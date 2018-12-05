@@ -1,0 +1,31 @@
+// UPL template for assignment panel
+// Copyright 2014 The Code Department
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+
+!ui-assignmentpanel layout:$d{!ui-vertical}
+    components:$c{titleBar legendPanel assignmentBoxPanel actionPanel}
+    assignCaption:$m{assignmentpanel.assigned} unassignCaption:$m{assignmentpanel.unassigned}
+    legendCaptionSuffix:$s{:} donePath:$n{/hidePopup}
+    
+// Title bar
+!ui-titlebar:titleBar caption:$g{captionPanelCaption} components:$c{captionCancelBtn}
+!ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
+     eventHandler:$d{!ui-event event:onclick action:$c{doneAct}}
+
+// Legend panel
+!ui-panel:legendPanel layout:$d{!ui-horizontal showCaption:true captionSuffix:$f{legendCaptionSuffix}} components:$c{legendLabel}
+!ui-label:legendLabel  styleClass:$e{ui-assignmentpanel-label} caption:$g{legendCaption} binding:$g{legendAttribute}
+
+// Assignment panel
+!ui-panel:assignmentBoxPanel components:$c{assignmentBox}
+!ui-assignmentbox:assignmentBox binding:$g{assignListAttribute}
+    filterCaption1:$f{filterCaption1} filterCaption2:$f{filterCaption2} assignCaption:$f{assignCaption} unassignCaption:$f{unassignCaption}
+    filterList1:$f{filterList1} filterList2:$f{filterList2} assignList:$g{assignList} unassignList:$g{unassignList}
+
+// Action panel
+!ui-panel:actionPanel layout:$d{!ui-horizontal} components:$c{doneBtn}
+!ui-button:doneBtn caption:$m{button.done} eventHandler:$d{!ui-event event:onclick action:$c{doneAct}}
+
+//Actions
+!ui-post:doneAct path:$f{donePath}

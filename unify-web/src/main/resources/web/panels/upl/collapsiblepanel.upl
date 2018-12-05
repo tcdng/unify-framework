@@ -1,0 +1,19 @@
+// UPL template for collapsible panel
+// Copyright 2016 The Code Department
+!ui-collapsiblepanel components:$c{body}
+!ui-panel:body layout:$d{!ui-vertical style:$s{width:100%;}} components:$c{titleBar contentPanel}
+
+// Title bar
+!ui-titlebar:titleBar styleClass:$e{cptitlebar} caption:$g{panelCaption}
+	components:$c{openBtn closeBtn}
+!ui-image:openBtn src:$t{images/down_gray.png} styleClass:$e{tbbutton}
+     eventHandler:$d{!ui-event event:onclick action:$c{expandContentAct}}
+!ui-image:closeBtn src:$t{images/up_gray.png} styleClass:$e{tbbutton}
+     eventHandler:$d{!ui-event event:onclick action:$c{collapseContentAct}}
+
+// Content panel
+!ui-panel:contentPanel layout:$f{contentLayout} components:$g{content}
+
+// Actions
+!ui-postcommand:expandContentAct command:expandContent components:$c{contentPanel}
+!ui-postcommand:collapseContentAct command:collapseContent components:$c{contentPanel}

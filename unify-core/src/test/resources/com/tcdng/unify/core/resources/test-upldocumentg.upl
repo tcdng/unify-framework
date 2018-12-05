@@ -1,0 +1,5 @@
+//Simple test UPL document
+!test-upldocumentg
+  names:$s{Bing}
+  names:$s{Cing}
+  names:$s{Ding}

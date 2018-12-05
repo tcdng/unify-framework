@@ -1,0 +1,3 @@
+// UPL template for wrapped data table CRUD panel
+// Copyright 2015 The Code Department
+!ui-wrappeddatatablecrudpanel formBinding:wrappedRecord

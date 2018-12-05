@@ -1,0 +1,15 @@
+!ui-document contentPanel:$c{mainPanel}
+
+!ui-panel:mainPanel layout:$d{!ui-vertical captionSuffix:$s{:}} components:$c{fullName birthDt height}
+!ui-text:fullName caption:$s{Name} binding:fullName
+!ui-date:birthDt caption:$s{Birth Date} binding:birthDt
+!ui-decimal:height caption:$s{Height} binding:height
+
+!ui-panel:bioPanel components:$c{color age gender metricPanel} binding:bio
+!ui-text:color caption:$s{Color} binding:color
+!ui-text:age caption:$s{Age} binding:age
+!ui-text:gender caption:$s{Gender} binding:gender
+
+!ui-panel:metricPanel components:$c{marker mHeight} binding:metric
+!ui-text:marker caption:$s{Marker} binding:marker
+!ui-text:mHeight caption:$s{Height} binding:height

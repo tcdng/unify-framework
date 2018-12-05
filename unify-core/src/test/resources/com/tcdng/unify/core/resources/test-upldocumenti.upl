@@ -1,0 +1,6 @@
+//Simple test UPL document
+!test-upldocumenti
+  names:$s{Bling}
+  names:$s{Cling}
+  names:$s{Sling}
+ 

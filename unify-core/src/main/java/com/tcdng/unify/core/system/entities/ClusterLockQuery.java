@@ -1,0 +1,65 @@
+/*
+ * Copyright 2014 The Code Department
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.tcdng.unify.core.system.entities;
+
+import java.util.Collection;
+import java.util.Date;
+
+import com.tcdng.unify.core.database.Query;
+import com.tcdng.unify.core.operation.IsNull;
+import com.tcdng.unify.core.operation.Less;
+import com.tcdng.unify.core.operation.Or;
+
+/**
+ * Cluster synchronization lock query.
+ * 
+ * @author Lateef Ojulari
+ * @since 1.0
+ */
+public class ClusterLockQuery extends Query<ClusterLock> {
+
+	public ClusterLockQuery() {
+		super(ClusterLock.class);
+	}
+
+	public ClusterLockQuery lockName(String lockName) {
+		return (ClusterLockQuery) equals("lockName", lockName);
+	}
+
+	public ClusterLockQuery lockNameIn(Collection<String> lockNameList) {
+		return (ClusterLockQuery) amongst("lockName", lockNameList);
+	}
+
+	public ClusterLockQuery currentOwner(String currentOwner) {
+		return (ClusterLockQuery) equals("currentOwner", currentOwner);
+	}
+
+	public ClusterLockQuery currentOwnerIsNull() {
+		return (ClusterLockQuery) isNull("currentOwner");
+	}
+
+	public ClusterLockQuery expiryTime(Date date) {
+		return (ClusterLockQuery) equals("expiryTime", date);
+	}
+
+	public ClusterLockQuery expiryTimeBefore(Date date) {
+		return (ClusterLockQuery) less("expiryTime", date);
+	}
+
+	public ClusterLockQuery expiredOrFree(Date date) {
+		return (ClusterLockQuery) add(new Or(new Less("expiryTime", date), new IsNull("currentOwner")));
+	}
+}

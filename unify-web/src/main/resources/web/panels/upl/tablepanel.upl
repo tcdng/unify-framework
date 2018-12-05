@@ -1,0 +1,11 @@
+//Table Panel UPL
+!ui-tablepanel layout:$d{!ui-vertical} components:$c{contentTbl}
+    tableStyleClass:$e{ui-table}
+    
+!ui-table:contentTbl bodyStyle:$f{tableBodyStyle} serialNumbers:$f{tableSerialNumbers} styleClass:$f{tableStyleClass}
+    rowSelectable:$f{tableRowSelectable} selDependentList:$f{tableSelDependentList}
+    rowEventHandler:$f{tableRowEventHandler}
+    windowed:$f{tableWindowed} pagination:$f{tablePagination}
+    multiSelect:$f{tableMultiSelect} multiSelDependentList:$f{tableMultiSelDependentList}
+    sortable:$f{tableSortable}
+    binding:$f{tableBinding} components:$f{tableColumnList}

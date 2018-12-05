@@ -1,0 +1,12 @@
+//Simple test UPL document
+!test-upldocumentd rootList:$c{firstDocumentId} thirdName:$s{Danger Mouse}
+    firstName:$s{Robocop}
+ 
+//inner document
+!test-upldocumentc:firstDocumentId fourthName:$s{Tommy}
+    firstName:$f{firstName} thirdName:$f{thirdName} //Test bubbling
+    lastName:$f{gloopLastName}
+
+//Some other element
+!test-uplelementa:tenthId name:$s{Optimus Prime} description:$s{Anchor Man}
+    componentRef:$c{firstDocumentId.firstId} // Test deep reference

@@ -1,0 +1,22 @@
+//Simple test UPL document
+!test-upldocumentc rootList:$c{thirdId} thirdName:$m{uplcompiler.test.thirdname}
+    firstName:$s{Sammy} foreignInlineName:$s{Trish}
+    rootList:$c{secondId fifthId}
+ 
+//Add a new element
+!test-uplelementb:fifthId title:$s{The Document} count:1515
+	user:$d{!test-uplelementa name:$f{foreignInlineName}
+		description:$s{Singer} action:$c{firstId}}
+	manyUser:$d{!test-uplelementa name:$s{Tom}
+		description:$s{Founder A}
+		action:$c{firstId}}
+	manyUser:$d{!test-uplelementa name:$s{Dick} description:$s{Founder B} action:$c{firstId secondId}}
+    components:$c{thirdId firstId} //Make reference to elements including inherited
+    components:$c{fourthId}
+
+//Override elements
+!test-uplelementa:firstId name:$f{firstName} description:$s{Developer}
+!test-uplelementa:secondId name:$s{Chip} description:$s{Newscaster}
+
+//Some other element
+!test-uplelementa:tenthId name:$s{Man Called Slone} description:$s{Anchor Man}

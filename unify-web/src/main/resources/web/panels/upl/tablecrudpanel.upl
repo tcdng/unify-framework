@@ -1,0 +1,85 @@
+// UPL template for record CRUD panel
+// Copyright 2015 The Code Department
+!ui-tablecrudpanel components:$c{simpleCrudBody}
+	tableBodyStyle:$s{height:320px;} tableWindowed:false tableRowSelectable:false tableReadOnly:false
+	addBtnCaption:$m{button.add}
+	createFrmBtnLabel:$m{button.saveandclose}
+	createNextFrmBtnLabel:$m{button.saveandnext}
+	saveFrmBtnLabel:$m{button.save}
+	formCaptionSuffix:$s{:}
+	formBinding:record
+
+!ui-panel:simpleCrudBody layout:$d{!ui-vertical style:$s{width:100%;}} components:$c{searchPanel simpleCrudTbl}
+
+!ui-panel:searchPanel layout:$d{!ui-horizontal style:$s{float:right;}}
+    components:$f{moreSearchComponentList} components:$c{addBtn}
+
+!ui-button:addBtn styleClass:$s{ui-tablecrudpanel-abutton} caption:$f{addBtnCaption} privilege:$f{addPrivilege}
+    hint:$m{hint.add} eventHandler:$d{!ui-event event:onclick action:$c{prepareCreateAct}} staticBindingValue:$f{addBtnStaticBinding}
+
+//CRUD table
+!ui-table:simpleCrudTbl styleClass:$e{ui-table ui-simplecrudtable} binding:recordList
+    bodyStyle:$f{tableBodyStyle} components:$f{tableColumnList} components:$c{userActions}
+    serialNumbers:true rowSelectable:$f{tableRowSelectable} windowed:$f{tableWindowed} pagination:false
+    multiSelect:false sortable:true readOnly:$f{tableReadOnly}
+
+!ui-group:userActions caption:$m{simplecrudpanel.action} style:$s{text-align:center;} columnStyle:$s{width:80px;}
+    components:$c{viewBtn editBtn deleteBtn}
+    components:$f{moreTableUserActionList}
+
+!ui-image:viewBtn src:$t{images/viewtable.png} styleClass:$e{taction}
+    hint:$m{hint.view} eventHandler:$d{!ui-event event:onclick action:$c{prepareViewAct}} privilege:$f{viewPrivilege}
+!ui-image:editBtn src:$t{images/edittable.png} styleClass:$e{taction}
+    hint:$m{hint.edit} eventHandler:$d{!ui-event event:onclick action:$c{prepareUpdateAct}} privilege:$f{editPrivilege}
+!ui-image:deleteBtn src:$t{images/deletetable.png} styleClass:$e{taction}
+    hint:$m{hint.delete} eventHandler:$d{!ui-event event:onclick action:$c{prepareDeleteAct}} privilege:$f{deletePrivilege}
+
+//Table actions 
+!ui-postcommand:prepareCreateAct command:prepareCreateRecord components:$f{morePrepareCreateComponents}
+!ui-postcommand:prepareViewAct command:prepareViewRecord
+!ui-postcommand:prepareUpdateAct command:prepareUpdateRecord components:$f{morePrepareUpdateComponents}
+!ui-postcommand:prepareDeleteAct command:prepareDeleteRecord
+
+//CRUD popup form    
+!ui-panel:simpleCrudPopup styleClass:$e{ui-tablecrudpanel-popup} layout:$d{!ui-vertical}
+    components:$c{titleBar formPanel} 
+
+!ui-titlebar:titleBar captionBinding:caption components:$c{captionCancelBtn} draggable:true
+!ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
+     eventHandler:$d{!ui-event event:onclick action:$c{cancelAct}}
+
+!ui-formpanel:formPanel layout:$d{!ui-vertical style:$s{table-layout:fixed;}} formSection:$f{formSection}
+    formCaptionSuffix:$f{formCaptionSuffix} formBinding:$f{formBinding} formColumns:$f{formColumns}
+    footerComponentList:$c{createNextFrmBtn createFrmBtn saveFrmBtn deleteFrmBtn cancelFrmBtn doneFrmBtn}
+    footerComponentList:$f{moreFormFooterComponentList}
+    
+//Form buttons
+!ui-button:createFrmBtn caption:$f{createFrmBtnLabel} eventHandler:$d{!ui-event event:onclick action:$c{createAct}}
+!ui-button:createNextFrmBtn caption:$f{createNextFrmBtnLabel} eventHandler:$d{!ui-event event:onclick action:$c{createNextAct}}
+!ui-button:saveFrmBtn caption:$f{saveFrmBtnLabel} eventHandler:$d{!ui-event event:onclick action:$c{saveAct}}
+!ui-button:deleteFrmBtn styleClass:$s{ui-button-alert} caption:$m{button.delete} eventHandler:$d{!ui-event event:onclick action:$c{deleteAct}}
+!ui-button:cancelFrmBtn styleClass:$s{ui-button-alert} caption:$m{button.cancel} eventHandler:$d{!ui-event event:onclick action:$c{cancelAct}}
+!ui-button:doneFrmBtn caption:$m{button.close} eventHandler:$d{!ui-event event:onclick action:$c{cancelAct}}
+
+
+//Form actions
+!ui-postcommand:createAct command:createRecord components:$c{formPanel}
+	validations:$c{formValidation} validations:$f{addValidations}
+	refresh:$c{simpleCrudBody} refresh:$f{moreFormActionRefresh}
+!ui-postcommand:createNextAct command:createNextRecord components:$c{formPanel}
+	validations:$c{formValidation} validations:$f{addValidations}
+	refresh:$c{simpleCrudBody} refresh:$f{moreFormActionRefresh}
+!ui-postcommand:saveAct command:updateRecord components:$c{formPanel}
+	validations:$c{formValidation} validations:$f{saveValidations}
+	refresh:$c{simpleCrudBody} refresh:$f{moreFormActionRefresh}
+!ui-postcommand:deleteAct command:deleteRecord confirm:$f{confirmOnDeleteMsg}
+	refresh:$c{simpleCrudBody} refresh:$f{moreFormActionRefresh}
+!ui-postcommand:cancelAct command:cancel
+!ui-postcommand:refreshFormAct components:$c{formPanel} refresh:$c{formPanel}
+
+
+// Validations
+!ui-validation:formValidation components:$c{formPanel}
+
+// General actions
+!ui-postcommand:switchPopupStateAct refresh:$c{simpleCrudPopup} components:$c{simpleCrudPopup}

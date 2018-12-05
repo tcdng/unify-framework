@@ -1,0 +1,11 @@
+//Simple test UPL document
+!test-upldocumenta rootList:$c{firstId secondId} fourthName:$m{uplcompiler.test.fourthname}
+    longNameRef:$c{fourthId}
+    
+!test-uplelementa:firstId name:$s{Man Called Slone} description:$s{Anchor Man}
+!test-uplelementa:secondId name:$s{Hillary McCain} description:$s{News Editor}
+
+!test-uplelementa:thirdId name:$f{thirdName} description:$m{uplcompiler.test.cableman} components:$c{secondId}
+!test-uplelementa:fourthId name:$f{fourthName} description:$s{Twiddler} components:$c{thirdId secondId firstId}
+
+!test-uplelementa:lastId name:$f{lastName} description:$s{Twiddler} components:$c{thirdId secondId firstId}

@@ -1,0 +1,12 @@
+//Search Panel UPL
+!ui-searchcriteriapanel layout:$d{!ui-vertical} components:$c{criteriaPanel buttonPanel}
+	searchClearList:$c{criteriaPanel} searchLayout:$d{!ui-grid showCaption:true captionSuffix:$s{:}}
+
+!ui-panel:criteriaPanel layout:$f{searchLayout} components:$g{searchByList}
+!ui-panel:buttonPanel layout:$d{!ui-horizontal} components:$c{searchBtn clearBtn}
+
+!ui-button:searchBtn caption:$m{button.search} eventHandler:$d{!ui-event event:onclick action:$c{searchAct}}
+!ui-button:clearBtn caption:$m{button.clear} eventHandler:$d{!ui-event event:onclick action:$c{clearAct}}
+
+!ui-post:searchAct path:$g{searchPath} components:$c{criteriaPanel} shortcut:$s{alt+s}
+!ui-clear:clearAct components:$f{searchClearList}

@@ -1,0 +1,4 @@
+//Simple test UPL document
+!test-upldocumenth
+ 
+!test-upldocumentf:namesDocumentId names:$f{names}

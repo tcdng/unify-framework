@@ -1,0 +1,5 @@
+//Simple test UPL document
+!test-upldocumente rootList:$c{firstDocumentId}
+ 
+//inner document
+!test-upldocumentd:firstDocumentId firstName:$s{Troop} thirdName:$m{uplcompiler.test.creep}
