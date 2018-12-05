@@ -31,12 +31,12 @@ public abstract class AbstractDocument implements Document {
 
 	@Override
 	public String getListKey() {
-		return String.valueOf(this.getId());
+		return String.valueOf(getId());
 	}
 
 	@Override
 	public String getListDescription() {
-		return this.getDescription();
+		return getDescription();
 	}
 
 }

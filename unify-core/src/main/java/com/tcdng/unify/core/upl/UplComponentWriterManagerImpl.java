@@ -43,34 +43,34 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
 	private Map<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>> writersByPlatform;
 
 	public UplComponentWriterManagerImpl() {
-		this.writersByPlatform = new ConcurrentHashMap<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
+		writersByPlatform = new ConcurrentHashMap<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
 	}
 
 	@Override
 	public Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform)
 			throws UnifyException {
-		Map<Class<? extends UplComponent>, UplComponentWriter> writers = this.writersByPlatform.get(platform);
+		Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
 		if (writers == null) {
-			return this.writersByPlatform.get(UserPlatform.DEFAULT);
+			return writersByPlatform.get(UserPlatform.DEFAULT);
 		}
 		return writers;
 	}
 
 	@Override
 	protected void onInitialize() throws UnifyException {
-		this.writersByPlatform.put(UserPlatform.DEFAULT,
+		writersByPlatform.put(UserPlatform.DEFAULT,
 				new HashMap<Class<? extends UplComponent>, UplComponentWriter>());
-		List<UnifyComponentConfig> writerConfigList = this.getComponentConfigs(UplComponentWriter.class);
+		List<UnifyComponentConfig> writerConfigList = getComponentConfigs(UplComponentWriter.class);
 		for (UnifyComponentConfig config : writerConfigList) {
 			Class<? extends UnifyComponent> writerType = config.getType();
 			Writes wa = writerType.getAnnotation(Writes.class);
 			if (wa != null) {
 				UserPlatform platform = wa.target();
-				UplComponentWriter writer = (UplComponentWriter) this.getComponent(config.getName());
-				Map<Class<? extends UplComponent>, UplComponentWriter> writers = this.writersByPlatform.get(platform);
+				UplComponentWriter writer = (UplComponentWriter) getComponent(config.getName());
+				Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
 				if (writers == null) {
 					writers = new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
-					this.writersByPlatform.put(platform, writers);
+					writersByPlatform.put(platform, writers);
 				}
 
 				Class<? extends UplComponent> uplType = wa.value();
@@ -84,16 +84,16 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
 		}
 
 		// Expand to concrete UPL component types
-		for (UserPlatform platform : this.writersByPlatform.keySet()) {
+		for (UserPlatform platform : writersByPlatform.keySet()) {
 			Map<Class<? extends UplComponent>, UplComponentWriter> writers = this
-					.expandToConcreteUplTypes(this.writersByPlatform.get(platform));
-			this.writersByPlatform.put(platform, writers);
+					.expandToConcreteUplTypes(writersByPlatform.get(platform));
+			writersByPlatform.put(platform, writers);
 		}
 
 		// Set defaults for other platforms
-		Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters = this.writersByPlatform
+		Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters = writersByPlatform
 				.get(UserPlatform.DEFAULT);
-		for (Map<Class<? extends UplComponent>, UplComponentWriter> writers : this.writersByPlatform.values()) {
+		for (Map<Class<? extends UplComponent>, UplComponentWriter> writers : writersByPlatform.values()) {
 			if (writers != defaultWriters) {
 				for (Class<? extends UplComponent> uplType : defaultWriters.keySet()) {
 					if (!writers.containsKey(uplType)) {
@@ -104,8 +104,8 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
 		}
 
 		// Calcify
-		for (UserPlatform platform : this.writersByPlatform.keySet()) {
-			this.writersByPlatform.put(platform, Collections.unmodifiableMap(writersByPlatform.get(platform)));
+		for (UserPlatform platform : writersByPlatform.keySet()) {
+			writersByPlatform.put(platform, Collections.unmodifiableMap(writersByPlatform.get(platform)));
 		}
 	}
 
@@ -120,7 +120,7 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
 		Map<Class<? extends UplComponent>, UplComponentWriter> newWriters = new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
 		for (Class<? extends UplComponent> uplType : writers.keySet()) {
 			UplComponentWriter writer = writers.get(uplType);
-			List<UnifyComponentConfig> uplTypeConfigList = this.getComponentConfigs(uplType);
+			List<UnifyComponentConfig> uplTypeConfigList = getComponentConfigs(uplType);
 			if (uplTypeConfigList.size() == 1) {
 				newWriters.put((Class<? extends UplComponent>) uplTypeConfigList.get(0).getType(), writer);
 			} else {

@@ -32,20 +32,20 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 	public void log(LoggingLevel loggingLevel, String message) throws UnifyException {
 		switch (loggingLevel) {
 		case DEBUG:
-			this.logger.debug(message);
+			logger.debug(message);
 			break;
 		case ERROR:
-			this.logger.error(message);
+			logger.error(message);
 			break;
 		case SEVERE:
-			this.logger.fatal(message);
+			logger.fatal(message);
 			break;
 		case WARN:
-			this.logger.warn(message);
+			logger.warn(message);
 			break;
 		case INFO:
 		default:
-			this.logger.info(message);
+			logger.info(message);
 			break;
 		}
 	}
@@ -54,20 +54,20 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 	public void log(LoggingLevel loggingLevel, String message, Exception exception) throws UnifyException {
 		switch (loggingLevel) {
 		case DEBUG:
-			this.logger.debug(message, exception);
+			logger.debug(message, exception);
 			break;
 		case ERROR:
-			this.logger.error(message, exception);
+			logger.error(message, exception);
 			break;
 		case SEVERE:
-			this.logger.fatal(message, exception);
+			logger.fatal(message, exception);
 			break;
 		case WARN:
-			this.logger.warn(message, exception);
+			logger.warn(message, exception);
 			break;
 		case INFO:
 		default:
-			this.logger.info(message, exception);
+			logger.info(message, exception);
 			break;
 		}
 	}
@@ -76,9 +76,9 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 	public boolean isEnabled(LoggingLevel loggingLevel) throws UnifyException {
 		switch (loggingLevel) {
 		case DEBUG:
-			return this.logger.isDebugEnabled();
+			return logger.isDebugEnabled();
 		case INFO:
-			return this.logger.isInfoEnabled();
+			return logger.isInfoEnabled();
 		case SEVERE:
 		case WARN:
 		case ERROR:
@@ -89,9 +89,9 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 	}
 
 	protected org.apache.log4j.Logger getLogger(String category) {
-		if (this.logger == null) {
-			this.logger = org.apache.log4j.Logger.getLogger(category);
+		if (logger == null) {
+			logger = org.apache.log4j.Logger.getLogger(category);
 		}
-		return this.logger;
+		return logger;
 	}
 }

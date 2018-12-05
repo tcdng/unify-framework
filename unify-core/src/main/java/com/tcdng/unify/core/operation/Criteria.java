@@ -59,20 +59,20 @@ public class Criteria implements Cloneable {
 	}
 
 	public final void getFields(Set<String> fields) {
-		if (this.preOp instanceof String) {
-			fields.add((String) this.preOp);
+		if (preOp instanceof String) {
+			fields.add((String) preOp);
 		} else {
-			((Criteria) this.preOp).getFields(fields);
+			((Criteria) preOp).getFields(fields);
 		}
 
-		if (this.postOp instanceof Criteria) {
-			((Criteria) this.postOp).getFields(fields);
+		if (postOp instanceof Criteria) {
+			((Criteria) postOp).getFields(fields);
 		}
 	}
 
 	public Criteria copy() {
 		try {
-			return (Criteria) this.clone();
+			return (Criteria) clone();
 		} catch (CloneNotSupportedException e) {
 		}
 		return null;
@@ -81,11 +81,11 @@ public class Criteria implements Cloneable {
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		Criteria clone = (Criteria) super.clone();
-		if (this.preOp != null && this.preOp instanceof Criteria) {
-			clone.preOp = ((Criteria) this.preOp).clone();
+		if (preOp != null && preOp instanceof Criteria) {
+			clone.preOp = ((Criteria) preOp).clone();
 		}
-		if (this.postOp != null && this.postOp instanceof Criteria) {
-			clone.postOp = ((Criteria) this.postOp).clone();
+		if (postOp != null && postOp instanceof Criteria) {
+			clone.postOp = ((Criteria) postOp).clone();
 		}
 		return clone;
 	}

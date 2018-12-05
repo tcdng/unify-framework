@@ -44,37 +44,37 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 		searchField.setKeyOnly(true);
 
 		writer.write("<div");
-		this.writeTagId(writer, searchField.getSearchPanelId());
-		this.writeTagStyleClass(writer, "sfborder");
+		writeTagId(writer, searchField.getSearchPanelId());
+		writeTagStyleClass(writer, "sfborder");
 		writer.write(">");
 
 		// Filter row
 		writer.write("<div");
-		this.writeTagStyleClass(writer, "sffilterrow");
+		writeTagStyleClass(writer, "sffilterrow");
 		writer.write(">");
 		writer.write("<span>").write(searchField.getFilterLabel()).write("</span>");
 		writer.write("<input type=\"text\"");
-		this.writeTagId(writer, searchField.getFilterId());
-		this.writeTagValue(writer, searchField.getFilter());
+		writeTagId(writer, searchField.getFilterId());
+		writeTagValue(writer, searchField.getFilter());
 		writer.write("/>");
 		writer.write("</div>");
 
 		// Result row
 		writer.write("<div");
-		this.writeTagId(writer, searchField.getResultPanelId());
-		this.writeTagStyleClass(writer, "sfresultrow");
+		writeTagId(writer, searchField.getResultPanelId());
+		writeTagStyleClass(writer, "sfresultrow");
 		writer.write(">");
-		this.writeResultList(writer, searchField);
+		writeResultList(writer, searchField);
 		writer.write("</div>");
 
 		// Action row
 		writer.write("<div");
-		this.writeTagStyleClass(writer, "sfactionrow");
+		writeTagStyleClass(writer, "sfactionrow");
 		writer.write(">");
-		this.writeButton(writer, searchField.getClearButtonId(), "sfactbutton", "float:left;",
-				this.getSessionMessage("button.clear"));
-		this.writeButton(writer, searchField.getCancelButtonId(), "sfactbutton", "float:right;",
-				this.getSessionMessage("button.cancel"));
+		writeButton(writer, searchField.getClearButtonId(), "sfactbutton", "float:left;",
+				getSessionMessage("button.clear"));
+		writeButton(writer, searchField.getCancelButtonId(), "sfactbutton", "float:right;",
+				getSessionMessage("button.cancel"));
 		writer.write("</div>");
 
 		writer.write("</div>");
@@ -85,7 +85,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 			throws UnifyException {
 		SearchField searchField = (SearchField) popupTextField;
 		searchField.setKeyOnly(true);
-		this.writeRigging(writer, searchField, "ux.rigSearchField");
+		writeRigging(writer, searchField, "ux.rigSearchField");
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 			throws UnifyException {
 		SearchField searchField = (SearchField) widget;
 		if (searchField.getResultPanelId().equals(sectionPageName)) {
-			this.writeResultList(writer, searchField);
+			writeResultList(writer, searchField);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 			throws UnifyException {
 		SearchField searchField = (SearchField) widget;
 		if (searchField.getResultPanelId().equals(sectionPageName)) {
-			this.writeRigging(writer, searchField, "ux.searchWireResult");
+			writeRigging(writer, searchField, "ux.searchWireResult");
 		}
 	}
 
@@ -156,15 +156,15 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 		List<? extends Listable> listableList = searchField.getListables();
 		int length = listableList.size();
 		writer.write("<div");
-		this.writeTagStyleClass(writer, "sflist");
+		writeTagStyleClass(writer, "sflist");
 		writer.write(">");
 		for (int i = 0; i < length; i++) {
 			writer.write("<a");
-			this.writeTagId(writer, searchField.getNamingIndexedId(i));
+			writeTagId(writer, searchField.getNamingIndexedId(i));
 			if (i % 2 == 0) {
-				this.writeTagStyleClass(writer, "odd");
+				writeTagStyleClass(writer, "odd");
 			} else {
-				this.writeTagStyleClass(writer, "even");
+				writeTagStyleClass(writer, "even");
 			}
 			writer.write(">");
 			writer.writeWithHtmlEscape(listableList.get(i).getListDescription());

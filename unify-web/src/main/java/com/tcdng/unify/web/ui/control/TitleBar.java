@@ -33,9 +33,9 @@ public class TitleBar extends AbstractMultiControl {
 
 	@Override
 	public String getStyle() throws UnifyException {
-		if (this.getUplAttribute(boolean.class, "draggable")) {
-			if (this.getUplAttribute(String.class, "style") != null) {
-				return this.getUplAttribute(String.class, "style") + "cursor:move;";
+		if (getUplAttribute(boolean.class, "draggable")) {
+			if (getUplAttribute(String.class, "style") != null) {
+				return getUplAttribute(String.class, "style") + "cursor:move;";
 			}
 
 			return "cursor:move;";

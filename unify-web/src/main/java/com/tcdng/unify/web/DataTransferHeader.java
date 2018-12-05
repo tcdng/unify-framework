@@ -43,7 +43,7 @@ public class DataTransferHeader {
 	}
 
 	public Object getDebugValue() {
-		if (this.bindingInfo != null && this.bindingInfo.isMasked()) {
+		if (bindingInfo != null && bindingInfo.isMasked()) {
 			return "********";
 		}
 
@@ -67,16 +67,16 @@ public class DataTransferHeader {
 	}
 
 	public String getLongProperty() {
-		if (this.bindingInfo != null) {
-			return this.bindingInfo.getLongProperty();
+		if (bindingInfo != null) {
+			return bindingInfo.getLongProperty();
 		}
 
 		return null;
 	}
 
 	public String getShortProperty() {
-		if (this.bindingInfo != null) {
-			return this.bindingInfo.getShortProperty();
+		if (bindingInfo != null) {
+			return bindingInfo.getShortProperty();
 		}
 
 		return null;

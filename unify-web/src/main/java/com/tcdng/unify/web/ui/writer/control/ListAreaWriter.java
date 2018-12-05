@@ -39,7 +39,7 @@ public class ListAreaWriter extends AbstractControlWriter {
 		ListArea listArea = (ListArea) widget;
 		String styleClass = listArea.getUplAttribute(String.class, "styleClass");
 		writer.write("<div ");
-		this.writeTagAttributes(writer, listArea);
+		writeTagAttributes(writer, listArea);
 		writer.write("><ul class=\"").write(styleClass).write("-body\">");
 		for (Listable listable : listArea.getListables()) {
 			writer.write("<li class=\"").write(styleClass).write("-item\">");

@@ -38,19 +38,19 @@ public class CollapsiblePanel extends AbstractPanel {
 	public void switchState() throws UnifyException {
 		super.switchState();
 
-		this.setVisible("openBtn", collapsed);
-		this.setVisible("closeBtn", !collapsed);
-		this.setVisible("contentPanel", !collapsed);
+		setVisible("openBtn", collapsed);
+		setVisible("closeBtn", !collapsed);
+		setVisible("contentPanel", !collapsed);
 	}
 
 	@Action
 	public void expandContent() throws UnifyException {
-		this.collapsed = false;
+		collapsed = false;
 	}
 
 	@Action
 	public void collapseContent() throws UnifyException {
-		this.collapsed = true;
+		collapsed = true;
 	}
 
 	public boolean isCollapsed() {

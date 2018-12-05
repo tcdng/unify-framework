@@ -34,7 +34,7 @@ public abstract class AbstractPageActionWriter extends AbstractBehaviorWriter im
 	public void writeBehavior(ResponseWriter writer, Behavior behavior, String id) throws UnifyException {
 		PageAction pageAction = (PageAction) behavior;
 		if (!StringUtils.isBlank(behavior.getUplAttribute(String.class, "shortcut"))) {
-			this.writeShortcutHandlerJs(writer, null, id, pageAction);
+			writeShortcutHandlerJs(writer, null, id, pageAction);
 		}
 	}
 

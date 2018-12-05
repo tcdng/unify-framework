@@ -45,38 +45,38 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
 		}
 
 		writer.write("<div");
-		this.writeTagId(writer, dateField.getPrefixedId("cal_"));
-		this.writeTagStyleClass(writer, "dborder");
+		writeTagId(writer, dateField.getPrefixedId("cal_"));
+		writeTagStyleClass(writer, "dborder");
 		writer.write(">");
 
 		writer.write("<div class=\"cnav\">");
-		this.writeButton(writer, dateField.getPrefixedId("decy_"), "cscroll", null, "<<");
-		this.writeButton(writer, dateField.getPrefixedId("decm_"), "cscroll", null, "<");
+		writeButton(writer, dateField.getPrefixedId("decy_"), "cscroll", null, "<<");
+		writeButton(writer, dateField.getPrefixedId("decm_"), "cscroll", null, "<");
 		writer.write("<span");
-		this.writeTagId(writer, dateField.getPrefixedId("disp_"));
-		this.writeTagStyleClass(writer, "cdisplay");
+		writeTagId(writer, dateField.getPrefixedId("disp_"));
+		writeTagStyleClass(writer, "cdisplay");
 		writer.write("></span>");
-		this.writeButton(writer, dateField.getPrefixedId("incm_"), "cscroll", null, ">");
-		this.writeButton(writer, dateField.getPrefixedId("incy_"), "cscroll", null, ">>");
+		writeButton(writer, dateField.getPrefixedId("incm_"), "cscroll", null, ">");
+		writeButton(writer, dateField.getPrefixedId("incy_"), "cscroll", null, ">>");
 		writer.write("</div>");
 		writer.write("<div");
-		this.writeTagId(writer, dateField.getPrefixedId("cont_"));
-		this.writeTagStyleClass(writer, "ccontent");
+		writeTagId(writer, dateField.getPrefixedId("cont_"));
+		writeTagStyleClass(writer, "ccontent");
 		writer.write(">");
 		writer.write("</div>");
 
 		writer.write("<div class=\"ccontrol\">");
-		this.writeButton(writer, dateField.getPrefixedId("btnt_"), "cactbutton", "float:left;",
-				this.getSessionMessage("button.today"));
-		this.writeButton(writer, dateField.getPrefixedId("btnc_"), "cactbutton", "float:right;",
-				this.getSessionMessage("button.clear"));
+		writeButton(writer, dateField.getPrefixedId("btnt_"), "cactbutton", "float:left;",
+				getSessionMessage("button.today"));
+		writeButton(writer, dateField.getPrefixedId("btnc_"), "cactbutton", "float:right;",
+				getSessionMessage("button.clear"));
 		writer.write("</div>");
 
 		Calendar dateCal = Calendar.getInstance();
 		dateCal.setTime(date);
-		this.writeHidden(writer, dateField.getPrefixedId("day_"), dateCal.get(Calendar.DAY_OF_MONTH));
-		this.writeHidden(writer, dateField.getPrefixedId("mon_"), dateCal.get(Calendar.MONTH) + 1);
-		this.writeHidden(writer, dateField.getPrefixedId("year_"), dateCal.get(Calendar.YEAR));
+		writeHidden(writer, dateField.getPrefixedId("day_"), dateCal.get(Calendar.DAY_OF_MONTH));
+		writeHidden(writer, dateField.getPrefixedId("mon_"), dateCal.get(Calendar.MONTH) + 1);
+		writeHidden(writer, dateField.getPrefixedId("year_"), dateCal.get(Calendar.YEAR));
 		writer.write("</div>");
 	}
 

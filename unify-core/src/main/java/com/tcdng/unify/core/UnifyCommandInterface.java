@@ -38,26 +38,26 @@ public class UnifyCommandInterface extends AbstractUnifyContainerInterface {
 
 	@Override
 	public int getPort() {
-		return this.listeningPort;
+		return listeningPort;
 	}
 
 	@Override
 	protected void onStartServicingRequests() throws UnifyException {
-		this.networkInterface.startLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
+		networkInterface.startLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
 	}
 
 	@Override
 	protected void onStopServicingRequests() throws UnifyException {
-		this.networkInterface.stopLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
+		networkInterface.stopLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
 	}
 
 	@Override
 	protected void onInitialize() throws UnifyException {
-		this.listeningPort = this.getContainerSetting(short.class, UnifyCorePropertyConstants.APPLICATION_COMMAND_PORT,
+		listeningPort = getContainerSetting(short.class, UnifyCorePropertyConstants.APPLICATION_COMMAND_PORT,
 				UnifyContainer.DEFAULT_COMMAND_PORT);
-		this.networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER,
+		networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER,
 				UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG, "unify-commandinterface-comm", "localhost",
-				this.listeningPort, 32);
+				listeningPort, 32);
 	}
 
 	@Override

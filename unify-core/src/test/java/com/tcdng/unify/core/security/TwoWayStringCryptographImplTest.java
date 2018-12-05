@@ -36,13 +36,13 @@ public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest 
 
 	@Test
 	public void testEncryptNull() throws Exception {
-		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) this.getComponent("cryptographA");
+		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
 		assertNull(stringCryptographA.encrypt(null));
 	}
 
 	@Test
 	public void testEncryptString() throws Exception {
-		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) this.getComponent("cryptographA");
+		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
 		String encrypted = stringCryptographA.encrypt("Hello World!");
 		assertNotNull(encrypted);
 		assertFalse("Hello World!".equals(encrypted));
@@ -50,7 +50,7 @@ public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest 
 
 	@Test
 	public void testEncryptStringConsistent() throws Exception {
-		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) this.getComponent("cryptographA");
+		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
 		String encryptedA = stringCryptographA.encrypt("Hello World!");
 		String encryptedB = stringCryptographA.encrypt("Hello World!");
 		String encryptedC = stringCryptographA.encrypt("Hello World!");
@@ -60,8 +60,8 @@ public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest 
 
 	@Test
 	public void testEncryptStringWithDifferentCryptographs() throws Exception {
-		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) this.getComponent("cryptographA");
-		TwoWayStringCryptograph stringCryptographB = (TwoWayStringCryptograph) this.getComponent("cryptographB");
+		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
+		TwoWayStringCryptograph stringCryptographB = (TwoWayStringCryptograph) getComponent("cryptographB");
 		String encryptedA = stringCryptographA.encrypt("Hello World!");
 		String encryptedB = stringCryptographB.encrypt("Hello World!");
 		assertFalse(encryptedA.equals(encryptedB));
@@ -69,19 +69,19 @@ public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest 
 
 	@Test
 	public void testDecryptNull() throws Exception {
-		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) this.getComponent("cryptographA");
+		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
 		assertNull(stringCryptographA.decrypt(null));
 	}
 
 	@Test(expected = UnifyException.class)
 	public void testDecryptString() throws Exception {
-		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) this.getComponent("cryptographA");
+		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
 		stringCryptographA.decrypt("Hello World!");
 	}
 
 	@Test
 	public void testDecryptEncryptedString() throws Exception {
-		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) this.getComponent("cryptographA");
+		TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
 		String encrypted = stringCryptographA.encrypt("Piggy plans to kidnap Kermit");
 		String decrypted = stringCryptographA.decrypt(encrypted);
 		assertEquals("Piggy plans to kidnap Kermit", decrypted);

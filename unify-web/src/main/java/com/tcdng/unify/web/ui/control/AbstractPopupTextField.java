@@ -33,7 +33,7 @@ public abstract class AbstractPopupTextField extends TextField {
 
 	@Override
 	public String getBorderId() throws UnifyException {
-		return this.getPrefixedId("brd_");
+		return getPrefixedId("brd_");
 	}
 
 	@Override
@@ -42,27 +42,27 @@ public abstract class AbstractPopupTextField extends TextField {
 	}
 
 	public String getPopupButtonId() throws UnifyException {
-		return this.getPrefixedId("popb_");
+		return getPrefixedId("popb_");
 	}
 
 	public String getPopupId() throws UnifyException {
-		return this.getPrefixedId("pop_");
+		return getPrefixedId("pop_");
 	}
 
 	public String getButtonImageSrc() throws UnifyException {
-		return this.getUplAttribute(String.class, "buttonImgSrc");
+		return getUplAttribute(String.class, "buttonImgSrc");
 	}
 
 	public long getDisplayTimeOut() throws UnifyException {
-		return this.getUplAttribute(long.class, "timeout");
+		return getUplAttribute(long.class, "timeout");
 	}
 
 	public boolean isClearable() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "clearable");
+		return getUplAttribute(boolean.class, "clearable");
 	}
 
 	public boolean isPopupAlways() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "popupAlways");
+		return getUplAttribute(boolean.class, "popupAlways");
 	}
 
 	public abstract boolean isPopupOnEditableOnly();

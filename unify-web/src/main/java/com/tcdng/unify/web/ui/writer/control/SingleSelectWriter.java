@@ -72,11 +72,11 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
 			Listable listable = listableList.get(i);
 			String key = listable.getListKey();
 			writer.write("<a");
-			this.writeTagId(writer, singleSelect.getNamingIndexedId(i));
+			writeTagId(writer, singleSelect.getNamingIndexedId(i));
 			if (key.equals(value)) {
-				this.writeTagStyleClass(writer, "sel");
+				writeTagStyleClass(writer, "sel");
 			} else {
-				this.writeTagStyleClass(writer, "norm");
+				writeTagStyleClass(writer, "norm");
 			}
 			writer.write(">");
 			writer.writeWithHtmlEscape(listable.getListDescription());

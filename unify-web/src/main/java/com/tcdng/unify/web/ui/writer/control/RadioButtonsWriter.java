@@ -40,7 +40,7 @@ public class RadioButtonsWriter extends AbstractControlWriter {
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		RadioButtons radioButtons = (RadioButtons) widget;
-		this.writeHiddenPush(writer, radioButtons, PushType.RADIO);
+		writeHiddenPush(writer, radioButtons, PushType.RADIO);
 
 		String value = radioButtons.getValue(String.class);
 		List<? extends Listable> listableList = radioButtons.getListables();
@@ -48,9 +48,9 @@ public class RadioButtonsWriter extends AbstractControlWriter {
 		int breaks = listableList.size();
 		for (Listable listable : listableList) {
 			writer.write("<input type=\"radio\"");
-			this.writeTagName(writer, radioButtons);
-			this.writeTagStyleClass(writer, radioButtons);
-			this.writeTagStyle(writer, radioButtons);
+			writeTagName(writer, radioButtons);
+			writeTagStyleClass(writer, radioButtons);
+			writeTagStyle(writer, radioButtons);
 			String key = listable.getListKey();
 
 			if (key.equals(value)) {

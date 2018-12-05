@@ -44,21 +44,21 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testConfigureNetworkInterface() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.configure(NetworkInterfaceConfigType.REMOTE_UNICAST_SERVER, "test-unicastcfg1",
 				TESTUNICASTCLIENTCOMM, "localhost", 10001, 20);
 	}
 
 	@Test(expected = UnifyException.class)
 	public void testConfigureNetworkInterfaceIncompatible() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, "test-unicastcfg2",
 				TESTUNICASTCLIENTCOMM, "localhost", 10002, 20);
 	}
 
 	@Test(expected = UnifyException.class)
 	public void testConfigureNetworkInterfaceExists() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.configure(NetworkInterfaceConfigType.REMOTE_UNICAST_SERVER, "test-unicastcfg3",
 				TESTUNICASTCLIENTCOMM, "localhost", 10003, 20);
 		networkInterface.configure(NetworkInterfaceConfigType.REMOTE_UNICAST_SERVER, "test-unicastcfg3",
@@ -67,13 +67,13 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test(expected = UnifyException.class)
 	public void testStartLocalUnicastServerNoConfig() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.startLocalUnicastServer("none-config");
 	}
 
 	@Test
 	public void testStartLocalUnicastServer() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, "test-unicastcfg5",
 				TESTUNICASTSERVERCOMM, "localhost", 10005, 20);
 		networkInterface.startLocalUnicastServer("test-unicastcfg5");
@@ -82,7 +82,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test(expected = UnifyException.class)
 	public void testStopLocalUnicastServerNotExist() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, "test-unicastcfg6",
 				TESTUNICASTSERVERCOMM, "localhost", 10006, 20);
 		networkInterface.stopLocalUnicastServer("test-unicastcfg6");
@@ -90,7 +90,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testEstablishUnicast() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		String id = null;
 		try {
 			networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, "test-unicastcfg7",
@@ -107,7 +107,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testDestroyUnicast() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		try {
 			networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, "test-unicastcfg8",
 					TESTUNICASTSERVERCOMM, "localhost", 10008, 20);
@@ -123,7 +123,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testUnicast() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		try {
 			networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, "test-unicastcfg9",
 					TESTUNICASTSERVERCOMM, "localhost", 10009, 20);
@@ -143,7 +143,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testUnicastMultiple() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		try {
 			networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, "test-unicastcfg10",
 					TESTUNICASTSERVERCOMM, "localhost", 10010, 20);
@@ -168,13 +168,13 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test(expected = UnifyException.class)
 	public void testStartLocalMulticastNoConfig() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.startLocalMulticastClient("none-config");
 	}
 
 	@Test
 	public void testStartLocalMulticastClient() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.configure(NetworkInterfaceConfigType.LOCAL_MULTICAST_CLIENT, "test-multicastcfg1",
 				TESTMULTICASTCLIENTCOMM, "225.0.0.1", 20001, 20);
 		networkInterface.startLocalMulticastClient("test-multicastcfg1");
@@ -183,7 +183,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test(expected = UnifyException.class)
 	public void testStopLocalMulticastClientNotExist() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		networkInterface.configure(NetworkInterfaceConfigType.LOCAL_MULTICAST_CLIENT, "test-multicastcfg2",
 				TESTMULTICASTCLIENTCOMM, "225.0.0.1", 20002, 20);
 		networkInterface.stopLocalMulticastClient("test-multicastcfg2");
@@ -191,7 +191,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testEstablishMuilticast() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		String id = null;
 		try {
 			networkInterface.configure(NetworkInterfaceConfigType.LOCAL_MULTICAST_CLIENT, "test-multicastcfg3-client",
@@ -208,7 +208,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testDestroyMulticast() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		try {
 			networkInterface.configure(NetworkInterfaceConfigType.LOCAL_MULTICAST_CLIENT, "test-multicastcfg4-client",
 					TESTMULTICASTCLIENTCOMM, "225.0.0.3", 20004, 20);
@@ -224,7 +224,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
 	@Test(timeout = 4000)
 	public void testMulticast() throws Exception {
-		NetworkInterface networkInterface = this.getNetworkInterface();
+		NetworkInterface networkInterface = getNetworkInterface();
 		try {
 			networkInterface.configure(NetworkInterfaceConfigType.LOCAL_MULTICAST_CLIENT, "test-multicastcfg5-client",
 					TESTMULTICASTCLIENTCOMM, "225.0.0.4", 20005, 20);
@@ -265,7 +265,7 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 	}
 
 	private NetworkInterface getNetworkInterface() throws Exception {
-		return (NetworkInterface) this.getComponent(ApplicationComponents.APPLICATION_NETWORKINTERFACE);
+		return (NetworkInterface) getComponent(ApplicationComponents.APPLICATION_NETWORKINTERFACE);
 	}
 
 }

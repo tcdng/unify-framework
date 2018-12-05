@@ -34,12 +34,12 @@ public class LoanDisbursementBusinessModuleImpl extends AbstractBusinessModule
 
 	@Override
 	public Long create(LoanDisbursement loanDisbursement) throws UnifyException {
-		return (Long) this.db().create(loanDisbursement);
+		return (Long) db().create(loanDisbursement);
 	}
 
 	@Override
 	public List<LoanDisbursement> find(LoanDisbursementQuery query) throws UnifyException {
-		return this.db().listAll(query);
+		return db().listAll(query);
 	}
 
 }

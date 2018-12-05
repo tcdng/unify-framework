@@ -49,13 +49,13 @@ public class AbstractOneWayCryptograph extends AbstractUnifyComponent {
 			try {
 				MessageDigest digest = MessageDigest.getInstance("SHA-256");
 				digest.reset();
-				digest.update(this.encryptionKey.getBytes("UTF-8"));
+				digest.update(encryptionKey.getBytes("UTF-8"));
 				digest.update(toEncrypt);
 				return digest.digest();
 			} catch (NoSuchAlgorithmException e) {
-				this.throwOperationErrorException(e);
+				throwOperationErrorException(e);
 			} catch (UnsupportedEncodingException e) {
-				this.throwOperationErrorException(e);
+				throwOperationErrorException(e);
 			}
 		}
 		return null;

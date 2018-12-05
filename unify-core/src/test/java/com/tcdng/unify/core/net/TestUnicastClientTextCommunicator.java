@@ -30,9 +30,9 @@ public class TestUnicastClientTextCommunicator extends AbstractUnicastClientText
 	@Override
 	public NetworkMessage communicate(NetworkMessage message) throws UnifyException {
 		TestTextRequest request = (TestTextRequest) message;
-		this.writeLine(request.getFirstName());
-		this.writeLine(request.getLastName());
-		String fullName = this.readLine();
+		writeLine(request.getFirstName());
+		writeLine(request.getLastName());
+		String fullName = readLine();
 		return new TestTextResponse(fullName);
 	}
 

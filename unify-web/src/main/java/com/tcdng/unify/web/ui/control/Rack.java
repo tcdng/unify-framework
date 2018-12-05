@@ -45,16 +45,16 @@ public class Rack extends Table {
 	public void onPageInitialize() throws UnifyException {
 		StringBuilder sb = new StringBuilder(
 				"!ui-shiftbuttons  caption:$m{table.rack.shift} columnStyle:$s{width:100px;} style:$s{text-align:center;}");
-		this.appendUplAttribute(sb, "binding");
-		this.shiftCtrl = (ShiftButtons) this.addExternalChildControl(sb.toString());
-		this.shiftDirectionCtrl = (Control) this.addInternalChildControl("!ui-hidden binding:shiftDirection");
+		appendUplAttribute(sb, "binding");
+		shiftCtrl = (ShiftButtons) addExternalChildControl(sb.toString());
+		shiftDirectionCtrl = (Control) addInternalChildControl("!ui-hidden binding:shiftDirection");
 
 		super.onPageInitialize();
 	}
 
 	@Override
 	public String getShiftDirectionId() throws UnifyException {
-		return this.shiftDirectionCtrl.getId();
+		return shiftDirectionCtrl.getId();
 	}
 
 	public Control getShiftDirectionCtrl() {
@@ -92,18 +92,18 @@ public class Rack extends Table {
 	@Override
 	public void addPageAliases() throws UnifyException {
 		super.addPageAliases();
-		this.addPageAlias(shiftDirectionCtrl);
+		addPageAlias(shiftDirectionCtrl);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doShift() throws UnifyException {
-		List<Object> list = (List<Object>) this.getValue();
+		List<Object> list = (List<Object>) getValue();
 		if (list != null && list.size() > 1) {
 			boolean swap = false;
-			int viewIndex = this.getViewIndex();
+			int viewIndex = getViewIndex();
 			int oldIndex = viewIndex;
-			switch (this.shiftDirection) {
+			switch (shiftDirection) {
 			case ShiftDirectionConstants.TOP:
 				viewIndex = 0;
 				break;
@@ -125,12 +125,12 @@ public class Rack extends Table {
 			}
 
 			if (oldIndex != viewIndex) {
-				this.setViewIndex(viewIndex);
+				setViewIndex(viewIndex);
 				if (swap) {
-					Collections.swap(this.getValueList(), oldIndex, viewIndex);
+					Collections.swap(getValueList(), oldIndex, viewIndex);
 					Collections.swap(list, oldIndex, viewIndex);
 				} else {
-					this.getValueList().add(viewIndex, this.getValueList().remove(oldIndex));
+					getValueList().add(viewIndex, getValueList().remove(oldIndex));
 					list.add(viewIndex, list.remove(oldIndex));
 				}
 			}

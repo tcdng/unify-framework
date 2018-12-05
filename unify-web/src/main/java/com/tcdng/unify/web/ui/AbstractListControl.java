@@ -40,45 +40,45 @@ public abstract class AbstractListControl extends AbstractControl implements Lis
 	@Override
 	public ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels)
 			throws UnifyException {
-		return this.getListControlUtils().getListControlJsonData(this, indexes, keys, labels);
+		return getListControlUtils().getListControlJsonData(this, indexes, keys, labels);
 	}
 
 	@Override
 	public List<? extends Listable> getListables() throws UnifyException {
-		return this.getListControlUtils().getListables(this);
+		return getListControlUtils().getListables(this);
 	}
 
 	@Override
 	public Map<String, String> getListMap() throws UnifyException {
-		return this.getListControlUtils().getListMap(this);
+		return getListControlUtils().getListMap(this);
 	}
 
 	@Override
 	public String getList() throws UnifyException {
-		return this.getUplAttribute(String.class, "list");
+		return getUplAttribute(String.class, "list");
 	}
 
 	@Override
 	public String[] getListParams() throws UnifyException {
-		return this.getUplAttribute(String[].class, "listParams");
+		return getUplAttribute(String[].class, "listParams");
 	}
 
 	@Override
 	public ListParamType getListParamType() throws UnifyException {
-		return this.getUplAttribute(ListParamType.class, "listParamType");
+		return getUplAttribute(ListParamType.class, "listParamType");
 	}
 
 	@Override
 	public String getListKey() throws UnifyException {
-		return this.getUplAttribute(String.class, "listKey");
+		return getUplAttribute(String.class, "listKey");
 	}
 
 	@Override
 	public String getListDescription() throws UnifyException {
-		return this.getUplAttribute(String.class, "listDescription");
+		return getUplAttribute(String.class, "listDescription");
 	}
 
 	private ListControlUtils getListControlUtils() throws UnifyException {
-		return (ListControlUtils) this.getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
+		return (ListControlUtils) getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
 	}
 }

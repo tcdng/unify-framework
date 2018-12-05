@@ -42,7 +42,7 @@ public class CheckBoxListWriter extends AbstractControlWriter {
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		CheckBoxList checkBoxList = (CheckBoxList) widget;
-		this.writeHiddenPush(writer, checkBoxList, PushType.CHECKBOX);
+		writeHiddenPush(writer, checkBoxList, PushType.CHECKBOX);
 
 		List<String> values = checkBoxList.getValue(ArrayList.class, String.class);
 		List<? extends Listable> listableList = checkBoxList.getListables();
@@ -50,9 +50,9 @@ public class CheckBoxListWriter extends AbstractControlWriter {
 		boolean appendSym = !checkBoxList.getUplAttribute(boolean.class, "flow");
 		for (Listable listable : listableList) {
 			writer.write("<input type=\"checkbox\"");
-			this.writeTagName(writer, checkBoxList);
-			this.writeTagStyleClass(writer, checkBoxList);
-			this.writeTagStyle(writer, checkBoxList);
+			writeTagName(writer, checkBoxList);
+			writeTagStyleClass(writer, checkBoxList);
+			writeTagStyle(writer, checkBoxList);
 
 			String key = listable.getListKey();
 			if (values != null && values.contains(key)) {

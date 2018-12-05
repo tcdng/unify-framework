@@ -58,7 +58,7 @@ public class MonthInYearListCommand extends AbstractZeroParamsListCommand {
 	private FactoryMap<Locale, List<? extends Listable>> monthInYear;
 
 	public MonthInYearListCommand() {
-		this.monthInYear = new FactoryMap<Locale, List<? extends Listable>>() {
+		monthInYear = new FactoryMap<Locale, List<? extends Listable>>() {
 
 			@Override
 			protected List<? extends Listable> create(Locale locale, Object... params) throws Exception {
@@ -81,6 +81,6 @@ public class MonthInYearListCommand extends AbstractZeroParamsListCommand {
 
 	@Override
 	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return this.monthInYear.get(locale);
+		return monthInYear.get(locale);
 	}
 }

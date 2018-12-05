@@ -41,7 +41,7 @@ public class ClusterNodeListCommand extends AbstractZeroParamsListCommand {
 
 	@Override
 	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return this.clusterManager
+		return clusterManager
 				.findClusterNodes((ClusterNodeQuery) new ClusterNodeQuery().ignoreEmptyCriteria(true).order("nodeId"));
 	}
 }

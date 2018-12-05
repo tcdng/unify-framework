@@ -96,7 +96,7 @@ public class PackableDocumentValueStoreTest extends AbstractUnifyComponentTest {
 
 	@Override
 	protected void onSetup() throws Exception {
-		this.custDocConfig = new PackableDocConfig("customerConfig",
+		custDocConfig = new PackableDocConfig("customerConfig",
 				new PackableDocConfig.FieldConfig("name", String.class),
 				new PackableDocConfig.FieldConfig("birthDt", Date.class),
 				new PackableDocConfig.FieldConfig("balance", BigDecimal.class),
@@ -106,7 +106,7 @@ public class PackableDocumentValueStoreTest extends AbstractUnifyComponentTest {
 				new PackableDocConfig.FieldConfig("address.line2", String.class),
 				new PackableDocConfig.FieldConfig("modeList", List.class));
 
-		this.addressDocConfig = new PackableDocConfig("addressConfig",
+		addressDocConfig = new PackableDocConfig("addressConfig",
 				new PackableDocConfig.FieldConfig("line1", String.class),
 				new PackableDocConfig.FieldConfig("line2", String.class));
 	}

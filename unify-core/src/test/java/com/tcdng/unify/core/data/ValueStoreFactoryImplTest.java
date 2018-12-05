@@ -41,8 +41,8 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testGetValueStore() throws Exception {
-		ValueStoreFactory vsFactory = (ValueStoreFactory) this
-				.getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
+		ValueStoreFactory vsFactory = (ValueStoreFactory) getComponent(
+				ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
 
 		ValueStore vs1 = vsFactory.getValueStore(new PackableDoc(custDocConfig, false), 0);
 		ValueStore vs2 = vsFactory.getValueStore(new Customer(), 0);
@@ -56,16 +56,15 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testGetValueStoreWithNullSource() throws Exception {
-		ValueStoreFactory vsFactory = (ValueStoreFactory) this
-				.getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
+		ValueStoreFactory vsFactory = (ValueStoreFactory) getComponent(
+				ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
 		ValueStore vs1 = vsFactory.getValueStore(null, 0);
 		assertNull(vs1);
 	}
 
 	@Override
 	protected void onSetup() throws Exception {
-		this.custDocConfig = new PackableDocConfig("customerConfig",
-				new PackableDocConfig.FieldConfig("name", String.class),
+		custDocConfig = new PackableDocConfig("customerConfig", new PackableDocConfig.FieldConfig("name", String.class),
 				new PackableDocConfig.FieldConfig("birthDt", Date.class),
 				new PackableDocConfig.FieldConfig("balance", BigDecimal.class),
 				new PackableDocConfig.FieldConfig("id", Long.class),

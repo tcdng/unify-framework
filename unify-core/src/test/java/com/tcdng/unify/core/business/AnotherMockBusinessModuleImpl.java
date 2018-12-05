@@ -31,12 +31,12 @@ public class AnotherMockBusinessModuleImpl extends AbstractBusinessModule implem
 
 	@Override
 	public Long createLoanAccount(LoanAccount loanAccount) throws UnifyException {
-		return (Long) this.db().create(loanAccount);
+		return (Long) db().create(loanAccount);
 	}
 
 	@Override
 	public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
-		return this.db().list(LoanAccount.class, loanAccountId);
+		return db().list(LoanAccount.class, loanAccountId);
 	}
 
 }

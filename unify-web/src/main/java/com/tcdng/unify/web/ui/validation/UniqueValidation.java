@@ -46,20 +46,20 @@ public class UniqueValidation extends AbstractPageValidation {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
-		Class<? extends Entity> validationClazz = (Class<? extends Entity>) this.getUplAttribute(Class.class, "type");
+		Class<? extends Entity> validationClazz = (Class<? extends Entity>) getUplAttribute(Class.class, "type");
 		if (validationClazz == null) {
 			validationClazz = (Class<? extends Entity>) dataTransfer.getValidationClass();
 		}
 
-		Class<?> idClazz = (Class<?>) this.getUplAttribute(Class.class, "idType");
+		Class<?> idClazz = (Class<?>) getUplAttribute(Class.class, "idType");
 		if (idClazz == null) {
 			idClazz = dataTransfer.getValidationIdClass();
 		}
 
 		if (validationClazz != null) {
 			Query<? extends Entity> criteria = new Query(validationClazz);
-			String idProperty = this.getUplAttribute(String.class, "idProperty");
-			Object id = this.getTransferValue(idClazz, idProperty, dataTransfer);
+			String idProperty = getUplAttribute(String.class, "idProperty");
+			Object id = getTransferValue(idClazz, idProperty, dataTransfer);
 			if (id != null) {
 				criteria.notEqual("id", id);
 			}
@@ -92,13 +92,13 @@ public class UniqueValidation extends AbstractPageValidation {
 
 			if (sb.length() > 0 && ((GenericBusinessModule) this
 					.getComponent(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)).countAll(criteria) > 0) {
-				String message = this.getSessionMessage("validation.uniquerecordexists", sb.toString());
-				this.addValidationFail((Control) widgets.get(0), "unique", message);
+				String message = getSessionMessage("validation.uniquerecordexists", sb.toString());
+				addValidationFail((Control) widgets.get(0), "unique", message);
 				return false;
 			}
 		}
 
-		this.addValidationPass((Control) widgets.get(0), null);
+		addValidationPass((Control) widgets.get(0), null);
 		return true;
 	}
 

@@ -30,6 +30,6 @@ public class LoanDisbursementQuery extends AbstractTestEntityQuery<LoanDisbursem
 	}
 
 	public LoanDisbursementQuery loanAccountId(Long loanAccountId) {
-		return (LoanDisbursementQuery) this.equals("loanAccountId", loanAccountId);
+		return (LoanDisbursementQuery) equals("loanAccountId", loanAccountId);
 	}
 }

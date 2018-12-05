@@ -49,7 +49,7 @@ public class ShiftButtonsWriter extends AbstractControlWriter {
 		bottomCtrl.setDisabled(disabled);
 
 		writer.write("<div");
-		this.writeTagAttributes(writer, shiftButtons);
+		writeTagAttributes(writer, shiftButtons);
 		writer.write(">");
 		writer.writeStructureAndContent(topCtrl);
 		writer.writeHtmlFixedSpace();

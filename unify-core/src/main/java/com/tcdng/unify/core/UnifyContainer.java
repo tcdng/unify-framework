@@ -399,9 +399,8 @@ public class UnifyContainer {
 
 		// Initialization
 		started = true;
-		requestContextManager = (RequestContextManager) this
-				.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-		uplCompiler = (UplCompiler) this.getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
+		requestContextManager = (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+		uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
 
 		// Generate and install proxy business module objects
 		logInfo("Generating and installing proxy business module objects...");
@@ -410,16 +409,15 @@ public class UnifyContainer {
 			if (pluginMap == null) {
 				pluginMap = Collections.emptyMap();
 			}
-			UnifyComponentConfig proxyUnifyComponentConfig = this
-					.generateInstallBusinessModuleProxyObjects(unifyComponentConfig, pluginMap);
-			InternalUnifyComponentInfo iuc = this.getInternalUnifyComponentInfo(proxyUnifyComponentConfig.getName());
+			UnifyComponentConfig proxyUnifyComponentConfig = generateInstallBusinessModuleProxyObjects(unifyComponentConfig, pluginMap);
+			InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(proxyUnifyComponentConfig.getName());
 			iuc.setUnifyComponentConfig(proxyUnifyComponentConfig);
 		}
 
 		// Set proxy broadcast methods
 		logInfo("Setting broadcast proxy methods...");
 		for (BroadcastInfo broadcastInfo : broadcastInfoMap.values()) {
-			InternalUnifyComponentInfo iuc = this.getInternalUnifyComponentInfo(broadcastInfo.getComponentName());
+			InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(broadcastInfo.getComponentName());
 			Method method = ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName(), String[].class);
 			broadcastInfo.setMethod(method);
 		}
@@ -427,10 +425,8 @@ public class UnifyContainer {
 		logInfo("Generation and installation of proxy objects completed");
 
 		// Cluster manager
-		clusterManager = (ClusterManagerBusinessModule) this
-				.getComponent(ApplicationComponents.APPLICATION_CLUSTERMANAGER);
-		userSessionManager = (UserSessionManager) this
-				.getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
+		clusterManager = (ClusterManagerBusinessModule) getComponent(ApplicationComponents.APPLICATION_CLUSTERMANAGER);
+		userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
 
 		// Run application startup module
 		logInfo("Initiating application bootup module startup...");
@@ -438,7 +434,7 @@ public class UnifyContainer {
 		if (bootComponentName == null) {
 			bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTMODULE;
 		}
-		applicationBootModule = (BootModule) this.getComponent(bootComponentName);
+		applicationBootModule = (BootModule) getComponent(bootComponentName);
 		applicationBootModule.startup();
 		logInfo("Application bootup completed...");
 
@@ -449,7 +445,7 @@ public class UnifyContainer {
 
 		// Schedule periodic tasks
 		logInfo("Scheduling periodic tasks...");
-		TaskManager taskManager = (TaskManager) this.getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
+		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
 		for (Map.Entry<String, Map<String, Periodic>> entry1 : componentPeriodMethodMap.entrySet()) {
 			logInfo("Intializing component [{0}] with periodic methods...", entry1.getKey());
 			getComponent(entry1.getKey());

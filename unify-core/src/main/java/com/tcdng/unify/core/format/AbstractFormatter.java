@@ -37,17 +37,17 @@ public abstract class AbstractFormatter<T> extends AbstractUplComponent implemen
 
 	@Override
 	public Locale getLocale() throws UnifyException {
-		return this.getUplAttribute(Locale.class, "locale");
+		return getUplAttribute(Locale.class, "locale");
 	}
 
 	@Override
 	public FormatHelper getFormatHelper() throws UnifyException {
-		return (FormatHelper) this.getComponent(ApplicationComponents.APPLICATION_FORMATHELPER);
+		return (FormatHelper) getComponent(ApplicationComponents.APPLICATION_FORMATHELPER);
 	}
 
 	@Override
 	public Class<T> getDataType() {
-		return this.dataType;
+		return dataType;
 	}
 
 	@Override

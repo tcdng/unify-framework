@@ -27,13 +27,13 @@ public abstract class AbstractTransformCache<T, U, V> extends AbstractCache<T, U
 
 	@Override
 	public V transformPut(T key, U object, long expirationTime) throws UnifyException {
-		this.put(key, object, expirationTime);
-		return this.transformCachedObject(object);
+		put(key, object, expirationTime);
+		return transformCachedObject(object);
 	}
 
 	@Override
 	public V getTransformed(T key) throws UnifyException {
-		return this.transformCachedObject(this.get(key));
+		return transformCachedObject(get(key));
 	}
 
 	protected abstract V transformCachedObject(U cachedObject) throws UnifyException;

@@ -41,7 +41,7 @@ public abstract class AbstractJsonArrayConverter<T> implements JsonValueConverte
 		JsonArray array = jsonValue.asArray();
 		T[] result = (T[]) Array.newInstance(clazz, array.size());
 		for (int i = 0; i < result.length; i++) {
-			result[i] = this.getValue(array.get(i));
+			result[i] = getValue(array.get(i));
 		}
 		return result;
 	}
@@ -52,7 +52,7 @@ public abstract class AbstractJsonArrayConverter<T> implements JsonValueConverte
 		JsonArray array = (JsonArray) Json.array();
 		T[] arrayValues = (T[]) value;
 		for (int i = 0; i < arrayValues.length; i++) {
-			array.add(this.setValue(arrayValues[i]));
+			array.add(setValue(arrayValues[i]));
 		}
 		return array;
 	}

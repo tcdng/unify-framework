@@ -154,6 +154,6 @@ public class BusinessModuleTest extends AbstractUnifyComponentTest {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onTearDown() throws Exception {
-		this.deleteAll(LoanDisbursement.class, LoanAccount.class, Account.class);
+		deleteAll(LoanDisbursement.class, LoanAccount.class, Account.class);
 	}
 }

@@ -38,7 +38,7 @@ public abstract class AbstractCache<T, U> extends AbstractUnifyComponent impleme
 	private FactoryMap<T, CacheEntry> cacheEntries;
 
 	public AbstractCache() {
-		this.cacheEntries = new FactoryMap<T, CacheEntry>() {
+		cacheEntries = new FactoryMap<T, CacheEntry>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			protected CacheEntry create(T key, Object... params) throws Exception {
@@ -49,44 +49,44 @@ public abstract class AbstractCache<T, U> extends AbstractUnifyComponent impleme
 
 	@Override
 	public U put(T key, U object) throws UnifyException {
-		return this.put(key, object, defaultExpiryPeriod);
+		return put(key, object, defaultExpiryPeriod);
 	}
 
 	@Override
 	public U put(T key, U object, long expiryPeriod) throws UnifyException {
-		this.cacheEntries.remove(key);
-		this.cacheEntries.get(key, object, expiryPeriod);
+		cacheEntries.remove(key);
+		cacheEntries.get(key, object, expiryPeriod);
 		return object;
 	}
 
 	@Override
 	public U get(T key) throws UnifyException {
-		if (this.cacheEntries.isKey(key)) {
-			return this.cacheEntries.get(key).getObject();
+		if (cacheEntries.isKey(key)) {
+			return cacheEntries.get(key).getObject();
 		}
 		return null;
 	}
 
 	@Override
 	public U remove(T key) throws UnifyException {
-		return this.cacheEntries.remove(key).getObject();
+		return cacheEntries.remove(key).getObject();
 	}
 
 	@Override
 	public void clear() throws UnifyException {
-		this.cacheEntries.clear();
+		cacheEntries.clear();
 	}
 
 	@Override
 	public int size() {
-		return this.cacheEntries.size();
+		return cacheEntries.size();
 	}
 
 	@Override
 	@Expirable(cycleInSec = 20)
 	public void removeExpiredCacheEntries() throws UnifyException {
 		long currentTime = System.currentTimeMillis();
-		for (Iterator<Map.Entry<T, CacheEntry>> it = this.cacheEntries.entrySet().iterator(); it.hasNext();) {
+		for (Iterator<Map.Entry<T, CacheEntry>> it = cacheEntries.entrySet().iterator(); it.hasNext();) {
 			Map.Entry<T, CacheEntry> entry = it.next();
 			if (currentTime >= entry.getValue().getTimeToExpire()) {
 				it.remove();
@@ -115,11 +115,11 @@ public abstract class AbstractCache<T, U> extends AbstractUnifyComponent impleme
 		public CacheEntry(U object, long expiryPeriod) {
 			this.expiryPeriod = expiryPeriod * 1000L;
 			this.object = object;
-			this.getObject();
+			getObject();
 		}
 
 		public U getObject() {
-			this.timeToExpire = System.currentTimeMillis() + this.expiryPeriod;
+			timeToExpire = System.currentTimeMillis() + expiryPeriod;
 			return object;
 		}
 

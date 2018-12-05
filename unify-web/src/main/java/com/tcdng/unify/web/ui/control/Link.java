@@ -30,7 +30,7 @@ public class Link extends AbstractControl {
 
 	@Override
 	public boolean isContainerDisabled() throws UnifyException {
-		return super.isContainerDisabled() || !this.isContainerEditable();
+		return super.isContainerDisabled() || !isContainerEditable();
 	}
 
 	@Override

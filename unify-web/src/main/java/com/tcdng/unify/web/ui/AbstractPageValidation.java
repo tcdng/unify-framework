@@ -51,7 +51,7 @@ public abstract class AbstractPageValidation extends AbstractBehavior implements
 	}
 
 	public String getBorderErrStyle() throws UnifyException {
-		return this.getUplAttribute(String.class, "borderErrStyle");
+		return getUplAttribute(String.class, "borderErrStyle");
 	}
 
 	/**
@@ -67,7 +67,7 @@ public abstract class AbstractPageValidation extends AbstractBehavior implements
 	 *             if an error occurs
 	 */
 	protected void addValidationPass(Control control, String validationCode) throws UnifyException {
-		this.getRequestContextUtil().addRequestValidationInfo(control.getId(),
+		getRequestContextUtil().addRequestValidationInfo(control.getId(),
 				new ValidationInfo(control, validationCode));
 	}
 
@@ -84,8 +84,8 @@ public abstract class AbstractPageValidation extends AbstractBehavior implements
 	 *             if an error occurs
 	 */
 	protected void addValidationFail(Control control, String validationCode, String message) throws UnifyException {
-		this.getRequestContextUtil().addRequestValidationInfo(control.getId(),
-				new ValidationInfo(control, validationCode, message, this.getBorderErrStyle()));
+		getRequestContextUtil().addRequestValidationInfo(control.getId(),
+				new ValidationInfo(control, validationCode, message, getBorderErrStyle()));
 	}
 
 	/**
@@ -99,7 +99,7 @@ public abstract class AbstractPageValidation extends AbstractBehavior implements
 	 *             if an error occurs
 	 */
 	protected <T> T getTransferValue(Class<T> clazz, DataTransferBlock transferBlock) throws UnifyException {
-		return this.convert(clazz, transferBlock.getValue(), null);
+		return convert(clazz, transferBlock.getValue(), null);
 	}
 
 	/**
@@ -117,7 +117,7 @@ public abstract class AbstractPageValidation extends AbstractBehavior implements
 	protected <T> T getTransferValue(Class<T> clazz, String property, DataTransfer transfer) throws UnifyException {
 		for (DataTransferBlock transferBlock : transfer.getDataTransferBlocks()) {
 			if (property.equals(transferBlock.getLongProperty()) || property.equals(transferBlock.getShortProperty())) {
-				return this.convert(clazz, transferBlock.getValue(), null);
+				return convert(clazz, transferBlock.getValue(), null);
 			}
 		}
 

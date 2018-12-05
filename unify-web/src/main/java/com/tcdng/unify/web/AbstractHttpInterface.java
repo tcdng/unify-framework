@@ -60,9 +60,9 @@ public abstract class AbstractHttpInterface extends AbstractUnifyWebInterface {
 	protected HttpApplicationServlet createHttpServlet() throws UnifyException {
 		HttpApplicationServlet httpApplicationServlet = new HttpApplicationServlet(true); // Standalone
 		httpApplicationServlet.setup(this,
-				(RequestContextManager) this.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER),
-				(ApplicationController) this.getComponent(WebApplicationComponents.APPLICATION_HTTPCONTROLLER),
-				(UserSessionManager) this.getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER));
+				(RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER),
+				(ApplicationController) getComponent(WebApplicationComponents.APPLICATION_HTTPCONTROLLER),
+				(UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER));
 		return httpApplicationServlet;
 	}
 

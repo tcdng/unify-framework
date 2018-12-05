@@ -44,9 +44,9 @@ public class FileAttachmentWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		FileAttachment fileAttachment = (FileAttachment) widget;
 		writer.write("<div");
-		this.writeTagAttributes(writer, fileAttachment);
+		writeTagAttributes(writer, fileAttachment);
 		writer.write("><div style=\"display:table;border-collapse:collapse;width:100%;\">");
-		String noFilename = this.getSessionMessage("fileattachment.noname");
+		String noFilename = getSessionMessage("fileattachment.noname");
 		FileAttachmentsInfo fileAttachmentsInfo = fileAttachment.getAttachmentsInfo();
 		if (fileAttachmentsInfo != null) {
 			boolean isContainerDisabled = fileAttachment.isContainerDisabled();
@@ -82,7 +82,7 @@ public class FileAttachmentWriter extends AbstractControlWriter {
 				if (!fileAttachmentsInfo.isAdhoc()) {
 					String description = fileAttachmentInfo.getDescription();
 					if (description == null) {
-						description = this.getSessionMessage("fileattachment.label", i);
+						description = getSessionMessage("fileattachment.label", i);
 					}
 
 					writer.write("<div class=\"falabel\">");

@@ -109,7 +109,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		ContentPanel contentPanel = (ContentPanel) container;
 		if (contentPanel.getPageCount() > 0) {
 			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
-			RequestContextUtil rcUtil = this.getRequestContextUtil();
+			RequestContextUtil rcUtil = getRequestContextUtil();
 			writer.write("<div id=\"").write(contentPanel.getHintPanelId()).write("\" class=\"cphint\"></div>");
 			writer.write("<div id=\"").write(contentPanel.getBusyIndicatorId()).write("\" class=\"cpbusy\">");
 			writer.write("<img class=\"cpimage\" src=\"");

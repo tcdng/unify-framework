@@ -32,18 +32,18 @@ public class UplAttributesInfo {
 	}
 
 	public Set<String> getAttributes() {
-		return this.uplAttributeInfoMap.keySet();
+		return uplAttributeInfoMap.keySet();
 	}
 
 	public boolean isAttribute(String name) {
-		return this.uplAttributeInfoMap.containsKey(name);
+		return uplAttributeInfoMap.containsKey(name);
 	}
 
 	public UplAttributeInfo getUplAttributeInfo(String attributeName) {
-		return this.uplAttributeInfoMap.get(attributeName);
+		return uplAttributeInfoMap.get(attributeName);
 	}
 
 	public int size() {
-		return this.uplAttributeInfoMap.size();
+		return uplAttributeInfoMap.size();
 	}
 }

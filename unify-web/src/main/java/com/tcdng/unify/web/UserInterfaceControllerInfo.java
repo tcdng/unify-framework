@@ -40,10 +40,10 @@ public class UserInterfaceControllerInfo extends ControllerInfo {
 	}
 
 	public BindingInfo getBindingInfo(String id) {
-		return this.idPropertyBindingMap.get(id);
+		return idPropertyBindingMap.get(id);
 	}
 
 	public void addBindings(Map<String, BindingInfo> pageNamePropertyBindingMap) {
-		this.idPropertyBindingMap.putAll(pageNamePropertyBindingMap);
+		idPropertyBindingMap.putAll(pageNamePropertyBindingMap);
 	}
 }

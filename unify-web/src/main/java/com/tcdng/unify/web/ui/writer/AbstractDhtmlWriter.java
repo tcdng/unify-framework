@@ -662,7 +662,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 	}
 
 	protected RequestContextUtil getRequestContextUtil() throws UnifyException {
-		return (RequestContextUtil) this.getComponent(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL);
+		return (RequestContextUtil) getComponent(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL);
 	}
 
 	protected PageManager getPageManager() throws UnifyException {

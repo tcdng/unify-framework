@@ -42,7 +42,7 @@ public class ImageWriter extends AbstractTargetControlWriter {
 	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
 		Image imageCtrl = (Image) targetControl;
 		writer.write("<img");
-		this.writeTagAttributes(writer, imageCtrl);
+		writeTagAttributes(writer, imageCtrl);
 		writer.write(" src=\"");
 		Object image = imageCtrl.getValue();
 		if (image instanceof ImageGenerator) {
@@ -53,7 +53,7 @@ public class ImageWriter extends AbstractTargetControlWriter {
 
 		if (image != null) {
 			String imageName = "Img_" + imageCtrl.getId() + '_' + (new Date().getTime());
-			this.setSessionAttribute(imageName, image);
+			setSessionAttribute(imageName, image);
 			writer.writeScopeImageContextURL(imageName);
 			writer.writeURLParameter("clearOnRead", "true");
 		} else {

@@ -43,7 +43,7 @@ public class FileDownload extends Button {
 	@Action
 	public void download() throws UnifyException {
 		DownloadFile downloadFile = null;
-		String fileSrc = this.getUplAttribute(String.class, "fileSrc");
+		String fileSrc = getUplAttribute(String.class, "fileSrc");
 		if (!StringUtils.isBlank(fileSrc)) {
 			byte[] data = IOUtils.readFileResourceInputStream(fileSrc);
 			String fileName = fileSrc;
@@ -54,22 +54,22 @@ public class FileDownload extends Button {
 
 			downloadFile = new DownloadFile(fileName, ContentTypeConstants.APPLICATION_OCTETSTREAM, data);
 		} else {
-			String fileProperty = this.getUplAttribute(String.class, "fileProperty");
+			String fileProperty = getUplAttribute(String.class, "fileProperty");
 			if (!StringUtils.isBlank(fileProperty)) {
-				downloadFile = (DownloadFile) this.getValue(fileProperty);
+				downloadFile = (DownloadFile) getValue(fileProperty);
 			} else {
-				String handler = this.getUplAttribute(String.class, "handler");
+				String handler = getUplAttribute(String.class, "handler");
 				if (!StringUtils.isBlank(handler)) {
-					FileDownloadHandler fileDownloadHandler = (FileDownloadHandler) this.getComponent(handler);
-					String id = this.getRequestTarget(String.class);
+					FileDownloadHandler fileDownloadHandler = (FileDownloadHandler) getComponent(handler);
+					String id = getRequestTarget(String.class);
 					downloadFile = fileDownloadHandler.handleFileDownload(id);
 				}
 			}
 		}
 
 		if (downloadFile != null) {
-			this.setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
-			this.setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
+			setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
+			setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
 		}
 	}
 

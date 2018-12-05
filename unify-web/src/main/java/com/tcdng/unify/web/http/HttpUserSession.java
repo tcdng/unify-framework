@@ -39,28 +39,28 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
 	public HttpUserSession(String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
 			String remoteUser, String remoteViewer, UserPlatform platform) {
-		this.sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), uriBase, contextPath,
+		sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), uriBase, contextPath,
 				remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
 	}
 
 	@Override
 	public String getRemoteAddress() {
-		return this.sessionContext.getRemoteAddress();
+		return sessionContext.getRemoteAddress();
 	}
 
 	@Override
 	public String getRemoteHost() {
-		return this.sessionContext.getRemoteHost();
+		return sessionContext.getRemoteHost();
 	}
 
 	@Override
 	public String getRemoteUser() {
-		return this.sessionContext.getRemoteUser();
+		return sessionContext.getRemoteUser();
 	}
 
 	@Override
 	public String getRemoteViewer() {
-		return this.sessionContext.getRemoteViewer();
+		return sessionContext.getRemoteViewer();
 	}
 
 	@Override

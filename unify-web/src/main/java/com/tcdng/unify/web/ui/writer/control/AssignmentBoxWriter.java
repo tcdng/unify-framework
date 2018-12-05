@@ -39,13 +39,13 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
 		AssignmentBox assignmentBox = (AssignmentBox) widget;
 		assignmentBox.updateState();
 		writer.write("<div");
-		this.writeTagAttributes(writer, assignmentBox);
+		writeTagAttributes(writer, assignmentBox);
 		writer.write(">");
 
 		writer.write("<div class=\"abftable\">");
 		writer.write("<div class=\"abrow\">");
-		this.writeFilter(writer, assignmentBox, assignmentBox.getFilterSel1(), assignmentBox.getFilterCaption1());
-		this.writeFilter(writer, assignmentBox, assignmentBox.getFilterSel2(), assignmentBox.getFilterCaption2());
+		writeFilter(writer, assignmentBox, assignmentBox.getFilterSel1(), assignmentBox.getFilterCaption1());
+		writeFilter(writer, assignmentBox, assignmentBox.getFilterSel2(), assignmentBox.getFilterCaption2());
 		writer.write("</div></div>");
 
 		writer.write("<div class=\"abtable\">");

@@ -45,10 +45,10 @@ public class Label extends AbstractFormattedControl {
 	@Override
 	public boolean isLayoutCaption() throws UnifyException {
 		super.isLayoutCaption();
-		return this.getUplAttribute(boolean.class, "layoutCaption");
+		return getUplAttribute(boolean.class, "layoutCaption");
 	}
 
 	public boolean isHtmlEscape() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "htmlEscape");
+		return getUplAttribute(boolean.class, "htmlEscape");
 	}
 }

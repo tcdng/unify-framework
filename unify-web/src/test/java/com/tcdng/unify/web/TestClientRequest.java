@@ -34,12 +34,12 @@ public class TestClientRequest implements ClientRequest {
 
 	public TestClientRequest(String path) {
 		this.path = path;
-		this.parameters = new HashMap<String, Object>();
+		parameters = new HashMap<String, Object>();
 	}
 
 	@Override
 	public String getPath() {
-		return this.path;
+		return path;
 	}
 
 	@Override
@@ -49,15 +49,15 @@ public class TestClientRequest implements ClientRequest {
 
 	@Override
 	public Set<String> getParameterNames() {
-		return this.parameters.keySet();
+		return parameters.keySet();
 	}
 
 	@Override
 	public Object getParameter(String name) {
-		return this.parameters.get(name);
+		return parameters.get(name);
 	}
 
 	public void setParameter(String name, Object value) {
-		this.parameters.put(name, value);
+		parameters.put(name, value);
 	}
 }

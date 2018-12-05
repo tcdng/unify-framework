@@ -88,7 +88,7 @@ public class OptionsTextArea extends TextArea implements ListControl {
 	}
 
 	public String getPopupId() throws UnifyException {
-		return this.getPrefixedId("pop_");
+		return getPrefixedId("pop_");
 	}
 
 	public String getFramePanelId() throws UnifyException {
@@ -100,7 +100,7 @@ public class OptionsTextArea extends TextArea implements ListControl {
 	}
 
 	private ListControlUtils getListControlUtils() throws UnifyException {
-		return (ListControlUtils) this.getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
+		return (ListControlUtils) getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
 	}
 
 }

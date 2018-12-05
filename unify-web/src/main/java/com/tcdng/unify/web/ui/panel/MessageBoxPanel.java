@@ -35,34 +35,34 @@ public class MessageBoxPanel extends AbstractPanel {
 	public void switchState() throws UnifyException {
 		super.switchState();
 
-		this.setVisible("okBtn", false);
-		this.setVisible("yesBtn", false);
-		this.setVisible("noBtn", false);
-		this.setVisible("retryBtn", false);
-		this.setVisible("cancelBtn", false);
+		setVisible("okBtn", false);
+		setVisible("yesBtn", false);
+		setVisible("noBtn", false);
+		setVisible("retryBtn", false);
+		setVisible("cancelBtn", false);
 
-		MessageBox mbi = this.getValue(MessageBox.class);
+		MessageBox mbi = getValue(MessageBox.class);
 		switch (mbi.getMessageMode()) {
 		case OK_CANCEL:
-			this.setVisible("okBtn", true);
-			this.setVisible("cancelBtn", true);
+			setVisible("okBtn", true);
+			setVisible("cancelBtn", true);
 			break;
 		case RETRY_CANCEL:
-			this.setVisible("retryBtn", true);
-			this.setVisible("cancelBtn", true);
+			setVisible("retryBtn", true);
+			setVisible("cancelBtn", true);
 			break;
 		case YES_NO:
-			this.setVisible("yesBtn", true);
-			this.setVisible("noBtn", true);
+			setVisible("yesBtn", true);
+			setVisible("noBtn", true);
 			break;
 		case YES_NO_CANCEL:
-			this.setVisible("yesBtn", true);
-			this.setVisible("noBtn", true);
-			this.setVisible("cancelBtn", true);
+			setVisible("yesBtn", true);
+			setVisible("noBtn", true);
+			setVisible("cancelBtn", true);
 			break;
 		case OK:
 		default:
-			this.setVisible("okBtn", true);
+			setVisible("okBtn", true);
 			break;
 
 		}

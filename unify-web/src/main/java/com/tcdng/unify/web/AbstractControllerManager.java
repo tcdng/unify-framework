@@ -186,7 +186,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 			synchronized (sessionContext) {
 				controller = (Controller) sessionContext.getAttribute(pathParts.getBeanId());
 				if (controller == null) {
-					UnifyComponentConfig unifyComponentConfig = this.getComponentConfig(Controller.class,
+					UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class,
 							pathParts.getActBeanName());
 
 					if (unifyComponentConfig == null) {
@@ -230,7 +230,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 			if (controller.isUserInterface()) {
 				String documentPath = (String) request.getParameter(RequestParameterConstants.DOCUMENT);
 				if (documentPath != null) {
-					PageController docPageController = (PageController) this.getController(documentPath);
+					PageController docPageController = (PageController) getController(documentPath);
 					requestContextUtil.setRequestDocumentController(docPageController);
 				}
 
@@ -431,10 +431,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 						(PageControllerResponse) getUplComponent(defaultLocale, "!showpopupresponse", false) }));
 
 		defaultResultMap.put(ResultMappingConstants.REFRESH_SECTION, new Result(new PageControllerResponse[] {
-				(PageControllerResponse) this.getUplComponent(defaultLocale, "!refreshsectionresponse", false) }));
+				(PageControllerResponse) getUplComponent(defaultLocale, "!refreshsectionresponse", false) }));
 
 		defaultResultMap.put(ResultMappingConstants.VALIDATION_ERROR, new Result(new PageControllerResponse[] {
-				(PageControllerResponse) this.getUplComponent(defaultLocale, "!validationerrorresponse", false) }));
+				(PageControllerResponse) getUplComponent(defaultLocale, "!validationerrorresponse", false) }));
 	}
 
 	@Override
@@ -524,7 +524,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 			RemoteCallParams param = streamer.unmarshal(handler.getParamType(), remoteParam);
 			methodCode = handler.getMethodCode();
 			if (handler.isRestricted() && rbbInfo.isRemoteCallGate()) {
-				RemoteCallGate gate = (RemoteCallGate) this.getComponent(rbbInfo.getRemoteCallGateName());
+				RemoteCallGate gate = (RemoteCallGate) getComponent(rbbInfo.getRemoteCallGateName());
 				gate.grantPass(param.getClientAppCode(), methodCode);
 			}
 
@@ -594,10 +594,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 			Result result = null;
 			if (StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.DOCUMENT))
 					&& !requestContextUtil.isRemoteViewer()) {
-				pageController = (PageController) this.getController(SystemInfoConstants.UNAUTHORISED_CONTROLLER_NAME);
+				pageController = (PageController) getController(SystemInfoConstants.UNAUTHORISED_CONTROLLER_NAME);
 				result = pageControllerInfoMap.get(pageController.getName()).getResult(ResultMappingConstants.INDEX);
 			} else {
-				pageController = (PageController) this.getController(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
+				pageController = (PageController) getController(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
 				pageController.getPage().getWidgetByShortName("stackTrace").setVisible(!loginRequired);
 				result = pageControllerInfoMap.get(pageController.getName())
 						.getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
@@ -673,7 +673,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
 		// Resolve category
 		List<String> categoryList = DataUtils.convert(ArrayList.class, String.class,
-				this.getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT), null);
+				getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT), null);
 		UnifyConfigUtils.resolveConfigurationOverrides(resultMap, categoryList);
 
 		resultMap.putAll(defaultResultMap); // Set result mappings that can
@@ -688,7 +688,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 	}
 
 	private RemoteCallControllerInfo createRemoteCallControllerInfo(String controllerName) throws UnifyException {
-		Class<? extends RemoteCallController> typeClass = this.getComponentType(RemoteCallController.class,
+		Class<? extends RemoteCallController> typeClass = getComponentType(RemoteCallController.class,
 				controllerName);
 
 		// Get gate if present
@@ -720,7 +720,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 	}
 
 	private ResourceControllerInfo createResourceControllerInfo(String controllerName) throws UnifyException {
-		Class<? extends ResourceController> resourceControllerClass = this.getComponentType(ResourceController.class,
+		Class<? extends ResourceController> resourceControllerClass = getComponentType(ResourceController.class,
 				controllerName);
 		Map<String, BindingInfo> propertyBindingMap = new HashMap<String, BindingInfo>();
 		setIdRequestParameterBindings(resourceControllerClass, propertyBindingMap);

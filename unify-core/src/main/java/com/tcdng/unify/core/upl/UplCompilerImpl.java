@@ -496,7 +496,7 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
 		String source = uba.value();
 		String workingPath = getUnifyComponentContext().getWorkingPath();
 		List<String> categoryList = DataUtils.convert(ArrayList.class, String.class,
-				this.getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT), null);
+				getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT), null);
 		if (categoryList != null && !categoryList.isEmpty()) {
 			for (String category : categoryList) {
 				String categorySource = NameUtils.getFilenameByCategory(source, category);

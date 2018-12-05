@@ -34,21 +34,21 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
 
 	@Override
 	public void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
-		if (this.isConfigured()) {
+		if (isConfigured()) {
 			throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED,
 					dynamicSqlDataSourceConfig.getName());
 		}
-		this.innerConfigure(dynamicSqlDataSourceConfig);
+		innerConfigure(dynamicSqlDataSourceConfig);
 	}
 
 	@Override
 	public boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
-		if (this.isConfigured()) {
+		if (isConfigured()) {
 			// Get old pool
-			SqlConnectionPool oldConnectionPool = this.getSqlConnectionPool();
+			SqlConnectionPool oldConnectionPool = getSqlConnectionPool();
 
 			// Create new pool
-			this.innerConfigure(dynamicSqlDataSourceConfig);
+			innerConfigure(dynamicSqlDataSourceConfig);
 
 			// Terminate old pool
 			if (oldConnectionPool != null) {
@@ -63,17 +63,17 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
 
 	@Override
 	public boolean isConfigured() throws UnifyException {
-		return this.getDriver() != null;
+		return getDriver() != null;
 	}
 
 	private void innerConfigure(DynamicSqlDataSourceConfig dataSourceConfig) throws UnifyException {
-		this.setDialect((DataSourceDialect) this.getComponent(dataSourceConfig.getDialect()));
-		this.setDriver(dataSourceConfig.getDriver());
-		this.setConnectionUrl(dataSourceConfig.getConnectionUrl());
-		this.setUsername(dataSourceConfig.getDbUsername());
-		this.setPassword(dataSourceConfig.getDbPassword());
-		this.setMaxConnections(dataSourceConfig.getMaxConnection());
-		this.setShutdownOnTerminate(dataSourceConfig.isShutdownOnTerminate());
-		this.doInitConnectionPool();
+		setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
+		setDriver(dataSourceConfig.getDriver());
+		setConnectionUrl(dataSourceConfig.getConnectionUrl());
+		setUsername(dataSourceConfig.getDbUsername());
+		setPassword(dataSourceConfig.getDbPassword());
+		setMaxConnections(dataSourceConfig.getMaxConnection());
+		setShutdownOnTerminate(dataSourceConfig.isShutdownOnTerminate());
+		doInitConnectionPool();
 	}
 }

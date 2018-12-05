@@ -31,11 +31,11 @@ public abstract class AbstractMulticastClientCommunicator extends AbstractNetwor
 
 	@Override
 	public void open(InputStream in) throws UnifyException {
-		if (this.open) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, this.getName());
+		if (open) {
+			throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
 		}
-		this.onOpen(in);
-		this.open = true;
+		onOpen(in);
+		open = true;
 	}
 
 	/**

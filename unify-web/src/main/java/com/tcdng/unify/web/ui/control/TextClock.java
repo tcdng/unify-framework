@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.AbstractControl;
 public class TextClock extends AbstractControl {
 
 	public String getDateTitle() throws UnifyException {
-		return this.getUplAttribute(String.class, "dateTitle");
+		return getUplAttribute(String.class, "dateTitle");
 	}
 
 	public String getTimeTitle() throws UnifyException {
-		return this.getUplAttribute(String.class, "timeTitle");
+		return getUplAttribute(String.class, "timeTitle");
 	}
 
 	public String getDateId() throws UnifyException {
-		return this.getPrefixedId("date_");
+		return getPrefixedId("date_");
 	}
 
 	public String getTimeId() throws UnifyException {
-		return this.getPrefixedId("time_");
+		return getPrefixedId("time_");
 	}
 }

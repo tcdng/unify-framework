@@ -40,8 +40,8 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 
 	@Override
 	protected void onClose() throws UnifyException {
-		IOUtils.close(this.out);
-		this.out = null;
+		IOUtils.close(out);
+		out = null;
 	}
 
 	/**
@@ -54,9 +54,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeBytes(byte[] buffer) throws UnifyException {
 		try {
-			this.out.write(buffer);
+			out.write(buffer);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -74,9 +74,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeBytes(byte[] buffer, int offset, int length) throws UnifyException {
 		try {
-			this.out.write(buffer, offset, length);
+			out.write(buffer, offset, length);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -91,9 +91,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeBoolean(boolean data) throws UnifyException {
 		try {
-			this.out.writeBoolean(data);
+			out.writeBoolean(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -107,9 +107,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeByte(byte data) throws UnifyException {
 		try {
-			this.out.writeByte(data);
+			out.writeByte(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -124,9 +124,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeChar(char data) throws UnifyException {
 		try {
-			this.out.writeChar(data);
+			out.writeChar(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -141,9 +141,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeDouble(double data) throws UnifyException {
 		try {
-			this.out.writeDouble(data);
+			out.writeDouble(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -157,9 +157,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeFloat(float data) throws UnifyException {
 		try {
-			this.out.writeFloat(data);
+			out.writeFloat(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -174,9 +174,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeInt(int data) throws UnifyException {
 		try {
-			this.out.writeInt(data);
+			out.writeInt(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -191,9 +191,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeLong(long data) throws UnifyException {
 		try {
-			this.out.writeLong(data);
+			out.writeLong(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -208,9 +208,9 @@ public abstract class AbstractMulticastServerDataCommunicator extends AbstractMu
 	 */
 	protected void writeShort(short data) throws UnifyException {
 		try {
-			this.out.writeShort(data);
+			out.writeShort(data);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}

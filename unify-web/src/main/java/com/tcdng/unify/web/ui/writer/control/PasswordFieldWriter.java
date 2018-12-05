@@ -35,7 +35,7 @@ public class PasswordFieldWriter extends TextFieldWriter {
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		PasswordField passwordField = (PasswordField) widget;
-		this.writeTextField(writer, passwordField, "password");
+		writeTextField(writer, passwordField, "password");
 	}
 
 }

@@ -42,18 +42,18 @@ public class UplDescriptorValidation extends AbstractPageValidation {
 			DataTransferBlock transferBlock = dataTransfer.getDataTransferBlock(widget.getId());
 			if (transferBlock != null) {
 				try {
-					String descriptor = this.getTransferValue(String.class, transferBlock);
-					this.getUplComponent(this.getSessionLocale(), descriptor, false);
+					String descriptor = getTransferValue(String.class, transferBlock);
+					getUplComponent(getSessionLocale(), descriptor, false);
 				} catch (Exception e) {
 					String caption = widget.getUplAttribute(String.class, "caption");
-					String message = this.getSessionMessage("validation.invalidupldescriptor", caption);
-					this.addValidationFail((Control) widget, "upldescriptor", message);
+					String message = getSessionMessage("validation.invalidupldescriptor", caption);
+					addValidationFail((Control) widget, "upldescriptor", message);
 					pass = localPass = false;
 				}
 			}
 
 			if (localPass) {
-				this.addValidationPass((Control) widget, "upldescriptor");
+				addValidationPass((Control) widget, "upldescriptor");
 			}
 		}
 		return pass;

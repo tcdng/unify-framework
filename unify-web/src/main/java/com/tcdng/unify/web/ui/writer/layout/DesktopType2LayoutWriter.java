@@ -54,7 +54,7 @@ public class DesktopType2LayoutWriter extends AbstractDocumentLayoutWriter {
 			throws UnifyException {
 		boolean isCollapsible = layout.getUplAttribute(boolean.class, "collapsibleSidebar");
 		String docPageName = document.getId();
-		this.writeSection(writer, "header", document.getHeaderPanel());
+		writeSection(writer, "header", document.getHeaderPanel());
 		writer.write("<div class=\"midSection\">");
 		writer.write("<div class=\"cell\">");
 		writer.write("<div style=\"display:table; width:100%; height:100%\">");
@@ -74,7 +74,7 @@ public class DesktopType2LayoutWriter extends AbstractDocumentLayoutWriter {
 		writer.write("</div>");
 		writer.write("</div>");
 		writer.write("</div>");
-		this.writeSection(writer, "footer", document.getFooterPanel());
+		writeSection(writer, "footer", document.getFooterPanel());
 	}
 
 }

@@ -40,10 +40,10 @@ public class TitleBarWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		TitleBar titleBar = (TitleBar) widget;
 		writer.write("<div");
-		this.writeTagAttributes(writer, titleBar);
+		writeTagAttributes(writer, titleBar);
 		writer.write(">");
 		writer.write("<div class=\"tblabel\">");
-		this.writeCaption(writer, titleBar);
+		writeCaption(writer, titleBar);
 		writer.write("</div>");
 		writer.write("<div class=\"tbcontrols\">");
 		for (ChildControlInfo childControlInfo : titleBar.getChildControlInfos()) {

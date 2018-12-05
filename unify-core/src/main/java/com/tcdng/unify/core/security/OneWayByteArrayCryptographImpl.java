@@ -29,7 +29,7 @@ public class OneWayByteArrayCryptographImpl extends AbstractOneWayCryptograph im
 
 	@Override
 	public byte[] forwardTransform(byte[] value) throws UnifyException {
-		return this.encrypt(value);
+		return encrypt(value);
 	}
 
 	@Override
@@ -39,6 +39,6 @@ public class OneWayByteArrayCryptographImpl extends AbstractOneWayCryptograph im
 
 	@Override
 	public byte[] encrypt(byte[] toEncrypt) throws UnifyException {
-		return this.doEncrypt(toEncrypt);
+		return doEncrypt(toEncrypt);
 	}
 }

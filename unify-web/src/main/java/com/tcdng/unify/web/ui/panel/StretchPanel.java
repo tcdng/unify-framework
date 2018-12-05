@@ -30,6 +30,6 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 public class StretchPanel extends AbstractPanel {
 
 	public String getContentPageName() throws UnifyException {
-		return this.getPrefixedId("content");
+		return getPrefixedId("content");
 	}
 }

@@ -35,8 +35,8 @@ public class DecimalField extends IntegerField {
 
 	@Override
 	public void onPageInitialize() throws UnifyException {
-		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) this.getFormatter();
-		int scale = this.getUplAttribute(int.class, "scale");
+		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
+		int scale = getUplAttribute(int.class, "scale");
 		numberFormatter.setScale(scale);
 
 		super.onPageInitialize();

@@ -45,58 +45,58 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
 	private int currentSel;
 
 	public AbstractFlyoutMenu() {
-		this.visibleMenuItemMap = new HashMap<String, MenuItem>();
+		visibleMenuItemMap = new HashMap<String, MenuItem>();
 	}
 
 	@Override
 	public void onPageInitialize() throws UnifyException {
 		super.onPageInitialize();
-		this.currentSelCtrl = (Control) this.addInternalControl("!ui-hidden binding:currentSel");
+		currentSelCtrl = (Control) addInternalControl("!ui-hidden binding:currentSel");
 	}
 
 	@Override
 	public String getSelectId() throws UnifyException {
-		return this.getPrefixedId("sel_");
+		return getPrefixedId("sel_");
 	}
 
 	@Override
 	public String getSliderWinId() throws UnifyException {
-		return this.getPrefixedId("sldw_");
+		return getPrefixedId("sldw_");
 	}
 
 	@Override
 	public String getSliderId() throws UnifyException {
-		return this.getPrefixedId("sld_");
+		return getPrefixedId("sld_");
 	}
 
 	@Override
 	public String getNavId() throws UnifyException {
-		return this.getPrefixedId("nav_");
+		return getPrefixedId("nav_");
 	}
 
 	@Override
 	public String getBackButtonId() throws UnifyException {
-		return this.getPrefixedId("btnb_");
+		return getPrefixedId("btnb_");
 	}
 
 	@Override
 	public String getForwardButtonId() throws UnifyException {
-		return this.getPrefixedId("btnf_");
+		return getPrefixedId("btnf_");
 	}
 
 	@Override
 	public String getPopupId() throws UnifyException {
-		return this.getPrefixedId("pop_");
+		return getPrefixedId("pop_");
 	}
 
 	@Override
 	public String getPopupWinId() throws UnifyException {
-		return this.getPrefixedId("popw_");
+		return getPrefixedId("popw_");
 	}
 
 	@Override
 	public String getPopupContentId() throws UnifyException {
-		return this.getPrefixedId("popc_");
+		return getPrefixedId("popc_");
 	}
 
 	@Override
@@ -106,17 +106,17 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
 
 	@Override
 	public int getSliderGap() throws UnifyException {
-		return this.getUplAttribute(int.class, "sliderGap");
+		return getUplAttribute(int.class, "sliderGap");
 	}
 
 	@Override
 	public int getScrollRate() throws UnifyException {
-		return this.getUplAttribute(int.class, "scrollRate");
+		return getUplAttribute(int.class, "scrollRate");
 	}
 
 	@Override
 	public int getScrollStepRate() throws UnifyException {
-		return this.getUplAttribute(int.class, "scrollStepRate");
+		return getUplAttribute(int.class, "scrollStepRate");
 	}
 
 	@Override

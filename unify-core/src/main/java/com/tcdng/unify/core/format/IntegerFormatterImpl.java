@@ -36,9 +36,9 @@ public class IntegerFormatterImpl extends AbstractNumberFormatter<Integer> imple
 	@Override
 	public Integer parse(String string) throws UnifyException {
 		try {
-			return Integer.valueOf(this.getNumberFormat().parse(string).intValue());
+			return Integer.valueOf(getNumberFormat().parse(string).intValue());
 		} catch (ParseException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}

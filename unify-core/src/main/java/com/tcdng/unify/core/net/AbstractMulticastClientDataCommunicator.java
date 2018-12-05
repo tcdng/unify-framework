@@ -40,8 +40,8 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 
 	@Override
 	protected void onClose() throws UnifyException {
-		IOUtils.close(this.in);
-		this.in = null;
+		IOUtils.close(in);
+		in = null;
 	}
 
 	/**
@@ -55,9 +55,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected int readBytes(byte[] buffer) throws UnifyException {
 		try {
-			return this.in.read(buffer);
+			return in.read(buffer);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -77,9 +77,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected int readBytes(byte[] buffer, int offset, int length) throws UnifyException {
 		try {
-			return this.in.read(buffer, offset, length);
+			return in.read(buffer, offset, length);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -92,9 +92,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected boolean readBoolean() throws UnifyException {
 		try {
-			return this.in.readBoolean();
+			return in.readBoolean();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return false;
 	}
@@ -107,9 +107,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected byte readByte() throws UnifyException {
 		try {
-			return this.in.readByte();
+			return in.readByte();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -122,9 +122,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected char readChar() throws UnifyException {
 		try {
-			return this.in.readChar();
+			return in.readChar();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -137,9 +137,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected double readDouble() throws UnifyException {
 		try {
-			return this.in.readDouble();
+			return in.readDouble();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -152,9 +152,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected float readFloat() throws UnifyException {
 		try {
-			return this.in.readFloat();
+			return in.readFloat();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -167,9 +167,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected int readInt() throws UnifyException {
 		try {
-			return this.in.readInt();
+			return in.readInt();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -182,9 +182,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected long readLong() throws UnifyException {
 		try {
-			return this.in.readLong();
+			return in.readLong();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -197,9 +197,9 @@ public abstract class AbstractMulticastClientDataCommunicator extends AbstractMu
 	 */
 	protected short readShort() throws UnifyException {
 		try {
-			return this.in.readShort();
+			return in.readShort();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}

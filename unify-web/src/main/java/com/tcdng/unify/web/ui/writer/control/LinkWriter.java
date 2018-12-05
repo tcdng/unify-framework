@@ -37,9 +37,9 @@ public class LinkWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		Link link = (Link) widget;
 		writer.write("<a");
-		this.writeTagAttributes(writer, link);
+		writeTagAttributes(writer, link);
 		writer.write(">");
-		this.writeCaption(writer, link);
+		writeCaption(writer, link);
 		writer.write("</a>");
 	}
 }

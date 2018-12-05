@@ -41,17 +41,17 @@ public abstract class AbstractNetworkUnicastCommunicator extends AbstractUnifyCo
 
 	@Override
 	public void open(InputStream in, OutputStream out) throws UnifyException {
-		if (this.open) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, this.getName());
+		if (open) {
+			throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
 		}
-		this.onOpen(in, out);
-		this.open = true;
+		onOpen(in, out);
+		open = true;
 	}
 
 	@Override
 	public void close() throws UnifyException {
-		this.open = false;
-		this.onClose();
+		open = false;
+		onClose();
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public abstract class AbstractNetworkUnicastCommunicator extends AbstractUnifyCo
 
 	@Override
 	protected void onTerminate() throws UnifyException {
-		this.close();
+		close();
 	}
 
 	/**
@@ -80,7 +80,7 @@ public abstract class AbstractNetworkUnicastCommunicator extends AbstractUnifyCo
 	 *             the receive exception
 	 */
 	protected void throwReceiveException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, this.getName());
+		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, getName());
 	}
 
 	/**
@@ -92,7 +92,7 @@ public abstract class AbstractNetworkUnicastCommunicator extends AbstractUnifyCo
 	 *             the transmit exception
 	 */
 	protected void throwTransmitException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, this.getName());
+		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, getName());
 	}
 
 	/**

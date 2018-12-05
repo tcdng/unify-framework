@@ -35,22 +35,22 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
 public class Image extends AbstractTargetControl {
 
 	public String getSrc() throws UnifyException {
-		return this.getUplAttribute(String.class, "src");
+		return getUplAttribute(String.class, "src");
 	}
 
 	public String getSrcBinding() throws UnifyException {
-		return this.getUplAttribute(String.class, "srcBinding");
+		return getUplAttribute(String.class, "srcBinding");
 	}
 
 	public String getScope() throws UnifyException {
-		return this.getUplAttribute(String.class, "scope");
+		return getUplAttribute(String.class, "scope");
 	}
 
 	public boolean isClearOnRead() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "clearOnRead");
+		return getUplAttribute(boolean.class, "clearOnRead");
 	}
 
 	public boolean isAlwaysFetch() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "alwaysFetch");
+		return getUplAttribute(boolean.class, "alwaysFetch");
 	}
 }

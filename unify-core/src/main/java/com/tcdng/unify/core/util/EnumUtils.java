@@ -69,20 +69,20 @@ public final class EnumUtils {
 		private Map<String, EnumConst> mapByName;
 
 		public EnumConstMap(Class<? extends EnumConst> key) {
-			this.mapByCode = new HashMap<String, EnumConst>();
-			this.mapByName = new HashMap<String, EnumConst>();
+			mapByCode = new HashMap<String, EnumConst>();
+			mapByName = new HashMap<String, EnumConst>();
 			for (EnumConst enumConst : key.getEnumConstants()) {
-				this.mapByCode.put(enumConst.code(), enumConst);
-				this.mapByName.put(enumConst.name().toLowerCase(), enumConst);
+				mapByCode.put(enumConst.code(), enumConst);
+				mapByName.put(enumConst.name().toLowerCase(), enumConst);
 			}
 		}
 
 		public EnumConst getByCode(String code) {
-			return this.mapByCode.get(code);
+			return mapByCode.get(code);
 		}
 
 		public EnumConst getByName(String name) {
-			return this.mapByName.get(name.toLowerCase());
+			return mapByName.get(name.toLowerCase());
 		}
 	}
 }

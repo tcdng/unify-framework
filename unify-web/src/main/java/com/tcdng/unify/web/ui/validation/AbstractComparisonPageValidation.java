@@ -46,24 +46,24 @@ public abstract class AbstractComparisonPageValidation extends AbstractPageValid
 		DataTransferBlock transferBlock1 = dataTransfer.getDataTransferBlock(widgets.get(0).getId());
 		DataTransferBlock transferBlock2 = dataTransfer.getDataTransferBlock(widgets.get(1).getId());
 		if (transferBlock1 != null && transferBlock2 != null) {
-			String value1 = this.getTransferValue(String.class, transferBlock1);
-			String value2 = this.getTransferValue(String.class, transferBlock2);
+			String value1 = getTransferValue(String.class, transferBlock1);
+			String value2 = getTransferValue(String.class, transferBlock2);
 			if (value1 != null && value2 != null) {
-				if (this.validateSame != value1.equals(value2)) {
+				if (validateSame != value1.equals(value2)) {
 					String caption1 = widgets.get(0).getUplAttribute(String.class, "caption");
 					String caption2 = widgets.get(1).getUplAttribute(String.class, "caption");
 					String message = null;
-					if (this.validateSame) {
-						message = this.getSessionMessage("validation.notsame", caption1, caption2);
+					if (validateSame) {
+						message = getSessionMessage("validation.notsame", caption1, caption2);
 					} else {
-						message = this.getSessionMessage("validation.same", caption1, caption2);
+						message = getSessionMessage("validation.same", caption1, caption2);
 					}
-					this.addValidationFail((Control) widgets.get(0), validationCode, message);
+					addValidationFail((Control) widgets.get(0), validationCode, message);
 					return false;
 				}
 			}
 		}
-		this.addValidationPass((Control) widgets.get(0), this.validationCode);
+		addValidationPass((Control) widgets.get(0), validationCode);
 		return true;
 	}
 }

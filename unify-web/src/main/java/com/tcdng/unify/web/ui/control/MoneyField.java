@@ -49,8 +49,8 @@ public class MoneyField extends AbstractListPopupTextField {
 
 	@Override
 	public void onPageInitialize() throws UnifyException {
-		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) this.getFormatter();
-		int scale = this.getUplAttribute(int.class, "scale");
+		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
+		int scale = getUplAttribute(int.class, "scale");
 		numberFormatter.setScale(scale);
 
 		super.onPageInitialize();
@@ -74,10 +74,10 @@ public class MoneyField extends AbstractListPopupTextField {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getFacadeStringValue() throws UnifyException {
-		Money money = this.getValue(Money.class);
+		Money money = getValue(Money.class);
 		if (money != null) {
 			StringBuilder sb = new StringBuilder();
-			Formatter<BigDecimal> formatter = this.getUplAttribute(Formatter.class, "formatter");
+			Formatter<BigDecimal> formatter = getUplAttribute(Formatter.class, "formatter");
 			if (money.getAmount() != null) {
 				sb.append(formatter.format(money.getAmount()));
 			}
@@ -89,15 +89,15 @@ public class MoneyField extends AbstractListPopupTextField {
 	}
 
 	public String getCurrencyCode() throws UnifyException {
-		return this.getUplAttribute(String.class, "currency");
+		return getUplAttribute(String.class, "currency");
 	}
 
 	public String getFramePanelId() throws UnifyException {
-		return this.getPrefixedId("frm_");
+		return getPrefixedId("frm_");
 	}
 
 	public String getListPanelId() throws UnifyException {
-		return this.getPrefixedId("lst_");
+		return getPrefixedId("lst_");
 	}
 
 }

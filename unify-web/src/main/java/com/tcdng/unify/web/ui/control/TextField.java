@@ -36,19 +36,19 @@ import com.tcdng.unify.web.ui.AbstractFormattedControl;
 public class TextField extends AbstractFormattedControl {
 
 	public String getCase() throws UnifyException {
-		return this.getUplAttribute(String.class, "case");
+		return getUplAttribute(String.class, "case");
 	}
 
 	public String getFacadeStringValue() throws UnifyException {
-		return this.getStringValue();
+		return getStringValue();
 	}
 
 	public String getExtStyleClass() throws UnifyException {
-		return this.getUplAttribute(String.class, "extStyleClass");
+		return getUplAttribute(String.class, "extStyleClass");
 	}
 
 	public boolean getExtReadOnly() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "extReadOnly");
+		return getUplAttribute(boolean.class, "extReadOnly");
 	}
 
 	public ExtensionType getExtensionType() {

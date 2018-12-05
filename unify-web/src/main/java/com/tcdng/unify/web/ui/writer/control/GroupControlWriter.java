@@ -41,7 +41,7 @@ public class GroupControlWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		GroupControl groupControl = (GroupControl) widget;
 		writer.write("<div");
-		this.writeTagAttributes(writer, groupControl);
+		writeTagAttributes(writer, groupControl);
 		writer.write(">");
 		ValueStore valueStore = groupControl.getValueStore();
 		boolean space = groupControl.isSpace();

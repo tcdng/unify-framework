@@ -624,7 +624,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	private RequestContextUtil getRequestContextUtil() throws UnifyException {
-		return (RequestContextUtil) this.getComponent(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL);
+		return (RequestContextUtil) getComponent(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL);
 	}
 
 	private String encodeURLParameter(String parameter) throws UnifyException {

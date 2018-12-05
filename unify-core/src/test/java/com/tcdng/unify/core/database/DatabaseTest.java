@@ -2887,7 +2887,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	@SuppressWarnings({ "unchecked" })
 	@Override
 	protected void onTearDown() throws Exception {
-		this.deleteAll(User.class, ServerConfig.class, Author.class, Office.class, Fruit.class,
+		deleteAll(User.class, ServerConfig.class, Author.class, Office.class, Fruit.class,
 				ReportParameterOptions.class, ReportParameter.class, Report.class);
 	}
 }

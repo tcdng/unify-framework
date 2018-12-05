@@ -37,19 +37,19 @@ public class DelimitedBatchFileReader extends AbstractMultiLineTextFileRecordRea
 	@Override
 	public void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException {
 		super.open(input, configuration, file);
-		this.fieldDelimiterType = input.getParameter(FieldDelimiterType.class,
+		fieldDelimiterType = input.getParameter(FieldDelimiterType.class,
 				DelimitedBatchFileReaderInputConstants.FIELDDELIMITER);
 	}
 
 	@Override
 	protected String[] parseEntry(String entry) throws UnifyException {
-		String[] result = new String[this.getBatchFileConfig().getFieldConfigs().size()];
-		this.logDebug("Parsing delimited [{0}] in line number = {1}, delimiter = [{2}]", entry, this.getEntryCounter(),
+		String[] result = new String[getBatchFileConfig().getFieldConfigs().size()];
+		logDebug("Parsing delimited [{0}] in line number = {1}, delimiter = [{2}]", entry, getEntryCounter(),
 				fieldDelimiterType);
 		int index = 0;
 		int beginIndex = 0;
 		char ch = fieldDelimiterType.getCharacter();
-		for (BatchFileFieldConfig fieldConfig : this.getBatchFileConfig().getFieldConfigs()) {
+		for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigs()) {
 			int endIndex = 0;
 			if (entry.charAt(beginIndex) == '"') {
 				// Take care of quoted value

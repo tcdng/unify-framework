@@ -30,6 +30,6 @@ public class FeatureQuery extends Query<FeatureData> {
 	}
 
 	public FeatureQuery code(String code) {
-		return (FeatureQuery) this.equals("code", code);
+		return (FeatureQuery) equals("code", code);
 	}
 }

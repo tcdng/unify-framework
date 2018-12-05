@@ -87,12 +87,12 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
 		if (format) {
-			sb.append(this.getLineSeparator());
+			sb.append(getLineSeparator());
 		} else {
 			sb.append(' ');
 		}
 		sb.append("ALTER COLUMN ");
-		this.appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+		appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
 		return sb.toString();
 	}
 
@@ -112,7 +112,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
 		if (format) {
-			sb.append(this.getLineSeparator());
+			sb.append(getLineSeparator());
 		} else {
 			sb.append(' ');
 		}

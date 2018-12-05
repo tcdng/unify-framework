@@ -43,7 +43,7 @@ public class StringConcatFormatterImpl extends AbstractFormatter<Object> impleme
 		String result = null;
 		if (value != null) {
 			String separator = "";
-			if (this.getUplAttribute(boolean.class, "newline")) {
+			if (getUplAttribute(boolean.class, "newline")) {
 				separator = "<br/>";
 			}
 

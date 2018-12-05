@@ -44,7 +44,7 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 			byte[][] fileObject = new byte[1][];
 			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
 					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) this.getComponent("fixedlength-batchfilereader");
+			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
 			reader.open(null, fileBulkConfig, fileObject);
 		} finally {
 			if (reader != null) {
@@ -60,10 +60,10 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
 			byte[][] fileObject = new byte[1][];
 			fileObject[0] = IOUtils.createInMemoryTextFile();
-			reader = (BatchFileReader) this.getComponent("fixedlength-batchfilereader");
+			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
 			reader.open(null, fileBulkConfig, fileObject);
 
-			boolean read = reader.readNextRecord(this.getValueStore(new TestBatchItemRecordB()));
+			boolean read = reader.readNextRecord(getValueStore(new TestBatchItemRecordB()));
 			assertFalse(read);
 		} finally {
 			if (reader != null) {
@@ -80,11 +80,11 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 			byte[][] fileObject = new byte[1][];
 			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
 					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) this.getComponent("fixedlength-batchfilereader");
+			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
 			reader.open(null, fileBulkConfig, fileObject);
 
 			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = this.getValueStore(batchItemRecord);
+			ValueStore store = getValueStore(batchItemRecord);
 			boolean read = reader.readNextRecord(store);
 			assertTrue(read);
 			assertEquals("0123456789", batchItemRecord.getAccountNo());
@@ -106,11 +106,11 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 			byte[][] fileObject = new byte[1][];
 			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
 					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) this.getComponent("fixedlength-batchfilereader");
+			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
 			reader.open(null, fileBulkConfig, fileObject);
 
 			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = this.getValueStore(batchItemRecord);
+			ValueStore store = getValueStore(batchItemRecord);
 			boolean read = reader.readNextRecord(store);
 			assertTrue(read);
 			assertEquals("0123456789", batchItemRecord.getAccountNo());
@@ -132,11 +132,11 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 			byte[][] fileObject = new byte[1][];
 			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
 					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) this.getComponent("fixedlength-batchfilereader");
+			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
 			reader.open(null, fileBulkConfig, fileObject);
 
 			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = this.getValueStore(batchItemRecord);
+			ValueStore store = getValueStore(batchItemRecord);
 			boolean read = reader.readNextRecord(store);
 			assertTrue(read);
 			assertEquals("0123456789", batchItemRecord.getAccountNo());
@@ -169,11 +169,11 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 			byte[][] fileObject = new byte[1][];
 			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
 					"6758495839Bamanga Tukur       NGN0000000052043");
-			reader = (BatchFileReader) this.getComponent("fixedlength-batchfilereader");
+			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
 			reader.open(null, fileBulkConfig, fileObject);
 
 			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = this.getValueStore(batchItemRecord);
+			ValueStore store = getValueStore(batchItemRecord);
 			boolean read = reader.readNextRecord(store);
 			assertTrue(read);
 			assertEquals("0123456789", batchItemRecord.getAccountNo());
@@ -202,11 +202,11 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 			byte[][] fileObject = new byte[1][];
 			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
 					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) this.getComponent("fixedlength-batchfilereader");
+			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
 			reader.open(null, fileBulkConfig, fileObject);
 
 			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = this.getValueStore(batchItemRecord);
+			ValueStore store = getValueStore(batchItemRecord);
 			boolean read = reader.readNextRecord(store);
 			assertTrue(read);
 			read = reader.readNextRecord(store);
@@ -231,7 +231,7 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 	}
 
 	private ValueStore getValueStore(Object record) throws Exception {
-		return ((ValueStoreFactory) this.getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+		return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
 				.getValueStore(record, 0);
 	}
 }

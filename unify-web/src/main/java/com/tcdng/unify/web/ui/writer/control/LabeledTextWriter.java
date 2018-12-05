@@ -38,10 +38,10 @@ public class LabeledTextWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		LabeledText labeledText = (LabeledText) widget;
 		writer.write("<div ");
-		this.writeTagAttributes(writer, labeledText);
+		writeTagAttributes(writer, labeledText);
 		writer.write(">");
 		writer.write("<span class=\"lttitle\">");
-		this.writeCaption(writer, labeledText);
+		writeCaption(writer, labeledText);
 		writer.write(":</span>&nbsp;");
 		String valueString = labeledText.getStringValue();
 		if (labeledText.getUplAttribute(int.class, "maxLen") > 0) {

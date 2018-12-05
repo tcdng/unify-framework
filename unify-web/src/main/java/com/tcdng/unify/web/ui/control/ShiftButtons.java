@@ -40,53 +40,53 @@ public class ShiftButtons extends AbstractMultiControl {
 	@Override
 	public void onPageInitialize() throws UnifyException {
 		super.onPageInitialize();
-		this.shiftTopCtrl = this.addInternalChildControl(
+		shiftTopCtrl = addInternalChildControl(
 				"!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
 				false);
-		this.shiftUpCtrl = this.addInternalChildControl(
+		shiftUpCtrl = addInternalChildControl(
 				"!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
-		this.shiftDownCtrl = this.addInternalChildControl(
+		shiftDownCtrl = addInternalChildControl(
 				"!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
 				false);
-		this.shiftBottomCtrl = this.addInternalChildControl(
+		shiftBottomCtrl = addInternalChildControl(
 				"!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
 				false);
 
-		this.shiftTopCtrl.setGroupId(this.getPrefixedId("shft_"));
-		this.shiftUpCtrl.setGroupId(this.getPrefixedId("shfu_"));
-		this.shiftDownCtrl.setGroupId(this.getPrefixedId("shfd_"));
-		this.shiftBottomCtrl.setGroupId(this.getPrefixedId("shfb_"));
+		shiftTopCtrl.setGroupId(getPrefixedId("shft_"));
+		shiftUpCtrl.setGroupId(getPrefixedId("shfu_"));
+		shiftDownCtrl.setGroupId(getPrefixedId("shfd_"));
+		shiftBottomCtrl.setGroupId(getPrefixedId("shfb_"));
 	}
 
 	public Control getShiftTopCtrl() {
-		return this.shiftTopCtrl;
+		return shiftTopCtrl;
 	}
 
 	public Control getShiftUpCtrl() {
-		return this.shiftUpCtrl;
+		return shiftUpCtrl;
 	}
 
 	public Control getShiftDownCtrl() {
-		return this.shiftDownCtrl;
+		return shiftDownCtrl;
 	}
 
 	public Control getShiftBottomCtrl() {
-		return this.shiftBottomCtrl;
+		return shiftBottomCtrl;
 	}
 
 	public String getShiftTopGroupId() throws UnifyException {
-		return this.shiftTopCtrl.getGroupId();
+		return shiftTopCtrl.getGroupId();
 	}
 
 	public String getShiftUpGroupId() throws UnifyException {
-		return this.shiftUpCtrl.getGroupId();
+		return shiftUpCtrl.getGroupId();
 	}
 
 	public String getShiftDownGroupId() throws UnifyException {
-		return this.shiftDownCtrl.getGroupId();
+		return shiftDownCtrl.getGroupId();
 	}
 
 	public String getShiftBottomGroupId() throws UnifyException {
-		return this.shiftBottomCtrl.getGroupId();
+		return shiftBottomCtrl.getGroupId();
 	}
 }

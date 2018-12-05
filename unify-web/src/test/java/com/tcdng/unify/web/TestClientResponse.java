@@ -43,14 +43,14 @@ public class TestClientResponse implements ClientResponse {
 	private boolean used;
 
 	public TestClientResponse() {
-		this.metas = new HashMap<String, String>();
-		this.outputStream = new ByteArrayOutputStream();
-		this.writer = new OutputStreamWriter(this.outputStream);
+		metas = new HashMap<String, String>();
+		outputStream = new ByteArrayOutputStream();
+		writer = new OutputStreamWriter(outputStream);
 	}
 
 	@Override
 	public void setMetaData(String key, String value) {
-		this.metas.put(key, value);
+		metas.put(key, value);
 	}
 
 	@Override
@@ -65,19 +65,19 @@ public class TestClientResponse implements ClientResponse {
 
 	@Override
 	public OutputStream getOutputStream() throws Exception {
-		this.used = true;
-		return this.outputStream;
+		used = true;
+		return outputStream;
 	}
 
 	@Override
 	public Writer getWriter() throws Exception {
-		this.used = true;
-		return this.writer;
+		used = true;
+		return writer;
 	}
 
 	@Override
 	public boolean isOutUsed() {
-		return this.used;
+		return used;
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class TestClientResponse implements ClientResponse {
 	}
 
 	public byte[] getBytes() {
-		return this.outputStream.toByteArray();
+		return outputStream.toByteArray();
 	}
 
 	public String toString() {

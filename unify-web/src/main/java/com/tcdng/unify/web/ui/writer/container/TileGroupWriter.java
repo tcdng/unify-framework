@@ -48,7 +48,7 @@ public class TileGroupWriter extends AbstractContainerWriter {
 			String actionPath = ((Tile) valueStore.getValueObject()).getActionPath();
 			if (actionPath != null) {
 				imageCtrl.setValueStore(valueStore);
-				this.writePathEventHandlerJS(writer, imageCtrl.getId(), "onclick", "post", actionPath);
+				writePathEventHandlerJS(writer, imageCtrl.getId(), "onclick", "post", actionPath);
 			}
 		}
 	}
@@ -83,7 +83,7 @@ public class TileGroupWriter extends AbstractContainerWriter {
 						writer.writeStructureAndContent(imageCtrl);
 						writer.write("<span id=\"").write(imageCtrl.getPrefixedId("spn_")).write("\">");
 						writer.writeWithHtmlEscape(
-								this.resolveSessionMessage(((Tile) valueStore.getValueObject()).getCaption()));
+								resolveSessionMessage(((Tile) valueStore.getValueObject()).getCaption()));
 						writer.write("</span>");
 						writer.write("</div>");
 					}

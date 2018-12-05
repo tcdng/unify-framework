@@ -40,7 +40,7 @@ public class KeyValueListAreaWriter extends AbstractControlWriter {
 		KeyValueListArea keyValueListArea = (KeyValueListArea) widget;
 		String styleClass = keyValueListArea.getUplAttribute(String.class, "styleClass");
 		writer.write("<div ");
-		this.writeTagAttributes(writer, keyValueListArea);
+		writeTagAttributes(writer, keyValueListArea);
 		writer.write("><table class=\"").write(styleClass).write("-body\">");
 		Map<Object, Object> map = keyValueListArea.getMapValue();
 		if (map != null) {

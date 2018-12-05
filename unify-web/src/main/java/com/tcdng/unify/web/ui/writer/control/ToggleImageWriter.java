@@ -37,7 +37,7 @@ public class ToggleImageWriter extends AbstractTargetControlWriter {
 	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
 		ToggleImage toggleImage = (ToggleImage) targetControl;
 		writer.write("<img");
-		this.writeTagAttributes(writer, toggleImage);
+		writeTagAttributes(writer, toggleImage);
 		writer.write(" src=\"");
 		if (toggleImage.getValue(boolean.class)) {
 			writer.writeFileImageContextURL(toggleImage.getUplAttribute(String.class, "onImgSrc"));

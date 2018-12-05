@@ -34,35 +34,35 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 public class SplitPanel extends AbstractPanel {
 
 	public String getSplitCtrlId() throws UnifyException {
-		return this.getPrefixedId("ctrl");
+		return getPrefixedId("ctrl");
 	}
 
 	public String getMinorWinId() throws UnifyException {
-		return this.getPrefixedId("win");
+		return getPrefixedId("win");
 	}
 
 	public String getMinorPaneId() throws UnifyException {
-		return this.getPrefixedId("pane");
+		return getPrefixedId("pane");
 	}
 
 	public int getMinorWinMax() throws UnifyException {
-		return this.getUplAttribute(int.class, "minorMax");
+		return getUplAttribute(int.class, "minorMax");
 	}
 
 	public int getMinorWinMin() throws UnifyException {
-		return this.getUplAttribute(int.class, "minorMin");
+		return getUplAttribute(int.class, "minorMin");
 	}
 
 	public boolean isVertical() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "vertical");
+		return getUplAttribute(boolean.class, "vertical");
 	}
 
 	public int getMinorWidth() throws UnifyException {
-		int minorWidth = this.getUplAttribute(int.class, "minorDefault");
-		if (minorWidth < this.getMinorWinMin()) {
-			minorWidth = this.getMinorWinMin();
-		} else if (minorWidth > this.getMinorWinMax()) {
-			minorWidth = this.getMinorWinMax();
+		int minorWidth = getUplAttribute(int.class, "minorDefault");
+		if (minorWidth < getMinorWinMin()) {
+			minorWidth = getMinorWinMin();
+		} else if (minorWidth > getMinorWinMax()) {
+			minorWidth = getMinorWinMax();
 		}
 		return minorWidth;
 	}

@@ -39,32 +39,32 @@ public class Picture extends AbstractMultiControl {
 
 	@Override
 	public void onPageInitialize() throws UnifyException {
-		this.fileControl = (Control) this.addInternalChildControl(
+		fileControl = (Control) addInternalChildControl(
 				"!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");
 		StringBuilder sb = new StringBuilder();
 		sb.append("!ui-image src:$t{images/camera.png}");
-		this.appendUplAttribute(sb, "binding");
-		this.appendUplAttribute(sb, "styleClass");
-		this.appendUplAttribute(sb, "style");
-		this.imageControl = this.addInternalChildControl(sb.toString(), true, false);
+		appendUplAttribute(sb, "binding");
+		appendUplAttribute(sb, "styleClass");
+		appendUplAttribute(sb, "style");
+		imageControl = addInternalChildControl(sb.toString(), true, false);
 	}
 
 	@Override
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
 		super.populate(transferBlock);
-		if (this.uploadedFile != null && this.uploadedFile.length > 0) {
-			this.setValue(this.uploadedFile[0].getData());
+		if (uploadedFile != null && uploadedFile.length > 0) {
+			setValue(uploadedFile[0].getData());
 		}
 
-		this.uploadedFile = null;
+		uploadedFile = null;
 	}
 
 	public Control getFileCtrl() {
-		return this.fileControl;
+		return fileControl;
 	}
 
 	public Control getImageCtrl() {
-		return this.imageControl;
+		return imageControl;
 	}
 
 	public UploadedFile[] getUploadedFile() {

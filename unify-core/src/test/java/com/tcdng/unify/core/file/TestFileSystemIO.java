@@ -41,8 +41,8 @@ public class TestFileSystemIO extends AbstractFileSystemIO {
 	private Map<ByteArrayOutputStream, String> streamReferences;
 
 	public TestFileSystemIO() {
-		this.files = new HashMap<String, byte[]>();
-		this.streamReferences = new HashMap<ByteArrayOutputStream, String>();
+		files = new HashMap<String, byte[]>();
+		streamReferences = new HashMap<ByteArrayOutputStream, String>();
 	}
 
 	@Override
@@ -52,13 +52,13 @@ public class TestFileSystemIO extends AbstractFileSystemIO {
 
 	@Override
 	public InputStream openFileInputStream(String filename) throws UnifyException {
-		return this.openFileInputStream(filename, 0);
+		return openFileInputStream(filename, 0);
 	}
 
 	@Override
 	public InputStream openFileInputStream(String filename, long skip) throws UnifyException {
 		try {
-			byte[] file = this.files.get(filename);
+			byte[] file = files.get(filename);
 			if (file == null) {
 				throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename);
 			}
@@ -69,7 +69,7 @@ public class TestFileSystemIO extends AbstractFileSystemIO {
 			}
 			return inputStream;
 		} catch (IOException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 			;
 		}
 		return null;
@@ -78,8 +78,8 @@ public class TestFileSystemIO extends AbstractFileSystemIO {
 	@Override
 	public OutputStream openFileOutputStream(String filename) throws UnifyException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		this.streamReferences.put(outputStream, filename);
-		this.files.put(filename, new byte[0]);
+		streamReferences.put(outputStream, filename);
+		files.put(filename, new byte[0]);
 		return outputStream;
 	}
 
@@ -87,16 +87,16 @@ public class TestFileSystemIO extends AbstractFileSystemIO {
 	public OutputStream openFileOutputStream(String filename, boolean append) throws UnifyException {
 		try {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			byte[] file = this.files.get(filename);
+			byte[] file = files.get(filename);
 			if (append && file != null) {
 				outputStream.write(file);
 			} else {
-				this.files.put(filename, new byte[0]);
+				files.put(filename, new byte[0]);
 			}
-			this.streamReferences.put(outputStream, filename);
+			streamReferences.put(outputStream, filename);
 			return outputStream;
 		} catch (IOException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 			;
 		}
 		return null;
@@ -105,11 +105,11 @@ public class TestFileSystemIO extends AbstractFileSystemIO {
 	@Override
 	public void close(OutputStream outputStream) {
 		try {
-			String filename = this.streamReferences.get(outputStream);
+			String filename = streamReferences.get(outputStream);
 			if (filename != null) {
 				outputStream.flush();
-				this.files.put(filename, ((ByteArrayOutputStream) outputStream).toByteArray());
-				this.streamReferences.remove(outputStream);
+				files.put(filename, ((ByteArrayOutputStream) outputStream).toByteArray());
+				streamReferences.remove(outputStream);
 			}
 		} catch (IOException e) {
 		}

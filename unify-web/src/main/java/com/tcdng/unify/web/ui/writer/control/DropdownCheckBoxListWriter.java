@@ -59,14 +59,14 @@ public class DropdownCheckBoxListWriter extends AbstractPopupTextFieldWriter {
 			dropdownCheckList
 					.setDisabled(dropdownCheckList.isContainerDisabled() || !dropdownCheckList.isContainerEditable());
 
-			this.writeHiddenPush(writer, dropdownCheckList, PushType.CHECKBOX);
+			writeHiddenPush(writer, dropdownCheckList, PushType.CHECKBOX);
 
 			writer.write("<div class=\"dclframe\"><table>");
 			String selectAllOption = dropdownCheckList.getSelectAllOption();
 			if (selectAllOption != null) {
 				writer.write("<tr><td colspan=\"").write(columns * 2).write("\">");
 				writer.write("<input type=\"checkbox\"");
-				this.writeTagId(writer, dropdownCheckList.getSelectAllId());
+				writeTagId(writer, dropdownCheckList.getSelectAllId());
 				if (dropdownCheckList.isDisabled()) {
 					writer.write(" disabled=\"true\"");
 				}
@@ -87,14 +87,14 @@ public class DropdownCheckBoxListWriter extends AbstractPopupTextFieldWriter {
 						Listable listable = listableList.get(i);
 						writer.write("<td>");
 						writer.write("<input type=\"checkbox\"");
-						this.writeTagId(writer, dropdownCheckList.getNamingIndexedId(i));
-						this.writeTagName(writer, groupId);
+						writeTagId(writer, dropdownCheckList.getNamingIndexedId(i));
+						writeTagName(writer, groupId);
 						String key = listable.getListKey();
 						if (values != null && values.contains(key)) {
 							writer.write(" checked=\"checked\"");
 						}
 
-						this.writeTagValue(writer, key);
+						writeTagValue(writer, key);
 						writer.write("/></td><td>");
 						writer.writeWithHtmlEscape(listable.getListDescription());
 						writer.write("</td>");
@@ -117,7 +117,7 @@ public class DropdownCheckBoxListWriter extends AbstractPopupTextFieldWriter {
 		// If select option, add select all behavior also
 		if (dropdownCheckList.getSelectAllOption() != null) {
 			String pageName = dropdownCheckList.getId();
-			this.writeEventJs(writer, "onclick", "setallchecked", dropdownCheckList.getSelectAllId(), pageName);
+			writeEventJs(writer, "onclick", "setallchecked", dropdownCheckList.getSelectAllId(), pageName);
 		}
 	}
 

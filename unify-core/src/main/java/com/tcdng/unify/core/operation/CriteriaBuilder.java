@@ -113,7 +113,7 @@ public abstract class CriteriaBuilder implements Cloneable {
 
 	public CriteriaBuilder copy() {
 		try {
-			return (CriteriaBuilder) this.clone();
+			return (CriteriaBuilder) clone();
 		} catch (CloneNotSupportedException e) {
 		}
 		return null;
@@ -122,8 +122,8 @@ public abstract class CriteriaBuilder implements Cloneable {
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		CriteriaBuilder clone = (CriteriaBuilder) super.clone();
-		if (this.criteria != null) {
-			clone.criteria = (Criteria) this.criteria.clone();
+		if (criteria != null) {
+			clone.criteria = (Criteria) criteria.clone();
 		}
 		return clone;
 	}

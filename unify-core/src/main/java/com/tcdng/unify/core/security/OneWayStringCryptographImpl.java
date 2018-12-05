@@ -31,7 +31,7 @@ public class OneWayStringCryptographImpl extends AbstractOneWayCryptograph imple
 
 	@Override
 	public String forwardTransform(String value) throws UnifyException {
-		return this.encrypt(value);
+		return encrypt(value);
 	}
 
 	@Override
@@ -43,13 +43,13 @@ public class OneWayStringCryptographImpl extends AbstractOneWayCryptograph imple
 	public String encrypt(String string) throws UnifyException {
 		try {
 			if (string != null) {
-				byte encrypted[] = this.doEncrypt(string.getBytes("UTF-8"));
+				byte encrypted[] = doEncrypt(string.getBytes("UTF-8"));
 				return DatatypeConverter.printBase64Binary(encrypted);
 			}
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}

@@ -43,8 +43,6 @@ public abstract class AbstractPool<T> {
 
 	private int minSize;
 
-	private int maxSize;
-
 	private boolean executeOnGet;
 
 	public AbstractPool(long getTimeout, int minSize, int maxSize) {
@@ -54,20 +52,19 @@ public abstract class AbstractPool<T> {
 	public AbstractPool(long getTimeout, int minSize, int maxSize, boolean executeOnGet) {
 		this.getTimeout = getTimeout;
 		this.minSize = minSize;
-		this.maxSize = maxSize;
 		this.executeOnGet = executeOnGet;
-		if (this.minSize > this.maxSize) {
-			this.minSize = this.maxSize;
+		if (minSize > maxSize) {
+			this.minSize = maxSize;
 		}
-		this.semaphore = new Semaphore(maxSize);
-		this.availableObjects = new ConcurrentLinkedQueue<T>();
-		this.servedObjects = new HashSet<T>();
+		semaphore = new Semaphore(maxSize);
+		availableObjects = new ConcurrentLinkedQueue<T>();
+		servedObjects = new HashSet<T>();
 	}
 
 	public void initialize() throws UnifyException {
 		try {
 			for (int i = 0; i < minSize; i++) {
-				this.availableObjects.add(this.createObject());
+				availableObjects.add(createObject());
 			}
 		} catch (UnifyException e) {
 			throw e;
@@ -77,51 +74,51 @@ public abstract class AbstractPool<T> {
 	}
 
 	public void terminate() throws UnifyException {
-		this.semaphore.drainPermits();
-		for (T object : this.availableObjects) {
-			this.destroyObject(object);
+		semaphore.drainPermits();
+		for (T object : availableObjects) {
+			destroyObject(object);
 		}
 
-		this.availableObjects.clear();
-		this.servedObjects.clear();
+		availableObjects.clear();
+		servedObjects.clear();
 	}
 
 	public int available() {
-		return this.semaphore.availablePermits();
+		return semaphore.availablePermits();
 	}
 
 	public int size() {
-		return this.availableObjects.size() + this.servedObjects.size();
+		return availableObjects.size() + servedObjects.size();
 	}
 
 	public T borrowObject(Object... params) throws UnifyException {
 		try {
 			T object = null;
-			if (this.semaphore.tryAcquire(getTimeout, TimeUnit.MILLISECONDS)) {
-				object = this.availableObjects.poll();
+			if (semaphore.tryAcquire(getTimeout, TimeUnit.MILLISECONDS)) {
+				object = availableObjects.poll();
 				boolean createNew = object == null;
 
 				if (!createNew) {
-					if (this.executeOnGet) {
+					if (executeOnGet) {
 						try {
-							this.onGetObject(object, params);
+							onGetObject(object, params);
 						} catch (Exception e) {
 							createNew = true;
-							this.destroyObject(object);
+							destroyObject(object);
 						}
 					}
 				}
 
 				if (createNew) {
 					try {
-						object = this.createObject();
-						if (this.executeOnGet) {
-							this.onGetObject(object, params);
+						object = createObject();
+						if (executeOnGet) {
+							onGetObject(object, params);
 						}
 					} catch (Exception e) {
-						this.semaphore.release();
+						semaphore.release();
 						if (object != null) {
-							this.destroyObject(object);
+							destroyObject(object);
 						}
 						throw e;
 					}
@@ -132,7 +129,7 @@ public abstract class AbstractPool<T> {
 				throw new UnifyException(UnifyCoreErrorConstants.GENERIC_OBJECT_POOL_TIMEOUT);
 			}
 
-			this.servedObjects.add(object);
+			servedObjects.add(object);
 			return object;
 		} catch (UnifyException e) {
 			throw e;
@@ -142,9 +139,9 @@ public abstract class AbstractPool<T> {
 	}
 
 	public boolean returnObject(T object) {
-		if (object != null && this.servedObjects.remove(object)) {
-			if (this.availableObjects.offer(object)) {
-				this.semaphore.release();
+		if (object != null && servedObjects.remove(object)) {
+			if (availableObjects.offer(object)) {
+				semaphore.release();
 				return true;
 			}
 		}
@@ -152,9 +149,9 @@ public abstract class AbstractPool<T> {
 	}
 
 	public boolean removeObject(T object) {
-		if (this.availableObjects.remove(object)) {
-			this.servedObjects.remove(object);
-			this.semaphore.release();
+		if (availableObjects.remove(object)) {
+			servedObjects.remove(object);
+			semaphore.release();
 			return true;
 		}
 		return false;

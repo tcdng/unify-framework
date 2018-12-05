@@ -42,20 +42,20 @@ public class RealPathResourceController extends FileResourceController {
 	@Override
 	public void prepareExecution() throws UnifyException {
 		super.prepareExecution();
-		this.file = new File(
-				IOUtils.buildFilename(this.getUnifyComponentContext().getWorkingPath(), this.getResourceName()));
-		if (this.file.exists()) {
-			this.setContentLength(this.file.length());
+		file = new File(
+				IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), getResourceName()));
+		if (file.exists()) {
+			setContentLength(file.length());
 		}
 	}
 
 	@Override
 	protected InputStream getInputStream() throws UnifyException {
-		if (this.file != null && this.file.exists()) {
+		if (file != null && file.exists()) {
 			try {
-				return new FileInputStream(this.file);
+				return new FileInputStream(file);
 			} catch (FileNotFoundException e) {
-				this.throwOperationErrorException(e);
+				throwOperationErrorException(e);
 			}
 		}
 		return null;

@@ -34,8 +34,8 @@ public abstract class AbstractNetworkMulticastCommunicator extends AbstractUnify
 
 	@Override
 	public void close() throws UnifyException {
-		this.open = false;
-		this.onClose();
+		open = false;
+		onClose();
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public abstract class AbstractNetworkMulticastCommunicator extends AbstractUnify
 	 *             the receive exception
 	 */
 	protected void throwReceiveException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, this.getName());
+		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, getName());
 	}
 
 	/**
@@ -69,7 +69,7 @@ public abstract class AbstractNetworkMulticastCommunicator extends AbstractUnify
 	 *             the transmit exception
 	 */
 	protected void throwTransmitException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, this.getName());
+		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, getName());
 	}
 
 	/**

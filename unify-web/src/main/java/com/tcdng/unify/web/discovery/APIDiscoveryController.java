@@ -42,7 +42,7 @@ public class APIDiscoveryController extends AbstractRemoteCallController {
 	@GatewayAction(name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, description = "Discover Remote Call", restricted = false)
 	public DiscoverRemoteCallResult discoverRemoteCall(DiscoverRemoteCallParams params) throws UnifyException {
 		DiscoverRemoteCallResult result = new DiscoverRemoteCallResult();
-		APIDiscoveryRemoteCallInfo remoteCallInfo = this.aPIDiscoveryManager
+		APIDiscoveryRemoteCallInfo remoteCallInfo = aPIDiscoveryManager
 				.getRemoteCallInfo(params.getRemoteCallCode());
 		result.setRemoteCallInfo(remoteCallInfo);
 		return result;

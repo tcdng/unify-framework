@@ -84,7 +84,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 	@Override
 	public void applyLayout(JasperDesign jasperDesign, Report report) throws UnifyException {
 		try {
-			if (this.isListFormat(report.getFormat())) {
+			if (isListFormat(report.getFormat())) {
 				JRDesignBand blankBand = new JRDesignBand();
 				jasperDesign.setTitle(blankBand);
 				jasperDesign.setPageHeader(blankBand);
@@ -94,21 +94,21 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 				jasperDesign.setSummary(blankBand);
 			}
 
-			ColumnStyles columnStyles = this.getReportColumnStyles(report);
+			ColumnStyles columnStyles = getReportColumnStyles(report);
 			jasperDesign.addStyle(columnStyles.getParentStyle());
 			jasperDesign.addStyle(columnStyles.getNormalStyle());
 			jasperDesign.addStyle(columnStyles.getBoldStyle());
 
 			boolean isQuery = !StringUtils.isBlank(report.getQuery());
 			for (ReportColumn reportColumn : report.getColumns()) {
-				jasperDesign.addField(this.newJRDesignField(reportColumn, isQuery));
+				jasperDesign.addField(newJRDesignField(reportColumn, isQuery));
 			}
 
 			jasperDesign.setProperty("net.sf.jasperreports.awt.ignore.missing.font", "true");
 
-			this.doApplyLayout(jasperDesign, columnStyles, report);
+			doApplyLayout(jasperDesign, columnStyles, report);
 		} catch (JRException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 	}
 
@@ -133,7 +133,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 			int reportWidth, int columnWidth, boolean footer) throws UnifyException {
 		JRDesignGroup jRDesignGroup = new JRDesignGroup();
 		jRDesignGroup.setName(reportColumn.getTitle() + " Group");
-		jRDesignGroup.setExpression(this.newJRDesignExpression(reportColumn));
+		jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
 
 		JRDesignBand jRDesignBand = new JRDesignBand();
 		int groupBandHeight = report.getColumnHeaderHeight();
@@ -146,16 +146,16 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		jRDesignTextField.setHeight(groupBandHeight - (22));
 		jRDesignTextField.setBackcolor(new Color(0xC0, 0xC0, 0xC0));
 		jRDesignTextField.setMode(ModeEnum.OPAQUE);
-		jRDesignTextField.setHorizontalAlignment(this.getHorizontalAlign(reportColumn.getHorizontalAlignment()));
-		jRDesignTextField.setExpression(this.newJRDesignExpression(reportColumn));
+		jRDesignTextField.setHorizontalAlignment(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
+		jRDesignTextField.setExpression(newJRDesignExpression(reportColumn));
 		jRDesignBand.addElement(jRDesignTextField);
-		jRDesignBand.addElement(this.newJRDesignLine(0, groupBandHeight - 1, reportWidth, 0, Color.BLACK));
+		jRDesignBand.addElement(newJRDesignLine(0, groupBandHeight - 1, reportWidth, 0, Color.BLACK));
 		((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(jRDesignBand);
 
 		if (footer) {
 			jRDesignBand = new JRDesignBand();
 			jRDesignBand.setHeight(groupBandHeight);
-			jRDesignBand.addElement(this.newJRDesignLine(0, 0, reportWidth, 0, Color.BLACK));
+			jRDesignBand.addElement(newJRDesignLine(0, 0, reportWidth, 0, Color.BLACK));
 			if (report.getGroupSummationLegend() != null) {
 				JRDesignStaticText jRDesignStaticText = new JRDesignStaticText();
 				jRDesignStaticText.setX(0);
@@ -163,8 +163,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 				jRDesignStaticText.setWidth(60);
 				jRDesignStaticText.setHeight(groupBandHeight - (22));
 				jRDesignStaticText.setStyle(columnStyles.getBoldStyle());
-				jRDesignStaticText
-						.setHorizontalAlignment(this.getHorizontalAlign(reportColumn.getHorizontalAlignment()));
+				jRDesignStaticText.setHorizontalAlignment(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
 				jRDesignStaticText.setText(report.getGroupSummationLegend());
 				jRDesignBand.addElement(jRDesignStaticText);
 			}
@@ -180,20 +179,20 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 			jrDesignImage.setHorizontalAlignment(HorizontalAlignEnum.CENTER);
 			jrDesignImage.setWidth(reportColumn.getWidthRatio());
 			jrDesignImage.setScaleImage(ScaleImageEnum.FILL_FRAME);
-			jrDesignImage.setExpression(this.newJRDesignExpression(reportColumn));
-			jrDesignImage.setPrintWhenExpression(this.newNotNullJRDesignExpression(reportColumn));
+			jrDesignImage.setExpression(newJRDesignExpression(reportColumn));
+			jrDesignImage.setPrintWhenExpression(newNotNullJRDesignExpression(reportColumn));
 			return jrDesignImage;
 		}
 
 		JRDesignTextField textField = new JRDesignTextField();
 		textField.setWidth(reportColumn.getWidthRatio());
 		textField.setStyle(columnStyles.getNormalStyle());
-		textField.setHorizontalAlignment(this.getHorizontalAlign(reportColumn.getHorizontalAlignment()));
-		textField.setExpression(this.newJRDesignExpression(reportColumn));
+		textField.setHorizontalAlignment(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
+		textField.setExpression(newJRDesignExpression(reportColumn));
 		textField.setBlankWhenNull(true);
 
 		textField.addPropertyExpression(
-				this.newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
+				newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
 
 		if (!isListFormat) {
 			textField.setStretchWithOverflow(true);
@@ -275,11 +274,11 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		try {
 			JRDesignGroup jRDesignGroup = new JRDesignGroup();
 			jRDesignGroup.setName(reportColumn.getTitle() + "_Group");
-			jRDesignGroup.setExpression(this.newJRDesignExpression(reportColumn));
+			jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
 			jasperDesign.addGroup(jRDesignGroup);
 			return jRDesignGroup;
 		} catch (JRException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}
@@ -295,13 +294,13 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 			jRDesignVariable.setResetGroup(jRDesignGroup);
 			jRDesignVariable.setCalculation(CalculationEnum.SUM);
 			jRDesignVariable
-					.setInitialValueExpression(this.newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
-			jRDesignVariable.setExpression(this.newJRDesignExpression(
+					.setInitialValueExpression(newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
+			jRDesignVariable.setExpression(newJRDesignExpression(
 					"new " + reportColumn.getTypeName() + "($F{" + reportColumn.getName() + "})"));
 			jasperDesign.addVariable(jRDesignVariable);
 			return jRDesignVariable;
 		} catch (JRException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}
@@ -316,13 +315,13 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 			jRDesignVariable.setResetType(ResetTypeEnum.REPORT);
 			jRDesignVariable.setCalculation(CalculationEnum.SUM);
 			jRDesignVariable
-					.setInitialValueExpression(this.newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
-			jRDesignVariable.setExpression(this.newJRDesignExpression(
+					.setInitialValueExpression(newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
+			jRDesignVariable.setExpression(newJRDesignExpression(
 					"new " + reportColumn.getTypeName() + "($F{" + reportColumn.getName() + "})"));
 			jasperDesign.addVariable(jRDesignVariable);
 			return jRDesignVariable;
 		} catch (JRException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}
@@ -360,7 +359,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		}
 
 		public ColumnStyles(String fontName, int fontSize) {
-			String nameSuffix = String.valueOf(this.hashCode());
+			String nameSuffix = String.valueOf(hashCode());
 			parentStyle = new JRDesignStyle();
 			parentStyle.setName("parent_" + nameSuffix);
 			parentStyle.setDefault(true);

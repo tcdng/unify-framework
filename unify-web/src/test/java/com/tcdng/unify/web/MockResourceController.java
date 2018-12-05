@@ -50,7 +50,7 @@ public class MockResourceController extends AbstractResourceController {
 			osw.write("Hello World!");
 			osw.flush();
 		} catch (IOException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 	}
 

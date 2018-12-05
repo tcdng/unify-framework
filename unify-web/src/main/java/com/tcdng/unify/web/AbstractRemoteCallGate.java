@@ -32,8 +32,8 @@ public abstract class AbstractRemoteCallGate extends AbstractUnifyComponent impl
 
 	@Override
 	public void grantPass(String applicationCode, String functionCode) throws UnifyException {
-		if (!this.openMode) {
-			this.doGrantPass(applicationCode, functionCode);
+		if (!openMode) {
+			doGrantPass(applicationCode, functionCode);
 		}
 	}
 

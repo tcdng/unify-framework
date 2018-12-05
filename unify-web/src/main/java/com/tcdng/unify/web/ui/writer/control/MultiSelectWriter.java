@@ -43,9 +43,9 @@ public class MultiSelectWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		MultiSelect multiSelect = (MultiSelect) widget;
 		writer.write("<div ");
-		this.writeTagStyleClass(writer, multiSelect);
-		this.writeTagStyle(writer, multiSelect);
-		this.writeTagTitle(writer, multiSelect);
+		writeTagStyleClass(writer, multiSelect);
+		writeTagStyle(writer, multiSelect);
+		writeTagTitle(writer, multiSelect);
 		writer.write("><div id=\"").write(multiSelect.getFramePanelId())
 				.write("\" style=\"width:100%;height:100%;overflow-y:scroll;overflow-x:hidden;\" tabindex=\"0\">");
 
@@ -57,11 +57,11 @@ public class MultiSelectWriter extends AbstractControlWriter {
 			Listable listable = listableList.get(i);
 			String key = listable.getListKey();
 			writer.write("<a");
-			this.writeTagId(writer, multiSelect.getNamingIndexedId(i));
+			writeTagId(writer, multiSelect.getNamingIndexedId(i));
 			if (values != null && values.contains(key)) {
-				this.writeTagStyleClass(writer, "sel");
+				writeTagStyleClass(writer, "sel");
 			} else {
-				this.writeTagStyleClass(writer, "norm");
+				writeTagStyleClass(writer, "norm");
 			}
 			writer.write("\">");
 			writer.writeWithHtmlEscape(listable.getListDescription());
@@ -70,8 +70,8 @@ public class MultiSelectWriter extends AbstractControlWriter {
 		writer.write("</div>");
 
 		writer.write("<select ");
-		this.writeTagId(writer, multiSelect);
-		this.writeTagStyle(writer, "display:none;");
+		writeTagId(writer, multiSelect);
+		writeTagStyle(writer, "display:none;");
 		writer.write(" multiple=\"multiple\">");
 
 		for (Listable listable : multiSelect.getListables()) {

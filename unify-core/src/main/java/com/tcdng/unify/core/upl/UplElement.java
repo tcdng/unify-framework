@@ -66,8 +66,8 @@ public class UplElement implements UplElementAttributes {
 	private int uplType;
 
 	public UplElement() {
-		this.uplType = UplTypeConstants.DOCUMENT;
-		this.uplAttributes = new HashMap<String, Object>();
+		uplType = UplTypeConstants.DOCUMENT;
+		uplAttributes = new HashMap<String, Object>();
 	}
 
 	public UplElement(int uplType, String source, int lineNumber, String qualifiedName, String elementType, String id) {
@@ -77,7 +77,7 @@ public class UplElement implements UplElementAttributes {
 		this.qualifiedName = qualifiedName;
 		this.elementType = elementType;
 		this.id = id;
-		this.uplAttributes = new HashMap<String, Object>();
+		uplAttributes = new HashMap<String, Object>();
 	}
 
 	public UplElement getParentElement() {
@@ -143,38 +143,38 @@ public class UplElement implements UplElementAttributes {
 
 	@Override
 	public String getParentLongName() {
-		if (this.parentElement != null) {
-			return this.parentElement.getLongName();
+		if (parentElement != null) {
+			return parentElement.getLongName();
 		}
 		return null;
 	}
 
 	@Override
 	public String getComponentName() {
-		return this.elementType;
+		return elementType;
 	}
 
 	public boolean isAttribute(String name) {
-		return this.uplAttributes.containsKey(name);
+		return uplAttributes.containsKey(name);
 	}
 
 	@Override
 	public Set<String> getAttributeNames() {
-		return this.uplAttributes.keySet();
+		return uplAttributes.keySet();
 	}
 
 	@Override
 	public Set<UplElementAttributes> getChildElements() {
-		if (this.childElements != null) {
-			return new HashSet<UplElementAttributes>(this.childElements.values());
+		if (childElements != null) {
+			return new HashSet<UplElementAttributes>(childElements.values());
 		}
 		return Collections.emptySet();
 	}
 
 	@Override
 	public List<String> getShallowReferencedLongNames(String attribute) throws UnifyException {
-		if (this.referencedLongNames != null) {
-			List<String> list = this.referencedLongNames.get(attribute);
+		if (referencedLongNames != null) {
+			List<String> list = referencedLongNames.get(attribute);
 			if (list != null) {
 				return list;
 			}
@@ -184,16 +184,16 @@ public class UplElement implements UplElementAttributes {
 
 	@Override
 	public Set<String> getShallowReferencedLongNames() throws UnifyException {
-		if (this.shallowReferencedLongNames != null) {
-			return this.shallowReferencedLongNames;
+		if (shallowReferencedLongNames != null) {
+			return shallowReferencedLongNames;
 		}
 		return Collections.emptySet();
 	}
 
 	@Override
 	public Set<String> getDeepReferencedLongNames() throws UnifyException {
-		if (this.deepReferencedLongNames != null) {
-			return this.deepReferencedLongNames;
+		if (deepReferencedLongNames != null) {
+			return deepReferencedLongNames;
 		}
 		return Collections.emptySet();
 	}
@@ -201,10 +201,10 @@ public class UplElement implements UplElementAttributes {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getAttributeValue(Class<T> clazz, String name) throws UnifyException {
-		if (!this.uplAttributes.containsKey(name)) {
-			throw new UnifyException(UnifyCoreErrorConstants.UPL_COMPONENT_ATTRIBUTE_UNKNOWN, this.elementType, name);
+		if (!uplAttributes.containsKey(name)) {
+			throw new UnifyException(UnifyCoreErrorConstants.UPL_COMPONENT_ATTRIBUTE_UNKNOWN, elementType, name);
 		}
-		return (T) this.uplAttributes.get(name);
+		return (T) uplAttributes.get(name);
 	}
 
 	public void finalizeReferences() throws UnifyException {
@@ -212,121 +212,121 @@ public class UplElement implements UplElementAttributes {
 		for (Map.Entry<String, Object> entry : uplAttributes.entrySet()) {
 			Object attrValue = entry.getValue();
 			if (attrValue instanceof UplElementReferences) {
-				this.finalizeReferences(entry.getKey(), ((UplElementReferences) attrValue));
+				finalizeReferences(entry.getKey(), ((UplElementReferences) attrValue));
 			} else if (attrValue instanceof UplElementReferences[]) {
 				for (UplElementReferences uplRef : (UplElementReferences[]) attrValue) {
-					this.finalizeReferences(entry.getKey(), uplRef);
+					finalizeReferences(entry.getKey(), uplRef);
 				}
 			}
 		}
 
 		// Child
-		if (this.childElements != null) {
-			if (this.deepReferencedLongNames == null) {
-				this.shallowReferencedLongNames = new HashSet<String>();
-				this.deepReferencedLongNames = new HashSet<String>();
+		if (childElements != null) {
+			if (deepReferencedLongNames == null) {
+				shallowReferencedLongNames = new HashSet<String>();
+				deepReferencedLongNames = new HashSet<String>();
 			}
 
-			for (UplElement uplElement : this.childElements.values()) {
+			for (UplElement uplElement : childElements.values()) {
 				String longName = uplElement.getLongName();
-				this.shallowReferencedLongNames.add(longName);
-				this.deepReferencedLongNames.add(longName);
+				shallowReferencedLongNames.add(longName);
+				deepReferencedLongNames.add(longName);
 
 				uplElement.finalizeReferences();
-				this.deepReferencedLongNames.addAll(uplElement.getDeepReferencedLongNames());
+				deepReferencedLongNames.addAll(uplElement.getDeepReferencedLongNames());
 			}
 		}
 	}
 
 	private void finalizeReferences(String attrName, UplElementReferences uplRefs) {
-		this.addFinalizedReferences(attrName, uplRefs.getLongNames());
+		addFinalizedReferences(attrName, uplRefs.getLongNames());
 	}
 
 	private void addFinalizedReferences(String attrName, List<String> list) {
-		if (this.referencedLongNames == null) {
-			this.referencedLongNames = new HashMap<String, List<String>>();
+		if (referencedLongNames == null) {
+			referencedLongNames = new HashMap<String, List<String>>();
 		}
 
-		List<String> oldList = this.referencedLongNames.get(attrName);
+		List<String> oldList = referencedLongNames.get(attrName);
 		if (oldList == null) {
-			this.referencedLongNames.put(attrName, list);
+			referencedLongNames.put(attrName, list);
 		} else {
 			oldList.addAll(list);
 		}
 
-		if (this.deepReferencedLongNames == null) {
-			this.shallowReferencedLongNames = new HashSet<String>();
-			this.deepReferencedLongNames = new HashSet<String>();
+		if (deepReferencedLongNames == null) {
+			shallowReferencedLongNames = new HashSet<String>();
+			deepReferencedLongNames = new HashSet<String>();
 		}
-		this.shallowReferencedLongNames.addAll(list);
-		this.deepReferencedLongNames.addAll(list);
+		shallowReferencedLongNames.addAll(list);
+		deepReferencedLongNames.addAll(list);
 	}
 
 	public Object getAttributeValue(String name) {
-		return this.uplAttributes.get(name);
+		return uplAttributes.get(name);
 	}
 
 	public void setAttributeValue(String name, Object value) {
-		this.uplAttributes.put(name, value);
+		uplAttributes.put(name, value);
 	}
 
 	public boolean isChildElement(String id) {
-		if (this.childElements != null) {
-			return this.childElements.containsKey(id);
+		if (childElements != null) {
+			return childElements.containsKey(id);
 		}
 		return false;
 	}
 
 	public Set<String> getChildIds() {
-		if (this.childElements != null) {
-			return this.childElements.keySet();
+		if (childElements != null) {
+			return childElements.keySet();
 		}
 		return Collections.emptySet();
 	}
 
 	public UplElement getChildElement(String id) {
-		if (this.childElements != null) {
-			return this.childElements.get(id);
+		if (childElements != null) {
+			return childElements.get(id);
 		}
 		return null;
 	}
 
 	public void merge(UplElement uplElement) throws UnifyException {
-		if (this.qualifiedName == null) {
-			this.qualifiedName = uplElement.getQualifiedName();
+		if (qualifiedName == null) {
+			qualifiedName = uplElement.getQualifiedName();
 		}
-		if (this.elementType == null) {
-			this.elementType = uplElement.getElementType();
+		if (elementType == null) {
+			elementType = uplElement.getElementType();
 		}
 
-		if (this.source == null) {
-			this.source = uplElement.getSource();
+		if (source == null) {
+			source = uplElement.getSource();
 		}
 
 		for (String attribute : uplElement.getAttributeNames()) {
-			if (!this.uplAttributes.containsKey(attribute)) {
-				this.uplAttributes.put(attribute, uplElement.getAttributeValue(attribute));
+			if (!uplAttributes.containsKey(attribute)) {
+				uplAttributes.put(attribute, uplElement.getAttributeValue(attribute));
 			}
 		}
 
 		if (uplElement.attributeExtension != null) {
 			for (String attribute : uplElement.attributeExtension.keySet()) {
-				this.extendAttributes(attribute, uplElement.attributeExtension.get(attribute));
+				extendAttributes(attribute, uplElement.attributeExtension.get(attribute));
 			}
 		}
 
 		for (String id : uplElement.getChildIds()) {
-			this.addChildElement(uplElement.getChildElement(id), true);
+			addChildElement(uplElement.getChildElement(id), true);
 		}
 	}
 
 	public void addChildElement(UplElement uplElement, boolean merge) throws UnifyException {
 		if (merge) {
-			if (this.isChildElement(uplElement.getId())) {
+			if (isChildElement(uplElement.getId())) {
 				return;
 			}
 		} else {
-			if (this.isChildElement(uplElement.getId())) {
+			if (isChildElement(uplElement.getId())) {
 				throw new UnifyException(UnifyCoreErrorConstants.UPL_ELEMENT_ID_DUPLICATE, uplElement.getSource(),
 						uplElement.getLineNumber(), uplElement.getId());
 			}
@@ -334,41 +334,41 @@ public class UplElement implements UplElementAttributes {
 
 		uplElement.setParentElement(this);
 
-		if (this.childElements == null) {
-			this.childElements = new HashMap<String, UplElement>();
+		if (childElements == null) {
+			childElements = new HashMap<String, UplElement>();
 		}
-		this.childElements.put(uplElement.getId(), uplElement);
+		childElements.put(uplElement.getId(), uplElement);
 	}
 
 	public boolean isAttributeExtension(String attribute) {
-		if (this.attributeExtension != null) {
-			return this.attributeExtension.containsKey(attribute);
+		if (attributeExtension != null) {
+			return attributeExtension.containsKey(attribute);
 		}
 		return false;
 	}
 
 	public void extendAttributes(String newAttribute, UplAttributeInfo uplAttributeInfo) {
-		if (this.attributeExtension == null) {
-			this.attributeExtension = new HashMap<String, UplAttributeInfo>();
+		if (attributeExtension == null) {
+			attributeExtension = new HashMap<String, UplAttributeInfo>();
 		}
-		this.attributeExtension.put(newAttribute, uplAttributeInfo);
+		attributeExtension.put(newAttribute, uplAttributeInfo);
 	}
 
 	public UplAttributeInfo getAttributeExtension(String attribute) {
-		if (this.attributeExtension != null) {
-			return this.attributeExtension.get(attribute);
+		if (attributeExtension != null) {
+			return attributeExtension.get(attribute);
 		}
 		return null;
 	}
 
 	public String getReferenceLongName(String referenceId) throws UnifyException {
 		String longName = null;
-		if (this.isChildElement(referenceId)) {
-			longName = this.getChildElement(referenceId).getLongName();
+		if (isChildElement(referenceId)) {
+			longName = getChildElement(referenceId).getLongName();
 		}
 
 		if (longName == null) {
-			UplElement topParentElement = this.getParentElement();
+			UplElement topParentElement = getParentElement();
 			if (topParentElement != null) {
 				UplElement topParentChildElement = topParentElement.getChildElement(referenceId);
 				if (topParentChildElement != null) {
@@ -388,7 +388,7 @@ public class UplElement implements UplElementAttributes {
 		}
 
 		if (longName == null) {
-			throw new UnifyException(UnifyCoreErrorConstants.UPL_CHILD_WITH_ELEMENT_ID_NOTFOUND, this.getId(),
+			throw new UnifyException(UnifyCoreErrorConstants.UPL_CHILD_WITH_ELEMENT_ID_NOTFOUND, getId(),
 					referenceId);
 		}
 		return longName;
@@ -396,15 +396,15 @@ public class UplElement implements UplElementAttributes {
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("(elementType = ").append(this.elementType).append(';');
-		sb.append("qualifiedName = ").append(this.qualifiedName).append(';');
-		sb.append("id = ").append(this.id).append(';');
-		sb.append("source = ").append(this.source).append(';');
-		sb.append("lineNumber = ").append(this.lineNumber).append(';');
-		sb.append("\nlongName = ").append(this.longName).append(';');
-		sb.append("\nuplAttributes = ").append(this.uplAttributes).append(';');
-		sb.append("\nattributeExtension = ").append(this.attributeExtension).append(';');
-		sb.append("\nchildElements = ").append(this.childElements).append(";)\n");
+		sb.append("(elementType = ").append(elementType).append(';');
+		sb.append("qualifiedName = ").append(qualifiedName).append(';');
+		sb.append("id = ").append(id).append(';');
+		sb.append("source = ").append(source).append(';');
+		sb.append("lineNumber = ").append(lineNumber).append(';');
+		sb.append("\nlongName = ").append(longName).append(';');
+		sb.append("\nuplAttributes = ").append(uplAttributes).append(';');
+		sb.append("\nattributeExtension = ").append(attributeExtension).append(';');
+		sb.append("\nchildElements = ").append(childElements).append(";)\n");
 		return sb.toString();
 	}
 }

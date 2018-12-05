@@ -32,7 +32,7 @@ public class MockReportFormatterStoreImpl extends AbstractUnifyComponent impleme
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
-		return (Formatter<T>) this.getSessionLocaleFormatter(formatterUpl);
+		return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
 	}
 
 	@Override

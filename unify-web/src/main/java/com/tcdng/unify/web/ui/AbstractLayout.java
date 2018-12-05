@@ -36,32 +36,32 @@ public abstract class AbstractLayout extends AbstractUplComponent implements Lay
 
 	@Override
 	public boolean isInlineCaption() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "inlineCaption");
+		return getUplAttribute(boolean.class, "inlineCaption");
 	}
 
 	@Override
 	public boolean isShowCaption() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "showCaption");
+		return getUplAttribute(boolean.class, "showCaption");
 	}
 
 	@Override
 	public String getCaptionStyle() throws UnifyException {
-		return this.getUplAttribute(String.class, "captionStyle");
+		return getUplAttribute(String.class, "captionStyle");
 	}
 
 	@Override
 	public String getCaptionSuffix() throws UnifyException {
-		return this.getUplAttribute(String.class, "captionSuffix");
+		return getUplAttribute(String.class, "captionSuffix");
 	}
 
 	@Override
 	public String getStyleClass() throws UnifyException {
-		return this.getUplAttribute(String.class, "styleClass");
+		return getUplAttribute(String.class, "styleClass");
 	}
 
 	@Override
 	public String getStyle() throws UnifyException {
-		return this.getUplAttribute(String.class, "style");
+		return getUplAttribute(String.class, "style");
 	}
 
 }

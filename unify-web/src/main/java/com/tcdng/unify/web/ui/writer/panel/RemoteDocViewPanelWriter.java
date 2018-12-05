@@ -44,7 +44,7 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
 		writer.write(",\"pRemoteURL\":\"").write(remoteDocViewPanel.getRemoteDocViewInfo().getRemoteDocUrl())
 				.write("\"");
 
-		UserToken userToken = this.getUserToken();
+		UserToken userToken = getUserToken();
 		writer.write(",\"pRemoteLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
 		writer.write(",\"pRemoteUserName\":\"").write(userToken.getUserName()).write("\"");
 		if (userToken.getRoleCode() != null) {
@@ -61,7 +61,7 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
 	}
 
 	private String getResponseControllerWinId() throws UnifyException {
-		return "win_" + this.getPageManager()
-				.getPageName(this.getRequestContextUtil().getResponsePageControllerInfo().getControllerId());
+		return "win_" + getPageManager()
+				.getPageName(getRequestContextUtil().getResponsePageControllerInfo().getControllerId());
 	}
 }

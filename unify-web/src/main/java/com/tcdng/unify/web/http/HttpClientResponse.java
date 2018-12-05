@@ -45,47 +45,47 @@ public class HttpClientResponse implements ClientResponse {
 
 	@Override
 	public void setMetaData(String key, String value) {
-		this.response.setHeader(key, value);
+		response.setHeader(key, value);
 	}
 
 	@Override
 	public void setContentType(String contentType) {
-		this.response.setContentType(contentType);
+		response.setContentType(contentType);
 	}
 
 	@Override
 	public void setCharacterEncoding(String charset) {
-		this.response.setCharacterEncoding(charset);
+		response.setCharacterEncoding(charset);
 	}
 
 	@Override
 	public OutputStream getOutputStream() throws Exception {
-		if (this.outputStream == null) {
-			this.outputStream = this.response.getOutputStream();
-			this.outUsed = true;
+		if (outputStream == null) {
+			outputStream = response.getOutputStream();
+			outUsed = true;
 		}
-		return this.outputStream;
+		return outputStream;
 	}
 
 	@Override
 	public Writer getWriter() throws Exception {
-		if (this.writer == null) {
-			this.writer = this.response.getWriter();
-			this.outUsed = true;
+		if (writer == null) {
+			writer = response.getWriter();
+			outUsed = true;
 		}
-		return this.writer;
+		return writer;
 	}
 
 	@Override
 	public void setStatus(int status) {
-		this.response.setStatus(status);
+		response.setStatus(status);
 	}
 
 	@Override
 	public void close() {
-		this.response.setStatus(HttpServletResponse.SC_OK);
-		IOUtils.close(this.outputStream);
-		IOUtils.close(this.writer);
+		response.setStatus(HttpServletResponse.SC_OK);
+		IOUtils.close(outputStream);
+		IOUtils.close(writer);
 	}
 
 	public boolean isOutUsed() {

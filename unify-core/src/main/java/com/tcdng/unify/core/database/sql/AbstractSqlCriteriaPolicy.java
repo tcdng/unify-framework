@@ -32,7 +32,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
 
 	protected String opSql;
 
-	public AbstractSqlCriteriaPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+	public AbstractSqlCriteriaPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
 		this.sqlDataSourceDialect = sqlDataSourceDialect;
 		this.opSql = opSql;
 	}
@@ -47,7 +47,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
 	 *             if an error occurs
 	 */
 	protected SqlCriteriaPolicy getOperatorPolicy(Criteria criteria) throws UnifyException {
-		return this.sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getOperator());
+		return sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getOperator());
 	}
 
 	/**
@@ -59,7 +59,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
 	 *             if column type is not supported
 	 */
 	protected SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException {
-		return this.sqlDataSourceDialect.getSqlTypePolicy(columnType);
+		return sqlDataSourceDialect.getSqlTypePolicy(columnType);
 	}
 
 	/**
@@ -72,14 +72,14 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
 	 *             if an error occurs
 	 */
 	protected String getSqlStringValue(Object value) throws UnifyException {
-		return this.sqlDataSourceDialect.translateValue(value);
+		return sqlDataSourceDialect.translateValue(value);
 	}
 
 	/**
 	 * Returns the minimum clause values.
 	 */
 	protected int maximumClauseValues() {
-		return this.sqlDataSourceDialect.getMaxClauseValues();
+		return sqlDataSourceDialect.getMaxClauseValues();
 	}
 
 	/**

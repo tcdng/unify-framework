@@ -62,29 +62,29 @@ public class WebStringWriter extends LargeStringWriter {
 
 	public WebStringWriter appendHtmlEscaped(String str) {
 		if (str == null) {
-			this.append(str);
+			append(str);
 		} else {
 			int len = str.length();
 			for (int i = 0; i < len; i++) {
 				char ch = str.charAt(i);
 				switch (ch) {
 				case '<':
-					this.append("&lt;");
+					append("&lt;");
 					break;
 				case '>':
-					this.append("&gt;");
+					append("&gt;");
 					break;
 				case '&':
-					this.append("&amp;");
+					append("&amp;");
 					break;
 				case '"':
-					this.append("&quot;");
+					append("&quot;");
 					break;
 				case '\'':
-					this.append("&apos;");
+					append("&apos;");
 					break;
 				default:
-					this.append(ch);
+					append(ch);
 				}
 			}
 		}
@@ -94,7 +94,7 @@ public class WebStringWriter extends LargeStringWriter {
 
 	public WebStringWriter appendHtmlEscaped(WebStringWriter wsw) {
 		if (wsw == null) {
-			this.append(StringUtils.NULL_STRING);
+			append(StringUtils.NULL_STRING);
 		} else {
 			char[] data = wsw.getData();
 			int len = wsw.length();
@@ -102,22 +102,22 @@ public class WebStringWriter extends LargeStringWriter {
 				char ch = data[i];
 				switch (ch) {
 				case '<':
-					this.append("&lt;");
+					append("&lt;");
 					break;
 				case '>':
-					this.append("&gt;");
+					append("&gt;");
 					break;
 				case '&':
-					this.append("&amp;");
+					append("&amp;");
 					break;
 				case '"':
-					this.append("&quot;");
+					append("&quot;");
 					break;
 				case '\'':
-					this.append("&apos;");
+					append("&apos;");
 					break;
 				default:
-					this.append(ch);
+					append(ch);
 				}
 			}
 		}
@@ -127,9 +127,9 @@ public class WebStringWriter extends LargeStringWriter {
 
 	public WebStringWriter appendJsonQuoted(String str) {
 		if (str == null || str.length() == 0) {
-			this.append("\"\"");
+			append("\"\"");
 		} else {
-			this.append('"');
+			append('"');
 			int len = str.length();
 			for (int i = 0; i < len; i++) {
 				char ch = str.charAt(i);
@@ -137,38 +137,38 @@ public class WebStringWriter extends LargeStringWriter {
 				case '"':
 				case '\\':
 				case '/':
-					this.append('\\').append(ch);
+					append('\\').append(ch);
 					break;
 				case '\t':
-					this.append("\\t");
+					append("\\t");
 					break;
 				case '\f':
-					this.append("\\f");
+					append("\\f");
 					break;
 				case '\b':
-					this.append("\\b");
+					append("\\b");
 					break;
 				case '\r':
-					this.append("\\r");
+					append("\\r");
 					break;
 				case '\n':
-					this.append("\\n");
+					append("\\n");
 					break;
 				default:
 					if (ch < ' ' || ch > 127) {
 						String hex = Integer.toHexString(ch);
 						int padLen = 4 - hex.length();
-						this.append("\\u");
+						append("\\u");
 						while (padLen-- > 0) {
-							this.append('0');
+							append('0');
 						}
-						this.append(hex);
+						append(hex);
 					} else {
-						this.append(ch);
+						append(ch);
 					}
 				}
 			}
-			this.append('"');
+			append('"');
 		}
 
 		return this;
@@ -176,9 +176,9 @@ public class WebStringWriter extends LargeStringWriter {
 
 	public WebStringWriter appendJsonQuoted(WebStringWriter wsw) {
 		if (wsw == null) {
-			this.append("\"\"");
+			append("\"\"");
 		} else {
-			this.append('"');
+			append('"');
 			char[] data = wsw.getData();
 			int len = wsw.length();
 			for (int i = 0; i < len; i++) {
@@ -187,38 +187,38 @@ public class WebStringWriter extends LargeStringWriter {
 				case '"':
 				case '\\':
 				case '/':
-					this.append('\\').append(ch);
+					append('\\').append(ch);
 					break;
 				case '\t':
-					this.append("\\t");
+					append("\\t");
 					break;
 				case '\f':
-					this.append("\\f");
+					append("\\f");
 					break;
 				case '\b':
-					this.append("\\b");
+					append("\\b");
 					break;
 				case '\r':
-					this.append("\\r");
+					append("\\r");
 					break;
 				case '\n':
-					this.append("\\n");
+					append("\\n");
 					break;
 				default:
 					if (ch < ' ' || ch > 127) {
 						String hex = Integer.toHexString(ch);
 						int padLen = 4 - hex.length();
-						this.append("\\u");
+						append("\\u");
 						while (padLen-- > 0) {
-							this.append('0');
+							append('0');
 						}
-						this.append(hex);
+						append(hex);
 					} else {
-						this.append(ch);
+						append(ch);
 					}
 				}
 			}
-			this.append('"');
+			append('"');
 		}
 
 		return this;

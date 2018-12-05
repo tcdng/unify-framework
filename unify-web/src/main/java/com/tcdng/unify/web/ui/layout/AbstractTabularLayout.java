@@ -46,12 +46,12 @@ public abstract class AbstractTabularLayout extends AbstractLayout implements Ta
 
 	@Override
 	public String[] getWidths() throws UnifyException {
-		return this.getUplAttribute(String[].class, "widths");
+		return getUplAttribute(String[].class, "widths");
 	}
 
 	@Override
 	public String[] getHeights() throws UnifyException {
-		return this.getUplAttribute(String[].class, "heights");
+		return getUplAttribute(String[].class, "heights");
 	}
 
 }

@@ -46,24 +46,24 @@ public abstract class AbstractUnicastObjectCommunicator extends AbstractNetworkU
 													// header (Don't change this
 													// order)
 		} catch (IOException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 	}
 
 	@Override
 	protected void onClose() throws UnifyException {
-		IOUtils.close(this.in);
-		IOUtils.close(this.out);
-		this.in = null;
-		this.out = null;
+		IOUtils.close(in);
+		IOUtils.close(out);
+		in = null;
+		out = null;
 	}
 
 	@Override
 	protected void flushWrite() throws UnifyException {
 		try {
-			this.out.flush();
+			out.flush();
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -76,9 +76,9 @@ public abstract class AbstractUnicastObjectCommunicator extends AbstractNetworkU
 	 */
 	protected Object readObject() throws UnifyException {
 		try {
-			return this.in.readObject();
+			return in.readObject();
 		} catch (Exception e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return null;
 	}
@@ -93,12 +93,12 @@ public abstract class AbstractUnicastObjectCommunicator extends AbstractNetworkU
 	 */
 	protected void writeObject(Serializable object) throws UnifyException {
 		try {
-			this.out.writeObject(object);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeObject(object);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 }

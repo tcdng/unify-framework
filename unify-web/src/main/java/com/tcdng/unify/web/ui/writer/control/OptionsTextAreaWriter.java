@@ -59,11 +59,11 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
 			for (int i = 0; i < length; i++) {
 				Listable listable = listableList.get(i);
 				writer.write("<a");
-				this.writeTagId(writer, optionsTextArea.getNamingIndexedId(i));
+				writeTagId(writer, optionsTextArea.getNamingIndexedId(i));
 				if (i == 0) {
-					this.writeTagStyleClass(writer, "sel");
+					writeTagStyleClass(writer, "sel");
 				} else {
-					this.writeTagStyleClass(writer, "norm");
+					writeTagStyleClass(writer, "norm");
 				}
 				writer.write(">");
 				writer.writeWithHtmlEscape(listable.getListDescription());

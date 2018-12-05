@@ -47,7 +47,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 	protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
 			throws UnifyException {
 		List<ReportColumn> reportColumnList = report.getColumns();
-		boolean isListFormat = this.isListFormat(report.getFormat());
+		boolean isListFormat = isListFormat(report.getFormat());
 		boolean isPrintColumnNames = report.isPrintColumnNames();
 		int actualColumnWidth = jasperDesign.getColumnWidth();
 		int columnHeaderHeight = report.getColumnHeaderHeight();
@@ -69,7 +69,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 				if (reportColumn.isSum() && DataUtils.isNumberType(reportColumn.getTypeName())) {
 				}
 
-				JRDesignElement jRDesignElement = this.newColumnJRDesignElement(jasperDesign, columnStyles,
+				JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, columnStyles,
 						reportColumn, isListFormat);
 				jRDesignElement.setX(titleWidth);
 				jRDesignElement.setY(calcDetailHeight + 2);
@@ -78,7 +78,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 				detailElementList.add(jRDesignElement);
 
 				if (isPrintColumnNames) {
-					JRDesignElement colHeaderJRDesignElement = this.newTitleJRDesignStaticText(columnStyles,
+					JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles,
 							Color.WHITE, HorizontalAlignEnum.LEFT, reportColumn);
 					colHeaderJRDesignElement.setBackcolor(new Color(0xD0, 0xD0, 0xD0));
 					colHeaderJRDesignElement.setX(0);
@@ -88,7 +88,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 
 					if (isListFormat) {
 						colHeaderJRDesignElement.addPropertyExpression(
-								this.newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
+								newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
 					}
 					detailTitleElementList.add(colHeaderJRDesignElement);
 				}
@@ -101,15 +101,15 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 		detailBand.setHeight(calcDetailHeight);
 
 		if (report.isShadeOddRows()) {
-			JRDesignRectangle jRDesignRectangle = this.newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth,
+			JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth,
 					calcDetailHeight, new Color(0xEE, 0xEE, 0xEE));
 			jRDesignRectangle.getLinePen().setLineWidth(0);
-			jRDesignRectangle.setPrintWhenExpression(this.getOnOddJRDesignExpression());
+			jRDesignRectangle.setPrintWhenExpression(getOnOddJRDesignExpression());
 			detailBand.addElement(jRDesignRectangle);
 		}
 
 		if (report.isUnderlineRows()) {
-			JRDesignLine jRDesignLine = this.newJRDesignLine(0, calcDetailHeight - 1, actualColumnWidth, 0,
+			JRDesignLine jRDesignLine = newJRDesignLine(0, calcDetailHeight - 1, actualColumnWidth, 0,
 					Color.BLACK);
 			detailBand.addElement(jRDesignLine);
 		}
@@ -133,17 +133,17 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 		int groupHeaderX = 0;
 		int groupCascade = 20;
 		for (ReportColumn reportColumn : groupingColumnList) {
-			JRDesignGroup jRDesignGroup = this.newJRDesignGroup(jasperDesign, reportColumn);
+			JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, reportColumn);
 
 			JRDesignBand groupBand = new JRDesignBand();
 			groupBand.setHeight(columnHeaderHeight);
 
-			JRDesignRectangle grpJRDesignRectangle = this.newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth,
+			JRDesignRectangle grpJRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth,
 					columnHeaderHeight - 2, new Color(0xD0, 0xD0, 0xD0));
 			grpJRDesignRectangle.getLinePen().setLineWidth(0);
 			groupBand.addElement(grpJRDesignRectangle);
 
-			JRDesignElement jRDesignElement = this.newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn,
+			JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn,
 					isListFormat);
 			jRDesignElement.setX(groupHeaderX);
 			jRDesignElement.setY(2);

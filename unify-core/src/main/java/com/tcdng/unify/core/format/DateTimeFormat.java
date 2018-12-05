@@ -42,7 +42,7 @@ public class DateTimeFormat {
 	private int[] range;
 
 	public DateTimeFormat(String subPattern, Locale locale, List<? extends Listable> list, int[] range) {
-		this.sdfPool = new SimpleDateFormatPool(subPattern, locale);
+		sdfPool = new SimpleDateFormatPool(subPattern, locale);
 		this.subPattern = subPattern;
 		if (list != null) {
 			this.list = Collections.unmodifiableList(list);

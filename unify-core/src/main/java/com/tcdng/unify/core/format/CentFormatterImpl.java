@@ -46,10 +46,10 @@ public class CentFormatterImpl extends AbstractNumberFormatter<Number> implement
 	@Override
 	public Number parse(String string) throws UnifyException {
 		try {
-			Number value = this.getNumberFormat().parse(string);
+			Number value = getNumberFormat().parse(string);
 			return Double.valueOf(value.doubleValue() / 100);
 		} catch (ParseException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}

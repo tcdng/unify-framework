@@ -32,7 +32,7 @@ public abstract class AbstractTimeField extends AbstractPopupTextField {
 	@Override
 	public void onPageInitialize() throws UnifyException {
 		super.onPageInitialize();
-		this.pattern = this.getFormatter().getFormatHelper().splitDatePattern(this.getFormatter().getPattern());
+		pattern = getFormatter().getFormatHelper().splitDatePattern(getFormatter().getPattern());
 	}
 
 	@Override

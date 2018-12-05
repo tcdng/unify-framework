@@ -61,10 +61,10 @@ public class DataTransfer {
 	}
 
 	public DataTransferBlock getDataTransferBlock(String id) {
-		return this.transferBlocks.get(id);
+		return transferBlocks.get(id);
 	}
 
 	public Collection<DataTransferBlock> getDataTransferBlocks() {
-		return this.transferBlocks.values();
+		return transferBlocks.values();
 	}
 }

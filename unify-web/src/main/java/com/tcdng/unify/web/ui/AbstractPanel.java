@@ -40,7 +40,7 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	private boolean allowRefresh;
 
 	public AbstractPanel() {
-		this.allowRefresh = true;
+		allowRefresh = true;
 	}
 
 	@Override
@@ -51,13 +51,13 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	@Override
 	@Action
 	public void switchState() throws UnifyException {
-		this.getRequestContextUtil().setPanelSwitchStateFlag(this);
+		getRequestContextUtil().setPanelSwitchStateFlag(this);
 	}
 
 	@Override
 	public boolean isVisible() throws UnifyException {
-		if (this.getUplAttribute(boolean.class, "hideOnNoComponents")) {
-			if (this.isNoReferencedComponents()) {
+		if (getUplAttribute(boolean.class, "hideOnNoComponents")) {
+			if (isNoReferencedComponents()) {
 				return false;
 			}
 		}
@@ -71,19 +71,19 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 
 	@Override
 	public void addEventListener(PanelEventListener listener) {
-		if (this.listeners == null) {
-			this.listeners = new ArrayList<PanelEventListener>();
+		if (listeners == null) {
+			listeners = new ArrayList<PanelEventListener>();
 		}
 
-		if (!this.listeners.contains(listener)) {
-			this.listeners.add(listener);
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
 		}
 	}
 
 	@Override
 	public void removeEventListener(PanelEventListener listener) {
-		if (this.listeners != null) {
-			this.listeners.remove(listener);
+		if (listeners != null) {
+			listeners.remove(listener);
 		}
 	}
 
@@ -125,8 +125,8 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	 *            the event code
 	 */
 	protected void notifyListeners(String eventCode) throws UnifyException {
-		if (this.listeners != null) {
-			for (PanelEventListener listener : this.listeners) {
+		if (listeners != null) {
+			for (PanelEventListener listener : listeners) {
 				listener.notify(this, eventCode);
 			}
 		}

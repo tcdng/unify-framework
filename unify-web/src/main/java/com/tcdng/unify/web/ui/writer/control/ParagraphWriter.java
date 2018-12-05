@@ -38,14 +38,14 @@ public class ParagraphWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		Paragraph paragraph = (Paragraph) widget;
 		writer.write("<p ");
-		this.writeTagAttributes(writer, paragraph);
+		writeTagAttributes(writer, paragraph);
 		writer.write(">");
 		String value = paragraph.getStringValue();
 		if (value == null) {
 			if (!StringUtils.isBlank(paragraph.getBinding())) {
 				writer.writeHtmlFixedSpace();
 			} else {
-				this.writeCaption(writer, paragraph);
+				writeCaption(writer, paragraph);
 			}
 		} else {
 			writer.writeWithHtmlEscape(value);

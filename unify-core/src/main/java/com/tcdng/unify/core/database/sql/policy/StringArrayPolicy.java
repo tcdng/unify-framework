@@ -54,7 +54,7 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
 		if (data == null) {
 			((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
 		} else {
-			((PreparedStatement) pstmt).setString(index, this.getString(data));
+			((PreparedStatement) pstmt).setString(index, getString(data));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
 	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
 		String string = ((ResultSet) rs).getString(column);
 		if (string != null) {
-			return this.getResult(string);
+			return getResult(string);
 		}
 		return null;
 	}
@@ -71,7 +71,7 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
 	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
 		String string = ((ResultSet) rs).getString(index);
 		if (string != null) {
-			return this.getResult(string);
+			return getResult(string);
 		}
 		return null;
 	}
@@ -81,6 +81,6 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
 	}
 
 	private Object getResult(String data) throws Exception {
-		return DataUtils.convert(this.arrayClass, StringUtils.getCommaSeparatedValues(data), null);
+		return DataUtils.convert(arrayClass, StringUtils.getCommaSeparatedValues(data), null);
 	}
 }

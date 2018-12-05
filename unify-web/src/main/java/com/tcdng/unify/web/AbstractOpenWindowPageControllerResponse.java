@@ -33,8 +33,8 @@ public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJ
 
 	@Override
 	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		WindowResourceInfo windowResourceInfo = this.prepareWindowResource();
-		this.setSessionAttribute(windowResourceInfo.getResourceName(), windowResourceInfo.getResourceObject());
+		WindowResourceInfo windowResourceInfo = prepareWindowResource();
+		setSessionAttribute(windowResourceInfo.getResourceName(), windowResourceInfo.getResourceObject());
 
 		writer.write(",\"openWindow\":");
 		writer.useSecondary(128);

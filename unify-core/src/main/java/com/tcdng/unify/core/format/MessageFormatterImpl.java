@@ -33,7 +33,7 @@ public class MessageFormatterImpl extends AbstractFormatter<String> implements M
 
 	@Override
 	public String format(String value) throws UnifyException {
-		return this.resolveSessionMessage(value);
+		return resolveSessionMessage(value);
 	}
 
 	@Override

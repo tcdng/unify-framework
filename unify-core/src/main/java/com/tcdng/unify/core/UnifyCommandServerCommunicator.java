@@ -31,9 +31,9 @@ public class UnifyCommandServerCommunicator extends AbstractUnicastTextCommunica
 
 	@Override
 	public boolean communicate() throws UnifyException {
-		String cmd = this.readLine();
-		String param = this.readLine();
-		this.sendCommand(cmd, param);
+		String cmd = readLine();
+		String param = readLine();
+		sendCommand(cmd, param);
 		return true;
 	}
 }

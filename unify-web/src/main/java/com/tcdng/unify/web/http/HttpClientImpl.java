@@ -36,7 +36,7 @@ public class HttpClientImpl extends AbstractHttpClient {
 		try {
 			return (HttpURLConnection) new URL(url).openConnection();
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}

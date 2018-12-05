@@ -40,6 +40,6 @@ public class PageWidgetValidator {
 	}
 
 	public boolean validate(DataTransfer dataTransfer) throws UnifyException {
-		return this.pageValidation.validate(this.widgets, dataTransfer);
+		return pageValidation.validate(widgets, dataTransfer);
 	}
 }

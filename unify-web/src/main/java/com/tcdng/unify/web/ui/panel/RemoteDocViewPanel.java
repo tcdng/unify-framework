@@ -32,6 +32,6 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 public class RemoteDocViewPanel extends AbstractPanel {
 
 	public RemoteDocViewInfo getRemoteDocViewInfo() throws UnifyException {
-		return (RemoteDocViewInfo) this.getValue();
+		return (RemoteDocViewInfo) getValue();
 	}
 }

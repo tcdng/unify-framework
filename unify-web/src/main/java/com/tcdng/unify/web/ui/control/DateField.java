@@ -45,19 +45,19 @@ public class DateField extends AbstractTimeField {
 		super.onPageInitialize();
 
 		// Preset date-time format for month and pattern aliases
-		Formatter<?> formatter = this.getFormatter();
+		Formatter<?> formatter = getFormatter();
 		for (Pattern p : super.getPattern()) {
 			if (!p.isFiller()) {
 				if ('M' == p.getPattern().charAt(0)) {
-					this.monthDateTimeFormat = formatter.getFormatHelper().getSubPatternDateTimeFormat(p.getPattern(),
+					monthDateTimeFormat = formatter.getFormatHelper().getSubPatternDateTimeFormat(p.getPattern(),
 							formatter.getLocale());
-					this.longMonthList = monthDateTimeFormat.getSubPatternDescriptions();
+					longMonthList = monthDateTimeFormat.getSubPatternDescriptions();
 				}
 			}
 		}
 
 		// Preset short days list
-		this.shortDayList = formatter.getFormatHelper().getSubPatternDateTimeFormat("EEE", formatter.getLocale())
+		shortDayList = formatter.getFormatHelper().getSubPatternDateTimeFormat("EEE", formatter.getLocale())
 				.getSubPatternKeys();
 	}
 
@@ -68,13 +68,13 @@ public class DateField extends AbstractTimeField {
 			if (!p.isFiller()) {
 				switch (p.getPattern().charAt(0)) {
 				case 'y':
-					p.setTarget(this.getPrefixedId("year_"));
+					p.setTarget(getPrefixedId("year_"));
 					break;
 				case 'd':
-					p.setTarget(this.getPrefixedId("day_"));
+					p.setTarget(getPrefixedId("day_"));
 					break;
 				case 'M':
-					p.setTarget(this.getPrefixedId("mon_"));
+					p.setTarget(getPrefixedId("mon_"));
 					break;
 				default:
 				}
@@ -84,10 +84,10 @@ public class DateField extends AbstractTimeField {
 	}
 
 	public String[] getShortDayList() {
-		return this.shortDayList;
+		return shortDayList;
 	}
 
 	public String[] getLongMonthList() {
-		return this.longMonthList;
+		return longMonthList;
 	}
 }

@@ -30,9 +30,9 @@ public class TestMulticastServerDataCommunicator extends AbstractMulticastServer
 	@Override
 	public void send(NetworkMessage message) throws UnifyException {
 		TestMulticastMessage msg = (TestMulticastMessage) message;
-		this.writeChar(msg.getCode());
-		this.writeInt(msg.getWidth());
-		this.writeInt(msg.getHeight());
+		writeChar(msg.getCode());
+		writeInt(msg.getWidth());
+		writeInt(msg.getHeight());
 	}
 
 }

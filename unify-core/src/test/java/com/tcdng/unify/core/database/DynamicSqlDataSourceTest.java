@@ -55,7 +55,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
 		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
 				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
 		try {
-			DynamicSqlDataSourceConfig config = this.getConfig(0);
+			DynamicSqlDataSourceConfig config = getConfig(0);
 			dsds.configure(config);
 			assertTrue(dsds.isConfigured());
 		} finally {
@@ -68,7 +68,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
 		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
 				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
 		try {
-			DynamicSqlDataSourceConfig config = this.getConfig(0);
+			DynamicSqlDataSourceConfig config = getConfig(0);
 			dsds.configure(config);
 			dsds.configure(config);
 		} finally {
@@ -81,7 +81,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
 		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
 				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
 		try {
-			DynamicSqlDataSourceConfig config = this.getConfig(0);
+			DynamicSqlDataSourceConfig config = getConfig(0);
 			dsds.configure(config);
 			boolean result = dsds.reconfigure(config);
 			assertTrue(result);
@@ -95,7 +95,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
 		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
 				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
 		try {
-			DynamicSqlDataSourceConfig config = this.getConfig(0);
+			DynamicSqlDataSourceConfig config = getConfig(0);
 			boolean result = dsds.reconfigure(config);
 			assertFalse(result);
 		} finally {

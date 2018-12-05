@@ -49,7 +49,7 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
-		return (Formatter<T>) this.getSessionLocaleFormatter(formatterUpl);
+		return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
 	}
 
 	@Override
@@ -57,9 +57,9 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 		FileOutputStream fileOutputStream = null;
 		try {
 			fileOutputStream = new FileOutputStream(filename);
-			this.generateReport(report, fileOutputStream);
+			generateReport(report, fileOutputStream);
 		} catch (FileNotFoundException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		} finally {
 			IOUtils.close(fileOutputStream);
 		}
@@ -70,9 +70,9 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 		FileOutputStream fileOutputStream = null;
 		try {
 			fileOutputStream = new FileOutputStream(file);
-			this.generateReport(report, fileOutputStream);
+			generateReport(report, fileOutputStream);
 		} catch (FileNotFoundException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		} finally {
 			IOUtils.close(fileOutputStream);
 		}
@@ -81,16 +81,16 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 	@Override
 	public void generateReport(Report report, OutputStream outputStream) throws UnifyException {
 		if (report.getDataSource() == null) {
-			report.setDataSource(this.defaultDatasource);
+			report.setDataSource(defaultDatasource);
 			report.setDynamicDataSource(false);
 		}
 
 		if (report.getProcessor() != null) {
-			ReportProcessor reportProcessor = ((ReportProcessor) this.getComponent(report.getProcessor()));
+			ReportProcessor reportProcessor = ((ReportProcessor) getComponent(report.getProcessor()));
 			reportProcessor.process(report);
 		}
 
-		this.doGenerateReport(report, outputStream);
+		doGenerateReport(report, outputStream);
 	}
 
 	@Override
@@ -105,10 +105,10 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 
 	protected DataSource getDataSource(Report report) throws UnifyException {
 		if (report.isDynamicDataSource()) {
-			return this.dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
+			return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
 		}
 
-		return (DataSource) this.getComponent(report.getDataSource());
+		return (DataSource) getComponent(report.getDataSource());
 	}
 
 	protected abstract void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException;

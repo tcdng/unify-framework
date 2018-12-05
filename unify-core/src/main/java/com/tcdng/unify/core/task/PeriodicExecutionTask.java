@@ -34,13 +34,13 @@ public class PeriodicExecutionTask extends AbstractTask {
 			if (!taskMonitor.isCanceled()) {
 				PeriodicExecutionInfo periodicExecutionInfo = input.getParam(PeriodicExecutionInfo.class,
 						PeriodicExecutionTaskConstants.PERIODICEXECUTIONINFO);
-				UnifyComponent unifyComponent = this.getComponent(periodicExecutionInfo.getComponentName());
+				UnifyComponent unifyComponent = getComponent(periodicExecutionInfo.getComponentName());
 				periodicExecutionInfo.getMethod().invoke(unifyComponent, taskMonitor);
 			}
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 	}
 }

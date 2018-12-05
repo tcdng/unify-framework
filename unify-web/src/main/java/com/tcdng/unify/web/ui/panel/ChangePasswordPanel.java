@@ -36,7 +36,7 @@ public class ChangePasswordPanel extends AbstractPanel {
 	@Override
 	public void switchState() throws UnifyException {
 		super.switchState();
-		Widget messageLabel = this.getWidgetByShortName("pwdChangeMsg");
+		Widget messageLabel = getWidgetByShortName("pwdChangeMsg");
 		messageLabel.setVisible(messageLabel.getValue(String.class) != null);
 	}
 }

@@ -55,13 +55,13 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
 
 	@Override
 	public String format(T value) throws UnifyException {
-		return this.getNumberFormat().format(value);
+		return getNumberFormat().format(value);
 	}
 
 	@Override
 	public String getPattern() throws UnifyException {
-		this.getNumberFormat();
-		return this.pattern;
+		getNumberFormat();
+		return pattern;
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
 		if (precision > 0) {
 			return precision;
 		}
-		return this.getUplAttribute(int.class, "precision");
+		return getUplAttribute(int.class, "precision");
 	}
 
 	@Override
 	public void setPrecision(int precision) {
 		this.precision = precision;
-		this.nf = null;
+		nf = null;
 	}
 
 	@Override
@@ -83,13 +83,13 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
 		if (scale > 0) {
 			return scale;
 		}
-		return this.getUplAttribute(int.class, "scale");
+		return getUplAttribute(int.class, "scale");
 	}
 
 	@Override
 	public void setScale(int scale) {
 		this.scale = scale;
-		this.nf = null;
+		nf = null;
 	}
 
 	@Override
@@ -97,28 +97,28 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
 		if (groupingUsed) {
 			return groupingUsed;
 		}
-		return this.getUplAttribute(boolean.class, "useGrouping");
+		return getUplAttribute(boolean.class, "useGrouping");
 	}
 
 	@Override
 	public void setGroupingUsed(boolean groupingUsed) {
 		this.groupingUsed = groupingUsed;
-		this.nf = null;
+		nf = null;
 	}
 
 	@Override
 	public NumberSymbols getNumberSymbols() throws UnifyException {
-		this.getNumberFormat();
-		return this.numberSymbols;
+		getNumberFormat();
+		return numberSymbols;
 	}
 
 	protected NumberFormat getNumberFormat() throws UnifyException {
 		if (nf == null) {
-			this.pattern = null;
-			Locale locale = this.getLocale();
-			this.numberSymbols = this.getFormatHelper().getNumberSymbols(type, locale);
+			pattern = null;
+			Locale locale = getLocale();
+			numberSymbols = getFormatHelper().getNumberSymbols(type, locale);
 
-			switch (this.type) {
+			switch (type) {
 			case INTEGER:
 				nf = NumberFormat.getIntegerInstance(locale);
 				break;
@@ -132,16 +132,16 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
 			}
 
 			DecimalFormat df = (DecimalFormat) nf;
-			nf.setGroupingUsed(this.isGroupingUsed());
+			nf.setGroupingUsed(isGroupingUsed());
 			if (NumberType.INTEGER.equals(type)) {
 				df.setParseBigDecimal(false);
-				if (this.getPrecision() > 0) {
+				if (getPrecision() > 0) {
 					nf.setMaximumIntegerDigits(getPrecision());
 				}
 			} else {
 				df.setParseBigDecimal(true);
-				int precision = this.getPrecision();
-				int scale = this.getScale();
+				int precision = getPrecision();
+				int scale = getScale();
 				if (precision > 0) {
 					if (scale > 0) {
 						precision -= scale;
@@ -156,7 +156,7 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
 				}
 			}
 
-			this.pattern = df.toPattern();
+			pattern = df.toPattern();
 		}
 		return nf;
 	}

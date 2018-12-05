@@ -88,13 +88,13 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
 		}
 
 		hsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
-				.append(timeField.getPrefixedId("btns_")).append("\">").append(this.getSessionMessage("button.set"))
+				.append(timeField.getPrefixedId("btns_")).append("\">").append(getSessionMessage("button.set"))
 				.append("</button></div>");
 		csb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
-				.append(timeField.getPrefixedId("btncl_")).append("\">").append(this.getSessionMessage("button.clear"))
+				.append(timeField.getPrefixedId("btncl_")).append("\">").append(getSessionMessage("button.clear"))
 				.append("</button></div>");
 		fsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
-				.append(timeField.getPrefixedId("btncn_")).append("\">").append(this.getSessionMessage("button.cancel"))
+				.append(timeField.getPrefixedId("btncn_")).append("\">").append(getSessionMessage("button.cancel"))
 				.append("</button></div>");
 
 		writer.write("<div class=\"tfframe\"><div style=\"display:table\"><div style=\"display:table-row\">")

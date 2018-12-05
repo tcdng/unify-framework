@@ -40,24 +40,24 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 
 	@Override
 	protected void onOpen(InputStream in, OutputStream out) throws UnifyException {
-		this.writer = new BufferedWriter(new OutputStreamWriter(out));
-		this.reader = new BufferedReader(new InputStreamReader(in));
+		writer = new BufferedWriter(new OutputStreamWriter(out));
+		reader = new BufferedReader(new InputStreamReader(in));
 	}
 
 	@Override
 	protected void onClose() throws UnifyException {
-		IOUtils.close(this.reader);
-		IOUtils.close(this.writer);
-		this.reader = null;
-		this.writer = null;
+		IOUtils.close(reader);
+		IOUtils.close(writer);
+		reader = null;
+		writer = null;
 	}
 
 	@Override
 	protected void flushWrite() throws UnifyException {
 		try {
-			this.writer.flush();
+			writer.flush();
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -69,9 +69,9 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected String readLine() throws UnifyException {
 		try {
-			return this.reader.readLine();
+			return reader.readLine();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return null;
 	}
@@ -87,9 +87,9 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected int readChar(char[] buffer) throws UnifyException {
 		try {
-			return this.reader.read(buffer);
+			return reader.read(buffer);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -109,9 +109,9 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected int readChar(char[] buffer, int offset, int length) throws UnifyException {
 		try {
-			return this.reader.read(buffer, offset, length);
+			return reader.read(buffer, offset, length);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -124,9 +124,9 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected int readChar() throws UnifyException {
 		try {
-			return this.reader.read();
+			return reader.read();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -141,12 +141,12 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected void write(String text) throws UnifyException {
 		try {
-			this.writer.write(text);
-			if (this.isAutoFlush()) {
-				this.writer.flush();
+			writer.write(text);
+			if (isAutoFlush()) {
+				writer.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -160,13 +160,13 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeLine(String text) throws UnifyException {
 		try {
-			this.writer.write(text);
-			this.writer.newLine();
-			if (this.isAutoFlush()) {
-				this.writer.flush();
+			writer.write(text);
+			writer.newLine();
+			if (isAutoFlush()) {
+				writer.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -178,12 +178,12 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeNewLine() throws UnifyException {
 		try {
-			this.writer.newLine();
-			if (this.isAutoFlush()) {
-				this.writer.flush();
+			writer.newLine();
+			if (isAutoFlush()) {
+				writer.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -197,12 +197,12 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeChar(char[] buffer) throws UnifyException {
 		try {
-			this.writer.write(buffer);
-			if (this.isAutoFlush()) {
-				this.writer.flush();
+			writer.write(buffer);
+			if (isAutoFlush()) {
+				writer.flush();
 			}
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 	}
 
@@ -220,12 +220,12 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeChar(char[] buffer, int offset, int length) throws UnifyException {
 		try {
-			this.writer.write(buffer, offset, length);
-			if (this.isAutoFlush()) {
-				this.writer.flush();
+			writer.write(buffer, offset, length);
+			if (isAutoFlush()) {
+				writer.flush();
 			}
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 	}
 
@@ -239,12 +239,12 @@ public abstract class AbstractUnicastTextCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeChar(char ch) throws UnifyException {
 		try {
-			this.writer.write(ch);
-			if (this.isAutoFlush()) {
-				this.writer.flush();
+			writer.write(ch);
+			if (isAutoFlush()) {
+				writer.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 }

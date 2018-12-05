@@ -80,7 +80,7 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 		}
 
 		if (StringUtils.isBlank(resolvedPath)) {
-			resolvedPath = this.getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_HOME, "/home");
+			resolvedPath = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_HOME, "/home");
 		}
 
 		Charset charset = StandardCharsets.UTF_8;
@@ -89,12 +89,12 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 		}
 
 		ClientRequest clientRequest = new HttpClientRequest(resolvedPath, charset,
-				this.extractRequestParameters(request, charset));
+				extractRequestParameters(request, charset));
 		ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
-		if (!this.remoteViewerList.isEmpty()) {
+		if (!remoteViewerList.isEmpty()) {
 			String origin = request.getHeader("origin");
-			if (this.remoteViewerList.contains(origin)) {
+			if (remoteViewerList.contains(origin)) {
 				HttpServletResponse response = (HttpServletResponse) responseObject;
 				response.setHeader("Access-Control-Allow-Origin", origin);
 				response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
@@ -103,16 +103,16 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 			}
 		}
 
-		this.controllerManager.executeController(clientRequest, clientResponse);
+		controllerManager.executeController(clientRequest, clientResponse);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onInitialize() throws UnifyException {
-		this.remoteViewerList = DataUtils.convert(ArrayList.class, String.class,
-				this.getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_REMOTE_VIEWERS), null);
-		if (this.remoteViewerList == null) {
-			this.remoteViewerList = Collections.emptyList();
+		remoteViewerList = DataUtils.convert(ArrayList.class, String.class,
+				getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_REMOTE_VIEWERS), null);
+		if (remoteViewerList == null) {
+			remoteViewerList = Collections.emptyList();
 		}
 	}
 
@@ -132,12 +132,12 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 				result.put(RequestParameterConstants.REMOTE_CALL_BODY, reqBody);
 				result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
 			} catch (IOException e) {
-				this.throwOperationErrorException(e);
+				throwOperationErrorException(e);
 			}
 		} else {
 			boolean isFormData = contentType != null && contentType.indexOf("multipart/form-data") >= 0;
 			if (isFormData) {
-				this.processParts(result, request);
+				processParts(result, request);
 			} else {
 				boolean chkMorsic = true;
 				Map<String, String[]> httpRequestParamMap = request.getParameterMap();
@@ -167,7 +167,7 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 
 	private void processParts(Map<String, Object> requestParameterMap, HttpServletRequest request)
 			throws UnifyException {
-		this.logDebug("Processing multi-part request parameters [{0}]", requestParameterMap.keySet());
+		logDebug("Processing multi-part request parameters [{0}]", requestParameterMap.keySet());
 		try {
 			Map<String, List<String>> stringMap = new HashMap<String, List<String>>();
 			Map<String, List<UploadedFile>> uploadedFileMap = new HashMap<String, List<UploadedFile>>();
@@ -180,7 +180,7 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 					continue;
 				}
 
-				ContentDisposition contentDisposition = this.getContentDisposition(part);
+				ContentDisposition contentDisposition = getContentDisposition(part);
 				if (contentDisposition.isFileName()) {
 					UploadedFile frmFile = new UploadedFile(contentDisposition.getFileName(),
 							contentDisposition.getCreationDate(), contentDisposition.getModificationDate(),
@@ -225,9 +225,9 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
-		this.logDebug("Multi-part request processing completed");
+		logDebug("Multi-part request processing completed");
 	}
 
 	private ContentDisposition getContentDisposition(Part part) throws UnifyException {
@@ -283,7 +283,7 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 		}
 
 		public boolean isFileName() {
-			return this.fileName != null;
+			return fileName != null;
 		}
 	}
 }

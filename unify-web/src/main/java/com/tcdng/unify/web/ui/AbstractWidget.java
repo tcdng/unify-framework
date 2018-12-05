@@ -264,7 +264,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	@Override
 	public boolean isEditable() throws UnifyException {
-		return editable && !this.getUplAttribute(boolean.class, "readOnly") && getPrivilegeSettings().isEditable();
+		return editable && !getUplAttribute(boolean.class, "readOnly") && getPrivilegeSettings().isEditable();
 	}
 
 	@Override

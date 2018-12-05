@@ -36,6 +36,6 @@ public class TaskStatusLoggerImpl extends AbstractTaskStatusLogger {
 
 	@Override
 	public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
-		this.logError(exception);
+		logError(exception);
 	}
 }

@@ -40,9 +40,9 @@ public abstract class AbstractTwoWayCryptograph extends AbstractUnifyComponent {
 
 	@Override
 	protected void onInitialize() throws UnifyException {
-		String encryptionKey = this.getEncryptionKey();
-		this.ecipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.ENCRYPT_MODE);
-		this.dcipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.DECRYPT_MODE);
+		String encryptionKey = getEncryptionKey();
+		ecipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.ENCRYPT_MODE);
+		dcipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.DECRYPT_MODE);
 	}
 
 	@Override
@@ -51,18 +51,18 @@ public abstract class AbstractTwoWayCryptograph extends AbstractUnifyComponent {
 	}
 
 	protected String getEncryptionKey() throws UnifyException {
-		return this.encryptionKey;
+		return encryptionKey;
 	}
 
 	protected final byte[] doEncrypt(byte[] toEncrypt) throws UnifyException {
 		if (toEncrypt != null) {
-			Cipher ecipher = this.ecipherPool.borrowObject();
+			Cipher ecipher = ecipherPool.borrowObject();
 			try {
 				return ecipher.doFinal(toEncrypt);
 			} catch (Exception e) {
-				this.throwOperationErrorException(e);
+				throwOperationErrorException(e);
 			} finally {
-				this.ecipherPool.returnObject(ecipher);
+				ecipherPool.returnObject(ecipher);
 			}
 		}
 		return null;
@@ -70,13 +70,13 @@ public abstract class AbstractTwoWayCryptograph extends AbstractUnifyComponent {
 
 	protected final byte[] doDecrypt(byte[] toDecrypt) throws UnifyException {
 		if (toDecrypt != null) {
-			Cipher dcipher = this.dcipherPool.borrowObject();
+			Cipher dcipher = dcipherPool.borrowObject();
 			try {
 				return dcipher.doFinal(toDecrypt);
 			} catch (Exception e) {
-				this.throwOperationErrorException(e);
+				throwOperationErrorException(e);
 			} finally {
-				this.dcipherPool.returnObject(dcipher);
+				dcipherPool.returnObject(dcipher);
 			}
 		}
 		return null;

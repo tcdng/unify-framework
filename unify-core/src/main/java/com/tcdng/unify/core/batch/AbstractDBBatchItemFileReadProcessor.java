@@ -59,9 +59,9 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
 			updateFields = updateList.toArray(new String[updateList.size()]);
 		}
 
-		Database pm = this.getDatabase(input);
+		Database pm = getDatabase(input);
 		T batchItem = ReflectUtils.newInstance(batchItemClass);
-		ValueStore itemStore = this.getValueStoreFactory().getValueStore(batchItem, 0);
+		ValueStore itemStore = getValueStoreFactory().getValueStore(batchItem, 0);
 		int createCount = 0;
 		int updateCount = 0;
 		int skipCount = 0;
@@ -69,10 +69,10 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
 			T constraint = pm.findConstraint(batchItem);
 			if (constraint == null) {
 				// No constraint. Just create item.
-				this.preBatchItemCreate(input, batchItem);
+				preBatchItemCreate(input, batchItem);
 				Object id = pm.create(batchItem);
 				idList.add(id);
-				this.postBatchItemCreate(input, batchItem);
+				postBatchItemCreate(input, batchItem);
 				createCount++;
 			} else {
 				// Constraining record found. Take action.

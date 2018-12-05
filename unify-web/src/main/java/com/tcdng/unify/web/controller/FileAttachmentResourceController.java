@@ -46,13 +46,13 @@ public class FileAttachmentResourceController extends AbstractResourceController
 	@Override
 	public void execute(OutputStream outputStream) throws UnifyException {
 		FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) this
-				.removeSessionAttribute(this.getResourceName());
+				.removeSessionAttribute(getResourceName());
 		FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
 		byte[] data = fileAttachmentInfo.getAttachment();
 		if (data == null) {
 			String handler = fileAttachmentsInfo.getHandlerName();
 			if (handler != null) {
-				FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) this.getComponent(handler);
+				FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
 				FileAttachmentInfo viewFileAttachmentInfo = fileAttachmentHandler
 						.handleView(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
 				data = viewFileAttachmentInfo.getAttachment();

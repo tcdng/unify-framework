@@ -43,14 +43,14 @@ public class FileSizeFormatterImpl extends AbstractFormatter<Number> implements 
 			return null;
 		}
 		if (value.longValue() < 0) {
-			this.throwOperationErrorException(new Exception("Invalid file size - " + value));
+			throwOperationErrorException(new Exception("Invalid file size - " + value));
 		}
 		if (value.longValue() < 1024) {
 			return value + " Bytes";
 		}
 		double bytes = value.doubleValue();
 		int index = (int) (Math.log(bytes) / Math.log(1024));
-		return String.format("%s %s", this.getNumberFormat().format(bytes / Math.pow(1024, index)),
+		return String.format("%s %s", getNumberFormat().format(bytes / Math.pow(1024, index)),
 				FILESIZE_SUFFIX[index - 1]);
 	}
 
@@ -61,7 +61,7 @@ public class FileSizeFormatterImpl extends AbstractFormatter<Number> implements 
 				string = string.toUpperCase();
 				for (int i = 0; i < string.length(); i++) {
 					if (Character.isLetter(string.charAt(i))) {
-						double value = this.getNumberFormat().parse(string.substring(0, i).trim()).doubleValue();
+						double value = getNumberFormat().parse(string.substring(0, i).trim()).doubleValue();
 						String suffix = string.substring(i);
 						if ("KB".equals(suffix)) {
 							value *= 1024;
@@ -81,10 +81,10 @@ public class FileSizeFormatterImpl extends AbstractFormatter<Number> implements 
 						return (long) value;
 					}
 				}
-				return (long) this.getNumberFormat().parse(string.trim()).doubleValue();
+				return (long) getNumberFormat().parse(string.trim()).doubleValue();
 			}
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}
@@ -95,11 +95,11 @@ public class FileSizeFormatterImpl extends AbstractFormatter<Number> implements 
 	}
 
 	private NumberFormat getNumberFormat() throws UnifyException {
-		if (this.nf == null) {
-			this.nf = NumberFormat.getNumberInstance(this.getLocale());
-			this.nf.setMaximumFractionDigits(1);
-			this.nf.setMinimumFractionDigits(1);
+		if (nf == null) {
+			nf = NumberFormat.getNumberInstance(getLocale());
+			nf.setMaximumFractionDigits(1);
+			nf.setMinimumFractionDigits(1);
 		}
-		return this.nf;
+		return nf;
 	}
 }

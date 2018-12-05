@@ -66,65 +66,65 @@ public abstract class AbstractDateFormatter extends AbstractFormatter<Date> impl
 
 	@Override
 	public String getPattern() throws UnifyException {
-		this.getSimpleDateFormatPool();
-		return this.pattern;
+		getSimpleDateFormatPool();
+		return pattern;
 	}
 
 	@Override
 	public String format(Date date) throws UnifyException {
-		return this.getSimpleDateFormatPool().format(date);
+		return getSimpleDateFormatPool().format(date);
 	}
 
 	@Override
 	public Date parse(String string) throws UnifyException {
-		return this.getSimpleDateFormatPool().parse(string);
+		return getSimpleDateFormatPool().parse(string);
 	}
 
 	private SimpleDateFormatPool getSimpleDateFormatPool() throws UnifyException {
-		if (this.sdfp == null) {
-			this.sdfp = CalendarUtils.getSimpleDateFormatPool(this.getSessionContext().getLocale(), getDatePattern());
+		if (sdfp == null) {
+			sdfp = CalendarUtils.getSimpleDateFormatPool(getSessionContext().getLocale(), getDatePattern());
 		}
-		return this.sdfp;
+		return sdfp;
 	}
 
 	private String getDatePattern() throws UnifyException {
 		DateFormat df = null;
 
-		switch (this.type) {
+		switch (type) {
 		case DATETIME:
-			Integer styleId = this.getStyleId();
-			df = DateFormat.getDateTimeInstance(styleId, styleId, this.getLocale());
+			Integer styleId = getStyleId();
+			df = DateFormat.getDateTimeInstance(styleId, styleId, getLocale());
 			break;
 		case TIME:
-			df = DateFormat.getTimeInstance(this.getStyleId(), this.getLocale());
+			df = DateFormat.getTimeInstance(getStyleId(), getLocale());
 			break;
 		case DATE:
-			df = DateFormat.getDateInstance(this.getStyleId(), this.getLocale());
+			df = DateFormat.getDateInstance(getStyleId(), getLocale());
 			break;
 		case FIXED:
 		default:
-			String uplPattern = this.getUplAttribute(String.class, "pattern");
-			df = new SimpleDateFormat(uplPattern, this.getLocale());
+			String uplPattern = getUplAttribute(String.class, "pattern");
+			df = new SimpleDateFormat(uplPattern, getLocale());
 			break;
 		}
 
-		String timeZoneId = this.getUplAttribute(String.class, "timeZoneId");
+		String timeZoneId = getUplAttribute(String.class, "timeZoneId");
 		if (timeZoneId != null) {
 			df.setTimeZone(TimeZone.getTimeZone(timeZoneId));
 		}
 
 		SimpleDateFormat sdf = (SimpleDateFormat) df;
-		if (DateStyleConstants.CUSTOMSHORT_STYLE.equals(this.getUplAttribute(String.class, "style"))) {
-			sdf.applyPattern(this.getFormatHelper().getDatePatternWithLongYear(sdf.toPattern()));
+		if (DateStyleConstants.CUSTOMSHORT_STYLE.equals(getUplAttribute(String.class, "style"))) {
+			sdf.applyPattern(getFormatHelper().getDatePatternWithLongYear(sdf.toPattern()));
 		}
 
-		this.pattern = sdf.toPattern();
-		return this.pattern;
+		pattern = sdf.toPattern();
+		return pattern;
 	}
 
 	private Integer getStyleId() throws UnifyException {
 		Integer id = null;
-		String style = this.getUplAttribute(String.class, "style");
+		String style = getUplAttribute(String.class, "style");
 		if (style != null) {
 			String actStyle = style;
 			if (DateStyleConstants.CUSTOMSHORT_STYLE.equals(actStyle)) {

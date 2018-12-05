@@ -35,12 +35,12 @@ public class TestMulticastClientDataCommunicator extends AbstractMulticastClient
 	private List<TestMulticastMessage> messages;
 
 	public TestMulticastClientDataCommunicator() {
-		this.messages = new ArrayList<TestMulticastMessage>();
+		messages = new ArrayList<TestMulticastMessage>();
 	}
 
 	@Override
 	public void receive() throws UnifyException {
-		this.messages.add(new TestMulticastMessage(this.readChar(), this.readInt(), this.readInt()));
+		messages.add(new TestMulticastMessage(readChar(), readInt(), readInt()));
 	}
 
 	public List<TestMulticastMessage> getMessages() {

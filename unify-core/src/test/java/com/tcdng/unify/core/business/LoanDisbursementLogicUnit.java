@@ -37,7 +37,7 @@ public class LoanDisbursementLogicUnit extends AbstractBusinessLogicUnit {
 			loanDisbursement.setLoanAccountId(loanAccount.getId());
 			loanDisbursement.setDisbursementCount(20);
 			loanDisbursement.setDisbursementAmount(loanAccount.getPrincipalAmount());
-			this.getDatabase(input).create(loanDisbursement);
+			getDatabase(input).create(loanDisbursement);
 		}
 	}
 }

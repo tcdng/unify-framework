@@ -70,27 +70,27 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 			}
 		}
 
-		this.defineParameters(name, parameterList);
+		defineParameters(name, parameterList);
 	}
 
 	@Override
 	public void defineParameters(String name, List<ParameterDef> parameterList) throws UnifyException {
-		ParametersDef pdd = this.db().find(new ParametersDefQuery().typeName(name));
+		ParametersDef pdd = db().find(new ParametersDefQuery().typeName(name));
 		if (pdd == null) {
 			pdd = new ParametersDef();
 			pdd.setTypeName(name);
 			pdd.setParameterDefs(parameterList);
-			this.db().create(pdd);
+			db().create(pdd);
 		} else {
 			pdd.setParameterDefs(parameterList);
-			this.db().updateByIdVersion(pdd);
+			db().updateByIdVersion(pdd);
 		}
 	}
 
 	@Override
 	public Map<String, ParameterDef> findParameterDefinitionsByName(String name) throws UnifyException {
 		Map<String, ParameterDef> map = new LinkedHashMap<String, ParameterDef>();
-		for (ParameterDef pd : this.db().find(new ParametersDefQuery().typeName(name)).getParameterDefs()) {
+		for (ParameterDef pd : db().find(new ParametersDefQuery().typeName(name)).getParameterDefs()) {
 			map.put(pd.getName(), pd);
 		}
 		return map;
@@ -98,11 +98,11 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 
 	@Override
 	public List<Input> fetchInputList(String name) throws UnifyException {
-		ParametersDef parametersDefData = this.db().find(new ParametersDefQuery().typeName(name));
+		ParametersDef parametersDefData = db().find(new ParametersDefQuery().typeName(name));
 		if (parametersDefData != null) {
 			List<Input> inputList = new ArrayList<Input>();
 			for (ParameterDef pdd : parametersDefData.getParameterDefs()) {
-				inputList.add(this.getParameterValue(pdd));
+				inputList.add(getParameterValue(pdd));
 			}
 
 			return inputList;
@@ -116,9 +116,9 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 		List<Input> inputList = null;
 		if (QueryUtils.isValidStringCriteria(paramTypeName)) {
 			inputList = new ArrayList<Input>();
-			Map<String, ParameterDef> parameterDefMap = this.findParameterDefinitionsByName(paramTypeName);
+			Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
 			Set<String> usedSet = new HashSet<String>();
-			ParameterValues parameterValuesData = this.db()
+			ParameterValues parameterValuesData = db()
 					.list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
 			if (parameterValuesData != null) {
 				for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
@@ -126,7 +126,7 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 					ParameterDef parameterDefData = parameterDefMap.get(key);
 					if (parameterDefData != null) {
 						usedSet.add(key);
-						Input parameterValue = this.getParameterValue(parameterDefData);
+						Input parameterValue = getParameterValue(parameterDefData);
 						parameterValue.setValue(parameterValueData.getParamValue());
 						inputList.add(parameterValue);
 					}
@@ -137,7 +137,7 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 				for (Map.Entry<String, ParameterDef> entry : parameterDefMap.entrySet()) {
 					if (!usedSet.contains(entry.getKey())) {
 						ParameterDef parameterDefData = entry.getValue();
-						inputList.add(this.getParameterValue(parameterDefData));
+						inputList.add(getParameterValue(parameterDefData));
 					}
 				}
 			}
@@ -151,11 +151,11 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 	@Override
 	public Map<String, Object> findParameterTypeValues(String paramTypeName, String instTypeName, Long instId)
 			throws UnifyException {
-		ParameterValues parameterValuesData = this.db()
+		ParameterValues parameterValuesData = db()
 				.list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
 		if (parameterValuesData != null) {
 			Map<String, Object> result = new HashMap<String, Object>();
-			Map<String, ParameterDef> parameterDefMap = this.findParameterDefinitionsByName(paramTypeName);
+			Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
 			for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
 				ParameterDef parameterDefData = parameterDefMap.get(parameterValueData.getParamKey());
 				if (parameterDefData != null) {
@@ -174,12 +174,12 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 	@Override
 	public void updateParameterValues(String paramTypeName, String instTypeName, Long instId, Inputs parameterValues)
 			throws UnifyException {
-		ParametersDef pdd = this.db().find(new ParametersDefQuery().typeName(paramTypeName));
+		ParametersDef pdd = db().find(new ParametersDefQuery().typeName(paramTypeName));
 		if (pdd == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.PARAMETER_DEFINITION_UNKNOWN, paramTypeName);
 		}
 
-		ParameterValues parameterValuesData = this.db()
+		ParameterValues parameterValuesData = db()
 				.list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
 		Long parameterValuesId = null;
 		if (parameterValuesData == null) {
@@ -187,7 +187,7 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 			parameterValuesData.setParametersDefId(pdd.getId());
 			parameterValuesData.setInstTypeName(instTypeName);
 			parameterValuesData.setInstId(instId);
-			parameterValuesId = (Long) this.db().create(parameterValuesData);
+			parameterValuesId = (Long) db().create(parameterValuesData);
 		} else {
 			parameterValuesId = parameterValuesData.getId();
 		}
@@ -213,19 +213,19 @@ public class ParameterBusinessModuleImpl extends AbstractBusinessModule implemen
 		}
 
 		parameterValuesData.setParameterValues(parameterValueList);
-		this.db().updateByIdVersion(parameterValuesData);
+		db().updateByIdVersion(parameterValuesData);
 	}
 
 	@Override
 	public void deleteParameterValues(String paramTypeName, String instTypeName, Long instId) throws UnifyException {
-		this.db().deleteAll(
+		db().deleteAll(
 				new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
 	}
 
 	private Input getParameterValue(ParameterDef parameterDefData) throws UnifyException {
 		Class<?> type = ReflectUtils.getClassForName(parameterDefData.getType());
 		return new Input(type, parameterDefData.getName(),
-				this.resolveSessionMessage(parameterDefData.getDescription()), parameterDefData.getEditor(),
+				resolveSessionMessage(parameterDefData.getDescription()), parameterDefData.getEditor(),
 				parameterDefData.isMandatory());
 	}
 

@@ -63,7 +63,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
 		if (format) {
-			sb.append(this.getLineSeparator());
+			sb.append(getLineSeparator());
 		} else {
 			sb.append(' ');
 		}
@@ -104,11 +104,11 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 	protected void onInitialize() throws UnifyException {
 		super.onInitialize();
 
-		this.setDataTypePolicy(ColumnType.BLOB, new OracleBlobPolicy());
-		this.setDataTypePolicy(ColumnType.CLOB, new OracleClobPolicy());
-		this.setDataTypePolicy(ColumnType.LONG, new OracleLongPolicy());
+		setDataTypePolicy(ColumnType.BLOB, new OracleBlobPolicy());
+		setDataTypePolicy(ColumnType.CLOB, new OracleClobPolicy());
+		setDataTypePolicy(ColumnType.LONG, new OracleLongPolicy());
 
-		this.setTimestampFormat(
+		setTimestampFormat(
 				new SimpleDateFormat("('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))"));
 	}
 }

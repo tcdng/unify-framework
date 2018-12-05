@@ -32,6 +32,6 @@ import com.tcdng.unify.web.ui.control.Table;
 public class TablePanel extends AbstractPanel {
 
 	public Table getTable() throws UnifyException {
-		return (Table) this.getWidgetByShortName("contentTbl");
+		return (Table) getWidgetByShortName("contentTbl");
 	}
 }

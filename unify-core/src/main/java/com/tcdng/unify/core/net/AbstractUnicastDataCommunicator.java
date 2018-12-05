@@ -44,18 +44,18 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 
 	@Override
 	protected void onClose() throws UnifyException {
-		IOUtils.close(this.in);
-		IOUtils.close(this.out);
-		this.in = null;
-		this.out = null;
+		IOUtils.close(in);
+		IOUtils.close(out);
+		in = null;
+		out = null;
 	}
 
 	@Override
 	protected void flushWrite() throws UnifyException {
 		try {
-			this.out.flush();
+			out.flush();
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -70,9 +70,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected int readBytes(byte[] buffer) throws UnifyException {
 		try {
-			return this.in.read(buffer);
+			return in.read(buffer);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -92,9 +92,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected int readBytes(byte[] buffer, int offset, int length) throws UnifyException {
 		try {
-			return this.in.read(buffer, offset, length);
+			return in.read(buffer, offset, length);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -107,9 +107,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected boolean readBoolean() throws UnifyException {
 		try {
-			return this.in.readBoolean();
+			return in.readBoolean();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return false;
 	}
@@ -122,9 +122,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected byte readByte() throws UnifyException {
 		try {
-			return this.in.readByte();
+			return in.readByte();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -137,9 +137,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected char readChar() throws UnifyException {
 		try {
-			return this.in.readChar();
+			return in.readChar();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -152,9 +152,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected double readDouble() throws UnifyException {
 		try {
-			return this.in.readDouble();
+			return in.readDouble();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -167,9 +167,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected float readFloat() throws UnifyException {
 		try {
-			return this.in.readFloat();
+			return in.readFloat();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -182,9 +182,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected int readInt() throws UnifyException {
 		try {
-			return this.in.readInt();
+			return in.readInt();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -197,9 +197,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected long readLong() throws UnifyException {
 		try {
-			return this.in.readLong();
+			return in.readLong();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -212,9 +212,9 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected short readShort() throws UnifyException {
 		try {
-			return this.in.readShort();
+			return in.readShort();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -229,12 +229,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeBytes(byte[] buffer) throws UnifyException {
 		try {
-			this.out.write(buffer);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.write(buffer);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -252,12 +252,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeBytes(byte[] buffer, int offset, int length) throws UnifyException {
 		try {
-			this.out.write(buffer, offset, length);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.write(buffer, offset, length);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -272,12 +272,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeBoolean(boolean data) throws UnifyException {
 		try {
-			this.out.writeBoolean(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeBoolean(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -291,12 +291,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeByte(byte data) throws UnifyException {
 		try {
-			this.out.writeByte(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeByte(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -311,12 +311,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeChar(char data) throws UnifyException {
 		try {
-			this.out.writeChar(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeChar(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -331,12 +331,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeDouble(double data) throws UnifyException {
 		try {
-			this.out.writeDouble(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeDouble(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -350,12 +350,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeFloat(float data) throws UnifyException {
 		try {
-			this.out.writeFloat(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeFloat(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -370,12 +370,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeInt(int data) throws UnifyException {
 		try {
-			this.out.writeInt(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeInt(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -390,12 +390,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeLong(long data) throws UnifyException {
 		try {
-			this.out.writeLong(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeLong(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}
@@ -410,12 +410,12 @@ public abstract class AbstractUnicastDataCommunicator extends AbstractNetworkUni
 	 */
 	protected void writeShort(short data) throws UnifyException {
 		try {
-			this.out.writeShort(data);
-			if (this.isAutoFlush()) {
-				this.out.flush();
+			out.writeShort(data);
+			if (isAutoFlush()) {
+				out.flush();
 			}
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 
 	}

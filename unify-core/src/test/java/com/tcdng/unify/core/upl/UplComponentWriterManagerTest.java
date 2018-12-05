@@ -150,8 +150,7 @@ public class UplComponentWriterManagerTest extends AbstractUnifyComponentTest {
 
 	@Override
 	protected void onSetup() throws Exception {
-		this.ucwManager = (UplComponentWriterManager) this
-				.getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
+		ucwManager = (UplComponentWriterManager) getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
 	}
 
 	@Override

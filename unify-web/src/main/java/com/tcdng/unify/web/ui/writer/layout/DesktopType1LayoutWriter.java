@@ -41,10 +41,10 @@ public class DesktopType1LayoutWriter extends AbstractDocumentLayoutWriter {
 	@Override
 	protected void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
 			throws UnifyException {
-		this.writeSection(writer, "header", document.getHeaderPanel());
-		this.writeSection(writer, "menu", document.getMenuPanel());
-		this.writeSection(writer, "content", document.getContentPanel());
-		this.writeSection(writer, "footer", document.getFooterPanel());
+		writeSection(writer, "header", document.getHeaderPanel());
+		writeSection(writer, "menu", document.getMenuPanel());
+		writeSection(writer, "content", document.getContentPanel());
+		writeSection(writer, "footer", document.getFooterPanel());
 	}
 
 }

@@ -29,9 +29,9 @@ public class TestUnicastServerTextCommunicator extends AbstractUnicastServerText
 
 	@Override
 	public boolean communicate() throws UnifyException {
-		String firstName = this.readLine();
-		String lastName = this.readLine();
-		this.writeLine(firstName + " " + lastName);
+		String firstName = readLine();
+		String lastName = readLine();
+		writeLine(firstName + " " + lastName);
 		return true;
 	}
 

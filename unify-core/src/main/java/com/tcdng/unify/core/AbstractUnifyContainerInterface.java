@@ -28,23 +28,23 @@ public abstract class AbstractUnifyContainerInterface extends AbstractUnifyCompo
 
 	@Override
 	public void startServicingRequests() throws UnifyException {
-		if (!this.servicingRequests) {
-			this.onStartServicingRequests();
-			this.servicingRequests = true;
+		if (!servicingRequests) {
+			onStartServicingRequests();
+			servicingRequests = true;
 		}
 	}
 
 	@Override
 	public void stopServicingRequests() throws UnifyException {
-		if (this.servicingRequests) {
-			this.onStopServicingRequests();
-			this.servicingRequests = false;
+		if (servicingRequests) {
+			onStopServicingRequests();
+			servicingRequests = false;
 		}
 	}
 
 	@Override
 	public boolean isServicingRequests() {
-		return this.servicingRequests;
+		return servicingRequests;
 	}
 
 	/**

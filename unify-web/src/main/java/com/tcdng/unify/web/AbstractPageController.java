@@ -91,7 +91,7 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
 	@Override
 	public final void setPage(Page page) throws UnifyException {
 		this.page = page;
-		page.setValueStore(((ValueStoreFactory) this.getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+		page.setValueStore(((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
 				.getValueStore(this, -1));
 		onSetPage();
 	}
@@ -152,8 +152,8 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
 	public String command() throws UnifyException {
 		RequestCommand requestCommand = getRequestContextUtil().getRequestCommand();
 		if (requestCommand != null) {
-			WidgetCommandManager uiCommandManager = (WidgetCommandManager) this
-					.getComponent(WebApplicationComponents.APPLICATION_UICOMMANDMANAGER);
+			WidgetCommandManager uiCommandManager = (WidgetCommandManager) 
+					getComponent(WebApplicationComponents.APPLICATION_UICOMMANDMANAGER);
 			Widget widget = getPageWidgetByLongName(Widget.class, requestCommand.getTargetId());
 			if (widget.isRelayCommand()) {
 				widget = widget.getRelayWidget();
@@ -194,7 +194,7 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
 	 *             if an error occurs
 	 */
 	protected void writeValueTo(String controllerName, String propertyName, Object value) throws UnifyException {
-		((ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
+		((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
 				.populateController(controllerName, propertyName, value);
 	}
 

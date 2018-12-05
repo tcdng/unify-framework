@@ -39,14 +39,14 @@ public class FileUploadWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		FileUpload fileUpload = (FileUpload) widget;
 		writer.write("<div ");
-		this.writeTagStyleClass(writer, fileUpload);
-		this.writeTagStyle(writer, fileUpload);
+		writeTagStyleClass(writer, fileUpload);
+		writeTagStyle(writer, fileUpload);
 		writer.write(">");
 
 		// Actual HTML file control
 		writer.write("<input type=\"file\"");
-		this.writeTagId(writer, fileUpload);
-		this.writeTagStyle(writer, "display:none;");
+		writeTagId(writer, fileUpload);
+		writeTagStyle(writer, "display:none;");
 		String accept = fileUpload.getAccept();
 		if (!StringUtils.isBlank(accept)) {
 			FileAttachmentType fileAttachmentType = FileAttachmentType.fromName(accept);
@@ -115,7 +115,7 @@ public class FileUploadWriter extends AbstractControlWriter {
 			int maxSize = fileUpload.getMaxSize();
 			if (maxSize > 0) {
 				writer.write(",\"pMaxSize\":").write(maxSize);
-				writer.write(",\"pMaxMsg\":\"").write(this.getSessionMessage("fileupload.maxsize", maxSize)).write('"');
+				writer.write(",\"pMaxMsg\":\"").write(getSessionMessage("fileupload.maxsize", maxSize)).write('"');
 			}
 			writer.write("});");
 		}

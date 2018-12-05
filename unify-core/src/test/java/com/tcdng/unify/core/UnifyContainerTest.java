@@ -41,14 +41,14 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
 	@Test(expected = UnifyException.class)
 	public void testGetUnknownComponent() throws Exception {
-		this.getComponent("component-c");
+		getComponent("component-c");
 	}
 
 	@Test
 	public void testGetSingletonComponent() throws Exception {
-		UnifyComponent c1 = this.getComponent("component-a1");
-		UnifyComponent c2 = this.getComponent("component-a1");
-		UnifyComponent c3 = this.getComponent("component-a1");
+		UnifyComponent c1 = getComponent("component-a1");
+		UnifyComponent c2 = getComponent("component-a1");
+		UnifyComponent c3 = getComponent("component-a1");
 		assertSame(c1, c2);
 		assertSame(c1, c3);
 		assertSame(c2, c3);
@@ -56,9 +56,9 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testGetNonSingletonComponent() throws Exception {
-		UnifyComponent c1 = this.getComponent("component-a2");
-		UnifyComponent c2 = this.getComponent("component-a2");
-		UnifyComponent c3 = this.getComponent("component-a2");
+		UnifyComponent c1 = getComponent("component-a2");
+		UnifyComponent c2 = getComponent("component-a2");
+		UnifyComponent c3 = getComponent("component-a2");
 		assertNotSame(c1, c2);
 		assertNotSame(c1, c3);
 		assertNotSame(c2, c3);
@@ -66,7 +66,7 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testGetComponentWithConfigurableProperties() throws Exception {
-		TestComponentB testComponentB = (TestComponentB) this.getComponent("component-b");
+		TestComponentB testComponentB = (TestComponentB) getComponent("component-b");
 		assertNotNull(testComponentB.getTestComponentA1());
 		assertTrue(TestComponentA1.class.equals(testComponentB.getTestComponentA1().getClass()));
 		assertEquals("127.0.0.1", testComponentB.getAddress());
@@ -74,26 +74,26 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testGetUnknownComponentConfig() throws Exception {
-		assertNull(this.getComponentConfig("component-c"));
+		assertNull(getComponentConfig("component-c"));
 	}
 
 	@Test
 	public void testGetSingletonComponentConfig() throws Exception {
-		UnifyComponentConfig ucc = this.getComponentConfig("component-a1");
+		UnifyComponentConfig ucc = getComponentConfig("component-a1");
 		assertNotNull(ucc);
 		assertTrue(ucc.isSingleton());
 	}
 
 	@Test
 	public void testGetNonSingletonComponentConfig() throws Exception {
-		UnifyComponentConfig ucc = this.getComponentConfig("component-a2");
+		UnifyComponentConfig ucc = getComponentConfig("component-a2");
 		assertNotNull(ucc);
 		assertFalse(ucc.isSingleton());
 	}
 
 	@Test
 	public void testGetComponentConfigs() throws Exception {
-		List<UnifyComponentConfig> unifyComponentConfigList = this.getComponentConfigs(UnifyComponent.class);
+		List<UnifyComponentConfig> unifyComponentConfigList = getComponentConfigs(UnifyComponent.class);
 		assertNotNull(unifyComponentConfigList);
 		Set<String> componentNames = new HashSet<String>();
 		for (UnifyComponentConfig unifyComponentConfig : unifyComponentConfigList) {
@@ -106,7 +106,7 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testGetComponentNames() throws Exception {
-		List<String> unifyComponentNameList = this.getComponentNames(UnifyComponent.class);
+		List<String> unifyComponentNameList = getComponentNames(UnifyComponent.class);
 		assertNotNull(unifyComponentNameList);
 		Set<String> componentNames = new HashSet<String>();
 		componentNames.addAll(unifyComponentNameList);
@@ -117,11 +117,11 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testComponentCustomisation() throws Exception {
-		UnifyComponent component1 = this.getComponent("component-b3");
+		UnifyComponent component1 = getComponent("component-b3");
 		assertNotNull(component1);
 		assertTrue(component1 instanceof TestComponentC);
 
-		UnifyComponent component2 = this.getComponent("component-b3_tiger");
+		UnifyComponent component2 = getComponent("component-b3_tiger");
 		assertNotNull(component2);
 		assertTrue(component2 == component1);
 	}

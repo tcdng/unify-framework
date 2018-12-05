@@ -53,12 +53,12 @@ public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements Re
 
 	@Override
 	public ResponseWriter getResponseWriter() throws UnifyException {
-		return this.internalPools.get(this.getSessionContext().getPlatform()).borrowObject();
+		return internalPools.get(getSessionContext().getPlatform()).borrowObject();
 	}
 
 	@Override
 	public boolean restore(ResponseWriter writer) throws UnifyException {
-		return this.internalPools.get(this.getSessionContext().getPlatform()).returnObject(writer);
+		return internalPools.get(getSessionContext().getPlatform()).returnObject(writer);
 	}
 
 	@Override

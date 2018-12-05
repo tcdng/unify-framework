@@ -41,7 +41,7 @@ public class AccordionPanel extends AbstractPanel {
 	@Override
 	public void onPageInitialize() throws UnifyException {
 		super.onPageInitialize();
-		this.currentSelCtrl = (Control) this.addInternalControl("!ui-hidden binding:currentSel");
+		currentSelCtrl = (Control) addInternalControl("!ui-hidden binding:currentSel");
 	}
 
 	@Action
@@ -58,36 +58,36 @@ public class AccordionPanel extends AbstractPanel {
 
 	@Action
 	public void expandContent() throws UnifyException {
-		this.collapsed = false;
+		collapsed = false;
 	}
 
 	@Action
 	public void collapseContent() throws UnifyException {
-		this.collapsed = true;
+		collapsed = true;
 	}
 
 	public boolean isCollapsed() {
-		return this.collapsed;
+		return collapsed;
 	}
 
 	public String getHeaderIdBase() throws UnifyException {
-		return this.getPrefixedId("hdr_");
+		return getPrefixedId("hdr_");
 	}
 
 	public Control getCurrentSelCtrl() {
-		return this.currentSelCtrl;
+		return currentSelCtrl;
 	}
 
 	public void clearSectionCount() {
-		this.sectionCount = 0;
+		sectionCount = 0;
 	}
 
 	public void incrementSectionCount() {
-		this.sectionCount++;
+		sectionCount++;
 	}
 
 	public int getSectionCount() {
-		return this.sectionCount;
+		return sectionCount;
 	}
 
 	public int getCurrentSel() {

@@ -53,7 +53,7 @@ public class DayInWeekListCommand extends AbstractZeroParamsListCommand {
 	private FactoryMap<Locale, List<? extends Listable>> dayInWeek;
 
 	public DayInWeekListCommand() {
-		this.dayInWeek = new FactoryMap<Locale, List<? extends Listable>>() {
+		dayInWeek = new FactoryMap<Locale, List<? extends Listable>>() {
 
 			@Override
 			protected List<? extends Listable> create(Locale locale, Object... params) throws Exception {
@@ -74,6 +74,6 @@ public class DayInWeekListCommand extends AbstractZeroParamsListCommand {
 
 	@Override
 	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return this.dayInWeek.get(locale);
+		return dayInWeek.get(locale);
 	}
 }

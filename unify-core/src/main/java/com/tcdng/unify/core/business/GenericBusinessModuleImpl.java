@@ -37,60 +37,60 @@ public class GenericBusinessModuleImpl extends AbstractBusinessModule implements
 
 	@Override
 	public Object create(Entity record) throws UnifyException {
-		return this.db().create(record);
+		return db().create(record);
 	}
 
 	@Override
 	public <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException {
 		Query<T> query = new Query<T>(clazz);
 		query.equals("id", id);
-		return (T) this.db().list(query);
+		return (T) db().list(query);
 	}
 
 	@Override
 	public <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException {
-		return this.db().listAll(query);
+		return db().listAll(query);
 	}
 
 	@Override
 	public <T, U extends Entity> T listValue(Class<T> valueClazz, Class<U> recordClazz, Object id, String property)
 			throws UnifyException {
-		return this.db().value(valueClazz, property, new Query<U>(recordClazz).equals("id", id));
+		return db().value(valueClazz, property, new Query<U>(recordClazz).equals("id", id));
 	}
 
 	@Override
 	public int update(Entity record) throws UnifyException {
-		return this.db().updateByIdVersion(record);
+		return db().updateByIdVersion(record);
 	}
 
 	@Override
 	public int updateById(Class<? extends Entity> clazz, Object id, Update update) throws UnifyException {
-		return this.db().updateById(clazz, id, update);
+		return db().updateById(clazz, id, update);
 	}
 
 	@Override
 	public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
-		return this.db().updateAll(query, update);
+		return db().updateAll(query, update);
 	}
 
 	@Override
 	public <T extends Entity> int delete(Class<T> clazz, Object id) throws UnifyException {
-		return this.db().delete(clazz, id);
+		return db().delete(clazz, id);
 	}
 
 	@Override
 	public int deleteAll(Query<? extends Entity> query) throws UnifyException {
-		return this.db().deleteAll(query);
+		return db().deleteAll(query);
 	}
 
 	@Override
 	public void populateListOnly(Entity record) throws UnifyException {
-		this.db().populateListOnly(record);
+		db().populateListOnly(record);
 	}
 
 	@Override
 	public <T extends Entity> int countAll(Query<T> query) throws UnifyException {
-		return this.db().countAll(query);
+		return db().countAll(query);
 	}
 
 }

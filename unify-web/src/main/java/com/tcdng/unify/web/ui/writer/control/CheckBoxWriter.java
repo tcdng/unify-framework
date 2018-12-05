@@ -37,13 +37,13 @@ public class CheckBoxWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		CheckBox checkBox = (CheckBox) widget;
 		writer.write("<input type=\"checkbox\"");
-		this.writeTagAttributes(writer, checkBox);
+		writeTagAttributes(writer, checkBox);
 		if (checkBox.getValue(boolean.class)) {
 			writer.write(" checked=\"checked\"");
 		}
 		writer.write("/>");
 		if (!checkBox.isLayoutCaption()) {
-			this.writeCaption(writer, checkBox);
+			writeCaption(writer, checkBox);
 		}
 	}
 

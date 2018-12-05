@@ -60,7 +60,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 		String tableName = sqlRecordSchemaInfo.getTable();
 		sb.append("ALTER TABLE ").append(tableName);
 		if (format) {
-			sb.append(this.getLineSeparator());
+			sb.append(getLineSeparator());
 		} else {
 			sb.append(" ");
 		}
@@ -75,12 +75,12 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
 		if (format) {
-			sb.append(this.getLineSeparator());
+			sb.append(getLineSeparator());
 		} else {
 			sb.append(' ');
 		}
 		sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getColumn()).append(" ");
-		this.appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+		appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
 		return sb.toString();
 	}
 
@@ -88,7 +88,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 	protected void onInitialize() throws UnifyException {
 		super.onInitialize();
 
-		this.setDataTypePolicy(ColumnType.BLOB, new MySqlBlobPolicy());
+		setDataTypePolicy(ColumnType.BLOB, new MySqlBlobPolicy());
 	}
 
 	@Override

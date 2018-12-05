@@ -43,7 +43,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		BasicDocument document = (BasicDocument) widget;
 		writer.write("<!DOCTYPE html>");
 		writer.write("<html ");
-		this.writeTagAttributes(writer, document);
+		writeTagAttributes(writer, document);
 		writer.write("><head>");
 		// Write title
 		writer.write("<title>");
@@ -51,7 +51,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		if (!StringUtils.isBlank(title)) {
 			writer.write(title);
 		} else {
-			writer.write(this.getUnifyComponentContext().getInstanceName());
+			writer.write(getUnifyComponentContext().getInstanceName());
 		}
 		writer.write("</title>");
 
@@ -70,30 +70,30 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write("\">");
 
 		// Write style sheet links
-		this.writeStyleSheet(writer, "$t{css/unify-web.css}");
+		writeStyleSheet(writer, "$t{css/unify-web.css}");
 
-		for (String styleSheet : this.getPageManager().getDocumentStyleSheets()) {
-			this.writeStyleSheet(writer, styleSheet);
+		for (String styleSheet : getPageManager().getDocumentStyleSheets()) {
+			writeStyleSheet(writer, styleSheet);
 		}
 
 		String[] styleSheets = document.getUplAttribute(String[].class, "styleSheet");
 		if (styleSheets != null) {
 			for (String styleSheet : styleSheets) {
-				this.writeStyleSheet(writer, styleSheet);
+				writeStyleSheet(writer, styleSheet);
 			}
 		}
 
 		// Write javascript sources
-		this.writeJavascript(writer, "web/js/unify-web.js");
+		writeJavascript(writer, "web/js/unify-web.js");
 
-		for (String script : this.getPageManager().getDocumentsScripts()) {
-			this.writeJavascript(writer, script);
+		for (String script : getPageManager().getDocumentsScripts()) {
+			writeJavascript(writer, script);
 		}
 
 		String[] scripts = document.getUplAttribute(String[].class, "script");
 		if (scripts != null) {
 			for (String script : scripts) {
-				this.writeJavascript(writer, script);
+				writeJavascript(writer, script);
 			}
 		}
 
@@ -132,10 +132,10 @@ public class DocumentWriter extends AbstractPageWriter {
 		super.doWriteBehavior(writer, document);
 
 		// Write panel behaviours
-		this.writeBehaviour(writer, document.getHeaderPanel());
-		this.writeBehaviour(writer, document.getMenuPanel());
-		this.writeBehaviour(writer, document.getContentPanel());
-		this.writeBehaviour(writer, document.getFooterPanel());
+		writeBehaviour(writer, document.getHeaderPanel());
+		writeBehaviour(writer, document.getMenuPanel());
+		writeBehaviour(writer, document.getContentPanel());
+		writeBehaviour(writer, document.getFooterPanel());
 
 		// Add more behaviour
 		writer.write("var aliasPrms = {");

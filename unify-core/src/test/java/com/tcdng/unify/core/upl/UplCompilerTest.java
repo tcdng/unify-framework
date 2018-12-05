@@ -908,7 +908,7 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
 	@Override
 	protected void onSetup() throws Exception {
-		this.uplCompiler = (UplCompiler) this.getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
+		uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
 	}
 
 	@Override

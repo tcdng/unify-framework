@@ -51,11 +51,11 @@ public class DataTransferBlock {
 	}
 
 	public Object getValue() {
-		return this.header.getValue();
+		return header.getValue();
 	}
 
 	public Object getDebugValue() {
-		return this.header.getDebugValue();
+		return header.getDebugValue();
 	}
 
 	public DataTransferBlock getChildBlock() {
@@ -63,23 +63,23 @@ public class DataTransferBlock {
 	}
 
 	public String getLongName() {
-		return this.header.getLongName();
+		return header.getLongName();
 	}
 
 	public String getLongProperty() {
-		return this.header.getLongProperty();
+		return header.getLongProperty();
 	}
 
 	public String getShortProperty() {
-		return this.header.getShortProperty();
+		return header.getShortProperty();
 	}
 
 	public DataTransferBlock getSiblingBlock() {
-		return this.header.getSiblingBlock();
+		return header.getSiblingBlock();
 	}
 
 	public void setSiblingBlock(DataTransferBlock siblingBlock) {
-		this.header.setSiblingBlock(siblingBlock);
+		header.setSiblingBlock(siblingBlock);
 	}
 
 	@Override

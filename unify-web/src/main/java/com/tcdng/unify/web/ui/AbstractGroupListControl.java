@@ -28,7 +28,7 @@ public abstract class AbstractGroupListControl extends AbstractListControl {
 
 	@Override
 	public String getGroupId() throws UnifyException {
-		return this.getId();
+		return getId();
 	}
 
 }

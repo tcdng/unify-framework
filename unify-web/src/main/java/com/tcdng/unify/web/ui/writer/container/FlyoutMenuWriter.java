@@ -63,7 +63,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 				psb.append("\",\"popupId\":\"").append(popupId);
 				psb.append("\",\"popupContentId\":\"").append(popupContentId).append("\"");
 				psb.append(",\"vertical\":").append(flyoutMenu.isVertical()).append("}");
-				this.writeOpenPopupJS(writer, "onmouseover", id, null, popupId, 500, "repositionmenupopup",
+				writeOpenPopupJS(writer, "onmouseover", id, null, popupId, 500, "repositionmenupopup",
 						psb.toString(), null, null);
 				menuWinIdList.add(menuWinId);
 			}
@@ -94,7 +94,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 		writer.write(",\"pRate\":").write(flyoutMenu.getScrollRate());
 		writer.write(",\"pStepRate\":").write(flyoutMenu.getScrollStepRate());
 
-		MenuSet menuSet = (MenuSet) this.getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
+		MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
 		if (menuSet.isShowSelect()) {
 			writer.write(",\"pSelId\":\"").write(flyoutMenu.getSelectId()).write("\"");
 			writer.write(",\"pCurSelId\":\"").write(flyoutMenu.getCurrentSelCtrl().getId()).write("\"");
@@ -135,7 +135,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 			writer.write("<div style=\"display:table-cell;\">");
 		}
 
-		this.appendScrollButton(writer, flyoutMenu, flyoutMenu.getBackButtonId(), backImg);
+		appendScrollButton(writer, flyoutMenu, flyoutMenu.getBackButtonId(), backImg);
 
 		writer.write("<div id=\"").write(flyoutMenu.getSliderWinId()).write("\"");
 		if (flyoutMenu.isVertical()) {
@@ -149,12 +149,12 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 		StringBuilder psb = new StringBuilder();
 
 		// Menu set select
-		MenuSet menuSet = (MenuSet) this.getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
+		MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
 		boolean isShowMenu = true;
 		if (menuSet.isShowSelect()) {
 			List<Integer> visibleIndexList = new ArrayList<Integer>();
 			for (int i = 0; i < menuSet.size(); i++) {
-				if (this.getPrivilegeSettings(menuSet.getMenu(i).getPrivilege()).isVisible()) {
+				if (getPrivilegeSettings(menuSet.getMenu(i).getPrivilege()).isVisible()) {
 					visibleIndexList.add(i);
 				}
 			}
@@ -184,29 +184,29 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 			int childIndex = DYNAMIC_CHILD_OFFSET;
 			Menu menu = menuSet.getMenu(flyoutMenu.getCurrentSel());
 			for (MenuItemSet menuItemSet : menu.getMenuItemSetList()) {
-				if (this.getPrivilegeSettings(menuItemSet.getPrivilege()).isVisible()) {
+				if (getPrivilegeSettings(menuItemSet.getPrivilege()).isVisible()) {
 					String menuId = flyoutMenu.getNamingIndexedId(childIndex++);
 					flyoutMenu.addMenuItem(menuId, menuItemSet);
 					writer.write("<li id=\"").write("win_" + menuId).write("\">");
 					writer.write("<a class=\"option\" id=\"").write(menuId).write("\">");
-					writer.writeWithHtmlEscape(this.resolveSessionMessage(menuItemSet.getCaption()));
+					writer.writeWithHtmlEscape(resolveSessionMessage(menuItemSet.getCaption()));
 					writer.write("</a>");
 					writer.write("</li>");
 
 					List<MenuItem> menuItemList = menuItemSet.getMenuItemList();
 					if (!menuItemList.isEmpty()) {
 						psb.append("<div");
-						this.writeTagId(psb, "pop_" + menuId);
-						this.writeTagStyleClass(psb, "flyoutmenu-popup");
+						writeTagId(psb, "pop_" + menuId);
+						writeTagStyleClass(psb, "flyoutmenu-popup");
 						psb.append(">");
 						psb.append("<ul id=\"").append("popc_" + menuId).append("\">");
 						for (MenuItem menuItem : menuItemList) {
-							if (this.getPrivilegeSettings(menuItem.getPrivilege()).isVisible()) {
+							if (getPrivilegeSettings(menuItem.getPrivilege()).isVisible()) {
 								String menuItemId = flyoutMenu.getNamingIndexedId(childIndex++);
 								flyoutMenu.addMenuItem(menuItemId, menuItem);
 								psb.append("<li><a class=\"mitem\" id=\"").append(menuItemId).append("\">");
 								HtmlUtils.writeStringWithHtmlEscape(psb,
-										this.resolveSessionMessage(menuItem.getCaption()));
+										resolveSessionMessage(menuItem.getCaption()));
 								psb.append("</a></li>");
 							}
 						}
@@ -221,7 +221,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 		writer.write("</div>");
 		writer.write("</div>");
 
-		this.appendScrollButton(writer, flyoutMenu, flyoutMenu.getForwardButtonId(), forwardImg);
+		appendScrollButton(writer, flyoutMenu, flyoutMenu.getForwardButtonId(), forwardImg);
 
 		writer.write("</div>");
 		writer.write("</div>");

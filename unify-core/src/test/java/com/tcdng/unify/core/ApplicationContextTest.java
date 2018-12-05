@@ -33,18 +33,18 @@ public class ApplicationContextTest {
 
 	@Before
 	public void setup() throws Exception {
-		this.applicationContext = new ApplicationContext(null, null, "\n");
+		applicationContext = new ApplicationContext(null, null, "\n");
 	}
 
 	@Test
 	public void testContextHasNoPrivilegesForRole() {
-		assertFalse(this.applicationContext.isRoleAttributes(""));
+		assertFalse(applicationContext.isRoleAttributes(""));
 	}
 
 	@Test
 	public void testContextHasPrivilegesForRole() {
 		String roleCode = String.valueOf(1L);
-		this.applicationContext.setRoleAttributes(roleCode, new RoleAttributes());
-		assertTrue(this.applicationContext.isRoleAttributes(roleCode));
+		applicationContext.setRoleAttributes(roleCode, new RoleAttributes());
+		assertTrue(applicationContext.isRoleAttributes(roleCode));
 	}
 }

@@ -33,18 +33,18 @@ public class TaskOutput {
 	private Map<String, Object> results;
 
 	public TaskOutput() {
-		this.results = new HashMap<String, Object>();
+		results = new HashMap<String, Object>();
 	}
 
 	public void setResult(String name, Object value) {
-		this.results.put(name, value);
+		results.put(name, value);
 	}
 
 	public Set<String> getResultNames() {
-		return this.results.keySet();
+		return results.keySet();
 	}
 
 	public <T> T getResult(Class<T> valueType, String name) throws UnifyException {
-		return DataUtils.convert(valueType, this.results.get(name), null);
+		return DataUtils.convert(valueType, results.get(name), null);
 	}
 }

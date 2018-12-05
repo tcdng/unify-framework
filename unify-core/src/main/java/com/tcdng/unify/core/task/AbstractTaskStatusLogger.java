@@ -28,7 +28,7 @@ public abstract class AbstractTaskStatusLogger extends AbstractUnifyComponent im
 
 	@Override
 	public void logTaskException(Exception e) {
-		this.logError(e);
+		logError(e);
 	}
 
 	@Override

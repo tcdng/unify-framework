@@ -47,33 +47,33 @@ public class ContainerInfoPageController extends AbstractPageController {
 
 	@Action
 	public String refresh() throws UnifyException {
-		this.getContainerInfo();
+		getContainerInfo();
 		return "refresh";
 	}
 
 	@Action
 	public String prepareViewComponent() throws UnifyException {
-		this.componentInfo = this.info.getComponentInfoList().get(this.componentListTableState.getViewIndex());
+		componentInfo = info.getComponentInfoList().get(componentListTableState.getViewIndex());
 		return "showcomponentpopup";
 	}
 
 	@Action
 	public String viewComponentDone() throws UnifyException {
-		return this.hidePopup();
+		return hidePopup();
 	}
 
 	@Override
 	protected void onSetPage() throws UnifyException {
-		this.componentListTableState = this.getPageWidgetByShortName(Table.class, "componentTbl");
+		componentListTableState = getPageWidgetByShortName(Table.class, "componentTbl");
 	}
 
 	@Override
 	public UnifyContainerInfo getContainerInfo() throws UnifyException {
-		return this.info = super.getContainerInfo();
+		return info = super.getContainerInfo();
 	}
 
 	public UnifyContainerInfo getInfo() {
-		return this.info;
+		return info;
 	}
 
 	public UnifyComponentInfo getComponentInfo() {
@@ -82,17 +82,17 @@ public class ContainerInfoPageController extends AbstractPageController {
 
 	@Override
 	protected void onIndexPage() throws UnifyException {
-		this.getContainerInfo();
+		getContainerInfo();
 	}
 
 	@Override
 	protected void onOpenPage() throws UnifyException {
-		this.getContainerInfo();
+		getContainerInfo();
 	}
 
 	@Override
 	protected void onClosePage() throws UnifyException {
-		this.info = null;
-		this.componentInfo = null;
+		info = null;
+		componentInfo = null;
 	}
 }

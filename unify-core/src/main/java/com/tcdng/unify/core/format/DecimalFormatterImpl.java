@@ -36,9 +36,9 @@ public class DecimalFormatterImpl extends AbstractNumberFormatter<Number> implem
 	@Override
 	public Number parse(String string) throws UnifyException {
 		try {
-			return this.getNumberFormat().parse(string);
+			return getNumberFormat().parse(string);
 		} catch (ParseException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}

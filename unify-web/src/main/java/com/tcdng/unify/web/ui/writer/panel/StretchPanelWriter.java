@@ -38,11 +38,11 @@ public class StretchPanelWriter extends AbstractPanelWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		StretchPanel panel = (StretchPanel) widget;
 		writer.write("<div");
-		this.writeTagId(writer, panel);
-		this.writeTagStyleClass(writer, panel.getStyleClass());
-		this.writeTagStyle(writer, "width:100%;height:100%;overflow:auto;");
+		writeTagId(writer, panel);
+		writeTagStyleClass(writer, panel.getStyleClass());
+		writeTagStyle(writer, "width:100%;height:100%;overflow:auto;");
 		writer.write(">");
-		this.writeInnerStructureAndContent(writer, panel);
+		writeInnerStructureAndContent(writer, panel);
 		writer.write("</div>");
 	}
 

@@ -44,19 +44,19 @@ public class UnifyComponentSettings {
 	}
 
 	public Set<String> getPropertyNames() {
-		return this.settings.keySet();
+		return settings.keySet();
 	}
 
 	public Setting getSetting(String property) {
-		return this.settings.get(property);
+		return settings.get(property);
 	}
 
 	public boolean isProperty(String property) {
-		return this.settings.containsKey(property);
+		return settings.containsKey(property);
 	}
 
 	public Object getSettingValue(String property) {
-		Setting setting = this.settings.get(property);
+		Setting setting = settings.get(property);
 		if (setting != null) {
 			return setting.getValue();
 		}
@@ -65,7 +65,7 @@ public class UnifyComponentSettings {
 	}
 
 	public boolean isConcealed(String property) {
-		Setting setting = this.settings.get(property);
+		Setting setting = settings.get(property);
 		if (setting != null) {
 			return setting.isHidden();
 		}
@@ -77,7 +77,7 @@ public class UnifyComponentSettings {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\tsettings = {\n");
 		boolean isAppendSymbol = false;
-		for (Map.Entry<String, Setting> entry : this.settings.entrySet()) {
+		for (Map.Entry<String, Setting> entry : settings.entrySet()) {
 			if (isAppendSymbol) {
 				sb.append(",\n");
 			} else {
@@ -95,25 +95,25 @@ public class UnifyComponentSettings {
 		private Map<String, Setting> settings;
 
 		public Builder() {
-			this.settings = new HashMap<String, Setting>();
+			settings = new HashMap<String, Setting>();
 		}
 
 		public Builder(UnifyComponentSettings annotationSettings) {
-			this.settings = new HashMap<String, Setting>();
-			this.settings.putAll(annotationSettings.settings);
+			settings = new HashMap<String, Setting>();
+			settings.putAll(annotationSettings.settings);
 		}
 
 		public Builder setProperty(String name, Object value) {
-			return this.setProperty(name, value, false);
+			return setProperty(name, value, false);
 		}
 
 		public Builder setProperty(String name, Object value, boolean concealed) {
-			this.settings.put(name, new Setting(name, value, concealed));
+			settings.put(name, new Setting(name, value, concealed));
 			return this;
 		}
 
 		public UnifyComponentSettings build() {
-			return new UnifyComponentSettings(this.settings);
+			return new UnifyComponentSettings(settings);
 		}
 
 	}

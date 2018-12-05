@@ -52,16 +52,16 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
 		List<? extends Listable> listableList = moneyField.getListables();
 		int length = listableList.size();
 
-		String currencyCode = this.getCurrencyCode(moneyField);
+		String currencyCode = getCurrencyCode(moneyField);
 		for (int i = 0; i < length; i++) {
 			Listable listable = listableList.get(i);
 			String key = listable.getListKey();
 			writer.write("<a");
-			this.writeTagId(writer, moneyField.getNamingIndexedId(i));
+			writeTagId(writer, moneyField.getNamingIndexedId(i));
 			if (key.equals(currencyCode)) {
-				this.writeTagStyleClass(writer, "sel");
+				writeTagStyleClass(writer, "sel");
 			} else {
-				this.writeTagStyleClass(writer, "norm");
+				writeTagStyleClass(writer, "norm");
 			}
 			writer.write(">");
 			writer.writeWithHtmlEscape(listable.getListDescription());
@@ -97,14 +97,14 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
 	protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
 		MoneyField moneyField = (MoneyField) widget;
 		writer.write("<button");
-		this.writeTagId(writer, moneyField.getPopupButtonId());
-		this.writeTagStyleClass(writer, "tplbutton");
+		writeTagId(writer, moneyField.getPopupButtonId());
+		writeTagStyleClass(writer, "tplbutton");
 		if (!appendPopup(moneyField)) {
 			writer.write(" disabled");
 		}
 
 		writer.write(">");
-		writer.write(this.getCurrencyCode(moneyField));
+		writer.write(getCurrencyCode(moneyField));
 		writer.write("</button>");
 	}
 

@@ -38,36 +38,36 @@ public abstract class AbstractDocument extends AbstractPage implements Document 
 
 	@Override
 	public Panel getHeaderPanel() throws UnifyException {
-		String headerPanelId = this.getUplAttribute(String.class, "headerPanel");
+		String headerPanelId = getUplAttribute(String.class, "headerPanel");
 		if (headerPanelId != null) {
-			return this.getPanelByLongName(headerPanelId);
+			return getPanelByLongName(headerPanelId);
 		}
 		return null;
 	}
 
 	@Override
 	public Panel getMenuPanel() throws UnifyException {
-		String menuPanelId = this.getUplAttribute(String.class, "menuPanel");
+		String menuPanelId = getUplAttribute(String.class, "menuPanel");
 		if (menuPanelId != null) {
-			return this.getPanelByLongName(menuPanelId);
+			return getPanelByLongName(menuPanelId);
 		}
 		return null;
 	}
 
 	@Override
 	public Panel getContentPanel() throws UnifyException {
-		String contentPanelId = this.getUplAttribute(String.class, "contentPanel");
+		String contentPanelId = getUplAttribute(String.class, "contentPanel");
 		if (contentPanelId != null) {
-			return this.getPanelByLongName(contentPanelId);
+			return getPanelByLongName(contentPanelId);
 		}
 		return null;
 	}
 
 	@Override
 	public Panel getFooterPanel() throws UnifyException {
-		String footerPanelId = this.getUplAttribute(String.class, "footerPanel");
+		String footerPanelId = getUplAttribute(String.class, "footerPanel");
 		if (footerPanelId != null) {
-			return this.getPanelByLongName(footerPanelId);
+			return getPanelByLongName(footerPanelId);
 		}
 		return null;
 	}

@@ -39,11 +39,11 @@ public class WindowPanelWriter extends AbstractPanelWriter {
 		writer.write("<div style=\"display:table;width:100%;height:100%;\">");
 		writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;\">");
 		writer.write("<div class=\"wptitle\">");
-		this.writeCaption(writer, windowPanel);
+		writeCaption(writer, windowPanel);
 		writer.write("</div>");
 		writer.write("</div></div>");
 		writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;height:100%;\">");
-		this.writeLayoutContent(writer, windowPanel);
+		writeLayoutContent(writer, windowPanel);
 		writer.write("</div></div>");
 		writer.write("</div>");
 	}

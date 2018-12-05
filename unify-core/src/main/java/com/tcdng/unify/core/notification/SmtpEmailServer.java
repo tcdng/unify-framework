@@ -36,13 +36,13 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
 	@Override
 	public void sendEmail(String configurationCode, Email email) throws UnifyException {
 		try {
-			MimeMessage message = this.createMimeMessage(configurationCode, email);
+			MimeMessage message = createMimeMessage(configurationCode, email);
 			Transport.send(message);
 			email.setSent(true);
 		} catch (MessagingException e) {
-			this.logError(e);
+			logError(e);
 			email.setSent(false);
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
 			transport.connect();
 			for (Email email : emailList) {
 				try {
-					MimeMessage mimeMessage = this.createMimeMessage(session, email);
+					MimeMessage mimeMessage = createMimeMessage(session, email);
 					transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
 					email.setSent(true);
 				} catch (MessagingException e) {
@@ -64,7 +64,7 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 	}
 }

@@ -37,7 +37,7 @@ public class HiddenFieldWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		HiddenField hiddenField = (HiddenField) widget;
 		writer.write("<input type=\"hidden\"");
-		this.writeTagAttributes(writer, hiddenField);
+		writeTagAttributes(writer, hiddenField);
 		String value = hiddenField.getStringValue();
 		if (value != null) {
 			writer.write(" value=\"");

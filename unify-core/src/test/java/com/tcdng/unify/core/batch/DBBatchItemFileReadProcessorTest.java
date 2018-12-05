@@ -42,7 +42,7 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest {
 
-	private Database pm;
+	private Database db;
 
 	private DatabaseTransactionManager tm;
 
@@ -50,7 +50,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 	@Test
 	public void testBatchItemProcessing() throws Exception {
 		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), this.pm.getName());
+		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
 		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
 		byte[][] fileObject = new byte[1][];
 		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
@@ -60,7 +60,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 
 		// Perform batch file processing and do some assertions
 		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) this.getComponent("test-batchfileprocessor-a");
+		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
 		tm.beginTransaction();
 		try {
 			blu.execute(input, output);
@@ -76,7 +76,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 		List<TestBatchItemRecordA> batchItemList = null;
 		tm.beginTransaction();
 		try {
-			batchItemList = pm.findAll(
+			batchItemList = db.findAll(
 					new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
 		} finally {
 			tm.endTransaction();
@@ -101,7 +101,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 	@Test
 	public void testBatchItemProcessingSkipExisting() throws Exception {
 		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), this.pm.getName());
+		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
 		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
 		byte[][] fileObject = new byte[1][];
 		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
@@ -111,7 +111,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 
 		// Perform batch file processing and do some assertions
 		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) this.getComponent("test-batchfileprocessor-a");
+		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
 		tm.beginTransaction();
 		try {
 			blu.execute(input, output);
@@ -127,7 +127,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 		List<TestBatchItemRecordA> batchItemList = null;
 		tm.beginTransaction();
 		try {
-			batchItemList = pm.findAll(
+			batchItemList = db.findAll(
 					new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
 		} finally {
 			tm.endTransaction();
@@ -152,7 +152,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 	@Test
 	public void testBatchItemProcessingUpdateExisting() throws Exception {
 		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), this.pm.getName());
+		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
 		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
 		fileBulkConfig.setOnConstraint(ConstraintAction.UPDATE);
 		byte[][] fileObject = new byte[1][];
@@ -163,7 +163,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 
 		// Perform batch file processing and do some assertions
 		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) this.getComponent("test-batchfileprocessor-a");
+		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
 		tm.beginTransaction();
 		try {
 			blu.execute(input, output);
@@ -180,7 +180,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 		List<TestBatchItemRecordA> batchItemList = null;
 		tm.beginTransaction();
 		try {
-			batchItemList = pm.findAll(
+			batchItemList = db.findAll(
 					new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
 		} finally {
 			tm.endTransaction();
@@ -205,7 +205,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 	@Test(expected = UnifyException.class)
 	public void testBatchItemProcessingFailOnExisting() throws Exception {
 		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), this.pm.getName());
+		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
 		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
 		fileBulkConfig.setOnConstraint(ConstraintAction.FAIL);
 		byte[][] fileObject = new byte[1][];
@@ -215,7 +215,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 		input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
 		// Perform batch file processing and do some assertions
-		BusinessLogicUnit blu = (BusinessLogicUnit) this.getComponent("test-batchfileprocessor-a");
+		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
 		tm.beginTransaction();
 		try {
 			blu.execute(input, new BusinessLogicOutput());
@@ -226,13 +226,13 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
 
 	@Override
 	protected void onSetup() throws Exception {
-		pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+		db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
 		tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
 	}
 
 	@SuppressWarnings({ "unchecked" })
 	@Override
 	protected void onTearDown() throws Exception {
-		this.deleteAll(TestBatchItemRecordA.class, TestBatchItemRecordB.class, TestBatchRecordB.class);
+		deleteAll(TestBatchItemRecordA.class, TestBatchItemRecordB.class, TestBatchRecordB.class);
 	}
 }

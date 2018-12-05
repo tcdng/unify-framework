@@ -59,15 +59,15 @@ public class AuthorPageController extends AbstractPageController {
 	@Action
 	public String createAuthor() throws UnifyException {
 		authorDatabase.put(fullName, new Author(fullName, birthDt, height));
-		return this.noResult();
+		return noResult();
 	}
 
 	@Action
 	public String viewAuthor() throws UnifyException {
 		Author author = authorDatabase.get(fullName);
-		this.birthDt = author.getBirthDt();
-		this.height = author.getHeight();
-		return this.noResult();
+		birthDt = author.getBirthDt();
+		height = author.getHeight();
+		return noResult();
 	}
 
 	public String getFullName() {
@@ -80,10 +80,10 @@ public class AuthorPageController extends AbstractPageController {
 
 	@Action
 	public String newAuthor() throws UnifyException {
-		this.fullName = null;
-		this.birthDt = null;
-		this.height = null;
-		return this.noResult();
+		fullName = null;
+		birthDt = null;
+		height = null;
+		return noResult();
 	}
 
 	public Date getBirthDt() {
@@ -113,17 +113,17 @@ public class AuthorPageController extends AbstractPageController {
 	@Override
 	protected void onInitialize() throws UnifyException {
 		super.onInitialize();
-		this.authorDatabase = new HashMap<String, Author>();
-		this.bio = new MapValues();
-		this.bio.addValue("color", String.class);
-		this.bio.addValue("age", Integer.class);
-		this.bio.addValue("gender", Gender.class);
+		authorDatabase = new HashMap<String, Author>();
+		bio = new MapValues();
+		bio.addValue("color", String.class);
+		bio.addValue("age", Integer.class);
+		bio.addValue("gender", Gender.class);
 
 		PackableDocConfig docConfig = new PackableDocConfig("ledgerConfig",
 				new PackableDocConfig.FieldConfig("marker", String.class),
 				new PackableDocConfig.FieldConfig("height", Double.class));
 
 		PackableDoc pDoc = new PackableDoc(docConfig, false);
-		this.bio.addValue("metric", pDoc);
+		bio.addValue("metric", pDoc);
 	}
 }

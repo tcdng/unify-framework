@@ -62,7 +62,7 @@ public class Log4jLoggerImpl extends AbstractLog4jLogger {
 	@Override
 	protected void onInitialize() throws UnifyException {
 		try {
-			org.apache.log4j.Logger logger = this.getLogger(this.logCategory);
+			org.apache.log4j.Logger logger = getLogger(logCategory);
 			synchronized (logger) {
 				// Ensure that appenders for a particular logger category are
 				// not added
@@ -76,26 +76,26 @@ public class Log4jLoggerImpl extends AbstractLog4jLogger {
 						appendConsole = false;
 					} else if (appender instanceof RollingFileAppender) {
 						RollingFileAppender rfAppender = (RollingFileAppender) appender;
-						if (this.logFilename.equalsIgnoreCase(rfAppender.getFile())) {
+						if (logFilename.equalsIgnoreCase(rfAppender.getFile())) {
 							appendFile = false;
 						}
 					}
 				}
 
-				PatternLayout patternLayout = new PatternLayout(this.logPattern);
-				if (appendConsole && this.logToConsole) {
+				PatternLayout patternLayout = new PatternLayout(logPattern);
+				if (appendConsole && logToConsole) {
 					logger.addAppender(new ConsoleAppender(patternLayout, ConsoleAppender.SYSTEM_OUT));
 				}
 
-				if (appendFile && this.logToFile) {
-					RollingFileAppender rfAppender = new RollingFileAppender(patternLayout, this.logFilename);
-					rfAppender.setMaxFileSize(this.logFileMaxSize);
-					rfAppender.setMaxBackupIndex(this.maxFileBackup);
+				if (appendFile && logToFile) {
+					RollingFileAppender rfAppender = new RollingFileAppender(patternLayout, logFilename);
+					rfAppender.setMaxFileSize(logFileMaxSize);
+					rfAppender.setMaxBackupIndex(maxFileBackup);
 					logger.addAppender(rfAppender);
 				}
 			}
 		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, this.getName());
+			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, getName());
 		}
 	}
 

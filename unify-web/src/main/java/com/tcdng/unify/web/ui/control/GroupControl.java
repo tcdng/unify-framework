@@ -44,6 +44,6 @@ public class GroupControl extends AbstractMultiControl implements Control {
 	}
 
 	public boolean isSpace() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "space");
+		return getUplAttribute(boolean.class, "space");
 	}
 }

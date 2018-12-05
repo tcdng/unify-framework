@@ -24,12 +24,12 @@ package com.tcdng.unify.core.operation;
 public class AndBuilder extends CriteriaBuilder {
 
 	public AndBuilder and(CriteriaBuilder criteriaBuilder) {
-		this.add(criteriaBuilder.getCriteria());
+		add(criteriaBuilder.getCriteria());
 		return this;
 	}
 
 	public AndBuilder and(Criteria criteria) {
-		this.add(criteria);
+		add(criteria);
 		return this;
 	}
 

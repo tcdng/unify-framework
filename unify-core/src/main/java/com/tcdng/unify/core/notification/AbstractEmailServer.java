@@ -230,7 +230,7 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 
 		return mimeMessage;

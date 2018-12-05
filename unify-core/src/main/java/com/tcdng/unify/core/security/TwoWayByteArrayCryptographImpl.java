@@ -30,22 +30,22 @@ public class TwoWayByteArrayCryptographImpl extends AbstractTwoWayCryptograph im
 
 	@Override
 	public byte[] forwardTransform(byte[] value) throws UnifyException {
-		return this.encrypt(value);
+		return encrypt(value);
 	}
 
 	@Override
 	public byte[] reverseTransform(byte[] value) throws UnifyException {
-		return this.decrypt(value);
+		return decrypt(value);
 	}
 
 	@Override
 	public byte[] encrypt(byte[] array) throws UnifyException {
-		return this.doEncrypt(array);
+		return doEncrypt(array);
 	}
 
 	@Override
 	public byte[] decrypt(byte[] array) throws UnifyException {
-		return this.doDecrypt(array);
+		return doDecrypt(array);
 	}
 
 }

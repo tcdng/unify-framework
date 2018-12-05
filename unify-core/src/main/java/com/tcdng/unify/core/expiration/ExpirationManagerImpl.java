@@ -52,23 +52,23 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 	private List<ObservedExpirableInfo> expirablesList;
 
 	public ExpirationManagerImpl() {
-		this.expirablesList = new ArrayList<ObservedExpirableInfo>();
+		expirablesList = new ArrayList<ObservedExpirableInfo>();
 	}
 
 	@Periodic(PeriodicType.NORMAL)
 	public synchronized void removeExpiredExpirables(TaskMonitor taskMonitor) throws UnifyException {
 		Date now = new Date();
-		for (ObservedExpirableInfo observedExpirableInfo : this.expirablesList) {
+		for (ObservedExpirableInfo observedExpirableInfo : expirablesList) {
 			try {
 				if (observedExpirableInfo.isExpired(now)) {
-					this.logDebug("Invoking expiration method [{1}] on component [{0}]...",
+					logDebug("Invoking expiration method [{1}] on component [{0}]...",
 							observedExpirableInfo.getExpirable().getName(),
 							observedExpirableInfo.getMethod().getName());
 					observedExpirableInfo.getMethod().invoke(observedExpirableInfo.getExpirable());
 					observedExpirableInfo.reset();
 				}
 			} catch (Exception e) {
-				this.logError(e);
+				logError(e);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 			for (Method method : unifyComponentConfig.getType().getMethods()) {
 				Expirable ea = method.getAnnotation(Expirable.class);
 				if (ea == null) {
-					ea = this.proxyMethodRelay
+					ea = proxyMethodRelay
 							.getExpirable(ReflectUtils.getMethodSignature(unifyComponentConfig.getName(), method));
 				}
 
@@ -97,11 +97,11 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 					int cycle = ea.cycleInSec();
 					String setting = AnnotationUtils.getAnnotationString(ea.cycleInSecSetting());
 					if (setting != null) {
-						cycle = this.getContainerSetting(int.class, setting, ea.cycleInSec());
+						cycle = getContainerSetting(int.class, setting, ea.cycleInSec());
 					}
 
-					UnifyComponent expirable = this.getComponent(unifyComponentConfig.getName());
-					this.expirablesList.add(new ObservedExpirableInfo(expirable, method, cycle));
+					UnifyComponent expirable = getComponent(unifyComponentConfig.getName());
+					expirablesList.add(new ObservedExpirableInfo(expirable, method, cycle));
 				}
 			}
 		}
@@ -109,7 +109,7 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 
 	@Override
 	protected void onTerminate() throws UnifyException {
-		this.expirablesList.clear();
+		expirablesList.clear();
 	}
 
 	private class ObservedExpirableInfo {
@@ -126,7 +126,7 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 			this.expirable = expirable;
 			this.method = method;
 			this.cycle = cycle;
-			this.reset();
+			reset();
 		}
 
 		public UnifyComponent getExpirable() {
@@ -138,11 +138,11 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 		}
 
 		public boolean isExpired(Date now) {
-			return now.after(this.expiryDate);
+			return now.after(expiryDate);
 		}
 
 		public void reset() {
-			this.expiryDate = CalendarUtils.getNowWithOffset(this.cycle);
+			expiryDate = CalendarUtils.getNowWithOffset(cycle);
 		}
 	}
 }

@@ -50,7 +50,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testGetNextSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		assertEquals(Long.valueOf(1L), snbm.getNextSequenceNumber("sequenceA"));
 		assertEquals(Long.valueOf(2L), snbm.getNextSequenceNumber("sequenceA"));
@@ -80,7 +80,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testMultiThreadGetNextSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
 		Map<String, Object> inputParameters1 = new HashMap<String, Object>();
@@ -119,7 +119,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testSameDayGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Date testDate = CalendarUtils.getMidnightDate(new Date());
 		Calendar cal1 = Calendar.getInstance();
@@ -141,7 +141,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testSameSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Date testDate = new Date();
 		Long sequenceNo1 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
@@ -154,7 +154,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testDifferentSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Date testDate = new Date();
 		Long sequenceNo1 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
@@ -167,7 +167,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testSameSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
@@ -185,7 +185,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testDifferentSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
@@ -203,7 +203,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testMultiThreadGetNextDateSequenceNumber() throws Exception {
-		this.getSequenceNumberBusinessModule();
+		getSequenceNumberBusinessModule();
 
 		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
 		Date testDate = new Date();
@@ -243,7 +243,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testSingleGetUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Long id = snbm.getUniqueStringId("this.is.a.unique.string");
 		assertNotNull(id);
@@ -251,7 +251,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testMultipleGetSameUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Long id1 = snbm.getUniqueStringId("this.is.a.unique.string");
 		Long id2 = snbm.getUniqueStringId("this.is.a.unique.string");
@@ -268,7 +268,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testSingleGetDifferentUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Long id1 = snbm.getUniqueStringId("this.is.a.unique.string");
 		Long id2 = snbm.getUniqueStringId("this.is.another.unique.string");
@@ -288,7 +288,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testMultipleGetDifferentUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule snbm = this.getSequenceNumberBusinessModule();
+		SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
 
 		Long id1 = snbm.getUniqueStringId("this.is.a.unique.string");
 		Long id2 = snbm.getUniqueStringId("this.is.another.unique.string");
@@ -316,7 +316,7 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
 	@Test
 	public void testMultiThreadGetUniqueStringId() throws Exception {
-		this.getSequenceNumberBusinessModule();
+		getSequenceNumberBusinessModule();
 
 		String[] uniqueString = { "this.is.a.unique.string", "this.is.another.unique.string",
 				"this.is.some.other.unique.string" };

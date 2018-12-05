@@ -87,6 +87,6 @@ public abstract class AbstractListPopupTextField extends AbstractPopupTextField 
 	}
 
 	private ListControlUtils getListControlUtils() throws UnifyException {
-		return (ListControlUtils) this.getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
+		return (ListControlUtils) getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
 	}
 }

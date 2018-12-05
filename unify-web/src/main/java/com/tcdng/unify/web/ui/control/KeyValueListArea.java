@@ -32,6 +32,6 @@ public class KeyValueListArea extends AbstractControl {
 
 	@SuppressWarnings("unchecked")
 	public Map<Object, Object> getMapValue() throws UnifyException {
-		return (Map<Object, Object>) this.getValue();
+		return (Map<Object, Object>) getValue();
 	}
 }

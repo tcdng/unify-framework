@@ -41,7 +41,7 @@ public class MultiDynamicWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		MultiDynamic multiDynamic = (MultiDynamic) widget;
 		writer.write("<div");
-		this.writeTagAttributes(writer, multiDynamic);
+		writeTagAttributes(writer, multiDynamic);
 		writer.write(">");
 		List<MultiDynamic.ValueStore> valueStoreList = multiDynamic.getValueList();
 		if (valueStoreList != null) {
@@ -91,7 +91,7 @@ public class MultiDynamicWriter extends AbstractControlWriter {
 				valueCtrl.setValueStore(valueStoreList.get(i).getValueStore());
 				writer.writeBehaviour(valueCtrl);
 				if (multiDynamic.isContainerEditable()) {
-					this.addPageAlias(multiDynamic.getId(), valueCtrl);
+					addPageAlias(multiDynamic.getId(), valueCtrl);
 				}
 			}
 		}

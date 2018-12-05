@@ -50,10 +50,10 @@ public class DropdownCheckBoxList extends AbstractListPopupTextField {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getFacadeStringValue() throws UnifyException {
-		List<String> values = this.getValue(ArrayList.class, String.class);
+		List<String> values = getValue(ArrayList.class, String.class);
 		StringBuilder sb = new StringBuilder();
 		if (values != null) {
-			Map<String, String> listMap = this.getListMap();
+			Map<String, String> listMap = getListMap();
 			boolean appendSym = false;
 			for (String value : values) {
 				if (appendSym) {
@@ -68,14 +68,14 @@ public class DropdownCheckBoxList extends AbstractListPopupTextField {
 	}
 
 	public String getSelectAllId() throws UnifyException {
-		return this.getPrefixedId("sela_");
+		return getPrefixedId("sela_");
 	}
 
 	public String getSelectAllOption() throws UnifyException {
-		return this.getUplAttribute(String.class, "selectAllOption");
+		return getUplAttribute(String.class, "selectAllOption");
 	}
 
 	public int getColumns() throws UnifyException {
-		return this.getUplAttribute(int.class, "columns");
+		return getUplAttribute(int.class, "columns");
 	}
 }

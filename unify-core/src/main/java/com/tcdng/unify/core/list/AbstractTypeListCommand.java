@@ -43,7 +43,7 @@ public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends 
 
 	public AbstractTypeListCommand(Class<T> typeClazz) {
 		this.typeClass = typeClazz;
-		this.typeListMap = new FactoryMap<Locale, List<Listable>>() {
+		typeListMap = new FactoryMap<Locale, List<Listable>>() {
 
 			@Override
 			protected List<Listable> create(Locale key, Object... params) throws Exception {

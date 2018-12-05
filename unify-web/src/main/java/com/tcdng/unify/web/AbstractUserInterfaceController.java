@@ -52,7 +52,7 @@ public abstract class AbstractUserInterfaceController extends AbstractController
 
 	@Override
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		if (!this.readOnly) {
+		if (!readOnly) {
 			DataUtils.setNestedBeanProperty(this, transferBlock.getLongProperty(), transferBlock.getValue(), null);
 		}
 	}

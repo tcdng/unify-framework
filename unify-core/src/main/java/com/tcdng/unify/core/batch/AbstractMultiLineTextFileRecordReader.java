@@ -40,28 +40,28 @@ public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatc
 
 	@Override
 	public void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException {
-		this.batchFileConfig = configuration;
-		this.reader = IOUtils.detectAndOpenBufferedReader(file[0]);
+		batchFileConfig = configuration;
+		reader = IOUtils.detectAndOpenBufferedReader(file[0]);
 		if (configuration.isSkipFirstRecord()) {
-			this.nextEntry();
+			nextEntry();
 		}
 	}
 
 	@Override
 	public void close() {
-		IOUtils.close(this.reader);
-		this.reader = null;
+		IOUtils.close(reader);
+		reader = null;
 	}
 
 	@Override
 	public boolean readNextRecord(ValueStore recordStore) throws UnifyException {
-		String[] splitRecord = this.readNextRecord();
+		String[] splitRecord = readNextRecord();
 		if (splitRecord != null) {
 			int index = 0;
-			for (BatchFileFieldConfig fieldConfig : this.batchFileConfig.getFieldConfigs()) {
+			for (BatchFileFieldConfig fieldConfig : batchFileConfig.getFieldConfigs()) {
 				Formatter<?> formatter = null;
 				if (fieldConfig.isFormatter()) {
-					formatter = this.getApplicationLocaleFormatter(fieldConfig.getFormatter());
+					formatter = getApplicationLocaleFormatter(fieldConfig.getFormatter());
 				}
 
 				recordStore.store(fieldConfig.getFieldName(), splitRecord[index++], formatter);
@@ -73,24 +73,24 @@ public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatc
 
 	@Override
 	public boolean skipNextRecord() throws UnifyException {
-		return this.readNextRecord() != null;
+		return readNextRecord() != null;
 	}
 
 	protected BatchFileConfig getBatchFileConfig() {
-		return this.batchFileConfig;
+		return batchFileConfig;
 	}
 
 	protected int getEntryCounter() {
-		return this.entryCounter;
+		return entryCounter;
 	}
 
 	protected abstract String[] parseEntry(String entry) throws UnifyException;
 
 	private String[] readNextRecord() throws UnifyException {
-		String line = this.nextEntry();
+		String line = nextEntry();
 		if (line != null) {
-			this.entryCounter++;
-			return this.parseEntry(line);
+			entryCounter++;
+			return parseEntry(line);
 		}
 
 		return null;
@@ -98,9 +98,9 @@ public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatc
 
 	private String nextEntry() throws UnifyException {
 		try {
-			return this.reader.readLine();
+			return reader.readLine();
 		} catch (IOException e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 		return null;
 	}

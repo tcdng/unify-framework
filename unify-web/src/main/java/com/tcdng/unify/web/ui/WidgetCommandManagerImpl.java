@@ -39,7 +39,7 @@ public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements 
 	private FactoryMap<Class<? extends Widget>, UICommandInfo> uiCommandInfoMap;
 
 	public WidgetCommandManagerImpl() {
-		this.uiCommandInfoMap = new FactoryMap<Class<? extends Widget>, UICommandInfo>() {
+		uiCommandInfoMap = new FactoryMap<Class<? extends Widget>, UICommandInfo>() {
 
 			@Override
 			protected UICommandInfo create(Class<? extends Widget> key, Object... params) throws Exception {
@@ -64,7 +64,7 @@ public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements 
 	@Override
 	public void executeCommand(Widget widget, String command) throws UnifyException {
 		try {
-			Method method = this.uiCommandInfoMap.get(widget.getClass()).getCommandMethod(command);
+			Method method = uiCommandInfoMap.get(widget.getClass()).getCommandMethod(command);
 			if (method == null) {
 				throw new UnifyException(UnifyWebErrorConstants.WIDGET_UNKNOWN_COMMANDHANDLER, widget.getClass(),
 						command);
@@ -73,7 +73,7 @@ public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements 
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		}
 	}
 
@@ -92,15 +92,15 @@ public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements 
 		private Map<String, Method> commandMethods;
 
 		public UICommandInfo() {
-			this.commandMethods = new HashMap<String, Method>();
+			commandMethods = new HashMap<String, Method>();
 		}
 
 		public void addCommandMethod(String name, Method method) {
-			this.commandMethods.put(name, method);
+			commandMethods.put(name, method);
 		}
 
 		public Method getCommandMethod(String name) throws UnifyException {
-			return this.commandMethods.get(name);
+			return commandMethods.get(name);
 		}
 	}
 }

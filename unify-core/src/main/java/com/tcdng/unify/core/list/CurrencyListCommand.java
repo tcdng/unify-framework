@@ -41,7 +41,7 @@ public class CurrencyListCommand extends AbstractListCommand<CurrencyListParams>
 
 	public CurrencyListCommand() {
 		super(CurrencyListParams.class);
-		this.currencyListByLocale = new FactoryMap<Locale, List<ListData>>() {
+		currencyListByLocale = new FactoryMap<Locale, List<ListData>>() {
 
 			@Override
 			protected List<ListData> create(Locale locale, Object... params) throws Exception {
@@ -70,7 +70,7 @@ public class CurrencyListCommand extends AbstractListCommand<CurrencyListParams>
 			return list;
 		}
 
-		return this.currencyListByLocale.get(locale);
+		return currencyListByLocale.get(locale);
 	}
 
 }

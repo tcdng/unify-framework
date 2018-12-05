@@ -35,13 +35,13 @@ public abstract class AbstractMulticastClientTextCommunicator extends AbstractMu
 
 	@Override
 	protected void onOpen(InputStream in) throws UnifyException {
-		this.reader = new BufferedReader(new InputStreamReader(in));
+		reader = new BufferedReader(new InputStreamReader(in));
 	}
 
 	@Override
 	protected void onClose() throws UnifyException {
-		IOUtils.close(this.reader);
-		this.reader = null;
+		IOUtils.close(reader);
+		reader = null;
 	}
 
 	/**
@@ -52,9 +52,9 @@ public abstract class AbstractMulticastClientTextCommunicator extends AbstractMu
 	 */
 	protected String readLine() throws UnifyException {
 		try {
-			return this.reader.readLine();
+			return reader.readLine();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return null;
 	}
@@ -70,9 +70,9 @@ public abstract class AbstractMulticastClientTextCommunicator extends AbstractMu
 	 */
 	protected int readChar(char[] buffer) throws UnifyException {
 		try {
-			return this.reader.read(buffer);
+			return reader.read(buffer);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -92,9 +92,9 @@ public abstract class AbstractMulticastClientTextCommunicator extends AbstractMu
 	 */
 	protected int readChar(char[] buffer, int offset, int length) throws UnifyException {
 		try {
-			return this.reader.read(buffer, offset, length);
+			return reader.read(buffer, offset, length);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}
@@ -107,9 +107,9 @@ public abstract class AbstractMulticastClientTextCommunicator extends AbstractMu
 	 */
 	protected int readChar() throws UnifyException {
 		try {
-			return this.reader.read();
+			return reader.read();
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 		return 0;
 	}

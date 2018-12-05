@@ -82,7 +82,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 	}
 
 	public FormatHelperImpl() {
-		this.localeDateTimeFormatMaps = new LocaleFactoryMaps<String, DateTimeFormat>() {
+		localeDateTimeFormatMaps = new LocaleFactoryMaps<String, DateTimeFormat>() {
 			@Override
 			protected DateTimeFormat createObject(Locale locale, String subPattern, Object... params) throws Exception {
 				List<Listable> list = null;
@@ -116,7 +116,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 			}
 		};
 
-		this.localeNumberSymbolMaps = new LocaleFactoryMaps<NumberType, NumberSymbols>() {
+		localeNumberSymbolMaps = new LocaleFactoryMaps<NumberType, NumberSymbols>() {
 			@Override
 			protected NumberSymbols createObject(Locale locale, NumberType numberType, Object... params)
 					throws Exception {
@@ -141,7 +141,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 			}
 		};
 
-		this.simpleDateFormatPoolMap = new FactoryMap<String, SimpleDateFormatPool>() {
+		simpleDateFormatPoolMap = new FactoryMap<String, SimpleDateFormatPool>() {
 
 			@Override
 			protected SimpleDateFormatPool create(String pattern, Object... params) throws Exception {
@@ -248,7 +248,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 
 	@Override
 	public String getDatePatternWithLongYear(String pattern) throws UnifyException {
-		Pattern[] subPatterns = this.splitDatePattern(pattern);
+		Pattern[] subPatterns = splitDatePattern(pattern);
 		for (int i = 0; i < subPatterns.length; i++) {
 			Pattern subPattern = subPatterns[i];
 			if (!subPattern.isFiller() && subPattern.getPattern().charAt(0) == 'y') {
@@ -256,17 +256,17 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 				break;
 			}
 		}
-		return this.reconstructDatePattern(subPatterns);
+		return reconstructDatePattern(subPatterns);
 	}
 
 	@Override
 	public String formatNow(String pattern) throws UnifyException {
-		return this.format(pattern, new Date());
+		return format(pattern, new Date());
 	}
 
 	@Override
 	public String format(String pattern, Date date) throws UnifyException {
-		return this.simpleDateFormatPoolMap.get(pattern).format(date);
+		return simpleDateFormatPoolMap.get(pattern).format(date);
 	}
 
 	@Override

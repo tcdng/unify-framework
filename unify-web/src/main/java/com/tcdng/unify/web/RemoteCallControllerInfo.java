@@ -44,14 +44,14 @@ public class RemoteCallControllerInfo extends ControllerInfo {
 	}
 
 	public boolean isRemoteCallGate() {
-		return this.remoteCallGateName != null;
+		return remoteCallGateName != null;
 	}
 
 	/**
 	 * Retrieves all remote-call handler names associated with controller.
 	 */
 	public Set<String> getRemoteHandlerNames() {
-		return this.remoteHandlerMap.keySet();
+		return remoteHandlerMap.keySet();
 	}
 
 	/**
@@ -66,10 +66,10 @@ public class RemoteCallControllerInfo extends ControllerInfo {
 	 *             if remote-call handler info with name is unknown
 	 */
 	public RemoteCallHandler getRemoteCallHandler(String name) throws UnifyException {
-		RemoteCallHandler handler = this.remoteHandlerMap.get(name);
+		RemoteCallHandler handler = remoteHandlerMap.get(name);
 		if (handler == null) {
 			throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_UNKNOWN_REMOTECALL_HANDLER,
-					this.getControllerName(), name);
+					getControllerName(), name);
 		}
 		return handler;
 	}

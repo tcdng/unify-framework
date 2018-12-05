@@ -35,26 +35,26 @@ import com.tcdng.unify.web.ui.AbstractControl;
 public class TextArea extends AbstractControl {
 
 	public int getColumns() throws UnifyException {
-		return this.getUplAttribute(int.class, "columns");
+		return getUplAttribute(int.class, "columns");
 	}
 
 	public int getRows() throws UnifyException {
-		return this.getUplAttribute(int.class, "rows");
+		return getUplAttribute(int.class, "rows");
 	}
 
 	public int getMinLen() throws UnifyException {
-		return this.getUplAttribute(int.class, "minLen");
+		return getUplAttribute(int.class, "minLen");
 	}
 
 	public int getMaxLen() throws UnifyException {
-		return this.getUplAttribute(int.class, "maxLen");
+		return getUplAttribute(int.class, "maxLen");
 	}
 
 	public boolean isWordWrap() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "wordWrap");
+		return getUplAttribute(boolean.class, "wordWrap");
 	}
 
 	public boolean isScrollToEnd() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "scrollToEnd");
+		return getUplAttribute(boolean.class, "scrollToEnd");
 	}
 }

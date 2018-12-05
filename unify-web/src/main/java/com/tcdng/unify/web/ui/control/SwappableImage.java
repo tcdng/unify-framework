@@ -34,10 +34,10 @@ import com.tcdng.unify.web.ui.AbstractControl;
 public class SwappableImage extends AbstractControl {
 
 	public String[] getSrc() throws UnifyException {
-		return this.getUplAttribute(String[].class, "src");
+		return getUplAttribute(String[].class, "src");
 	}
 
 	public boolean isAlwaysFetch() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "alwaysFetch");
+		return getUplAttribute(boolean.class, "alwaysFetch");
 	}
 }

@@ -38,7 +38,7 @@ public class CheckBox extends AbstractControl {
 
 	@Override
 	public boolean isLayoutCaption() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "layoutCaption");
+		return getUplAttribute(boolean.class, "layoutCaption");
 	}
 
 }

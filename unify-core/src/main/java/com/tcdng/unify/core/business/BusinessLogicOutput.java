@@ -33,7 +33,7 @@ public class BusinessLogicOutput {
 	private Map<String, Object> results;
 
 	public BusinessLogicOutput() {
-		this.results = new HashMap<String, Object>();
+		results = new HashMap<String, Object>();
 	}
 
 	public void setResult(String name, Object value) {

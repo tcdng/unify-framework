@@ -30,7 +30,7 @@ public class MultiSelect extends AbstractListControl {
 
 	@Override
 	public boolean isContainerDisabled() throws UnifyException {
-		return super.isContainerDisabled() || !this.isContainerEditable();
+		return super.isContainerDisabled() || !isContainerEditable();
 	}
 
 	@Override
@@ -44,11 +44,11 @@ public class MultiSelect extends AbstractListControl {
 	}
 
 	public String getFramePanelId() throws UnifyException {
-		return this.getPrefixedId("frm_");
+		return getPrefixedId("frm_");
 	}
 
 	public String getListPanelId() throws UnifyException {
-		return this.getPrefixedId("lst_");
+		return getPrefixedId("lst_");
 	}
 
 }

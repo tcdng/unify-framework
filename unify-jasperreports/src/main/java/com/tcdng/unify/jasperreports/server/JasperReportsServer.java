@@ -96,9 +96,9 @@ public class JasperReportsServer extends AbstractReportServer {
 		super.onInitialize();
 		jasperReportsCache = (JasperReportsCache) getComponent("jasperreports-cache");
 		layoutManagers.put(ReportLayout.TABULAR,
-				(JasperReportsLayoutManager) this.getComponent("jasperreports-tabularlayoutmanager"));
+				(JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
 		layoutManagers.put(ReportLayout.COLUMNAR,
-				(JasperReportsLayoutManager) this.getComponent("jasperreports-columnarlayoutmanager"));
+				(JasperReportsLayoutManager) getComponent("jasperreports-columnarlayoutmanager"));
 	}
 
 	@Override

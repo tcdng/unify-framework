@@ -57,7 +57,7 @@ public class PageValidationImpl extends AbstractPageValidation {
 							Widget frmWidget = form.getWidgetByLongName(longName);
 							if (frmWidget.isVisible()) {
 								if (frmWidget instanceof Control) {
-									pass &= this.validateWidget((Control) frmWidget, dataTransfer);
+									pass &= validateWidget((Control) frmWidget, dataTransfer);
 								}
 							}
 						}
@@ -79,18 +79,18 @@ public class PageValidationImpl extends AbstractPageValidation {
 								Control control = valueCtrl.getControl();
 
 								if (store.isRequired()) {
-									String value = this.getTransferValue(String.class,
+									String value = getTransferValue(String.class,
 											dynamicCtrlBlock.getChildBlock());
 									if (value == null || StringUtils.isBlank(value)) {
-										this.addValidationFail(control, "required",
-												this.getSessionMessage("validation.required", store.getCaption()));
+										addValidationFail(control, "required",
+												getSessionMessage("validation.required", store.getCaption()));
 										localPass = false;
 										pass = false;
 									}
 								}
 
 								if (localPass) {
-									this.addValidationPass(control, null);
+									addValidationPass(control, null);
 								}
 
 								dataTransferBlock = dataTransferBlock.getSiblingBlock();
@@ -98,13 +98,13 @@ public class PageValidationImpl extends AbstractPageValidation {
 						}
 					}
 				} else if (widget instanceof DynamicPanel) {
-					PageManager pageManager = this.getPageManager();
+					PageManager pageManager = getPageManager();
 					StandalonePanel standalonePanel = ((DynamicPanel) widget).getStandalonePanel();
 					for (String longName : standalonePanel.getPageValidationNames()) {
 						pass &= standalonePanel.getPageWidgetValidator(pageManager, longName).validate(dataTransfer);
 					}
 				} else if (widget instanceof Control) {
-					pass &= this.validateWidget((Control) widget, dataTransfer);
+					pass &= validateWidget((Control) widget, dataTransfer);
 				}
 			}
 		}
@@ -116,11 +116,11 @@ public class PageValidationImpl extends AbstractPageValidation {
 		DataTransferBlock dataTransferBlock = dataTransfer.getDataTransferBlock(control.getId());
 		if (dataTransferBlock != null) {
 			String caption = control.getUplAttribute(String.class, "caption");
-			String value = this.getTransferValue(String.class, dataTransferBlock);
+			String value = getTransferValue(String.class, dataTransferBlock);
 
 			if (control.getRequired().isTrue()) {
 				if (value == null || StringUtils.isBlank(value)) {
-					this.addValidationFail(control, "required", this.getSessionMessage("validation.required", caption));
+					addValidationFail(control, "required", getSessionMessage("validation.required", caption));
 					return false;
 				}
 			}
@@ -129,8 +129,8 @@ public class PageValidationImpl extends AbstractPageValidation {
 				int minLen = control.getUplAttribute(int.class, "minLen");
 				if (minLen > 0) {
 					if (value == null || value.length() < minLen) {
-						this.addValidationFail(control, "minLen",
-								this.getSessionMessage("validation.greaterthanorequal", caption, minLen));
+						addValidationFail(control, "minLen",
+								getSessionMessage("validation.greaterthanorequal", caption, minLen));
 						return false;
 					}
 				}
@@ -140,14 +140,14 @@ public class PageValidationImpl extends AbstractPageValidation {
 				int maxLen = control.getUplAttribute(int.class, "maxLen");
 				if (maxLen > 0) {
 					if (value != null && value.length() > maxLen) {
-						this.addValidationFail(control, "maxLen",
-								this.getSessionMessage("validation.lessthanorequal", caption, maxLen));
+						addValidationFail(control, "maxLen",
+								getSessionMessage("validation.lessthanorequal", caption, maxLen));
 						return false;
 					}
 				}
 			}
 
-			this.addValidationPass(control, null);
+			addValidationPass(control, null);
 		}
 
 		return true;

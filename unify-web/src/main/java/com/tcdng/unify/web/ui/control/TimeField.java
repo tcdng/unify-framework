@@ -41,8 +41,8 @@ public class TimeField extends AbstractTimeField {
 		super.onPageInitialize();
 
 		Pattern[] pattern = super.getPattern();
-		this.dateTimeFormat = new DateTimeFormat[pattern.length];
-		Formatter<?> formatter = (Formatter<?>) this.getFormatter();
+		dateTimeFormat = new DateTimeFormat[pattern.length];
+		Formatter<?> formatter = (Formatter<?>) getFormatter();
 		for (int i = 0; i < pattern.length; i++) {
 			Pattern fp = pattern[i];
 			if (!fp.isFiller()) {
@@ -58,13 +58,13 @@ public class TimeField extends AbstractTimeField {
 		for (int i = 0; i < pattern.length; i++) {
 			Pattern fp = pattern[i];
 			if (!fp.isFiller()) {
-				fp.setTarget(this.getPrefixedId("timi_") + i);
+				fp.setTarget(getPrefixedId("timi_") + i);
 			}
 		}
 		return pattern;
 	}
 
 	public DateTimeFormat[] getDateTimeFormat() {
-		return this.dateTimeFormat;
+		return dateTimeFormat;
 	}
 }

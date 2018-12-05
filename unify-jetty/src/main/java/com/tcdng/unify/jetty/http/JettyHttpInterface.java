@@ -44,50 +44,49 @@ public class JettyHttpInterface extends AbstractHttpInterface {
 	private NetworkSchemeType networkSchemeType;
 
 	public JettyHttpInterface() {
-		this.networkSchemeType = NetworkSchemeType.HTTP;
+		networkSchemeType = NetworkSchemeType.HTTP;
 	}
 
 	@Override
 	public String getScheme() {
-		return this.networkSchemeType.code();
+		return networkSchemeType.code();
 	}
 
 	@Override
 	public int getPort() {
-		return this.getHttpPort();
+		return getHttpPort();
 	}
 
 	@Override
 	protected void onInitialize() throws UnifyException {
 		try {
-			this.logInfo("Initializing HTTP server on port {0}; using context path {1} and servlet path {2}...",
-					Integer.toString(this.getHttpPort()), this.getContextPath(), this.getServletPath());
-			this.httpServer = new Server(this.getHttpPort());
+			logInfo("Initializing HTTP server on port {0}; using context path {1} and servlet path {2}...",
+					Integer.toString(getHttpPort()), getContextPath(), getServletPath());
+			httpServer = new Server(getHttpPort());
 			ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-			context.setContextPath(this.getContextPath());
+			context.setContextPath(getContextPath());
 			context.getSessionHandler().getSessionManager().setMaxInactiveInterval(
-					this.getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
+					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
 							UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT));
-			this.httpServer.setHandler(context);
+			httpServer.setHandler(context);
 
-			ServletHolder mainHolder = new ServletHolder(this.createHttpServlet());
-			mainHolder.getRegistration().setMultipartConfig(
-					new MultipartConfigElement(this.getMultipartLocation(), this.getMultipartMaxFileSize(),
-							this.getMultipartMaxRequestSize(), this.getMultipartFileSizeThreshold()));
-			context.addServlet(mainHolder, this.getServletPath());
-			this.httpServer.start();
-			this.logInfo("HTTP server initialization completed.");
+			ServletHolder mainHolder = new ServletHolder(createHttpServlet());
+			mainHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
+					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
+			context.addServlet(mainHolder, getServletPath());
+			httpServer.start();
+			logInfo("HTTP server initialization completed.");
 		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, this.getName());
+			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, getName());
 		}
 	}
 
 	@Override
 	protected void onTerminate() throws UnifyException {
 		try {
-			this.httpServer.stop();
+			httpServer.stop();
 		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_TERMINATION_ERROR, this.getName());
+			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_TERMINATION_ERROR, getName());
 		}
 	}
 

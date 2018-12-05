@@ -34,14 +34,14 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
 public class ToggleButton extends AbstractTargetControl {
 
 	public String getToggleAttribute() throws UnifyException {
-		return this.getUplAttribute(String.class, "toggleProperty");
+		return getUplAttribute(String.class, "toggleProperty");
 	}
 
 	public String getOnMessageKey() throws UnifyException {
-		return this.getUplAttribute(String.class, "onMessageKey");
+		return getUplAttribute(String.class, "onMessageKey");
 	}
 
 	public String getOffMessageKey() throws UnifyException {
-		return this.getUplAttribute(String.class, "offMessageKey");
+		return getUplAttribute(String.class, "offMessageKey");
 	}
 }

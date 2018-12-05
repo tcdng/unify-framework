@@ -42,7 +42,7 @@ public class SwappableImageWriter extends AbstractControlWriter {
 			index = 0;
 		}
 		writer.write("<img");
-		this.writeTagAttributes(writer, swappableImage);
+		writeTagAttributes(writer, swappableImage);
 		writer.write(" src=\"");
 		writer.writeFileImageContextURL(src[index]);
 		if (swappableImage.isAlwaysFetch()) {

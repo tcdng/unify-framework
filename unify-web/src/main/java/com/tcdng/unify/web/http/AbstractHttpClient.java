@@ -36,14 +36,14 @@ public abstract class AbstractHttpClient extends AbstractUnifyComponent implemen
 	@Override
 	public HttpClientTextResponse getRemoteTextResource(String url, Map<String, String> parameters)
 			throws UnifyException {
-		HttpURLConnection connection = this.getHttpURLConnection(url);
+		HttpURLConnection connection = getHttpURLConnection(url);
 		try {
 			connection.setRequestMethod("POST");
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 
 			DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-			out.writeBytes(this.getParameters(parameters));
+			out.writeBytes(getParameters(parameters));
 			out.flush();
 			out.close();
 
@@ -57,7 +57,7 @@ public abstract class AbstractHttpClient extends AbstractUnifyComponent implemen
 			in.close();
 			return new HttpClientTextResponse(responseCode, responseText.toString());
 		} catch (Exception e) {
-			this.throwOperationErrorException(e);
+			throwOperationErrorException(e);
 		} finally {
 			connection.disconnect();
 		}

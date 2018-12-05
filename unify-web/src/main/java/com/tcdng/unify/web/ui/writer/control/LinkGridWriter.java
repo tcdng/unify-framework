@@ -44,7 +44,7 @@ public class LinkGridWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		LinkGrid linkGrid = (LinkGrid) widget;
 		writer.write("<div");
-		this.writeTagAttributes(writer, linkGrid);
+		writeTagAttributes(writer, linkGrid);
 		writer.write(">");
 		LinkGridInfo linkGridInfo = linkGrid.getValue(LinkGridInfo.class);
 		if (linkGridInfo != null) {

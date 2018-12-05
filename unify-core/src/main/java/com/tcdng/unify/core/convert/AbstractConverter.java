@@ -30,7 +30,7 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 	@Override
 	public T convert(Object value, Formatter<?> formatter) throws UnifyException {
 		try {
-			return this.doConvert(value, formatter);
+			return doConvert(value, formatter);
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {

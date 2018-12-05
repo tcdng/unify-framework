@@ -35,13 +35,13 @@ public abstract class AbstractMulticastServerTextCommunicator extends AbstractMu
 
 	@Override
 	protected void onOpen(OutputStream out) throws UnifyException {
-		this.writer = new BufferedWriter(new OutputStreamWriter(out));
+		writer = new BufferedWriter(new OutputStreamWriter(out));
 	}
 
 	@Override
 	protected void onClose() throws UnifyException {
-		IOUtils.close(this.writer);
-		this.writer = null;
+		IOUtils.close(writer);
+		writer = null;
 	}
 
 	/**
@@ -54,9 +54,9 @@ public abstract class AbstractMulticastServerTextCommunicator extends AbstractMu
 	 */
 	protected void write(String text) throws UnifyException {
 		try {
-			this.writer.write(text);
+			writer.write(text);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -70,10 +70,10 @@ public abstract class AbstractMulticastServerTextCommunicator extends AbstractMu
 	 */
 	protected void writeLine(String text) throws UnifyException {
 		try {
-			this.writer.write(text);
-			this.writer.newLine();
+			writer.write(text);
+			writer.newLine();
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -85,9 +85,9 @@ public abstract class AbstractMulticastServerTextCommunicator extends AbstractMu
 	 */
 	protected void writeNewLine() throws UnifyException {
 		try {
-			this.writer.newLine();
+			writer.newLine();
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 
@@ -101,9 +101,9 @@ public abstract class AbstractMulticastServerTextCommunicator extends AbstractMu
 	 */
 	protected void writeChar(char[] buffer) throws UnifyException {
 		try {
-			this.writer.write(buffer);
+			writer.write(buffer);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 	}
 
@@ -121,9 +121,9 @@ public abstract class AbstractMulticastServerTextCommunicator extends AbstractMu
 	 */
 	protected void writeChar(char[] buffer, int offset, int length) throws UnifyException {
 		try {
-			this.writer.write(buffer, offset, length);
+			writer.write(buffer, offset, length);
 		} catch (IOException e) {
-			this.throwReceiveException(e);
+			throwReceiveException(e);
 		}
 	}
 
@@ -137,9 +137,9 @@ public abstract class AbstractMulticastServerTextCommunicator extends AbstractMu
 	 */
 	protected void writeChar(char ch) throws UnifyException {
 		try {
-			this.writer.write(ch);
+			writer.write(ch);
 		} catch (IOException e) {
-			this.throwTransmitException(e);
+			throwTransmitException(e);
 		}
 	}
 

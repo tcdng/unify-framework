@@ -43,7 +43,7 @@ public class HttpClientRequest implements ClientRequest {
 
 	@Override
 	public String getPath() {
-		return this.path;
+		return path;
 	}
 
 	@Override

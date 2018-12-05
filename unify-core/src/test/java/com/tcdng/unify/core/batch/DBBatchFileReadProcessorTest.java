@@ -43,7 +43,7 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 
-	private Database pm;
+	private Database db;
 
 	private DatabaseTransactionManager tm;
 
@@ -51,7 +51,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 	@Test
 	public void testSingleBatchBatchProcessing() throws Exception {
 		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), this.pm.getName());
+		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
 		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
 		byte[][] fileObject = new byte[1][];
 		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
@@ -61,7 +61,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 
 		// Perform batch file processing and do some assertions
 		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) this.getComponent("test-batchfileprocessor-b");
+		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-b");
 		tm.beginTransaction();
 		try {
 			blu.execute(input, output);
@@ -84,7 +84,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 		TestBatchRecordB qryBatchRecord = null;
 		tm.beginTransaction();
 		try {
-			qryBatchRecord = pm.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "NGN"));
+			qryBatchRecord = db.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "NGN"));
 		} finally {
 			tm.endTransaction();
 		}
@@ -99,7 +99,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 		List<TestBatchItemRecordB> batchItemList = null;
 		tm.beginTransaction();
 		try {
-			batchItemList = pm.findAll(
+			batchItemList = db.findAll(
 					new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class).equals("batchId", batchId).order("id"));
 		} finally {
 			tm.endTransaction();
@@ -127,7 +127,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 	@Test
 	public void testMultipleBatchBatchProcessing() throws Exception {
 		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), this.pm.getName());
+		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
 		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
 		byte[][] fileObject = new byte[1][];
 		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
@@ -137,7 +137,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 
 		// Perform batch file processing and do some assertions
 		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) this.getComponent("test-batchfileprocessor-b");
+		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-b");
 		tm.beginTransaction();
 		try {
 			blu.execute(input, output);
@@ -167,8 +167,8 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 		TestBatchRecordB usdBatchRecord = null;
 		tm.beginTransaction();
 		try {
-			ngnBatchRecord = pm.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "NGN"));
-			usdBatchRecord = pm.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "USD"));
+			ngnBatchRecord = db.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "NGN"));
+			usdBatchRecord = db.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "USD"));
 		} finally {
 			tm.endTransaction();
 		}
@@ -191,9 +191,9 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 		List<TestBatchItemRecordB> usdBatchItemList = null;
 		tm.beginTransaction();
 		try {
-			ngnBatchItemList = pm.findAll(new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class)
+			ngnBatchItemList = db.findAll(new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class)
 					.equals("batchId", ngnBatchId).order("id"));
-			usdBatchItemList = pm.findAll(new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class)
+			usdBatchItemList = db.findAll(new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class)
 					.equals("batchId", usdBatchId).order("id"));
 		} finally {
 			tm.endTransaction();
@@ -227,13 +227,13 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
 
 	@Override
 	protected void onSetup() throws Exception {
-		pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+		db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
 		tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onTearDown() throws Exception {
-		this.deleteAll(TestBatchItemRecordA.class, TestBatchItemRecordB.class, TestBatchRecordB.class);
+		deleteAll(TestBatchItemRecordA.class, TestBatchItemRecordB.class, TestBatchRecordB.class);
 	}
 }

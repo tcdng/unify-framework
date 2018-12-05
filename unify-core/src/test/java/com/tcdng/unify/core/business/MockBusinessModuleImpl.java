@@ -57,27 +57,27 @@ public class MockBusinessModuleImpl extends AbstractBusinessModule implements Mo
 
 	@Override
 	public Long createAccount(Account account) throws UnifyException {
-		return (Long) this.db().create(account);
+		return (Long) db().create(account);
 	}
 
 	@Override
 	public Account findAccount(Long accountId) throws UnifyException {
-		return this.db().find(Account.class, accountId);
+		return db().find(Account.class, accountId);
 	}
 
 	@Override
 	public List<Account> find(AccountQuery query) throws UnifyException {
-		return this.db().listAll(query);
+		return db().listAll(query);
 	}
 
 	@Override
 	public Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException {
-		Long accountId = (Long) this.db().create(new Account(accountNo, accountName));
-		return this.anotherMockBusinessModule.createLoanAccount(new LoanAccount(accountId, amount));
+		Long accountId = (Long) db().create(new Account(accountNo, accountName));
+		return anotherMockBusinessModule.createLoanAccount(new LoanAccount(accountId, amount));
 	}
 
 	@Override
 	public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
-		return this.anotherMockBusinessModule.findLoanAccount(loanAccountId);
+		return anotherMockBusinessModule.findLoanAccount(loanAccountId);
 	}
 }

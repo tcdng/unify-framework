@@ -44,22 +44,22 @@ public class BatchFileConfig {
 	}
 
 	public BatchFileConfig(boolean skipFirstRecord) {
-		this.fieldConfigList = new LinkedHashMap<String, BatchFileFieldConfig>();
-		this.skipFirstRecord = false;
-		this.onConstraint = ConstraintAction.SKIP;
+		fieldConfigList = new LinkedHashMap<String, BatchFileFieldConfig>();
+		skipFirstRecord = false;
+		onConstraint = ConstraintAction.SKIP;
 		this.skipFirstRecord = skipFirstRecord;
 	}
 
 	public BatchFileConfig addFieldConfig(String fieldName, String readerFieldName, String formatter,
 			PadDirection padDirection, int length, boolean trim, boolean pad, boolean updateOnConstraint,
 			Character padChar) {
-		this.fieldConfigList.put(fieldName, new BatchFileFieldConfig(fieldName, readerFieldName, formatter,
+		fieldConfigList.put(fieldName, new BatchFileFieldConfig(fieldName, readerFieldName, formatter,
 				padDirection, length, trim, pad, updateOnConstraint, padChar));
 		return this;
 	}
 
 	public BatchFileConfig addFieldConfig(String fieldName, int length, boolean trim) {
-		this.fieldConfigList.put(fieldName,
+		fieldConfigList.put(fieldName,
 				new BatchFileFieldConfig(fieldName, null, null, null, length, trim, false, true, ' '));
 		return this;
 	}
@@ -89,7 +89,7 @@ public class BatchFileConfig {
 	}
 
 	public Collection<BatchFileFieldConfig> getFieldConfigs() {
-		return this.fieldConfigList.values();
+		return fieldConfigList.values();
 	}
 
 	public boolean isSkipFirstRecord() {

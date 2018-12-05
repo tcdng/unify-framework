@@ -35,7 +35,7 @@ public class RandomAlphanumericPasswordGenerator extends AbstractUnifyComponent 
 	private Random random;
 
 	public RandomAlphanumericPasswordGenerator() {
-		this.random = new Random();
+		random = new Random();
 	}
 
 	@Override

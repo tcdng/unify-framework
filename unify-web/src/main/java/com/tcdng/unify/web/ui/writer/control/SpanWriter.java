@@ -37,7 +37,7 @@ public class SpanWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		Span span = (Span) widget;
 		writer.write("<span ");
-		this.writeTagAttributes(writer, span);
+		writeTagAttributes(writer, span);
 		writer.write(">");
 		String value = span.getStringValue();
 		if (value != null) {

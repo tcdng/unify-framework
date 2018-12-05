@@ -34,9 +34,9 @@ public class OneWayStringCryptographImplTest extends AbstractUnifyComponentTest 
 
 	@Test
 	public void testEncryptNull() throws Exception {
-		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) this.getComponent("cryptographA");
-		OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) this.getComponent("cryptographB");
-		OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) this.getComponent("cryptographC");
+		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
+		OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) getComponent("cryptographB");
+		OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) getComponent("cryptographC");
 
 		assertNull(stringCryptographA.encrypt(null));
 		assertNull(stringCryptographB.encrypt(null));
@@ -45,8 +45,8 @@ public class OneWayStringCryptographImplTest extends AbstractUnifyComponentTest 
 
 	@Test
 	public void testEncryptStringConsistent() throws Exception {
-		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) this.getComponent("cryptographA");
-		OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) this.getComponent("cryptographB");
+		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
+		OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) getComponent("cryptographB");
 		String encryptedA = stringCryptographA.encrypt("Hello");
 		String encryptedB = stringCryptographB.encrypt("Hello");
 		assertEquals(encryptedA, encryptedB);
@@ -54,8 +54,8 @@ public class OneWayStringCryptographImplTest extends AbstractUnifyComponentTest 
 
 	@Test
 	public void testEncryptStringWithDifferentCryptographs() throws Exception {
-		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) this.getComponent("cryptographA");
-		OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) this.getComponent("cryptographC");
+		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
+		OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) getComponent("cryptographC");
 		String encryptedA = stringCryptographA.encrypt("Hello");
 		String encryptedB = stringCryptographC.encrypt("Hello");
 		assertFalse(encryptedA.equals(encryptedB));

@@ -37,7 +37,7 @@ public class ToggleButtonWriter extends AbstractTargetControlWriter {
 	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
 		ToggleButton toggleButton = (ToggleButton) targetControl;
 		writer.write("<button type=\"button\"");
-		this.writeTagAttributes(writer, toggleButton);
+		writeTagAttributes(writer, toggleButton);
 		writer.write(">");
 		if (toggleButton.getValue(boolean.class, toggleButton.getToggleAttribute())) {
 			writer.writeWithHtmlEscape(toggleButton.getOnMessageKey());

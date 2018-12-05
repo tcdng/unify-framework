@@ -43,7 +43,7 @@ public class FileUpload extends AbstractControl {
 	@Override
 	public void onPageInitialize() throws UnifyException {
 		super.onPageInitialize();
-		this.accept = this.getUplAttribute(String.class, "accept");
+		accept = getUplAttribute(String.class, "accept");
 	}
 
 	public String getAccept() {
@@ -55,11 +55,11 @@ public class FileUpload extends AbstractControl {
 	}
 
 	public int getMaxSize() throws UnifyException {
-		int maxSize = this.getUplAttribute(int.class, "maxSize");
+		int maxSize = getUplAttribute(int.class, "maxSize");
 		if (maxSize <= 0) {
-			String maxSizeProperty = this.getUplAttribute(String.class, "maxSizeProperty");
+			String maxSizeProperty = getUplAttribute(String.class, "maxSizeProperty");
 			if (!StringUtils.isBlank(maxSizeProperty)) {
-				maxSize = this.getValue(int.class, maxSizeProperty);
+				maxSize = getValue(int.class, maxSizeProperty);
 			}
 		}
 
@@ -67,30 +67,30 @@ public class FileUpload extends AbstractControl {
 	}
 
 	public String getUploadURL() throws UnifyException {
-		return this.getUplAttribute(String.class, "uploadPath");
+		return getUplAttribute(String.class, "uploadPath");
 	}
 
 	public String getBrowseCaption() throws UnifyException {
-		return this.getUplAttribute(String.class, "browseCaption");
+		return getUplAttribute(String.class, "browseCaption");
 	}
 
 	public String getUploadCaption() throws UnifyException {
-		return this.getUplAttribute(String.class, "uploadCaption");
+		return getUplAttribute(String.class, "uploadCaption");
 	}
 
 	public boolean isSelectOnly() throws UnifyException {
-		return this.getUplAttribute(boolean.class, "selectOnly");
+		return getUplAttribute(boolean.class, "selectOnly");
 	}
 
 	public String getButtonId() throws UnifyException {
-		return this.getPrefixedId("btn_");
+		return getPrefixedId("btn_");
 	}
 
 	public String getSpanId() throws UnifyException {
-		return this.getPrefixedId("spn_");
+		return getPrefixedId("spn_");
 	}
 
 	public String getUploadButtonId() throws UnifyException {
-		return this.getPrefixedId("btnu_");
+		return getPrefixedId("btnu_");
 	}
 }

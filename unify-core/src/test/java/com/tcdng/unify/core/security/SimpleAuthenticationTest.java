@@ -32,14 +32,14 @@ public class SimpleAuthenticationTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testEncrypted() throws Exception {
-		Authentication dpa = (SimpleAuthentication) this.getComponent("simple-auth1");
+		Authentication dpa = (SimpleAuthentication) getComponent("simple-auth1");
 		assertEquals("scott", dpa.getUsername());
 		assertEquals("tiger", dpa.getPassword());
 	}
 
 	@Test
 	public void testUnencrypted() throws Exception {
-		Authentication dpa = (SimpleAuthentication) this.getComponent("simple-auth2");
+		Authentication dpa = (SimpleAuthentication) getComponent("simple-auth2");
 		assertEquals("scott", dpa.getUsername());
 		assertEquals("tiger", dpa.getPassword());
 	}

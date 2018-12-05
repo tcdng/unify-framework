@@ -36,7 +36,7 @@ public class RegexPatternStoreImpl extends AbstractUnifyComponent implements Reg
 	private LocaleFactoryMaps<String, Pattern> patterns;
 
 	public RegexPatternStoreImpl() {
-		this.patterns = new LocaleFactoryMaps<String, Pattern>() {
+		patterns = new LocaleFactoryMaps<String, Pattern>() {
 
 			@Override
 			protected Pattern createObject(Locale locale, String regexMessageKey, Object... params) throws Exception {

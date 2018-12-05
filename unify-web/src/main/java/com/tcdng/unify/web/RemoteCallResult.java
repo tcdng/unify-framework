@@ -68,6 +68,6 @@ public abstract class RemoteCallResult {
 	}
 
 	public boolean isError() {
-		return this.errorCode != null || this.errorMsg != null;
+		return errorCode != null || errorMsg != null;
 	}
 }

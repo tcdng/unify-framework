@@ -34,10 +34,10 @@ public class DownloadPathResourceController extends RealPathResourceController {
 	@Override
 	public void prepareExecution() throws UnifyException {
 		super.prepareExecution();
-		this.file = new File(IOUtils.buildFilename(this.getUnifyComponentContext().getWorkingPath(),
-				"download/" + this.getResourceName()));
-		if (this.file.exists()) {
-			this.setContentLength(this.file.length());
+		file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(),
+				"download/" + getResourceName()));
+		if (file.exists()) {
+			setContentLength(file.length());
 		}
 	}
 }

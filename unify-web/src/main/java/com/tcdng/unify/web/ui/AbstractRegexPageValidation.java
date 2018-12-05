@@ -52,22 +52,22 @@ public abstract class AbstractRegexPageValidation extends AbstractPageValidation
 				boolean localPass = true;
 				DataTransferBlock dataTransferBlock = dataTransfer.getDataTransferBlock(widget.getId());
 				if (dataTransferBlock != null) {
-					String value = this.getTransferValue(String.class, dataTransferBlock);
+					String value = getTransferValue(String.class, dataTransferBlock);
 					if (value != null) {
-						Matcher matcher = ((RegexPatternStore) this
-								.getComponent(ApplicationComponents.APPLICATION_REGEXPATTERNSTORE))
-										.getPattern(this.getSessionLocale(), this.regexKey).matcher(value);
+						Matcher matcher = ((RegexPatternStore) getComponent(
+								ApplicationComponents.APPLICATION_REGEXPATTERNSTORE))
+										.getPattern(getSessionLocale(), regexKey).matcher(value);
 						if (!matcher.matches()) {
 							String caption = widget.getUplAttribute(String.class, "caption");
-							String message = this.getSessionMessage(this.errorKey, caption);
-							this.addValidationFail((Control) widget, this.validationCode, message);
+							String message = getSessionMessage(errorKey, caption);
+							addValidationFail((Control) widget, validationCode, message);
 							pass = localPass = false;
 						}
 					}
 				}
 
 				if (localPass) {
-					this.addValidationPass((Control) widget, this.validationCode);
+					addValidationPass((Control) widget, validationCode);
 				}
 			}
 		}

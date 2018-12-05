@@ -86,43 +86,43 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 	private long idCounter;
 
 	public NetworkInterfaceImpl() {
-		this.networkInterfaceConfigs = new HashMap<String, NetworkInterfaceConfig>();
-		this.localUnicastServers = new ConcurrentHashMap<String, LocalUnicastServer>();
-		this.localUnicastClients = new ConcurrentHashMap<String, LocalUnicastClient>();
-		this.localMulticastServers = new ConcurrentHashMap<String, LocalMulticastServer>();
-		this.localMulticastClients = new ConcurrentHashMap<String, LocalMulticastClient>();
+		networkInterfaceConfigs = new HashMap<String, NetworkInterfaceConfig>();
+		localUnicastServers = new ConcurrentHashMap<String, LocalUnicastServer>();
+		localUnicastClients = new ConcurrentHashMap<String, LocalUnicastClient>();
+		localMulticastServers = new ConcurrentHashMap<String, LocalMulticastServer>();
+		localMulticastClients = new ConcurrentHashMap<String, LocalMulticastClient>();
 	}
 
 	@Override
 	public synchronized void configure(NetworkInterfaceConfigType type, String configName, String communicatorName,
 			String host, int port, int maxThreads) throws UnifyException {
-		if (this.networkInterfaceConfigs.containsKey(configName)) {
+		if (networkInterfaceConfigs.containsKey(configName)) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_CONFIG_EXISTS, configName);
 		}
 
-		if (this.getComponentConfig(map.get(type), communicatorName) == null) {
+		if (getComponentConfig(map.get(type), communicatorName) == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_TYPE_COMM_INCOMPATIBLE, communicatorName,
 					type);
 		}
 
-		this.networkInterfaceConfigs.put(configName, new NetworkInterfaceConfig(type, configName, communicatorName,
+		networkInterfaceConfigs.put(configName, new NetworkInterfaceConfig(type, configName, communicatorName,
 				host, port,
-				maxThreads < this.minLocalUnicastServerThreads ? this.minLocalUnicastServerThreads : maxThreads));
+				maxThreads < minLocalUnicastServerThreads ? minLocalUnicastServerThreads : maxThreads));
 	}
 
 	@Override
 	public String establishUnicast(String configName) throws UnifyException {
-		this.logDebug("Establishing a unicast connection. Configuration = {0}...", configName);
-		NetworkInterfaceConfig nic = this.getConfig(NetworkInterfaceConfigType.REMOTE_UNICAST_SERVER, configName);
-		String id = configName + String.valueOf(++this.idCounter);
-		this.localUnicastClients.put(id, new LocalUnicastClient(id, nic));
+		logDebug("Establishing a unicast connection. Configuration = {0}...", configName);
+		NetworkInterfaceConfig nic = getConfig(NetworkInterfaceConfigType.REMOTE_UNICAST_SERVER, configName);
+		String id = configName + String.valueOf(++idCounter);
+		localUnicastClients.put(id, new LocalUnicastClient(id, nic));
 		return id;
 	}
 
 	@Override
 	public void destroyUnicast(String sessionID) throws UnifyException {
-		this.logDebug("Destroying a unicast connection. ID = {0}...", sessionID);
-		LocalUnicastClient localUnicastClient = this.localUnicastClients.remove(sessionID);
+		logDebug("Destroying a unicast connection. ID = {0}...", sessionID);
+		LocalUnicastClient localUnicastClient = localUnicastClients.remove(sessionID);
 		if (localUnicastClient == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_UNICASTCLIENT_NOT_STARTED, sessionID);
 		}
@@ -131,8 +131,8 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Override
 	public NetworkMessage unicast(String sessionID, NetworkMessage message) throws UnifyException {
-		this.logDebug("Sending a unicast message. Session ID = {0}, message = [{1}]...", sessionID, message);
-		LocalUnicastClient localUnicastClient = this.localUnicastClients.get(sessionID);
+		logDebug("Sending a unicast message. Session ID = {0}, message = [{1}]...", sessionID, message);
+		LocalUnicastClient localUnicastClient = localUnicastClients.get(sessionID);
 		if (localUnicastClient == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_UNICASTCLIENT_NOT_STARTED, sessionID);
 		}
@@ -142,18 +142,18 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Override
 	public synchronized void startLocalUnicastServer(String configName) throws UnifyException {
-		NetworkInterfaceConfig nic = this.getConfig(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, configName);
-		if (this.localUnicastServers.containsKey(configName)) {
+		NetworkInterfaceConfig nic = getConfig(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER, configName);
+		if (localUnicastServers.containsKey(configName)) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_UNICASTSERVER_STARTED, configName);
 		}
 		LocalUnicastServer localUnicastServer = new LocalUnicastServer(nic);
 		new Thread(localUnicastServer).start();
-		this.localUnicastServers.put(configName, localUnicastServer);
+		localUnicastServers.put(configName, localUnicastServer);
 	}
 
 	@Override
 	public void stopLocalUnicastServer(String configName) throws UnifyException {
-		LocalUnicastServer localUnicastServer = this.localUnicastServers.remove(configName);
+		LocalUnicastServer localUnicastServer = localUnicastServers.remove(configName);
 		if (localUnicastServer == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_UNICASTSERVER_NOT_STARTED, configName);
 		}
@@ -162,7 +162,7 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Override
 	public boolean isLocalUnicastServerRunning(String configName) throws UnifyException {
-		LocalUnicastServer localUnicastServer = this.localUnicastServers.get(configName);
+		LocalUnicastServer localUnicastServer = localUnicastServers.get(configName);
 		if (localUnicastServer == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_UNICASTSERVER_NOT_STARTED, configName);
 		}
@@ -171,17 +171,17 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Override
 	public String establishMulticast(String configName) throws UnifyException {
-		this.logDebug("Establishing a multicast connection. Configuration = {0}...", configName);
-		NetworkInterfaceConfig nic = this.getConfig(NetworkInterfaceConfigType.REMOTE_MULTICAST_CLIENT, configName);
-		String id = configName + String.valueOf(++this.idCounter);
-		this.localMulticastServers.put(id, new LocalMulticastServer(id, nic));
+		logDebug("Establishing a multicast connection. Configuration = {0}...", configName);
+		NetworkInterfaceConfig nic = getConfig(NetworkInterfaceConfigType.REMOTE_MULTICAST_CLIENT, configName);
+		String id = configName + String.valueOf(++idCounter);
+		localMulticastServers.put(id, new LocalMulticastServer(id, nic));
 		return id;
 	}
 
 	@Override
 	public void destroyMulticast(String sessionID) throws UnifyException {
-		this.logDebug("Destroying a multicast connection. ID = {0}...", sessionID);
-		LocalMulticastServer localMulticastServer = this.localMulticastServers.remove(sessionID);
+		logDebug("Destroying a multicast connection. ID = {0}...", sessionID);
+		LocalMulticastServer localMulticastServer = localMulticastServers.remove(sessionID);
 		if (localMulticastServer == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_MULTICASTSERVER_NOT_STARTED, sessionID);
 		}
@@ -190,8 +190,8 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Override
 	public void multicast(String sessionID, NetworkMessage message) throws UnifyException {
-		this.logDebug("Sending a multicast message. Session ID = {0}, message = [{1}]...", sessionID, message);
-		LocalMulticastServer localMulticastServer = this.localMulticastServers.get(sessionID);
+		logDebug("Sending a multicast message. Session ID = {0}, message = [{1}]...", sessionID, message);
+		LocalMulticastServer localMulticastServer = localMulticastServers.get(sessionID);
 		if (localMulticastServer == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_MULTICASTSERVER_NOT_STARTED, sessionID);
 		}
@@ -201,19 +201,19 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Override
 	public synchronized void startLocalMulticastClient(String configName) throws UnifyException {
-		NetworkInterfaceConfig nic = this.getConfig(NetworkInterfaceConfigType.LOCAL_MULTICAST_CLIENT, configName);
-		if (this.localUnicastServers.containsKey(configName)) {
+		NetworkInterfaceConfig nic = getConfig(NetworkInterfaceConfigType.LOCAL_MULTICAST_CLIENT, configName);
+		if (localUnicastServers.containsKey(configName)) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_MULTICLIENT_STARTED, configName);
 		}
 
 		LocalMulticastClient localMulticastClient = new LocalMulticastClient(nic);
 		new Thread(localMulticastClient).start();
-		this.localMulticastClients.put(configName, localMulticastClient);
+		localMulticastClients.put(configName, localMulticastClient);
 	}
 
 	@Override
 	public void stopLocalMulticastClient(String configName) throws UnifyException {
-		LocalMulticastClient localMulticastClient = this.localMulticastClients.remove(configName);
+		LocalMulticastClient localMulticastClient = localMulticastClients.remove(configName);
 		if (localMulticastClient == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_MULTICASTCLIENT_NOT_STARTED, configName);
 		}
@@ -222,7 +222,7 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Override
 	public boolean isLocalMulticastClientRunning(String configName) throws UnifyException {
-		LocalMulticastClient localMulticastClient = this.localMulticastClients.get(configName);
+		LocalMulticastClient localMulticastClient = localMulticastClients.get(configName);
 		if (localMulticastClient == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_MULTICASTCLIENT_NOT_STARTED, configName);
 		}
@@ -231,26 +231,26 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	@Periodic(PeriodicType.SLOWER)
 	public void performHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
-		this.logDebug("Performing network interface housekeeping. Interface = [{0}]...", this.getName());
+		logDebug("Performing network interface housekeeping. Interface = [{0}]...", getName());
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.SECOND, -this.localUnicastSessionTimeout);
+		calendar.add(Calendar.SECOND, -localUnicastSessionTimeout);
 		Date timeOut = calendar.getTime();
 
 		// Destroy expired local unicast clients
-		this.logDebug("Destroying expired local unicast clients...");
-		for (String key : this.localUnicastClients.keySet()) {
-			LocalUnicastClient localUnicastClient = this.localUnicastClients.get(key);
+		logDebug("Destroying expired local unicast clients...");
+		for (String key : localUnicastClients.keySet()) {
+			LocalUnicastClient localUnicastClient = localUnicastClients.get(key);
 			if (timeOut.after(localUnicastClient.getLastAccessTime())) {
-				this.destroyUnicast(localUnicastClient.getId());
+				destroyUnicast(localUnicastClient.getId());
 			}
 		}
 
 		// Destroy expired local multicast servers
-		this.logDebug("Destroying expired local multicast servers...");
-		for (String key : this.localMulticastServers.keySet()) {
-			LocalMulticastServer localMulticastServer = this.localMulticastServers.get(key);
+		logDebug("Destroying expired local multicast servers...");
+		for (String key : localMulticastServers.keySet()) {
+			LocalMulticastServer localMulticastServer = localMulticastServers.get(key);
 			if (timeOut.after(localMulticastServer.getLastAccessTime())) {
-				this.destroyUnicast(localMulticastServer.getId());
+				destroyUnicast(localMulticastServer.getId());
 			}
 		}
 	}
@@ -267,7 +267,7 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 	private synchronized NetworkInterfaceConfig getConfig(NetworkInterfaceConfigType type, String configName)
 			throws UnifyException {
-		NetworkInterfaceConfig nic = this.networkInterfaceConfigs.get(configName);
+		NetworkInterfaceConfig nic = networkInterfaceConfigs.get(configName);
 		if (nic == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_CONFIG_UNKNOWN, configName);
 		}
@@ -293,18 +293,18 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 			boolean success = false;
 			try {
 				this.id = id;
-				this.socket = new Socket(nic.getHost(), nic.getPort());
-				this.unicastClientCommunicator = (UnicastClientCommunicator) getComponent(nic.getCommunicator());
-				this.unicastClientCommunicator.open(socket.getInputStream(), socket.getOutputStream());
+				socket = new Socket(nic.getHost(), nic.getPort());
+				unicastClientCommunicator = (UnicastClientCommunicator) getComponent(nic.getCommunicator());
+				unicastClientCommunicator.open(socket.getInputStream(), socket.getOutputStream());
 				success = true;
 			} catch (UnifyException e) {
 				throw e;
 			} catch (Exception e) {
 				throwOperationErrorException(e);
 			} finally {
-				if (!success && this.socket != null) {
+				if (!success && socket != null) {
 					try {
-						this.socket.close();
+						socket.close();
 					} catch (IOException e) {
 					}
 				}
@@ -312,7 +312,7 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 		}
 
 		public NetworkMessage send(NetworkMessage message) throws UnifyException {
-			this.lastAccessTime = new Date();
+			lastAccessTime = new Date();
 			return unicastClientCommunicator.communicate(message);
 		}
 
@@ -326,12 +326,12 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 		public void close() {
 			try {
-				this.unicastClientCommunicator.close();
+				unicastClientCommunicator.close();
 			} catch (UnifyException e) {
 			}
 
 			try {
-				this.socket.close();
+				socket.close();
 			} catch (IOException e) {
 			}
 		}
@@ -353,19 +353,19 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 		public LocalUnicastServer(NetworkInterfaceConfig nic) throws UnifyException {
 			boolean success = false;
 			try {
-				this.workingThreadList = Collections
+				workingThreadList = Collections
 						.synchronizedList(new ArrayList<UnicastServerCommunicationThread>());
-				this.serverSocket = new ServerSocket(nic.getPort());
-				this.communicator = nic.getCommunicator();
-				this.executor = Executors.newFixedThreadPool(nic.getMaxThreads());
+				serverSocket = new ServerSocket(nic.getPort());
+				communicator = nic.getCommunicator();
+				executor = Executors.newFixedThreadPool(nic.getMaxThreads());
 				success = true;
 			} catch (IOException e) {
 				throw new UnifyException(e, UnifyCoreErrorConstants.NETWORKINTERFACE_UNABLE_BIND_LOCALSERVER,
 						nic.getConfigName(), nic.getPort());
 			} finally {
-				if (!success && this.serverSocket != null) {
+				if (!success && serverSocket != null) {
 					try {
-						this.serverSocket.close();
+						serverSocket.close();
 					} catch (IOException e) {
 					}
 				}
@@ -374,27 +374,27 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 		@Override
 		public void run() {
-			this.running = true;
-			while (this.running) {
+			running = true;
+			while (running) {
 				try {
-					Socket socket = this.serverSocket.accept();
+					Socket socket = serverSocket.accept();
 					UnicastServerCommunicator serverCommunicator = (UnicastServerCommunicator) getComponent(
-							this.communicator);
+							communicator);
 					serverCommunicator.open(socket.getInputStream(), socket.getOutputStream());
-					this.executor.execute(new UnicastServerCommunicationThread(socket, serverCommunicator));
+					executor.execute(new UnicastServerCommunicationThread(socket, serverCommunicator));
 				} catch (Exception e) {
-					if (this.running) {
+					if (running) {
 						logError(e);
-						this.running = false;
+						running = false;
 					}
 				}
 			}
 
 			for (UnicastServerCommunicationThread usct : new ArrayList<UnicastServerCommunicationThread>(
-					this.workingThreadList)) {
+					workingThreadList)) {
 				usct.close();
 			}
-			this.executor.shutdownNow();
+			executor.shutdownNow();
 		}
 
 		public boolean isRunning() {
@@ -403,8 +403,8 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 		public void close() {
 			try {
-				this.running = false;
-				this.serverSocket.close();
+				running = false;
+				serverSocket.close();
 			} catch (IOException e) {
 			}
 		}
@@ -420,14 +420,14 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 			public UnicastServerCommunicationThread(Socket socket, UnicastServerCommunicator serverCommunicator) {
 				this.socket = socket;
 				this.serverCommunicator = serverCommunicator;
-				this.open = true;
+				open = true;
 			}
 
 			@Override
 			public void run() {
 				try {
 					workingThreadList.add(this);
-					while (this.open && this.serverCommunicator.communicate()) {
+					while (open && serverCommunicator.communicate()) {
 						ThreadUtils.yield();
 					}
 				} catch (UnifyException e) {
@@ -442,7 +442,7 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 			}
 
 			public void close() {
-				this.open = false;
+				open = false;
 			}
 		}
 	}
@@ -468,14 +468,14 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 		public LocalMulticastServer(String id, NetworkInterfaceConfig nic) throws UnifyException {
 			boolean success = false;
 			try {
-				this.address = InetAddress.getByName(nic.getHost());
-				this.port = nic.getPort();
+				address = InetAddress.getByName(nic.getHost());
+				port = nic.getPort();
 				this.id = id;
-				this.socket = new MulticastSocket();
-				this.multicastServerCommunicator = (MulticastServerCommunicator) getComponent(nic.getCommunicator());
-				this.out = new ByteArrayOutputStream();
-				this.multicastServerCommunicator.open(this.out);
-				this.buffer = new byte[MULTICAST_PACKET_SIZE];
+				socket = new MulticastSocket();
+				multicastServerCommunicator = (MulticastServerCommunicator) getComponent(nic.getCommunicator());
+				out = new ByteArrayOutputStream();
+				multicastServerCommunicator.open(out);
+				buffer = new byte[MULTICAST_PACKET_SIZE];
 				success = true;
 			} catch (UnifyException e) {
 				throw e;
@@ -483,27 +483,27 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 				throwOperationErrorException(e);
 			} finally {
 				IOUtils.close(out);
-				if (!success && this.socket != null) {
-					this.socket.close();
+				if (!success && socket != null) {
+					socket.close();
 				}
 			}
 		}
 
 		public void send(NetworkMessage message) throws UnifyException {
 			try {
-				this.lastAccessTime = new Date();
-				this.out.reset();
+				lastAccessTime = new Date();
+				out.reset();
 				multicastServerCommunicator.send(message);
-				if (this.out.size() > MULTICAST_PACKET_SIZE) {
+				if (out.size() > MULTICAST_PACKET_SIZE) {
 					throw new UnifyException(UnifyCoreErrorConstants.NETWORKINTERFACE_MESSAGE_LARGER_THAN_MAXPACKETSIZE,
-							MULTICAST_PACKET_SIZE, this.out.size());
+							MULTICAST_PACKET_SIZE, out.size());
 				}
 
-				this.out.flush();
-				byte[] data = this.out.toByteArray();
-				System.arraycopy(data, 0, this.buffer, 0, data.length);
-				DatagramPacket packet = new DatagramPacket(this.buffer, MULTICAST_PACKET_SIZE, address, port);
-				this.socket.send(packet);
+				out.flush();
+				byte[] data = out.toByteArray();
+				System.arraycopy(data, 0, buffer, 0, data.length);
+				DatagramPacket packet = new DatagramPacket(buffer, MULTICAST_PACKET_SIZE, address, port);
+				socket.send(packet);
 			} catch (IOException e) {
 				throwOperationErrorException(e);
 			}
@@ -519,12 +519,12 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 		public void close() {
 			try {
-				this.multicastServerCommunicator.close();
+				multicastServerCommunicator.close();
 			} catch (UnifyException e) {
 			}
 
 			IOUtils.close(out);
-			this.socket.close();
+			socket.close();
 		}
 
 	}
@@ -544,36 +544,36 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 		public LocalMulticastClient(NetworkInterfaceConfig nic) throws UnifyException {
 			boolean success = false;
 			try {
-				this.socket = new MulticastSocket(nic.getPort());
-				this.socket.joinGroup(InetAddress.getByName(nic.getHost()));
-				this.buffer = new byte[MULTICAST_PACKET_SIZE];
-				this.in = new ByteArrayInputStream(this.buffer);
-				this.multicastClientCommunicator = (MulticastClientCommunicator) getComponent(nic.getCommunicator());
-				this.multicastClientCommunicator.open(in);
+				socket = new MulticastSocket(nic.getPort());
+				socket.joinGroup(InetAddress.getByName(nic.getHost()));
+				buffer = new byte[MULTICAST_PACKET_SIZE];
+				in = new ByteArrayInputStream(buffer);
+				multicastClientCommunicator = (MulticastClientCommunicator) getComponent(nic.getCommunicator());
+				multicastClientCommunicator.open(in);
 				success = true;
 			} catch (IOException e) {
 				throw new UnifyException(e, UnifyCoreErrorConstants.NETWORKINTERFACE_UNABLE_BIND_LOCALCLIENT,
 						nic.getConfigName(), nic.getPort());
 			} finally {
-				if (!success && this.socket != null) {
-					this.socket.close();
+				if (!success && socket != null) {
+					socket.close();
 				}
 			}
 		}
 
 		@Override
 		public void run() {
-			this.running = true;
-			while (this.running) {
+			running = true;
+			while (running) {
 				try {
-					this.in.reset();
-					DatagramPacket pack = new DatagramPacket(this.buffer, MULTICAST_PACKET_SIZE);
-					this.socket.receive(pack);
-					this.multicastClientCommunicator.receive();
+					in.reset();
+					DatagramPacket pack = new DatagramPacket(buffer, MULTICAST_PACKET_SIZE);
+					socket.receive(pack);
+					multicastClientCommunicator.receive();
 				} catch (Exception e) {
-					if (this.running) {
+					if (running) {
 						logError(e);
-						this.running = false;
+						running = false;
 					}
 				}
 			}
@@ -585,13 +585,13 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
 
 		public void close() {
 			try {
-				this.multicastClientCommunicator.close();
+				multicastClientCommunicator.close();
 			} catch (UnifyException e) {
 			}
 
 			IOUtils.close(in);
-			this.running = false;
-			this.socket.close();
+			running = false;
+			socket.close();
 		}
 	}
 }

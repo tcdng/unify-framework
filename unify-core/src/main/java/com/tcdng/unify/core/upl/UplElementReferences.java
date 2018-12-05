@@ -35,31 +35,31 @@ public class UplElementReferences {
 	private List<String> longNameList;
 
 	public UplElementReferences() {
-		this.idList = new ArrayList<String>();
-		this.longNameList = new ArrayList<String>();
+		idList = new ArrayList<String>();
+		longNameList = new ArrayList<String>();
 	}
 
 	public UplElementReferences(String[] ids) {
 		this();
 		for (String id : ids) {
-			this.idList.add(id);
+			idList.add(id);
 		}
 	}
 
 	public void add(UplElementReferences uplElementReferences) {
-		this.idList.addAll(uplElementReferences.getIds());
-		this.longNameList.addAll(uplElementReferences.getLongNames());
+		idList.addAll(uplElementReferences.getIds());
+		longNameList.addAll(uplElementReferences.getLongNames());
 	}
 
 	public List<String> getIds() {
-		return Collections.unmodifiableList(this.idList);
+		return Collections.unmodifiableList(idList);
 	}
 
 	public void setLongNames(UplElement ownerUplElement, CycleDetector<String> cycleDetector) throws UnifyException {
-		this.longNameList.clear();
-		for (String id : this.idList) {
+		longNameList.clear();
+		for (String id : idList) {
 			String longName = ownerUplElement.getReferenceLongName(id);
-			this.longNameList.add(longName);
+			longNameList.add(longName);
 			if (cycleDetector != null) {
 				cycleDetector.addReference(ownerUplElement.getLongName(), longName);
 			}
@@ -67,17 +67,17 @@ public class UplElementReferences {
 	}
 
 	public List<String> getLongNames() {
-		return Collections.unmodifiableList(this.longNameList);
+		return Collections.unmodifiableList(longNameList);
 	}
 
 	public int length() {
-		return this.idList.size();
+		return idList.size();
 	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("references:(idList = ").append(this.idList).append(';');
-		sb.append("longNameList = ").append(this.longNameList).append(";)\n");
+		sb.append("references:(idList = ").append(idList).append(';');
+		sb.append("longNameList = ").append(longNameList).append(";)\n");
 		return sb.toString();
 	}
 }
