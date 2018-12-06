@@ -34,6 +34,8 @@ public class Unify {
 
 	public static final String DEFAULT_UNIFY_HOST = "localhost";
 
+	private static final String CONFIGURATION_FILE = "conf/unify.xml";
+
 	private static UnifyContainer uc;
 
 	public static void main(String[] args) {
@@ -43,7 +45,8 @@ public class Unify {
 		}
 
 		String operation = args[0];
-		String workingFolder = System.getProperty("user.dir");
+		String workingFolder = null;
+		String configFile = null;
 		String host = DEFAULT_UNIFY_HOST;
 		short port = UnifyContainer.DEFAULT_COMMAND_PORT;
 
@@ -54,15 +57,17 @@ public class Unify {
 				host = args[i + 1];
 			} else if ("-p".equals(args[i])) {
 				port = Short.valueOf(args[i + 1]);
+			} else if ("-c".equals(args[i])) {
+				configFile = args[i + 1];
 			} else {
 				Unify.doHelp();
 			}
 		}
 
 		if ("startup".equalsIgnoreCase(operation)) {
-			Unify.doStartup(workingFolder, false);
+			Unify.doStartup(workingFolder, configFile, false);
 		} else if ("install".equalsIgnoreCase(operation)) {
-			Unify.doStartup(workingFolder, true);
+			Unify.doStartup(workingFolder, configFile, true);
 		} else if ("shutdown".equalsIgnoreCase(operation)) {
 			Unify.doShutdown(host, port);
 		} else if ("help".equalsIgnoreCase(operation)) {
@@ -110,7 +115,12 @@ public class Unify {
 		return uc;
 	}
 
-	private static void doStartup(String workingFolder, boolean deploymentMode) {
+	private static void doStartup(String workingFolder, String configFile, boolean deploymentMode) {
+		if (workingFolder == null || workingFolder.isEmpty()) {
+			System.out.println("Using default working folder [" + System.getProperty("user.dir") + "]");
+			workingFolder = System.getProperty("user.dir");
+		}
+
 		UnifyContainerEnvironment uce = null;
 		UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
 		try {
@@ -125,11 +135,16 @@ public class Unify {
 		}
 
 		InputStream xmlInputStream = null;
+		if (configFile == null || configFile.isEmpty()) {
+			System.out.println("Using default configuration folder [" + CONFIGURATION_FILE + "]");
+			configFile = CONFIGURATION_FILE;
+		}
+
 		try {
-			xmlInputStream = new FileInputStream(IOUtils.fileInstance("config/unify.xml", workingFolder));
+			xmlInputStream = new FileInputStream(IOUtils.fileInstance(configFile, workingFolder));
 		} catch (Exception e) {
-			System.err.println(
-					"Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, "config/unify.xml"));
+			System.err
+					.println("Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, configFile));
 			e.printStackTrace(System.err);
 			System.exit(1);
 		}
@@ -141,8 +156,8 @@ public class Unify {
 			uccb.setPropertyIfBlank(UnifyCorePropertyConstants.APPLICATION_HOME, "/home");
 		} catch (UnifyException e) {
 			IOUtils.close(xmlInputStream);
-			System.err.println(
-					"Failed reading configuration file - " + IOUtils.buildFilename(workingFolder, "config/unify.xml"));
+			System.err
+					.println("Failed reading configuration file - " + IOUtils.buildFilename(workingFolder, configFile));
 			e.printStackTrace(System.err);
 			System.exit(1);
 		} finally {

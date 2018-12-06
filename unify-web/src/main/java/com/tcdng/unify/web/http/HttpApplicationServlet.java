@@ -64,6 +64,8 @@ public class HttpApplicationServlet extends HttpServlet {
 	/** The serial version ID */
 	private static final long serialVersionUID = 3971544226497014269L;
 
+	private static final String CONFIGURATION_FILE = "config/unify.xml";
+
 	private UnifyContainer unifyContainer;
 
 	private UnifyWebInterface webInterface;
@@ -93,10 +95,9 @@ public class HttpApplicationServlet extends HttpServlet {
 		if (!standalone) {
 			ServletContext servletContext = config.getServletContext();
 			String workingFolder = servletContext.getRealPath("");
-			String configFolder = servletContext.getRealPath("/WEB-INF");
-			String configFilename = config.getInitParameter("application-config");
+			String configFilename = config.getInitParameter("application-config-file");
 			if (StringUtils.isBlank(configFilename)) {
-				configFilename = "unify.xml";
+				configFilename = IOUtils.buildFilename(workingFolder, CONFIGURATION_FILE);
 			}
 
 			InputStream configInputStream = null;
@@ -109,7 +110,7 @@ public class HttpApplicationServlet extends HttpServlet {
 				// Scan configuration
 				UnifyConfigUtils.readConfigFromTypeRepository(uccb, tr);
 				uccb.deploymentMode(true);
-				configInputStream = new FileInputStream(IOUtils.fileInstance(configFilename, configFolder));
+				configInputStream = new FileInputStream(IOUtils.fileInstance(configFilename, null));
 
 				// Read xml configuration
 				UnifyConfigUtils.readConfigFromXml(uccb, configInputStream);
