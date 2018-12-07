@@ -1,0 +1,7 @@
+// UPL template for container management page
+// Copyright 2014 The Code Department
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+
+!ui-document layout:$d{!ui-desktoptype0} components:$c{frmBanner}
+!ui-unorderedlist:frmBanner styleClass:$s{ui-defbanner} binding:banner

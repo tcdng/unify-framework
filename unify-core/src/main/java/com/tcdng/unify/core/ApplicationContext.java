@@ -17,6 +17,7 @@ package com.tcdng.unify.core;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -123,6 +124,14 @@ public class ApplicationContext extends Context {
 		return Collections.emptySet();
 	}
 
+	/**
+	 * Returns the application banner ASCII text
+	 * @return if an error occurs
+	 */
+	public List<String> getApplicationBanner() throws UnifyException {
+		return container.getApplicationBanner();
+	}
+	
 	/**
 	 * Returns the application locale.
 	 */

@@ -303,6 +303,14 @@ public class UnifyComponentContext {
 	}
 
 	/**
+	 * Returns the application banner ASCII text
+	 * @return if an error occurs
+	 */
+	protected List<String> getApplicationBanner() throws UnifyException {
+		return applicationContext.getApplicationBanner();
+	}
+
+	/**
 	 * Returns privilege settings for supplied privilege code and current session
 	 * role.
 	 * 

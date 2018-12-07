@@ -1133,6 +1133,14 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Returns the application banner ASCII text
+	 * @return if an error occurs
+	 */
+	protected List<String> getApplicationBanner() throws UnifyException {
+		return unifyComponentContext.getApplicationBanner();
+	}
+
+	/**
 	 * Returns session locale
 	 * 
 	 * @throws UnifyException

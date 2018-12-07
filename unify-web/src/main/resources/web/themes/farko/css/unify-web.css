@@ -5,6 +5,9 @@ body,td,th,button,input,select {font-family: Open Sans, sans-serif; font-size: 9
 input[type = "text"],input[type = "password"] {height:24px; border: 1px solid #C8C8C8;}
 select:not([multiple]){height:28px; padding-left: 4px; border: 1px solid #C8C8C8;}
 
+/** Default banner */
+.ui-defbanner {white-space:pre; font-family: monospace;font-size:15px;list-style:none;}
+
 /**Reserved globals*/
 .ui-user-hint {width: 300px; margin-left: auto; margin-right: auto; color: black; font-weight: bold; font-size: 8pt; text-align: center;
 z-index:400;}

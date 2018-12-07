@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.controller;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.web.AbstractPageController;
@@ -30,4 +31,16 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 @UplBinding("web/reserved/upl/defaulthome.upl")
 public class DefaultApplicationHomeController extends AbstractPageController {
 
+	private String[] banner;
+
+	@Override
+	protected void onIndexPage() throws UnifyException {
+		super.onIndexPage();
+		banner = getApplicationBanner().toArray(new String[0]);
+	}
+
+	public String[] getBanner() {
+		return banner;
+	}
+		
 }

@@ -269,7 +269,7 @@ public class UnifyContainer {
 		}
 		
 		// Banner
-		List<String> banner = loadBanner();
+		List<String> banner = getApplicationBanner();
 		if (!banner.isEmpty()) {
 			for(String line: banner) {
 				toConsole(line);
@@ -1280,7 +1280,7 @@ public class UnifyContainer {
 		logger = new UnifyContainerLoggerImpl(getClass());
 	}
 
-	private List<String> loadBanner() throws UnifyException {
+	public List<String> getApplicationBanner() throws UnifyException {
 		String filename = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BANNER);
 		if (StringUtils.isBlank(filename)) {
 			filename = DEFAULT_APPLICATION_BANNER;
