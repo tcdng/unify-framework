@@ -177,6 +177,7 @@ public abstract class AbstractUnifyComponentTest {
 	 *             if an error occurs
 	 */
 	private static void addSettingsAndDependencies() throws Exception {
+		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE, "false");
 		addDependency(ApplicationComponents.APPLICATION_DATASOURCE, TestSqlDataSource.class);
 
 		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE,

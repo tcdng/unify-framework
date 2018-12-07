@@ -86,6 +86,8 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
  */
 public class UnifyContainer {
 
+	public static final String DEFAULT_APPLICATION_BANNER = "banner/banner.txt";
+
 	public static final short DEFAULT_COMMAND_PORT = 4242;
 
 	public static final int DEFAULT_APPLICATION_QUERY_LIMIT = 10000;
@@ -159,6 +161,8 @@ public class UnifyContainer {
 
 	private Date startTime;
 
+	private boolean toConsole;
+	
 	private boolean productionMode;
 
 	private boolean clusterMode;
@@ -257,16 +261,30 @@ public class UnifyContainer {
 		if (nodeId == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.CONTAINER_NODEID_REQUIRED);
 		}
-
+		
+		toConsole = true;
+		if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE) != null) {
+			toConsole = Boolean.valueOf(
+					String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE)));
+		}
+		
+		// Banner
+		List<String> banner = loadBanner();
+		if (!banner.isEmpty()) {
+			for(String line: banner) {
+				toConsole(line);
+			}
+		}
+		
 		String lineSeparator = System.getProperty("line.separator");
 		applicationContext = new ApplicationContext(this, Locale.getDefault(),
 				lineSeparator != null ? lineSeparator : "\n");
-		long startTime = System.currentTimeMillis();
+		long startTimeMillis = System.currentTimeMillis();
 		initializeContainerMessages();
 		initializeContainerLogger();
 
-		logInfo("Container initialization started...");
-		logInfo("Validating and loading configuration...");
+		toConsole("Container initialization started...");
+		toConsole("Validating and loading configuration...");
 		for (UnifyComponentConfig unifyComponentConfig : ucc.getComponentConfigs()) {
 			// Validate configuration
 			Class<?> type = unifyComponentConfig.getType();
@@ -399,7 +417,8 @@ public class UnifyContainer {
 
 		// Initialization
 		started = true;
-		requestContextManager = (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+		requestContextManager = (RequestContextManager) getComponent(
+				ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
 		uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
 
 		// Generate and install proxy business module objects
@@ -409,7 +428,8 @@ public class UnifyContainer {
 			if (pluginMap == null) {
 				pluginMap = Collections.emptyMap();
 			}
-			UnifyComponentConfig proxyUnifyComponentConfig = generateInstallBusinessModuleProxyObjects(unifyComponentConfig, pluginMap);
+			UnifyComponentConfig proxyUnifyComponentConfig = generateInstallBusinessModuleProxyObjects(
+					unifyComponentConfig, pluginMap);
 			InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(proxyUnifyComponentConfig.getName());
 			iuc.setUnifyComponentConfig(proxyUnifyComponentConfig);
 		}
@@ -429,14 +449,15 @@ public class UnifyContainer {
 		userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
 
 		// Run application startup module
-		logInfo("Initiating application bootup module startup...");
+		toConsole("Initializing application bootup module...");
 		String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
 		if (bootComponentName == null) {
 			bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTMODULE;
 		}
 		applicationBootModule = (BootModule) getComponent(bootComponentName);
 		applicationBootModule.startup();
-		logInfo("Application bootup completed...");
+
+		toConsole("Application bootup module initialization completed.");
 
 		// Initialize interfaces
 		logInfo("Initializing container interfaces...");
@@ -467,10 +488,11 @@ public class UnifyContainer {
 		new CommandThread().start();
 
 		// Set start time to now
-		this.startTime = new Date();
+		startTime = new Date();
 
 		// Container initialization completed
-		logInfo("Container initialization completed in " + (this.startTime.getTime() - startTime) + "ms.");
+		long startupTimeMillis = startTime.getTime() - startTimeMillis;
+		toConsole("Container initialization completed in " + startupTimeMillis + "ms.");
 	}
 
 	/**
@@ -1150,23 +1172,27 @@ public class UnifyContainer {
 	}
 
 	private void openInterfaces() throws UnifyException {
-		logInfo("Opening container interfaces to start servicing requests...");
+		toConsole("Opening container interfaces to start servicing requests...");
+
 		for (UnifyContainerInterface unifyContainerInterface : interfaces) {
-			logInfo("Opening '" + unifyContainerInterface.getName() + "' on port " + unifyContainerInterface.getPort()
+			toConsole("Opening '" + unifyContainerInterface.getName() + "' on port " + unifyContainerInterface.getPort()
 					+ "...");
+
 			unifyContainerInterface.startServicingRequests();
 		}
-		logInfo("Container interfaces opened.");
+
+		toConsole("Container interfaces opened.");
 	}
 
 	private void closeInterfaces() throws UnifyException {
-		logInfo("Closing container interfaces...");
+		toConsole("Closing container interfaces...");
 		for (UnifyContainerInterface unifyContainerInterface : interfaces) {
-			logInfo("Closing interface '" + unifyContainerInterface.getName() + "'...");
+			toConsole("Closing interface '" + unifyContainerInterface.getName() + "'...");
+
 			unifyContainerInterface.stopServicingRequests();
-			;
 		}
-		logInfo("Container interfaces closed..");
+
+		toConsole("Container interfaces closed..");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1199,7 +1225,7 @@ public class UnifyContainer {
 				}
 				PatternLayout patternLayout = new PatternLayout(loggingPattern);
 
-				boolean logToConsole = true;
+				boolean logToConsole = false;
 				if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE) != null) {
 					logToConsole = Boolean.valueOf(
 							String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE)));
@@ -1254,10 +1280,27 @@ public class UnifyContainer {
 		logger = new UnifyContainerLoggerImpl(getClass());
 	}
 
+	private List<String> loadBanner() throws UnifyException {
+		String filename = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BANNER);
+		if (StringUtils.isBlank(filename)) {
+			filename = DEFAULT_APPLICATION_BANNER;
+		}
+
+		return IOUtils.readFileResourceLines(filename, unifyContainerEnvironment.getWorkingPath());
+	}
+
 	private void checkStarted() throws UnifyException {
 		if (!started) {
 			throw new UnifyException(UnifyCoreErrorConstants.CONTAINER_NOT_INITIALIZED);
 		}
+	}
+
+	private void toConsole(String msg) throws UnifyException {
+		if(toConsole) {
+			System.out.println(msg);
+		}
+
+		logInfo(msg);
 	}
 
 	private Logger getLogger(String name) throws UnifyException {

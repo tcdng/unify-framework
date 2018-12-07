@@ -291,7 +291,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
 	@Override
 	protected void onInitialize() throws UnifyException {
-		logInfo("Initialising datasource [{0}]...", getName());
+		logInfo("Initializing datasource [{0}]...", getName());
 		super.onInitialize();
 		if (driver != null) {
 			doInitConnectionPool();

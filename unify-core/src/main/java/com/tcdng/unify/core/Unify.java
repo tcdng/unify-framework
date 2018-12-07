@@ -117,7 +117,6 @@ public class Unify {
 
 	private static void doStartup(String workingFolder, String configFile, boolean deploymentMode) {
 		if (workingFolder == null || workingFolder.isEmpty()) {
-			System.out.println("Using default working folder [" + System.getProperty("user.dir") + "]");
 			workingFolder = System.getProperty("user.dir");
 		}
 
@@ -136,7 +135,6 @@ public class Unify {
 
 		InputStream xmlInputStream = null;
 		if (configFile == null || configFile.isEmpty()) {
-			System.out.println("Using default configuration folder [" + CONFIGURATION_FILE + "]");
 			configFile = CONFIGURATION_FILE;
 		}
 

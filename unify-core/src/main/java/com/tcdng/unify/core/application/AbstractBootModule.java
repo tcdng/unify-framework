@@ -53,7 +53,7 @@ public abstract class AbstractBootModule<T extends FeatureDefinition> extends Ab
 	@Override
 	@Transactional
 	public void startup() throws UnifyException {
-		logInfo("Initialising datasources...");
+		logInfo("Initializing datasources...");
 		for (String datasource : datasources) {
 			dataSourceManager.initDataSource(datasource);
 		}

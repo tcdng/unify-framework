@@ -34,6 +34,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -711,6 +712,40 @@ public final class IOUtils {
 	public static boolean isFile(String absoluteFilename) {
 		File file = new File(absoluteFilename);
 		return file.isFile();
+	}
+
+	/**
+	 * Reads a file resource, obtained from file system or class loader, as lines.
+	 * 
+	 * @param resourceName
+	 *            the resource name
+	 * @param realPath
+	 *            an optional real path
+	 * @return the lines read
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	public static List<String> readFileResourceLines(String resourceName, String realPath) throws UnifyException {
+		List<String> lines = Collections.emptyList();
+		InputStream in = null;
+		try {
+			in = IOUtils.openFileResourceInputStream(resourceName, realPath);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+			lines = new ArrayList<String>();
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				lines.add(line);
+			}
+		} catch (FileNotFoundException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
+		} catch (IOException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+		} finally {
+			IOUtils.close(in);
+		}
+
+		return lines;
 	}
 
 	/**

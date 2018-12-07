@@ -27,6 +27,10 @@ public interface UnifyCorePropertyConstants {
 
 	String APPLICATION_NAME = "application.name";
 
+	String APPLICATION_BANNER = "application.banner";
+	
+	String APPLICATION_CONTAINER_TOCONSOLE = "application.container.toconsole";
+
 	String APPLICATION_BOOT = "application.boot.component";
 
 	String APPLICATION_INTERFACES = "application.interfaces";
