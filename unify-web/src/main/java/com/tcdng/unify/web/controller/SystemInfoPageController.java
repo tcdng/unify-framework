@@ -38,7 +38,7 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
 		@ResultMapping(name = SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING, response = {
 				"!showpopupresponse popup:$s{systemExceptionPopup} systemInfo:true" }),
 		@ResultMapping(name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING, response = {
-				"!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.home}" }),
+				"!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }),
 		@ResultMapping(name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING, response = {
 				"!hidepopupresponse systemInfo:true" }) })
 public class SystemInfoPageController extends AbstractPageController {

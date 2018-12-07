@@ -13,23 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.controller;
+
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplBinding;
+import com.tcdng.unify.web.AbstractPageController;
+import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 
 /**
- * Unify web property constants.
+ * Default application home controller
  * 
  * @author Lateef Ojulari
- * @version 1.0
+ * @since 1.0
  */
-public interface UnifyWebPropertyConstants {
+@Component(ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME)
+@UplBinding("web/reserved/upl/defaulthome.upl")
+public class DefaultApplicationHomeController extends AbstractPageController {
 
-	String APPLICATION_HOME = "application.web.home";
-
-	String APPLICATION_DOCUMENT_STYLESHEET = "application.web.document.stylesheet";
-
-	String APPLICATION_DOCUMENT_SCRIPT = "application.web.document.script";
-
-	String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing.enabled";
-
-	String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
 }

@@ -33,7 +33,6 @@ import javax.servlet.http.Part;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationController;
-import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -49,6 +48,7 @@ import com.tcdng.unify.web.RemoteCallFormat;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
+import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 
 /**
  * Default HTTP application controller.
@@ -80,7 +80,8 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 		}
 
 		if (StringUtils.isBlank(resolvedPath)) {
-			resolvedPath = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_HOME, "/home");
+			resolvedPath = getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_HOME,
+					ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
 		}
 
 		Charset charset = StandardCharsets.UTF_8;

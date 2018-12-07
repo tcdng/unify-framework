@@ -34,7 +34,6 @@ import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyContainer;
 import com.tcdng.unify.core.UnifyContainerConfig;
 import com.tcdng.unify.core.UnifyContainerEnvironment;
-import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
@@ -46,6 +45,7 @@ import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
 import com.tcdng.unify.web.RemoteCallClient;
 import com.tcdng.unify.web.UnifyWebInterface;
+import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
@@ -114,8 +114,8 @@ public class HttpApplicationServlet extends HttpServlet {
 
 				// Read xml configuration
 				UnifyConfigUtils.readConfigFromXml(uccb, configInputStream);
-				uccb.setPropertyIfBlank(UnifyCorePropertyConstants.APPLICATION_HOME,
-						ReservedPageControllerConstants.APPLICATION_HOME);
+				uccb.setPropertyIfBlank(UnifyWebPropertyConstants.APPLICATION_HOME,
+						ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
 
 				// Create container
 				UnifyContainerConfig ucc = uccb.build();

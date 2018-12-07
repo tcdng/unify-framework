@@ -151,9 +151,6 @@ public class Unify {
 
 		try {
 			UnifyConfigUtils.readConfigFromXml(uccb, xmlInputStream);
-
-			// Set some defaults
-			uccb.setPropertyIfBlank(UnifyCorePropertyConstants.APPLICATION_HOME, "/home");
 		} catch (UnifyException e) {
 			IOUtils.close(xmlInputStream);
 			System.err

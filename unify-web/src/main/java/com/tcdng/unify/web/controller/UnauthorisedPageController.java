@@ -35,7 +35,7 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
 @Component(SystemInfoConstants.UNAUTHORISED_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/unauthorised.upl")
 @ResultMappings({ @ResultMapping(name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING, response = {
-		"!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.home}" }) })
+		"!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }) })
 public class UnauthorisedPageController extends AbstractPageController {
 
 	@Action

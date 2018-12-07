@@ -23,7 +23,7 @@ package com.tcdng.unify.web.constant;
  */
 public interface ReservedPageControllerConstants {
 
-	String APPLICATION_HOME = "/home";
+	String DEFAULT_APPLICATION_HOME = "/home";
 
 	String COMMONUTILITIES = "/commonutilities";
 }

@@ -23,8 +23,6 @@ package com.tcdng.unify.core;
  */
 public interface UnifyCorePropertyConstants {
 
-	String APPLICATION_HOME = "application.home";
-
 	String APPLICATION_CODE = "application.code";
 
 	String APPLICATION_NAME = "application.name";
