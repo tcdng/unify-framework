@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.task;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,6 +179,11 @@ public class TaskSetup {
 
 		public Builder delayInMillSec(long delayInMillSec) {
 			this.delayInMillSec = delayInMillSec;
+			return this;
+		}
+
+		public Builder delayUntil(Date time) {
+			this.delayInMillSec = time.getTime() - new Date().getTime();
 			return this;
 		}
 
