@@ -16,31 +16,31 @@
 package com.tcdng.unify.core.task;
 
 /**
- * Task execution information.
+ * Task instance information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaskExecutionInfo {
+public class TaskInstanceInfo {
+
+	private TaskExecLimit limit;
 
 	private String executionId;
 
-	private TaskExecLimit permission;
-
-	public TaskExecutionInfo(String executionId) {
-		this(executionId, TaskExecLimit.ALLOW_MULTIPLE);
+	public TaskInstanceInfo(String executionId) {
+		this(TaskExecLimit.ALLOW_MULTIPLE, executionId);
 	}
 
-	public TaskExecutionInfo(String executionId, TaskExecLimit permission) {
+	public TaskInstanceInfo(TaskExecLimit limit, String executionId) {
+		this.limit = limit;
 		this.executionId = executionId;
-		this.permission = permission;
+	}
+
+	public TaskExecLimit getLimit() {
+		return limit;
 	}
 
 	public String getExecutionId() {
 		return executionId;
-	}
-
-	public TaskExecLimit getPermission() {
-		return permission;
 	}
 }

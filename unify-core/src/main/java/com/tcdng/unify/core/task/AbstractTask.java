@@ -27,8 +27,8 @@ import com.tcdng.unify.core.UnifyException;
 public abstract class AbstractTask extends AbstractUnifyComponent implements Task {
 
 	@Override
-	public TaskExecutionInfo getTaskExecutionInfo(TaskInput input) throws UnifyException {
-		return new TaskExecutionInfo(input.getOrigTaskName());
+	public TaskInstanceInfo getTaskInstanceInfo(TaskInput input) throws UnifyException {
+		return new TaskInstanceInfo(input.getOrigTaskName());
 	}
 
 	@Override

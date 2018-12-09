@@ -29,7 +29,7 @@ import com.tcdng.unify.core.annotation.Component;
 public class TaskableMethodTask extends AbstractTask {
 
 	@Override
-	public TaskExecutionInfo getTaskExecutionInfo(TaskInput input) throws UnifyException {
+	public TaskInstanceInfo getTaskInstanceInfo(TaskInput input) throws UnifyException {
 		TaskableMethodConfig tmc = input.getTmc();
 		String executionId = input.getOrigTaskName();
 		if (tmc.getIdGenerator() != null) {
@@ -37,7 +37,7 @@ public class TaskableMethodTask extends AbstractTask {
 			executionId = taskIdGenerator.generateID(input);
 		}
 
-		return new TaskExecutionInfo(executionId, tmc.getTaskExecLimit());
+		return new TaskInstanceInfo(tmc.getTaskExecLimit(), executionId);
 	}
 
 	@Override

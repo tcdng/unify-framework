@@ -336,9 +336,11 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 		}
 
 		TaskInput taskInput = new TaskInput(origTaskName, tmc, inputParameters, prevTaskOutput);
-		TaskExecutionInfo taskExecutionInfo = task.getTaskExecutionInfo(taskInput);
-		String executionId = taskExecutionInfo.getExecutionId();
-		if (TaskExecLimit.ALLOW_SINGLE.equals(taskExecutionInfo.getPermission())) {
+		TaskInstanceInfo taskInstanceInfo = task.getTaskInstanceInfo(taskInput);
+		String executionId = taskInstanceInfo.getExecutionId();
+		if (TaskExecLimit.ALLOW_SINGLE.equals(taskInstanceInfo.getLimit())) {
+			// TODO the task ID set should be checked against execution IDs in cluster cache!
+			// To use grabLock();
 			if (uniqueTaskIDSet.contains(executionId)) {
 				throw new UnifyException(UnifyCoreErrorConstants.TASK_WITH_ID_ALREADY_RUNNING, executionId);
 			}

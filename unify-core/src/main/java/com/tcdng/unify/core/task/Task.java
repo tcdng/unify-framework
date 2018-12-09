@@ -27,15 +27,15 @@ import com.tcdng.unify.core.UnifyException;
 public interface Task extends UnifyComponent {
 
 	/**
-	 * Returns task execution information object based on supplied input.
+	 * Returns task instance information object based on supplied input.
 	 * 
 	 * @param input
 	 *            the task input object
-	 * @return a task execution information object
+	 * @return a task instance information object
 	 * @throws UnifyException
 	 *             if an error occurs
 	 */
-	TaskExecutionInfo getTaskExecutionInfo(TaskInput input) throws UnifyException;
+	TaskInstanceInfo getTaskInstanceInfo(TaskInput input) throws UnifyException;
 
 	/**
 	 * Executes task with specified parameters and is expected to block until
