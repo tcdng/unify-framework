@@ -103,17 +103,6 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 	}
 
 	@Override
-	public void purgeDataSource(String datasource) throws UnifyException {
-		if (!isProductionMode()) {
-			SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
-			List<Class<?>> dependencyEntityTypeList = datasourceEntityTypeMap.get(datasource);
-			for (int i = dependencyEntityTypeList.size() - 1; i >= 0; i--) {
-				purgeTable(sqlDataSource, dependencyEntityTypeList.get(i));
-			}
-		}
-	}
-
-	@Override
 	protected void onInitialize() throws UnifyException {
 
 	}
@@ -226,32 +215,6 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 			SqlUtils.close(rs);
 			SqlUtils.close(pstmt);
 		}
-	}
-
-	private void purgeTable(SqlDataSource sqlDataSource, Class<?> entityClass) throws UnifyException {
-		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
-
-		Connection connection = (Connection) sqlDataSource.getConnection();
-		PreparedStatement pstmt = null;
-		try {
-			String deleteSql = sqlDataSourceDialect.generateDeleteRecordSql(sqlEntityInfo);
-			logDebug("Executing managed datasource script {0}...", deleteSql);
-			pstmt = connection.prepareStatement(deleteSql);
-			pstmt.executeUpdate();
-			connection.commit();
-		} catch (SQLException e) {
-			try {
-				connection.rollback();
-			} catch (SQLException e1) {
-			}
-			throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR,
-					sqlDataSource.getName());
-		} finally {
-			SqlUtils.close(pstmt);
-			sqlDataSource.restoreConnection(connection);
-		}
-
 	}
 
 	private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)

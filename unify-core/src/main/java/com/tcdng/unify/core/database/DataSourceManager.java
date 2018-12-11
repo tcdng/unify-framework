@@ -38,7 +38,8 @@ public interface DataSourceManager extends UnifyComponent {
 	void initDataSource(String datasource) throws UnifyException;
 
 	/**
-	 * Manages a data source.
+	 * Manages a data source, making sure that entity models match datasource
+	 * schema.
 	 * 
 	 * @param datasource
 	 *            the datasource name
@@ -47,15 +48,4 @@ public interface DataSourceManager extends UnifyComponent {
 	 *             if data source does not allow management. If an error occurs.
 	 */
 	void manageDataSource(String datasource) throws UnifyException;
-
-	/**
-	 * Purges datasource.
-	 * 
-	 * @param datasource
-	 *            the datasource name
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void purgeDataSource(String datasource) throws UnifyException;
 }
