@@ -79,6 +79,17 @@ public class StringUtilsTest {
 	}
 
 	@Test
+	public void testContainsWhitespace() throws Exception {
+		assertFalse(StringUtils.containsWhitespace(null));
+		assertFalse(StringUtils.containsWhitespace(""));
+		assertFalse(StringUtils.containsWhitespace("Hello"));
+		assertTrue(StringUtils.containsWhitespace(" "));
+		assertTrue(StringUtils.containsWhitespace("Hello world!"));
+		assertTrue(StringUtils.containsWhitespace("\t"));
+		assertTrue(StringUtils.containsWhitespace("Hello\tworld!"));
+	}
+
+	@Test
 	public void testPadLeft() throws Exception {
 		assertEquals("0000000000", StringUtils.padLeft("", '0', 10));
 		assertEquals("00001234", StringUtils.padLeft("1234", '0', 8));

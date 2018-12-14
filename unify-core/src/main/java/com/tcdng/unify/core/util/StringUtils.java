@@ -300,6 +300,26 @@ public final class StringUtils {
 	}
 
 	/**
+	 * Tests if supplied string contains a whitespace character.
+	 * 
+	 * @param string
+	 *            the supplied string
+	 * @return true if string contains whitespace otherwise false
+	 */
+	public static boolean containsWhitespace(String string) {
+		if (string != null && !string.isEmpty()) {
+			int len = string.length();
+			for (int i = 0; i < len; i++) {
+				if (Character.isWhitespace(string.charAt(i))) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Pads a string on the left with specified character until its as long as
 	 * specified length. No padding occurs if length of supplied string is greater
 	 * than or equal to specified length.
