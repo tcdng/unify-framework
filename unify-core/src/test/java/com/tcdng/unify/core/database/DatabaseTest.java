@@ -1711,6 +1711,26 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testCreateRecordWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			ReportForm reportForm = new ReportForm("sampleEditor");
+			report.setReportForm(reportForm);
+
+			Long id = (Long) db.create(report);
+			assertNotNull(id);
+			assertEquals(id, report.getId());
+			assertEquals(id, reportForm.getReportId());
+
+			int count = db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true));
+			assertEquals(1, count);
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
 	public void testCreateRecordWithChildList() throws Exception {
 		db.getTransactionManager().beginTransaction();
 		try {
@@ -1835,6 +1855,26 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testFindRecordByIdWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("greenEditor"));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.find(Report.class, id);
+			assertNotNull(foundReport);
+			assertEquals("weeklyReport", foundReport.getName());
+			assertEquals("Weekly Report", foundReport.getDescription());
+
+			assertNotNull(foundReport.getReportForm());
+			assertEquals("greenEditor", foundReport.getReportForm().getEditor());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
 	public void testFindRecordByIdWithChildList() throws Exception {
 		db.getTransactionManager().beginTransaction();
 		try {
@@ -1862,6 +1902,26 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			assertEquals(BooleanType.TRUE, rParam.getScheduled());
 			assertNull(rParam.getReportDesc());
 			assertNull(rParam.getScheduledDesc());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testFindRecordByCriteriaWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("beanEditor"));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.find(new ReportQuery().equals("id", id));
+			assertNotNull(foundReport);
+			assertEquals("weeklyReport", foundReport.getName());
+			assertEquals("Weekly Report", foundReport.getDescription());
+
+			assertNotNull(foundReport.getReportForm());
+			assertEquals("beanEditor", foundReport.getReportForm().getEditor());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -2011,6 +2071,25 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testFindAllRecordsWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("editor10"));
+			db.create(report);
+
+			List<Report> list = db.findAll(new ReportQuery().ignoreEmptyCriteria(true));
+			assertNotNull(list);
+			assertEquals("weeklyReport", list.get(0).getName());
+			assertEquals("Weekly Report", list.get(0).getDescription());
+
+			assertNull(list.get(0).getReportForm());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
 	public void testFindAllRecordsWithChildList() throws Exception {
 		db.getTransactionManager().beginTransaction();
 		try {
@@ -2055,6 +2134,26 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testListRecordByIdWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("cyanEditor"));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.list(Report.class, id);
+			assertNotNull(foundReport);
+			assertEquals("weeklyReport", foundReport.getName());
+			assertEquals("Weekly Report", foundReport.getDescription());
+
+			assertNotNull(foundReport.getReportForm());
+			assertEquals("cyanEditor", foundReport.getReportForm().getEditor());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
 	public void testListRecordByIdWithChildList() throws Exception {
 		db.getTransactionManager().beginTransaction();
 		try {
@@ -2071,6 +2170,26 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			assertEquals(2, foundReport.getParameters().size());
 			assertEquals("startDate", foundReport.getParameters().get(0).getName());
 			assertEquals("endDate", foundReport.getParameters().get(1).getName());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testListRecordByCriteriaWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("grayEditor"));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.list(new ReportQuery().equals("id", id));
+			assertNotNull(foundReport);
+			assertEquals("weeklyReport", foundReport.getName());
+			assertEquals("Weekly Report", foundReport.getDescription());
+
+			assertNotNull(foundReport.getReportForm());
+			assertEquals("grayEditor", foundReport.getReportForm().getEditor());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -2207,6 +2326,25 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			rpo = rOptions.get(0);
 			assertNotNull(rpo);
 			assertEquals("title", rpo.getName());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testListAllRecordsWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("blueEditor"));
+			db.create(report);
+
+			List<Report> list = db.listAll(new ReportQuery().ignoreEmptyCriteria(true));
+			assertNotNull(list);
+			assertEquals("weeklyReport", list.get(0).getName());
+			assertEquals("Weekly Report", list.get(0).getDescription());
+
+			assertNull(list.get(0).getReportForm());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -2371,6 +2509,21 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testDeleteRecordByIdWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("sampleEditor"));
+			Long id = (Long) db.create(report);
+			db.delete(Report.class, id);
+			assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+			assertEquals(0, db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true)));
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
 	public void testDeleteRecordByIdWithChildList() throws Exception {
 		db.getTransactionManager().beginTransaction();
 		try {
@@ -2408,6 +2561,22 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testDeleteRecordByIdVersionWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("sampleEditor"));
+			Long id = (Long) db.create(report);
+			report = db.find(Report.class, id);
+			db.deleteByIdVersion(report);
+			assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+			assertEquals(0, db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true)));
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
 	public void testDeleteRecordByIdVersionWithChildList() throws Exception {
 		db.getTransactionManager().beginTransaction();
 		try {
@@ -2418,6 +2587,27 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			report = db.find(Report.class, id);
 			db.deleteByIdVersion(report);
 			assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+			assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testDeleteAllRecordWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			ReportForm reportForm = new ReportForm("sampleEditor");
+			report.setReportForm(reportForm);
+			db.create(report);
+			db.deleteAll(new ReportQuery().ignoreEmptyCriteria(true));
+
+			int count = db.countAll(new ReportQuery().ignoreEmptyCriteria(true));
+			assertEquals(0, count);
+
+			count = db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true));
+			assertEquals(0, count);
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -2464,6 +2654,34 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			assertEquals(0, db.countAll(new ReportQuery().ignoreEmptyCriteria(true)));
 			assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
 			assertEquals(0, db.countAll(new ReportParameterOptionsQuery().ignoreEmptyCriteria(true)));
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testDeleteSingleFromMultipleRecordsWithChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("editor1"));
+			Long id1 = (Long) db.create(report);
+
+			report = new Report("salaryReport", "Salary Report");
+			report.setReportForm(new ReportForm("editor2"));
+			Long id2 = (Long) db.create(report);
+
+			db.deleteAll(new ReportQuery().equals("id", id1));
+
+			int count = db.countAll(new ReportQuery().ignoreEmptyCriteria(true));
+			assertEquals(1, count);
+
+			report = db.find(Report.class, id2);
+			assertNotNull(report);
+			assertEquals("salaryReport", report.getName());
+			assertEquals("Salary Report", report.getDescription());
+			assertNotNull(report.getReportForm());
+			assertEquals("editor2", report.getReportForm().getEditor());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -2887,7 +3105,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	@SuppressWarnings({ "unchecked" })
 	@Override
 	protected void onTearDown() throws Exception {
-		deleteAll(User.class, ServerConfig.class, Author.class, Office.class, Fruit.class,
+		deleteAll(User.class, ServerConfig.class, Author.class, Office.class, Fruit.class, ReportForm.class,
 				ReportParameterOptions.class, ReportParameter.class, Report.class);
 	}
 }

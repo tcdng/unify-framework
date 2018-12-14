@@ -722,7 +722,7 @@ public interface UnifyCoreErrorConstants {
 	 * Child list type has no matching foreign key reference. Field = {0}, Child
 	 * type = {1}
 	 */
-	String RECORD_CHILDLIST_HO_MATCHING_FK = "UC_00B9";
+	String RECORD_CHILDLIST_NO_MATCHING_FK = "UC_00B9";
 
 	/**
 	 * Multiple child-only foreign keys detected. Type = {0}
@@ -896,4 +896,15 @@ public interface UnifyCoreErrorConstants {
 
 	/** Task setup has multiple tasks */
 	String TASKSETUP_MULTIPLE_TASKS = "UC_00E0";
+
+	/**
+	 * Child type has no matching foreign key reference. Field = {0}, Child
+	 * type = {1}
+	 */
+	String RECORD_CHILD_NO_MATCHING_FK = "UC_00E1";
+
+	/**
+	 * Multiple child records found for record. Type {0} with primary key {1} at field = {2}
+	 */
+	String RECORD_MULTIPLE_CHILD_FOUND = "UC_00E2";
 }
