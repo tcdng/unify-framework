@@ -33,7 +33,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
-import com.tcdng.unify.core.database.sql.ChildListFieldInfo;
+import com.tcdng.unify.core.database.sql.ChildFieldInfo;
 import com.tcdng.unify.core.database.sql.OnDeleteCascadeInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
@@ -889,33 +889,72 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				if (sqlEntityInfo.isChildList()) {
 					boolean isSelect = select != null && !select.isEmpty();
 					Object id = record.getId();
-					for (ChildListFieldInfo clfi : sqlEntityInfo.getChildListInfoList()) {
-						if (isSelect && !select.contains(clfi.getField().getName())) {
-							continue;
-						}
 
-						Query<? extends Entity> query = new Query(clfi.getChildEntityClass());
-						query.equals(clfi.getChildFkField().getName(), id).order("id");
-						List<? extends Entity> childList = null;
-						if (isListOnly) {
-							childList = listAll(query);
-						} else {
-							childList = findAll(query);
-						}
+					if (sqlEntityInfo.isSingleChildList()) {
+						for (ChildFieldInfo clfi : sqlEntityInfo.getSingleChildInfoList()) {
+							if (isSelect && !select.contains(clfi.getField().getName())) {
+								continue;
+							}
 
-						// Check if child has child list and load if necessary
-						if (!childList.isEmpty()) {
-							SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
-									.getSqlEntityInfo(clfi.getChildEntityClass());
-							if (childSqlEntityInfo.isChildList()) {
-								for (Entity childRecord : childList) {
+							Query<? extends Entity> query = new Query(clfi.getChildEntityClass());
+							query.equals(clfi.getChildFkField().getName(), id).order("id");
+							List<? extends Entity> childList = null;
+							if (isListOnly) {
+								childList = listAll(query);
+							} else {
+								childList = findAll(query);
+							}
+
+							// Check if child has child list and load if necessary
+							Entity childRecord = null;
+							if (!childList.isEmpty()) {
+								if (childList.size() > 1) {
+									throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_CHILD_FOUND,
+											record.getClass(), record.getId(), clfi.getField().getName());
+								}
+
+								childRecord = childList.get(0);
+								SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+										.getSqlEntityInfo(clfi.getChildEntityClass());
+								if (childSqlEntityInfo.isChildList()) {
 									fetchChildRecords(childRecord, null, isListOnly);
 								}
 							}
-						}
 
-						// Set child list
-						clfi.getSetter().invoke(record, childList);
+							// Set child record
+							clfi.getSetter().invoke(record, childRecord);
+						}
+					}
+
+					if (sqlEntityInfo.isManyChildList()) {
+						for (ChildFieldInfo clfi : sqlEntityInfo.getManyChildInfoList()) {
+							if (isSelect && !select.contains(clfi.getField().getName())) {
+								continue;
+							}
+
+							Query<? extends Entity> query = new Query(clfi.getChildEntityClass());
+							query.equals(clfi.getChildFkField().getName(), id).order("id");
+							List<? extends Entity> childList = null;
+							if (isListOnly) {
+								childList = listAll(query);
+							} else {
+								childList = findAll(query);
+							}
+
+							// Check if child has child list and load if necessary
+							if (!childList.isEmpty()) {
+								SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+										.getSqlEntityInfo(clfi.getChildEntityClass());
+								if (childSqlEntityInfo.isChildList()) {
+									for (Entity childRecord : childList) {
+										fetchChildRecords(childRecord, null, isListOnly);
+									}
+								}
+							}
+
+							// Set child list
+							clfi.getSetter().invoke(record, childList);
+						}
 					}
 				}
 			} catch (UnifyException e) {
@@ -936,13 +975,25 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@SuppressWarnings({ "unchecked" })
 	private void createChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, Object id) throws UnifyException {
 		try {
-			for (ChildListFieldInfo alfi : sqlEntityInfo.getChildListInfoList()) {
-				List<? extends Entity> attrList = (List<? extends Entity>) alfi.getGetter().invoke(record);
-				if (attrList != null) {
-					Method attrFkSetter = alfi.getAttrFkSetter();
-					for (Entity attrRecord : attrList) {
-						attrFkSetter.invoke(attrRecord, id);
-						create(attrRecord);
+			if (sqlEntityInfo.isSingleChildList()) {
+				for (ChildFieldInfo alfi : sqlEntityInfo.getSingleChildInfoList()) {
+					Entity childRecord = (Entity) alfi.getGetter().invoke(record);
+					if (childRecord != null) {
+						alfi.getAttrFkSetter().invoke(childRecord, id);
+						create(childRecord);
+					}
+				}
+			}
+
+			if (sqlEntityInfo.isManyChildList()) {
+				for (ChildFieldInfo alfi : sqlEntityInfo.getManyChildInfoList()) {
+					List<? extends Entity> attrList = (List<? extends Entity>) alfi.getGetter().invoke(record);
+					if (attrList != null) {
+						Method attrFkSetter = alfi.getAttrFkSetter();
+						for (Entity attrRecord : attrList) {
+							attrFkSetter.invoke(attrRecord, id);
+							create(attrRecord);
+						}
 					}
 				}
 			}

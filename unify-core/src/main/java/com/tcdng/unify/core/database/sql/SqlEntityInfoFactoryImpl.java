@@ -26,6 +26,7 @@ import java.util.Map;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Child;
 import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnOverride;
@@ -121,7 +122,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					String tableAlias = "R" + (++rAliasCounter);
 					return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass,
 							null, tableName, tableAlias, tableName, idFieldInfo, null, propertyInfoMap, null, null,
-							null, null);
+							null, null, null);
 				}
 
 				ReflectUtils.assertAnnotation(entityClass, Table.class);
@@ -156,7 +157,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				// Process all fields including super class fields
 				Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
-				List<ChildListFieldInfo> childListInfoList = new ArrayList<ChildListFieldInfo>();
+				List<ChildFieldInfo> childInfoList = new ArrayList<ChildFieldInfo>();
+				List<ChildFieldInfo> childListInfoList = new ArrayList<ChildFieldInfo>();
 				SqlFieldInfo idFieldInfo = null;
 				SqlFieldInfo versionFieldInfo = null;
 				int fkIndex = 0;
@@ -186,6 +188,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						Version va = field.getAnnotation(Version.class);
 						ListOnly loa = field.getAnnotation(ListOnly.class);
 						ForeignKey fka = field.getAnnotation(ForeignKey.class);
+						Child clda = field.getAnnotation(Child.class);
 						ChildList cla = field.getAnnotation(ChildList.class);
 
 						// Process primary key
@@ -206,7 +209,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 										searchClass, field);
 							}
 
-							if (va != null || ca != null || loa != null || fka != null || cla != null) {
+							if (va != null || ca != null || loa != null || fka != null || clda != null || cla != null) {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
 										searchClass, field);
 							}
@@ -231,7 +234,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 										searchClass, field);
 							}
 
-							if (ca != null || loa != null || fka != null || cla != null) {
+							if (ca != null || loa != null || fka != null || clda != null || cla != null) {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
 										searchClass, field);
 							}
@@ -242,7 +245,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							isPersistent = true;
 							position = ca.position();
 
-							if (loa != null || fka != null || cla != null) {
+							if (loa != null || fka != null || clda != null || cla != null) {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
 										searchClass, field);
 							}
@@ -287,7 +290,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						if (fka != null) {
 							position = fka.position();
 
-							if (loa != null || cla != null) {
+							if (loa != null || clda != null || cla != null) {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
 										searchClass, field);
 							}
@@ -359,7 +362,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						// Save list-only fields. Would be processed later since
 						// they depend on foreign key fields
 						if (loa != null) {
-							if (cla != null) {
+							if (clda != null || cla != null) {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
 										searchClass, field);
 							}
@@ -370,6 +373,24 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								listOnlyFieldMap.put(searchClass, fieldList);
 							}
 							fieldList.add(field);
+						}
+
+						// Process child
+						if (clda != null) {
+							if (cla != null) {
+								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
+										searchClass, field);
+							}
+
+							Class<?> childType = field.getType();
+							Field attrFkField = getAttributeOnlyForeignKeyField(entityClass, childType);
+							if (attrFkField == null) {
+								throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_NO_MATCHING_FK, field,
+										childType);
+							}
+
+							childInfoList.add(getChildFieldInfo(entityClass, field,
+									(Class<? extends Entity>) childType, attrFkField));
 						}
 
 						// Process child list
@@ -383,19 +404,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							Class<?> argumentType = ReflectUtils.getArgumentType(field.getGenericType(), 0);
 							Field attrFkField = getAttributeOnlyForeignKeyField(entityClass, argumentType);
 							if (attrFkField == null) {
-								throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILDLIST_HO_MATCHING_FK, field,
+								throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILDLIST_NO_MATCHING_FK, field,
 										argumentType);
 							}
 
-							GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(searchClass,
-									field.getName());
-							GetterSetterInfo attrFkGetterSetterInfo = ReflectUtils.getGetterSetterInfo(argumentType,
-									attrFkField.getName());
-							ChildListFieldInfo attrListFieldInfo = new ChildListFieldInfo(
-									(Class<? extends Entity>) argumentType, attrFkField,
-									attrFkGetterSetterInfo.getSetter(), field, getterSetterInfo.getGetter(),
-									getterSetterInfo.getSetter());
-							childListInfoList.add(attrListFieldInfo);
+							childListInfoList.add(getChildFieldInfo(entityClass, field,
+									(Class<? extends Entity>) argumentType, attrFkField));
 						}
 
 						if (isPersistent) {
@@ -583,7 +597,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				String tableAlias = "T" + (++tAliasCounter);
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
 						entityPolicy, tableName, tableAlias, viewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
-						childListInfoList, uniqueConstraintMap, indexMap, null);
+						childInfoList, childListInfoList,uniqueConstraintMap, indexMap, null);
 				return sqlEntityInfo;
 			}
 
@@ -603,6 +617,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	@Override
 	protected void onTerminate() throws UnifyException {
 
+	}
+
+	private ChildFieldInfo getChildFieldInfo(Class<?> parentClass, Field childField, Class<? extends Entity> childClass,
+			Field childFkField) throws UnifyException {
+		GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
+		GetterSetterInfo attrFkGetterSetterInfo = ReflectUtils.getGetterSetterInfo(childClass, childFkField.getName());
+		return new ChildFieldInfo(childClass, childFkField, attrFkGetterSetterInfo.getSetter(), childField,
+				getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
 	}
 
 	private Field getAttributeOnlyForeignKeyField(Class<?> entityClass, Class<?> argumentType) throws UnifyException {

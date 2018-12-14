@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.annotation.Child;
 import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
@@ -37,6 +38,9 @@ public class Report extends AbstractTestEntity {
 	@Column
 	private String description;
 
+	@Child
+	private ReportForm reportForm;
+	
 	@ChildList
 	private List<ReportParameter> parameters;
 
@@ -71,6 +75,14 @@ public class Report extends AbstractTestEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public ReportForm getReportForm() {
+		return reportForm;
+	}
+
+	public void setReportForm(ReportForm reportForm) {
+		this.reportForm = reportForm;
 	}
 
 	public List<ReportParameter> getParameters() {

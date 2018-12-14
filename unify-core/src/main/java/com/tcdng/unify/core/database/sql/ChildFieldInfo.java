@@ -21,12 +21,12 @@ import java.lang.reflect.Method;
 import com.tcdng.unify.core.database.Entity;
 
 /**
- * Child list field information.
+ * Child field information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ChildListFieldInfo extends OnDeleteCascadeInfo {
+public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
 	private Method attrFkSetter;
 
@@ -36,7 +36,7 @@ public class ChildListFieldInfo extends OnDeleteCascadeInfo {
 
 	private Method setter;
 
-	public ChildListFieldInfo(Class<? extends Entity> childEntityClass, Field childFkField, Method attrFkSetter,
+	public ChildFieldInfo(Class<? extends Entity> childEntityClass, Field childFkField, Method attrFkSetter,
 			Field field, Method getter, Method setter) {
 		super(childEntityClass, childFkField);
 		this.attrFkSetter = attrFkSetter;

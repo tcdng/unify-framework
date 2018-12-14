@@ -28,6 +28,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Holds entity information.
@@ -67,7 +68,9 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 	private List<SqlForeignKeyInfo> foreignKeyList;
 
-	private List<ChildListFieldInfo> childListInfoList;
+	private List<ChildFieldInfo> childInfoList;
+
+	private List<ChildFieldInfo> childListInfoList;
 
 	private List<OnDeleteCascadeInfo> onDeleteCascadeInfoList;
 
@@ -80,8 +83,9 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
 			EntityPolicy recordPolicy, String table, String tableAlias, String view, SqlFieldInfo idFieldInfo,
 			SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
-			List<ChildListFieldInfo> childListInfoList, Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap,
-			Map<String, SqlIndexInfo> indexMap, List<Map<String, Object>> staticValueList) {
+			List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
+			Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
+			List<Map<String, Object>> staticValueList) {
 		this.index = index;
 		this.entityClass = entityClass;
 		this.enumConstClass = enumConstClass;
@@ -115,34 +119,22 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 			listFieldInfoList.add(sqlFieldInfo);
 		}
 
-		if (!this.foreignKeyList.isEmpty()) {
-			this.foreignKeyList = Collections.unmodifiableList(this.foreignKeyList);
-		} else {
-			this.foreignKeyList = null;
-		}
+		this.foreignKeyList = DataUtils.unmodifiableList(this.foreignKeyList);
+		this.uniqueConstraintMap = DataUtils.unmodifiableMap(uniqueConstraintMap);
+		this.indexMap = DataUtils.unmodifiableMap(indexMap);
 
-		if (uniqueConstraintMap != null) {
-			this.uniqueConstraintMap = Collections.unmodifiableMap(uniqueConstraintMap);
-		}
+		this.fieldInfoMapByName = DataUtils.unmodifiableMap(this.fieldInfoMapByName);
+		this.fieldInfoList = DataUtils.unmodifiableList(this.fieldInfoList);
+		this.listFieldInfoList = DataUtils.unmodifiableList(this.listFieldInfoList);
 
-		if (indexMap != null) {
-			this.indexMap = Collections.unmodifiableMap(indexMap);
-		}
+		this.childInfoList = DataUtils.unmodifiableList(childInfoList);
+		this.childListInfoList = DataUtils.unmodifiableList(childListInfoList);
 
-		this.fieldInfoMapByName = Collections.unmodifiableMap(this.fieldInfoMapByName);
-		this.fieldInfoList = Collections.unmodifiableList(this.fieldInfoList);
-		this.listFieldInfoList = Collections.unmodifiableList(this.listFieldInfoList);
-
-		if (childListInfoList == null || childListInfoList.isEmpty()) {
-			this.childListInfoList = Collections.emptyList();
-		} else {
-			this.childListInfoList = Collections.unmodifiableList(childListInfoList);
-		}
-
-		if (this.childListInfoList.isEmpty()) {
+		if (this.childInfoList.isEmpty() && this.childListInfoList.isEmpty()) {
 			this.onDeleteCascadeInfoList = Collections.emptyList();
 		} else {
 			this.onDeleteCascadeInfoList = new ArrayList<OnDeleteCascadeInfo>();
+			this.onDeleteCascadeInfoList.addAll(this.childInfoList);
 			this.onDeleteCascadeInfoList.addAll(this.childListInfoList);
 			this.onDeleteCascadeInfoList = Collections.unmodifiableList(this.onDeleteCascadeInfoList);
 		}
@@ -241,7 +233,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 	@Override
 	public boolean isForeignKeys() {
-		return foreignKeyList != null && !foreignKeyList.isEmpty();
+		return !foreignKeyList.isEmpty();
 	}
 
 	@Override
@@ -249,12 +241,24 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		return foreignKeyList;
 	}
 
-	public List<ChildListFieldInfo> getChildListInfoList() {
+	public List<ChildFieldInfo> getSingleChildInfoList() {
+		return childInfoList;
+	}
+
+	public boolean isSingleChildList() {
+		return !childInfoList.isEmpty();
+	}
+
+	public List<ChildFieldInfo> getManyChildInfoList() {
 		return childListInfoList;
 	}
 
-	public boolean isChildList() {
+	public boolean isManyChildList() {
 		return !childListInfoList.isEmpty();
+	}
+
+	public boolean isChildList() {
+		return !childInfoList.isEmpty() || !childListInfoList.isEmpty();
 	}
 
 	public List<OnDeleteCascadeInfo> getOnDeleteCascadeInfoList() {
