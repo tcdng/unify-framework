@@ -547,7 +547,7 @@ public final class StringUtils {
 	}
 
 	public static List<StringToken> breakdownParameterizedString(String string) {
-		if (string == null) {
+		if (StringUtils.isBlank(string)) {
 			return Collections.emptyList();
 		}
 
