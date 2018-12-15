@@ -330,9 +330,7 @@ public class StringUtilsTest {
 	public void testBreakdownParameterizedStringBlank() throws Exception {
 		List<StringToken> tokenList = StringUtils.breakdownParameterizedString("   ");
 		assertNotNull(tokenList);
-		assertEquals(1, tokenList.size());
-
-		assertEquals("   ", tokenList.get(0).getToken());
+		assertEquals(0, tokenList.size());
 	}
 
 	@Test
