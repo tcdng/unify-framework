@@ -23,24 +23,24 @@ package com.tcdng.unify.core.task;
  */
 public class TaskInstanceInfo {
 
-	private TaskExecLimit limit;
+    private TaskExecLimit limit;
 
-	private String executionId;
+    private String executionId;
 
-	public TaskInstanceInfo(String executionId) {
-		this(TaskExecLimit.ALLOW_MULTIPLE, executionId);
-	}
+    public TaskInstanceInfo(String executionId) {
+        this(TaskExecLimit.ALLOW_MULTIPLE, executionId);
+    }
 
-	public TaskInstanceInfo(TaskExecLimit limit, String executionId) {
-		this.limit = limit;
-		this.executionId = executionId;
-	}
+    public TaskInstanceInfo(TaskExecLimit limit, String executionId) {
+        this.limit = limit;
+        this.executionId = executionId;
+    }
 
-	public TaskExecLimit getLimit() {
-		return limit;
-	}
+    public TaskExecLimit getLimit() {
+        return limit;
+    }
 
-	public String getExecutionId() {
-		return executionId;
-	}
+    public String getExecutionId() {
+        return executionId;
+    }
 }

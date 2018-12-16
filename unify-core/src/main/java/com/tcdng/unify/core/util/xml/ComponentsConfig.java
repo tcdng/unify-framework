@@ -27,25 +27,25 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ComponentsConfig {
 
-	private AliasesConfig aliasesConfig;
+    private AliasesConfig aliasesConfig;
 
-	private List<ComponentConfig> componentConfigList;
+    private List<ComponentConfig> componentConfigList;
 
-	public AliasesConfig getAliasesConfig() {
-		return aliasesConfig;
-	}
+    public AliasesConfig getAliasesConfig() {
+        return aliasesConfig;
+    }
 
-	@XmlElement(name = "aliases")
-	public void setAliasesConfig(AliasesConfig aliasesConfig) {
-		this.aliasesConfig = aliasesConfig;
-	}
+    @XmlElement(name = "aliases")
+    public void setAliasesConfig(AliasesConfig aliasesConfig) {
+        this.aliasesConfig = aliasesConfig;
+    }
 
-	public List<ComponentConfig> getComponentConfigList() {
-		return componentConfigList;
-	}
+    public List<ComponentConfig> getComponentConfigList() {
+        return componentConfigList;
+    }
 
-	@XmlElement(name = "component")
-	public void setComponentConfigList(List<ComponentConfig> componentConfigList) {
-		this.componentConfigList = componentConfigList;
-	}
+    @XmlElement(name = "component")
+    public void setComponentConfigList(List<ComponentConfig> componentConfigList) {
+        this.componentConfigList = componentConfigList;
+    }
 }

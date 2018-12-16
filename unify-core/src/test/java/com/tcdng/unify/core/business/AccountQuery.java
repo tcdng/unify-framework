@@ -25,8 +25,8 @@ import com.tcdng.unify.core.database.AbstractTestEntityQuery;
  */
 public class AccountQuery extends AbstractTestEntityQuery<Account> {
 
-	public AccountQuery() {
-		super(Account.class);
-	}
+    public AccountQuery() {
+        super(Account.class);
+    }
 
 }

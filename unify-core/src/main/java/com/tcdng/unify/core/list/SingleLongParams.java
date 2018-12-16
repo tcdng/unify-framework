@@ -24,13 +24,13 @@ package com.tcdng.unify.core.list;
  */
 public class SingleLongParams {
 
-	private Long value;
+    private Long value;
 
-	public SingleLongParams(Long value) {
-		this.value = value;
-	}
+    public SingleLongParams(Long value) {
+        this.value = value;
+    }
 
-	public Long getValue() {
-		return value;
-	}
+    public Long getValue() {
+        return value;
+    }
 }

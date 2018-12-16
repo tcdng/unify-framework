@@ -24,41 +24,41 @@ package com.tcdng.unify.core.ui;
  */
 public class Tile {
 
-	private String imageSrc;
+    private String imageSrc;
 
-	private String caption;
+    private String caption;
 
-	private String actionPath;
+    private String actionPath;
 
-	private byte[] image;
+    private byte[] image;
 
-	private boolean landscape;
+    private boolean landscape;
 
-	public Tile(String imageSrc, String caption, String actionPath, byte[] image, boolean landscape) {
-		this.imageSrc = imageSrc;
-		this.caption = caption;
-		this.actionPath = actionPath;
-		this.image = image;
-		this.landscape = landscape;
-	}
+    public Tile(String imageSrc, String caption, String actionPath, byte[] image, boolean landscape) {
+        this.imageSrc = imageSrc;
+        this.caption = caption;
+        this.actionPath = actionPath;
+        this.image = image;
+        this.landscape = landscape;
+    }
 
-	public String getImageSrc() {
-		return imageSrc;
-	}
+    public String getImageSrc() {
+        return imageSrc;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public String getActionPath() {
-		return actionPath;
-	}
+    public String getActionPath() {
+        return actionPath;
+    }
 
-	public byte[] getImage() {
-		return image;
-	}
+    public byte[] getImage() {
+        return image;
+    }
 
-	public boolean isLandscape() {
-		return landscape;
-	}
+    public boolean isLandscape() {
+        return landscape;
+    }
 }

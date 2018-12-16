@@ -26,30 +26,30 @@ import java.util.List;
  */
 public class SqlIndexInfo implements SqlIndexSchemaInfo {
 
-	private String name;
+    private String name;
 
-	private List<String> fieldNameList;
+    private List<String> fieldNameList;
 
-	private boolean unique;
+    private boolean unique;
 
-	public SqlIndexInfo(String name, List<String> fieldNameList, boolean unique) {
-		this.name = name;
-		this.fieldNameList = Collections.unmodifiableList(fieldNameList);
-		this.unique = unique;
-	}
+    public SqlIndexInfo(String name, List<String> fieldNameList, boolean unique) {
+        this.name = name;
+        this.fieldNameList = Collections.unmodifiableList(fieldNameList);
+        this.unique = unique;
+    }
 
-	@Override
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
-	@Override
-	public List<String> getFieldNameList() {
-		return fieldNameList;
-	}
+    @Override
+    public List<String> getFieldNameList() {
+        return fieldNameList;
+    }
 
-	@Override
-	public boolean isUnique() {
-		return unique;
-	}
+    @Override
+    public boolean isUnique() {
+        return unique;
+    }
 }

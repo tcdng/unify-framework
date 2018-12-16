@@ -25,58 +25,58 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class SqlColumnInfo implements Listable {
 
-	private Class<?> javaType;
+    private Class<?> javaType;
 
-	private String columnName;
+    private String columnName;
 
-	private int sqlType;
+    private int sqlType;
 
-	private int size;
+    private int size;
 
-	private int decimalDigits;
+    private int decimalDigits;
 
-	private boolean nullable;
+    private boolean nullable;
 
-	public SqlColumnInfo(Class<?> javaType, String name, int sqlType, int size, int decimalDigits, boolean nullable) {
-		this.javaType = javaType;
-		this.columnName = name;
-		this.sqlType = sqlType;
-		this.size = size;
-		this.decimalDigits = decimalDigits;
-		this.nullable = nullable;
-	}
+    public SqlColumnInfo(Class<?> javaType, String name, int sqlType, int size, int decimalDigits, boolean nullable) {
+        this.javaType = javaType;
+        this.columnName = name;
+        this.sqlType = sqlType;
+        this.size = size;
+        this.decimalDigits = decimalDigits;
+        this.nullable = nullable;
+    }
 
-	@Override
-	public String getListKey() {
-		return columnName;
-	}
+    @Override
+    public String getListKey() {
+        return columnName;
+    }
 
-	@Override
-	public String getListDescription() {
-		return columnName;
-	}
+    @Override
+    public String getListDescription() {
+        return columnName;
+    }
 
-	public Class<?> getJavaType() {
-		return javaType;
-	}
+    public Class<?> getJavaType() {
+        return javaType;
+    }
 
-	public String getColumnName() {
-		return columnName;
-	}
+    public String getColumnName() {
+        return columnName;
+    }
 
-	public int getSqlType() {
-		return sqlType;
-	}
+    public int getSqlType() {
+        return sqlType;
+    }
 
-	public int getSize() {
-		return size;
-	}
+    public int getSize() {
+        return size;
+    }
 
-	public int getDecimalDigits() {
-		return decimalDigits;
-	}
+    public int getDecimalDigits() {
+        return decimalDigits;
+    }
 
-	public boolean isNullable() {
-		return nullable;
-	}
+    public boolean isNullable() {
+        return nullable;
+    }
 }

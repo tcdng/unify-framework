@@ -28,56 +28,56 @@ import com.tcdng.unify.core.annotation.Singleton;
  */
 @Singleton(false)
 public abstract class AbstractNetworkMulticastCommunicator extends AbstractUnifyComponent
-		implements NetworkMulticastCommunicator {
+        implements NetworkMulticastCommunicator {
 
-	protected boolean open;
+    protected boolean open;
 
-	@Override
-	public void close() throws UnifyException {
-		open = false;
-		onClose();
-	}
+    @Override
+    public void close() throws UnifyException {
+        open = false;
+        onClose();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	/**
-	 * Throws a receive exception.
-	 * 
-	 * @param cause
-	 *            the cause
-	 * @throws UnifyException
-	 *             the receive exception
-	 */
-	protected void throwReceiveException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, getName());
-	}
+    /**
+     * Throws a receive exception.
+     * 
+     * @param cause
+     *            the cause
+     * @throws UnifyException
+     *             the receive exception
+     */
+    protected void throwReceiveException(Exception cause) throws UnifyException {
+        throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, getName());
+    }
 
-	/**
-	 * Throws a transmit exception.
-	 * 
-	 * @param cause
-	 *            the cause
-	 * @throws UnifyException
-	 *             the transmit exception
-	 */
-	protected void throwTransmitException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, getName());
-	}
+    /**
+     * Throws a transmit exception.
+     * 
+     * @param cause
+     *            the cause
+     * @throws UnifyException
+     *             the transmit exception
+     */
+    protected void throwTransmitException(Exception cause) throws UnifyException {
+        throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, getName());
+    }
 
-	/**
-	 * Executed on close of communicator.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void onClose() throws UnifyException;
+    /**
+     * Executed on close of communicator.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void onClose() throws UnifyException;
 
 }

@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotAmongstPolicy extends MultipleParameterPolicy {
 
-	public NotAmongstPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" NOT IN ", sqlDataSourceDialect, " AND ");
-	}
+    public NotAmongstPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" NOT IN ", sqlDataSourceDialect, " AND ");
+    }
 }

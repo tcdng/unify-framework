@@ -34,96 +34,96 @@ import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
 @Component(name = SqlDialectConstants.MYSQL, description = "$m{sqldialect.mysqldb}")
 public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
-	public MySqlDialect() {
-		super(true); // Append NULL on table create
-	}
+    public MySqlDialect() {
+        super(true); // Append NULL on table create
+    }
 
-	@Override
-	public String generateTestSql() throws UnifyException {
-		return "SELECT 1";
-	}
+    @Override
+    public String generateTestSql() throws UnifyException {
+        return "SELECT 1";
+    }
 
-	@Override
-	public String generateNowSql() throws UnifyException {
-		return "SELECT CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateNowSql() throws UnifyException {
+        return "SELECT CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public int getMaxClauseValues() {
-		return -1;
-	}
+    @Override
+    public int getMaxClauseValues() {
+        return -1;
+    }
 
-	@Override
-	public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-			SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		String tableName = sqlRecordSchemaInfo.getTable();
-		sb.append("ALTER TABLE ").append(tableName);
-		if (format) {
-			sb.append(getLineSeparator());
-		} else {
-			sb.append(" ");
-		}
-		sb.append("DROP INDEX ").append(tableName).append("_").append(sqlUniqueConstraintInfo.getName().toUpperCase())
-				.append("UK");
-		return sb.toString();
-	}
+    @Override
+    public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        String tableName = sqlRecordSchemaInfo.getTable();
+        sb.append("ALTER TABLE ").append(tableName);
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(" ");
+        }
+        sb.append("DROP INDEX ").append(tableName).append("_").append(sqlUniqueConstraintInfo.getName().toUpperCase())
+                .append("UK");
+        return sb.toString();
+    }
 
-	@Override
-	public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-			SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
-		if (format) {
-			sb.append(getLineSeparator());
-		} else {
-			sb.append(' ');
-		}
-		sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getColumn()).append(" ");
-		appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
-		return sb.toString();
-	}
+    @Override
+    public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getColumn()).append(" ");
+        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+        return sb.toString();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		super.onInitialize();
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
 
-		setDataTypePolicy(ColumnType.BLOB, new MySqlBlobPolicy());
-	}
+        setDataTypePolicy(ColumnType.BLOB, new MySqlBlobPolicy());
+    }
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		boolean isAppend = false;
-		if (limit > 0) {
-			sql.append(" LIMIT ").append(limit);
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        boolean isAppend = false;
+        if (limit > 0) {
+            sql.append(" LIMIT ").append(limit);
+            isAppend = true;
+        }
 
-		if (offset > 0) {
-			sql.append(" OFFSET ").append(offset);
-			isAppend = true;
-		}
+        if (offset > 0) {
+            sql.append(" OFFSET ").append(offset);
+            isAppend = true;
+        }
 
-		return isAppend;
-	}
+        return isAppend;
+    }
 }
 
 class MySqlBlobPolicy extends BlobPolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("MEDIUMBLOB");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("MEDIUMBLOB");
+    }
 }

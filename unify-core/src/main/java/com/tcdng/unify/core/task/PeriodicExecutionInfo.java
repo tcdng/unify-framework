@@ -25,20 +25,20 @@ import java.lang.reflect.Method;
  */
 public class PeriodicExecutionInfo {
 
-	private String componentName;
+    private String componentName;
 
-	private Method method;
+    private Method method;
 
-	public PeriodicExecutionInfo(String componentName, Method method) {
-		this.componentName = componentName;
-		this.method = method;
-	}
+    public PeriodicExecutionInfo(String componentName, Method method) {
+        this.componentName = componentName;
+        this.method = method;
+    }
 
-	public String getComponentName() {
-		return componentName;
-	}
+    public String getComponentName() {
+        return componentName;
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public Method getMethod() {
+        return method;
+    }
 }

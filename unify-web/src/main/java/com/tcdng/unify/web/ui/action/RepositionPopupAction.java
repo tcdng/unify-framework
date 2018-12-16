@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-repositionpopup")
 public class RepositionPopupAction extends AbstractPageAction {
 
-	public RepositionPopupAction() {
-		super("repositionpopup");
-	}
+    public RepositionPopupAction() {
+        super("repositionpopup");
+    }
 }

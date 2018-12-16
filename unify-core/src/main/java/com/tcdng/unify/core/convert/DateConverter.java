@@ -27,17 +27,17 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class DateConverter extends AbstractConverter<Date> {
 
-	@Override
-	protected Date doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Date) {
-			return (Date) value;
-		}
-		if (value instanceof String) {
-			String string = ((String) value).trim();
-			if (!string.isEmpty()) {
-				return doConvert(formatter.parse((String) value), null);
-			}
-		}
-		return null;
-	}
+    @Override
+    protected Date doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Date) {
+            return (Date) value;
+        }
+        if (value instanceof String) {
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                return doConvert(formatter.parse((String) value), null);
+            }
+        }
+        return null;
+    }
 }

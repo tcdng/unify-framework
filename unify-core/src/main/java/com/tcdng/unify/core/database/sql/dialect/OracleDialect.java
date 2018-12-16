@@ -42,109 +42,109 @@ import com.tcdng.unify.core.database.sql.policy.LongPolicy;
 @Component(name = SqlDialectConstants.ORACLE, description = "$m{sqldialect.oracledb}")
 public class OracleDialect extends AbstractSqlDataSourceDialect {
 
-	@Override
-	public String generateTestSql() throws UnifyException {
-		return "SELECT 1 FROM DUAL";
-	}
+    @Override
+    public String generateTestSql() throws UnifyException {
+        return "SELECT 1 FROM DUAL";
+    }
 
-	@Override
-	public String generateNowSql() throws UnifyException {
-		return "SELECT LOCALTIMESTAMP FROM DUAL";
-	}
+    @Override
+    public String generateNowSql() throws UnifyException {
+        return "SELECT LOCALTIMESTAMP FROM DUAL";
+    }
 
-	@Override
-	public int getMaxClauseValues() {
-		return 1000;
-	}
+    @Override
+    public int getMaxClauseValues() {
+        return 1000;
+    }
 
-	@Override
-	public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-			boolean format) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
-		if (format) {
-			sb.append(getLineSeparator());
-		} else {
-			sb.append(' ');
-		}
-		sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getColumn());
-		return sb.toString();
-	}
+    @Override
+    public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+        return sb.toString();
+    }
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		if (offset > 0) {
-			throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
-		}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        if (offset > 0) {
+            throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
+        }
 
-		if (limit > 0) {
-			if (append) {
-				sql.append(" AND ROWNUM <= ").append(limit);
-			} else {
-				sql.append(" WHERE ROWNUM <= ").append(limit);
-			}
-			return true;
-		}
-		return false;
-	}
+        if (limit > 0) {
+            if (append) {
+                sql.append(" AND ROWNUM <= ").append(limit);
+            } else {
+                sql.append(" WHERE ROWNUM <= ").append(limit);
+            }
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		super.onInitialize();
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
 
-		setDataTypePolicy(ColumnType.BLOB, new OracleBlobPolicy());
-		setDataTypePolicy(ColumnType.CLOB, new OracleClobPolicy());
-		setDataTypePolicy(ColumnType.LONG, new OracleLongPolicy());
+        setDataTypePolicy(ColumnType.BLOB, new OracleBlobPolicy());
+        setDataTypePolicy(ColumnType.CLOB, new OracleClobPolicy());
+        setDataTypePolicy(ColumnType.LONG, new OracleLongPolicy());
 
-		setTimestampFormat(
-				new SimpleDateFormat("('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))"));
-	}
+        setTimestampFormat(
+                new SimpleDateFormat("('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))"));
+    }
 }
 
 class OracleLongPolicy extends LongPolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("NUMBER(19)");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("NUMBER(19)");
+    }
 }
 
 class OracleBlobPolicy extends BlobPolicy {
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null || ((byte[]) data).length == 0) {
-			((PreparedStatement) pstmt).setNull(index, Types.BLOB);
-		} else {
-			((PreparedStatement) pstmt).setBinaryStream(index, new ByteArrayInputStream((byte[]) data),
-					((byte[]) data).length);
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null || ((byte[]) data).length == 0) {
+            ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
+        } else {
+            ((PreparedStatement) pstmt).setBinaryStream(index, new ByteArrayInputStream((byte[]) data),
+                    ((byte[]) data).length);
+        }
+    }
 
 }
 
 class OracleClobPolicy extends ClobPolicy {
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null || ((String) data).isEmpty()) {
-			((PreparedStatement) pstmt).setNull(index, Types.CLOB);
-		} else {
-			((PreparedStatement) pstmt).setCharacterStream(index, new StringReader((String) data),
-					((String) data).length());
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null || ((String) data).isEmpty()) {
+            ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
+        } else {
+            ((PreparedStatement) pstmt).setCharacterStream(index, new StringReader((String) data),
+                    ((String) data).length());
+        }
+    }
 
 }

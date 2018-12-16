@@ -22,5 +22,5 @@ package com.tcdng.unify.core.annotation;
  * @since 1.0
  */
 public enum TransactionAttribute {
-	REQUIRED, REQUIRES_NEW, SUPPORTS, NOT_SUPPORTED, MANDATORY, NEVER
+    REQUIRED, REQUIRES_NEW, SUPPORTS, NOT_SUPPORTED, MANDATORY, NEVER
 }

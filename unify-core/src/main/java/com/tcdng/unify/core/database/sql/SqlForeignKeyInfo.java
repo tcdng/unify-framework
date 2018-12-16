@@ -23,18 +23,18 @@ package com.tcdng.unify.core.database.sql;
  */
 public class SqlForeignKeyInfo implements SqlForeignKeySchemaInfo {
 
-	private SqlFieldInfo sqlFieldInfo;
+    private SqlFieldInfo sqlFieldInfo;
 
-	public SqlForeignKeyInfo(SqlFieldInfo sqlFieldInfo) {
-		this.sqlFieldInfo = sqlFieldInfo;
-	}
+    public SqlForeignKeyInfo(SqlFieldInfo sqlFieldInfo) {
+        this.sqlFieldInfo = sqlFieldInfo;
+    }
 
-	@Override
-	public String getFieldName() {
-		return sqlFieldInfo.getName();
-	}
+    @Override
+    public String getFieldName() {
+        return sqlFieldInfo.getName();
+    }
 
-	public SqlFieldInfo getSqlFieldInfo() {
-		return sqlFieldInfo;
-	}
+    public SqlFieldInfo getSqlFieldInfo() {
+        return sqlFieldInfo;
+    }
 }

@@ -28,30 +28,30 @@ import com.tcdng.unify.core.data.Listable;
  */
 public interface SearchProvider extends ListCommand<SearchProviderParams> {
 
-	/**
-	 * Performs a search using supplied filter.
-	 * 
-	 * @param filter
-	 *            the search filter
-	 * @return search result
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<? extends Listable> search(String filter) throws UnifyException;
+    /**
+     * Performs a search using supplied filter.
+     * 
+     * @param filter
+     *            the search filter
+     * @return search result
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<? extends Listable> search(String filter) throws UnifyException;
 
-	/**
-	 * Returns the search provider key property.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getKeyProperty() throws UnifyException;
+    /**
+     * Returns the search provider key property.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getKeyProperty() throws UnifyException;
 
-	/**
-	 * Returns the search provider description property.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getDescProperty() throws UnifyException;
+    /**
+     * Returns the search provider description property.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getDescProperty() throws UnifyException;
 }

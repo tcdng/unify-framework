@@ -31,47 +31,47 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class BusinessLogicInput {
 
-	private TaskMonitor taskMonitor;
+    private TaskMonitor taskMonitor;
 
-	private String dbName;
+    private String dbName;
 
-	private Map<String, Object> parameters;
+    private Map<String, Object> parameters;
 
-	public BusinessLogicInput() {
-		this.parameters = new HashMap<String, Object>();
-	}
+    public BusinessLogicInput() {
+        this.parameters = new HashMap<String, Object>();
+    }
 
-	public BusinessLogicInput(TaskMonitor taskMonitor, String dbName) {
-		this.taskMonitor = taskMonitor;
-		this.dbName = dbName;
-		this.parameters = new HashMap<String, Object>();
-	}
+    public BusinessLogicInput(TaskMonitor taskMonitor, String dbName) {
+        this.taskMonitor = taskMonitor;
+        this.dbName = dbName;
+        this.parameters = new HashMap<String, Object>();
+    }
 
-	public BusinessLogicInput(String pm) {
-		this(null, pm);
-	}
+    public BusinessLogicInput(String pm) {
+        this(null, pm);
+    }
 
-	public TaskMonitor getTaskMonitor() {
-		return taskMonitor;
-	}
+    public TaskMonitor getTaskMonitor() {
+        return taskMonitor;
+    }
 
-	public String getDbName() {
-		return dbName;
-	}
+    public String getDbName() {
+        return dbName;
+    }
 
-	public void setParameters(Map<String, Object> parameters) {
-		this.parameters.putAll(parameters);
-	}
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters.putAll(parameters);
+    }
 
-	public void setParameter(String name, Object value) {
-		parameters.put(name, value);
-	}
+    public void setParameter(String name, Object value) {
+        parameters.put(name, value);
+    }
 
-	public Set<String> getParameterNames() {
-		return parameters.keySet();
-	}
+    public Set<String> getParameterNames() {
+        return parameters.keySet();
+    }
 
-	public <T> T getParameter(Class<T> valueType, String name) throws UnifyException {
-		return DataUtils.convert(valueType, parameters.get(name), null);
-	}
+    public <T> T getParameter(Class<T> valueType, String name) throws UnifyException {
+        return DataUtils.convert(valueType, parameters.get(name), null);
+    }
 }

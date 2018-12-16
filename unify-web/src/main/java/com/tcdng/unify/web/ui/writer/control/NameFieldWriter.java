@@ -32,10 +32,10 @@ import com.tcdng.unify.web.ui.control.TextField;
 @Component("namefield-writer")
 public class NameFieldWriter extends TextFieldWriter {
 
-	@Override
-	protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-		NameField nameField = (NameField) textField;
-		writer.writeNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
-				nameField.isAcceptPeriod(), nameField.isAcceptDash());
-	}
+    @Override
+    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+        NameField nameField = (NameField) textField;
+        writer.writeNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
+                nameField.isAcceptPeriod(), nameField.isAcceptDash());
+    }
 }

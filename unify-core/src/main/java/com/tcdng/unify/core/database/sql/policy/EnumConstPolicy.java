@@ -32,41 +32,41 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public class EnumConstPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		if (length <= 0) {
-			length = StaticReference.CODE_LENGTH;
-		}
-		sb.append("VARCHAR(").append(length).append(')');
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        if (length <= 0) {
+            length = StaticReference.CODE_LENGTH;
+        }
+        sb.append("VARCHAR(").append(length).append(')');
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
-		} else {
-			((PreparedStatement) pstmt).setString(index, ((EnumConst) data).code());
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
+        } else {
+            ((PreparedStatement) pstmt).setString(index, ((EnumConst) data).code());
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Object object = ((ResultSet) rs).getString(column);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Object object = ((ResultSet) rs).getString(column);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Object object = ((ResultSet) rs).getString(index);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Object object = ((ResultSet) rs).getString(index);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
+    }
 
 }

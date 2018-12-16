@@ -33,13 +33,13 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 @UplAttributes({ @UplAttribute(name = "rootList", type = UplElementReferences.class) })
 public class TestDocumentD extends AbstractTestDocument {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

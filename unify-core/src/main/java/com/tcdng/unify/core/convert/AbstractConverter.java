@@ -27,27 +27,27 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public abstract class AbstractConverter<T> implements Converter<T> {
 
-	@Override
-	public T convert(Object value, Formatter<?> formatter) throws UnifyException {
-		try {
-			return doConvert(value, formatter);
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.CONVERTER_EXCEPTION);
-		}
-	}
+    @Override
+    public T convert(Object value, Formatter<?> formatter) throws UnifyException {
+        try {
+            return doConvert(value, formatter);
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.CONVERTER_EXCEPTION);
+        }
+    }
 
-	/**
-	 * Performs actual conversion.
-	 * 
-	 * @param value
-	 *            the value to convert
-	 * @param formatter
-	 *            the formatter if any
-	 * @return the conversion result
-	 * @throws Exception
-	 *             if an error occurs
-	 */
-	protected abstract T doConvert(Object value, Formatter<?> formatter) throws Exception;
+    /**
+     * Performs actual conversion.
+     * 
+     * @param value
+     *            the value to convert
+     * @param formatter
+     *            the formatter if any
+     * @return the conversion result
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected abstract T doConvert(Object value, Formatter<?> formatter) throws Exception;
 }

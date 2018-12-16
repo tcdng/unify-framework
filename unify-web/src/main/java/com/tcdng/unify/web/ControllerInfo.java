@@ -23,13 +23,13 @@ package com.tcdng.unify.web;
  */
 public abstract class ControllerInfo {
 
-	private String controllerName;
+    private String controllerName;
 
-	public ControllerInfo(String controllerName) {
-		this.controllerName = controllerName;
-	}
+    public ControllerInfo(String controllerName) {
+        this.controllerName = controllerName;
+    }
 
-	public String getControllerName() {
-		return controllerName;
-	}
+    public String getControllerName() {
+        return controllerName;
+    }
 }

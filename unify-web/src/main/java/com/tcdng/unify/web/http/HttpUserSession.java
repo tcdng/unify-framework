@@ -33,58 +33,58 @@ import com.tcdng.unify.core.util.ApplicationUtils;
  */
 public class HttpUserSession implements UserSession, HttpSessionBindingListener {
 
-	private transient UserSessionManager userSessionManager;
+    private transient UserSessionManager userSessionManager;
 
-	private SessionContext sessionContext;
+    private SessionContext sessionContext;
 
-	public HttpUserSession(String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
-			String remoteUser, String remoteViewer, UserPlatform platform) {
-		sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), uriBase, contextPath,
-				remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
-	}
+    public HttpUserSession(String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
+            String remoteUser, String remoteViewer, UserPlatform platform) {
+        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), uriBase, contextPath,
+                remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
+    }
 
-	@Override
-	public String getRemoteAddress() {
-		return sessionContext.getRemoteAddress();
-	}
+    @Override
+    public String getRemoteAddress() {
+        return sessionContext.getRemoteAddress();
+    }
 
-	@Override
-	public String getRemoteHost() {
-		return sessionContext.getRemoteHost();
-	}
+    @Override
+    public String getRemoteHost() {
+        return sessionContext.getRemoteHost();
+    }
 
-	@Override
-	public String getRemoteUser() {
-		return sessionContext.getRemoteUser();
-	}
+    @Override
+    public String getRemoteUser() {
+        return sessionContext.getRemoteUser();
+    }
 
-	@Override
-	public String getRemoteViewer() {
-		return sessionContext.getRemoteViewer();
-	}
+    @Override
+    public String getRemoteViewer() {
+        return sessionContext.getRemoteViewer();
+    }
 
-	@Override
-	public SessionContext getSessionContext() {
-		return sessionContext;
-	}
+    @Override
+    public SessionContext getSessionContext() {
+        return sessionContext;
+    }
 
-	@Override
-	public void valueBound(HttpSessionBindingEvent event) {
-		try {
-			userSessionManager.addUserSession(this);
-		} catch (UnifyException e) {
-		}
-	}
+    @Override
+    public void valueBound(HttpSessionBindingEvent event) {
+        try {
+            userSessionManager.addUserSession(this);
+        } catch (UnifyException e) {
+        }
+    }
 
-	@Override
-	public void valueUnbound(HttpSessionBindingEvent event) {
-		try {
-			userSessionManager.removeUserSession(this);
-		} catch (UnifyException e) {
-		}
-	}
+    @Override
+    public void valueUnbound(HttpSessionBindingEvent event) {
+        try {
+            userSessionManager.removeUserSession(this);
+        } catch (UnifyException e) {
+        }
+    }
 
-	public void setTransient(UserSessionManager userSessionManager) {
-		this.userSessionManager = userSessionManager;
-	}
+    public void setTransient(UserSessionManager userSessionManager) {
+        this.userSessionManager = userSessionManager;
+    }
 }

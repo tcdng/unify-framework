@@ -26,9 +26,9 @@ import com.tcdng.unify.core.format.Formatter;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class),
-		@UplAttribute(name = "acceptNegative", type = boolean.class),
-		@UplAttribute(name = "useGrouping", type = boolean.class),
-		@UplAttribute(name = "formatter", type = Formatter.class) })
+        @UplAttribute(name = "acceptNegative", type = boolean.class),
+        @UplAttribute(name = "useGrouping", type = boolean.class),
+        @UplAttribute(name = "formatter", type = Formatter.class) })
 public abstract class AbstractNumberField extends TextField {
 
 }

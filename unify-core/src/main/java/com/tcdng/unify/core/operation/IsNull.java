@@ -23,8 +23,8 @@ package com.tcdng.unify.core.operation;
  */
 public class IsNull extends Criteria {
 
-	public IsNull(String field) {
-		super(Operator.IS_NULL, field, null);
-	}
+    public IsNull(String field) {
+        super(Operator.IS_NULL, field, null);
+    }
 
 }

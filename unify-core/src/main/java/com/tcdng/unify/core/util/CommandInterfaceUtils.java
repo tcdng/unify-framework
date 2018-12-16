@@ -26,28 +26,28 @@ import java.net.Socket;
  */
 public final class CommandInterfaceUtils {
 
-	private CommandInterfaceUtils() {
+    private CommandInterfaceUtils() {
 
-	}
+    }
 
-	public static void sendCommand(String host, int port, String command, String param) throws Exception {
-		Socket socket = null;
-		PrintWriter writer = null;
-		try {
-			socket = new Socket(host, port);
-			writer = new PrintWriter(socket.getOutputStream(), true);
-			writer.write(command);
-			writer.write(param);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			IOUtils.close(writer);
-			if (socket != null) {
-				try {
-					socket.close();
-				} catch (Exception e) {
-				}
-			}
-		}
-	}
+    public static void sendCommand(String host, int port, String command, String param) throws Exception {
+        Socket socket = null;
+        PrintWriter writer = null;
+        try {
+            socket = new Socket(host, port);
+            writer = new PrintWriter(socket.getOutputStream(), true);
+            writer.write(command);
+            writer.write(param);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            IOUtils.close(writer);
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }

@@ -26,13 +26,13 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractReportProcessor extends AbstractUnifyComponent implements ReportProcessor {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

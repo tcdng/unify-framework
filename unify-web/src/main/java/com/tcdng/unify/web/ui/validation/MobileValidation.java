@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractRegexPageValidation;
 @Component("ui-mobilevalidation")
 public class MobileValidation extends AbstractRegexPageValidation {
 
-	public MobileValidation() {
-		super("mobile", "mobile.regex", "validation.invalidphone");
-	}
+    public MobileValidation() {
+        super("mobile", "mobile.regex", "validation.invalidphone");
+    }
 }

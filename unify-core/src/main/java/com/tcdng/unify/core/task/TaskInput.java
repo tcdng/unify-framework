@@ -29,39 +29,39 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class TaskInput {
 
-	private String origTaskName;
+    private String origTaskName;
 
-	private TaskableMethodConfig tmc;
+    private TaskableMethodConfig tmc;
 
-	private Map<String, Object> parameters;
+    private Map<String, Object> parameters;
 
-	private TaskOutput prevTaskOutput;
+    private TaskOutput prevTaskOutput;
 
-	public TaskInput(String origTaskName, TaskableMethodConfig tmc, Map<String, Object> parameters,
-			TaskOutput prevTaskOutput) {
-		this.origTaskName = origTaskName;
-		this.tmc = tmc;
-		this.parameters = parameters;
-		this.prevTaskOutput = prevTaskOutput;
-	}
+    public TaskInput(String origTaskName, TaskableMethodConfig tmc, Map<String, Object> parameters,
+            TaskOutput prevTaskOutput) {
+        this.origTaskName = origTaskName;
+        this.tmc = tmc;
+        this.parameters = parameters;
+        this.prevTaskOutput = prevTaskOutput;
+    }
 
-	public String getOrigTaskName() {
-		return origTaskName;
-	}
+    public String getOrigTaskName() {
+        return origTaskName;
+    }
 
-	public TaskOutput getPrevTaskOutput() {
-		return prevTaskOutput;
-	}
+    public TaskOutput getPrevTaskOutput() {
+        return prevTaskOutput;
+    }
 
-	public TaskableMethodConfig getTmc() {
-		return tmc;
-	}
+    public TaskableMethodConfig getTmc() {
+        return tmc;
+    }
 
-	public Set<String> getParamNames() {
-		return parameters.keySet();
-	}
+    public Set<String> getParamNames() {
+        return parameters.keySet();
+    }
 
-	public <T> T getParam(Class<T> valueType, String name) throws UnifyException {
-		return DataUtils.convert(valueType, parameters.get(name), null);
-	}
+    public <T> T getParam(Class<T> valueType, String name) throws UnifyException {
+        return DataUtils.convert(valueType, parameters.get(name), null);
+    }
 }

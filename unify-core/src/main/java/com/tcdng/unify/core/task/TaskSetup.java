@@ -31,198 +31,198 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class TaskSetup {
 
-	private TaskExecType type;
+    private TaskExecType type;
 
-	private List<String> taskNames;
+    private List<String> taskNames;
 
-	private Map<String, Object> parameters;
+    private Map<String, Object> parameters;
 
-	private String eventCode;
+    private String eventCode;
 
-	private List<String> eventDetails;
+    private List<String> eventDetails;
 
-	private String logger;
+    private String logger;
 
-	private long delayInMillSec;
+    private long delayInMillSec;
 
-	private long periodInMillSec;
+    private long periodInMillSec;
 
-	private int numberOfTimes;
+    private int numberOfTimes;
 
-	private boolean messages;
+    private boolean messages;
 
-	private boolean dependent;
+    private boolean dependent;
 
-	private TaskSetup(TaskExecType type, List<String> taskNames, Map<String, Object> parameters, String eventCode,
-			List<String> eventDetails, String logger, long delayInMillSec, long periodInMillSec, int numberOfTimes,
-			boolean messages, boolean dependent) {
-		this.type = type;
-		this.taskNames = taskNames;
-		this.parameters = parameters;
-		this.eventCode = eventCode;
-		this.eventDetails = eventDetails;
-		this.logger = logger;
-		this.delayInMillSec = delayInMillSec;
-		this.periodInMillSec = periodInMillSec;
-		this.numberOfTimes = numberOfTimes;
-		this.messages = messages;
-		this.dependent = dependent;
-	}
+    private TaskSetup(TaskExecType type, List<String> taskNames, Map<String, Object> parameters, String eventCode,
+            List<String> eventDetails, String logger, long delayInMillSec, long periodInMillSec, int numberOfTimes,
+            boolean messages, boolean dependent) {
+        this.type = type;
+        this.taskNames = taskNames;
+        this.parameters = parameters;
+        this.eventCode = eventCode;
+        this.eventDetails = eventDetails;
+        this.logger = logger;
+        this.delayInMillSec = delayInMillSec;
+        this.periodInMillSec = periodInMillSec;
+        this.numberOfTimes = numberOfTimes;
+        this.messages = messages;
+        this.dependent = dependent;
+    }
 
-	public TaskExecType getType() {
-		return type;
-	}
+    public TaskExecType getType() {
+        return type;
+    }
 
-	public List<String> getTaskNames() {
-		return taskNames;
-	}
+    public List<String> getTaskNames() {
+        return taskNames;
+    }
 
-	public Map<String, Object> getParameters() {
-		return parameters;
-	}
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
 
-	public String getEventCode() {
-		return eventCode;
-	}
+    public String getEventCode() {
+        return eventCode;
+    }
 
-	public List<String> getEventDetails() {
-		return eventDetails;
-	}
+    public List<String> getEventDetails() {
+        return eventDetails;
+    }
 
-	public String getLogger() {
-		return logger;
-	}
+    public String getLogger() {
+        return logger;
+    }
 
-	public long getDelayInMillSec() {
-		return delayInMillSec;
-	}
+    public long getDelayInMillSec() {
+        return delayInMillSec;
+    }
 
-	public long getPeriodInMillSec() {
-		return periodInMillSec;
-	}
+    public long getPeriodInMillSec() {
+        return periodInMillSec;
+    }
 
-	public int getNumberOfTimes() {
-		return numberOfTimes;
-	}
+    public int getNumberOfTimes() {
+        return numberOfTimes;
+    }
 
-	public boolean isMessages() {
-		return messages;
-	}
+    public boolean isMessages() {
+        return messages;
+    }
 
-	public boolean isDependent() {
-		return dependent;
-	}
+    public boolean isDependent() {
+        return dependent;
+    }
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
+    public static Builder newBuilder() {
+        return new Builder();
+    }
 
-	public static Builder newBuilder(TaskExecType type) {
-		return new Builder(type);
-	}
+    public static Builder newBuilder(TaskExecType type) {
+        return new Builder(type);
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private TaskExecType type;
+        private TaskExecType type;
 
-		private List<String> taskNames;
+        private List<String> taskNames;
 
-		private Map<String, Object> parameters;
+        private Map<String, Object> parameters;
 
-		private String eventCode;
+        private String eventCode;
 
-		private String[] eventDetails;
+        private String[] eventDetails;
 
-		private String logger;
+        private String logger;
 
-		private long delayInMillSec;
+        private long delayInMillSec;
 
-		private long periodInMillSec;
+        private long periodInMillSec;
 
-		private int numberOfTimes;
+        private int numberOfTimes;
 
-		private boolean messages;
+        private boolean messages;
 
-		private boolean dependent;
+        private boolean dependent;
 
-		private Builder() {
-			this(TaskExecType.RUN_IMMEDIATE);
-		}
+        private Builder() {
+            this(TaskExecType.RUN_IMMEDIATE);
+        }
 
-		private Builder(TaskExecType type) {
-			this.type = type;
-			this.taskNames = new ArrayList<String>();
-		}
+        private Builder(TaskExecType type) {
+            this.type = type;
+            this.taskNames = new ArrayList<String>();
+        }
 
-		public Builder addTask(String taskName) {
-			this.taskNames.add(taskName);
-			return this;
-		}
+        public Builder addTask(String taskName) {
+            this.taskNames.add(taskName);
+            return this;
+        }
 
-		public Builder setParams(Map<String, Object> params) {
-			if (parameters == null) {
-				parameters = new HashMap<String, Object>();
-			}
+        public Builder setParams(Map<String, Object> params) {
+            if (parameters == null) {
+                parameters = new HashMap<String, Object>();
+            }
 
-			parameters.putAll(params);
-			return this;
-		}
+            parameters.putAll(params);
+            return this;
+        }
 
-		public Builder setParam(String name, Object value) {
-			if (parameters == null) {
-				parameters = new HashMap<String, Object>();
-			}
+        public Builder setParam(String name, Object value) {
+            if (parameters == null) {
+                parameters = new HashMap<String, Object>();
+            }
 
-			parameters.put(name, value);
-			return this;
-		}
+            parameters.put(name, value);
+            return this;
+        }
 
-		public Builder delayInMillSec(long delayInMillSec) {
-			this.delayInMillSec = delayInMillSec;
-			return this;
-		}
+        public Builder delayInMillSec(long delayInMillSec) {
+            this.delayInMillSec = delayInMillSec;
+            return this;
+        }
 
-		public Builder delayUntil(Date time) {
-			this.delayInMillSec = time.getTime() - new Date().getTime();
-			return this;
-		}
+        public Builder delayUntil(Date time) {
+            this.delayInMillSec = time.getTime() - new Date().getTime();
+            return this;
+        }
 
-		public Builder periodInMillSec(long periodInMillSec) {
-			this.periodInMillSec = periodInMillSec;
-			return this;
-		}
+        public Builder periodInMillSec(long periodInMillSec) {
+            this.periodInMillSec = periodInMillSec;
+            return this;
+        }
 
-		public Builder numberOfTimes(int numberOfTimes) {
-			this.numberOfTimes = numberOfTimes;
-			return this;
-		}
+        public Builder numberOfTimes(int numberOfTimes) {
+            this.numberOfTimes = numberOfTimes;
+            return this;
+        }
 
-		public Builder useStatusLogger(String logger) {
-			this.logger = logger;
-			return this;
-		}
+        public Builder useStatusLogger(String logger) {
+            this.logger = logger;
+            return this;
+        }
 
-		public Builder logEvent(String eventCode, String... eventDetails) {
-			this.eventCode = eventCode;
-			this.eventDetails = eventDetails;
-			return this;
-		}
+        public Builder logEvent(String eventCode, String... eventDetails) {
+            this.eventCode = eventCode;
+            this.eventDetails = eventDetails;
+            return this;
+        }
 
-		public Builder logMessages() {
-			this.messages = true;
-			return this;
-		}
+        public Builder logMessages() {
+            this.messages = true;
+            return this;
+        }
 
-		public Builder runDependently() {
-			this.dependent = true;
-			return this;
-		}
+        public Builder runDependently() {
+            this.dependent = true;
+            return this;
+        }
 
-		public TaskSetup build() {
-			return new TaskSetup(type, DataUtils.unmodifiableList(taskNames), DataUtils.unmodifiableMap(parameters),
-					eventCode, DataUtils.unmodifiableList(eventDetails), logger, delayInMillSec, periodInMillSec,
-					numberOfTimes, messages, dependent);
-		}
+        public TaskSetup build() {
+            return new TaskSetup(type, DataUtils.unmodifiableList(taskNames), DataUtils.unmodifiableMap(parameters),
+                    eventCode, DataUtils.unmodifiableList(eventDetails), logger, delayInMillSec, periodInMillSec,
+                    numberOfTimes, messages, dependent);
+        }
 
-	}
+    }
 }

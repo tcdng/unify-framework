@@ -26,26 +26,26 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface DataSourceManager extends UnifyComponent {
 
-	/**
-	 * Initializes a data source.
-	 * 
-	 * @param datasource
-	 *            the datasource name
-	 * 
-	 * @throws UnifyException
-	 *             if data source does not allow management. If an error occurs.
-	 */
-	void initDataSource(String datasource) throws UnifyException;
+    /**
+     * Initializes a data source.
+     * 
+     * @param datasource
+     *            the datasource name
+     * 
+     * @throws UnifyException
+     *             if data source does not allow management. If an error occurs.
+     */
+    void initDataSource(String datasource) throws UnifyException;
 
-	/**
-	 * Manages a data source, making sure that entity models match datasource
-	 * schema.
-	 * 
-	 * @param datasource
-	 *            the datasource name
-	 * 
-	 * @throws UnifyException
-	 *             if data source does not allow management. If an error occurs.
-	 */
-	void manageDataSource(String datasource) throws UnifyException;
+    /**
+     * Manages a data source, making sure that entity models match datasource
+     * schema.
+     * 
+     * @param datasource
+     *            the datasource name
+     * 
+     * @throws UnifyException
+     *             if data source does not allow management. If an error occurs.
+     */
+    void manageDataSource(String datasource) throws UnifyException;
 }

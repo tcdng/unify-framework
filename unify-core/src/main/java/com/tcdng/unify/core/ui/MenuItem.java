@@ -26,40 +26,40 @@ import java.util.List;
  */
 public class MenuItem {
 
-	private String caption;
+    private String caption;
 
-	private String privilege;
+    private String privilege;
 
-	private String actionPath;
+    private String actionPath;
 
-	private List<MenuItem> menuItemList;
+    private List<MenuItem> menuItemList;
 
-	public MenuItem(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
-		this.caption = caption;
-		this.privilege = privilege;
-		this.actionPath = actionPath;
-		if (menuItemList != null) {
-			this.menuItemList = Collections.unmodifiableList(menuItemList);
-		}
-	}
+    public MenuItem(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
+        this.caption = caption;
+        this.privilege = privilege;
+        this.actionPath = actionPath;
+        if (menuItemList != null) {
+            this.menuItemList = Collections.unmodifiableList(menuItemList);
+        }
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public String getPrivilege() {
-		return privilege;
-	}
+    public String getPrivilege() {
+        return privilege;
+    }
 
-	public String getActionPath() {
-		return actionPath;
-	}
+    public String getActionPath() {
+        return actionPath;
+    }
 
-	public List<MenuItem> getMenuItemList() {
-		return menuItemList;
-	}
+    public List<MenuItem> getMenuItemList() {
+        return menuItemList;
+    }
 
-	public boolean isMain() {
-		return false;
-	}
+    public boolean isMain() {
+        return false;
+    }
 }

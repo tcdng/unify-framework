@@ -54,179 +54,177 @@ import com.tcdng.unify.core.util.ReflectUtils;
 @Component(ApplicationComponents.APPLICATION_PARAMETERBUSINESSMODULE)
 public class ParameterBusinessModuleImpl extends AbstractBusinessModule implements ParameterBusinessModule {
 
-	@Override
-	public void defineParameters(String name, Class<?> type) throws UnifyException {
-		List<ParameterDef> parameterList = new ArrayList<ParameterDef>();
-		for (Parameter pa : AnnotationUtils.getParameters(type)) {
-			String editor = AnnotationUtils.getAnnotationString(pa.editor());
-			if (editor != null) {
-				ParameterDef parameterDefData = new ParameterDef();
-				parameterDefData.setDescription(pa.description());
-				parameterDefData.setEditor(pa.editor());
-				parameterDefData.setMandatory(pa.mandatory());
-				parameterDefData.setName(pa.name());
-				parameterDefData.setType(pa.type().getName());
-				parameterList.add(parameterDefData);
-			}
-		}
+    @Override
+    public void defineParameters(String name, Class<?> type) throws UnifyException {
+        List<ParameterDef> parameterList = new ArrayList<ParameterDef>();
+        for (Parameter pa : AnnotationUtils.getParameters(type)) {
+            String editor = AnnotationUtils.getAnnotationString(pa.editor());
+            if (editor != null) {
+                ParameterDef parameterDefData = new ParameterDef();
+                parameterDefData.setDescription(pa.description());
+                parameterDefData.setEditor(pa.editor());
+                parameterDefData.setMandatory(pa.mandatory());
+                parameterDefData.setName(pa.name());
+                parameterDefData.setType(pa.type().getName());
+                parameterList.add(parameterDefData);
+            }
+        }
 
-		defineParameters(name, parameterList);
-	}
+        defineParameters(name, parameterList);
+    }
 
-	@Override
-	public void defineParameters(String name, List<ParameterDef> parameterList) throws UnifyException {
-		ParametersDef pdd = db().find(new ParametersDefQuery().typeName(name));
-		if (pdd == null) {
-			pdd = new ParametersDef();
-			pdd.setTypeName(name);
-			pdd.setParameterDefs(parameterList);
-			db().create(pdd);
-		} else {
-			pdd.setParameterDefs(parameterList);
-			db().updateByIdVersion(pdd);
-		}
-	}
+    @Override
+    public void defineParameters(String name, List<ParameterDef> parameterList) throws UnifyException {
+        ParametersDef pdd = db().find(new ParametersDefQuery().typeName(name));
+        if (pdd == null) {
+            pdd = new ParametersDef();
+            pdd.setTypeName(name);
+            pdd.setParameterDefs(parameterList);
+            db().create(pdd);
+        } else {
+            pdd.setParameterDefs(parameterList);
+            db().updateByIdVersion(pdd);
+        }
+    }
 
-	@Override
-	public Map<String, ParameterDef> findParameterDefinitionsByName(String name) throws UnifyException {
-		Map<String, ParameterDef> map = new LinkedHashMap<String, ParameterDef>();
-		for (ParameterDef pd : db().find(new ParametersDefQuery().typeName(name)).getParameterDefs()) {
-			map.put(pd.getName(), pd);
-		}
-		return map;
-	}
+    @Override
+    public Map<String, ParameterDef> findParameterDefinitionsByName(String name) throws UnifyException {
+        Map<String, ParameterDef> map = new LinkedHashMap<String, ParameterDef>();
+        for (ParameterDef pd : db().find(new ParametersDefQuery().typeName(name)).getParameterDefs()) {
+            map.put(pd.getName(), pd);
+        }
+        return map;
+    }
 
-	@Override
-	public List<Input> fetchInputList(String name) throws UnifyException {
-		ParametersDef parametersDefData = db().find(new ParametersDefQuery().typeName(name));
-		if (parametersDefData != null) {
-			List<Input> inputList = new ArrayList<Input>();
-			for (ParameterDef pdd : parametersDefData.getParameterDefs()) {
-				inputList.add(getParameterValue(pdd));
-			}
+    @Override
+    public List<Input> fetchInputList(String name) throws UnifyException {
+        ParametersDef parametersDefData = db().find(new ParametersDefQuery().typeName(name));
+        if (parametersDefData != null) {
+            List<Input> inputList = new ArrayList<Input>();
+            for (ParameterDef pdd : parametersDefData.getParameterDefs()) {
+                inputList.add(getParameterValue(pdd));
+            }
 
-			return inputList;
-		}
+            return inputList;
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
-	@Override
-	public Inputs fetchNormalizedInputs(String paramTypeName, String instTypeName, Long instId) throws UnifyException {
-		List<Input> inputList = null;
-		if (QueryUtils.isValidStringCriteria(paramTypeName)) {
-			inputList = new ArrayList<Input>();
-			Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
-			Set<String> usedSet = new HashSet<String>();
-			ParameterValues parameterValuesData = db()
-					.list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
-			if (parameterValuesData != null) {
-				for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
-					String key = parameterValueData.getParamKey();
-					ParameterDef parameterDefData = parameterDefMap.get(key);
-					if (parameterDefData != null) {
-						usedSet.add(key);
-						Input parameterValue = getParameterValue(parameterDefData);
-						parameterValue.setValue(parameterValueData.getParamValue());
-						inputList.add(parameterValue);
-					}
-				}
-			}
+    @Override
+    public Inputs fetchNormalizedInputs(String paramTypeName, String instTypeName, Long instId) throws UnifyException {
+        List<Input> inputList = null;
+        if (QueryUtils.isValidStringCriteria(paramTypeName)) {
+            inputList = new ArrayList<Input>();
+            Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
+            Set<String> usedSet = new HashSet<String>();
+            ParameterValues parameterValuesData = db()
+                    .list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
+            if (parameterValuesData != null) {
+                for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
+                    String key = parameterValueData.getParamKey();
+                    ParameterDef parameterDefData = parameterDefMap.get(key);
+                    if (parameterDefData != null) {
+                        usedSet.add(key);
+                        Input parameterValue = getParameterValue(parameterDefData);
+                        parameterValue.setValue(parameterValueData.getParamValue());
+                        inputList.add(parameterValue);
+                    }
+                }
+            }
 
-			if (usedSet.size() < parameterDefMap.size()) {
-				for (Map.Entry<String, ParameterDef> entry : parameterDefMap.entrySet()) {
-					if (!usedSet.contains(entry.getKey())) {
-						ParameterDef parameterDefData = entry.getValue();
-						inputList.add(getParameterValue(parameterDefData));
-					}
-				}
-			}
-		} else {
-			inputList = Collections.emptyList();
-		}
+            if (usedSet.size() < parameterDefMap.size()) {
+                for (Map.Entry<String, ParameterDef> entry : parameterDefMap.entrySet()) {
+                    if (!usedSet.contains(entry.getKey())) {
+                        ParameterDef parameterDefData = entry.getValue();
+                        inputList.add(getParameterValue(parameterDefData));
+                    }
+                }
+            }
+        } else {
+            inputList = Collections.emptyList();
+        }
 
-		return new Inputs(inputList);
-	}
+        return new Inputs(inputList);
+    }
 
-	@Override
-	public Map<String, Object> findParameterTypeValues(String paramTypeName, String instTypeName, Long instId)
-			throws UnifyException {
-		ParameterValues parameterValuesData = db()
-				.list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
-		if (parameterValuesData != null) {
-			Map<String, Object> result = new HashMap<String, Object>();
-			Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
-			for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
-				ParameterDef parameterDefData = parameterDefMap.get(parameterValueData.getParamKey());
-				if (parameterDefData != null) {
-					Class<?> type = ReflectUtils.getClassForName(parameterDefData.getType());
-					result.put(parameterDefData.getName(),
-							DataUtils.convert(type, parameterValueData.getParamValue(), null));
-				}
-			}
+    @Override
+    public Map<String, Object> findParameterTypeValues(String paramTypeName, String instTypeName, Long instId)
+            throws UnifyException {
+        ParameterValues parameterValuesData = db()
+                .list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
+        if (parameterValuesData != null) {
+            Map<String, Object> result = new HashMap<String, Object>();
+            Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
+            for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
+                ParameterDef parameterDefData = parameterDefMap.get(parameterValueData.getParamKey());
+                if (parameterDefData != null) {
+                    Class<?> type = ReflectUtils.getClassForName(parameterDefData.getType());
+                    result.put(parameterDefData.getName(),
+                            DataUtils.convert(type, parameterValueData.getParamValue(), null));
+                }
+            }
 
-			return result;
-		}
+            return result;
+        }
 
-		return Collections.emptyMap();
-	}
+        return Collections.emptyMap();
+    }
 
-	@Override
-	public void updateParameterValues(String paramTypeName, String instTypeName, Long instId, Inputs parameterValues)
-			throws UnifyException {
-		ParametersDef pdd = db().find(new ParametersDefQuery().typeName(paramTypeName));
-		if (pdd == null) {
-			throw new UnifyException(UnifyCoreErrorConstants.PARAMETER_DEFINITION_UNKNOWN, paramTypeName);
-		}
+    @Override
+    public void updateParameterValues(String paramTypeName, String instTypeName, Long instId, Inputs parameterValues)
+            throws UnifyException {
+        ParametersDef pdd = db().find(new ParametersDefQuery().typeName(paramTypeName));
+        if (pdd == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.PARAMETER_DEFINITION_UNKNOWN, paramTypeName);
+        }
 
-		ParameterValues parameterValuesData = db()
-				.list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
-		Long parameterValuesId = null;
-		if (parameterValuesData == null) {
-			parameterValuesData = new ParameterValues();
-			parameterValuesData.setParametersDefId(pdd.getId());
-			parameterValuesData.setInstTypeName(instTypeName);
-			parameterValuesData.setInstId(instId);
-			parameterValuesId = (Long) db().create(parameterValuesData);
-		} else {
-			parameterValuesId = parameterValuesData.getId();
-		}
+        ParameterValues parameterValuesData = db()
+                .list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
+        Long parameterValuesId = null;
+        if (parameterValuesData == null) {
+            parameterValuesData = new ParameterValues();
+            parameterValuesData.setParametersDefId(pdd.getId());
+            parameterValuesData.setInstTypeName(instTypeName);
+            parameterValuesData.setInstId(instId);
+            parameterValuesId = (Long) db().create(parameterValuesData);
+        } else {
+            parameterValuesId = parameterValuesData.getId();
+        }
 
-		List<ParameterValue> parameterValueList = new ArrayList<ParameterValue>();
-		for (ParameterDef pddc : pdd.getParameterDefs()) {
-			Input paramValue = parameterValues.getInput(pddc.getName());
-			String value = null;
-			if (paramValue != null) {
-				value = paramValue.getValue();
-			}
+        List<ParameterValue> parameterValueList = new ArrayList<ParameterValue>();
+        for (ParameterDef pddc : pdd.getParameterDefs()) {
+            Input paramValue = parameterValues.getInput(pddc.getName());
+            String value = null;
+            if (paramValue != null) {
+                value = paramValue.getValue();
+            }
 
-			if (pddc.isMandatory() && !QueryUtils.isValidStringCriteria(value)) {
-				throw new UnifyException(UnifyCoreErrorConstants.PARAMETER_VALUE_REQUIRED, pddc.getName(),
-						paramTypeName, instTypeName);
-			}
+            if (pddc.isMandatory() && !QueryUtils.isValidStringCriteria(value)) {
+                throw new UnifyException(UnifyCoreErrorConstants.PARAMETER_VALUE_REQUIRED, pddc.getName(),
+                        paramTypeName, instTypeName);
+            }
 
-			ParameterValue parameterValueData = new ParameterValue();
-			parameterValueData.setParameterValuesId(parameterValuesId);
-			parameterValueData.setParamKey(pddc.getName());
-			parameterValueData.setParamValue(value);
-			parameterValueList.add(parameterValueData);
-		}
+            ParameterValue parameterValueData = new ParameterValue();
+            parameterValueData.setParameterValuesId(parameterValuesId);
+            parameterValueData.setParamKey(pddc.getName());
+            parameterValueData.setParamValue(value);
+            parameterValueList.add(parameterValueData);
+        }
 
-		parameterValuesData.setParameterValues(parameterValueList);
-		db().updateByIdVersion(parameterValuesData);
-	}
+        parameterValuesData.setParameterValues(parameterValueList);
+        db().updateByIdVersion(parameterValuesData);
+    }
 
-	@Override
-	public void deleteParameterValues(String paramTypeName, String instTypeName, Long instId) throws UnifyException {
-		db().deleteAll(
-				new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
-	}
+    @Override
+    public void deleteParameterValues(String paramTypeName, String instTypeName, Long instId) throws UnifyException {
+        db().deleteAll(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
+    }
 
-	private Input getParameterValue(ParameterDef parameterDefData) throws UnifyException {
-		Class<?> type = ReflectUtils.getClassForName(parameterDefData.getType());
-		return new Input(type, parameterDefData.getName(),
-				resolveSessionMessage(parameterDefData.getDescription()), parameterDefData.getEditor(),
-				parameterDefData.isMandatory());
-	}
+    private Input getParameterValue(ParameterDef parameterDefData) throws UnifyException {
+        Class<?> type = ReflectUtils.getClassForName(parameterDefData.getType());
+        return new Input(type, parameterDefData.getName(), resolveSessionMessage(parameterDefData.getDescription()),
+                parameterDefData.getEditor(), parameterDefData.isMandatory());
+    }
 
 }

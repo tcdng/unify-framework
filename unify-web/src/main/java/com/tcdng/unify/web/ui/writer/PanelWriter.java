@@ -27,15 +27,15 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface PanelWriter extends ContainerWriter {
 
-	/**
-	 * Writes inner panel structure and content
-	 * 
-	 * @param writer
-	 *            - the response writer
-	 * @param panel
-	 *            the panel to write
-	 * @throws UnifyException
-	 *             - If an error occurs
-	 */
-	void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException;
+    /**
+     * Writes inner panel structure and content
+     * 
+     * @param writer
+     *            - the response writer
+     * @param panel
+     *            the panel to write
+     * @throws UnifyException
+     *             - If an error occurs
+     */
+    void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException;
 }

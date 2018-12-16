@@ -26,7 +26,7 @@ import com.tcdng.unify.core.data.Listable;
  */
 public interface Entity extends Listable, Describable {
 
-	Object getId();
+    Object getId();
 
-	boolean isReserved();
+    boolean isReserved();
 }

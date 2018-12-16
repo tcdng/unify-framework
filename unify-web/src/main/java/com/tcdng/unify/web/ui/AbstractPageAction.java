@@ -26,29 +26,29 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "components", type = UplElementReferences.class),
-		@UplAttribute(name = "confirm", type = String.class), @UplAttribute(name = "shortcut", type = String.class) })
+        @UplAttribute(name = "confirm", type = String.class), @UplAttribute(name = "shortcut", type = String.class) })
 public abstract class AbstractPageAction extends AbstractBehavior implements PageAction {
 
-	private String action;
+    private String action;
 
-	private String pageName;
+    private String pageName;
 
-	public AbstractPageAction(String action) {
-		this.action = action;
-	}
+    public AbstractPageAction(String action) {
+        this.action = action;
+    }
 
-	@Override
-	public String getAction() {
-		return this.action;
-	}
+    @Override
+    public String getAction() {
+        return this.action;
+    }
 
-	@Override
-	public String getId() {
-		return pageName;
-	}
+    @Override
+    public String getId() {
+        return pageName;
+    }
 
-	@Override
-	public void setId(String pageName) {
-		this.pageName = pageName;
-	}
+    @Override
+    public void setId(String pageName) {
+        this.pageName = pageName;
+    }
 }

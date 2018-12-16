@@ -28,123 +28,123 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class TaskableMethodConfig implements Listable {
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private String componentName;
+    private String componentName;
 
-	private Method method;
+    private Method method;
 
-	private List<ParamConfig> paramConfigList;
+    private List<ParamConfig> paramConfigList;
 
-	private TaskExecLimit taskExecLimit;
+    private TaskExecLimit taskExecLimit;
 
-	private String idGenerator;
+    private String idGenerator;
 
-	private boolean schedulable;
+    private boolean schedulable;
 
-	public TaskableMethodConfig(String name, String description, String componentName, Method method,
-			List<ParamConfig> paramConfigList, TaskExecLimit taskExecLimit, String idGenerator, boolean schedulable) {
-		this.name = name;
-		this.description = description;
-		this.componentName = componentName;
-		this.method = method;
-		this.paramConfigList = paramConfigList;
-		this.taskExecLimit = taskExecLimit;
-		this.idGenerator = idGenerator;
-		this.schedulable = schedulable;
-	}
+    public TaskableMethodConfig(String name, String description, String componentName, Method method,
+            List<ParamConfig> paramConfigList, TaskExecLimit taskExecLimit, String idGenerator, boolean schedulable) {
+        this.name = name;
+        this.description = description;
+        this.componentName = componentName;
+        this.method = method;
+        this.paramConfigList = paramConfigList;
+        this.taskExecLimit = taskExecLimit;
+        this.idGenerator = idGenerator;
+        this.schedulable = schedulable;
+    }
 
-	@Override
-	public String getListKey() {
-		return name;
-	}
+    @Override
+    public String getListKey() {
+        return name;
+    }
 
-	@Override
-	public String getListDescription() {
-		return description;
-	}
+    @Override
+    public String getListDescription() {
+        return description;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getComponentName() {
-		return componentName;
-	}
+    public String getComponentName() {
+        return componentName;
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public Method getMethod() {
+        return method;
+    }
 
-	public List<ParamConfig> getParamConfigList() {
-		return paramConfigList;
-	}
+    public List<ParamConfig> getParamConfigList() {
+        return paramConfigList;
+    }
 
-	public TaskExecLimit getTaskExecLimit() {
-		return taskExecLimit;
-	}
+    public TaskExecLimit getTaskExecLimit() {
+        return taskExecLimit;
+    }
 
-	public String getIdGenerator() {
-		return idGenerator;
-	}
+    public String getIdGenerator() {
+        return idGenerator;
+    }
 
-	public int getParamCount() {
-		return paramConfigList.size();
-	}
+    public int getParamCount() {
+        return paramConfigList.size();
+    }
 
-	public boolean isSchedulable() {
-		return schedulable;
-	}
+    public boolean isSchedulable() {
+        return schedulable;
+    }
 
-	public static class ParamConfig {
+    public static class ParamConfig {
 
-		private String paramName;
+        private String paramName;
 
-		private String paramDesc;
+        private String paramDesc;
 
-		private String editor;
+        private String editor;
 
-		private Class<?> type;
+        private Class<?> type;
 
-		private boolean mandatory;
+        private boolean mandatory;
 
-		public ParamConfig(Class<?> type, String paramName, String paramDesc, String editor, boolean mandatory) {
-			this.paramName = paramName;
-			this.paramDesc = paramDesc;
-			this.editor = editor;
-			this.type = type;
-			this.mandatory = mandatory;
-		}
+        public ParamConfig(Class<?> type, String paramName, String paramDesc, String editor, boolean mandatory) {
+            this.paramName = paramName;
+            this.paramDesc = paramDesc;
+            this.editor = editor;
+            this.type = type;
+            this.mandatory = mandatory;
+        }
 
-		public ParamConfig(Class<?> type, String paramName) {
-			this.type = type;
-			this.paramName = paramName;
-		}
+        public ParamConfig(Class<?> type, String paramName) {
+            this.type = type;
+            this.paramName = paramName;
+        }
 
-		public Class<?> getType() {
-			return type;
-		}
+        public Class<?> getType() {
+            return type;
+        }
 
-		public String getParamName() {
-			return paramName;
-		}
+        public String getParamName() {
+            return paramName;
+        }
 
-		public String getParamDesc() {
-			return paramDesc;
-		}
+        public String getParamDesc() {
+            return paramDesc;
+        }
 
-		public String getEditor() {
-			return editor;
-		}
+        public String getEditor() {
+            return editor;
+        }
 
-		public boolean isMandatory() {
-			return mandatory;
-		}
-	}
+        public boolean isMandatory() {
+            return mandatory;
+        }
+    }
 }

@@ -26,28 +26,28 @@ import com.tcdng.unify.core.constant.FileAttachmentType;
  */
 public class FileAttachment {
 
-	private FileAttachmentType type;
+    private FileAttachmentType type;
 
-	private String fileName;
+    private String fileName;
 
-	private byte[] data;
+    private byte[] data;
 
-	public FileAttachment(FileAttachmentType type, String fileName, byte[] data) {
-		this.type = type;
-		this.fileName = fileName;
-		this.data = data;
-	}
+    public FileAttachment(FileAttachmentType type, String fileName, byte[] data) {
+        this.type = type;
+        this.fileName = fileName;
+        this.data = data;
+    }
 
-	public FileAttachmentType getType() {
-		return type;
-	}
+    public FileAttachmentType getType() {
+        return type;
+    }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public byte[] getData() {
+        return data;
+    }
 
 }

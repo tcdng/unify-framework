@@ -26,80 +26,80 @@ import java.util.List;
  */
 public class SqlStatement {
 
-	private SqlEntityInfo sqlEntityInfo;
+    private SqlEntityInfo sqlEntityInfo;
 
-	private SqlStatementType type;
+    private SqlStatementType type;
 
-	private String sql;
+    private String sql;
 
-	private List<SqlParameter> parameterInfoList;
+    private List<SqlParameter> parameterInfoList;
 
-	private List<SqlResult> resultInfoList;
+    private List<SqlResult> resultInfoList;
 
-	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql) {
-		this.sqlEntityInfo = sqlEntityInfo;
-		this.type = type;
-		this.sql = sql;
-		this.parameterInfoList = Collections.emptyList();
-		this.resultInfoList = Collections.emptyList();
-	}
+    public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql) {
+        this.sqlEntityInfo = sqlEntityInfo;
+        this.type = type;
+        this.sql = sql;
+        this.parameterInfoList = Collections.emptyList();
+        this.resultInfoList = Collections.emptyList();
+    }
 
-	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
-			final List<SqlParameter> parameterInfoList) {
-		this.sqlEntityInfo = sqlEntityInfo;
-		this.type = type;
-		this.sql = sql;
-		this.parameterInfoList = parameterInfoList;
-		this.resultInfoList = Collections.emptyList();
-	}
+    public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
+            final List<SqlParameter> parameterInfoList) {
+        this.sqlEntityInfo = sqlEntityInfo;
+        this.type = type;
+        this.sql = sql;
+        this.parameterInfoList = parameterInfoList;
+        this.resultInfoList = Collections.emptyList();
+    }
 
-	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
-			final List<SqlParameter> parameterInfoList, final List<SqlResult> resultInfoList) {
-		this.sqlEntityInfo = sqlEntityInfo;
-		this.type = type;
-		this.sql = sql;
-		this.parameterInfoList = parameterInfoList;
-		this.resultInfoList = resultInfoList;
-	}
+    public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
+            final List<SqlParameter> parameterInfoList, final List<SqlResult> resultInfoList) {
+        this.sqlEntityInfo = sqlEntityInfo;
+        this.type = type;
+        this.sql = sql;
+        this.parameterInfoList = parameterInfoList;
+        this.resultInfoList = resultInfoList;
+    }
 
-	public SqlEntityInfo getSqlEntityInfo() {
-		return sqlEntityInfo;
-	}
+    public SqlEntityInfo getSqlEntityInfo() {
+        return sqlEntityInfo;
+    }
 
-	public SqlStatementType getType() {
-		return type;
-	}
+    public SqlStatementType getType() {
+        return type;
+    }
 
-	public String getSql() {
-		return sql;
-	}
+    public String getSql() {
+        return sql;
+    }
 
-	public List<SqlParameter> getParameterInfoList() {
-		return parameterInfoList;
-	}
+    public List<SqlParameter> getParameterInfoList() {
+        return parameterInfoList;
+    }
 
-	public List<SqlResult> getResultInfoList() {
-		return resultInfoList;
-	}
+    public List<SqlResult> getResultInfoList() {
+        return resultInfoList;
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[sql = ").append(sql);
-		if (parameterInfoList != null && !parameterInfoList.isEmpty()) {
-			sb.append(":");
-			boolean isAppendSymbol = false;
-			for (SqlParameter sqlParameter : parameterInfoList) {
-				if (isAppendSymbol) {
-					sb.append(", ");
-				} else {
-					isAppendSymbol = true;
-				}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[sql = ").append(sql);
+        if (parameterInfoList != null && !parameterInfoList.isEmpty()) {
+            sb.append(":");
+            boolean isAppendSymbol = false;
+            for (SqlParameter sqlParameter : parameterInfoList) {
+                if (isAppendSymbol) {
+                    sb.append(", ");
+                } else {
+                    isAppendSymbol = true;
+                }
 
-				sb.append("{").append(sqlParameter.toString()).append("}");
-			}
-		}
+                sb.append("{").append(sqlParameter.toString()).append("}");
+            }
+        }
 
-		sb.append("]");
-		return sb.toString();
-	}
+        sb.append("]");
+        return sb.toString();
+    }
 }

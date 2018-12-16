@@ -25,21 +25,21 @@ import com.tcdng.unify.core.UnifyComponent;
  */
 public interface Controller extends UnifyComponent {
 
-	/**
-	 * Returns the controller type.
-	 */
-	ControllerType getType();
+    /**
+     * Returns the controller type.
+     */
+    ControllerType getType();
 
-	/**
-	 * Returns true if user interface controller
-	 */
-	boolean isUserInterface();
+    /**
+     * Returns true if user interface controller
+     */
+    boolean isUserInterface();
 
-	/**
-	 * Tests if controller requires secured access.
-	 * 
-	 * @return a true value means that access to this controller must have been
-	 *         authenticated
-	 */
-	boolean isSecured();
+    /**
+     * Tests if controller requires secured access.
+     * 
+     * @return a true value means that access to this controller must have been
+     *         authenticated
+     */
+    boolean isSecured();
 }

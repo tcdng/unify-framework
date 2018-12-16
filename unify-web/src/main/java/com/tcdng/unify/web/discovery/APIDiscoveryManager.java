@@ -27,13 +27,13 @@ import com.tcdng.unify.web.discovery.gem.data.APIDiscoveryRemoteCallInfo;
  */
 public interface APIDiscoveryManager extends UnifyComponent {
 
-	/**
-	 * Returns API discovery remote call information.
-	 * 
-	 * @param code
-	 *            the remote call code
-	 * @throws UnifyException
-	 *             if remote call with code is unknown
-	 */
-	APIDiscoveryRemoteCallInfo getRemoteCallInfo(String code) throws UnifyException;
+    /**
+     * Returns API discovery remote call information.
+     * 
+     * @param code
+     *            the remote call code
+     * @throws UnifyException
+     *             if remote call with code is unknown
+     */
+    APIDiscoveryRemoteCallInfo getRemoteCallInfo(String code) throws UnifyException;
 }

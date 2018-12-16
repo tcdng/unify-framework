@@ -24,17 +24,17 @@ package com.tcdng.unify.core.list;
  */
 public class CurrencyListParams {
 
-	private String[] currencyCodes;
+    private String[] currencyCodes;
 
-	public CurrencyListParams(String[] currencyCodes) {
-		this.currencyCodes = currencyCodes;
-	}
+    public CurrencyListParams(String[] currencyCodes) {
+        this.currencyCodes = currencyCodes;
+    }
 
-	public String[] getCurrencyCodes() {
-		return currencyCodes;
-	}
+    public String[] getCurrencyCodes() {
+        return currencyCodes;
+    }
 
-	public boolean isCurrencyCodes() {
-		return currencyCodes != null && currencyCodes.length > 0;
-	}
+    public boolean isCurrencyCodes() {
+        return currencyCodes != null && currencyCodes.length > 0;
+    }
 }

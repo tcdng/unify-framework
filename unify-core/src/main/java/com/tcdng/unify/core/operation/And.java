@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class And extends Criteria {
 
-	public And(Criteria leftOperation, Criteria rightOperation) {
-		super(Operator.AND, leftOperation, rightOperation);
-	}
+    public And(Criteria leftOperation, Criteria rightOperation) {
+        super(Operator.AND, leftOperation, rightOperation);
+    }
 }

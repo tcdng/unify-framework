@@ -35,79 +35,79 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public interface StandalonePanel extends Panel {
 
-	/**
-	 * Sets the panel info.
-	 * 
-	 * @param standalonePanelInfo
-	 *            the standalone panel information
-	 */
-	void setStandalonePanelInfo(StandalonePanelInfo standalonePanelInfo);
+    /**
+     * Sets the panel info.
+     * 
+     * @param standalonePanelInfo
+     *            the standalone panel information
+     */
+    void setStandalonePanelInfo(StandalonePanelInfo standalonePanelInfo);
 
-	/**
-	 * Returns the page validator for this panel.
-	 * 
-	 * @param pageManager
-	 *            the page manager
-	 * @param longName
-	 *            the page validation long name
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	PageWidgetValidator getPageWidgetValidator(PageManager pageManager, String longName) throws UnifyException;
+    /**
+     * Returns the page validator for this panel.
+     * 
+     * @param pageManager
+     *            the page manager
+     * @param longName
+     *            the page validation long name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    PageWidgetValidator getPageWidgetValidator(PageManager pageManager, String longName) throws UnifyException;
 
-	/**
-	 * Returns page validation by long name.
-	 * 
-	 * @param longName
-	 *            the validation long name
-	 */
-	PageValidation getPageValidation(String longName);
+    /**
+     * Returns page validation by long name.
+     * 
+     * @param longName
+     *            the validation long name
+     */
+    PageValidation getPageValidation(String longName);
 
-	/**
-	 * Returns this panel's page validation long names.
-	 */
-	Set<String> getPageValidationNames();
+    /**
+     * Returns this panel's page validation long names.
+     */
+    Set<String> getPageValidationNames();
 
-	/**
-	 * Returns page action by long name.
-	 * 
-	 * @param longName
-	 *            the page action long name
-	 */
-	PageAction getPageAction(String longName);
+    /**
+     * Returns page action by long name.
+     * 
+     * @param longName
+     *            the page action long name
+     */
+    PageAction getPageAction(String longName);
 
-	/**
-	 * Gets widgets by long names.
-	 * 
-	 * @param longName
-	 *            - the component long names
-	 * @return array of components
-	 * @throws UnifyException
-	 *             if component in long name list doesn't exist on page
-	 */
-	List<Widget> getWidgetsByLongNames(List<String> longNames) throws UnifyException;
+    /**
+     * Gets widgets by long names.
+     * 
+     * @param longName
+     *            - the component long names
+     * @return array of components
+     * @throws UnifyException
+     *             if component in long name list doesn't exist on page
+     */
+    List<Widget> getWidgetsByLongNames(List<String> longNames) throws UnifyException;
 
-	/**
-	 * Returns true if page validation is enabled.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isValidationEnabled() throws UnifyException;
+    /**
+     * Returns true if page validation is enabled.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isValidationEnabled() throws UnifyException;
 
-	/**
-	 * Sets the page validation enabled flag.
-	 * 
-	 * @param validationEnabled
-	 *            the flag to set
-	 */
-	void setValidationEnabled(boolean validationEnabled);
+    /**
+     * Sets the page validation enabled flag.
+     * 
+     * @param validationEnabled
+     *            the flag to set
+     */
+    void setValidationEnabled(boolean validationEnabled);
 
-	/**
-	 * Returns true if source is invalidated.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isSourceInvalidated() throws UnifyException;
+    /**
+     * Returns true if source is invalidated.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isSourceInvalidated() throws UnifyException;
 }

@@ -23,5 +23,5 @@ package com.tcdng.unify.jetty;
  */
 public interface JettyApplicationComponents {
 
-	String JETTY_HTTPINTERFACE = "jetty-httpinterface";
+    String JETTY_HTTPINTERFACE = "jetty-httpinterface";
 }

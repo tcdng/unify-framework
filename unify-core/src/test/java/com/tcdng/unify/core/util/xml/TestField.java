@@ -34,35 +34,35 @@ import com.tcdng.unify.core.util.xml.adapter.DataTypeXmlAdapter;
 @XmlType(propOrder = { "name", "type" })
 public class TestField {
 
-	private String name;
+    private String name;
 
-	private DataType type;
+    private DataType type;
 
-	public TestField(String name, DataType type) {
-		this.name = name;
-		this.type = type;
-	}
+    public TestField(String name, DataType type) {
+        this.name = name;
+        this.type = type;
+    }
 
-	public TestField() {
+    public TestField() {
 
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@XmlElement
-	public void setName(String name) {
-		this.name = name;
-	}
+    @XmlElement
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public DataType getType() {
-		return type;
-	}
+    public DataType getType() {
+        return type;
+    }
 
-	@XmlJavaTypeAdapter(DataTypeXmlAdapter.class)
-	@XmlElement(name = "type")
-	public void setType(DataType type) {
-		this.type = type;
-	}
+    @XmlJavaTypeAdapter(DataTypeXmlAdapter.class)
+    @XmlElement(name = "type")
+    public void setType(DataType type) {
+        this.type = type;
+    }
 }

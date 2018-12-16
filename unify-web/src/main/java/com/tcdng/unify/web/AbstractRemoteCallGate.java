@@ -27,25 +27,25 @@ import com.tcdng.unify.core.annotation.Configurable;
  */
 public abstract class AbstractRemoteCallGate extends AbstractUnifyComponent implements RemoteCallGate {
 
-	@Configurable("false")
-	private boolean openMode;
+    @Configurable("false")
+    private boolean openMode;
 
-	@Override
-	public void grantPass(String applicationCode, String functionCode) throws UnifyException {
-		if (!openMode) {
-			doGrantPass(applicationCode, functionCode);
-		}
-	}
+    @Override
+    public void grantPass(String applicationCode, String functionCode) throws UnifyException {
+        if (!openMode) {
+            doGrantPass(applicationCode, functionCode);
+        }
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected abstract void doGrantPass(String applicationCode, String functionCode) throws UnifyException;
+    protected abstract void doGrantPass(String applicationCode, String functionCode) throws UnifyException;
 }

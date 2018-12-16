@@ -23,7 +23,7 @@ package com.tcdng.unify.core.batch;
  */
 public interface XMLBatchFileReaderInputConstants {
 
-	String BATCH_TAG_NAME = "xmlBatchTagName";
+    String BATCH_TAG_NAME = "xmlBatchTagName";
 
-	String BATCHITEM_TAG_NAME = "xmlBatchItemTagName";
+    String BATCHITEM_TAG_NAME = "xmlBatchItemTagName";
 }

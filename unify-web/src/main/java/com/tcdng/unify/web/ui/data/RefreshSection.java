@@ -25,20 +25,20 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public class RefreshSection {
 
-	private Widget widget;
+    private Widget widget;
 
-	private String sectionPageName;
+    private String sectionPageName;
 
-	public RefreshSection(Widget widget, String sectionPageName) {
-		this.widget = widget;
-		this.sectionPageName = sectionPageName;
-	}
+    public RefreshSection(Widget widget, String sectionPageName) {
+        this.widget = widget;
+        this.sectionPageName = sectionPageName;
+    }
 
-	public Widget getWidget() {
-		return widget;
-	}
+    public Widget getWidget() {
+        return widget;
+    }
 
-	public String getSectionPageName() {
-		return sectionPageName;
-	}
+    public String getSectionPageName() {
+        return sectionPageName;
+    }
 }

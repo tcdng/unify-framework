@@ -33,22 +33,22 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 @Component("forwardresponse")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
-		@UplAttribute(name = "pathProperty", type = String.class) })
+        @UplAttribute(name = "pathProperty", type = String.class) })
 public class ForwardResponse extends AbstractJsonPageControllerResponse {
 
-	public ForwardResponse() {
-		super("forwardHdl");
-	}
+    public ForwardResponse() {
+        super("forwardHdl");
+    }
 
-	@Override
-	public void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		String path = getUplAttribute(String.class, "path");
-		if (StringUtils.isBlank(path)) {
-			String pathProperty = getUplAttribute(String.class, "pathProperty");
-			path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathProperty);
-		}
-		logDebug("Preparing forward response:controller = [{0}],  path = [{1}]", pageController.getName(), path);
-		writer.write(",");
-		writer.writeJsonPathVariable("loadDocument", path);
-	}
+    @Override
+    public void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        String path = getUplAttribute(String.class, "path");
+        if (StringUtils.isBlank(path)) {
+            String pathProperty = getUplAttribute(String.class, "pathProperty");
+            path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathProperty);
+        }
+        logDebug("Preparing forward response:controller = [{0}],  path = [{1}]", pageController.getName(), path);
+        writer.write(",");
+        writer.writeJsonPathVariable("loadDocument", path);
+    }
 }

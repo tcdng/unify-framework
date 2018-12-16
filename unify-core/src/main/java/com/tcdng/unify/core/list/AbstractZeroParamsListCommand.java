@@ -24,8 +24,8 @@ package com.tcdng.unify.core.list;
  */
 public abstract class AbstractZeroParamsListCommand extends AbstractListCommand<ZeroParams> {
 
-	public AbstractZeroParamsListCommand() {
-		super(ZeroParams.class);
-	}
+    public AbstractZeroParamsListCommand() {
+        super(ZeroParams.class);
+    }
 
 }

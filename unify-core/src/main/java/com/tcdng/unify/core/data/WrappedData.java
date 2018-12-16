@@ -23,9 +23,9 @@ package com.tcdng.unify.core.data;
  */
 public interface WrappedData<T> {
 
-	void copyData(WrappedData<T> data);
+    void copyData(WrappedData<T> data);
 
-	T getData();
+    T getData();
 
-	Class<T> getDataType();
+    Class<T> getDataType();
 }

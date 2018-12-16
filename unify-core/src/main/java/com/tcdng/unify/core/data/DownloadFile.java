@@ -23,28 +23,28 @@ package com.tcdng.unify.core.data;
  */
 public class DownloadFile {
 
-	private String filename;
+    private String filename;
 
-	private String contentType;
+    private String contentType;
 
-	byte[] data;
+    byte[] data;
 
-	public DownloadFile(String filename, String contentType, byte[] data) {
-		this.filename = filename;
-		this.contentType = contentType;
-		this.data = data;
-	}
+    public DownloadFile(String filename, String contentType, byte[] data) {
+        this.filename = filename;
+        this.contentType = contentType;
+        this.data = data;
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public byte[] getData() {
+        return data;
+    }
 
 }

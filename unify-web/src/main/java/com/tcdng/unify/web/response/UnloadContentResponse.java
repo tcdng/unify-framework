@@ -32,32 +32,32 @@ import com.tcdng.unify.web.ui.panel.ContentPanel;
 @Component("unloadcontentresponse")
 public class UnloadContentResponse extends AbstractJsonPageControllerResponse {
 
-	public UnloadContentResponse() {
-		super("loadContentHdl");// Same handler as load content
-	}
+    public UnloadContentResponse() {
+        super("loadContentHdl");// Same handler as load content
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing unload content response: controller = [{0}]", pageController.getName());
-		if (getRequestContextUtil().isRemoteViewer()) {
-			writer.write(",\"closeRemoteTab\":true");
-		} else {
-			Document document = getRequestContextUtil().getRequestDocument();
-			appendRefreshPageJSON(writer, document, pageController);
-			writer.write(",");
-			appendRefreshAttributesJson(writer, true);
-			ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
-			writer.write(",\"busyIndicator\":\"").write(contentPanel.getBusyIndicatorId()).write("\"");
-			writer.write(",\"scrollToTop\":true");
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing unload content response: controller = [{0}]", pageController.getName());
+        if (getRequestContextUtil().isRemoteViewer()) {
+            writer.write(",\"closeRemoteTab\":true");
+        } else {
+            Document document = getRequestContextUtil().getRequestDocument();
+            appendRefreshPageJSON(writer, document, pageController);
+            writer.write(",");
+            appendRefreshAttributesJson(writer, true);
+            ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
+            writer.write(",\"busyIndicator\":\"").write(contentPanel.getBusyIndicatorId()).write("\"");
+            writer.write(",\"scrollToTop\":true");
+        }
+    }
 
-	private void appendRefreshPageJSON(ResponseWriter writer, Document document, PageController pageController)
-			throws UnifyException {
-		writer.write(",\"refreshPanels\":[");
-		ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
-		contentPanel.removeContent(pageController);
-		writer.writeJsonPanel(contentPanel, true);
-		writer.write("]");
-	}
+    private void appendRefreshPageJSON(ResponseWriter writer, Document document, PageController pageController)
+            throws UnifyException {
+        writer.write(",\"refreshPanels\":[");
+        ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
+        contentPanel.removeContent(pageController);
+        writer.writeJsonPanel(contentPanel, true);
+        writer.write("]");
+    }
 }

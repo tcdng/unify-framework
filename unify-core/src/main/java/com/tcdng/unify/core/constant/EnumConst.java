@@ -23,7 +23,7 @@ package com.tcdng.unify.core.constant;
  */
 public interface EnumConst {
 
-	String code();
+    String code();
 
-	String name();
+    String name();
 }

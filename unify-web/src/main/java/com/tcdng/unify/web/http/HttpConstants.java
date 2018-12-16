@@ -22,5 +22,5 @@ package com.tcdng.unify.web.http;
  * @since 1.0
  */
 public interface HttpConstants {
-	String USER_SESSION = "USER_SESSION";
+    String USER_SESSION = "USER_SESSION";
 }

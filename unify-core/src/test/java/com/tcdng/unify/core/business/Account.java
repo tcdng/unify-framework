@@ -28,35 +28,35 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
 @Table
 public class Account extends AbstractTestEntity {
 
-	@Column
-	private String accountNo;
+    @Column
+    private String accountNo;
 
-	@Column
-	private String accountName;
+    @Column
+    private String accountName;
 
-	public Account(String accountNo, String accountName) {
-		this.accountNo = accountNo;
-		this.accountName = accountName;
-	}
+    public Account(String accountNo, String accountName) {
+        this.accountNo = accountNo;
+        this.accountName = accountName;
+    }
 
-	public Account() {
+    public Account() {
 
-	}
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public String getAccountNo() {
+        return accountNo;
+    }
 
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 
-	public String getAccountName() {
-		return accountName;
-	}
+    public String getAccountName() {
+        return accountName;
+    }
 
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
 }

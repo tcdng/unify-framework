@@ -28,19 +28,19 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "periodicexecution-task")
 public class PeriodicExecutionTask extends AbstractTask {
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		try {
-			if (!taskMonitor.isCanceled()) {
-				PeriodicExecutionInfo periodicExecutionInfo = input.getParam(PeriodicExecutionInfo.class,
-						PeriodicExecutionTaskConstants.PERIODICEXECUTIONINFO);
-				UnifyComponent unifyComponent = getComponent(periodicExecutionInfo.getComponentName());
-				periodicExecutionInfo.getMethod().invoke(unifyComponent, taskMonitor);
-			}
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-	}
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        try {
+            if (!taskMonitor.isCanceled()) {
+                PeriodicExecutionInfo periodicExecutionInfo = input.getParam(PeriodicExecutionInfo.class,
+                        PeriodicExecutionTaskConstants.PERIODICEXECUTIONINFO);
+                UnifyComponent unifyComponent = getComponent(periodicExecutionInfo.getComponentName());
+                periodicExecutionInfo.getMethod().invoke(unifyComponent, taskMonitor);
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+    }
 }

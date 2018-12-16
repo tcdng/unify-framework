@@ -27,34 +27,34 @@ import com.tcdng.unify.core.annotation.Table;
 @Table
 public class ServerConfig extends AbstractTestEntity {
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	@Column(length = 128, transformer = "twoway-stringcryptograph")
-	private String password;
+    @Column(length = 128, transformer = "twoway-stringcryptograph")
+    private String password;
 
-	public ServerConfig() {
+    public ServerConfig() {
 
-	}
+    }
 
-	public ServerConfig(String name, String password) {
-		this.name = name;
-		this.password = password;
-	}
+    public ServerConfig(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

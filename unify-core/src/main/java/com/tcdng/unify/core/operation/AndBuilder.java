@@ -23,22 +23,22 @@ package com.tcdng.unify.core.operation;
  */
 public class AndBuilder extends CriteriaBuilder {
 
-	public AndBuilder and(CriteriaBuilder criteriaBuilder) {
-		add(criteriaBuilder.getCriteria());
-		return this;
-	}
+    public AndBuilder and(CriteriaBuilder criteriaBuilder) {
+        add(criteriaBuilder.getCriteria());
+        return this;
+    }
 
-	public AndBuilder and(Criteria criteria) {
-		add(criteria);
-		return this;
-	}
+    public AndBuilder and(Criteria criteria) {
+        add(criteria);
+        return this;
+    }
 
-	protected CriteriaBuilder add(Criteria criteria) {
-		if (this.criteria == null) {
-			this.criteria = criteria;
-		} else {
-			this.criteria = new And(this.criteria, criteria);
-		}
-		return this;
-	}
+    protected CriteriaBuilder add(Criteria criteria) {
+        if (this.criteria == null) {
+            this.criteria = criteria;
+        } else {
+            this.criteria = new And(this.criteria, criteria);
+        }
+        return this;
+    }
 }

@@ -27,16 +27,16 @@ import org.junit.Test;
  */
 public class WebUtilsTest {
 
-	@Test
-	public void testGetBeanIndexedPathFromPath() throws Exception {
-		assertEquals("/calculator:10/performAddition",
-				WebUtils.generateBeanIndexedPathFromPath("/calculator/performAddition", 10));
-	}
+    @Test
+    public void testGetBeanIndexedPathFromPath() throws Exception {
+        assertEquals("/calculator:10/performAddition",
+                WebUtils.generateBeanIndexedPathFromPath("/calculator/performAddition", 10));
+    }
 
-	@Test
-	public void testGetPathFromBeanIndexedPath() throws Exception {
-		assertEquals("/calculator/performAddition",
-				WebUtils.extractPathFromBeanIndexedPath("/calculator:10/performAddition"));
-		assertEquals("/calculator", WebUtils.extractPathFromBeanIndexedPath("/calculator:10"));
-	}
+    @Test
+    public void testGetPathFromBeanIndexedPath() throws Exception {
+        assertEquals("/calculator/performAddition",
+                WebUtils.extractPathFromBeanIndexedPath("/calculator:10/performAddition"));
+        assertEquals("/calculator", WebUtils.extractPathFromBeanIndexedPath("/calculator:10"));
+    }
 }

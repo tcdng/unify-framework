@@ -23,13 +23,13 @@ package com.tcdng.unify.core.report;
  */
 public class ReportTable {
 
-	private String name;
+    private String name;
 
-	public ReportTable(String name) {
-		this.name = name;
-	}
+    public ReportTable(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 }

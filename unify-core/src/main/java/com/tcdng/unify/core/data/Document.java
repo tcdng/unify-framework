@@ -25,5 +25,5 @@ import com.tcdng.unify.core.database.Entity;
  */
 public interface Document extends Entity {
 
-	Object getOwnerId();
+    Object getOwnerId();
 }

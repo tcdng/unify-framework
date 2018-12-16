@@ -37,43 +37,43 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component("dayinweeklist")
 public class DayInWeekListCommand extends AbstractZeroParamsListCommand {
 
-	private static final String[] SHORT_DAYS;
+    private static final String[] SHORT_DAYS;
 
-	static {
-		SHORT_DAYS = new String[7];
-		SHORT_DAYS[0] = DayInWeek.SUNDAY.code();
-		SHORT_DAYS[1] = DayInWeek.MONDAY.code();
-		SHORT_DAYS[2] = DayInWeek.TUESDAY.code();
-		SHORT_DAYS[3] = DayInWeek.WEDNESDAY.code();
-		SHORT_DAYS[4] = DayInWeek.THURSDAY.code();
-		SHORT_DAYS[5] = DayInWeek.FRIDAY.code();
-		SHORT_DAYS[6] = DayInWeek.SATURDAY.code();
+    static {
+        SHORT_DAYS = new String[7];
+        SHORT_DAYS[0] = DayInWeek.SUNDAY.code();
+        SHORT_DAYS[1] = DayInWeek.MONDAY.code();
+        SHORT_DAYS[2] = DayInWeek.TUESDAY.code();
+        SHORT_DAYS[3] = DayInWeek.WEDNESDAY.code();
+        SHORT_DAYS[4] = DayInWeek.THURSDAY.code();
+        SHORT_DAYS[5] = DayInWeek.FRIDAY.code();
+        SHORT_DAYS[6] = DayInWeek.SATURDAY.code();
 
-	}
-	private FactoryMap<Locale, List<? extends Listable>> dayInWeek;
+    }
+    private FactoryMap<Locale, List<? extends Listable>> dayInWeek;
 
-	public DayInWeekListCommand() {
-		dayInWeek = new FactoryMap<Locale, List<? extends Listable>>() {
+    public DayInWeekListCommand() {
+        dayInWeek = new FactoryMap<Locale, List<? extends Listable>>() {
 
-			@Override
-			protected List<? extends Listable> create(Locale locale, Object... params) throws Exception {
-				List<ListData> list = new ArrayList<ListData>();
+            @Override
+            protected List<? extends Listable> create(Locale locale, Object... params) throws Exception {
+                List<ListData> list = new ArrayList<ListData>();
 
-				DateFormatSymbols dfs = new DateFormatSymbols(locale);
-				String weekdays[] = dfs.getWeekdays();
-				if (weekdays != null && weekdays.length >= SHORT_DAYS.length) {
-					for (int i = 0; i < SHORT_DAYS.length;) {
-						list.add(new ListData(SHORT_DAYS[i], StringUtils.capitalizeFirstLetter(weekdays[++i])));
-					}
-				}
-				return list;
-			}
+                DateFormatSymbols dfs = new DateFormatSymbols(locale);
+                String weekdays[] = dfs.getWeekdays();
+                if (weekdays != null && weekdays.length >= SHORT_DAYS.length) {
+                    for (int i = 0; i < SHORT_DAYS.length;) {
+                        list.add(new ListData(SHORT_DAYS[i], StringUtils.capitalizeFirstLetter(weekdays[++i])));
+                    }
+                }
+                return list;
+            }
 
-		};
-	}
+        };
+    }
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return dayInWeek.get(locale);
-	}
+    @Override
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        return dayInWeek.get(locale);
+    }
 }

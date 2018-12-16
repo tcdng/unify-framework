@@ -25,15 +25,15 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public abstract class AbstractBatchFileReaderWriterFactory extends AbstractUnifyComponent
-		implements BatchFileReaderWriterFactory {
+        implements BatchFileReaderWriterFactory {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

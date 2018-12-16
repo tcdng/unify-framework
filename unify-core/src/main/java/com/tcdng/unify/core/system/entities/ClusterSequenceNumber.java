@@ -31,52 +31,52 @@ import com.tcdng.unify.core.annotation.Version;
 @Table(name = "CLUSTERSEQ")
 public class ClusterSequenceNumber extends AbstractSystemEntity {
 
-	@Id(name = "SEQUENCE_NM", length = 256)
-	private String sequenceName;
+    @Id(name = "SEQUENCE_NM", length = 256)
+    private String sequenceName;
 
-	@Column
-	private long nextBlock;
+    @Column
+    private long nextBlock;
 
-	@Column
-	private int blockSize;
+    @Column
+    private int blockSize;
 
-	@Version
-	private long versionNo;
+    @Version
+    private long versionNo;
 
-	@Override
-	public Object getId() {
-		return sequenceName;
-	}
+    @Override
+    public Object getId() {
+        return sequenceName;
+    }
 
-	public String getSequenceName() {
-		return sequenceName;
-	}
+    public String getSequenceName() {
+        return sequenceName;
+    }
 
-	public void setSequenceName(String sequenceName) {
-		this.sequenceName = sequenceName;
-	}
+    public void setSequenceName(String sequenceName) {
+        this.sequenceName = sequenceName;
+    }
 
-	public long getNextBlock() {
-		return nextBlock;
-	}
+    public long getNextBlock() {
+        return nextBlock;
+    }
 
-	public void setNextBlock(long nextBlock) {
-		this.nextBlock = nextBlock;
-	}
+    public void setNextBlock(long nextBlock) {
+        this.nextBlock = nextBlock;
+    }
 
-	public int getBlockSize() {
-		return blockSize;
-	}
+    public int getBlockSize() {
+        return blockSize;
+    }
 
-	public void setBlockSize(int blockSize) {
-		this.blockSize = blockSize;
-	}
+    public void setBlockSize(int blockSize) {
+        this.blockSize = blockSize;
+    }
 
-	public long getVersionNo() {
-		return versionNo;
-	}
+    public long getVersionNo() {
+        return versionNo;
+    }
 
-	public void setVersionNo(long versionNo) {
-		this.versionNo = versionNo;
-	}
+    public void setVersionNo(long versionNo) {
+        this.versionNo = versionNo;
+    }
 }

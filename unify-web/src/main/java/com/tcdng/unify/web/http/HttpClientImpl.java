@@ -31,13 +31,13 @@ import com.tcdng.unify.web.WebApplicationComponents;
 @Component(WebApplicationComponents.APPLICATION_HTTPCLIENT)
 public class HttpClientImpl extends AbstractHttpClient {
 
-	@Override
-	protected HttpURLConnection getHttpURLConnection(String url) throws UnifyException {
-		try {
-			return (HttpURLConnection) new URL(url).openConnection();
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    protected HttpURLConnection getHttpURLConnection(String url) throws UnifyException {
+        try {
+            return (HttpURLConnection) new URL(url).openConnection();
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 }

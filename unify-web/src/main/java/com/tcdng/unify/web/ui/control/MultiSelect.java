@@ -28,27 +28,27 @@ import com.tcdng.unify.web.ui.AbstractListControl;
 @Component("ui-multiselect")
 public class MultiSelect extends AbstractListControl {
 
-	@Override
-	public boolean isContainerDisabled() throws UnifyException {
-		return super.isContainerDisabled() || !isContainerEditable();
-	}
+    @Override
+    public boolean isContainerDisabled() throws UnifyException {
+        return super.isContainerDisabled() || !isContainerEditable();
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return true;
-	}
+    @Override
+    public boolean isMultiple() {
+        return true;
+    }
 
-	@Override
-	public boolean isSupportReadOnly() {
-		return false;
-	}
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
 
-	public String getFramePanelId() throws UnifyException {
-		return getPrefixedId("frm_");
-	}
+    public String getFramePanelId() throws UnifyException {
+        return getPrefixedId("frm_");
+    }
 
-	public String getListPanelId() throws UnifyException {
-		return getPrefixedId("lst_");
-	}
+    public String getListPanelId() throws UnifyException {
+        return getPrefixedId("lst_");
+    }
 
 }

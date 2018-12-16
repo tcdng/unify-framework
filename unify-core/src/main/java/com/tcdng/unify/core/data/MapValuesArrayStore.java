@@ -27,29 +27,29 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class MapValuesArrayStore extends AbstractArrayValueStore<MapValues> {
 
-	public MapValuesArrayStore(MapValues[] storage, int dataIndex) {
-		super(storage, dataIndex);
-	}
+    public MapValuesArrayStore(MapValues[] storage, int dataIndex) {
+        super(storage, dataIndex);
+    }
 
-	@Override
-	protected boolean doSettable(MapValues storage, String property) throws UnifyException {
-		return storage != null && storage.isMapValue(property);
-	}
+    @Override
+    protected boolean doSettable(MapValues storage, String property) throws UnifyException {
+        return storage != null && storage.isMapValue(property);
+    }
 
-	@Override
-	protected boolean doGettable(MapValues storage, String property) throws UnifyException {
-		return storage != null && storage.isMapValue(property);
-	}
+    @Override
+    protected boolean doGettable(MapValues storage, String property) throws UnifyException {
+        return storage != null && storage.isMapValue(property);
+    }
 
-	@Override
-	protected Object doRetrieve(MapValues storage, String property) throws UnifyException {
-		return storage.getValue(property);
-	}
+    @Override
+    protected Object doRetrieve(MapValues storage, String property) throws UnifyException {
+        return storage.getValue(property);
+    }
 
-	@Override
-	protected void doStore(MapValues storage, String property, Object value, Formatter<?> formatter)
-			throws UnifyException {
-		storage.setValue(property, value, formatter);
-	}
+    @Override
+    protected void doStore(MapValues storage, String property, Object value, Formatter<?> formatter)
+            throws UnifyException {
+        storage.setValue(property, value, formatter);
+    }
 
 }

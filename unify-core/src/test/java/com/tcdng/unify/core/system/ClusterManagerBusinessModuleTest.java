@@ -40,90 +40,90 @@ import com.tcdng.unify.core.util.ThreadUtils;
  */
 public class ClusterManagerBusinessModuleTest extends AbstractUnifyComponentTest {
 
-	public ClusterManagerBusinessModuleTest() {
-		super(true); // Cluster mode
-	}
+    public ClusterManagerBusinessModuleTest() {
+        super(true); // Cluster mode
+    }
 
-	@Test
-	public void testSingleMemberSync() throws Exception {
-		ClusterManagerBusinessModule cmModule = (ClusterManagerBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_CLUSTERMANAGER);
-		String lockOwnerId = cmModule.getLockOwnerId(false);
-		cmModule.beginSynchronization("computeSalaryLock");
-		List<ClusterLock> clusterSyncList = cmModule
-				.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
-		assertEquals(1, clusterSyncList.size());
-		ClusterLock clusterLock = clusterSyncList.get(0);
-		assertEquals("computeSalaryLock", clusterLock.getLockName());
-		assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
-		assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
+    @Test
+    public void testSingleMemberSync() throws Exception {
+        ClusterManagerBusinessModule cmModule = (ClusterManagerBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_CLUSTERMANAGER);
+        String lockOwnerId = cmModule.getLockOwnerId(false);
+        cmModule.beginSynchronization("computeSalaryLock");
+        List<ClusterLock> clusterSyncList = cmModule
+                .findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
+        assertEquals(1, clusterSyncList.size());
+        ClusterLock clusterLock = clusterSyncList.get(0);
+        assertEquals("computeSalaryLock", clusterLock.getLockName());
+        assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
+        assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
 
-		cmModule.endSynchronization("computeSalaryLock");
-		clusterSyncList = cmModule.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
-		assertEquals(1, clusterSyncList.size());
-		clusterLock = clusterSyncList.get(0);
-		assertNull(clusterLock.getCurrentOwner());
-		assertEquals(Integer.valueOf(0), clusterLock.getLockCount());
-	}
+        cmModule.endSynchronization("computeSalaryLock");
+        clusterSyncList = cmModule.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
+        assertEquals(1, clusterSyncList.size());
+        clusterLock = clusterSyncList.get(0);
+        assertNull(clusterLock.getCurrentOwner());
+        assertEquals(Integer.valueOf(0), clusterLock.getLockCount());
+    }
 
-	@Test
-	public void testSingleMemberWithRecursiveSync() throws Exception {
-		ClusterManagerBusinessModule cmModule = (ClusterManagerBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_CLUSTERMANAGER);
-		String lockOwnerId = cmModule.getLockOwnerId(false);
-		cmModule.beginSynchronization("generateResultLock");
-		cmModule.beginSynchronization("generateResultLock");
-		cmModule.beginSynchronization("generateResultLock");
-		List<ClusterLock> clusterSyncList = cmModule
-				.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
-		assertEquals(1, clusterSyncList.size());
-		ClusterLock clusterLock = clusterSyncList.get(0);
-		assertEquals("generateResultLock", clusterLock.getLockName());
-		assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
-		assertEquals(Integer.valueOf(3), clusterLock.getLockCount());
+    @Test
+    public void testSingleMemberWithRecursiveSync() throws Exception {
+        ClusterManagerBusinessModule cmModule = (ClusterManagerBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_CLUSTERMANAGER);
+        String lockOwnerId = cmModule.getLockOwnerId(false);
+        cmModule.beginSynchronization("generateResultLock");
+        cmModule.beginSynchronization("generateResultLock");
+        cmModule.beginSynchronization("generateResultLock");
+        List<ClusterLock> clusterSyncList = cmModule
+                .findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+        assertEquals(1, clusterSyncList.size());
+        ClusterLock clusterLock = clusterSyncList.get(0);
+        assertEquals("generateResultLock", clusterLock.getLockName());
+        assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
+        assertEquals(Integer.valueOf(3), clusterLock.getLockCount());
 
-		cmModule.endSynchronization("generateResultLock");
-		cmModule.endSynchronization("generateResultLock");
-		cmModule.endSynchronization("generateResultLock");
-		clusterSyncList = cmModule.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
-		assertEquals(1, clusterSyncList.size());
-		clusterLock = clusterSyncList.get(0);
-		assertNull(clusterLock.getCurrentOwner());
-		assertEquals(Integer.valueOf(0), clusterLock.getLockCount());
-	}
+        cmModule.endSynchronization("generateResultLock");
+        cmModule.endSynchronization("generateResultLock");
+        cmModule.endSynchronization("generateResultLock");
+        clusterSyncList = cmModule.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+        assertEquals(1, clusterSyncList.size());
+        clusterLock = clusterSyncList.get(0);
+        assertNull(clusterLock.getCurrentOwner());
+        assertEquals(Integer.valueOf(0), clusterLock.getLockCount());
+    }
 
-	@Test
-	public void testClusterSynchronizationWithSharedData() throws Exception {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-		TaskMonitor[] taskMonitor = new TaskMonitor[4];
-		for (int i = 0; i < taskMonitor.length; i++) {
-			taskMonitor[i] = taskManager.startTask("clustershareddata-test", parameters, true, null);
-		}
+    @Test
+    public void testClusterSynchronizationWithSharedData() throws Exception {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
+        TaskMonitor[] taskMonitor = new TaskMonitor[4];
+        for (int i = 0; i < taskMonitor.length; i++) {
+            taskMonitor[i] = taskManager.startTask("clustershareddata-test", parameters, true, null);
+        }
 
-		boolean pending = true;
-		do {
-			ThreadUtils.sleep(30);
-			pending = false;
-			for (int i = 0; i < taskMonitor.length; i++) {
-				pending |= taskMonitor[i].isPending();
-			}
-		} while (pending);
+        boolean pending = true;
+        do {
+            ThreadUtils.sleep(30);
+            pending = false;
+            for (int i = 0; i < taskMonitor.length; i++) {
+                pending |= taskMonitor[i].isPending();
+            }
+        } while (pending);
 
-		for (int i = 0; i < taskMonitor.length; i++) {
-			if (taskMonitor[i].isExceptions()) {
-				throw taskMonitor[i].getExceptions()[0];
-			}
-		}
-	}
+        for (int i = 0; i < taskMonitor.length; i++) {
+            if (taskMonitor[i].isExceptions()) {
+                throw taskMonitor[i].getExceptions()[0];
+            }
+        }
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

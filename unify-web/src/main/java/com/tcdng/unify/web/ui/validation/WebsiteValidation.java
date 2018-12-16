@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractRegexPageValidation;
 @Component("ui-websitevalidation")
 public class WebsiteValidation extends AbstractRegexPageValidation {
 
-	public WebsiteValidation() {
-		super("website", "website.regex", "validation.invalidwebsite");
-	}
+    public WebsiteValidation() {
+        super("website", "website.regex", "validation.invalidwebsite");
+    }
 }

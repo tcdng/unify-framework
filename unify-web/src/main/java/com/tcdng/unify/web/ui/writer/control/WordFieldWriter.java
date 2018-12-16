@@ -32,8 +32,8 @@ import com.tcdng.unify.web.ui.control.WordField;
 @Component("wordfield-writer")
 public class WordFieldWriter extends TextFieldWriter {
 
-	@Override
-	protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-		writer.writeWordFormatRegex();
-	}
+    @Override
+    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+        writer.writeWordFormatRegex();
+    }
 }

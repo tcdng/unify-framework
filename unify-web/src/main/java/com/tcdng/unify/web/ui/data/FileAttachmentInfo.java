@@ -25,67 +25,67 @@ import com.tcdng.unify.core.constant.FileAttachmentType;
  */
 public class FileAttachmentInfo {
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private String filename;
+    private String filename;
 
-	private FileAttachmentType type;
+    private FileAttachmentType type;
 
-	private byte[] attachment;
+    private byte[] attachment;
 
-	public FileAttachmentInfo(String name, String description, FileAttachmentType type) {
-		this.name = name;
-		this.description = description;
-		this.type = type;
-	}
+    public FileAttachmentInfo(String name, String description, FileAttachmentType type) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+    }
 
-	public FileAttachmentInfo(FileAttachmentType type) {
-		this.type = type;
-	}
+    public FileAttachmentInfo(FileAttachmentType type) {
+        this.type = type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public FileAttachmentType getType() {
-		return type;
-	}
+    public FileAttachmentType getType() {
+        return type;
+    }
 
-	public String getAccept() {
-		return this.type.extensions();
-	}
+    public String getAccept() {
+        return this.type.extensions();
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
-	public byte[] getAttachment() {
-		return attachment;
-	}
+    public byte[] getAttachment() {
+        return attachment;
+    }
 
-	public void setAttachment(byte[] attachment) {
-		this.attachment = attachment;
-	}
+    public void setAttachment(byte[] attachment) {
+        this.attachment = attachment;
+    }
 
-	public boolean isEmpty() {
-		return this.filename == null;
-	}
+    public boolean isEmpty() {
+        return this.filename == null;
+    }
 
-	public int size() {
-		if (this.attachment != null) {
-			return this.attachment.length;
-		}
+    public int size() {
+        if (this.attachment != null) {
+            return this.attachment.length;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 }

@@ -24,16 +24,16 @@ package com.tcdng.unify.web.ui;
  */
 public enum PushType {
 
-	CHECKBOX("pushc_"), RADIO("pushr_"), GROUP("pushg_");
+    CHECKBOX("pushc_"), RADIO("pushr_"), GROUP("pushg_");
 
-	private String prefix;
+    private String prefix;
 
-	private PushType(String prefix) {
-		this.prefix = prefix;
-	}
+    private PushType(String prefix) {
+        this.prefix = prefix;
+    }
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public String getPrefix() {
+        return prefix;
+    }
 
 }

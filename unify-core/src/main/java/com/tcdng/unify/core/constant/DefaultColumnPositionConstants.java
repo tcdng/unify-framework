@@ -23,13 +23,13 @@ package com.tcdng.unify.core.constant;
  */
 public interface DefaultColumnPositionConstants {
 
-	int ID_POSITION = 0;
+    int ID_POSITION = 0;
 
-	int FK_POSITION = 2;
+    int FK_POSITION = 2;
 
-	int COLUMN_POSITION = 4;
+    int COLUMN_POSITION = 4;
 
-	int LIST_POSITION = 4;
+    int LIST_POSITION = 4;
 
-	int VERSION_POSITION = 8;
+    int VERSION_POSITION = 8;
 }

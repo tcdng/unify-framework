@@ -25,24 +25,24 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public abstract class RemoteCallParams {
 
-	private String methodCode;
+    private String methodCode;
 
-	private String clientAppCode;
+    private String clientAppCode;
 
-	public RemoteCallParams(String methodCode) {
-		this.methodCode = methodCode;
-	}
+    public RemoteCallParams(String methodCode) {
+        this.methodCode = methodCode;
+    }
 
-	public String getClientAppCode() {
-		return clientAppCode;
-	}
+    public String getClientAppCode() {
+        return clientAppCode;
+    }
 
-	@XmlElement(required = true)
-	public void setClientAppCode(String clientAppCode) {
-		this.clientAppCode = clientAppCode;
-	}
+    @XmlElement(required = true)
+    public void setClientAppCode(String clientAppCode) {
+        this.clientAppCode = clientAppCode;
+    }
 
-	public String methodCode() {
-		return methodCode;
-	}
+    public String methodCode() {
+        return methodCode;
+    }
 }

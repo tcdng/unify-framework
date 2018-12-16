@@ -27,24 +27,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum ListParamType implements EnumConst {
 
-	IMMEDIATE("IMM"), CONTROL("CTRL"), PANEL("PNL");
+    IMMEDIATE("IMM"), CONTROL("CTRL"), PANEL("PNL");
 
-	private final String code;
+    private final String code;
 
-	private ListParamType(String code) {
-		this.code = code;
-	}
+    private ListParamType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static ListParamType fromCode(String code) {
-		return EnumUtils.fromCode(ListParamType.class, code);
-	}
+    public static ListParamType fromCode(String code) {
+        return EnumUtils.fromCode(ListParamType.class, code);
+    }
 
-	public static ListParamType fromName(String name) {
-		return EnumUtils.fromName(ListParamType.class, name);
-	}
+    public static ListParamType fromName(String name) {
+        return EnumUtils.fromName(ListParamType.class, name);
+    }
 }

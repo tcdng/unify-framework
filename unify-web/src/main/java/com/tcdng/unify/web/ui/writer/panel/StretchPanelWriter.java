@@ -34,37 +34,37 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 @Component("stretchpanel-writer")
 public class StretchPanelWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		StretchPanel panel = (StretchPanel) widget;
-		writer.write("<div");
-		writeTagId(writer, panel);
-		writeTagStyleClass(writer, panel.getStyleClass());
-		writeTagStyle(writer, "width:100%;height:100%;overflow:auto;");
-		writer.write(">");
-		writeInnerStructureAndContent(writer, panel);
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        StretchPanel panel = (StretchPanel) widget;
+        writer.write("<div");
+        writeTagId(writer, panel);
+        writeTagStyleClass(writer, panel.getStyleClass());
+        writeTagStyle(writer, "width:100%;height:100%;overflow:auto;");
+        writer.write(">");
+        writeInnerStructureAndContent(writer, panel);
+        writer.write("</div>");
+    }
 
-	@Override
-	public void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-		StretchPanel stretchPanel = (StretchPanel) panel;
-		writer.write("<div id=\"").write(stretchPanel.getContentPageName());
-		writer.write("\" style=\"width:100%;height:100%;display:none;\">");
-		super.writeInnerStructureAndContent(writer, panel);
-		writer.write("</div>");
-	}
+    @Override
+    public void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+        StretchPanel stretchPanel = (StretchPanel) panel;
+        writer.write("<div id=\"").write(stretchPanel.getContentPageName());
+        writer.write("\" style=\"width:100%;height:100%;display:none;\">");
+        super.writeInnerStructureAndContent(writer, panel);
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
-		StretchPanel panel = (StretchPanel) widget;
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        StretchPanel panel = (StretchPanel) widget;
 
-		// Append switch panel rigging
-		writer.write("ux.rigStretchPanel({");
-		writer.write("\"pId\":\"").write(panel.getId()).write('"');
-		writer.write(",\"pContId\":\"").write(panel.getContentPageName());
-		writer.write("\"});");
-	}
+        // Append switch panel rigging
+        writer.write("ux.rigStretchPanel({");
+        writer.write("\"pId\":\"").write(panel.getId()).write('"');
+        writer.write(",\"pContId\":\"").write(panel.getContentPageName());
+        writer.write("\"});");
+    }
 
 }

@@ -25,5 +25,5 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface PanelEventListener {
 
-	void notify(Panel panel, String eventCode) throws UnifyException;
+    void notify(Panel panel, String eventCode) throws UnifyException;
 }

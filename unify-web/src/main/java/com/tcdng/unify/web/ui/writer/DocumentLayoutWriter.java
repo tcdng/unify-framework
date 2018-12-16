@@ -29,32 +29,32 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface DocumentLayoutWriter extends UplComponentWriter {
 
-	/**
-	 * Writes structure and content of a document using this layout.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param layout
-	 *            the layout object
-	 * @param document
-	 *            the document
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
-			throws UnifyException;
+    /**
+     * Writes structure and content of a document using this layout.
+     * 
+     * @param writer
+     *            the response writer
+     * @param layout
+     *            the layout object
+     * @param document
+     *            the document
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
+            throws UnifyException;
 
-	/**
-	 * Writes behaviour of this layout.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param layout
-	 *            the layout object
-	 * @param document
-	 *            the document
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException;
+    /**
+     * Writes behaviour of this layout.
+     * 
+     * @param writer
+     *            the response writer
+     * @param layout
+     *            the layout object
+     * @param document
+     *            the document
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException;
 }

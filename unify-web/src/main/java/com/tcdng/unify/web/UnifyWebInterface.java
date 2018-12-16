@@ -25,7 +25,7 @@ import com.tcdng.unify.core.UnifyContainerInterface;
  */
 public interface UnifyWebInterface extends UnifyContainerInterface {
 
-	String getScheme();
+    String getScheme();
 
-	String getContextPath();
+    String getContextPath();
 }

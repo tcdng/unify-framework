@@ -31,6 +31,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UplBinding {
-	/** The source UPL document */
-	String value();
+    /** The source UPL document */
+    String value();
 }

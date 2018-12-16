@@ -35,44 +35,44 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
  */
 public final class AnnotationUtils {
 
-	public static String getAnnotationString(String value) {
-		if (AnnotationConstants.NONE.equals(value)) {
-			return null;
-		}
-		return value;
-	}
+    public static String getAnnotationString(String value) {
+        if (AnnotationConstants.NONE.equals(value)) {
+            return null;
+        }
+        return value;
+    }
 
-	public static String getComponentName(Class<?> clazz) throws UnifyException {
-		String name = null;
-		Component ca = clazz.getAnnotation(Component.class);
-		if (ca != null) {
-			name = getAnnotationString(ca.value());
-			if (StringUtils.isBlank(name)) {
-				name = getAnnotationString(ca.name());
-			}
-		}
+    public static String getComponentName(Class<?> clazz) throws UnifyException {
+        String name = null;
+        Component ca = clazz.getAnnotation(Component.class);
+        if (ca != null) {
+            name = getAnnotationString(ca.value());
+            if (StringUtils.isBlank(name)) {
+                name = getAnnotationString(ca.name());
+            }
+        }
 
-		return name;
-	}
+        return name;
+    }
 
-	public static List<Parameter> getParameters(Class<?> typeClazz) throws UnifyException {
-		Map<String, Parameter> map = new LinkedHashMap<String, Parameter>();
-		Schedulable sa = typeClazz.getAnnotation(Schedulable.class);
-		if (sa != null) {
-			for (Parameter pa : sa.parameters()) {
-				map.put(pa.name(), pa);
-			}
-		}
+    public static List<Parameter> getParameters(Class<?> typeClazz) throws UnifyException {
+        Map<String, Parameter> map = new LinkedHashMap<String, Parameter>();
+        Schedulable sa = typeClazz.getAnnotation(Schedulable.class);
+        if (sa != null) {
+            for (Parameter pa : sa.parameters()) {
+                map.put(pa.name(), pa);
+            }
+        }
 
-		for (Class<?> type : ReflectUtils.getClassHierachyList(typeClazz)) {
-			Parameters paa = type.getAnnotation(Parameters.class);
-			if (paa != null) {
-				for (Parameter pa : paa.value()) {
-					map.put(pa.name(), pa);
-				}
-			}
-		}
+        for (Class<?> type : ReflectUtils.getClassHierachyList(typeClazz)) {
+            Parameters paa = type.getAnnotation(Parameters.class);
+            if (paa != null) {
+                for (Parameter pa : paa.value()) {
+                    map.put(pa.name(), pa);
+                }
+            }
+        }
 
-		return new ArrayList<Parameter>(map.values());
-	}
+        return new ArrayList<Parameter>(map.values());
+    }
 }

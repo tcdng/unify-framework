@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class NotBetween extends Criteria {
 
-	public NotBetween(String field, Object lowerValue, Object upperValue) {
-		super(Operator.NOT_BETWEEN, field, new Object[] { lowerValue, upperValue });
-	}
+    public NotBetween(String field, Object lowerValue, Object upperValue) {
+        super(Operator.NOT_BETWEEN, field, new Object[] { lowerValue, upperValue });
+    }
 }

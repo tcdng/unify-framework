@@ -27,31 +27,31 @@ import com.tcdng.unify.web.ui.AbstractMultiControl.ChildControlInfo;
  * @since 1.0
  */
 public interface MultiControl extends Control {
-	/**
-	 * Adds a child control to this component.
-	 * 
-	 * @param control
-	 *            the child control to add
-	 * @throws UnifyException
-	 *             if and error occurs
-	 */
-	void addChildControl(Control control) throws UnifyException;
+    /**
+     * Adds a child control to this component.
+     * 
+     * @param control
+     *            the child control to add
+     * @throws UnifyException
+     *             if and error occurs
+     */
+    void addChildControl(Control control) throws UnifyException;
 
-	/**
-	 * Returns child control information.
-	 * 
-	 * @param childId
-	 *            the child control ID
-	 */
-	ChildControlInfo getChildControlInfo(String childId);
+    /**
+     * Returns child control information.
+     * 
+     * @param childId
+     *            the child control ID
+     */
+    ChildControlInfo getChildControlInfo(String childId);
 
-	/**
-	 * Returns all child control information.
-	 */
-	Collection<ChildControlInfo> getChildControlInfos();
+    /**
+     * Returns all child control information.
+     */
+    Collection<ChildControlInfo> getChildControlInfos();
 
-	/**
-	 * Returns child control count.
-	 */
-	int getChildControlCount();
+    /**
+     * Returns child control count.
+     */
+    int getChildControlCount();
 }

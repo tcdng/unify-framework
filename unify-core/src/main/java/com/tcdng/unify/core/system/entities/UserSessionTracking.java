@@ -31,107 +31,107 @@ import com.tcdng.unify.core.annotation.Table;
 @Table("USERSESSION")
 public class UserSessionTracking extends AbstractSystemEntity {
 
-	@Id(length = 64)
-	private String sessionId;
+    @Id(length = 64)
+    private String sessionId;
 
-	@Column(length = 64, nullable = true)
-	private String remoteHost;
+    @Column(length = 64, nullable = true)
+    private String remoteHost;
 
-	@Column(length = 64, nullable = true)
-	private String remoteAddress;
+    @Column(length = 64, nullable = true)
+    private String remoteAddress;
 
-	@Column(length = 64, nullable = true)
-	private String remoteUser;
+    @Column(length = 64, nullable = true)
+    private String remoteUser;
 
-	@Column(length = 64, nullable = true)
-	private String userLoginId;
+    @Column(length = 64, nullable = true)
+    private String userLoginId;
 
-	@Column(length = 64, nullable = true)
-	private String userName;
+    @Column(length = 64, nullable = true)
+    private String userName;
 
-	@Column(length = 32)
-	private String node;
+    @Column(length = 32)
+    private String node;
 
-	@Column(type = ColumnType.TIMESTAMP)
-	private Date createTime;
+    @Column(type = ColumnType.TIMESTAMP)
+    private Date createTime;
 
-	@Column(type = ColumnType.TIMESTAMP)
-	private Date lastAccessTime;
+    @Column(type = ColumnType.TIMESTAMP)
+    private Date lastAccessTime;
 
-	@Override
-	public Object getId() {
-		return sessionId;
-	}
+    @Override
+    public Object getId() {
+        return sessionId;
+    }
 
-	public String getSessionId() {
-		return sessionId;
-	}
+    public String getSessionId() {
+        return sessionId;
+    }
 
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
-	public String getRemoteHost() {
-		return remoteHost;
-	}
+    public String getRemoteHost() {
+        return remoteHost;
+    }
 
-	public void setRemoteHost(String remoteHost) {
-		this.remoteHost = remoteHost;
-	}
+    public void setRemoteHost(String remoteHost) {
+        this.remoteHost = remoteHost;
+    }
 
-	public String getRemoteAddress() {
-		return remoteAddress;
-	}
+    public String getRemoteAddress() {
+        return remoteAddress;
+    }
 
-	public void setRemoteAddress(String remoteAddress) {
-		this.remoteAddress = remoteAddress;
-	}
+    public void setRemoteAddress(String remoteAddress) {
+        this.remoteAddress = remoteAddress;
+    }
 
-	public String getRemoteUser() {
-		return remoteUser;
-	}
+    public String getRemoteUser() {
+        return remoteUser;
+    }
 
-	public void setRemoteUser(String remoteUser) {
-		this.remoteUser = remoteUser;
-	}
+    public void setRemoteUser(String remoteUser) {
+        this.remoteUser = remoteUser;
+    }
 
-	public String getUserLoginId() {
-		return userLoginId;
-	}
+    public String getUserLoginId() {
+        return userLoginId;
+    }
 
-	public void setUserLoginId(String userLoginId) {
-		this.userLoginId = userLoginId;
-	}
+    public void setUserLoginId(String userLoginId) {
+        this.userLoginId = userLoginId;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getNode() {
-		return node;
-	}
+    public String getNode() {
+        return node;
+    }
 
-	public void setNode(String node) {
-		this.node = node;
-	}
+    public void setNode(String node) {
+        this.node = node;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public Date getLastAccessTime() {
-		return lastAccessTime;
-	}
+    public Date getLastAccessTime() {
+        return lastAccessTime;
+    }
 
-	public void setLastAccessTime(Date lastAccessTime) {
-		this.lastAccessTime = lastAccessTime;
-	}
+    public void setLastAccessTime(Date lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
+    }
 }

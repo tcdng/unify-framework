@@ -25,11 +25,11 @@ import com.tcdng.unify.core.database.Query;
  */
 public class SequenceNumberQuery extends Query<ClusterSequenceNumber> {
 
-	public SequenceNumberQuery() {
-		super(ClusterSequenceNumber.class);
-	}
+    public SequenceNumberQuery() {
+        super(ClusterSequenceNumber.class);
+    }
 
-	public SequenceNumberQuery sequenceName(String sequenceName) {
-		return (SequenceNumberQuery) equals("sequenceName", sequenceName);
-	}
+    public SequenceNumberQuery sequenceName(String sequenceName) {
+        return (SequenceNumberQuery) equals("sequenceName", sequenceName);
+    }
 }

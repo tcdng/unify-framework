@@ -27,24 +27,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("frequencyunitlist")
 public enum FrequencyUnit implements EnumConst {
 
-	SECOND("S"), MINUTE("M"), HOUR("H");
+    SECOND("S"), MINUTE("M"), HOUR("H");
 
-	private final String code;
+    private final String code;
 
-	private FrequencyUnit(String code) {
-		this.code = code;
-	}
+    private FrequencyUnit(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static FrequencyUnit fromCode(String code) {
-		return EnumUtils.fromCode(FrequencyUnit.class, code);
-	}
+    public static FrequencyUnit fromCode(String code) {
+        return EnumUtils.fromCode(FrequencyUnit.class, code);
+    }
 
-	public static FrequencyUnit fromName(String name) {
-		return EnumUtils.fromName(FrequencyUnit.class, name);
-	}
+    public static FrequencyUnit fromName(String name) {
+        return EnumUtils.fromName(FrequencyUnit.class, name);
+    }
 }

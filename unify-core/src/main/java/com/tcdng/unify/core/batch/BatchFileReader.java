@@ -32,44 +32,44 @@ import com.tcdng.unify.core.data.ValueStore;
  */
 public interface BatchFileReader extends UnifyComponent {
 
-	/**
-	 * Opens batch file reader for reading using supplied configuration.
-	 * 
-	 * @param input
-	 *            the logic input
-	 * @param configuration
-	 *            the batch file configuration
-	 * @param file
-	 *            the array of file objects that constitutes a batch. Supported file
-	 *            objects are {@link InputStream}, {@link Reader}, {@link File} and
-	 *            {@link byte[]}
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException;
+    /**
+     * Opens batch file reader for reading using supplied configuration.
+     * 
+     * @param input
+     *            the logic input
+     * @param configuration
+     *            the batch file configuration
+     * @param file
+     *            the array of file objects that constitutes a batch. Supported file
+     *            objects are {@link InputStream}, {@link Reader}, {@link File} and
+     *            {@link byte[]}
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException;
 
-	/**
-	 * Reads next record from batch.
-	 * 
-	 * @param recordStore
-	 *            the record object value store to populate
-	 * @return true if record was read otherwise false indicating end of records
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean readNextRecord(ValueStore recordStore) throws UnifyException;
+    /**
+     * Reads next record from batch.
+     * 
+     * @param recordStore
+     *            the record object value store to populate
+     * @return true if record was read otherwise false indicating end of records
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean readNextRecord(ValueStore recordStore) throws UnifyException;
 
-	/**
-	 * Skips next record in batch.
-	 * 
-	 * @return true if record was skipped otherwise false indicating end of records
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean skipNextRecord() throws UnifyException;
+    /**
+     * Skips next record in batch.
+     * 
+     * @return true if record was skipped otherwise false indicating end of records
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean skipNextRecord() throws UnifyException;
 
-	/**
-	 * Closes batch file reader and all used open resources.
-	 */
-	void close();
+    /**
+     * Closes batch file reader and all used open resources.
+     */
+    void close();
 }

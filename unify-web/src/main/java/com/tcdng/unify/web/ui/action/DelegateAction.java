@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-delegate")
 public class DelegateAction extends AbstractPageAction {
 
-	public DelegateAction(String action) {
-		super("delegate");
-	}
+    public DelegateAction(String action) {
+        super("delegate");
+    }
 }

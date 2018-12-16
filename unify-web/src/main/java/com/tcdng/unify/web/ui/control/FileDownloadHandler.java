@@ -27,14 +27,14 @@ import com.tcdng.unify.core.data.DownloadFile;
  */
 public interface FileDownloadHandler extends UnifyComponent {
 
-	/**
-	 * Handles a file download request.
-	 * 
-	 * @param id
-	 *            the request ID
-	 * @return download file object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	DownloadFile handleFileDownload(String id) throws UnifyException;
+    /**
+     * Handles a file download request.
+     * 
+     * @param id
+     *            the request ID
+     * @return download file object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    DownloadFile handleFileDownload(String id) throws UnifyException;
 }

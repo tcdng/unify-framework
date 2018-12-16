@@ -26,20 +26,20 @@ import java.util.Set;
  */
 public class WidgetNameInfo {
 
-	private List<String> shallowNames;
+    private List<String> shallowNames;
 
-	private Set<String> deepNames;
+    private Set<String> deepNames;
 
-	public WidgetNameInfo(List<String> shallowNames, Set<String> deepNames) {
-		this.shallowNames = shallowNames;
-		this.deepNames = deepNames;
-	}
+    public WidgetNameInfo(List<String> shallowNames, Set<String> deepNames) {
+        this.shallowNames = shallowNames;
+        this.deepNames = deepNames;
+    }
 
-	public List<String> getShallowNames() {
-		return shallowNames;
-	}
+    public List<String> getShallowNames() {
+        return shallowNames;
+    }
 
-	public Set<String> getDeepNames() {
-		return deepNames;
-	}
+    public Set<String> getDeepNames() {
+        return deepNames;
+    }
 }

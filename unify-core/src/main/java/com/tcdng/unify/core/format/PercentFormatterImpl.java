@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "percentformat", description = "$m{format.percent}")
 public class PercentFormatterImpl extends DecimalFormatterImpl implements PercentFormatter {
 
-	public PercentFormatterImpl() {
-		super(NumberType.PERCENT);
-	}
+    public PercentFormatterImpl() {
+        super(NumberType.PERCENT);
+    }
 }

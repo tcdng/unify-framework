@@ -29,35 +29,35 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class CharacterPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("CHAR(1)");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("CHAR(1)");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.CHAR);
-		} else {
-			((PreparedStatement) pstmt).setString(index, String.valueOf(data));
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.CHAR);
+        } else {
+            ((PreparedStatement) pstmt).setString(index, String.valueOf(data));
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		String result = ((ResultSet) rs).getString(column);
-		if (result != null) {
-			return result.charAt(0);
-		}
-		return null;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        String result = ((ResultSet) rs).getString(column);
+        if (result != null) {
+            return result.charAt(0);
+        }
+        return null;
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		String result = ((ResultSet) rs).getString(index);
-		if (result != null) {
-			return result.charAt(0);
-		}
-		return null;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        String result = ((ResultSet) rs).getString(index);
+        if (result != null) {
+            return result.charAt(0);
+        }
+        return null;
+    }
 }

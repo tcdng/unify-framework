@@ -28,34 +28,34 @@ import com.tcdng.unify.core.annotation.Table;
 @Table(name = "REPORT_FORM")
 public class ReportForm extends AbstractTestEntity {
 
-	@ForeignKey(Report.class)
-	private Long reportId;
+    @ForeignKey(Report.class)
+    private Long reportId;
 
-	@Column
-	private String editor;
+    @Column
+    private String editor;
 
-	public ReportForm(String editor) {
-		this.editor = editor;
-	}
+    public ReportForm(String editor) {
+        this.editor = editor;
+    }
 
-	public ReportForm() {
+    public ReportForm() {
 
-	}
+    }
 
-	public Long getReportId() {
-		return reportId;
-	}
+    public Long getReportId() {
+        return reportId;
+    }
 
-	public void setReportId(Long reportId) {
-		this.reportId = reportId;
-	}
+    public void setReportId(Long reportId) {
+        this.reportId = reportId;
+    }
 
-	public String getEditor() {
-		return editor;
-	}
+    public String getEditor() {
+        return editor;
+    }
 
-	public void setEditor(String editor) {
-		this.editor = editor;
-	}
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
 
 }

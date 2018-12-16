@@ -29,29 +29,29 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public class BeanValueArrayStore extends AbstractArrayValueStore<Object> {
 
-	public BeanValueArrayStore(Object[] storage, int dataIndex) {
-		super(storage, dataIndex);
-	}
+    public BeanValueArrayStore(Object[] storage, int dataIndex) {
+        super(storage, dataIndex);
+    }
 
-	@Override
-	protected boolean doSettable(Object storage, String property) throws UnifyException {
-		return storage != null && ReflectUtils.isSettableField(storage.getClass(), property);
-	}
+    @Override
+    protected boolean doSettable(Object storage, String property) throws UnifyException {
+        return storage != null && ReflectUtils.isSettableField(storage.getClass(), property);
+    }
 
-	@Override
-	protected boolean doGettable(Object storage, String property) throws UnifyException {
-		return storage != null && ReflectUtils.isGettableField(storage.getClass(), property);
-	}
+    @Override
+    protected boolean doGettable(Object storage, String property) throws UnifyException {
+        return storage != null && ReflectUtils.isGettableField(storage.getClass(), property);
+    }
 
-	@Override
-	protected Object doRetrieve(Object storage, String property) throws UnifyException {
-		return ReflectUtils.findNestedBeanProperty(storage, property);
-	}
+    @Override
+    protected Object doRetrieve(Object storage, String property) throws UnifyException {
+        return ReflectUtils.findNestedBeanProperty(storage, property);
+    }
 
-	@Override
-	protected void doStore(Object storage, String property, Object value, Formatter<?> formatter)
-			throws UnifyException {
-		DataUtils.setNestedBeanProperty(storage, property, value, formatter);
-	}
+    @Override
+    protected void doStore(Object storage, String property, Object value, Formatter<?> formatter)
+            throws UnifyException {
+        DataUtils.setNestedBeanProperty(storage, property, value, formatter);
+    }
 
 }

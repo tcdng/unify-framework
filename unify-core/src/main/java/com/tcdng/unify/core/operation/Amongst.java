@@ -25,7 +25,7 @@ import java.util.Collection;
  */
 public class Amongst extends Criteria {
 
-	public Amongst(String field, Collection<? extends Object> values) {
-		super(Operator.AMONGST, field, values);
-	}
+    public Amongst(String field, Collection<? extends Object> values) {
+        super(Operator.AMONGST, field, values);
+    }
 }

@@ -24,13 +24,13 @@ package com.tcdng.unify.core;
  */
 public interface UnifyStaticSettings {
 
-	/**
-	 * Returns the messages bundle resource name.
-	 */
-	String getMessageBase();
+    /**
+     * Returns the messages bundle resource name.
+     */
+    String getMessageBase();
 
-	/**
-	 * Returns the settings priority level.
-	 */
-	int getLevel();
+    /**
+     * Returns the settings priority level.
+     */
+    int getLevel();
 }

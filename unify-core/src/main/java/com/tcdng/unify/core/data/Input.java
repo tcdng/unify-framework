@@ -27,69 +27,69 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class Input {
 
-	private String name;
+    private String name;
 
-	private String value;
+    private String value;
 
-	private String description;
+    private String description;
 
-	private String editor;
+    private String editor;
 
-	private Class<?> type;
+    private Class<?> type;
 
-	private boolean mandatory;
+    private boolean mandatory;
 
-	public Input(Class<?> type, String name, String description, String editor, boolean mandatory) {
-		this.type = type;
-		this.name = name;
-		this.description = description;
-		this.editor = editor;
-		this.mandatory = mandatory;
-	}
+    public Input(Class<?> type, String name, String description, String editor, boolean mandatory) {
+        this.type = type;
+        this.name = name;
+        this.description = description;
+        this.editor = editor;
+        this.mandatory = mandatory;
+    }
 
-	public Class<?> getType() {
-		return type;
-	}
+    public Class<?> getType() {
+        return type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getEditor() {
-		return editor;
-	}
+    public String getEditor() {
+        return editor;
+    }
 
-	public boolean isMandatory() {
-		return mandatory;
-	}
+    public boolean isMandatory() {
+        return mandatory;
+    }
 
-	public <T> void setTypeValue(T value) throws UnifyException {
-		this.value = DataUtils.convert(String.class, value, null);
-	}
+    public <T> void setTypeValue(T value) throws UnifyException {
+        this.value = DataUtils.convert(String.class, value, null);
+    }
 
-	public <T> void setTypeValue(T value, Formatter<?> formatter) throws UnifyException {
-		this.value = DataUtils.convert(String.class, value, formatter);
-	}
+    public <T> void setTypeValue(T value, Formatter<?> formatter) throws UnifyException {
+        this.value = DataUtils.convert(String.class, value, formatter);
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> T getTypeValue() throws UnifyException {
-		return (T) DataUtils.convert(this.type, value, null);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T getTypeValue() throws UnifyException {
+        return (T) DataUtils.convert(this.type, value, null);
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> T getTypeValue(Formatter<?> formatter) throws UnifyException {
-		return (T) DataUtils.convert(this.type, value, formatter);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T getTypeValue(Formatter<?> formatter) throws UnifyException {
+        return (T) DataUtils.convert(this.type, value, formatter);
+    }
 }

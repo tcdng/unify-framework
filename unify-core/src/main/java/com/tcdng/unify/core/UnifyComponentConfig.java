@@ -23,63 +23,63 @@ package com.tcdng.unify.core;
  */
 public class UnifyComponentConfig {
 
-	private Class<? extends UnifyComponent> type;
+    private Class<? extends UnifyComponent> type;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private boolean singleton;
+    private boolean singleton;
 
-	private UnifyComponentSettings settings;
+    private UnifyComponentSettings settings;
 
-	public UnifyComponentConfig(String name, String description, Class<? extends UnifyComponent> type,
-			boolean singleton) {
-		this(UnifyComponentSettings.EMPTY_SETTINGS, name, description, type, singleton);
-	}
+    public UnifyComponentConfig(String name, String description, Class<? extends UnifyComponent> type,
+            boolean singleton) {
+        this(UnifyComponentSettings.EMPTY_SETTINGS, name, description, type, singleton);
+    }
 
-	public UnifyComponentConfig(UnifyComponentSettings settings, String name, String description,
-			Class<? extends UnifyComponent> type, boolean singleton) {
-		this.name = name;
-		this.description = description;
-		this.type = type;
-		this.singleton = singleton;
-		this.settings = settings;
-	}
+    public UnifyComponentConfig(UnifyComponentSettings settings, String name, String description,
+            Class<? extends UnifyComponent> type, boolean singleton) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.singleton = singleton;
+        this.settings = settings;
+    }
 
-	public Class<? extends UnifyComponent> getType() {
-		return type;
-	}
+    public Class<? extends UnifyComponent> getType() {
+        return type;
+    }
 
-	public boolean isSingleton() {
-		return singleton;
-	}
+    public boolean isSingleton() {
+        return singleton;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		if (description == null) {
-			return name;
-		}
-		return description;
-	}
+    public String getDescription() {
+        if (description == null) {
+            return name;
+        }
+        return description;
+    }
 
-	public UnifyComponentSettings getSettings() {
-		return settings;
-	}
+    public UnifyComponentSettings getSettings() {
+        return settings;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{\n");
-		sb.append("\tname = ").append(name).append(",\n");
-		sb.append("\ttype = ").append(type).append(",\n");
-		sb.append("\tdescription = ").append(description).append(",\n");
-		sb.append("\tsingleton = ").append(singleton).append(",\n");
-		sb.append("\tsettings = ").append(this.settings);
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        sb.append("\tname = ").append(name).append(",\n");
+        sb.append("\ttype = ").append(type).append(",\n");
+        sb.append("\tdescription = ").append(description).append(",\n");
+        sb.append("\tsingleton = ").append(singleton).append(",\n");
+        sb.append("\tsettings = ").append(this.settings);
+        sb.append("}");
+        return sb.toString();
+    }
 }

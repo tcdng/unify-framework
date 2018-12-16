@@ -25,13 +25,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonFloatConverter implements JsonValueConverter<Float> {
-	@Override
-	public Float read(JsonValue jsonValue) throws Exception {
-		return jsonValue.asFloat();
-	}
+    @Override
+    public Float read(JsonValue jsonValue) throws Exception {
+        return jsonValue.asFloat();
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value((Float) value);
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value((Float) value);
+    }
 }

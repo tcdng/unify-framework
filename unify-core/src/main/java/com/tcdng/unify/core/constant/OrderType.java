@@ -26,24 +26,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 @StaticList("orderlist")
 public enum OrderType implements EnumConst {
-	ASCENDING("A"), DESCENDING("D");
+    ASCENDING("A"), DESCENDING("D");
 
-	private final String code;
+    private final String code;
 
-	private OrderType(String code) {
-		this.code = code;
-	}
+    private OrderType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static OrderType fromCode(String code) {
-		return EnumUtils.fromCode(OrderType.class, code);
-	}
+    public static OrderType fromCode(String code) {
+        return EnumUtils.fromCode(OrderType.class, code);
+    }
 
-	public static OrderType fromName(String name) {
-		return EnumUtils.fromName(OrderType.class, name);
-	}
+    public static OrderType fromName(String name) {
+        return EnumUtils.fromName(OrderType.class, name);
+    }
 }

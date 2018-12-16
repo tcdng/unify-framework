@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("ui-samevalidation")
 public class SameValidation extends AbstractComparisonPageValidation {
 
-	public SameValidation() {
-		super("same", true);
-	}
+    public SameValidation() {
+        super("same", true);
+    }
 }

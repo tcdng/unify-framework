@@ -23,45 +23,45 @@ package com.tcdng.unify.core;
  */
 public interface UnifyCorePropertyConstants {
 
-	String APPLICATION_CODE = "application.code";
+    String APPLICATION_CODE = "application.code";
 
-	String APPLICATION_NAME = "application.name";
+    String APPLICATION_NAME = "application.name";
 
-	String APPLICATION_BANNER = "application.banner";
-	
-	String APPLICATION_CONTAINER_TOCONSOLE = "application.container.toconsole";
+    String APPLICATION_BANNER = "application.banner";
 
-	String APPLICATION_BOOT = "application.boot.component";
+    String APPLICATION_CONTAINER_TOCONSOLE = "application.container.toconsole";
 
-	String APPLICATION_INTERFACES = "application.interfaces";
+    String APPLICATION_BOOT = "application.boot.component";
 
-	String APPLICATION_OSMODE = "application.osmode";
+    String APPLICATION_INTERFACES = "application.interfaces";
 
-	String APPLICATION_COMMAND_INTERFACE = "application.command.interface.enabled";
+    String APPLICATION_OSMODE = "application.osmode";
 
-	String APPLICATION_COMMAND_PORT = "application.command.interface.port";
+    String APPLICATION_COMMAND_INTERFACE = "application.command.interface.enabled";
 
-	String APPLICATION_LAYOUT = "application.layout";
+    String APPLICATION_COMMAND_PORT = "application.command.interface.port";
 
-	String APPLICATION_CUSTOMISATION = "application.customisation";
+    String APPLICATION_LAYOUT = "application.layout";
 
-	String APPLICATION_MESSAGES_BASE = "application.messages.base";
+    String APPLICATION_CUSTOMISATION = "application.customisation";
 
-	String APPLICATION_LOGGER_PATTERN_SETTING = "application.logger.pattern";
+    String APPLICATION_MESSAGES_BASE = "application.messages.base";
 
-	String APPLICATION_LOG_TO_CONSOLE = "application.logger.toconsole";
+    String APPLICATION_LOGGER_PATTERN_SETTING = "application.logger.pattern";
 
-	String APPLICATION_LOG_TO_FILE = "application.logger.tofile";
+    String APPLICATION_LOG_TO_CONSOLE = "application.logger.toconsole";
 
-	String APPLICATION_LOG_FILENAME = "application.logger.filename";
+    String APPLICATION_LOG_TO_FILE = "application.logger.tofile";
 
-	String APPLICATION_LOG_FILEMAXSIZE = "application.logger.filemaxsize";
+    String APPLICATION_LOG_FILENAME = "application.logger.filename";
 
-	String APPLICATION_LOG_FILEMAXBACKUP = "application.logger.filemaxbackup";
+    String APPLICATION_LOG_FILEMAXSIZE = "application.logger.filemaxsize";
 
-	String APPLICATION_LOG_LEVEL = "application.logger.level";
+    String APPLICATION_LOG_FILEMAXBACKUP = "application.logger.filemaxbackup";
 
-	String APPLICATION_QUERY_LIMIT = "application.query.limit";
+    String APPLICATION_LOG_LEVEL = "application.logger.level";
 
-	String APPLICATION_SESSION_TIMEOUT = "application.session.timeout";
+    String APPLICATION_QUERY_LIMIT = "application.query.limit";
+
+    String APPLICATION_SESSION_TIMEOUT = "application.session.timeout";
 }

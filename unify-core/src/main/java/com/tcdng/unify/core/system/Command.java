@@ -25,20 +25,20 @@ import java.util.List;
  */
 public class Command {
 
-	private String command;
+    private String command;
 
-	private List<String> params;
+    private List<String> params;
 
-	public Command(String command, List<String> params) {
-		this.command = command;
-		this.params = params;
-	}
+    public Command(String command, List<String> params) {
+        this.command = command;
+        this.params = params;
+    }
 
-	public String getCommand() {
-		return command;
-	}
+    public String getCommand() {
+        return command;
+    }
 
-	public List<String> getParams() {
-		return params;
-	}
+    public List<String> getParams() {
+        return params;
+    }
 }

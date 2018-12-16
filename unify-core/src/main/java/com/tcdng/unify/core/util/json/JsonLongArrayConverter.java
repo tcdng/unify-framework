@@ -26,17 +26,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonLongArrayConverter extends AbstractJsonArrayConverter<Long> {
 
-	public JsonLongArrayConverter() {
-		super(Long.class);
-	}
+    public JsonLongArrayConverter() {
+        super(Long.class);
+    }
 
-	@Override
-	protected Long getValue(JsonValue jsonValue) throws Exception {
-		return jsonValue.asLong();
-	}
+    @Override
+    protected Long getValue(JsonValue jsonValue) throws Exception {
+        return jsonValue.asLong();
+    }
 
-	@Override
-	protected JsonValue setValue(Long value) throws Exception {
-		return Json.value(value);
-	}
+    @Override
+    protected JsonValue setValue(Long value) throws Exception {
+        return Json.value(value);
+    }
 }

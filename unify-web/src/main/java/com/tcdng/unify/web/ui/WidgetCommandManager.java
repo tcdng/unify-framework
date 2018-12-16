@@ -26,15 +26,15 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface WidgetCommandManager extends UnifyComponent {
 
-	/**
-	 * Executes a UI command for supplied widget.
-	 * 
-	 * @param widget
-	 *            the widget whose command is to be executed
-	 * @param command
-	 *            the command to execute
-	 * @throws UnifyException
-	 *             if supplied widget has no such command. if an error occurs
-	 */
-	void executeCommand(Widget widget, String command) throws UnifyException;
+    /**
+     * Executes a UI command for supplied widget.
+     * 
+     * @param widget
+     *            the widget whose command is to be executed
+     * @param command
+     *            the command to execute
+     * @throws UnifyException
+     *             if supplied widget has no such command. if an error occurs
+     */
+    void executeCommand(Widget widget, String command) throws UnifyException;
 }

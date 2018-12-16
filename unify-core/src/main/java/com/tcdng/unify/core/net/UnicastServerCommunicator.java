@@ -25,12 +25,12 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface UnicastServerCommunicator extends NetworkUnicastCommunicator {
 
-	/**
-	 * Performs unicast server communication.
-	 * 
-	 * @return a true value if conversation continues otherwise false
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean communicate() throws UnifyException;
+    /**
+     * Performs unicast server communication.
+     * 
+     * @return a true value if conversation continues otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean communicate() throws UnifyException;
 }

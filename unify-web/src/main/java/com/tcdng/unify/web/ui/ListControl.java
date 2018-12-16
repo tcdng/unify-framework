@@ -29,82 +29,82 @@ import com.tcdng.unify.core.data.Listable;
  */
 public interface ListControl extends Control {
 
-	/**
-	 * Returns list control data.
-	 * 
-	 * @param indexes
-	 *            indicates JSON indexes array should be generated
-	 * @param keys
-	 *            indicates JSON keys array should be generated
-	 * @param labels
-	 *            indicates JSON labels array should be generated
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels) throws UnifyException;
+    /**
+     * Returns list control data.
+     * 
+     * @param indexes
+     *            indicates JSON indexes array should be generated
+     * @param keys
+     *            indicates JSON keys array should be generated
+     * @param labels
+     *            indicates JSON labels array should be generated
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels) throws UnifyException;
 
-	/**
-	 * Returns listables for a list control.
-	 * 
-	 * @return listables
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<? extends Listable> getListables() throws UnifyException;
+    /**
+     * Returns listables for a list control.
+     * 
+     * @return listables
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<? extends Listable> getListables() throws UnifyException;
 
-	/**
-	 * Returns key/description pairs for a list control.
-	 * 
-	 * @return the pair map
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Map<String, String> getListMap() throws UnifyException;
+    /**
+     * Returns key/description pairs for a list control.
+     * 
+     * @return the pair map
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<String, String> getListMap() throws UnifyException;
 
-	/**
-	 * Returns this control's list.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getList() throws UnifyException;
+    /**
+     * Returns this control's list.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getList() throws UnifyException;
 
-	/**
-	 * Gets the list parameters for this control..
-	 * 
-	 * @return array of parameters
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String[] getListParams() throws UnifyException;
+    /**
+     * Gets the list parameters for this control..
+     * 
+     * @return array of parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String[] getListParams() throws UnifyException;
 
-	/**
-	 * Gets the list parameter type
-	 * 
-	 * @return the list parameter type
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	ListParamType getListParamType() throws UnifyException;
+    /**
+     * Gets the list parameter type
+     * 
+     * @return the list parameter type
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ListParamType getListParamType() throws UnifyException;
 
-	/**
-	 * Returns this control's list key.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getListKey() throws UnifyException;
+    /**
+     * Returns this control's list key.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getListKey() throws UnifyException;
 
-	/**
-	 * Returns this control's list description.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getListDescription() throws UnifyException;
+    /**
+     * Returns this control's list description.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getListDescription() throws UnifyException;
 
-	/**
-	 * Returns true if list control allows multiple select.
-	 */
-	boolean isMultiple();
+    /**
+     * Returns true if list control allows multiple select.
+     */
+    boolean isMultiple();
 }

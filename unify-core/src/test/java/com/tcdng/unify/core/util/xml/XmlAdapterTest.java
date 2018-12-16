@@ -37,25 +37,25 @@ import com.tcdng.unify.core.constant.DataType;
  */
 public class XmlAdapterTest {
 
-	@Test
-	public void testEnumConstXmlAdapterMarshall() throws Exception {
-		JAXBContext jaxbContext = JAXBContext.newInstance(TestField.class);
-		Marshaller marshaller = jaxbContext.createMarshaller();
-		StringWriter sw = new StringWriter();
-		marshaller.marshal(new TestField("age", DataType.INTEGER), sw);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><test-field><name>age</name><type>INTEGER</type></test-field>",
-				sw.toString());
-	}
+    @Test
+    public void testEnumConstXmlAdapterMarshall() throws Exception {
+        JAXBContext jaxbContext = JAXBContext.newInstance(TestField.class);
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        StringWriter sw = new StringWriter();
+        marshaller.marshal(new TestField("age", DataType.INTEGER), sw);
+        assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><test-field><name>age</name><type>INTEGER</type></test-field>",
+                sw.toString());
+    }
 
-	@Test
-	public void testEnumConstXmlAdapterUnmarshall() throws Exception {
-		JAXBContext jaxbContext = JAXBContext.newInstance(TestField.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		StringReader sr = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><test-field><name>firstName</name><type>string</type></test-field>");
-		TestField testField = (TestField) unmarshaller.unmarshal(sr);
-		assertEquals("firstName", testField.getName());
-		assertEquals(DataType.STRING, testField.getType());
-	}
+    @Test
+    public void testEnumConstXmlAdapterUnmarshall() throws Exception {
+        JAXBContext jaxbContext = JAXBContext.newInstance(TestField.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        StringReader sr = new StringReader(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><test-field><name>firstName</name><type>string</type></test-field>");
+        TestField testField = (TestField) unmarshaller.unmarshal(sr);
+        assertEquals("firstName", testField.getName());
+        assertEquals(DataType.STRING, testField.getType());
+    }
 }

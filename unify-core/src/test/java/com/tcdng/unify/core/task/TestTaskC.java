@@ -28,8 +28,8 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("test-taskc")
 public class TestTaskC extends AbstractTask {
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
-	}
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+    }
 }

@@ -25,15 +25,15 @@ import java.util.Collection;
  */
 public class ClusterCommandQuery extends SequencedEntityQuery<ClusterCommand> {
 
-	public ClusterCommandQuery() {
-		super(ClusterCommand.class);
-	}
+    public ClusterCommandQuery() {
+        super(ClusterCommand.class);
+    }
 
-	public ClusterCommandQuery nodeId(String nodeId) {
-		return (ClusterCommandQuery) this.equals("nodeId", nodeId);
-	}
+    public ClusterCommandQuery nodeId(String nodeId) {
+        return (ClusterCommandQuery) this.equals("nodeId", nodeId);
+    }
 
-	public ClusterCommandQuery nodeIdIn(Collection<String> nodeId) {
-		return (ClusterCommandQuery) this.amongst("nodeId", nodeId);
-	}
+    public ClusterCommandQuery nodeIdIn(Collection<String> nodeId) {
+        return (ClusterCommandQuery) this.amongst("nodeId", nodeId);
+    }
 }

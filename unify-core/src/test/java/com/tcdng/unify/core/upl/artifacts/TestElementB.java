@@ -30,18 +30,18 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 @Component("test-uplelementb")
 @UplAttributes({ @UplAttribute(name = "title", type = String.class),
-		@UplAttribute(name = "user", type = TestElementA.class),
-		@UplAttribute(name = "manyUser", type = TestElementA[].class), @UplAttribute(name = "count", type = long.class),
-		@UplAttribute(name = "components", type = UplElementReferences.class) })
+        @UplAttribute(name = "user", type = TestElementA.class),
+        @UplAttribute(name = "manyUser", type = TestElementA[].class), @UplAttribute(name = "count", type = long.class),
+        @UplAttribute(name = "components", type = UplElementReferences.class) })
 public class TestElementB extends AbstractUplComponent {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

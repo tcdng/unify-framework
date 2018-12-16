@@ -23,5 +23,5 @@ package com.tcdng.unify.core.task;
  * @since 1.0
  */
 public enum TaskExecType {
-	RUN_IMMEDIATE, RUN_IMMEDIATE_BLOCK, RUN_AFTER, RUN_PERIODIC
+    RUN_IMMEDIATE, RUN_IMMEDIATE_BLOCK, RUN_AFTER, RUN_PERIODIC
 }

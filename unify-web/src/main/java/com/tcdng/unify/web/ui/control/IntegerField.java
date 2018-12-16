@@ -32,12 +32,12 @@ import com.tcdng.unify.core.format.NumberFormatter;
 @UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!integerformat}") })
 public class IntegerField extends AbstractNumberField {
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
-		numberFormatter.setPrecision(getUplAttribute(int.class, "precision"));
-		numberFormatter.setGroupingUsed(getUplAttribute(boolean.class, "useGrouping"));
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
+        numberFormatter.setPrecision(getUplAttribute(int.class, "precision"));
+        numberFormatter.setGroupingUsed(getUplAttribute(boolean.class, "useGrouping"));
 
-		super.onPageInitialize();
-	}
+        super.onPageInitialize();
+    }
 }

@@ -27,28 +27,28 @@ import com.tcdng.unify.core.business.BusinessLogicInput;
  */
 public interface BatchFileReaderWriterFactory extends UnifyComponent {
 
-	/**
-	 * Returns a new instance of a batch file reader.
-	 * 
-	 * @param input
-	 *            the logic input
-	 * @param batchFileConfig
-	 *            the batch file configuration
-	 * @param fileObject
-	 *            the file object to read
-	 * @return the batch file reader
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	BatchFileReader getBatchFileReader(BusinessLogicInput input, BatchFileConfig batchFileConfig, Object[] fileObject)
-			throws UnifyException;
+    /**
+     * Returns a new instance of a batch file reader.
+     * 
+     * @param input
+     *            the logic input
+     * @param batchFileConfig
+     *            the batch file configuration
+     * @param fileObject
+     *            the file object to read
+     * @return the batch file reader
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    BatchFileReader getBatchFileReader(BusinessLogicInput input, BatchFileConfig batchFileConfig, Object[] fileObject)
+            throws UnifyException;
 
-	/**
-	 * Disposes a batch reader. Called when no further use of reader instance is
-	 * required.
-	 * 
-	 * @param reader
-	 *            the reader
-	 */
-	void disposeBatchRecordReader(BatchFileReader reader);
+    /**
+     * Disposes a batch reader. Called when no further use of reader instance is
+     * required.
+     * 
+     * @param reader
+     *            the reader
+     */
+    void disposeBatchRecordReader(BatchFileReader reader);
 }

@@ -30,20 +30,20 @@ import com.tcdng.unify.web.ui.Control;
  */
 @Component("ui-group")
 @UplAttributes({ @UplAttribute(name = "focus", type = boolean.class),
-		@UplAttribute(name = "sortable", type = boolean.class), @UplAttribute(name = "space", type = boolean.class) })
+        @UplAttribute(name = "sortable", type = boolean.class), @UplAttribute(name = "space", type = boolean.class) })
 public class GroupControl extends AbstractMultiControl implements Control {
 
-	@Override
-	public boolean isFocus() throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean isFocus() throws UnifyException {
+        return false;
+    }
 
-	@Override
-	public void updateState() throws UnifyException {
+    @Override
+    public void updateState() throws UnifyException {
 
-	}
+    }
 
-	public boolean isSpace() throws UnifyException {
-		return getUplAttribute(boolean.class, "space");
-	}
+    public boolean isSpace() throws UnifyException {
+        return getUplAttribute(boolean.class, "space");
+    }
 }

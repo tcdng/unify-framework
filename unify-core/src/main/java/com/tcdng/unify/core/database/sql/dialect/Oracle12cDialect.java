@@ -28,37 +28,37 @@ import com.tcdng.unify.core.constant.SqlDialectConstants;
 @Component(name = SqlDialectConstants.ORACLE_12C, description = "$m{sqldialect.oracle12cdb}")
 public class Oracle12cDialect extends OracleDialect {
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		boolean isAppend = false;
-		if (offset > 0) {
-			sql.append(" OFFSET ").append(offset).append(" ROWS");
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        boolean isAppend = false;
+        if (offset > 0) {
+            sql.append(" OFFSET ").append(offset).append(" ROWS");
+            isAppend = true;
+        }
 
-		if (limit > 0) {
-			if (isAppend) {
-				sql.append(" FETCH NEXT ");
-			} else {
-				sql.append(" FETCH FIRST ");
-			}
+        if (limit > 0) {
+            if (isAppend) {
+                sql.append(" FETCH NEXT ");
+            } else {
+                sql.append(" FETCH FIRST ");
+            }
 
-			sql.append(limit).append(" ROWS ONLY");
-			isAppend = true;
-		}
+            sql.append(limit).append(" ROWS ONLY");
+            isAppend = true;
+        }
 
-		return isAppend;
-	}
+        return isAppend;
+    }
 }

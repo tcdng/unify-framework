@@ -34,19 +34,19 @@ import com.tcdng.unify.core.data.Listable;
 @Component("itemsperpagelist")
 public class ItemsPerPageListCommand extends AbstractZeroParamsListCommand {
 
-	private static final List<Listable> ITEMSPERPAGE = new ArrayList<Listable>();
+    private static final List<Listable> ITEMSPERPAGE = new ArrayList<Listable>();
 
-	static {
-		ITEMSPERPAGE.add(new ListNumberData(50));
-		ITEMSPERPAGE.add(new ListNumberData(100));
-		ITEMSPERPAGE.add(new ListNumberData(200));
-		ITEMSPERPAGE.add(new ListNumberData(500));
-		ITEMSPERPAGE.add(new ListNumberData(1000));
-		ITEMSPERPAGE.add(new ListData("-1", "All"));
-	}
+    static {
+        ITEMSPERPAGE.add(new ListNumberData(50));
+        ITEMSPERPAGE.add(new ListNumberData(100));
+        ITEMSPERPAGE.add(new ListNumberData(200));
+        ITEMSPERPAGE.add(new ListNumberData(500));
+        ITEMSPERPAGE.add(new ListNumberData(1000));
+        ITEMSPERPAGE.add(new ListData("-1", "All"));
+    }
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return ITEMSPERPAGE;
-	}
+    @Override
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        return ITEMSPERPAGE;
+    }
 }

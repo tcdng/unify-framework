@@ -25,11 +25,11 @@ import com.tcdng.unify.core.database.Query;
  */
 public class ClusterUniqueStringQuery extends Query<ClusterUniqueString> {
 
-	public ClusterUniqueStringQuery() {
-		super(ClusterUniqueString.class);
-	}
+    public ClusterUniqueStringQuery() {
+        super(ClusterUniqueString.class);
+    }
 
-	public ClusterUniqueStringQuery uniqueString(String uniqueString) {
-		return (ClusterUniqueStringQuery) equals("uniqueString", uniqueString);
-	}
+    public ClusterUniqueStringQuery uniqueString(String uniqueString) {
+        return (ClusterUniqueStringQuery) equals("uniqueString", uniqueString);
+    }
 }

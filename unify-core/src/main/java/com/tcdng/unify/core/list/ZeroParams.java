@@ -24,6 +24,6 @@ package com.tcdng.unify.core.list;
  */
 public class ZeroParams {
 
-	public static final ZeroParams INSTANCE = new ZeroParams();
+    public static final ZeroParams INSTANCE = new ZeroParams();
 
 }

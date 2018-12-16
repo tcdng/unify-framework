@@ -31,13 +31,13 @@ import com.tcdng.unify.web.ui.AbstractMultiControl;
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
 public class LinkGrid extends AbstractMultiControl {
 
-	public int getColumns() throws UnifyException {
-		return getUplAttribute(int.class, "columns");
-	}
+    public int getColumns() throws UnifyException {
+        return getUplAttribute(int.class, "columns");
+    }
 
-	@Override
-	public boolean isLayoutCaption() throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() throws UnifyException {
+        return false;
+    }
 
 }

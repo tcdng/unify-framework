@@ -23,13 +23,13 @@ package com.tcdng.unify.core;
  */
 public interface UserSession {
 
-	SessionContext getSessionContext();
+    SessionContext getSessionContext();
 
-	String getRemoteAddress();
+    String getRemoteAddress();
 
-	String getRemoteHost();
+    String getRemoteHost();
 
-	String getRemoteUser();
+    String getRemoteUser();
 
-	String getRemoteViewer();
+    String getRemoteViewer();
 }

@@ -28,43 +28,43 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("auditactionlist")
 public enum EventType implements EnumConst {
 
-	SEARCH("S", "ui-event-gray", true), CREATE("C", "ui-event-green", true), VIEW("R", "ui-event-gray", true), UPDATE(
-			"U", "ui-event-red",
-			true), DELETE("D", "ui-event-red", true), LOGIN("L", "ui-event-blue", false), LOGOUT("O", "ui-event-blue",
-					false), GENERATE("G", "ui-event-gray", false), UPLOAD("P", "ui-event-gray", false), DOWNLOAD("N",
-							"ui-event-gray", false), WORKFLOW("W", "ui-event-gray", false), MISCELLANEOUS("M",
-									"ui-event-yellow", false), SYSTEM("Y", "ui-event-yellow", false);
+    SEARCH("S", "ui-event-gray", true), CREATE("C", "ui-event-green", true), VIEW("R", "ui-event-gray", true), UPDATE(
+            "U", "ui-event-red",
+            true), DELETE("D", "ui-event-red", true), LOGIN("L", "ui-event-blue", false), LOGOUT("O", "ui-event-blue",
+                    false), GENERATE("G", "ui-event-gray", false), UPLOAD("P", "ui-event-gray", false), DOWNLOAD("N",
+                            "ui-event-gray", false), WORKFLOW("W", "ui-event-gray", false), MISCELLANEOUS("M",
+                                    "ui-event-yellow", false), SYSTEM("Y", "ui-event-yellow", false);
 
-	private final String code;
+    private final String code;
 
-	private final String colorMode;
+    private final String colorMode;
 
-	private final boolean crud;
+    private final boolean crud;
 
-	private EventType(String code, String colorMode, boolean crud) {
-		this.code = code;
-		this.colorMode = colorMode;
-		this.crud = crud;
-	}
+    private EventType(String code, String colorMode, boolean crud) {
+        this.code = code;
+        this.colorMode = colorMode;
+        this.crud = crud;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public String colorMode() {
-		return this.colorMode;
-	}
+    public String colorMode() {
+        return this.colorMode;
+    }
 
-	public static EventType fromCode(String code) {
-		return EnumUtils.fromCode(EventType.class, code);
-	}
+    public static EventType fromCode(String code) {
+        return EnumUtils.fromCode(EventType.class, code);
+    }
 
-	public static EventType fromName(String name) {
-		return EnumUtils.fromName(EventType.class, name);
-	}
+    public static EventType fromName(String name) {
+        return EnumUtils.fromName(EventType.class, name);
+    }
 
-	public boolean isCrud() {
-		return crud;
-	}
+    public boolean isCrud() {
+        return crud;
+    }
 }

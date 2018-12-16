@@ -25,35 +25,35 @@ import com.tcdng.unify.core.data.FluentSet;
  */
 public class Order extends FluentSet<String> {
 
-	private boolean ascending;
+    private boolean ascending;
 
-	public Order() {
-		this(true);
-	}
+    public Order() {
+        this(true);
+    }
 
-	public Order(boolean ascending) {
-		this.ascending = ascending;
-	}
+    public Order(boolean ascending) {
+        this.ascending = ascending;
+    }
 
-	public Order(Order order) {
-		super(order);
-		this.ascending = order.ascending;
-	}
+    public Order(Order order) {
+        super(order);
+        this.ascending = order.ascending;
+    }
 
-	@Override
-	public Order add(String field) {
-		return (Order) super.add(field);
-	}
+    @Override
+    public Order add(String field) {
+        return (Order) super.add(field);
+    }
 
-	public void setAscending(boolean ascending) {
-		this.ascending = ascending;
-	}
+    public void setAscending(boolean ascending) {
+        this.ascending = ascending;
+    }
 
-	public boolean isAscending() {
-		return ascending;
-	}
+    public boolean isAscending() {
+        return ascending;
+    }
 
-	public boolean isDescending() {
-		return !ascending;
-	}
+    public boolean isDescending() {
+        return !ascending;
+    }
 }

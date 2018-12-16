@@ -30,15 +30,15 @@ import com.tcdng.unify.core.format.NumberFormatter;
  */
 @Component("ui-decimal")
 @UplAttributes({ @UplAttribute(name = "scale", type = int.class),
-		@UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!decimalformat}") })
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!decimalformat}") })
 public class DecimalField extends IntegerField {
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
-		int scale = getUplAttribute(int.class, "scale");
-		numberFormatter.setScale(scale);
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
+        int scale = getUplAttribute(int.class, "scale");
+        numberFormatter.setScale(scale);
 
-		super.onPageInitialize();
-	}
+        super.onPageInitialize();
+    }
 }

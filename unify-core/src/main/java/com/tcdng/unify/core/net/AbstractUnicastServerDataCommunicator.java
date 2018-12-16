@@ -22,6 +22,6 @@ package com.tcdng.unify.core.net;
  * @since 1.0
  */
 public abstract class AbstractUnicastServerDataCommunicator extends AbstractUnicastDataCommunicator
-		implements UnicastServerCommunicator {
+        implements UnicastServerCommunicator {
 
 }

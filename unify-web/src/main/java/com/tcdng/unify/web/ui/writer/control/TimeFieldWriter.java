@@ -38,103 +38,103 @@ import com.tcdng.unify.web.ui.control.TimeField;
 @Component("timefield-writer")
 public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
 
-	@Override
-	protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
-			throws UnifyException {
-		TimeField timeField = (TimeField) popupTextField;
-		Date date = timeField.getValue(Date.class);
-		if (date == null) {
-			date = new Date();
-		}
+    @Override
+    protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+            throws UnifyException {
+        TimeField timeField = (TimeField) popupTextField;
+        Date date = timeField.getValue(Date.class);
+        if (date == null) {
+            date = new Date();
+        }
 
-		StringBuilder hsb = new StringBuilder();
-		StringBuilder csb = new StringBuilder();
-		StringBuilder fsb = new StringBuilder();
-		Pattern[] pattern = timeField.getPattern();
-		DateTimeFormat[] dateTimeFormat = timeField.getDateTimeFormat();
-		for (int i = 0; i < pattern.length; i++) {
-			Pattern fp = pattern[i];
-			if (fp.isFiller()) {
-				hsb.append("<div style=\"display:table-cell\">").append("</div>");
-				csb.append("<div style=\"display:table-cell\">").append(fp.getPattern()).append("</div>");
-				fsb.append("<div style=\"display:table-cell\">").append("</div>");
-			} else {
-				char plusBtnSymbol = '+';
-				char minusBtnSymbol = '-';
-				List<? extends Listable> listableList = dateTimeFormat[i].getList();
-				String value = dateTimeFormat[i].format(date);
-				hsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfbutton\" id=\"")
-						.append(timeField.getPrefixedId("btnat_")).append(i).append("\">").append(plusBtnSymbol)
-						.append("</button></div>");
-				csb.append(
-						"<div style=\"display:table-cell\"><input type=\"text\" class=\"tftext\" readonly=\"true\" id=\"")
-						.append(fp.getTarget()).append("\" value=\"").append(value).append("\"/>");
-				if (listableList != null) {
-					int j = 0;
-					for (Listable listable : listableList) {
-						if (listable.getListKey().equals(value)) {
-							break;
-						}
-						j++;
-					}
-					csb.append("<input type=\"hidden\" id=\"").append("h_").append(fp.getTarget()).append("\" value=\"")
-							.append(j).append("\"/>");
-				}
-				csb.append("</div>");
-				fsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfbutton\" id=\"")
-						.append(timeField.getPrefixedId("btnst_")).append(i).append("\">").append(minusBtnSymbol)
-						.append("</button></div>");
-			}
-		}
+        StringBuilder hsb = new StringBuilder();
+        StringBuilder csb = new StringBuilder();
+        StringBuilder fsb = new StringBuilder();
+        Pattern[] pattern = timeField.getPattern();
+        DateTimeFormat[] dateTimeFormat = timeField.getDateTimeFormat();
+        for (int i = 0; i < pattern.length; i++) {
+            Pattern fp = pattern[i];
+            if (fp.isFiller()) {
+                hsb.append("<div style=\"display:table-cell\">").append("</div>");
+                csb.append("<div style=\"display:table-cell\">").append(fp.getPattern()).append("</div>");
+                fsb.append("<div style=\"display:table-cell\">").append("</div>");
+            } else {
+                char plusBtnSymbol = '+';
+                char minusBtnSymbol = '-';
+                List<? extends Listable> listableList = dateTimeFormat[i].getList();
+                String value = dateTimeFormat[i].format(date);
+                hsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfbutton\" id=\"")
+                        .append(timeField.getPrefixedId("btnat_")).append(i).append("\">").append(plusBtnSymbol)
+                        .append("</button></div>");
+                csb.append(
+                        "<div style=\"display:table-cell\"><input type=\"text\" class=\"tftext\" readonly=\"true\" id=\"")
+                        .append(fp.getTarget()).append("\" value=\"").append(value).append("\"/>");
+                if (listableList != null) {
+                    int j = 0;
+                    for (Listable listable : listableList) {
+                        if (listable.getListKey().equals(value)) {
+                            break;
+                        }
+                        j++;
+                    }
+                    csb.append("<input type=\"hidden\" id=\"").append("h_").append(fp.getTarget()).append("\" value=\"")
+                            .append(j).append("\"/>");
+                }
+                csb.append("</div>");
+                fsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfbutton\" id=\"")
+                        .append(timeField.getPrefixedId("btnst_")).append(i).append("\">").append(minusBtnSymbol)
+                        .append("</button></div>");
+            }
+        }
 
-		hsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
-				.append(timeField.getPrefixedId("btns_")).append("\">").append(getSessionMessage("button.set"))
-				.append("</button></div>");
-		csb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
-				.append(timeField.getPrefixedId("btncl_")).append("\">").append(getSessionMessage("button.clear"))
-				.append("</button></div>");
-		fsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
-				.append(timeField.getPrefixedId("btncn_")).append("\">").append(getSessionMessage("button.cancel"))
-				.append("</button></div>");
+        hsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
+                .append(timeField.getPrefixedId("btns_")).append("\">").append(getSessionMessage("button.set"))
+                .append("</button></div>");
+        csb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
+                .append(timeField.getPrefixedId("btncl_")).append("\">").append(getSessionMessage("button.clear"))
+                .append("</button></div>");
+        fsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfabutton\" id=\"")
+                .append(timeField.getPrefixedId("btncn_")).append("\">").append(getSessionMessage("button.cancel"))
+                .append("</button></div>");
 
-		writer.write("<div class=\"tfframe\"><div style=\"display:table\"><div style=\"display:table-row\">")
-				.write(hsb.toString()).write("</div><div style=\"display:table-row\">").write(csb.toString())
-				.write("</div><div style=\"display:table-row\">").write(fsb.toString()).write("</div></div></div>");
-	}
+        writer.write("<div class=\"tfframe\"><div style=\"display:table\"><div style=\"display:table-row\">")
+                .write(hsb.toString()).write("</div><div style=\"display:table-row\">").write(csb.toString())
+                .write("</div><div style=\"display:table-row\">").write(fsb.toString()).write("</div></div></div>");
+    }
 
-	@Override
-	protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
-			throws UnifyException {
-		TimeField timeField = (TimeField) popupTextField;
-		String pageName = timeField.getId();
-		writer.write("ux.rigTimeField({");
-		writer.write("\"pId\":\"").write(pageName).write('"');
-		writer.write(",\"pClearable\":").write(timeField.isClearable());
-		writer.write(",\"pPattern\":");
-		writer.writeJsonPatternObject(timeField.getPattern());
-		writer.write(",\"pFormat\":");
-		writer.writeJsonDateTimeFormatObject(timeField.getDateTimeFormat());
-		writer.write("});");
-	}
+    @Override
+    protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
+            throws UnifyException {
+        TimeField timeField = (TimeField) popupTextField;
+        String pageName = timeField.getId();
+        writer.write("ux.rigTimeField({");
+        writer.write("\"pId\":\"").write(pageName).write('"');
+        writer.write(",\"pClearable\":").write(timeField.isClearable());
+        writer.write(",\"pPattern\":");
+        writer.writeJsonPatternObject(timeField.getPattern());
+        writer.write(",\"pFormat\":");
+        writer.writeJsonDateTimeFormatObject(timeField.getDateTimeFormat());
+        writer.write("});");
+    }
 
-	@Override
-	protected String getOnShowAction() throws UnifyException {
-		return null;
-	}
+    @Override
+    protected String getOnShowAction() throws UnifyException {
+        return null;
+    }
 
-	@Override
-	protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
-		return null;
-	}
+    @Override
+    protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
+        return null;
+    }
 
-	@Override
-	protected String getOnHideAction() throws UnifyException {
-		return null;
-	}
+    @Override
+    protected String getOnHideAction() throws UnifyException {
+        return null;
+    }
 
-	@Override
-	protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
-		return null;
-	}
+    @Override
+    protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
+        return null;
+    }
 
 }

@@ -37,70 +37,70 @@ import com.tcdng.unify.web.ui.Widget;
  */
 @Component("ui-dynamicpanel")
 @UplAttributes({ @UplAttribute(name = "panelNameBinding", type = String.class, mandatory = true),
-		@UplAttribute(name = "panelValueBinding", type = String.class),
-		@UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "panelValueBinding", type = String.class),
+        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
 public class DynamicPanel extends AbstractPanel {
 
-	private Set<String> panelNames;
+    private Set<String> panelNames;
 
-	public DynamicPanel() {
-		panelNames = new HashSet<String>();
-	}
+    public DynamicPanel() {
+        panelNames = new HashSet<String>();
+    }
 
-	@Override
-	public void resetState() throws UnifyException {
-		getStandalonePanel().resetState();
-	}
+    @Override
+    public void resetState() throws UnifyException {
+        getStandalonePanel().resetState();
+    }
 
-	@Override
-	public Widget getRelayWidget() throws UnifyException {
-		return getStandalonePanel();
-	}
+    @Override
+    public Widget getRelayWidget() throws UnifyException {
+        return getStandalonePanel();
+    }
 
-	@Override
-	public boolean isRelayCommand() {
-		return true;
-	}
+    @Override
+    public boolean isRelayCommand() {
+        return true;
+    }
 
-	public String getHiddenId() throws UnifyException {
-		return getPrefixedId("hid_");
-	}
+    public String getHiddenId() throws UnifyException {
+        return getPrefixedId("hid_");
+    }
 
-	public StandalonePanel getStandalonePanel() throws UnifyException {
-		String panelName = (String) getValue(getUplAttribute(String.class, "panelNameBinding"));
-		String uniqueName = UplUtils.generateUplComponentCloneName(panelName,
-				getPageManager().getPageName(getLongName()));
-		Page page = getRequestContextUtil().getRequestPage();
-		getPageManager().invalidateStaleDocument(uniqueName);
-		StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
-		if (standalonePanel == null) {
-			standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName);
-			page.addStandalonePanel(uniqueName, standalonePanel);
-			getControllerManager().updatePageControllerInfo(
-					getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), uniqueName);
-			panelNames.add(uniqueName);
-		}
-		setValueStore(standalonePanel);
-		return standalonePanel;
-	}
+    public StandalonePanel getStandalonePanel() throws UnifyException {
+        String panelName = (String) getValue(getUplAttribute(String.class, "panelNameBinding"));
+        String uniqueName = UplUtils.generateUplComponentCloneName(panelName,
+                getPageManager().getPageName(getLongName()));
+        Page page = getRequestContextUtil().getRequestPage();
+        getPageManager().invalidateStaleDocument(uniqueName);
+        StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
+        if (standalonePanel == null) {
+            standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName);
+            page.addStandalonePanel(uniqueName, standalonePanel);
+            getControllerManager().updatePageControllerInfo(
+                    getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), uniqueName);
+            panelNames.add(uniqueName);
+        }
+        setValueStore(standalonePanel);
+        return standalonePanel;
+    }
 
-	@Override
-	public void addPageAliases() throws UnifyException {
-		List<String> aliases = getPageManager().getExpandedReferences(getStandalonePanel().getId());
-		getRequestContextUtil().addPageAlias(getId(), aliases.toArray(new String[aliases.size()]));
-	}
+    @Override
+    public void addPageAliases() throws UnifyException {
+        List<String> aliases = getPageManager().getExpandedReferences(getStandalonePanel().getId());
+        getRequestContextUtil().addPageAlias(getId(), aliases.toArray(new String[aliases.size()]));
+    }
 
-	private void setValueStore(StandalonePanel standalonePanel) throws UnifyException {
-		ValueStore valueStore = getValueStore();
-		String valueBinding = getUplAttribute(String.class, "panelValueBinding");
-		if (valueBinding != null) {
-			ValueStore oldValueStore = standalonePanel.getValueStore();
-			Object valueObject = getValue(valueBinding);
-			if (oldValueStore == null || oldValueStore.getValueObject() != valueObject) {
-				standalonePanel.setValueStore(createValueStore(valueObject));
-			}
-		} else {
-			standalonePanel.setValueStore(valueStore);
-		}
-	}
+    private void setValueStore(StandalonePanel standalonePanel) throws UnifyException {
+        ValueStore valueStore = getValueStore();
+        String valueBinding = getUplAttribute(String.class, "panelValueBinding");
+        if (valueBinding != null) {
+            ValueStore oldValueStore = standalonePanel.getValueStore();
+            Object valueObject = getValue(valueBinding);
+            if (oldValueStore == null || oldValueStore.getValueObject() != valueObject) {
+                standalonePanel.setValueStore(createValueStore(valueObject));
+            }
+        } else {
+            standalonePanel.setValueStore(valueStore);
+        }
+    }
 }

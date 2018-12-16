@@ -26,27 +26,27 @@ import java.util.List;
  */
 public class Menu {
 
-	private String privilege;
+    private String privilege;
 
-	private String caption;
+    private String caption;
 
-	private List<MenuItemSet> menuItemSetList;
+    private List<MenuItemSet> menuItemSetList;
 
-	public Menu(String privilege, String caption, List<MenuItemSet> menuItemSetList) {
-		this.privilege = privilege;
-		this.caption = caption;
-		this.menuItemSetList = Collections.unmodifiableList(menuItemSetList);
-	}
+    public Menu(String privilege, String caption, List<MenuItemSet> menuItemSetList) {
+        this.privilege = privilege;
+        this.caption = caption;
+        this.menuItemSetList = Collections.unmodifiableList(menuItemSetList);
+    }
 
-	public String getPrivilege() {
-		return privilege;
-	}
+    public String getPrivilege() {
+        return privilege;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public List<MenuItemSet> getMenuItemSetList() {
-		return menuItemSetList;
-	}
+    public List<MenuItemSet> getMenuItemSetList() {
+        return menuItemSetList;
+    }
 }

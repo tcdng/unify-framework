@@ -23,21 +23,21 @@ package com.tcdng.unify.web.ui;
  */
 public interface PageAction extends Behavior {
 
-	/**
-	 * Returns the page action code.
-	 */
-	String getAction();
+    /**
+     * Returns the page action code.
+     */
+    String getAction();
 
-	/**
-	 * Returns the page action id.
-	 */
-	String getId();
+    /**
+     * Returns the page action id.
+     */
+    String getId();
 
-	/**
-	 * Sets the page action id.
-	 * 
-	 * @param id
-	 *            the id to set
-	 */
-	void setId(String id);
+    /**
+     * Sets the page action id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    void setId(String id);
 }

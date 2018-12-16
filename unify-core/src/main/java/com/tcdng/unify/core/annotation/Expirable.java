@@ -34,9 +34,9 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Expirable {
 
-	/** Expiration cycle in seconds */
-	int cycleInSec();
+    /** Expiration cycle in seconds */
+    int cycleInSec();
 
-	/** Expiration cycle in seconds settings key */
-	String cycleInSecSetting() default AnnotationConstants.NONE;
+    /** Expiration cycle in seconds settings key */
+    String cycleInSecSetting() default AnnotationConstants.NONE;
 }

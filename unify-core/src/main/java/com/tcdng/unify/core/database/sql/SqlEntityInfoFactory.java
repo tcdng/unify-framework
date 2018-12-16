@@ -26,16 +26,16 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SqlEntityInfoFactory extends UnifyComponent {
 
-	String VIEW_PREFIX = "V_";
+    String VIEW_PREFIX = "V_";
 
-	/**
-	 * Returns the SQL entity information for a entity type.
-	 * 
-	 * @param entityClass
-	 *            the entity class
-	 * @return entity information for specified entity type.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException;
+    /**
+     * Returns the SQL entity information for a entity type.
+     * 
+     * @param entityClass
+     *            the entity class
+     * @return entity information for specified entity type.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException;
 }

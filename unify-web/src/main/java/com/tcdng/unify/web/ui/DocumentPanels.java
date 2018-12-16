@@ -25,47 +25,47 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface DocumentPanels {
 
-	/**
-	 * Returns the document id.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getId() throws UnifyException;
+    /**
+     * Returns the document id.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getId() throws UnifyException;
 
-	/**
-	 * Returns the document header panel.
-	 * 
-	 * @return the header panel
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Panel getHeaderPanel() throws UnifyException;
+    /**
+     * Returns the document header panel.
+     * 
+     * @return the header panel
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Panel getHeaderPanel() throws UnifyException;
 
-	/**
-	 * Returns the document menu panel.
-	 * 
-	 * @return the menu panel
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Panel getMenuPanel() throws UnifyException;
+    /**
+     * Returns the document menu panel.
+     * 
+     * @return the menu panel
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Panel getMenuPanel() throws UnifyException;
 
-	/**
-	 * Returns the document content panel.
-	 * 
-	 * @return the content panel
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Panel getContentPanel() throws UnifyException;
+    /**
+     * Returns the document content panel.
+     * 
+     * @return the content panel
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Panel getContentPanel() throws UnifyException;
 
-	/**
-	 * Returns the document footer panel.
-	 * 
-	 * @return the footer panel
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Panel getFooterPanel() throws UnifyException;
+    /**
+     * Returns the document footer panel.
+     * 
+     * @return the footer panel
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Panel getFooterPanel() throws UnifyException;
 }

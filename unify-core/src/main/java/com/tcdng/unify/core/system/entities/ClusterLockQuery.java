@@ -31,35 +31,35 @@ import com.tcdng.unify.core.operation.Or;
  */
 public class ClusterLockQuery extends Query<ClusterLock> {
 
-	public ClusterLockQuery() {
-		super(ClusterLock.class);
-	}
+    public ClusterLockQuery() {
+        super(ClusterLock.class);
+    }
 
-	public ClusterLockQuery lockName(String lockName) {
-		return (ClusterLockQuery) equals("lockName", lockName);
-	}
+    public ClusterLockQuery lockName(String lockName) {
+        return (ClusterLockQuery) equals("lockName", lockName);
+    }
 
-	public ClusterLockQuery lockNameIn(Collection<String> lockNameList) {
-		return (ClusterLockQuery) amongst("lockName", lockNameList);
-	}
+    public ClusterLockQuery lockNameIn(Collection<String> lockNameList) {
+        return (ClusterLockQuery) amongst("lockName", lockNameList);
+    }
 
-	public ClusterLockQuery currentOwner(String currentOwner) {
-		return (ClusterLockQuery) equals("currentOwner", currentOwner);
-	}
+    public ClusterLockQuery currentOwner(String currentOwner) {
+        return (ClusterLockQuery) equals("currentOwner", currentOwner);
+    }
 
-	public ClusterLockQuery currentOwnerIsNull() {
-		return (ClusterLockQuery) isNull("currentOwner");
-	}
+    public ClusterLockQuery currentOwnerIsNull() {
+        return (ClusterLockQuery) isNull("currentOwner");
+    }
 
-	public ClusterLockQuery expiryTime(Date date) {
-		return (ClusterLockQuery) equals("expiryTime", date);
-	}
+    public ClusterLockQuery expiryTime(Date date) {
+        return (ClusterLockQuery) equals("expiryTime", date);
+    }
 
-	public ClusterLockQuery expiryTimeBefore(Date date) {
-		return (ClusterLockQuery) less("expiryTime", date);
-	}
+    public ClusterLockQuery expiryTimeBefore(Date date) {
+        return (ClusterLockQuery) less("expiryTime", date);
+    }
 
-	public ClusterLockQuery expiredOrFree(Date date) {
-		return (ClusterLockQuery) add(new Or(new Less("expiryTime", date), new IsNull("currentOwner")));
-	}
+    public ClusterLockQuery expiredOrFree(Date date) {
+        return (ClusterLockQuery) add(new Or(new Less("expiryTime", date), new IsNull("currentOwner")));
+    }
 }

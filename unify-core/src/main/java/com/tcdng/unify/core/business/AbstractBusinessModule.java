@@ -36,78 +36,78 @@ import com.tcdng.unify.core.task.TaskSetup;
  */
 public abstract class AbstractBusinessModule extends AbstractUnifyComponent implements BusinessModule {
 
-	@Configurable(ApplicationComponents.APPLICATION_DATABASE)
-	private Database database;
+    @Configurable(ApplicationComponents.APPLICATION_DATABASE)
+    private Database database;
 
-	@Configurable(ApplicationComponents.APPLICATION_TASKLAUNCHER)
-	private TaskLauncher taskLauncher;
+    @Configurable(ApplicationComponents.APPLICATION_TASKLAUNCHER)
+    private TaskLauncher taskLauncher;
 
-	@Override
-	public DatabaseTransactionManager tm() throws UnifyException {
-		return database.getTransactionManager();
-	}
+    @Override
+    public DatabaseTransactionManager tm() throws UnifyException {
+        return database.getTransactionManager();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	/**
-	 * Returns associated database
-	 */
-	protected Database db() {
-		return database;
-	}
+    /**
+     * Returns associated database
+     */
+    protected Database db() {
+        return database;
+    }
 
-	/**
-	 * Executes a business logic unit.
-	 * 
-	 * @param taskMonitor
-	 *            a task monitoring object
-	 * @param unitName
-	 *            the unit name
-	 * @param parameters
-	 *            logic input parameters
-	 * @return the business logic output
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected BusinessLogicOutput executeBusinessLogic(TaskMonitor taskMonitor, String unitName,
-			Map<String, Object> parameters) throws UnifyException {
-		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent(unitName);
-		BusinessLogicInput input = new BusinessLogicInput(taskMonitor, db().getName());
-		input.setParameters(parameters);
+    /**
+     * Executes a business logic unit.
+     * 
+     * @param taskMonitor
+     *            a task monitoring object
+     * @param unitName
+     *            the unit name
+     * @param parameters
+     *            logic input parameters
+     * @return the business logic output
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected BusinessLogicOutput executeBusinessLogic(TaskMonitor taskMonitor, String unitName,
+            Map<String, Object> parameters) throws UnifyException {
+        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent(unitName);
+        BusinessLogicInput input = new BusinessLogicInput(taskMonitor, db().getName());
+        input.setParameters(parameters);
 
-		BusinessLogicOutput output = new BusinessLogicOutput();
-		blu.execute(input, output);
-		return output;
-	}
+        BusinessLogicOutput output = new BusinessLogicOutput();
+        blu.execute(input, output);
+        return output;
+    }
 
-	protected TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
-		return taskLauncher.launchTask(taskSetup);
-	}
+    protected TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
+        return taskLauncher.launchTask(taskSetup);
+    }
 
-	protected void addTaskMonitorSessionMessage(TaskMonitor taskMonitor, String messageKey, Object... params)
-			throws UnifyException {
-		addTaskMessage(taskMonitor, getSessionMessage(messageKey, params));
-	}
+    protected void addTaskMonitorSessionMessage(TaskMonitor taskMonitor, String messageKey, Object... params)
+            throws UnifyException {
+        addTaskMessage(taskMonitor, getSessionMessage(messageKey, params));
+    }
 
-	protected void addTaskMessage(TaskMonitor taskMonitor, String message) throws UnifyException {
-		if (taskMonitor != null) {
-			taskMonitor.addMessage(message);
-		}
-	}
+    protected void addTaskMessage(TaskMonitor taskMonitor, String message) throws UnifyException {
+        if (taskMonitor != null) {
+            taskMonitor.addMessage(message);
+        }
+    }
 
-	protected void commit() throws UnifyException {
-		database.getTransactionManager().commit();
-	}
+    protected void commit() throws UnifyException {
+        database.getTransactionManager().commit();
+    }
 
-	protected void setRollback() throws UnifyException {
-		database.getTransactionManager().setRollback();
-	}
+    protected void setRollback() throws UnifyException {
+        database.getTransactionManager().setRollback();
+    }
 }

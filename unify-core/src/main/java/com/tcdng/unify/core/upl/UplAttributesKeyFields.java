@@ -23,35 +23,35 @@ package com.tcdng.unify.core.upl;
  */
 public class UplAttributesKeyFields {
 
-	private int uplType;
+    private int uplType;
 
-	private String componentName;
+    private String componentName;
 
-	private String longName;
+    private String longName;
 
-	private String descriptor;
+    private String descriptor;
 
-	public UplAttributesKeyFields(int uplType, String componentName, String longName, String descriptor) {
-		this.uplType = uplType;
-		this.componentName = componentName;
-		this.longName = longName;
-		this.descriptor = descriptor;
-	}
+    public UplAttributesKeyFields(int uplType, String componentName, String longName, String descriptor) {
+        this.uplType = uplType;
+        this.componentName = componentName;
+        this.longName = longName;
+        this.descriptor = descriptor;
+    }
 
-	public int getUplType() {
-		return uplType;
-	}
+    public int getUplType() {
+        return uplType;
+    }
 
-	public String getComponentName() {
-		return componentName;
-	}
+    public String getComponentName() {
+        return componentName;
+    }
 
-	public String getLongName() {
-		return longName;
-	}
+    public String getLongName() {
+        return longName;
+    }
 
-	public String getDescriptor() {
-		return descriptor;
-	}
+    public String getDescriptor() {
+        return descriptor;
+    }
 
 }

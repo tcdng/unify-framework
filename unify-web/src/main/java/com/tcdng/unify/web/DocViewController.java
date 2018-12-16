@@ -26,5 +26,5 @@ import com.tcdng.unify.web.ui.Panel;
  */
 public interface DocViewController extends PageController {
 
-	Panel getDocViewPanel() throws UnifyException;
+    Panel getDocViewPanel() throws UnifyException;
 }

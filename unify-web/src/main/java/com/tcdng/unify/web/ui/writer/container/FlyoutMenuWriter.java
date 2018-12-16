@@ -45,209 +45,208 @@ import com.tcdng.unify.web.util.HtmlUtils;
 @Component("flyoutmenu-writer")
 public class FlyoutMenuWriter extends AbstractPanelWriter {
 
-	private static final int DYNAMIC_CHILD_OFFSET = 10;
+    private static final int DYNAMIC_CHILD_OFFSET = 10;
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		FlyoutMenu flyoutMenu = (FlyoutMenu) widget;
-		List<String> menuWinIdList = new ArrayList<String>();
-		for (String id : flyoutMenu.getMenuItemIds()) {
-			MenuItem menuItem = flyoutMenu.getMenuItem(id);
-			if (menuItem.isMain()) {
-				String popupId = "pop_" + id;
-				String popupContentId = "popc_" + id;
-				String menuWinId = "win_" + id;
-				StringBuilder psb = new StringBuilder();
-				psb.append("{\"menuWinId\":\"").append(menuWinId);
-				psb.append("\",\"windowId\":\"").append(flyoutMenu.getSliderWinId());
-				psb.append("\",\"popupId\":\"").append(popupId);
-				psb.append("\",\"popupContentId\":\"").append(popupContentId).append("\"");
-				psb.append(",\"vertical\":").append(flyoutMenu.isVertical()).append("}");
-				writeOpenPopupJS(writer, "onmouseover", id, null, popupId, 500, "repositionmenupopup",
-						psb.toString(), null, null);
-				menuWinIdList.add(menuWinId);
-			}
-		}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        FlyoutMenu flyoutMenu = (FlyoutMenu) widget;
+        List<String> menuWinIdList = new ArrayList<String>();
+        for (String id : flyoutMenu.getMenuItemIds()) {
+            MenuItem menuItem = flyoutMenu.getMenuItem(id);
+            if (menuItem.isMain()) {
+                String popupId = "pop_" + id;
+                String popupContentId = "popc_" + id;
+                String menuWinId = "win_" + id;
+                StringBuilder psb = new StringBuilder();
+                psb.append("{\"menuWinId\":\"").append(menuWinId);
+                psb.append("\",\"windowId\":\"").append(flyoutMenu.getSliderWinId());
+                psb.append("\",\"popupId\":\"").append(popupId);
+                psb.append("\",\"popupContentId\":\"").append(popupContentId).append("\"");
+                psb.append(",\"vertical\":").append(flyoutMenu.isVertical()).append("}");
+                writeOpenPopupJS(writer, "onmouseover", id, null, popupId, 500, "repositionmenupopup", psb.toString(),
+                        null, null);
+                menuWinIdList.add(menuWinId);
+            }
+        }
 
-		writer.write("ux.rigFlyoutMenu({");
-		writer.write("\"pId\":\"").write(flyoutMenu.getId()).write("\"");
-		writer.write(",\"pContId\":\"").write(flyoutMenu.getContainerId()).write('"');
-		writer.write(",\"pCmdURL\":\"");
-		// Resolves out of bean context error which usually happens of menu reload
-		Object valueObject = flyoutMenu.getValueStore().getValueObject();
-		if (valueObject instanceof PageController) {
-			writer.writeCommandURL(((PageController) valueObject).getSessionId());
-		} else {
-			writer.writeCommandURL();
-		}
+        writer.write("ux.rigFlyoutMenu({");
+        writer.write("\"pId\":\"").write(flyoutMenu.getId()).write("\"");
+        writer.write(",\"pContId\":\"").write(flyoutMenu.getContainerId()).write('"');
+        writer.write(",\"pCmdURL\":\"");
+        // Resolves out of bean context error which usually happens of menu reload
+        Object valueObject = flyoutMenu.getValueStore().getValueObject();
+        if (valueObject instanceof PageController) {
+            writer.writeCommandURL(((PageController) valueObject).getSessionId());
+        } else {
+            writer.writeCommandURL();
+        }
 
-		writer.write('"');
-		writer.write(",\"pMenuWinId\":");
-		writer.writeJsonStringArray(menuWinIdList.toArray());
-		writer.write(",\"pNavId\":\"").write(flyoutMenu.getNavId()).write("\"");
-		writer.write(",\"pSliderId\":\"").write(flyoutMenu.getSliderId()).write("\"");
-		writer.write(",\"pSliderWinId\":\"").write(flyoutMenu.getSliderWinId()).write("\"");
-		writer.write(",\"pBackBtnId\":\"").write(flyoutMenu.getBackButtonId()).write("\"");
-		writer.write(",\"pForwardBtnId\":\"").write(flyoutMenu.getForwardButtonId()).write("\"");
-		writer.write(",\"pSliderGap\":").write(flyoutMenu.getSliderGap());
-		writer.write(",\"pVertical\":").write(flyoutMenu.isVertical());
-		writer.write(",\"pRate\":").write(flyoutMenu.getScrollRate());
-		writer.write(",\"pStepRate\":").write(flyoutMenu.getScrollStepRate());
+        writer.write('"');
+        writer.write(",\"pMenuWinId\":");
+        writer.writeJsonStringArray(menuWinIdList.toArray());
+        writer.write(",\"pNavId\":\"").write(flyoutMenu.getNavId()).write("\"");
+        writer.write(",\"pSliderId\":\"").write(flyoutMenu.getSliderId()).write("\"");
+        writer.write(",\"pSliderWinId\":\"").write(flyoutMenu.getSliderWinId()).write("\"");
+        writer.write(",\"pBackBtnId\":\"").write(flyoutMenu.getBackButtonId()).write("\"");
+        writer.write(",\"pForwardBtnId\":\"").write(flyoutMenu.getForwardButtonId()).write("\"");
+        writer.write(",\"pSliderGap\":").write(flyoutMenu.getSliderGap());
+        writer.write(",\"pVertical\":").write(flyoutMenu.isVertical());
+        writer.write(",\"pRate\":").write(flyoutMenu.getScrollRate());
+        writer.write(",\"pStepRate\":").write(flyoutMenu.getScrollStepRate());
 
-		MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
-		if (menuSet.isShowSelect()) {
-			writer.write(",\"pSelId\":\"").write(flyoutMenu.getSelectId()).write("\"");
-			writer.write(",\"pCurSelId\":\"").write(flyoutMenu.getCurrentSelCtrl().getId()).write("\"");
-		}
+        MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
+        if (menuSet.isShowSelect()) {
+            writer.write(",\"pSelId\":\"").write(flyoutMenu.getSelectId()).write("\"");
+            writer.write(",\"pCurSelId\":\"").write(flyoutMenu.getCurrentSelCtrl().getId()).write("\"");
+        }
 
-		writer.write(",\"pMenuItems\":[");
-		boolean appendSym = false;
-		for (String id : flyoutMenu.getMenuItemIds()) {
-			MenuItem menuItem = flyoutMenu.getMenuItem(id);
-			if (menuItem.getActionPath() != null) {
-				if (appendSym) {
-					writer.write(",");
-				} else {
-					appendSym = true;
-				}
+        writer.write(",\"pMenuItems\":[");
+        boolean appendSym = false;
+        for (String id : flyoutMenu.getMenuItemIds()) {
+            MenuItem menuItem = flyoutMenu.getMenuItem(id);
+            if (menuItem.getActionPath() != null) {
+                if (appendSym) {
+                    writer.write(",");
+                } else {
+                    appendSym = true;
+                }
 
-				writer.write("{\"id\":\"").write(id).write("\"");
-				writer.write(",\"main\":").write(menuItem.isMain());
-				writer.write(",\"actionPath\":\"").writeContextURL(menuItem.getActionPath()).write("\"}");
-			}
-		}
-		writer.write("]");
+                writer.write("{\"id\":\"").write(id).write("\"");
+                writer.write(",\"main\":").write(menuItem.isMain());
+                writer.write(",\"actionPath\":\"").writeContextURL(menuItem.getActionPath()).write("\"}");
+            }
+        }
+        writer.write("]");
 
-		writer.write("});");
-	}
+        writer.write("});");
+    }
 
-	@Override
-	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-		AbstractFlyoutMenu flyoutMenu = (AbstractFlyoutMenu) container;
-		String backImg = flyoutMenu.getUplAttribute(String.class, "backImgSrc");
-		String forwardImg = flyoutMenu.getUplAttribute(String.class, "forwardImgSrc");
-		flyoutMenu.clear();
-		writer.write("<div style=\"display:table;width:100%;height:100%;table-layout:fixed;\">");
-		writer.write("<div style=\"display:table-row;\">");
-		if (flyoutMenu.isVertical()) {
-			writer.write("<div style=\"display:table-cell; height:100%;\">");
-		} else {
-			writer.write("<div style=\"display:table-cell;\">");
-		}
+    @Override
+    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+        AbstractFlyoutMenu flyoutMenu = (AbstractFlyoutMenu) container;
+        String backImg = flyoutMenu.getUplAttribute(String.class, "backImgSrc");
+        String forwardImg = flyoutMenu.getUplAttribute(String.class, "forwardImgSrc");
+        flyoutMenu.clear();
+        writer.write("<div style=\"display:table;width:100%;height:100%;table-layout:fixed;\">");
+        writer.write("<div style=\"display:table-row;\">");
+        if (flyoutMenu.isVertical()) {
+            writer.write("<div style=\"display:table-cell; height:100%;\">");
+        } else {
+            writer.write("<div style=\"display:table-cell;\">");
+        }
 
-		appendScrollButton(writer, flyoutMenu, flyoutMenu.getBackButtonId(), backImg);
+        appendScrollButton(writer, flyoutMenu, flyoutMenu.getBackButtonId(), backImg);
 
-		writer.write("<div id=\"").write(flyoutMenu.getSliderWinId()).write("\"");
-		if (flyoutMenu.isVertical()) {
-			writer.write(" style=\"display:inline-block;width:100%;height:100%;overflow-y:hidden;\">");
-		} else {
-			writer.write(" style=\"display:inline-block;width:100%;height:100%;overflow-x:hidden;\">");
-		}
-		writer.write("<div id=\"").write(flyoutMenu.getSliderId())
-				.write("\" style = \"visibility:hidden;position:relative;\">");
-		writer.write("<ul id=\"").write(flyoutMenu.getNavId()).write("\" class=\"nav\">");
-		StringBuilder psb = new StringBuilder();
+        writer.write("<div id=\"").write(flyoutMenu.getSliderWinId()).write("\"");
+        if (flyoutMenu.isVertical()) {
+            writer.write(" style=\"display:inline-block;width:100%;height:100%;overflow-y:hidden;\">");
+        } else {
+            writer.write(" style=\"display:inline-block;width:100%;height:100%;overflow-x:hidden;\">");
+        }
+        writer.write("<div id=\"").write(flyoutMenu.getSliderId())
+                .write("\" style = \"visibility:hidden;position:relative;\">");
+        writer.write("<ul id=\"").write(flyoutMenu.getNavId()).write("\" class=\"nav\">");
+        StringBuilder psb = new StringBuilder();
 
-		// Menu set select
-		MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
-		boolean isShowMenu = true;
-		if (menuSet.isShowSelect()) {
-			List<Integer> visibleIndexList = new ArrayList<Integer>();
-			for (int i = 0; i < menuSet.size(); i++) {
-				if (getPrivilegeSettings(menuSet.getMenu(i).getPrivilege()).isVisible()) {
-					visibleIndexList.add(i);
-				}
-			}
+        // Menu set select
+        MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
+        boolean isShowMenu = true;
+        if (menuSet.isShowSelect()) {
+            List<Integer> visibleIndexList = new ArrayList<Integer>();
+            for (int i = 0; i < menuSet.size(); i++) {
+                if (getPrivilegeSettings(menuSet.getMenu(i).getPrivilege()).isVisible()) {
+                    visibleIndexList.add(i);
+                }
+            }
 
-			if (!visibleIndexList.isEmpty() && !visibleIndexList.contains(flyoutMenu.getCurrentSel())) {
-				flyoutMenu.setCurrentSel(visibleIndexList.get(0));
-			}
+            if (!visibleIndexList.isEmpty() && !visibleIndexList.contains(flyoutMenu.getCurrentSel())) {
+                flyoutMenu.setCurrentSel(visibleIndexList.get(0));
+            }
 
-			writer.write("<li><select id=\"").write(flyoutMenu.getSelectId()).write("\" class=\"mselect\">");
-			for (Integer i : visibleIndexList) {
-				writer.write("<option value=\"").write(i).write("\"");
-				if (i == flyoutMenu.getCurrentSel()) {
-					writer.write(" selected");
-				}
+            writer.write("<li><select id=\"").write(flyoutMenu.getSelectId()).write("\" class=\"mselect\">");
+            for (Integer i : visibleIndexList) {
+                writer.write("<option value=\"").write(i).write("\"");
+                if (i == flyoutMenu.getCurrentSel()) {
+                    writer.write(" selected");
+                }
 
-				writer.write(">");
-				writer.writeWithHtmlEscape(menuSet.getMenu(i).getCaption());
-				writer.write("</option>");
-			}
-			writer.write("</select></li>");
+                writer.write(">");
+                writer.writeWithHtmlEscape(menuSet.getMenu(i).getCaption());
+                writer.write("</option>");
+            }
+            writer.write("</select></li>");
 
-			isShowMenu = !visibleIndexList.isEmpty();
-		}
+            isShowMenu = !visibleIndexList.isEmpty();
+        }
 
-		if (isShowMenu && !menuSet.isEmpty()) {
-			// Menu items
-			int childIndex = DYNAMIC_CHILD_OFFSET;
-			Menu menu = menuSet.getMenu(flyoutMenu.getCurrentSel());
-			for (MenuItemSet menuItemSet : menu.getMenuItemSetList()) {
-				if (getPrivilegeSettings(menuItemSet.getPrivilege()).isVisible()) {
-					String menuId = flyoutMenu.getNamingIndexedId(childIndex++);
-					flyoutMenu.addMenuItem(menuId, menuItemSet);
-					writer.write("<li id=\"").write("win_" + menuId).write("\">");
-					writer.write("<a class=\"option\" id=\"").write(menuId).write("\">");
-					writer.writeWithHtmlEscape(resolveSessionMessage(menuItemSet.getCaption()));
-					writer.write("</a>");
-					writer.write("</li>");
+        if (isShowMenu && !menuSet.isEmpty()) {
+            // Menu items
+            int childIndex = DYNAMIC_CHILD_OFFSET;
+            Menu menu = menuSet.getMenu(flyoutMenu.getCurrentSel());
+            for (MenuItemSet menuItemSet : menu.getMenuItemSetList()) {
+                if (getPrivilegeSettings(menuItemSet.getPrivilege()).isVisible()) {
+                    String menuId = flyoutMenu.getNamingIndexedId(childIndex++);
+                    flyoutMenu.addMenuItem(menuId, menuItemSet);
+                    writer.write("<li id=\"").write("win_" + menuId).write("\">");
+                    writer.write("<a class=\"option\" id=\"").write(menuId).write("\">");
+                    writer.writeWithHtmlEscape(resolveSessionMessage(menuItemSet.getCaption()));
+                    writer.write("</a>");
+                    writer.write("</li>");
 
-					List<MenuItem> menuItemList = menuItemSet.getMenuItemList();
-					if (!menuItemList.isEmpty()) {
-						psb.append("<div");
-						writeTagId(psb, "pop_" + menuId);
-						writeTagStyleClass(psb, "flyoutmenu-popup");
-						psb.append(">");
-						psb.append("<ul id=\"").append("popc_" + menuId).append("\">");
-						for (MenuItem menuItem : menuItemList) {
-							if (getPrivilegeSettings(menuItem.getPrivilege()).isVisible()) {
-								String menuItemId = flyoutMenu.getNamingIndexedId(childIndex++);
-								flyoutMenu.addMenuItem(menuItemId, menuItem);
-								psb.append("<li><a class=\"mitem\" id=\"").append(menuItemId).append("\">");
-								HtmlUtils.writeStringWithHtmlEscape(psb,
-										resolveSessionMessage(menuItem.getCaption()));
-								psb.append("</a></li>");
-							}
-						}
-						psb.append("</ul>");
-						psb.append("</div>");
-					}
-				}
-			}
-		}
+                    List<MenuItem> menuItemList = menuItemSet.getMenuItemList();
+                    if (!menuItemList.isEmpty()) {
+                        psb.append("<div");
+                        writeTagId(psb, "pop_" + menuId);
+                        writeTagStyleClass(psb, "flyoutmenu-popup");
+                        psb.append(">");
+                        psb.append("<ul id=\"").append("popc_" + menuId).append("\">");
+                        for (MenuItem menuItem : menuItemList) {
+                            if (getPrivilegeSettings(menuItem.getPrivilege()).isVisible()) {
+                                String menuItemId = flyoutMenu.getNamingIndexedId(childIndex++);
+                                flyoutMenu.addMenuItem(menuItemId, menuItem);
+                                psb.append("<li><a class=\"mitem\" id=\"").append(menuItemId).append("\">");
+                                HtmlUtils.writeStringWithHtmlEscape(psb, resolveSessionMessage(menuItem.getCaption()));
+                                psb.append("</a></li>");
+                            }
+                        }
+                        psb.append("</ul>");
+                        psb.append("</div>");
+                    }
+                }
+            }
+        }
 
-		writer.write("</ul>");
-		writer.write("</div>");
-		writer.write("</div>");
+        writer.write("</ul>");
+        writer.write("</div>");
+        writer.write("</div>");
 
-		appendScrollButton(writer, flyoutMenu, flyoutMenu.getForwardButtonId(), forwardImg);
+        appendScrollButton(writer, flyoutMenu, flyoutMenu.getForwardButtonId(), forwardImg);
 
-		writer.write("</div>");
-		writer.write("</div>");
-		writer.write("</div>");
+        writer.write("</div>");
+        writer.write("</div>");
+        writer.write("</div>");
 
-		writer.writeStructureAndContent(flyoutMenu.getCurrentSelCtrl());
+        writer.writeStructureAndContent(flyoutMenu.getCurrentSelCtrl());
 
-		writer.write(psb.toString());
-	}
+        writer.write(psb.toString());
+    }
 
-	private void appendScrollButton(ResponseWriter writer, AbstractFlyoutMenu flyoutMenu, String buttonId,
-			String imageSrc) throws UnifyException {
-		writer.write("<div id=\"").write(buttonId);
-		if (flyoutMenu.isVertical()) {
-			writer.write("\" class=\"scroll\" style=\"display:table-cell; width:100%; vertical-align:middle;\">");
-		} else {
-			writer.write("\" class=\"scroll\" style=\"display:table-cell; height:100%; vertical-align:middle;\">");
-		}
-		writer.write("<img src=\"");
-		writer.writeFileImageContextURL(imageSrc);
-		if (flyoutMenu.isVertical()) {
-			writer.write("\" style=\"height:100%;max-width:100%;\"/>");
-		} else {
-			writer.write("\" style=\"width:100%;max-height:100%;\"/>");
-		}
-		writer.write("</div>");
-	}
+    private void appendScrollButton(ResponseWriter writer, AbstractFlyoutMenu flyoutMenu, String buttonId,
+            String imageSrc) throws UnifyException {
+        writer.write("<div id=\"").write(buttonId);
+        if (flyoutMenu.isVertical()) {
+            writer.write("\" class=\"scroll\" style=\"display:table-cell; width:100%; vertical-align:middle;\">");
+        } else {
+            writer.write("\" class=\"scroll\" style=\"display:table-cell; height:100%; vertical-align:middle;\">");
+        }
+        writer.write("<img src=\"");
+        writer.writeFileImageContextURL(imageSrc);
+        if (flyoutMenu.isVertical()) {
+            writer.write("\" style=\"height:100%;max-width:100%;\"/>");
+        } else {
+            writer.write("\" style=\"width:100%;max-height:100%;\"/>");
+        }
+        writer.write("</div>");
+    }
 
 }

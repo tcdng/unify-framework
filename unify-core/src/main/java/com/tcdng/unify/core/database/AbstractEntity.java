@@ -29,37 +29,37 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractEntity implements Entity {
 
-	@Override
-	public String getListKey() {
-		return String.valueOf(getId());
-	}
+    @Override
+    public String getListKey() {
+        return String.valueOf(getId());
+    }
 
-	@Override
-	public String getListDescription() {
-		return getDescription();
-	}
+    @Override
+    public String getListDescription() {
+        return getDescription();
+    }
 
-	@Override
-	public boolean isReserved() {
-		return false;
-	}
+    @Override
+    public boolean isReserved() {
+        return false;
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		return ReflectUtils.equals(this, object, ignore());
-	}
+    @Override
+    public boolean equals(Object object) {
+        return ReflectUtils.equals(this, object, ignore());
+    }
 
-	@Override
-	public int hashCode() {
-		return ReflectUtils.hashCode(this, ignore());
-	}
+    @Override
+    public int hashCode() {
+        return ReflectUtils.hashCode(this, ignore());
+    }
 
-	@Override
-	public String toString() {
-		return StringUtils.beanToString(this);
-	}
+    @Override
+    public String toString() {
+        return StringUtils.beanToString(this);
+    }
 
-	protected Set<String> ignore() {
-		return Collections.emptySet();
-	}
+    protected Set<String> ignore() {
+        return Collections.emptySet();
+    }
 }

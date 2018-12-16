@@ -37,134 +37,134 @@ import com.tcdng.unify.web.ui.data.TreeInfo.MenuInfo;
  */
 public class TreeItemCategoryInfo {
 
-	private String name;
+    private String name;
 
-	private String icon;
+    private String icon;
 
-	private Set<EventType> eventTypes;
+    private Set<EventType> eventTypes;
 
-	private List<MenuInfo> menuList;
+    private List<MenuInfo> menuList;
 
-	private TreeItemCategoryInfo(String name, String icon, Set<EventType> eventTypes, List<MenuInfo> menuList) {
-		this.name = name;
-		this.icon = icon;
-		this.eventTypes = Collections.unmodifiableSet(eventTypes);
-		this.menuList = Collections.unmodifiableList(menuList);
-	}
+    private TreeItemCategoryInfo(String name, String icon, Set<EventType> eventTypes, List<MenuInfo> menuList) {
+        this.name = name;
+        this.icon = icon;
+        this.eventTypes = Collections.unmodifiableSet(eventTypes);
+        this.menuList = Collections.unmodifiableList(menuList);
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getIcon() {
-		return icon;
-	}
+    public String getIcon() {
+        return icon;
+    }
 
-	public Set<EventType> getEventTypes() {
-		return eventTypes;
-	}
+    public Set<EventType> getEventTypes() {
+        return eventTypes;
+    }
 
-	public List<MenuInfo> getMenuList() {
-		return menuList;
-	}
+    public List<MenuInfo> getMenuList() {
+        return menuList;
+    }
 
-	public boolean isMenu() {
-		return !DataUtils.isBlank(menuList);
-	}
+    public boolean isMenu() {
+        return !DataUtils.isBlank(menuList);
+    }
 
-	public static Builder newBuilder(String name) {
-		return new Builder(name);
-	}
+    public static Builder newBuilder(String name) {
+        return new Builder(name);
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private String name;
+        private String name;
 
-		private String icon;
+        private String icon;
 
-		private Set<EventType> eventTypes;
+        private Set<EventType> eventTypes;
 
-		private Map<String, MenuInfo> menuList;
+        private Map<String, MenuInfo> menuList;
 
-		private Builder(String name) {
-			this.name = name;
-			eventTypes = new HashSet<EventType>();
-			menuList = new LinkedHashMap<String, MenuInfo>();
-		}
+        private Builder(String name) {
+            this.name = name;
+            eventTypes = new HashSet<EventType>();
+            menuList = new LinkedHashMap<String, MenuInfo>();
+        }
 
-		public Builder useIcon(String icon) {
-			this.icon = icon;
-			return this;
-		}
+        public Builder useIcon(String icon) {
+            this.icon = icon;
+            return this;
+        }
 
-		public Builder listenTo(EventType eventType) {
-			this.eventTypes.add(eventType);
+        public Builder listenTo(EventType eventType) {
+            this.eventTypes.add(eventType);
 
-			return this;
-		}
+            return this;
+        }
 
-		/**
-		 * Adds a menu item for category. Item is not visible on multiple selection.
-		 * 
-		 * @param code
-		 *            the item code sent to event handler on click.
-		 * @param caption
-		 *            the item caption
-		 * @return this builder
-		 * @throws UnifyException
-		 *             if menu with code already exists
-		 */
-		public Builder addMenuItem(String code, String caption) throws UnifyException {
-			return addMenuItem(code, caption, false);
-		}
+        /**
+         * Adds a menu item for category. Item is not visible on multiple selection.
+         * 
+         * @param code
+         *            the item code sent to event handler on click.
+         * @param caption
+         *            the item caption
+         * @return this builder
+         * @throws UnifyException
+         *             if menu with code already exists
+         */
+        public Builder addMenuItem(String code, String caption) throws UnifyException {
+            return addMenuItem(code, caption, false);
+        }
 
-		/**
-		 * Adds a menu item for category.
-		 * 
-		 * @param code
-		 *            the item code sent to event handler on click.
-		 * @param caption
-		 *            the item caption
-		 * @param separator
-		 *            the separator flag
-		 * @return this builder
-		 * @throws UnifyException
-		 *             if menu with code already exists
-		 */
-		public Builder addMenuItem(String code, String caption, boolean separator) throws UnifyException {
-			return addMenuItem(code, caption, separator, false);
-		}
+        /**
+         * Adds a menu item for category.
+         * 
+         * @param code
+         *            the item code sent to event handler on click.
+         * @param caption
+         *            the item caption
+         * @param separator
+         *            the separator flag
+         * @return this builder
+         * @throws UnifyException
+         *             if menu with code already exists
+         */
+        public Builder addMenuItem(String code, String caption, boolean separator) throws UnifyException {
+            return addMenuItem(code, caption, separator, false);
+        }
 
-		/**
-		 * Adds a menu item for category with separator option.
-		 * 
-		 * @param code
-		 *            the item code sent to event handler on click.
-		 * @param caption
-		 *            the item caption
-		 * @param separator
-		 *            the separator flag
-		 * @param showOnMultiple
-		 *            Indicates menu item should be visible on multiple selection
-		 * @return this builder
-		 * @throws UnifyException
-		 *             if menu with code already exists
-		 */
-		public Builder addMenuItem(String code, String caption, boolean separator, boolean showOnMultiple)
-				throws UnifyException {
-			if (menuList.containsKey(code)) {
-				throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-						"Menu item with code [" + code + "] exists.");
-			}
+        /**
+         * Adds a menu item for category with separator option.
+         * 
+         * @param code
+         *            the item code sent to event handler on click.
+         * @param caption
+         *            the item caption
+         * @param separator
+         *            the separator flag
+         * @param showOnMultiple
+         *            Indicates menu item should be visible on multiple selection
+         * @return this builder
+         * @throws UnifyException
+         *             if menu with code already exists
+         */
+        public Builder addMenuItem(String code, String caption, boolean separator, boolean showOnMultiple)
+                throws UnifyException {
+            if (menuList.containsKey(code)) {
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                        "Menu item with code [" + code + "] exists.");
+            }
 
-			listenTo(EventType.MOUSE_RIGHTCLICK);
-			menuList.put(code, new MenuInfo(code, caption, showOnMultiple, separator));
-			return this;
-		}
+            listenTo(EventType.MOUSE_RIGHTCLICK);
+            menuList.put(code, new MenuInfo(code, caption, showOnMultiple, separator));
+            return this;
+        }
 
-		public TreeItemCategoryInfo build() {
-			return new TreeItemCategoryInfo(this.name, this.icon, this.eventTypes,
-					new ArrayList<MenuInfo>(this.menuList.values()));
-		}
-	}
+        public TreeItemCategoryInfo build() {
+            return new TreeItemCategoryInfo(this.name, this.icon, this.eventTypes,
+                    new ArrayList<MenuInfo>(this.menuList.values()));
+        }
+    }
 }

@@ -33,72 +33,72 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractUnicastObjectCommunicator extends AbstractNetworkUnicastCommunicator {
 
-	private ObjectInputStream in;
+    private ObjectInputStream in;
 
-	private ObjectOutputStream out;
+    private ObjectOutputStream out;
 
-	@Override
-	protected void onOpen(InputStream in, OutputStream out) throws UnifyException {
-		try {
-			this.out = new ObjectOutputStream(out); // Sends header
-			this.out.flush();
-			this.in = new ObjectInputStream(in); // Blocks waiting for stream
-													// header (Don't change this
-													// order)
-		} catch (IOException e) {
-			throwOperationErrorException(e);
-		}
-	}
+    @Override
+    protected void onOpen(InputStream in, OutputStream out) throws UnifyException {
+        try {
+            this.out = new ObjectOutputStream(out); // Sends header
+            this.out.flush();
+            this.in = new ObjectInputStream(in); // Blocks waiting for stream
+                                                 // header (Don't change this
+                                                 // order)
+        } catch (IOException e) {
+            throwOperationErrorException(e);
+        }
+    }
 
-	@Override
-	protected void onClose() throws UnifyException {
-		IOUtils.close(in);
-		IOUtils.close(out);
-		in = null;
-		out = null;
-	}
+    @Override
+    protected void onClose() throws UnifyException {
+        IOUtils.close(in);
+        IOUtils.close(out);
+        in = null;
+        out = null;
+    }
 
-	@Override
-	protected void flushWrite() throws UnifyException {
-		try {
-			out.flush();
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    @Override
+    protected void flushWrite() throws UnifyException {
+        try {
+            out.flush();
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
-	/**
-	 * Reads an object.
-	 * 
-	 * @return the object read
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected Object readObject() throws UnifyException {
-		try {
-			return in.readObject();
-		} catch (Exception e) {
-			throwReceiveException(e);
-		}
-		return null;
-	}
+    /**
+     * Reads an object.
+     * 
+     * @return the object read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected Object readObject() throws UnifyException {
+        try {
+            return in.readObject();
+        } catch (Exception e) {
+            throwReceiveException(e);
+        }
+        return null;
+    }
 
-	/**
-	 * Writes a serializable object.
-	 * 
-	 * @param object
-	 *            the object to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeObject(Serializable object) throws UnifyException {
-		try {
-			out.writeObject(object);
-			if (isAutoFlush()) {
-				out.flush();
-			}
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes a serializable object.
+     * 
+     * @param object
+     *            the object to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeObject(Serializable object) throws UnifyException {
+        try {
+            out.writeObject(object);
+            if (isAutoFlush()) {
+                out.flush();
+            }
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 }

@@ -23,49 +23,49 @@ package com.tcdng.unify.core.net;
  */
 public class NetworkInterfaceConfig {
 
-	private NetworkInterfaceConfigType type;
+    private NetworkInterfaceConfigType type;
 
-	private String configName;
+    private String configName;
 
-	private String communicator;
+    private String communicator;
 
-	private String host;
+    private String host;
 
-	private int port;
+    private int port;
 
-	private int maxThreads;
+    private int maxThreads;
 
-	public NetworkInterfaceConfig(NetworkInterfaceConfigType type, String configName, String communicator, String host,
-			int port, int maxThreads) {
-		this.type = type;
-		this.configName = configName;
-		this.communicator = communicator;
-		this.host = host;
-		this.port = port;
-		this.maxThreads = maxThreads;
-	}
+    public NetworkInterfaceConfig(NetworkInterfaceConfigType type, String configName, String communicator, String host,
+            int port, int maxThreads) {
+        this.type = type;
+        this.configName = configName;
+        this.communicator = communicator;
+        this.host = host;
+        this.port = port;
+        this.maxThreads = maxThreads;
+    }
 
-	public NetworkInterfaceConfigType getType() {
-		return type;
-	}
+    public NetworkInterfaceConfigType getType() {
+        return type;
+    }
 
-	public String getConfigName() {
-		return configName;
-	}
+    public String getConfigName() {
+        return configName;
+    }
 
-	public String getCommunicator() {
-		return communicator;
-	}
+    public String getCommunicator() {
+        return communicator;
+    }
 
-	public String getHost() {
-		return host;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public int getMaxThreads() {
-		return maxThreads;
-	}
+    public int getMaxThreads() {
+        return maxThreads;
+    }
 }

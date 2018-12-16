@@ -23,9 +23,9 @@ package com.tcdng.unify.web;
  */
 public enum ControllerType {
 
-	PAGE_CONTROLLER,
+    PAGE_CONTROLLER,
 
-	RESOURCE_CONTROLLER,
+    RESOURCE_CONTROLLER,
 
-	REMOTECALL_CONTROLLER
+    REMOTECALL_CONTROLLER
 }

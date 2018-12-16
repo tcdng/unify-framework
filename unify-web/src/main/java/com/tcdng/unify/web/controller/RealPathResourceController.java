@@ -33,31 +33,30 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("/resource/realpath")
 public class RealPathResourceController extends FileResourceController {
 
-	protected File file;
+    protected File file;
 
-	public RealPathResourceController() {
-		super(false);
-	}
+    public RealPathResourceController() {
+        super(false);
+    }
 
-	@Override
-	public void prepareExecution() throws UnifyException {
-		super.prepareExecution();
-		file = new File(
-				IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), getResourceName()));
-		if (file.exists()) {
-			setContentLength(file.length());
-		}
-	}
+    @Override
+    public void prepareExecution() throws UnifyException {
+        super.prepareExecution();
+        file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), getResourceName()));
+        if (file.exists()) {
+            setContentLength(file.length());
+        }
+    }
 
-	@Override
-	protected InputStream getInputStream() throws UnifyException {
-		if (file != null && file.exists()) {
-			try {
-				return new FileInputStream(file);
-			} catch (FileNotFoundException e) {
-				throwOperationErrorException(e);
-			}
-		}
-		return null;
-	}
+    @Override
+    protected InputStream getInputStream() throws UnifyException {
+        if (file != null && file.exists()) {
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throwOperationErrorException(e);
+            }
+        }
+        return null;
+    }
 }

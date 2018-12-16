@@ -29,40 +29,40 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class DoublePolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		if (precision <= 0) {
-			sb.append("FLOAT");
-		} else {
-			sb.append("FLOAT(").append(precision).append(')');
-		}
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        if (precision <= 0) {
+            sb.append("FLOAT");
+        } else {
+            sb.append("FLOAT(").append(precision).append(')');
+        }
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.DOUBLE);
-		} else {
-			((PreparedStatement) pstmt).setDouble(index, (Double) data);
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.DOUBLE);
+        } else {
+            ((PreparedStatement) pstmt).setDouble(index, (Double) data);
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Object object = ((ResultSet) rs).getObject(column);
-		if (object != null) {
-			return ((ResultSet) rs).getDouble(column);
-		}
-		return null;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Object object = ((ResultSet) rs).getObject(column);
+        if (object != null) {
+            return ((ResultSet) rs).getDouble(column);
+        }
+        return null;
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Object object = ((ResultSet) rs).getObject(index);
-		if (object != null) {
-			return ((ResultSet) rs).getDouble(index);
-		}
-		return null;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Object object = ((ResultSet) rs).getObject(index);
+        if (object != null) {
+            return ((ResultSet) rs).getDouble(index);
+        }
+        return null;
+    }
 
 }

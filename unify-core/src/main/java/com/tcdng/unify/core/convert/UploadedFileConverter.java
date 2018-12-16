@@ -26,13 +26,13 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class UploadedFileConverter extends AbstractConverter<UploadedFile> {
 
-	@Override
-	protected UploadedFile doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof UploadedFile) {
-			return (UploadedFile) value;
-		}
+    @Override
+    protected UploadedFile doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof UploadedFile) {
+            return (UploadedFile) value;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

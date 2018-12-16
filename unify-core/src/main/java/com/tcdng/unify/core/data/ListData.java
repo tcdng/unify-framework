@@ -23,22 +23,22 @@ package com.tcdng.unify.core.data;
  */
 public class ListData implements Listable {
 
-	private String listKey;
+    private String listKey;
 
-	private String listDescription;
+    private String listDescription;
 
-	public ListData(String listKey, String listDescription) {
-		this.listKey = listKey;
-		this.listDescription = listDescription;
-	}
+    public ListData(String listKey, String listDescription) {
+        this.listKey = listKey;
+        this.listDescription = listDescription;
+    }
 
-	@Override
-	public String getListKey() {
-		return listKey;
-	}
+    @Override
+    public String getListKey() {
+        return listKey;
+    }
 
-	@Override
-	public String getListDescription() {
-		return listDescription;
-	}
+    @Override
+    public String getListDescription() {
+        return listDescription;
+    }
 }

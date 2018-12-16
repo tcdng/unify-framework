@@ -29,29 +29,29 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public abstract class AbstractTargetControlWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		TargetControl targetControl = (TargetControl) widget;
-		writer.write("<input type=\"hidden\"");
-		writeTagId(writer, targetControl.getTargetId());
-		String value = targetControl.getStaticBindingValue();
-		if (value == null) {
-			value = targetControl.getStringValue();
-		}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        TargetControl targetControl = (TargetControl) widget;
+        writer.write("<input type=\"hidden\"");
+        writeTagId(writer, targetControl.getTargetId());
+        String value = targetControl.getStaticBindingValue();
+        if (value == null) {
+            value = targetControl.getStringValue();
+        }
 
-		if (value != null) {
-			writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
-		} else {
-			int index = targetControl.getValueIndex();
-			if (index >= 0) {
-				writer.write(" value=\"").write(index).write("\"");
-			}
-		}
+        if (value != null) {
+            writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
+        } else {
+            int index = targetControl.getValueIndex();
+            if (index >= 0) {
+                writer.write(" value=\"").write(index).write("\"");
+            }
+        }
 
-		writer.write("/>");
-		doWriteTargetControl(writer, targetControl);
-	}
+        writer.write("/>");
+        doWriteTargetControl(writer, targetControl);
+    }
 
-	protected abstract void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl)
-			throws UnifyException;
+    protected abstract void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl)
+            throws UnifyException;
 }

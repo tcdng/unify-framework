@@ -25,42 +25,42 @@ import com.tcdng.unify.core.operation.Operator;
  */
 public class ReportColumnFilter {
 
-	private Operator op;
+    private Operator op;
 
-	private String tableName;
+    private String tableName;
 
-	private String columnName;
+    private String columnName;
 
-	private Object param1;
+    private Object param1;
 
-	private Object param2;
+    private Object param2;
 
-	public ReportColumnFilter(Operator op, String tableName, String columnName, Object param1, Object param2) {
-		this.op = op;
-		this.tableName = tableName;
-		this.columnName = columnName;
-		this.param1 = param1;
-		this.param2 = param2;
-	}
+    public ReportColumnFilter(Operator op, String tableName, String columnName, Object param1, Object param2) {
+        this.op = op;
+        this.tableName = tableName;
+        this.columnName = columnName;
+        this.param1 = param1;
+        this.param2 = param2;
+    }
 
-	public Operator getOp() {
-		return op;
-	}
+    public Operator getOp() {
+        return op;
+    }
 
-	public String getTableName() {
-		return tableName;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 
-	public String getColumnName() {
-		return columnName;
-	}
+    public String getColumnName() {
+        return columnName;
+    }
 
-	public Object getParam1() {
-		return param1;
-	}
+    public Object getParam1() {
+        return param1;
+    }
 
-	public Object getParam2() {
-		return param2;
-	}
+    public Object getParam2() {
+        return param2;
+    }
 
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class LikeBegin extends Criteria {
 
-	public LikeBegin(String field, String value) {
-		super(Operator.LIKE_BEGIN, field, value);
-	}
+    public LikeBegin(String field, String value) {
+        super(Operator.LIKE_BEGIN, field, value);
+    }
 }

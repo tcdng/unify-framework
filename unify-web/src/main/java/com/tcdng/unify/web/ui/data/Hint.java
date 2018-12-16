@@ -23,24 +23,24 @@ package com.tcdng.unify.web.ui.data;
  */
 public class Hint {
 
-	public enum MODE {
-		INFO, WARNING, ERROR
-	}
+    public enum MODE {
+        INFO, WARNING, ERROR
+    }
 
-	private MODE mode;
+    private MODE mode;
 
-	private String message;
+    private String message;
 
-	public Hint(MODE mode, String message) {
-		this.mode = mode;
-		this.message = message;
-	}
+    public Hint(MODE mode, String message) {
+        this.mode = mode;
+        this.message = message;
+    }
 
-	public MODE getMode() {
-		return mode;
-	}
+    public MODE getMode() {
+        return mode;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 }

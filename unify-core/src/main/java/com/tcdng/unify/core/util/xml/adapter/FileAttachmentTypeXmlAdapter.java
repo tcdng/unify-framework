@@ -26,8 +26,8 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  */
 public class FileAttachmentTypeXmlAdapter extends AbstractEnumConstXmlAdapter<FileAttachmentType> {
 
-	public FileAttachmentTypeXmlAdapter() {
-		super(FileAttachmentType.class);
-	}
+    public FileAttachmentTypeXmlAdapter() {
+        super(FileAttachmentType.class);
+    }
 
 }

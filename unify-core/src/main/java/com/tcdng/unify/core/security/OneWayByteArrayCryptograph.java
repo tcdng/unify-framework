@@ -25,15 +25,15 @@ import com.tcdng.unify.core.transform.Transformer;
  * @since 1.0
  */
 public interface OneWayByteArrayCryptograph extends Transformer<byte[], byte[]> {
-	/**
-	 * Encrypts a byte array.
-	 * 
-	 * @param array
-	 *            the array to encrypt
-	 * @return the encrypted array
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	byte[] encrypt(byte[] array) throws UnifyException;
+    /**
+     * Encrypts a byte array.
+     * 
+     * @param array
+     *            the array to encrypt
+     * @return the encrypted array
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    byte[] encrypt(byte[] array) throws UnifyException;
 
 }

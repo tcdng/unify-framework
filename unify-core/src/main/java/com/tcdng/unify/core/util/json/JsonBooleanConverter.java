@@ -25,13 +25,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonBooleanConverter implements JsonValueConverter<Boolean> {
-	@Override
-	public Boolean read(JsonValue jsonValue) throws Exception {
-		return jsonValue.asBoolean();
-	}
+    @Override
+    public Boolean read(JsonValue jsonValue) throws Exception {
+        return jsonValue.asBoolean();
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value((Boolean) value);
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value((Boolean) value);
+    }
 }

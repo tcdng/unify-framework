@@ -26,16 +26,16 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface PasswordGenerator extends UnifyComponent {
 
-	/**
-	 * Generates a password for supplied principal.
-	 * 
-	 * @param principal
-	 *            the principal to generate password for
-	 * @param length
-	 *            the password length
-	 * @return the generated password
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String generatePassword(String principal, int length) throws UnifyException;
+    /**
+     * Generates a password for supplied principal.
+     * 
+     * @param principal
+     *            the principal to generate password for
+     * @param length
+     *            the password length
+     * @return the generated password
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generatePassword(String principal, int length) throws UnifyException;
 }

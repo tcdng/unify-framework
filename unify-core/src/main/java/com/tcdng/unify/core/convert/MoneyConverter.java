@@ -30,30 +30,30 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class MoneyConverter extends AbstractConverter<Money> {
 
-	@Override
-	protected Money doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Money) {
-			return new Money((Money) value);
-		}
+    @Override
+    protected Money doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Money) {
+            return new Money((Money) value);
+        }
 
-		if (value instanceof String) {
-			String string = ((String) value).trim();
-			if (!string.isEmpty()) {
-				String currencyCode = string.substring(0, 3);
-				String amtPart = string.substring(3).trim();
-				BigDecimal amount = null;
-				if (formatter == null) {
-					amount = new BigDecimal(amtPart);
-				} else {
-					DecimalFormatter decimalFormatter = (DecimalFormatter) formatter;
-					amount = new BigDecimal((decimalFormatter.parse(amtPart)).toString());
-				}
+        if (value instanceof String) {
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                String currencyCode = string.substring(0, 3);
+                String amtPart = string.substring(3).trim();
+                BigDecimal amount = null;
+                if (formatter == null) {
+                    amount = new BigDecimal(amtPart);
+                } else {
+                    DecimalFormatter decimalFormatter = (DecimalFormatter) formatter;
+                    amount = new BigDecimal((decimalFormatter.parse(amtPart)).toString());
+                }
 
-				return new Money(currencyCode, amount);
-			}
-		}
+                return new Money(currencyCode, amount);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

@@ -32,11 +32,11 @@ import com.tcdng.unify.web.ui.control.Rack;
 @Component("rack-writer")
 public class RackWriter extends TableWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteStructureAndContent(writer, widget);
-		Rack rack = (Rack) widget;
-		writer.writeStructureAndContent(rack.getShiftDirectionCtrl());
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteStructureAndContent(writer, widget);
+        Rack rack = (Rack) widget;
+        writer.writeStructureAndContent(rack.getShiftDirectionCtrl());
+    }
 
 }

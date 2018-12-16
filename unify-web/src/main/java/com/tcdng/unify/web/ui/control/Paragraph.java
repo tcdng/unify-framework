@@ -27,9 +27,9 @@ import com.tcdng.unify.web.ui.AbstractControl;
 @Component("ui-paragraph")
 public class Paragraph extends AbstractControl {
 
-	@Override
-	public boolean isLayoutCaption() {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
 
 }

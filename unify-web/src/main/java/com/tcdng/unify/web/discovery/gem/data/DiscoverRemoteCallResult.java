@@ -29,14 +29,14 @@ import com.tcdng.unify.web.RemoteCallResult;
 @XmlRootElement
 public class DiscoverRemoteCallResult extends RemoteCallResult {
 
-	private APIDiscoveryRemoteCallInfo remoteCallInfo;
+    private APIDiscoveryRemoteCallInfo remoteCallInfo;
 
-	public APIDiscoveryRemoteCallInfo getRemoteCallInfo() {
-		return remoteCallInfo;
-	}
+    public APIDiscoveryRemoteCallInfo getRemoteCallInfo() {
+        return remoteCallInfo;
+    }
 
-	@XmlElement(required = true)
-	public void setRemoteCallInfo(APIDiscoveryRemoteCallInfo remoteCallInfo) {
-		this.remoteCallInfo = remoteCallInfo;
-	}
+    @XmlElement(required = true)
+    public void setRemoteCallInfo(APIDiscoveryRemoteCallInfo remoteCallInfo) {
+        this.remoteCallInfo = remoteCallInfo;
+    }
 }

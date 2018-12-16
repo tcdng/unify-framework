@@ -33,41 +33,41 @@ import com.tcdng.unify.core.operation.Criteria;
  */
 public abstract class BinaryPolicy extends AbstractSqlCriteriaPolicy {
 
-	public BinaryPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
-		super(opSql, sqlDataSourceDialect);
-	}
+    public BinaryPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+        super(opSql, sqlDataSourceDialect);
+    }
 
-	@Override
-	public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
-		sql.append("(");
-		Criteria subOperation = (Criteria) criteria.getPreOp();
-		SqlCriteriaPolicy sqlCriteriaPolicy = getOperatorPolicy(subOperation);
-		sqlCriteriaPolicy.translate(sql, sqlEntityInfo, subOperation);
-		sql.append(opSql);
-		subOperation = (Criteria) criteria.getPostOp();
-		sqlCriteriaPolicy = getOperatorPolicy(subOperation);
-		sqlCriteriaPolicy.translate(sql, sqlEntityInfo, subOperation);
-		sql.append(")");
-	}
+    @Override
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
+        sql.append("(");
+        Criteria subOperation = (Criteria) criteria.getPreOp();
+        SqlCriteriaPolicy sqlCriteriaPolicy = getOperatorPolicy(subOperation);
+        sqlCriteriaPolicy.translate(sql, sqlEntityInfo, subOperation);
+        sql.append(opSql);
+        subOperation = (Criteria) criteria.getPostOp();
+        sqlCriteriaPolicy = getOperatorPolicy(subOperation);
+        sqlCriteriaPolicy.translate(sql, sqlEntityInfo, subOperation);
+        sql.append(")");
+    }
 
-	@Override
-	public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-			throws UnifyException {
-		// TODO unsupported
-	}
+    @Override
+    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        // TODO unsupported
+    }
 
-	@Override
-	public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-			SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
-		sql.append("(");
-		Criteria subOperation = (Criteria) criteria.getPreOp();
-		SqlCriteriaPolicy sqlCriteriaPolicy = getOperatorPolicy(subOperation);
-		sqlCriteriaPolicy.generatePreparedStatementCriteria(sql, parameterInfoList, sqlEntityInfo, subOperation);
-		sql.append(opSql);
-		subOperation = (Criteria) criteria.getPostOp();
-		sqlCriteriaPolicy = getOperatorPolicy(subOperation);
-		sqlCriteriaPolicy.generatePreparedStatementCriteria(sql, parameterInfoList, sqlEntityInfo, subOperation);
-		sql.append(")");
-	}
+    @Override
+    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
+        sql.append("(");
+        Criteria subOperation = (Criteria) criteria.getPreOp();
+        SqlCriteriaPolicy sqlCriteriaPolicy = getOperatorPolicy(subOperation);
+        sqlCriteriaPolicy.generatePreparedStatementCriteria(sql, parameterInfoList, sqlEntityInfo, subOperation);
+        sql.append(opSql);
+        subOperation = (Criteria) criteria.getPostOp();
+        sqlCriteriaPolicy = getOperatorPolicy(subOperation);
+        sqlCriteriaPolicy.generatePreparedStatementCriteria(sql, parameterInfoList, sqlEntityInfo, subOperation);
+        sql.append(")");
+    }
 
 }

@@ -39,91 +39,91 @@ import com.tcdng.unify.web.annotation.ResultMappings;
 @Component("/testauthor")
 @UplBinding("web/test/upl/testauthor.upl")
 @ResultMappings({ @ResultMapping(name = "resultMappingA", response = "!postresponse"),
-		@ResultMapping(name = "resultMappingB", response = "!hidepopupresponse") })
+        @ResultMapping(name = "resultMappingB", response = "!hidepopupresponse") })
 public class AuthorPageController extends AbstractPageController {
 
-	private String fullName;
+    private String fullName;
 
-	private Date birthDt;
+    private Date birthDt;
 
-	private Double height;
+    private Double height;
 
-	private Map<String, Author> authorDatabase;
+    private Map<String, Author> authorDatabase;
 
-	private MapValues bio;
+    private MapValues bio;
 
-	public AuthorPageController() throws UnifyException {
+    public AuthorPageController() throws UnifyException {
 
-	}
+    }
 
-	@Action
-	public String createAuthor() throws UnifyException {
-		authorDatabase.put(fullName, new Author(fullName, birthDt, height));
-		return noResult();
-	}
+    @Action
+    public String createAuthor() throws UnifyException {
+        authorDatabase.put(fullName, new Author(fullName, birthDt, height));
+        return noResult();
+    }
 
-	@Action
-	public String viewAuthor() throws UnifyException {
-		Author author = authorDatabase.get(fullName);
-		birthDt = author.getBirthDt();
-		height = author.getHeight();
-		return noResult();
-	}
+    @Action
+    public String viewAuthor() throws UnifyException {
+        Author author = authorDatabase.get(fullName);
+        birthDt = author.getBirthDt();
+        height = author.getHeight();
+        return noResult();
+    }
 
-	public String getFullName() {
-		return fullName;
-	}
+    public String getFullName() {
+        return fullName;
+    }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	@Action
-	public String newAuthor() throws UnifyException {
-		fullName = null;
-		birthDt = null;
-		height = null;
-		return noResult();
-	}
+    @Action
+    public String newAuthor() throws UnifyException {
+        fullName = null;
+        birthDt = null;
+        height = null;
+        return noResult();
+    }
 
-	public Date getBirthDt() {
-		return birthDt;
-	}
+    public Date getBirthDt() {
+        return birthDt;
+    }
 
-	public void setBirthDt(Date birthDt) {
-		this.birthDt = birthDt;
-	}
+    public void setBirthDt(Date birthDt) {
+        this.birthDt = birthDt;
+    }
 
-	public Double getHeight() {
-		return height;
-	}
+    public Double getHeight() {
+        return height;
+    }
 
-	public void setHeight(Double height) {
-		this.height = height;
-	}
+    public void setHeight(Double height) {
+        this.height = height;
+    }
 
-	public MapValues getBio() {
-		return bio;
-	}
+    public MapValues getBio() {
+        return bio;
+    }
 
-	public void setBio(MapValues bio) {
-		this.bio = bio;
-	}
+    public void setBio(MapValues bio) {
+        this.bio = bio;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		super.onInitialize();
-		authorDatabase = new HashMap<String, Author>();
-		bio = new MapValues();
-		bio.addValue("color", String.class);
-		bio.addValue("age", Integer.class);
-		bio.addValue("gender", Gender.class);
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
+        authorDatabase = new HashMap<String, Author>();
+        bio = new MapValues();
+        bio.addValue("color", String.class);
+        bio.addValue("age", Integer.class);
+        bio.addValue("gender", Gender.class);
 
-		PackableDocConfig docConfig = new PackableDocConfig("ledgerConfig",
-				new PackableDocConfig.FieldConfig("marker", String.class),
-				new PackableDocConfig.FieldConfig("height", Double.class));
+        PackableDocConfig docConfig = new PackableDocConfig("ledgerConfig",
+                new PackableDocConfig.FieldConfig("marker", String.class),
+                new PackableDocConfig.FieldConfig("height", Double.class));
 
-		PackableDoc pDoc = new PackableDoc(docConfig, false);
-		bio.addValue("metric", pDoc);
-	}
+        PackableDoc pDoc = new PackableDoc(docConfig, false);
+        bio.addValue("metric", pDoc);
+    }
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class NotLike extends Criteria {
 
-	public NotLike(String field, String value) {
-		super(Operator.NOT_LIKE, field, value);
-	}
+    public NotLike(String field, String value) {
+        super(Operator.NOT_LIKE, field, value);
+    }
 }

@@ -40,57 +40,57 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
 
-	/**
-	 * The datasource that table belongs to. Defaults to
-	 * {@link #ApplicationComponents.APPLICATION_DATASOURCE}
-	 */
-	String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
+    /**
+     * The datasource that table belongs to. Defaults to
+     * {@link #ApplicationComponents.APPLICATION_DATASOURCE}
+     */
+    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 
-	/** The name of the table when no other annotation method is set */
-	String value() default AnnotationConstants.NONE;
+    /** The name of the table when no other annotation method is set */
+    String value() default AnnotationConstants.NONE;
 
-	/** The name of the table. */
-	String name() default AnnotationConstants.NONE;
+    /** The name of the table. */
+    String name() default AnnotationConstants.NONE;
 
-	/** The description of the table */
-	String description() default AnnotationConstants.NONE;
+    /** The description of the table */
+    String description() default AnnotationConstants.NONE;
 
-	/**
-	 * The view associated with this table. A value is generated if not supplied and
-	 * annotated entity has view-only properties. The default implementation
-	 * generates one by appending the table name with a "V_" prefix. So for a table
-	 * with name "BOOK" the dialect would produce "V_BOOK".
-	 */
-	String view() default AnnotationConstants.NONE;
+    /**
+     * The view associated with this table. A value is generated if not supplied and
+     * annotated entity has view-only properties. The default implementation
+     * generates one by appending the table name with a "V_" prefix. So for a table
+     * with name "BOOK" the dialect would produce "V_BOOK".
+     */
+    String view() default AnnotationConstants.NONE;
 
-	/**
-	 * The table primary key column name. If set, overrides {@link Id} name of
-	 * annotated primary key entity property. On a wider note, if no column name can
-	 * be resolved from this annotation and the {@link Id} annotation, the system
-	 * generates a column name. This is useful when a subclass wants to override the
-	 * mapping of an inherited ID field.
-	 */
-	String idColumn() default AnnotationConstants.NONE;
+    /**
+     * The table primary key column name. If set, overrides {@link Id} name of
+     * annotated primary key entity property. On a wider note, if no column name can
+     * be resolved from this annotation and the {@link Id} annotation, the system
+     * generates a column name. This is useful when a subclass wants to override the
+     * mapping of an inherited ID field.
+     */
+    String idColumn() default AnnotationConstants.NONE;
 
-	/**
-	 * The table primary key column name. Effective only when there is a field
-	 * annotated with {@link Version}. If set, overrides column name of annotated
-	 * version entity property. If no column name can be resolved from this
-	 * annotation and the version annotation, the system generates a column name.
-	 * This is useful when a subclass wants to override the mapping of an inherited
-	 * version number field.
-	 */
-	String versionColumn() default AnnotationConstants.NONE;
+    /**
+     * The table primary key column name. Effective only when there is a field
+     * annotated with {@link Version}. If set, overrides column name of annotated
+     * version entity property. If no column name can be resolved from this
+     * annotation and the version annotation, the system generates a column name.
+     * This is useful when a subclass wants to override the mapping of an inherited
+     * version number field.
+     */
+    String versionColumn() default AnnotationConstants.NONE;
 
-	/** Table unique constraints */
-	UniqueConstraint[] uniqueConstraints() default {};
+    /** Table unique constraints */
+    UniqueConstraint[] uniqueConstraints() default {};
 
-	/** Table indexes */
-	Index[] indexes() default {};
+    /** Table indexes */
+    Index[] indexes() default {};
 
-	/** Column overrides */
-	ColumnOverride[] columnOverrides() default {};
+    /** Column overrides */
+    ColumnOverride[] columnOverrides() default {};
 
-	/** Foreign key overrides */
-	ForeignKeyOverride[] foreignKeyOverrides() default {};
+    /** Foreign key overrides */
+    ForeignKeyOverride[] foreignKeyOverrides() default {};
 }

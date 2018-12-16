@@ -25,14 +25,14 @@ import java.util.List;
  */
 public interface SqlUniqueConstraintSchemaInfo {
 
-	/**
-	 * Returns the unique constraint name.
-	 */
-	String getName();
+    /**
+     * Returns the unique constraint name.
+     */
+    String getName();
 
-	/**
-	 * Returns the unique constraint field list.
-	 */
-	List<String> getFieldNameList();
+    /**
+     * Returns the unique constraint field list.
+     */
+    List<String> getFieldNameList();
 
 }

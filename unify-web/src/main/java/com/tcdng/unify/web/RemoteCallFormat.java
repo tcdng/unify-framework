@@ -27,45 +27,45 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum RemoteCallFormat implements EnumConst {
 
-	JSON("JSON", ContentTypeConstants.APPLICATION_JSON), XML("XML", ContentTypeConstants.APPLICATION_XML);
+    JSON("JSON", ContentTypeConstants.APPLICATION_JSON), XML("XML", ContentTypeConstants.APPLICATION_XML);
 
-	private String code;
+    private String code;
 
-	private String contentType;
+    private String contentType;
 
-	private RemoteCallFormat(String code, String contentType) {
-		this.code = code;
-		this.contentType = contentType;
-	}
+    private RemoteCallFormat(String code, String contentType) {
+        this.code = code;
+        this.contentType = contentType;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static RemoteCallFormat fromCode(String code) {
-		return EnumUtils.fromCode(RemoteCallFormat.class, code);
-	}
+    public static RemoteCallFormat fromCode(String code) {
+        return EnumUtils.fromCode(RemoteCallFormat.class, code);
+    }
 
-	public static RemoteCallFormat fromName(String name) {
-		return EnumUtils.fromName(RemoteCallFormat.class, name);
-	}
+    public static RemoteCallFormat fromName(String name) {
+        return EnumUtils.fromName(RemoteCallFormat.class, name);
+    }
 
-	public static RemoteCallFormat fromContentType(String contentType) {
-		if (contentType != null) {
-			if (contentType.startsWith(JSON.getContentType())) {
-				return JSON;
-			}
+    public static RemoteCallFormat fromContentType(String contentType) {
+        if (contentType != null) {
+            if (contentType.startsWith(JSON.getContentType())) {
+                return JSON;
+            }
 
-			if (contentType.startsWith(XML.getContentType())) {
-				return XML;
-			}
-		}
+            if (contentType.startsWith(XML.getContentType())) {
+                return XML;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

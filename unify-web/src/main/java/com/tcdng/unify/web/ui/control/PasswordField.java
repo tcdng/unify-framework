@@ -30,9 +30,9 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 @UplAttributes({ @UplAttribute(name = "autocomplete", type = boolean.class) })
 public class PasswordField extends TextField {
 
-	@Override
-	public boolean isMasked() throws UnifyException {
-		return true;
-	}
+    @Override
+    public boolean isMasked() throws UnifyException {
+        return true;
+    }
 
 }

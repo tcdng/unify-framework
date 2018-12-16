@@ -31,116 +31,116 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractMulticastServerTextCommunicator extends AbstractMulticastServerCommunicator {
 
-	private BufferedWriter writer;
+    private BufferedWriter writer;
 
-	@Override
-	protected void onOpen(OutputStream out) throws UnifyException {
-		writer = new BufferedWriter(new OutputStreamWriter(out));
-	}
+    @Override
+    protected void onOpen(OutputStream out) throws UnifyException {
+        writer = new BufferedWriter(new OutputStreamWriter(out));
+    }
 
-	@Override
-	protected void onClose() throws UnifyException {
-		IOUtils.close(writer);
-		writer = null;
-	}
+    @Override
+    protected void onClose() throws UnifyException {
+        IOUtils.close(writer);
+        writer = null;
+    }
 
-	/**
-	 * Writes text.
-	 * 
-	 * @param text
-	 *            the text to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void write(String text) throws UnifyException {
-		try {
-			writer.write(text);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes text.
+     * 
+     * @param text
+     *            the text to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void write(String text) throws UnifyException {
+        try {
+            writer.write(text);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
-	/**
-	 * Writes text with a new line.
-	 * 
-	 * @param text
-	 *            the text to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeLine(String text) throws UnifyException {
-		try {
-			writer.write(text);
-			writer.newLine();
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes text with a new line.
+     * 
+     * @param text
+     *            the text to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeLine(String text) throws UnifyException {
+        try {
+            writer.write(text);
+            writer.newLine();
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
-	/**
-	 * Writes a new line.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeNewLine() throws UnifyException {
-		try {
-			writer.newLine();
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes a new line.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeNewLine() throws UnifyException {
+        try {
+            writer.newLine();
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
-	/**
-	 * Write characters from buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to write from
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeChar(char[] buffer) throws UnifyException {
-		try {
-			writer.write(buffer);
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-	}
+    /**
+     * Write characters from buffer.
+     * 
+     * @param buffer
+     *            the buffer to write from
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeChar(char[] buffer) throws UnifyException {
+        try {
+            writer.write(buffer);
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+    }
 
-	/**
-	 * Writes characters from portion of buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to write from
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the number of characters to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeChar(char[] buffer, int offset, int length) throws UnifyException {
-		try {
-			writer.write(buffer, offset, length);
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-	}
+    /**
+     * Writes characters from portion of buffer.
+     * 
+     * @param buffer
+     *            the buffer to write from
+     * @param offset
+     *            the offset
+     * @param length
+     *            the number of characters to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeChar(char[] buffer, int offset, int length) throws UnifyException {
+        try {
+            writer.write(buffer, offset, length);
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+    }
 
-	/**
-	 * Writes a character.
-	 * 
-	 * @param ch
-	 *            the character to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeChar(char ch) throws UnifyException {
-		try {
-			writer.write(ch);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes a character.
+     * 
+     * @param ch
+     *            the character to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeChar(char ch) throws UnifyException {
+        try {
+            writer.write(ch);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
 }

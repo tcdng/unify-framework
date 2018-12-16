@@ -23,29 +23,29 @@ package com.tcdng.unify.web.ui.data;
  */
 public enum MessageIcon {
 
-	INFO(0), WARNING(1), ERROR(2), QUESTION(3);
+    INFO(0), WARNING(1), ERROR(2), QUESTION(3);
 
-	private final int iconIndex;
+    private final int iconIndex;
 
-	private MessageIcon(int iconIndex) {
-		this.iconIndex = iconIndex;
-	}
+    private MessageIcon(int iconIndex) {
+        this.iconIndex = iconIndex;
+    }
 
-	public int getIconIndex() {
-		return iconIndex;
-	}
+    public int getIconIndex() {
+        return iconIndex;
+    }
 
-	public static MessageIcon getIconByInt(int iconIndex) {
-		switch (iconIndex) {
-		case 3:
-			return MessageIcon.QUESTION;
-		case 2:
-			return MessageIcon.ERROR;
-		case 1:
-			return MessageIcon.WARNING;
-		case 0:
-		default:
-			return MessageIcon.INFO;
-		}
-	}
+    public static MessageIcon getIconByInt(int iconIndex) {
+        switch (iconIndex) {
+        case 3:
+            return MessageIcon.QUESTION;
+        case 2:
+            return MessageIcon.ERROR;
+        case 1:
+            return MessageIcon.WARNING;
+        case 0:
+        default:
+            return MessageIcon.INFO;
+        }
+    }
 }

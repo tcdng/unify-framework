@@ -41,119 +41,119 @@ import com.tcdng.unify.web.ui.control.TextField;
 @Component("moneyfield-writer")
 public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
 
-	@Override
-	protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
-			throws UnifyException {
-		MoneyField moneyField = (MoneyField) popupTextField;
+    @Override
+    protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+            throws UnifyException {
+        MoneyField moneyField = (MoneyField) popupTextField;
 
-		writer.write("<div id=\"").write(moneyField.getFramePanelId())
-				.write("\" class=\"mfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
-		writer.write("<div id=\"").write(moneyField.getListPanelId()).write("\" class=\"mflist\">");
-		List<? extends Listable> listableList = moneyField.getListables();
-		int length = listableList.size();
+        writer.write("<div id=\"").write(moneyField.getFramePanelId())
+                .write("\" class=\"mfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
+        writer.write("<div id=\"").write(moneyField.getListPanelId()).write("\" class=\"mflist\">");
+        List<? extends Listable> listableList = moneyField.getListables();
+        int length = listableList.size();
 
-		String currencyCode = getCurrencyCode(moneyField);
-		for (int i = 0; i < length; i++) {
-			Listable listable = listableList.get(i);
-			String key = listable.getListKey();
-			writer.write("<a");
-			writeTagId(writer, moneyField.getNamingIndexedId(i));
-			if (key.equals(currencyCode)) {
-				writeTagStyleClass(writer, "sel");
-			} else {
-				writeTagStyleClass(writer, "norm");
-			}
-			writer.write(">");
-			writer.writeWithHtmlEscape(listable.getListDescription());
-			writer.write("</a>");
-		}
-		writer.write("</div>");
-		writer.write("</div>");
-	}
+        String currencyCode = getCurrencyCode(moneyField);
+        for (int i = 0; i < length; i++) {
+            Listable listable = listableList.get(i);
+            String key = listable.getListKey();
+            writer.write("<a");
+            writeTagId(writer, moneyField.getNamingIndexedId(i));
+            if (key.equals(currencyCode)) {
+                writeTagStyleClass(writer, "sel");
+            } else {
+                writeTagStyleClass(writer, "norm");
+            }
+            writer.write(">");
+            writer.writeWithHtmlEscape(listable.getListDescription());
+            writer.write("</a>");
+        }
+        writer.write("</div>");
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
-			throws UnifyException {
-		MoneyField moneyField = (MoneyField) popupTextField;
-		ListControlJsonData listControlJsonData = moneyField.getListControlJsonData(true, true, false);
+    @Override
+    protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
+            throws UnifyException {
+        MoneyField moneyField = (MoneyField) popupTextField;
+        ListControlJsonData listControlJsonData = moneyField.getListControlJsonData(true, true, false);
 
-		// Append rigging
-		writer.write("ux.rigMoneyField({");
-		writer.write("\"pId\":\"").write(moneyField.getId()).write('"');
-		writer.write(",\"pFrmId\":\"").write(moneyField.getFramePanelId()).write('"');
-		writer.write(",\"pLstId\":\"").write(moneyField.getListPanelId()).write('"');
-		writer.write(",\"pBtnId\":\"").write(moneyField.getPopupButtonId()).write('"');
-		writer.write(",\"pFacId\":\"").write(moneyField.getFacadeId()).write('"');
-		writer.write(",\"pKeyIdx\":").write(listControlJsonData.getValueIndex());
-		writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-		writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-		writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
-		writer.write(",\"pNormCls\":\"norm\"");
-		writer.write(",\"pSelCls\":\"sel\"");
-		writer.write("});");
-	}
+        // Append rigging
+        writer.write("ux.rigMoneyField({");
+        writer.write("\"pId\":\"").write(moneyField.getId()).write('"');
+        writer.write(",\"pFrmId\":\"").write(moneyField.getFramePanelId()).write('"');
+        writer.write(",\"pLstId\":\"").write(moneyField.getListPanelId()).write('"');
+        writer.write(",\"pBtnId\":\"").write(moneyField.getPopupButtonId()).write('"');
+        writer.write(",\"pFacId\":\"").write(moneyField.getFacadeId()).write('"');
+        writer.write(",\"pKeyIdx\":").write(listControlJsonData.getValueIndex());
+        writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
+        writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
+        writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
+        writer.write(",\"pNormCls\":\"norm\"");
+        writer.write(",\"pSelCls\":\"sel\"");
+        writer.write("});");
+    }
 
-	@Override
-	protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
-		MoneyField moneyField = (MoneyField) widget;
-		writer.write("<button");
-		writeTagId(writer, moneyField.getPopupButtonId());
-		writeTagStyleClass(writer, "tplbutton");
-		if (!appendPopup(moneyField)) {
-			writer.write(" disabled");
-		}
+    @Override
+    protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
+        MoneyField moneyField = (MoneyField) widget;
+        writer.write("<button");
+        writeTagId(writer, moneyField.getPopupButtonId());
+        writeTagStyleClass(writer, "tplbutton");
+        if (!appendPopup(moneyField)) {
+            writer.write(" disabled");
+        }
 
-		writer.write(">");
-		writer.write(getCurrencyCode(moneyField));
-		writer.write("</button>");
-	}
+        writer.write(">");
+        writer.write(getCurrencyCode(moneyField));
+        writer.write("</button>");
+    }
 
-	@Override
-	protected String getOnShowAction() throws UnifyException {
-		return "ux.moneyFieldOnShow";
-	}
+    @Override
+    protected String getOnShowAction() throws UnifyException {
+        return "ux.moneyFieldOnShow";
+    }
 
-	@Override
-	protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
-		MoneyField moneyField = (MoneyField) popupTextField;
-		StringBuilder sb = new StringBuilder();
-		sb.append('{');
-		sb.append("\"pFrmId\":\"").append(moneyField.getFramePanelId()).append('"');
-		sb.append('}');
-		return sb.toString();
-	}
+    @Override
+    protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
+        MoneyField moneyField = (MoneyField) popupTextField;
+        StringBuilder sb = new StringBuilder();
+        sb.append('{');
+        sb.append("\"pFrmId\":\"").append(moneyField.getFramePanelId()).append('"');
+        sb.append('}');
+        return sb.toString();
+    }
 
-	@Override
-	protected String getOnHideAction() throws UnifyException {
-		return null;
-	}
+    @Override
+    protected String getOnHideAction() throws UnifyException {
+        return null;
+    }
 
-	@Override
-	protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
-		return null;
-	}
+    @Override
+    protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
+        return null;
+    }
 
-	@Override
-	protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-		MoneyField moneyField = (MoneyField) textField;
-		int scale = 0;
-		if (textField.isUplAttribute("scale")) {
-			scale = moneyField.getUplAttribute(int.class, "scale");
-		}
+    @Override
+    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+        MoneyField moneyField = (MoneyField) textField;
+        int scale = 0;
+        if (textField.isUplAttribute("scale")) {
+            scale = moneyField.getUplAttribute(int.class, "scale");
+        }
 
-		writer.writeNumberFormatRegex(((NumberFormatter<?>) moneyField.getFormatter()).getNumberSymbols(),
-				moneyField.getUplAttribute(int.class, "precision"), scale,
-				moneyField.getUplAttribute(boolean.class, "acceptNegative"),
-				moneyField.getUplAttribute(boolean.class, "useGrouping"));
-	}
+        writer.writeNumberFormatRegex(((NumberFormatter<?>) moneyField.getFormatter()).getNumberSymbols(),
+                moneyField.getUplAttribute(int.class, "precision"), scale,
+                moneyField.getUplAttribute(boolean.class, "acceptNegative"),
+                moneyField.getUplAttribute(boolean.class, "useGrouping"));
+    }
 
-	private String getCurrencyCode(MoneyField moneyField) throws UnifyException {
-		String currencyCode = moneyField.getCurrencyCode();
-		Money money = moneyField.getValue(Money.class);
-		if (money != null && money.getCurrencyCode() != null) {
-			currencyCode = money.getCurrencyCode();
-		}
+    private String getCurrencyCode(MoneyField moneyField) throws UnifyException {
+        String currencyCode = moneyField.getCurrencyCode();
+        Money money = moneyField.getValue(Money.class);
+        if (money != null && money.getCurrencyCode() != null) {
+            currencyCode = money.getCurrencyCode();
+        }
 
-		return currencyCode;
-	}
+        return currencyCode;
+    }
 }

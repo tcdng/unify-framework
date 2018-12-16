@@ -30,9 +30,9 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
 @UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class) })
 public class Button extends AbstractTargetControl {
 
-	@Override
-	public boolean isLayoutCaption() {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
 
 }

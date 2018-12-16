@@ -36,18 +36,18 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component("sqldatasourceschemalist")
 public class SqlDataSourceSchemaListCommand extends AbstractDynamicSqlDataSourceListCommand {
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-		if (!StringUtils.isBlank(params.getConfigName())) {
-			List<Listable> schemaList = new ArrayList<Listable>();
-			for (String schema : getDsManager().getSchemas(params.getConfigName())) {
-				schemaList.add(new ListData(schema, schema));
-			}
-			DataUtils.sort(schemaList, Listable.class, "listDescription", true);
-			return schemaList;
-		}
+    @Override
+    public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
+        if (!StringUtils.isBlank(params.getConfigName())) {
+            List<Listable> schemaList = new ArrayList<Listable>();
+            for (String schema : getDsManager().getSchemas(params.getConfigName())) {
+                schemaList.add(new ListData(schema, schema));
+            }
+            DataUtils.sort(schemaList, Listable.class, "listDescription", true);
+            return schemaList;
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
 }

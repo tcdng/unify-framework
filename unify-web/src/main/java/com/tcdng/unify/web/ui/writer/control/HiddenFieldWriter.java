@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("hiddenfield-writer")
 public class HiddenFieldWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		HiddenField hiddenField = (HiddenField) widget;
-		writer.write("<input type=\"hidden\"");
-		writeTagAttributes(writer, hiddenField);
-		String value = hiddenField.getStringValue();
-		if (value != null) {
-			writer.write(" value=\"");
-			writer.writeWithHtmlEscape(value);
-			writer.write("\"");
-		}
-		writer.write("/>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        HiddenField hiddenField = (HiddenField) widget;
+        writer.write("<input type=\"hidden\"");
+        writeTagAttributes(writer, hiddenField);
+        String value = hiddenField.getStringValue();
+        if (value != null) {
+            writer.write(" value=\"");
+            writer.writeWithHtmlEscape(value);
+            writer.write("\"");
+        }
+        writer.write("/>");
+    }
 
 }

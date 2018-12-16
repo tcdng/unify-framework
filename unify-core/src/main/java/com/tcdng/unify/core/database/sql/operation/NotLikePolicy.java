@@ -25,12 +25,12 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotLikePolicy extends SingleParameterPolicy {
 
-	public NotLikePolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" NOT LIKE ", sqlDataSourceDialect);
-	}
+    public NotLikePolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" NOT LIKE ", sqlDataSourceDialect);
+    }
 
-	@Override
-	protected Object adjustValue(Object value) {
-		return "%" + value + "%";
-	}
+    @Override
+    protected Object adjustValue(Object value) {
+        return "%" + value + "%";
+    }
 }

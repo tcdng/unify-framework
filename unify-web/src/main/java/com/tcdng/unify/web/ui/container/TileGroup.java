@@ -38,39 +38,39 @@ import com.tcdng.unify.web.ui.Control;
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
 public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
 
-	private Control imageCtrl;
+    private Control imageCtrl;
 
-	public TileGroup() {
-		super(false);
-	}
+    public TileGroup() {
+        super(false);
+    }
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image");
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image");
+    }
 
-	public int getColumns() throws UnifyException {
-		return getUplAttribute(int.class, "columns");
-	}
+    public int getColumns() throws UnifyException {
+        return getUplAttribute(int.class, "columns");
+    }
 
-	public Control getImageCtrl() {
-		return imageCtrl;
-	}
+    public Control getImageCtrl() {
+        return imageCtrl;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected List<Tile> getItemList() throws UnifyException {
-		return (List<Tile>) getValue();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected List<Tile> getItemList() throws UnifyException {
+        return (List<Tile>) getValue();
+    }
 
-	@Override
-	protected ValueStore newValue(Tile tile, int index) throws UnifyException {
-		return createValueStore(tile, index);
-	}
+    @Override
+    protected ValueStore newValue(Tile tile, int index) throws UnifyException {
+        return createValueStore(tile, index);
+    }
 
-	@Override
-	protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
+    @Override
+    protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
 
-	}
+    }
 }

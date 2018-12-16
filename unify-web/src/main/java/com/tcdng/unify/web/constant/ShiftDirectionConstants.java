@@ -23,11 +23,11 @@ package com.tcdng.unify.web.constant;
  */
 public interface ShiftDirectionConstants {
 
-	int TOP = 0;
+    int TOP = 0;
 
-	int UP = 1;
+    int UP = 1;
 
-	int DOWN = 2;
+    int DOWN = 2;
 
-	int BOTTOM = 3;
+    int BOTTOM = 3;
 }

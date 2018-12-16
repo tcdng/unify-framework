@@ -23,5 +23,5 @@ package com.tcdng.unify.core.data;
  */
 public interface Describable {
 
-	String getDescription();
+    String getDescription();
 }

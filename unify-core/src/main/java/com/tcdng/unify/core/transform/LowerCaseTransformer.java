@@ -28,11 +28,11 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("lowercase-transformer")
 public class LowerCaseTransformer extends AbstractStringTransformer {
 
-	@Override
-	public String forwardTransform(String value) throws UnifyException {
-		if (value != null) {
-			return value.toLowerCase();
-		}
-		return null;
-	}
+    @Override
+    public String forwardTransform(String value) throws UnifyException {
+        if (value != null) {
+            return value.toLowerCase();
+        }
+        return null;
+    }
 }

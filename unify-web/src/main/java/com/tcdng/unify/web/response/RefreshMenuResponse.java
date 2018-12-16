@@ -36,23 +36,23 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("refreshmenuresponse")
 public class RefreshMenuResponse extends AbstractJsonPageControllerResponse {
 
-	public RefreshMenuResponse() {
-		super("refreshMenuHdl");
-	}
+    public RefreshMenuResponse() {
+        super("refreshMenuHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing refresh menu response: controller = [{0}]", pageController.getName());
-		if (Boolean.TRUE.equals(removeSessionAttribute(SessionAttributeConstants.REFRESH_MENU))) {
-			Document document = getRequestContextUtil().getRequestDocument();
-			Panel menuPanel = document.getMenuPanel();
-			if (menuPanel != null) {
-				writer.write(",\"refreshPanels\":[");
-				writer.writeJsonPanel(menuPanel, true);
-				writer.write("]");
-				return;
-			}
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing refresh menu response: controller = [{0}]", pageController.getName());
+        if (Boolean.TRUE.equals(removeSessionAttribute(SessionAttributeConstants.REFRESH_MENU))) {
+            Document document = getRequestContextUtil().getRequestDocument();
+            Panel menuPanel = document.getMenuPanel();
+            if (menuPanel != null) {
+                writer.write(",\"refreshPanels\":[");
+                writer.writeJsonPanel(menuPanel, true);
+                writer.write("]");
+                return;
+            }
+        }
+    }
 
 }

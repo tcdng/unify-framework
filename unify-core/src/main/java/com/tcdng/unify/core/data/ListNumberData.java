@@ -23,20 +23,20 @@ package com.tcdng.unify.core.data;
  */
 public class ListNumberData implements Listable {
 
-	private String number;
+    private String number;
 
-	public ListNumberData(int num) {
-		this.number = String.valueOf(num);
-	}
+    public ListNumberData(int num) {
+        this.number = String.valueOf(num);
+    }
 
-	@Override
-	public String getListKey() {
-		return number;
-	}
+    @Override
+    public String getListKey() {
+        return number;
+    }
 
-	@Override
-	public String getListDescription() {
-		return number;
-	}
+    @Override
+    public String getListDescription() {
+        return number;
+    }
 
 }

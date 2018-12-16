@@ -29,22 +29,22 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "longformat", description = "$m{format.long}")
 public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements LongFormatter {
 
-	public LongFormatterImpl() {
-		super(Long.class, NumberType.INTEGER);
-	}
+    public LongFormatterImpl() {
+        super(Long.class, NumberType.INTEGER);
+    }
 
-	@Override
-	public Long parse(String string) throws UnifyException {
-		try {
-			return Long.valueOf(getNumberFormat().parse(string).intValue());
-		} catch (ParseException e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public Long parse(String string) throws UnifyException {
+        try {
+            return Long.valueOf(getNumberFormat().parse(string).intValue());
+        } catch (ParseException e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 
-	@Override
-	public void setScale(int scale) {
+    @Override
+    public void setScale(int scale) {
 
-	}
+    }
 }

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "datetimeformat", description = "$m{format.datetime}")
 public class DateTimeFormatterImpl extends AbstractDateFormatter implements DateTimeFormatter {
 
-	public DateTimeFormatterImpl() {
-		super(TYPE.DATETIME);
-	}
+    public DateTimeFormatterImpl() {
+        super(TYPE.DATETIME);
+    }
 }

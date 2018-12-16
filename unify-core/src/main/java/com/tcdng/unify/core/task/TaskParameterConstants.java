@@ -23,5 +23,5 @@ package com.tcdng.unify.core.task;
  */
 public interface TaskParameterConstants {
 
-	String LOCK_TO_RELEASE = "lockToRelease";
+    String LOCK_TO_RELEASE = "lockToRelease";
 }

@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 @Component("windowpanel-writer")
 public class WindowPanelWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-		WindowPanel windowPanel = (WindowPanel) panel;
-		writer.write("<div style=\"display:table;width:100%;height:100%;\">");
-		writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;\">");
-		writer.write("<div class=\"wptitle\">");
-		writeCaption(writer, windowPanel);
-		writer.write("</div>");
-		writer.write("</div></div>");
-		writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;height:100%;\">");
-		writeLayoutContent(writer, windowPanel);
-		writer.write("</div></div>");
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+        WindowPanel windowPanel = (WindowPanel) panel;
+        writer.write("<div style=\"display:table;width:100%;height:100%;\">");
+        writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;\">");
+        writer.write("<div class=\"wptitle\">");
+        writeCaption(writer, windowPanel);
+        writer.write("</div>");
+        writer.write("</div></div>");
+        writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;height:100%;\">");
+        writeLayoutContent(writer, windowPanel);
+        writer.write("</div></div>");
+        writer.write("</div>");
+    }
 }

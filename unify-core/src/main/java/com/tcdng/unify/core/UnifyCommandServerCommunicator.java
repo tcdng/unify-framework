@@ -27,13 +27,13 @@ import com.tcdng.unify.core.net.UnicastServerCommunicator;
  */
 @Component("unify-commandinterface-comm")
 public class UnifyCommandServerCommunicator extends AbstractUnicastTextCommunicator
-		implements UnicastServerCommunicator {
+        implements UnicastServerCommunicator {
 
-	@Override
-	public boolean communicate() throws UnifyException {
-		String cmd = readLine();
-		String param = readLine();
-		sendCommand(cmd, param);
-		return true;
-	}
+    @Override
+    public boolean communicate() throws UnifyException {
+        String cmd = readLine();
+        String param = readLine();
+        sendCommand(cmd, param);
+        return true;
+    }
 }

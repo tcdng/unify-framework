@@ -25,12 +25,12 @@ import java.util.List;
  */
 public class MenuItemSet extends MenuItem {
 
-	public MenuItemSet(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
-		super(caption, privilege, actionPath, menuItemList);
-	}
+    public MenuItemSet(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
+        super(caption, privilege, actionPath, menuItemList);
+    }
 
-	@Override
-	public boolean isMain() {
-		return true;
-	}
+    @Override
+    public boolean isMain() {
+        return true;
+    }
 }

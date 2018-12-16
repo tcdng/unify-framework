@@ -29,12 +29,12 @@ import com.tcdng.unify.core.database.DatabaseTransactionManager;
  */
 public interface BusinessModule extends UnifyComponent {
 
-	/**
-	 * Gets the business module application database transaction manager.
-	 * 
-	 * @return DatabaseTransactionManager the transaction manager
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	DatabaseTransactionManager tm() throws UnifyException;
+    /**
+     * Gets the business module application database transaction manager.
+     * 
+     * @return DatabaseTransactionManager the transaction manager
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    DatabaseTransactionManager tm() throws UnifyException;
 }

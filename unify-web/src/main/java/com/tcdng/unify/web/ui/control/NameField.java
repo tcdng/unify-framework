@@ -29,24 +29,24 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  */
 @Component("ui-name")
 @UplAttributes({ @UplAttribute(name = "underscore", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "dollar", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "period", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "dash", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "dollar", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "period", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "dash", type = boolean.class, defaultValue = "false") })
 public class NameField extends TextField {
 
-	public boolean isAcceptUnderscore() throws UnifyException {
-		return getUplAttribute(boolean.class, "underscore");
-	}
+    public boolean isAcceptUnderscore() throws UnifyException {
+        return getUplAttribute(boolean.class, "underscore");
+    }
 
-	public boolean isAcceptDollar() throws UnifyException {
-		return getUplAttribute(boolean.class, "dollar");
-	}
+    public boolean isAcceptDollar() throws UnifyException {
+        return getUplAttribute(boolean.class, "dollar");
+    }
 
-	public boolean isAcceptPeriod() throws UnifyException {
-		return getUplAttribute(boolean.class, "period");
-	}
+    public boolean isAcceptPeriod() throws UnifyException {
+        return getUplAttribute(boolean.class, "period");
+    }
 
-	public boolean isAcceptDash() throws UnifyException {
-		return getUplAttribute(boolean.class, "dash");
-	}
+    public boolean isAcceptDash() throws UnifyException {
+        return getUplAttribute(boolean.class, "dash");
+    }
 }

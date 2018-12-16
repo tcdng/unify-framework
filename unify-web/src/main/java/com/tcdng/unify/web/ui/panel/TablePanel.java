@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.control.Table;
 @UplBinding("web/panels/upl/tablepanel.upl")
 public class TablePanel extends AbstractPanel {
 
-	public Table getTable() throws UnifyException {
-		return (Table) getWidgetByShortName("contentTbl");
-	}
+    public Table getTable() throws UnifyException {
+        return (Table) getWidgetByShortName("contentTbl");
+    }
 }

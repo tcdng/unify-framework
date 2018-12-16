@@ -29,17 +29,17 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface LayoutWriter extends UplComponentWriter {
 
-	/**
-	 * Writes structure and content of components using supplied layout.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param layout
-	 *            the layout component.
-	 * @param container
-	 *            the container
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container) throws UnifyException;
+    /**
+     * Writes structure and content of components using supplied layout.
+     * 
+     * @param writer
+     *            the response writer
+     * @param layout
+     *            the layout component.
+     * @param container
+     *            the container
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container) throws UnifyException;
 }

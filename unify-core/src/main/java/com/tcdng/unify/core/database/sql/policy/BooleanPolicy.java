@@ -30,28 +30,28 @@ import com.tcdng.unify.core.util.SqlUtils;
  */
 public class BooleanPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("CHAR(1)");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("CHAR(1)");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.CHAR);
-		} else {
-			((PreparedStatement) pstmt).setString(index, SqlUtils.getString((Boolean) data));
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.CHAR);
+        } else {
+            ((PreparedStatement) pstmt).setString(index, SqlUtils.getString((Boolean) data));
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		return SqlUtils.getBoolean(((ResultSet) rs).getString(column));
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        return SqlUtils.getBoolean(((ResultSet) rs).getString(column));
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		return SqlUtils.getBoolean(((ResultSet) rs).getString(index));
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        return SqlUtils.getBoolean(((ResultSet) rs).getString(index));
+    }
 
 }

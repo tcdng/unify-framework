@@ -34,88 +34,88 @@ import com.tcdng.unify.web.ui.data.RefreshSection;
  */
 @Component("ui-search")
 @UplAttributes({ @UplAttribute(name = "filterLabel", type = String.class, defaultValue = "$m{search.filter}"),
-		@UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/search.png}"),
-		@UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "immediate") })
+        @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/search.png}"),
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "immediate") })
 public class SearchField extends AbstractListPopupTextField {
 
-	private String filter;
+    private String filter;
 
-	private boolean keyOnly;
+    private boolean keyOnly;
 
-	@Override
-	public ExtensionType getExtensionType() {
-		return ExtensionType.FACADE_HIDDEN;
-	}
+    @Override
+    public ExtensionType getExtensionType() {
+        return ExtensionType.FACADE_HIDDEN;
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return false;
-	}
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 
-	@Override
-	public String[] getListParams() throws UnifyException {
-		String[] params = new String[4];
-		if (keyOnly) {
-			params[0] = getStringValue();
-		}
+    @Override
+    public String[] getListParams() throws UnifyException {
+        String[] params = new String[4];
+        if (keyOnly) {
+            params[0] = getStringValue();
+        }
 
-		params[1] = filter;
-		return params;
-	}
+        params[1] = filter;
+        return params;
+    }
 
-	@Override
-	public String getFacadeStringValue() throws UnifyException {
-		String key = getStringValue();
-		if (key != null) {
-			return getListMap().get(key);
-		}
+    @Override
+    public String getFacadeStringValue() throws UnifyException {
+        String key = getStringValue();
+        if (key != null) {
+            return getListMap().get(key);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Action
-	public void search() throws UnifyException {
-		filter = getRequestTarget(String.class);
-		setKeyOnly(false);
+    @Action
+    public void search() throws UnifyException {
+        filter = getRequestTarget(String.class);
+        setKeyOnly(false);
 
-		setRequestAttribute(UnifyWebRequestAttributeConstants.REFRESH_SECTION,
-				new RefreshSection(this, getResultPanelId()));
-		setCommandResultMapping(ResultMappingConstants.REFRESH_SECTION);
-	}
+        setRequestAttribute(UnifyWebRequestAttributeConstants.REFRESH_SECTION,
+                new RefreshSection(this, getResultPanelId()));
+        setCommandResultMapping(ResultMappingConstants.REFRESH_SECTION);
+    }
 
-	public String getFilter() {
-		return filter;
-	}
+    public String getFilter() {
+        return filter;
+    }
 
-	public boolean isKeyOnly() {
-		return keyOnly;
-	}
+    public boolean isKeyOnly() {
+        return keyOnly;
+    }
 
-	public void setKeyOnly(boolean keyOnly) {
-		this.keyOnly = keyOnly;
-	}
+    public void setKeyOnly(boolean keyOnly) {
+        this.keyOnly = keyOnly;
+    }
 
-	public String getFilterLabel() throws UnifyException {
-		return resolveSessionMessage(getUplAttribute(String.class, "filterLabel"));
-	}
+    public String getFilterLabel() throws UnifyException {
+        return resolveSessionMessage(getUplAttribute(String.class, "filterLabel"));
+    }
 
-	public String getFilterId() throws UnifyException {
-		return getPrefixedId("fil_");
-	}
+    public String getFilterId() throws UnifyException {
+        return getPrefixedId("fil_");
+    }
 
-	public String getSearchPanelId() throws UnifyException {
-		return getPrefixedId("sch_");
-	}
+    public String getSearchPanelId() throws UnifyException {
+        return getPrefixedId("sch_");
+    }
 
-	public String getResultPanelId() throws UnifyException {
-		return getPrefixedId("rlt_");
-	}
+    public String getResultPanelId() throws UnifyException {
+        return getPrefixedId("rlt_");
+    }
 
-	public String getClearButtonId() throws UnifyException {
-		return getPrefixedId("clr_");
-	}
+    public String getClearButtonId() throws UnifyException {
+        return getPrefixedId("clr_");
+    }
 
-	public String getCancelButtonId() throws UnifyException {
-		return getPrefixedId("can_");
-	}
+    public String getCancelButtonId() throws UnifyException {
+        return getPrefixedId("can_");
+    }
 }

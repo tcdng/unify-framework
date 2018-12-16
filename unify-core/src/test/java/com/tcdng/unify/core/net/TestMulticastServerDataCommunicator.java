@@ -27,12 +27,12 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("test-datamulticastservercomm")
 public class TestMulticastServerDataCommunicator extends AbstractMulticastServerDataCommunicator {
 
-	@Override
-	public void send(NetworkMessage message) throws UnifyException {
-		TestMulticastMessage msg = (TestMulticastMessage) message;
-		writeChar(msg.getCode());
-		writeInt(msg.getWidth());
-		writeInt(msg.getHeight());
-	}
+    @Override
+    public void send(NetworkMessage message) throws UnifyException {
+        TestMulticastMessage msg = (TestMulticastMessage) message;
+        writeChar(msg.getCode());
+        writeInt(msg.getWidth());
+        writeInt(msg.getHeight());
+    }
 
 }

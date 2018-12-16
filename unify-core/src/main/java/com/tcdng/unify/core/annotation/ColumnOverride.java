@@ -31,19 +31,19 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ColumnOverride {
 
-	String field();
+    String field();
 
-	ColumnType type() default ColumnType.AUTO;
+    ColumnType type() default ColumnType.AUTO;
 
-	String name() default AnnotationConstants.NONE;
+    String name() default AnnotationConstants.NONE;
 
-	String transformer() default AnnotationConstants.NONE;
+    String transformer() default AnnotationConstants.NONE;
 
-	int length() default -1;
+    int length() default -1;
 
-	int precision() default -1;
+    int precision() default -1;
 
-	int scale() default -1;
+    int scale() default -1;
 
-	boolean nullable() default false;
+    boolean nullable() default false;
 }

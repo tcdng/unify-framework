@@ -27,8 +27,8 @@ import com.tcdng.unify.core.annotation.AutoDetect;
 @AutoDetect
 public class UnifyCoreStaticSettings extends AbstractUnifyStaticSettings {
 
-	public UnifyCoreStaticSettings() {
-		super("com.tcdng.unify.core.resources.messages", -8);
-	}
+    public UnifyCoreStaticSettings() {
+        super("com.tcdng.unify.core.resources.messages", -8);
+    }
 
 }

@@ -36,15 +36,15 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 @Component(WebApplicationComponents.APPLICATION_APIDISCOVERY_CONTROLLER)
 public class APIDiscoveryController extends AbstractRemoteCallController {
 
-	@Configurable(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER)
-	private APIDiscoveryManager aPIDiscoveryManager;
+    @Configurable(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER)
+    private APIDiscoveryManager aPIDiscoveryManager;
 
-	@GatewayAction(name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, description = "Discover Remote Call", restricted = false)
-	public DiscoverRemoteCallResult discoverRemoteCall(DiscoverRemoteCallParams params) throws UnifyException {
-		DiscoverRemoteCallResult result = new DiscoverRemoteCallResult();
-		APIDiscoveryRemoteCallInfo remoteCallInfo = aPIDiscoveryManager
-				.getRemoteCallInfo(params.getRemoteCallCode());
-		result.setRemoteCallInfo(remoteCallInfo);
-		return result;
-	}
+    @GatewayAction(name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL,
+            description = "Discover Remote Call", restricted = false)
+    public DiscoverRemoteCallResult discoverRemoteCall(DiscoverRemoteCallParams params) throws UnifyException {
+        DiscoverRemoteCallResult result = new DiscoverRemoteCallResult();
+        APIDiscoveryRemoteCallInfo remoteCallInfo = aPIDiscoveryManager.getRemoteCallInfo(params.getRemoteCallCode());
+        result.setRemoteCallInfo(remoteCallInfo);
+        return result;
+    }
 }

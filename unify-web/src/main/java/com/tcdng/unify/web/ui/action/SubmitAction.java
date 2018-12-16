@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("ui-submit")
 public class SubmitAction extends PostAction {
 
-	public SubmitAction() {
-		super("submit");
-	}
+    public SubmitAction() {
+        super("submit");
+    }
 }

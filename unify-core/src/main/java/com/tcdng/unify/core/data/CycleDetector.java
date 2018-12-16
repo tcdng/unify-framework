@@ -50,86 +50,86 @@ import java.util.List;
  */
 public class CycleDetector<T> {
 
-	private List<T> referenceList;
+    private List<T> referenceList;
 
-	public CycleDetector() {
-		referenceList = new ArrayList<T>();
-	}
+    public CycleDetector() {
+        referenceList = new ArrayList<T>();
+    }
 
-	/**
-	 * Adds a reference to the detector's reference list.
-	 * 
-	 * @param referrer
-	 * @param referee
-	 * @return this cycle detector
-	 */
-	public CycleDetector<T> addReference(T referrer, T referee) {
-		if (referrer == null || referee == null) {
-			throw new IllegalArgumentException();
-		}
-		referenceList.add(referrer);
-		referenceList.add(referee);
-		return this;
-	}
+    /**
+     * Adds a reference to the detector's reference list.
+     * 
+     * @param referrer
+     * @param referee
+     * @return this cycle detector
+     */
+    public CycleDetector<T> addReference(T referrer, T referee) {
+        if (referrer == null || referee == null) {
+            throw new IllegalArgumentException();
+        }
+        referenceList.add(referrer);
+        referenceList.add(referee);
+        return this;
+    }
 
-	/**
-	 * Removes the last reference.
-	 */
-	public CycleDetector<T> removeLast() {
-		if (!referenceList.isEmpty()) {
-			referenceList.remove(referenceList.size() - 1);
-			referenceList.remove(referenceList.size() - 1);
-		}
-		return this;
-	}
+    /**
+     * Removes the last reference.
+     */
+    public CycleDetector<T> removeLast() {
+        if (!referenceList.isEmpty()) {
+            referenceList.remove(referenceList.size() - 1);
+            referenceList.remove(referenceList.size() - 1);
+        }
+        return this;
+    }
 
-	/**
-	 * Clears the detector's reference list
-	 */
-	public CycleDetector<T> clear() {
-		referenceList.clear();
-		return this;
-	}
+    /**
+     * Clears the detector's reference list
+     */
+    public CycleDetector<T> clear() {
+        referenceList.clear();
+        return this;
+    }
 
-	public boolean isEmpty() {
-		return referenceList.isEmpty();
-	}
+    public boolean isEmpty() {
+        return referenceList.isEmpty();
+    }
 
-	/**
-	 * Detects a cycle in the detector's reference list.
-	 * 
-	 * @return a list containing a trail of detected cycle, otherwise an empty list
-	 *         is returned
-	 */
-	public List<T> detect() {
-		List<T> resultList = new ArrayList<T>();
-		for (int i = 0; i < referenceList.size(); i += 2) {
-			T a = referenceList.get(i);
-			T b = referenceList.get(i + 1);
-			resultList.add(a);
-			if (scanChain(resultList, b)) {
-				break;
-			}
-			resultList.clear();
-		}
-		return resultList;
-	}
+    /**
+     * Detects a cycle in the detector's reference list.
+     * 
+     * @return a list containing a trail of detected cycle, otherwise an empty list
+     *         is returned
+     */
+    public List<T> detect() {
+        List<T> resultList = new ArrayList<T>();
+        for (int i = 0; i < referenceList.size(); i += 2) {
+            T a = referenceList.get(i);
+            T b = referenceList.get(i + 1);
+            resultList.add(a);
+            if (scanChain(resultList, b)) {
+                break;
+            }
+            resultList.clear();
+        }
+        return resultList;
+    }
 
-	private boolean scanChain(List<T> resultList, T b) {
-		for (int j = 0; j < referenceList.size(); j += 2) {
-			T c = referenceList.get(j);
-			if (c.equals(b)) {
-				if (resultList.contains(c)) {
-					resultList.add(c);
-					return true;
-				}
-				resultList.add(c);
-				if (scanChain(resultList, referenceList.get(j + 1))) {
-					return true;
-				}
-				resultList.remove(resultList.size() - 1);
-			}
-		}
-		return false;
-	}
+    private boolean scanChain(List<T> resultList, T b) {
+        for (int j = 0; j < referenceList.size(); j += 2) {
+            T c = referenceList.get(j);
+            if (c.equals(b)) {
+                if (resultList.contains(c)) {
+                    resultList.add(c);
+                    return true;
+                }
+                resultList.add(c);
+                if (scanChain(resultList, referenceList.get(j + 1))) {
+                    return true;
+                }
+                resultList.remove(resultList.size() - 1);
+            }
+        }
+        return false;
+    }
 }

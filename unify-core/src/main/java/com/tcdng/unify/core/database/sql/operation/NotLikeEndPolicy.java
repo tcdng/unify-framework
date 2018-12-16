@@ -25,12 +25,12 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotLikeEndPolicy extends NotLikePolicy {
 
-	public NotLikeEndPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(sqlDataSourceDialect);
-	}
+    public NotLikeEndPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(sqlDataSourceDialect);
+    }
 
-	@Override
-	protected Object adjustValue(Object value) {
-		return "%" + value;
-	}
+    @Override
+    protected Object adjustValue(Object value) {
+        return "%" + value;
+    }
 }

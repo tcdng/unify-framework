@@ -30,56 +30,56 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
 @Table
 public class LoanAccount extends AbstractTestEntity {
 
-	@ForeignKey(Account.class)
-	private Long accountId;
+    @ForeignKey(Account.class)
+    private Long accountId;
 
-	@Column
-	private Double principalAmount;
+    @Column
+    private Double principalAmount;
 
-	@ListOnly(key = "accountId", property = "accountNo")
-	private String accountNo;
+    @ListOnly(key = "accountId", property = "accountNo")
+    private String accountNo;
 
-	@ListOnly(key = "accountId", property = "accountName")
-	private String accountName;
+    @ListOnly(key = "accountId", property = "accountName")
+    private String accountName;
 
-	public LoanAccount(Long accountId, Double principalAmount) {
-		this.accountId = accountId;
-		this.principalAmount = principalAmount;
-	}
+    public LoanAccount(Long accountId, Double principalAmount) {
+        this.accountId = accountId;
+        this.principalAmount = principalAmount;
+    }
 
-	public LoanAccount() {
+    public LoanAccount() {
 
-	}
+    }
 
-	public Long getAccountId() {
-		return accountId;
-	}
+    public Long getAccountId() {
+        return accountId;
+    }
 
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
-	}
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
 
-	public Double getPrincipalAmount() {
-		return principalAmount;
-	}
+    public Double getPrincipalAmount() {
+        return principalAmount;
+    }
 
-	public void setPrincipalAmount(Double principalAmount) {
-		this.principalAmount = principalAmount;
-	}
+    public void setPrincipalAmount(Double principalAmount) {
+        this.principalAmount = principalAmount;
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public String getAccountNo() {
+        return accountNo;
+    }
 
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 
-	public String getAccountName() {
-		return accountName;
-	}
+    public String getAccountName() {
+        return accountName;
+    }
 
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 }

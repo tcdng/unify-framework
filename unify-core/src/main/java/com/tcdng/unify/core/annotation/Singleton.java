@@ -34,6 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Singleton {
 
-	/** The singleton flag */
-	boolean value() default true;
+    /** The singleton flag */
+    boolean value() default true;
 }

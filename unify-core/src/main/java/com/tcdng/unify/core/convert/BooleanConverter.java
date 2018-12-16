@@ -26,16 +26,16 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class BooleanConverter extends AbstractConverter<Boolean> {
 
-	@Override
-	protected Boolean doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Boolean) {
-			return Boolean.valueOf((Boolean) value);
-		}
-		if (value instanceof String) {
-			String string = ((String) value);
-			return Boolean.valueOf("y".equalsIgnoreCase(string) || "on".equalsIgnoreCase(string)
-					|| "true".equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string));
-		}
-		return null;
-	}
+    @Override
+    protected Boolean doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Boolean) {
+            return Boolean.valueOf((Boolean) value);
+        }
+        if (value instanceof String) {
+            String string = ((String) value);
+            return Boolean.valueOf("y".equalsIgnoreCase(string) || "on".equalsIgnoreCase(string)
+                    || "true".equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string));
+        }
+        return null;
+    }
 }

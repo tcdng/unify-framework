@@ -25,16 +25,16 @@ import com.tcdng.unify.core.database.Entity;
  */
 public interface BatchRecord extends Entity {
 
-	/**
-	 * Returns batch category.
-	 */
-	String getCategory();
+    /**
+     * Returns batch category.
+     */
+    String getCategory();
 
-	/**
-	 * Sets the batch record category.
-	 * 
-	 * @param category
-	 *            the category to set
-	 */
-	void setCategory(String category);
+    /**
+     * Sets the batch record category.
+     * 
+     * @param category
+     *            the category to set
+     */
+    void setCategory(String category);
 }

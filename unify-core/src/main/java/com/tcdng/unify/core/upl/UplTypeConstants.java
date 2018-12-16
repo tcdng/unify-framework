@@ -23,11 +23,11 @@ package com.tcdng.unify.core.upl;
  */
 public interface UplTypeConstants {
 
-	int DOCUMENT = 0;
+    int DOCUMENT = 0;
 
-	int DOCUMENT_INLINE = 1;
+    int DOCUMENT_INLINE = 1;
 
-	int DESCRIPTOR = 2;
+    int DESCRIPTOR = 2;
 
-	int DESCRIPTOR_INLINE = 3;
+    int DESCRIPTOR_INLINE = 3;
 }

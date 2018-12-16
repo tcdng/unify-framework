@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 @Component("ui-stretchpanel")
 public class StretchPanel extends AbstractPanel {
 
-	public String getContentPageName() throws UnifyException {
-		return getPrefixedId("content");
-	}
+    public String getContentPageName() throws UnifyException {
+        return getPrefixedId("content");
+    }
 }

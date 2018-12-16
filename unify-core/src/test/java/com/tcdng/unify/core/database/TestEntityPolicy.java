@@ -29,43 +29,43 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("testentity-policy")
 public class TestEntityPolicy extends AbstractEntityPolicy {
 
-	private long idCounter;
+    private long idCounter;
 
-	@Override
-	public Object preCreate(Entity record, Date now) throws UnifyException {
-		Long id = Long.valueOf(++idCounter);
-		((AbstractTestEntity) record).setId(id);
-		((AbstractTestEntity) record).setVersion(1L);
-		return id;
-	}
+    @Override
+    public Object preCreate(Entity record, Date now) throws UnifyException {
+        Long id = Long.valueOf(++idCounter);
+        ((AbstractTestEntity) record).setId(id);
+        ((AbstractTestEntity) record).setVersion(1L);
+        return id;
+    }
 
-	@Override
-	public void preUpdate(Entity record, Date now) throws UnifyException {
-		((AbstractTestEntity) record).setVersion(((AbstractTestEntity) record).getVersion() + 1L);
-	}
+    @Override
+    public void preUpdate(Entity record, Date now) throws UnifyException {
+        ((AbstractTestEntity) record).setVersion(((AbstractTestEntity) record).getVersion() + 1L);
+    }
 
-	@Override
-	public void preDelete(Entity record, Date now) throws UnifyException {
+    @Override
+    public void preDelete(Entity record, Date now) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void onCreateError(Entity record) {
+    @Override
+    public void onCreateError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public void onUpdateError(Entity record) {
+    @Override
+    public void onUpdateError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public void onDeleteError(Entity record) {
+    @Override
+    public void onDeleteError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public boolean isSetNow() {
-		return false;
-	}
+    @Override
+    public boolean isSetNow() {
+        return false;
+    }
 }

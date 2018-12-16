@@ -25,13 +25,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonStringConverter implements JsonValueConverter<String> {
-	@Override
-	public String read(JsonValue jsonValue) throws Exception {
-		return jsonValue.asString();
-	}
+    @Override
+    public String read(JsonValue jsonValue) throws Exception {
+        return jsonValue.asString();
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value((String) value);
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value((String) value);
+    }
 }

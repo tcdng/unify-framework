@@ -29,82 +29,82 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public abstract class AbstractPanelWriter extends AbstractContainerWriter implements PanelWriter {
 
-	@Override
-	public void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-		panel.cascadeValueStore();
-		doWriteInnerStructureAndContent(writer, panel);
-	}
+    @Override
+    public void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+        panel.cascadeValueStore();
+        doWriteInnerStructureAndContent(writer, panel);
+    }
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Panel panel = (Panel) widget;
-		writer.write("<div");
-		writePanelTagAttributes(writer, panel);
-		writer.write(">");
-		writeInnerStructureAndContent(writer, panel);
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        Panel panel = (Panel) widget;
+        writer.write("<div");
+        writePanelTagAttributes(writer, panel);
+        writer.write(">");
+        writeInnerStructureAndContent(writer, panel);
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
-		Panel panel = (Panel) widget;
-		if (panel.isAllowRefresh()) {
-			int refreshEvery = panel.getRefreshEvery();
-			if (refreshEvery > 0) {
-				// Append delayed post
-				String path = panel.getRefreshPath();
-				writer.write("ux.setDelayedPanelPost({");
-				writer.write("\"pId\":\"").write(panel.getId()).write('"');
-				writer.write(",\"pURL\":\"");
-				if (path == null) {
-					writer.writeCommandURL();
-				} else {
-					writer.writeContextURL(path);
-				}
-				writer.write('"');
-				writer.write(",\"pPeriodMilliSec\":").write(refreshEvery);
-				writer.write("});");
-			}
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        Panel panel = (Panel) widget;
+        if (panel.isAllowRefresh()) {
+            int refreshEvery = panel.getRefreshEvery();
+            if (refreshEvery > 0) {
+                // Append delayed post
+                String path = panel.getRefreshPath();
+                writer.write("ux.setDelayedPanelPost({");
+                writer.write("\"pId\":\"").write(panel.getId()).write('"');
+                writer.write(",\"pURL\":\"");
+                if (path == null) {
+                    writer.writeCommandURL();
+                } else {
+                    writer.writeContextURL(path);
+                }
+                writer.write('"');
+                writer.write(",\"pPeriodMilliSec\":").write(refreshEvery);
+                writer.write("});");
+            }
+        }
+    }
 
-	protected void writePanelTagAttributes(ResponseWriter writer, Panel panel) throws UnifyException {
-		String backImageSrc = panel.getBackImageSrc();
-		if (!StringUtils.isBlank(backImageSrc)) {
-			writeTagId(writer, panel);
-			writeTagStyleClass(writer, panel);
-			writer.write(" style=\"background: url('");
-			writer.writeFileImageContextURL(backImageSrc);
-			writer.write("') no-repeat;background-size:100% 100%;");
-			String style = panel.getStyle();
-			if (style != null) {
-				writer.write(style);
-			}
-			writer.write("\"");
-		} else {
-			writeTagAttributes(writer, panel);
-		}
-	}
+    protected void writePanelTagAttributes(ResponseWriter writer, Panel panel) throws UnifyException {
+        String backImageSrc = panel.getBackImageSrc();
+        if (!StringUtils.isBlank(backImageSrc)) {
+            writeTagId(writer, panel);
+            writeTagStyleClass(writer, panel);
+            writer.write(" style=\"background: url('");
+            writer.writeFileImageContextURL(backImageSrc);
+            writer.write("') no-repeat;background-size:100% 100%;");
+            String style = panel.getStyle();
+            if (style != null) {
+                writer.write(style);
+            }
+            writer.write("\"");
+        } else {
+            writeTagAttributes(writer, panel);
+        }
+    }
 
-	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-		String legend = panel.getLegend();
+    protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+        String legend = panel.getLegend();
 
-		boolean isLegend = !StringUtils.isBlank(legend);
-		if (isLegend) {
-			writer.write("<fieldset><legend>");
-			writeAttributeWithEscape(writer, panel, "legend");
-			writer.write("</legend>");
-		}
+        boolean isLegend = !StringUtils.isBlank(legend);
+        if (isLegend) {
+            writer.write("<fieldset><legend>");
+            writeAttributeWithEscape(writer, panel, "legend");
+            writer.write("</legend>");
+        }
 
-		if (!getRequestContextUtil().isPanelSwitched(panel)) {
-			panel.switchState();
-		}
+        if (!getRequestContextUtil().isPanelSwitched(panel)) {
+            panel.switchState();
+        }
 
-		writeLayoutContent(writer, panel);
+        writeLayoutContent(writer, panel);
 
-		if (isLegend) {
-			writer.write("</fieldset>");
-		}
-	}
+        if (isLegend) {
+            writer.write("</fieldset>");
+        }
+    }
 }

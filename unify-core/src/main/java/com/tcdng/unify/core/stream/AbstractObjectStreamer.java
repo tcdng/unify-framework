@@ -30,24 +30,24 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractObjectStreamer extends AbstractUnifyComponent implements ObjectStreamer {
 
-	@Override
-	public <T> T unmarshal(Class<T> type, InputStream inputStream) throws UnifyException {
-		return unmarshal(type, inputStream, null);
-	}
+    @Override
+    public <T> T unmarshal(Class<T> type, InputStream inputStream) throws UnifyException {
+        return unmarshal(type, inputStream, null);
+    }
 
-	@Override
-	public void marshal(Object object, OutputStream outputStream) throws UnifyException {
-		marshal(object, outputStream, null);
-	}
+    @Override
+    public void marshal(Object object, OutputStream outputStream) throws UnifyException {
+        marshal(object, outputStream, null);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
 }

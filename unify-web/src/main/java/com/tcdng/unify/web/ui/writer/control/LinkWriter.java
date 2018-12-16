@@ -33,13 +33,13 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("link-writer")
 public class LinkWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Link link = (Link) widget;
-		writer.write("<a");
-		writeTagAttributes(writer, link);
-		writer.write(">");
-		writeCaption(writer, link);
-		writer.write("</a>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        Link link = (Link) widget;
+        writer.write("<a");
+        writeTagAttributes(writer, link);
+        writer.write(">");
+        writeCaption(writer, link);
+        writer.write("</a>");
+    }
 }

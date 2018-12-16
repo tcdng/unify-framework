@@ -33,80 +33,80 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * @since 1.0
  */
 public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRecord>
-		extends AbstractBatchFileReadProcessor implements DBBatchFileReadProcessor {
+        extends AbstractBatchFileReadProcessor implements DBBatchFileReadProcessor {
 
-	private Class<T> batchItemClass;
+    private Class<T> batchItemClass;
 
-	public AbstractDBBatchItemFileReadProcessor(Class<T> batchItemClass) {
-		this.batchItemClass = batchItemClass;
-	}
+    public AbstractDBBatchItemFileReadProcessor(Class<T> batchItemClass) {
+        this.batchItemClass = batchItemClass;
+    }
 
-	@Override
-	protected Object doProcessBatchFile(BusinessLogicInput input, BatchFileConfig batchFileConfig,
-			BatchFileReader reader) throws UnifyException {
-		TaskMonitor tm = input.getTaskMonitor();
-		tm.addMessage("Processing batch file...");
-		List<Object> idList = new ArrayList<Object>();
-		String[] updateFields = null;
-		ConstraintAction action = batchFileConfig.getOnConstraint();
-		if (ConstraintAction.UPDATE.equals(action)) {
-			List<String> updateList = new ArrayList<String>();
-			for (BatchFileFieldConfig bfc : batchFileConfig.getFieldConfigs()) {
-				if (bfc.isUpdateOnConstraint()) {
-					updateList.add(bfc.getFieldName());
-				}
-			}
-			updateFields = updateList.toArray(new String[updateList.size()]);
-		}
+    @Override
+    protected Object doProcessBatchFile(BusinessLogicInput input, BatchFileConfig batchFileConfig,
+            BatchFileReader reader) throws UnifyException {
+        TaskMonitor tm = input.getTaskMonitor();
+        tm.addMessage("Processing batch file...");
+        List<Object> idList = new ArrayList<Object>();
+        String[] updateFields = null;
+        ConstraintAction action = batchFileConfig.getOnConstraint();
+        if (ConstraintAction.UPDATE.equals(action)) {
+            List<String> updateList = new ArrayList<String>();
+            for (BatchFileFieldConfig bfc : batchFileConfig.getFieldConfigs()) {
+                if (bfc.isUpdateOnConstraint()) {
+                    updateList.add(bfc.getFieldName());
+                }
+            }
+            updateFields = updateList.toArray(new String[updateList.size()]);
+        }
 
-		Database pm = getDatabase(input);
-		T batchItem = ReflectUtils.newInstance(batchItemClass);
-		ValueStore itemStore = getValueStoreFactory().getValueStore(batchItem, 0);
-		int createCount = 0;
-		int updateCount = 0;
-		int skipCount = 0;
-		while (reader.readNextRecord(itemStore)) {
-			T constraint = pm.findConstraint(batchItem);
-			if (constraint == null) {
-				// No constraint. Just create item.
-				preBatchItemCreate(input, batchItem);
-				Object id = pm.create(batchItem);
-				idList.add(id);
-				postBatchItemCreate(input, batchItem);
-				createCount++;
-			} else {
-				// Constraining record found. Take action.
-				switch (action) {
-				case FAIL:
-					throw new UnifyException(UnifyCoreErrorConstants.BATCH_FILE_READER_RECORD_EXISTS, constraint,
-							batchItem);
-				case UPDATE:
-					ReflectUtils.shallowBeanCopy(constraint, batchItem, updateFields);
-					pm.updateByIdVersion(constraint);
-					updateCount++;
-					break;
-				case SKIP:
-				default:
-					// Skip. Do nothing with batch item
-					skipCount++;
-					break;
-				}
-			}
-		}
+        Database pm = getDatabase(input);
+        T batchItem = ReflectUtils.newInstance(batchItemClass);
+        ValueStore itemStore = getValueStoreFactory().getValueStore(batchItem, 0);
+        int createCount = 0;
+        int updateCount = 0;
+        int skipCount = 0;
+        while (reader.readNextRecord(itemStore)) {
+            T constraint = pm.findConstraint(batchItem);
+            if (constraint == null) {
+                // No constraint. Just create item.
+                preBatchItemCreate(input, batchItem);
+                Object id = pm.create(batchItem);
+                idList.add(id);
+                postBatchItemCreate(input, batchItem);
+                createCount++;
+            } else {
+                // Constraining record found. Take action.
+                switch (action) {
+                case FAIL:
+                    throw new UnifyException(UnifyCoreErrorConstants.BATCH_FILE_READER_RECORD_EXISTS, constraint,
+                            batchItem);
+                case UPDATE:
+                    ReflectUtils.shallowBeanCopy(constraint, batchItem, updateFields);
+                    pm.updateByIdVersion(constraint);
+                    updateCount++;
+                    break;
+                case SKIP:
+                default:
+                    // Skip. Do nothing with batch item
+                    skipCount++;
+                    break;
+                }
+            }
+        }
 
-		tm.addMessage("Batch file processing completed.");
-		tm.addMessage("Summary: createCount = " + createCount + ", updateCount = " + updateCount + ", skipCount = "
-				+ skipCount);
+        tm.addMessage("Batch file processing completed.");
+        tm.addMessage("Summary: createCount = " + createCount + ", updateCount = " + updateCount + ", skipCount = "
+                + skipCount);
 
-		return idList;
-	}
+        return idList;
+    }
 
-	protected void preBatchItemCreate(BusinessLogicInput input, T batchItem) throws UnifyException {
+    protected void preBatchItemCreate(BusinessLogicInput input, T batchItem) throws UnifyException {
 
-	}
+    }
 
-	protected void postBatchItemCreate(BusinessLogicInput input, T batchItem) throws UnifyException {
+    protected void postBatchItemCreate(BusinessLogicInput input, T batchItem) throws UnifyException {
 
-	}
+    }
 
 }

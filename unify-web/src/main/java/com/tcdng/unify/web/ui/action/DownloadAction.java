@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @UplAttributes({ @UplAttribute(name = "resource", type = String.class, mandatory = true) })
 public class DownloadAction extends AbstractPageAction {
 
-	public DownloadAction() {
-		super("download");
-	}
+    public DownloadAction() {
+        super("download");
+    }
 }

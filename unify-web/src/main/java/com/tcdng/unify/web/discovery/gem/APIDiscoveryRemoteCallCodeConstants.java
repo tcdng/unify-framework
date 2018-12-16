@@ -23,5 +23,5 @@ package com.tcdng.unify.web.discovery.gem;
  */
 public interface APIDiscoveryRemoteCallCodeConstants {
 
-	String DISCOVER_REMOTE_CALL = "apidiscovery-001";
+    String DISCOVER_REMOTE_CALL = "apidiscovery-001";
 }

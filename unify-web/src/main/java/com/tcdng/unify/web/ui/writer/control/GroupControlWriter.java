@@ -37,48 +37,48 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("group-writer")
 public class GroupControlWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		GroupControl groupControl = (GroupControl) widget;
-		writer.write("<div");
-		writeTagAttributes(writer, groupControl);
-		writer.write(">");
-		ValueStore valueStore = groupControl.getValueStore();
-		boolean space = groupControl.isSpace();
-		boolean appendSym = false;
-		for (AbstractMultiControl.ChildControlInfo childControlInfo : groupControl.getChildControlInfos()) {
-			if (childControlInfo.isExternal()) {
-				Control control = childControlInfo.getControl();
-				if (control.isVisible()) {
-					if (space) {
-						if (appendSym) {
-							writer.writeHtmlFixedSpace();
-						} else {
-							appendSym = true;
-						}
-					}
-					control.setValueStore(valueStore);
-					writer.writeStructureAndContent(control);
-				}
-			}
-		}
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        GroupControl groupControl = (GroupControl) widget;
+        writer.write("<div");
+        writeTagAttributes(writer, groupControl);
+        writer.write(">");
+        ValueStore valueStore = groupControl.getValueStore();
+        boolean space = groupControl.isSpace();
+        boolean appendSym = false;
+        for (AbstractMultiControl.ChildControlInfo childControlInfo : groupControl.getChildControlInfos()) {
+            if (childControlInfo.isExternal()) {
+                Control control = childControlInfo.getControl();
+                if (control.isVisible()) {
+                    if (space) {
+                        if (appendSym) {
+                            writer.writeHtmlFixedSpace();
+                        } else {
+                            appendSym = true;
+                        }
+                    }
+                    control.setValueStore(valueStore);
+                    writer.writeStructureAndContent(control);
+                }
+            }
+        }
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		GroupControl groupControl = (GroupControl) widget;
-		super.doWriteBehavior(writer, groupControl);
-		ValueStore valueStore = groupControl.getValueStore();
-		for (AbstractMultiControl.ChildControlInfo childControlInfo : groupControl.getChildControlInfos()) {
-			if (childControlInfo.isExternal()) {
-				Control control = childControlInfo.getControl();
-				if (control.isVisible() || control.isHidden()) {
-					control.setValueStore(valueStore);
-					writer.writeBehaviour(control);
-				}
-			}
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        GroupControl groupControl = (GroupControl) widget;
+        super.doWriteBehavior(writer, groupControl);
+        ValueStore valueStore = groupControl.getValueStore();
+        for (AbstractMultiControl.ChildControlInfo childControlInfo : groupControl.getChildControlInfos()) {
+            if (childControlInfo.isExternal()) {
+                Control control = childControlInfo.getControl();
+                if (control.isVisible() || control.isHidden()) {
+                    control.setValueStore(valueStore);
+                    writer.writeBehaviour(control);
+                }
+            }
+        }
+    }
 
 }

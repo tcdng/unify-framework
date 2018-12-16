@@ -29,28 +29,28 @@ import com.tcdng.unify.core.upl.AbstractUplGenerator;
 @Component("test-uplgenerator")
 public class TestUplGenerator extends AbstractUplGenerator {
 
-	public TestUplGenerator() {
-		super("test-generateddoc");
-	}
+    public TestUplGenerator() {
+        super("test-generateddoc");
+    }
 
-	@Override
-	public boolean isNewerVersion(String target) throws UnifyException {
-		if ("type1".equals(target)) {
-			// type 1 version is always stale
-			return true;
-		}
+    @Override
+    public boolean isNewerVersion(String target) throws UnifyException {
+        if ("type1".equals(target)) {
+            // type 1 version is always stale
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	protected void generateBody(StringBuilder sb, String target) throws UnifyException {
-		if ("type1".equals(target)) {
-			sb.append("names:$s{Tweak}").append(" names:$s{Peak}").append(" names:$s{Leak}");
-		} else {
-			sb.append("names:$s{Gain}").append(" names:$s{Train}");
-		}
+    @Override
+    protected void generateBody(StringBuilder sb, String target) throws UnifyException {
+        if ("type1".equals(target)) {
+            sb.append("names:$s{Tweak}").append(" names:$s{Peak}").append(" names:$s{Leak}");
+        } else {
+            sb.append("names:$s{Gain}").append(" names:$s{Train}");
+        }
 
-		appendNewline(sb);
-	}
+        appendNewline(sb);
+    }
 }

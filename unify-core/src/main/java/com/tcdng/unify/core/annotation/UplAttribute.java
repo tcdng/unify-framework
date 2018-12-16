@@ -30,15 +30,15 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UplAttribute {
-	/** The attribute name */
-	String name();
+    /** The attribute name */
+    String name();
 
-	/** The attribute type */
-	Class<?> type();
+    /** The attribute type */
+    Class<?> type();
 
-	/** The attribute default value */
-	String defaultValue() default AnnotationConstants.NONE;
+    /** The attribute default value */
+    String defaultValue() default AnnotationConstants.NONE;
 
-	/** Used to indicate that attribute is mandatory */
-	boolean mandatory() default false;
+    /** Used to indicate that attribute is mandatory */
+    boolean mandatory() default false;
 }

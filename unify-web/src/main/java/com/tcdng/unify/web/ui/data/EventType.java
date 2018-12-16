@@ -27,24 +27,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum EventType implements EnumConst {
 
-	MOUSE_CLICK("MCL"), MOUSE_DBLCLICK("MDC"), MOUSE_RIGHTCLICK("RCL"), MOUSE_MENUCLICK("MUL");
+    MOUSE_CLICK("MCL"), MOUSE_DBLCLICK("MDC"), MOUSE_RIGHTCLICK("RCL"), MOUSE_MENUCLICK("MUL");
 
-	private final String code;
+    private final String code;
 
-	private EventType(String code) {
-		this.code = code;
-	}
+    private EventType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static EventType fromCode(String code) {
-		return EnumUtils.fromCode(EventType.class, code);
-	}
+    public static EventType fromCode(String code) {
+        return EnumUtils.fromCode(EventType.class, code);
+    }
 
-	public static EventType fromName(String name) {
-		return EnumUtils.fromName(EventType.class, name);
-	}
+    public static EventType fromName(String name) {
+        return EnumUtils.fromName(EventType.class, name);
+    }
 }

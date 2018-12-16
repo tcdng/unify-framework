@@ -30,99 +30,99 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface FormatHelper extends UnifyComponent {
 
-	String yyyyMMdd_HHmmss = "yyyyMMdd_HHmmss";
+    String yyyyMMdd_HHmmss = "yyyyMMdd_HHmmss";
 
-	/**
-	 * Returns the number symbols for specified number type and locale.
-	 * 
-	 * @param numberType
-	 *            the number type
-	 * @param locale
-	 *            the locale
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	NumberSymbols getNumberSymbols(NumberType numberType, Locale locale) throws UnifyException;
+    /**
+     * Returns the number symbols for specified number type and locale.
+     * 
+     * @param numberType
+     *            the number type
+     * @param locale
+     *            the locale
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    NumberSymbols getNumberSymbols(NumberType numberType, Locale locale) throws UnifyException;
 
-	/**
-	 * Returns the date-time format object for supplied sub pattern and locale.
-	 * 
-	 * @param subPattern
-	 *            the date time sub pattern
-	 * @param locale
-	 *            the locale
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	DateTimeFormat getSubPatternDateTimeFormat(String subPattern, Locale locale) throws UnifyException;
+    /**
+     * Returns the date-time format object for supplied sub pattern and locale.
+     * 
+     * @param subPattern
+     *            the date time sub pattern
+     * @param locale
+     *            the locale
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    DateTimeFormat getSubPatternDateTimeFormat(String subPattern, Locale locale) throws UnifyException;
 
-	/**
-	 * Returns true if the supplied string is a supported date-time sub pattern.
-	 * 
-	 * @param subPattern
-	 *            the string to test
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isSupportedDateTimeSubPattern(String subPattern) throws UnifyException;
+    /**
+     * Returns true if the supplied string is a supported date-time sub pattern.
+     * 
+     * @param subPattern
+     *            the string to test
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isSupportedDateTimeSubPattern(String subPattern) throws UnifyException;
 
-	/**
-	 * Returns the long year version of a date pattern. For instance an input
-	 * pattern of <em>dd-MM-yy<em> would return <em>dd-MM-yyyy<em>.
-	 * 
-	 * @param pattern
-	 *            the date pattern, which should contain at least a year element
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getDatePatternWithLongYear(String pattern) throws UnifyException;
+    /**
+     * Returns the long year version of a date pattern. For instance an input
+     * pattern of <em>dd-MM-yy<em> would return <em>dd-MM-yyyy<em>.
+     * 
+     * @param pattern
+     *            the date pattern, which should contain at least a year element
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getDatePatternWithLongYear(String pattern) throws UnifyException;
 
-	/**
-	 * Splits a date pattern into its sub-elements. For instance an input pattern of
-	 * <em>dd-MM-yy<em> would be split to five sub-patterns; "dd" a date
-	 * sub-pattern, "-" a filler pattern, "MM" a date sub-pattern, "-" another
-	 * filler pattern and finally "yy" a date sub-pattern.
-	 * 
-	 * @param pattern
-	 *            the pattern to split
-	 * @return the sub-patterns, returned in same sequence as in supplied pattern.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Pattern[] splitDatePattern(String pattern) throws UnifyException;
+    /**
+     * Splits a date pattern into its sub-elements. For instance an input pattern of
+     * <em>dd-MM-yy<em> would be split to five sub-patterns; "dd" a date
+     * sub-pattern, "-" a filler pattern, "MM" a date sub-pattern, "-" another
+     * filler pattern and finally "yy" a date sub-pattern.
+     * 
+     * @param pattern
+     *            the pattern to split
+     * @return the sub-patterns, returned in same sequence as in supplied pattern.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Pattern[] splitDatePattern(String pattern) throws UnifyException;
 
-	/**
-	 * Reconstructs a date pattern from a set of sub-elements.
-	 * 
-	 * @param subPatterns
-	 *            the sub patterns
-	 * @return the reconstructed date pattern
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String reconstructDatePattern(Pattern[] subPatterns) throws UnifyException;
+    /**
+     * Reconstructs a date pattern from a set of sub-elements.
+     * 
+     * @param subPatterns
+     *            the sub patterns
+     * @return the reconstructed date pattern
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String reconstructDatePattern(Pattern[] subPatterns) throws UnifyException;
 
-	/**
-	 * Returns formatted string of current time using supplied pattern.
-	 * 
-	 * @param pattern
-	 *            the date-time pattern
-	 * @return the formatted date
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String formatNow(String pattern) throws UnifyException;
+    /**
+     * Returns formatted string of current time using supplied pattern.
+     * 
+     * @param pattern
+     *            the date-time pattern
+     * @return the formatted date
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String formatNow(String pattern) throws UnifyException;
 
-	/**
-	 * Returns formatted string of specified time using supplied pattern.
-	 * 
-	 * @param pattern
-	 *            the date-time pattern
-	 * @param date
-	 *            the time to format
-	 * @return the formatted date
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String format(String pattern, Date date) throws UnifyException;
+    /**
+     * Returns formatted string of specified time using supplied pattern.
+     * 
+     * @param pattern
+     *            the date-time pattern
+     * @param date
+     *            the time to format
+     * @return the formatted date
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String format(String pattern, Date date) throws UnifyException;
 }

@@ -28,5 +28,5 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface MenuLoader extends UnifyComponent {
 
-	List<Menu> loadMenus() throws UnifyException;
+    List<Menu> loadMenus() throws UnifyException;
 }

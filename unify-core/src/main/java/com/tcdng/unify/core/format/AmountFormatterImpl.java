@@ -27,8 +27,8 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  */
 @Component(name = "amountformat", description = "$m{format.amount}")
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class, defaultValue = "16"),
-		@UplAttribute(name = "scale", type = int.class, defaultValue = "2"),
-		@UplAttribute(name = "useGrouping", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "scale", type = int.class, defaultValue = "2"),
+        @UplAttribute(name = "useGrouping", type = boolean.class, defaultValue = "true") })
 public class AmountFormatterImpl extends DecimalFormatterImpl implements AmountFormatter {
 
 }

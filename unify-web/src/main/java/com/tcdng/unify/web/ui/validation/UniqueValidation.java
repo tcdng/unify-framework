@@ -39,67 +39,67 @@ import com.tcdng.unify.web.ui.Widget;
  */
 @Component("ui-uniquevalidation")
 @UplAttributes({ @UplAttribute(name = "type", type = Class.class),
-		@UplAttribute(name = "idProperty", type = String.class, defaultValue = "id"),
-		@UplAttribute(name = "idType", type = Class.class, defaultValue = "java.lang.Long") })
+        @UplAttribute(name = "idProperty", type = String.class, defaultValue = "id"),
+        @UplAttribute(name = "idType", type = Class.class, defaultValue = "java.lang.Long") })
 public class UniqueValidation extends AbstractPageValidation {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
-		Class<? extends Entity> validationClazz = (Class<? extends Entity>) getUplAttribute(Class.class, "type");
-		if (validationClazz == null) {
-			validationClazz = (Class<? extends Entity>) dataTransfer.getValidationClass();
-		}
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
+        Class<? extends Entity> validationClazz = (Class<? extends Entity>) getUplAttribute(Class.class, "type");
+        if (validationClazz == null) {
+            validationClazz = (Class<? extends Entity>) dataTransfer.getValidationClass();
+        }
 
-		Class<?> idClazz = (Class<?>) getUplAttribute(Class.class, "idType");
-		if (idClazz == null) {
-			idClazz = dataTransfer.getValidationIdClass();
-		}
+        Class<?> idClazz = (Class<?>) getUplAttribute(Class.class, "idType");
+        if (idClazz == null) {
+            idClazz = dataTransfer.getValidationIdClass();
+        }
 
-		if (validationClazz != null) {
-			Query<? extends Entity> criteria = new Query(validationClazz);
-			String idProperty = getUplAttribute(String.class, "idProperty");
-			Object id = getTransferValue(idClazz, idProperty, dataTransfer);
-			if (id != null) {
-				criteria.notEqual("id", id);
-			}
+        if (validationClazz != null) {
+            Query<? extends Entity> criteria = new Query(validationClazz);
+            String idProperty = getUplAttribute(String.class, "idProperty");
+            Object id = getTransferValue(idClazz, idProperty, dataTransfer);
+            if (id != null) {
+                criteria.notEqual("id", id);
+            }
 
-			StringBuilder sb = new StringBuilder();
-			boolean appendSymbol = false;
-			for (Widget widget : widgets) {
-				if (widget.isVisible()) {
-					DataTransferBlock transferBlock = dataTransfer.getDataTransferBlock(widget.getId());
-					if (transferBlock != null) {
-						Object value = transferBlock.getValue();
-						if (value != null) {
-							criteria.equals(transferBlock.getShortProperty(), value);
+            StringBuilder sb = new StringBuilder();
+            boolean appendSymbol = false;
+            for (Widget widget : widgets) {
+                if (widget.isVisible()) {
+                    DataTransferBlock transferBlock = dataTransfer.getDataTransferBlock(widget.getId());
+                    if (transferBlock != null) {
+                        Object value = transferBlock.getValue();
+                        if (value != null) {
+                            criteria.equals(transferBlock.getShortProperty(), value);
 
-							if (appendSymbol) {
-								sb.append(',');
-							} else {
-								appendSymbol = true;
-							}
+                            if (appendSymbol) {
+                                sb.append(',');
+                            } else {
+                                appendSymbol = true;
+                            }
 
-							String caption = widget.getUplAttribute(String.class, "caption");
-							sb.append(caption).append(" = '").append(value).append('\'');
-							continue;
-						}
-					}
+                            String caption = widget.getUplAttribute(String.class, "caption");
+                            sb.append(caption).append(" = '").append(value).append('\'');
+                            continue;
+                        }
+                    }
 
-					break;
-				}
-			}
+                    break;
+                }
+            }
 
-			if (sb.length() > 0 && ((GenericBusinessModule) this
-					.getComponent(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)).countAll(criteria) > 0) {
-				String message = getSessionMessage("validation.uniquerecordexists", sb.toString());
-				addValidationFail((Control) widgets.get(0), "unique", message);
-				return false;
-			}
-		}
+            if (sb.length() > 0 && ((GenericBusinessModule) this
+                    .getComponent(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)).countAll(criteria) > 0) {
+                String message = getSessionMessage("validation.uniquerecordexists", sb.toString());
+                addValidationFail((Control) widgets.get(0), "unique", message);
+                return false;
+            }
+        }
 
-		addValidationPass((Control) widgets.get(0), null);
-		return true;
-	}
+        addValidationPass((Control) widgets.get(0), null);
+        return true;
+    }
 
 }

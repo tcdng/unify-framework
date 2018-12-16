@@ -28,25 +28,25 @@ import org.junit.Test;
  */
 public class NameUtilsTest {
 
-	@Test
-	public void testDescribeName() throws Exception {
-		assertNull(NameUtils.describeName(null));
-		assertEquals("", NameUtils.describeName(""));
-		assertEquals("Run On Time", NameUtils.describeName("runOnTime"));
-		assertEquals("The Sky Is Blue", NameUtils.describeName("The sky is blue"));
-	}
+    @Test
+    public void testDescribeName() throws Exception {
+        assertNull(NameUtils.describeName(null));
+        assertEquals("", NameUtils.describeName(""));
+        assertEquals("Run On Time", NameUtils.describeName("runOnTime"));
+        assertEquals("The Sky Is Blue", NameUtils.describeName("The sky is blue"));
+    }
 
-	@Test
-	public void testDescribeNestedName() throws Exception {
-		assertEquals("Run On Time", NameUtils.describeName("run.OnTime"));
-		assertEquals("User Bio Age", NameUtils.describeName("userBio.age"));
-	}
+    @Test
+    public void testDescribeNestedName() throws Exception {
+        assertEquals("Run On Time", NameUtils.describeName("run.OnTime"));
+        assertEquals("User Bio Age", NameUtils.describeName("userBio.age"));
+    }
 
-	@Test
-	public void testDescribeCode() throws Exception {
-		assertNull(NameUtils.describeCode(null));
-		assertEquals("", NameUtils.describeCode(""));
-		assertEquals("Account Number", NameUtils.describeCode("ACCOUNT_NUMBER"));
-		assertEquals("Loan Id", NameUtils.describeCode("_LOAN_ID"));
-	}
+    @Test
+    public void testDescribeCode() throws Exception {
+        assertNull(NameUtils.describeCode(null));
+        assertEquals("", NameUtils.describeCode(""));
+        assertEquals("Account Number", NameUtils.describeCode("ACCOUNT_NUMBER"));
+        assertEquals("Loan Id", NameUtils.describeCode("_LOAN_ID"));
+    }
 }

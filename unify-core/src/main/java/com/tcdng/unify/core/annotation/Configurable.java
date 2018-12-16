@@ -34,23 +34,23 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Configurable {
 
-	/** The default configuration value */
-	String value() default AnnotationConstants.NONE;
+    /** The default configuration value */
+    String value() default AnnotationConstants.NONE;
 
-	/**
-	 * The default configuration values. Use when multiple values need configured
-	 * for a property
-	 */
-	String[] values() default {};
+    /**
+     * The default configuration values. Use when multiple values need configured
+     * for a property
+     */
+    String[] values() default {};
 
-	/**
-	 * The configurable property name. Effective only in {@link Configuration}
-	 * annotation.
-	 */
-	String property() default AnnotationConstants.NONE;
+    /**
+     * The configurable property name. Effective only in {@link Configuration}
+     * annotation.
+     */
+    String property() default AnnotationConstants.NONE;
 
-	/**
-	 * Indicates that configurable property is hidden.
-	 */
-	boolean hidden() default false;
+    /**
+     * Indicates that configurable property is hidden.
+     */
+    boolean hidden() default false;
 }

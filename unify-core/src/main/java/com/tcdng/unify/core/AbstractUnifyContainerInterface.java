@@ -22,44 +22,44 @@ package com.tcdng.unify.core;
  * @since 1.0
  */
 public abstract class AbstractUnifyContainerInterface extends AbstractUnifyComponent
-		implements UnifyContainerInterface {
+        implements UnifyContainerInterface {
 
-	private boolean servicingRequests;
+    private boolean servicingRequests;
 
-	@Override
-	public void startServicingRequests() throws UnifyException {
-		if (!servicingRequests) {
-			onStartServicingRequests();
-			servicingRequests = true;
-		}
-	}
+    @Override
+    public void startServicingRequests() throws UnifyException {
+        if (!servicingRequests) {
+            onStartServicingRequests();
+            servicingRequests = true;
+        }
+    }
 
-	@Override
-	public void stopServicingRequests() throws UnifyException {
-		if (servicingRequests) {
-			onStopServicingRequests();
-			servicingRequests = false;
-		}
-	}
+    @Override
+    public void stopServicingRequests() throws UnifyException {
+        if (servicingRequests) {
+            onStopServicingRequests();
+            servicingRequests = false;
+        }
+    }
 
-	@Override
-	public boolean isServicingRequests() {
-		return servicingRequests;
-	}
+    @Override
+    public boolean isServicingRequests() {
+        return servicingRequests;
+    }
 
-	/**
-	 * Performs an on-start servicing requests operation.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void onStartServicingRequests() throws UnifyException;
+    /**
+     * Performs an on-start servicing requests operation.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void onStartServicingRequests() throws UnifyException;
 
-	/**
-	 * Performs an on-stop servicing requests operation.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void onStopServicingRequests() throws UnifyException;
+    /**
+     * Performs an on-stop servicing requests operation.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void onStopServicingRequests() throws UnifyException;
 }

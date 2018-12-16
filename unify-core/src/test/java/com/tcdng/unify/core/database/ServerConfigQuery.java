@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database;
  */
 public class ServerConfigQuery extends AbstractTestEntityQuery<ServerConfig> {
 
-	public ServerConfigQuery() {
-		super(ServerConfig.class);
-	}
+    public ServerConfigQuery() {
+        super(ServerConfig.class);
+    }
 }

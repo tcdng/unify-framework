@@ -24,20 +24,20 @@ package com.tcdng.unify.core.list;
  */
 public class SearchProviderParams {
 
-	private String key;
+    private String key;
 
-	private String filter;
+    private String filter;
 
-	public SearchProviderParams(String key, String filter) {
-		this.key = key;
-		this.filter = filter;
-	}
+    public SearchProviderParams(String key, String filter) {
+        this.key = key;
+        this.filter = filter;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getFilter() {
-		return filter;
-	}
+    public String getFilter() {
+        return filter;
+    }
 }

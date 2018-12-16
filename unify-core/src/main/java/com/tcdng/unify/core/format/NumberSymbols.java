@@ -23,63 +23,63 @@ package com.tcdng.unify.core.format;
  */
 public class NumberSymbols {
 
-	private NumberType numberType;
+    private NumberType numberType;
 
-	private String negativePrefix;
+    private String negativePrefix;
 
-	private String negativeSuffix;
+    private String negativeSuffix;
 
-	private String positivePrefix;
+    private String positivePrefix;
 
-	private String positiveSuffix;
+    private String positiveSuffix;
 
-	private int groupSize;
+    private int groupSize;
 
-	private char groupingSeparator;
+    private char groupingSeparator;
 
-	private char decimalSeparator;
+    private char decimalSeparator;
 
-	public NumberSymbols(NumberType numberType, String negativePrefix, String negativeSuffix, String positivePrefix,
-			String positiveSuffix, int groupSize, char groupingSeparator, char decimalSeparator) {
-		this.numberType = numberType;
-		this.negativePrefix = negativePrefix;
-		this.negativeSuffix = negativeSuffix;
-		this.positivePrefix = positivePrefix;
-		this.positiveSuffix = positiveSuffix;
-		this.groupSize = groupSize;
-		this.groupingSeparator = groupingSeparator;
-		this.decimalSeparator = decimalSeparator;
-	}
+    public NumberSymbols(NumberType numberType, String negativePrefix, String negativeSuffix, String positivePrefix,
+            String positiveSuffix, int groupSize, char groupingSeparator, char decimalSeparator) {
+        this.numberType = numberType;
+        this.negativePrefix = negativePrefix;
+        this.negativeSuffix = negativeSuffix;
+        this.positivePrefix = positivePrefix;
+        this.positiveSuffix = positiveSuffix;
+        this.groupSize = groupSize;
+        this.groupingSeparator = groupingSeparator;
+        this.decimalSeparator = decimalSeparator;
+    }
 
-	public NumberType getNumberType() {
-		return numberType;
-	}
+    public NumberType getNumberType() {
+        return numberType;
+    }
 
-	public String getNegativePrefix() {
-		return negativePrefix;
-	}
+    public String getNegativePrefix() {
+        return negativePrefix;
+    }
 
-	public String getNegativeSuffix() {
-		return negativeSuffix;
-	}
+    public String getNegativeSuffix() {
+        return negativeSuffix;
+    }
 
-	public String getPositivePrefix() {
-		return positivePrefix;
-	}
+    public String getPositivePrefix() {
+        return positivePrefix;
+    }
 
-	public String getPositiveSuffix() {
-		return positiveSuffix;
-	}
+    public String getPositiveSuffix() {
+        return positiveSuffix;
+    }
 
-	public int getGroupSize() {
-		return groupSize;
-	}
+    public int getGroupSize() {
+        return groupSize;
+    }
 
-	public char getGroupingSeparator() {
-		return groupingSeparator;
-	}
+    public char getGroupingSeparator() {
+        return groupingSeparator;
+    }
 
-	public char getDecimalSeparator() {
-		return decimalSeparator;
-	}
+    public char getDecimalSeparator() {
+        return decimalSeparator;
+    }
 }

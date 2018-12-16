@@ -29,19 +29,19 @@ import com.tcdng.unify.core.annotation.Singleton;
 @Singleton(false)
 public abstract class AbstractResourceGenerator<T> extends AbstractUnifyComponent implements ResourceGenerator<T> {
 
-	@Override
-	public boolean isReady() throws UnifyException {
-		return true;
-	}
+    @Override
+    public boolean isReady() throws UnifyException {
+        return true;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
 }

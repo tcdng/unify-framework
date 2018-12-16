@@ -23,9 +23,9 @@ package com.tcdng.unify.core.system;
  */
 public interface DateSequenceNumberTaskConstants {
 
-	String SEQUENCENAME = "sequenceName";
+    String SEQUENCENAME = "sequenceName";
 
-	String ITERATIONS = "iterations";
+    String ITERATIONS = "iterations";
 
-	String DATE = "date";
+    String DATE = "date";
 }

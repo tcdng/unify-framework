@@ -25,19 +25,19 @@ import com.tcdng.unify.core.constant.EnumConst;
  */
 public class StaticReferenceQuery extends Query<StaticReference> {
 
-	private Class<? extends EnumConst> enumConstType;
+    private Class<? extends EnumConst> enumConstType;
 
-	public StaticReferenceQuery(Class<? extends EnumConst> enumConstType) {
-		super(StaticReference.class);
-		this.enumConstType = enumConstType;
-	}
+    public StaticReferenceQuery(Class<? extends EnumConst> enumConstType) {
+        super(StaticReference.class);
+        this.enumConstType = enumConstType;
+    }
 
-	public Class<? extends EnumConst> getEnumConstType() {
-		return enumConstType;
-	}
+    public Class<? extends EnumConst> getEnumConstType() {
+        return enumConstType;
+    }
 
-	public StaticReferenceQuery code(String code) {
-		return (StaticReferenceQuery) this.equals("code", code);
-	}
+    public StaticReferenceQuery code(String code) {
+        return (StaticReferenceQuery) this.equals("code", code);
+    }
 
 }

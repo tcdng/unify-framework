@@ -23,5 +23,5 @@ package com.tcdng.unify.core.constant;
  */
 public interface SessionAttributeConstants {
 
-	String APPLICATION_CONTEXT_ID = "APPLICATION_CONTEXT_ID";
+    String APPLICATION_CONTEXT_ID = "APPLICATION_CONTEXT_ID";
 }

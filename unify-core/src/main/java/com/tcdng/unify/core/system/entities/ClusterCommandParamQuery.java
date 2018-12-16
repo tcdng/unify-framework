@@ -25,23 +25,23 @@ import java.util.Collection;
  */
 public class ClusterCommandParamQuery extends SequencedEntityQuery<ClusterCommandParam> {
 
-	public ClusterCommandParamQuery() {
-		super(ClusterCommandParam.class);
-	}
+    public ClusterCommandParamQuery() {
+        super(ClusterCommandParam.class);
+    }
 
-	public ClusterCommandParamQuery clusterCommandId(Long clusterCommandId) {
-		return (ClusterCommandParamQuery) equals("clusterCommandId", clusterCommandId);
-	}
+    public ClusterCommandParamQuery clusterCommandId(Long clusterCommandId) {
+        return (ClusterCommandParamQuery) equals("clusterCommandId", clusterCommandId);
+    }
 
-	public ClusterCommandParamQuery clusterCommandIdIn(Collection<Long> clusterCommandId) {
-		return (ClusterCommandParamQuery) amongst("clusterCommandId", clusterCommandId);
-	}
+    public ClusterCommandParamQuery clusterCommandIdIn(Collection<Long> clusterCommandId) {
+        return (ClusterCommandParamQuery) amongst("clusterCommandId", clusterCommandId);
+    }
 
-	public ClusterCommandParamQuery nodeId(String nodeId) {
-		return (ClusterCommandParamQuery) equals("nodeId", nodeId);
-	}
+    public ClusterCommandParamQuery nodeId(String nodeId) {
+        return (ClusterCommandParamQuery) equals("nodeId", nodeId);
+    }
 
-	public ClusterCommandParamQuery nodeIdIn(Collection<String> nodeId) {
-		return (ClusterCommandParamQuery) amongst("nodeId", nodeId);
-	}
+    public ClusterCommandParamQuery nodeIdIn(Collection<String> nodeId) {
+        return (ClusterCommandParamQuery) amongst("nodeId", nodeId);
+    }
 }

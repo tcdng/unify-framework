@@ -31,40 +31,40 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
 @Component("validationerrorresponse")
 public class ValidationErrorResponse extends AbstractJsonPageControllerResponse {
 
-	public ValidationErrorResponse() {
-		super("validationErrorHdl");
-	}
+    public ValidationErrorResponse() {
+        super("validationErrorHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing validation error response: controller = [{0}]", pageController.getName());
-		StringBuilder htmlSb = new StringBuilder();
-		writer.write(",\"validationInfo\":[");
-		boolean appendSymbol = false;
-		for (ValidationInfo validationInfo : getRequestContextUtil().getRequestValidationInfoList()) {
-			if (appendSymbol) {
-				writer.write(',');
-			} else {
-				appendSymbol = true;
-			}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing validation error response: controller = [{0}]", pageController.getName());
+        StringBuilder htmlSb = new StringBuilder();
+        writer.write(",\"validationInfo\":[");
+        boolean appendSymbol = false;
+        for (ValidationInfo validationInfo : getRequestContextUtil().getRequestValidationInfoList()) {
+            if (appendSymbol) {
+                writer.write(',');
+            } else {
+                appendSymbol = true;
+            }
 
-			writer.write("{\"pId\":\"").write(validationInfo.getId()).write("\", \"borderStyle\":\"")
-					.write(validationInfo.getBorderStyle()).write("\"");
-			writer.write(",\"pBrdId\":\"").write(validationInfo.getBorderId()).write("\"");
-			writer.write(",\"pNotfId\":\"").write(validationInfo.getNotificationId()).write("\"");
-			if (!validationInfo.isPass()) {
-				String message = validationInfo.getMessage();
-				logDebug("Preparing validation error response: error = [{0}]", message);
-				if (htmlSb.length() == 0) {
-					writer.write(",\"setFocus\":true");
-					htmlSb.append(true);
-				}
-				writer.write(",\"msg\":\"");
-				writer.write(message);
-				writer.write("\"");
-			}
-			writer.write("}");
-		}
-		writer.write("]");
-	}
+            writer.write("{\"pId\":\"").write(validationInfo.getId()).write("\", \"borderStyle\":\"")
+                    .write(validationInfo.getBorderStyle()).write("\"");
+            writer.write(",\"pBrdId\":\"").write(validationInfo.getBorderId()).write("\"");
+            writer.write(",\"pNotfId\":\"").write(validationInfo.getNotificationId()).write("\"");
+            if (!validationInfo.isPass()) {
+                String message = validationInfo.getMessage();
+                logDebug("Preparing validation error response: error = [{0}]", message);
+                if (htmlSb.length() == 0) {
+                    writer.write(",\"setFocus\":true");
+                    htmlSb.append(true);
+                }
+                writer.write(",\"msg\":\"");
+                writer.write(message);
+                writer.write("\"");
+            }
+            writer.write("}");
+        }
+        writer.write("]");
+    }
 }

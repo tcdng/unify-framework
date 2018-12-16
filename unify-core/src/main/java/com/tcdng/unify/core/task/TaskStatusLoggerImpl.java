@@ -29,13 +29,13 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_TASKSTATUSLOGGER)
 public class TaskStatusLoggerImpl extends AbstractTaskStatusLogger {
 
-	@Override
-	public void logTaskStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) {
+    @Override
+    public void logTaskStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) {
 
-	}
+    }
 
-	@Override
-	public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
-		logError(exception);
-	}
+    @Override
+    public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
+        logError(exception);
+    }
 }

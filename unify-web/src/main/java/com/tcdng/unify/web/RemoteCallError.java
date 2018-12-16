@@ -26,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RemoteCallError extends RemoteCallResult {
 
-	public RemoteCallError(String methodCode, String errorCode, String errorMsg) {
-		super(methodCode, errorCode, errorMsg);
-	}
+    public RemoteCallError(String methodCode, String errorCode, String errorMsg) {
+        super(methodCode, errorCode, errorMsg);
+    }
 
-	public RemoteCallError() {
+    public RemoteCallError() {
 
-	}
+    }
 }

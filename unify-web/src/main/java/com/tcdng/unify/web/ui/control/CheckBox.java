@@ -31,14 +31,14 @@ import com.tcdng.unify.web.ui.AbstractControl;
 @UplAttributes({ @UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false") })
 public class CheckBox extends AbstractControl {
 
-	@Override
-	public boolean isSupportReadOnly() {
-		return false;
-	}
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
 
-	@Override
-	public boolean isLayoutCaption() throws UnifyException {
-		return getUplAttribute(boolean.class, "layoutCaption");
-	}
+    @Override
+    public boolean isLayoutCaption() throws UnifyException {
+        return getUplAttribute(boolean.class, "layoutCaption");
+    }
 
 }

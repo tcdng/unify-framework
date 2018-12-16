@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 @UplAttributes({ @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
 public class RemoteDocViewPanel extends AbstractPanel {
 
-	public RemoteDocViewInfo getRemoteDocViewInfo() throws UnifyException {
-		return (RemoteDocViewInfo) getValue();
-	}
+    public RemoteDocViewInfo getRemoteDocViewInfo() throws UnifyException {
+        return (RemoteDocViewInfo) getValue();
+    }
 }

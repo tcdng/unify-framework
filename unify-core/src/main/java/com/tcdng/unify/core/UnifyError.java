@@ -26,41 +26,41 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class UnifyError {
 
-	private String errorCode;
+    private String errorCode;
 
-	private Object[] errorParams;
+    private Object[] errorParams;
 
-	public UnifyError(String errorCode) {
-		this(errorCode, DataUtils.ZEROLEN_OBJECT_ARRAY);
-	}
+    public UnifyError(String errorCode) {
+        this(errorCode, DataUtils.ZEROLEN_OBJECT_ARRAY);
+    }
 
-	public UnifyError(String errorCode, Object... errorParams) {
-		this.errorCode = errorCode;
-		this.errorParams = errorParams;
-	}
+    public UnifyError(String errorCode, Object... errorParams) {
+        this.errorCode = errorCode;
+        this.errorParams = errorParams;
+    }
 
-	public String getErrorCode() {
-		return errorCode;
-	}
+    public String getErrorCode() {
+        return errorCode;
+    }
 
-	public Object[] getErrorParams() {
-		return errorParams;
-	}
+    public Object[] getErrorParams() {
+        return errorParams;
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Code = ").append(errorCode).append(", params = [");
-		boolean appendSym = false;
-		for (Object obj : errorParams) {
-			if (appendSym) {
-				sb.append(',');
-			} else {
-				appendSym = true;
-			}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Code = ").append(errorCode).append(", params = [");
+        boolean appendSym = false;
+        for (Object obj : errorParams) {
+            if (appendSym) {
+                sb.append(',');
+            } else {
+                appendSym = true;
+            }
 
-			sb.append(obj);
-		}
-		sb.append("]");
-		return sb.toString();
-	}
+            sb.append(obj);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }

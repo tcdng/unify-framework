@@ -25,24 +25,24 @@ import com.tcdng.unify.core.util.TypeRepository;
  */
 public class UnifyContainerEnvironment {
 
-	private TypeRepository typeRepository;
+    private TypeRepository typeRepository;
 
-	private String workingPath;
+    private String workingPath;
 
-	public UnifyContainerEnvironment(TypeRepository typeRepository) {
-		this.typeRepository = typeRepository;
-	}
+    public UnifyContainerEnvironment(TypeRepository typeRepository) {
+        this.typeRepository = typeRepository;
+    }
 
-	public UnifyContainerEnvironment(TypeRepository typeRepository, String workingPath) {
-		this.typeRepository = typeRepository;
-		this.workingPath = workingPath;
-	}
+    public UnifyContainerEnvironment(TypeRepository typeRepository, String workingPath) {
+        this.typeRepository = typeRepository;
+        this.workingPath = workingPath;
+    }
 
-	public TypeRepository getTypeRepository() {
-		return typeRepository;
-	}
+    public TypeRepository getTypeRepository() {
+        return typeRepository;
+    }
 
-	public String getWorkingPath() {
-		return workingPath;
-	}
+    public String getWorkingPath() {
+        return workingPath;
+    }
 }

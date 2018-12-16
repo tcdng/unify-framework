@@ -30,16 +30,16 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public class PageWidgetValidator {
 
-	private PageValidation pageValidation;
+    private PageValidation pageValidation;
 
-	private List<Widget> widgets;
+    private List<Widget> widgets;
 
-	public PageWidgetValidator(PageValidation pageValidation, List<Widget> widgets) {
-		this.pageValidation = pageValidation;
-		this.widgets = widgets;
-	}
+    public PageWidgetValidator(PageValidation pageValidation, List<Widget> widgets) {
+        this.pageValidation = pageValidation;
+        this.widgets = widgets;
+    }
 
-	public boolean validate(DataTransfer dataTransfer) throws UnifyException {
-		return pageValidation.validate(widgets, dataTransfer);
-	}
+    public boolean validate(DataTransfer dataTransfer) throws UnifyException {
+        return pageValidation.validate(widgets, dataTransfer);
+    }
 }

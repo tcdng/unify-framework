@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "timeformat", description = "$m{format.time}")
 public class TimeFormatterImpl extends AbstractDateFormatter implements TimeFormatter {
 
-	public TimeFormatterImpl() {
-		super(TYPE.TIME);
-	}
+    public TimeFormatterImpl() {
+        super(TYPE.TIME);
+    }
 }

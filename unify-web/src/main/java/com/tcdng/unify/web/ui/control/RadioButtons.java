@@ -27,14 +27,14 @@ import com.tcdng.unify.web.ui.AbstractGroupListControl;
 @Component("ui-radiobuttons")
 public class RadioButtons extends AbstractGroupListControl {
 
-	@Override
-	public boolean isMultiple() {
-		return false;
-	}
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 
-	@Override
-	public boolean isSupportReadOnly() {
-		return false;
-	}
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
 
 }

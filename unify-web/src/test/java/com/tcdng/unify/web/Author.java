@@ -24,27 +24,27 @@ import java.util.Date;
  * @since 1.0
  */
 public class Author {
-	private String name;
+    private String name;
 
-	private Date birthDt;
+    private Date birthDt;
 
-	private Double height;
+    private Double height;
 
-	public Author(String name, Date birthDt, Double height) {
-		this.name = name;
-		this.birthDt = birthDt;
-		this.height = height;
-	}
+    public Author(String name, Date birthDt, Double height) {
+        this.name = name;
+        this.birthDt = birthDt;
+        this.height = height;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Date getBirthDt() {
-		return birthDt;
-	}
+    public Date getBirthDt() {
+        return birthDt;
+    }
 
-	public Double getHeight() {
-		return height;
-	}
+    public Double getHeight() {
+        return height;
+    }
 }

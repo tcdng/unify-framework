@@ -27,12 +27,12 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("test-textunicastservercomm")
 public class TestUnicastServerTextCommunicator extends AbstractUnicastServerTextCommunicator {
 
-	@Override
-	public boolean communicate() throws UnifyException {
-		String firstName = readLine();
-		String lastName = readLine();
-		writeLine(firstName + " " + lastName);
-		return true;
-	}
+    @Override
+    public boolean communicate() throws UnifyException {
+        String firstName = readLine();
+        String lastName = readLine();
+        writeLine(firstName + " " + lastName);
+        return true;
+    }
 
 }

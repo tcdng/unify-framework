@@ -35,32 +35,32 @@ import com.tcdng.unify.core.util.TypeUtils;
  */
 public class WebTypeUtils extends TypeUtils {
 
-	public static TypeRepository buildTypeRepositoryFromServletContext(ServletContext servletContext)
-			throws UnifyException {
-		try {
-			AnnotationDB classpathDB = new AnnotationDB();
-			classpathDB.setScanFieldAnnotations(false);
-			classpathDB.setScanMethodAnnotations(false);
-			classpathDB.setScanParameterAnnotations(false);
+    public static TypeRepository buildTypeRepositoryFromServletContext(ServletContext servletContext)
+            throws UnifyException {
+        try {
+            AnnotationDB classpathDB = new AnnotationDB();
+            classpathDB.setScanFieldAnnotations(false);
+            classpathDB.setScanMethodAnnotations(false);
+            classpathDB.setScanParameterAnnotations(false);
 
-			URL[] urls = null;
-			URL classPathUrl = WarUrlFinder.findWebInfClassesPath(servletContext);
-			URL[] libUrls = WarUrlFinder.findWebInfLibClasspaths(servletContext);
-			if (classPathUrl != null) {
-				urls = new URL[libUrls.length + 1];
-				int i = 0;
-				for (; i < libUrls.length; i++) {
-					urls[i] = libUrls[i];
-				}
-				urls[i] = classPathUrl;
-			} else {
-				urls = libUrls;
-			}
-			classpathDB.scanArchives(urls);
-			return new TypeRepositoryImpl(classpathDB);
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);
-		}
-	}
+            URL[] urls = null;
+            URL classPathUrl = WarUrlFinder.findWebInfClassesPath(servletContext);
+            URL[] libUrls = WarUrlFinder.findWebInfLibClasspaths(servletContext);
+            if (classPathUrl != null) {
+                urls = new URL[libUrls.length + 1];
+                int i = 0;
+                for (; i < libUrls.length; i++) {
+                    urls[i] = libUrls[i];
+                }
+                urls[i] = classPathUrl;
+            } else {
+                urls = libUrls;
+            }
+            classpathDB.scanArchives(urls);
+            return new TypeRepositoryImpl(classpathDB);
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);
+        }
+    }
 
 }

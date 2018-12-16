@@ -25,9 +25,9 @@ import com.tcdng.unify.core.database.AbstractEntity;
  */
 public abstract class AbstractSystemEntity extends AbstractEntity {
 
-	@Override
-	public String getDescription() {
-		return null;
-	}
+    @Override
+    public String getDescription() {
+        return null;
+    }
 
 }

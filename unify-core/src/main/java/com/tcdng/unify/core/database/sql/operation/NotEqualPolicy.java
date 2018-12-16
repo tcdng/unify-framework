@@ -25,8 +25,8 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotEqualPolicy extends SingleParameterPolicy {
 
-	public NotEqualPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" != ", sqlDataSourceDialect);
-	}
+    public NotEqualPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" != ", sqlDataSourceDialect);
+    }
 
 }

@@ -36,67 +36,67 @@ import com.tcdng.unify.web.ui.control.OptionsTextArea;
 @Component("optionstextarea-writer")
 public class OptionsTextAreaWriter extends TextAreaWriter {
 
-	@Override
-	protected final void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		OptionsTextArea optionsTextArea = (OptionsTextArea) widget;
-		writer.write("<div ");
-		writeTagStyleClass(writer, optionsTextArea);
-		writer.write(">");
-		writeTextArea(writer, optionsTextArea, "otatext");
+    @Override
+    protected final void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        OptionsTextArea optionsTextArea = (OptionsTextArea) widget;
+        writer.write("<div ");
+        writeTagStyleClass(writer, optionsTextArea);
+        writer.write(">");
+        writeTextArea(writer, optionsTextArea, "otatext");
 
-		if (optionsTextArea.isContainerEditable() && !optionsTextArea.isContainerDisabled()) {
-			writer.write("<div");
-			writeTagId(writer, optionsTextArea.getPopupId());
-			writeTagStyleClass(writer, "ui-text-popup-win");
-			writer.write(">");
+        if (optionsTextArea.isContainerEditable() && !optionsTextArea.isContainerDisabled()) {
+            writer.write("<div");
+            writeTagId(writer, optionsTextArea.getPopupId());
+            writeTagStyleClass(writer, "ui-text-popup-win");
+            writer.write(">");
 
-			writer.write("<div id=\"").write(optionsTextArea.getFramePanelId())
-					.write("\" class=\"otaborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
-			writer.write("<div id=\"").write(optionsTextArea.getListPanelId()).write("\" class=\"otalist\">");
-			List<? extends Listable> listableList = optionsTextArea.getListables();
-			int length = listableList.size();
+            writer.write("<div id=\"").write(optionsTextArea.getFramePanelId())
+                    .write("\" class=\"otaborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
+            writer.write("<div id=\"").write(optionsTextArea.getListPanelId()).write("\" class=\"otalist\">");
+            List<? extends Listable> listableList = optionsTextArea.getListables();
+            int length = listableList.size();
 
-			for (int i = 0; i < length; i++) {
-				Listable listable = listableList.get(i);
-				writer.write("<a");
-				writeTagId(writer, optionsTextArea.getNamingIndexedId(i));
-				if (i == 0) {
-					writeTagStyleClass(writer, "sel");
-				} else {
-					writeTagStyleClass(writer, "norm");
-				}
-				writer.write(">");
-				writer.writeWithHtmlEscape(listable.getListDescription());
-				writer.write("</a>");
-			}
-			writer.write("</div>");
-			writer.write("</div>");
-			writer.write("</div>");
-		}
+            for (int i = 0; i < length; i++) {
+                Listable listable = listableList.get(i);
+                writer.write("<a");
+                writeTagId(writer, optionsTextArea.getNamingIndexedId(i));
+                if (i == 0) {
+                    writeTagStyleClass(writer, "sel");
+                } else {
+                    writeTagStyleClass(writer, "norm");
+                }
+                writer.write(">");
+                writer.writeWithHtmlEscape(listable.getListDescription());
+                writer.write("</a>");
+            }
+            writer.write("</div>");
+            writer.write("</div>");
+            writer.write("</div>");
+        }
 
-		writer.write("</div>");
-	}
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
-		OptionsTextArea optionsTextArea = (OptionsTextArea) widget;
-		writer.write("ux.rigOptionsTextArea({");
-		writer.write("\"pId\":\"").write(optionsTextArea.getId()).write('"');
-		writer.write(",\"pScrEnd\":").write(optionsTextArea.isScrollToEnd());
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        OptionsTextArea optionsTextArea = (OptionsTextArea) widget;
+        writer.write("ux.rigOptionsTextArea({");
+        writer.write("\"pId\":\"").write(optionsTextArea.getId()).write('"');
+        writer.write(",\"pScrEnd\":").write(optionsTextArea.isScrollToEnd());
 
-		if (optionsTextArea.isContainerEditable() && !optionsTextArea.isContainerDisabled()) {
-			ListControlJsonData listControlJsonData = optionsTextArea.getListControlJsonData(true, true, false);
-			writer.write(",\"pPopupId\":\"").write(optionsTextArea.getPopupId()).write('"');
-			writer.write(",\"pFrmId\":\"").write(optionsTextArea.getFramePanelId()).write('"');
-			writer.write(",\"pLstId\":\"").write(optionsTextArea.getListPanelId()).write('"');
-			writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-			writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-			writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
-			writer.write(",\"pNormCls\":\"norm\"");
-			writer.write(",\"pSelCls\":\"sel\"");
-		}
+        if (optionsTextArea.isContainerEditable() && !optionsTextArea.isContainerDisabled()) {
+            ListControlJsonData listControlJsonData = optionsTextArea.getListControlJsonData(true, true, false);
+            writer.write(",\"pPopupId\":\"").write(optionsTextArea.getPopupId()).write('"');
+            writer.write(",\"pFrmId\":\"").write(optionsTextArea.getFramePanelId()).write('"');
+            writer.write(",\"pLstId\":\"").write(optionsTextArea.getListPanelId()).write('"');
+            writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
+            writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
+            writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
+            writer.write(",\"pNormCls\":\"norm\"");
+            writer.write(",\"pSelCls\":\"sel\"");
+        }
 
-		writer.write("});");
-	}
+        writer.write("});");
+    }
 }

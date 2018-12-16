@@ -31,40 +31,40 @@ import com.tcdng.unify.core.format.Pattern;
  */
 @Component("ui-time")
 @UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/clock.png}"),
-		@UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!timeformat style:short}") })
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!timeformat style:short}") })
 public class TimeField extends AbstractTimeField {
 
-	private DateTimeFormat[] dateTimeFormat;
+    private DateTimeFormat[] dateTimeFormat;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
 
-		Pattern[] pattern = super.getPattern();
-		dateTimeFormat = new DateTimeFormat[pattern.length];
-		Formatter<?> formatter = (Formatter<?>) getFormatter();
-		for (int i = 0; i < pattern.length; i++) {
-			Pattern fp = pattern[i];
-			if (!fp.isFiller()) {
-				dateTimeFormat[i] = formatter.getFormatHelper().getSubPatternDateTimeFormat(fp.getPattern(),
-						formatter.getLocale());
-			}
-		}
-	}
+        Pattern[] pattern = super.getPattern();
+        dateTimeFormat = new DateTimeFormat[pattern.length];
+        Formatter<?> formatter = (Formatter<?>) getFormatter();
+        for (int i = 0; i < pattern.length; i++) {
+            Pattern fp = pattern[i];
+            if (!fp.isFiller()) {
+                dateTimeFormat[i] = formatter.getFormatHelper().getSubPatternDateTimeFormat(fp.getPattern(),
+                        formatter.getLocale());
+            }
+        }
+    }
 
-	@Override
-	public Pattern[] getPattern() throws UnifyException {
-		Pattern[] pattern = super.getPattern();
-		for (int i = 0; i < pattern.length; i++) {
-			Pattern fp = pattern[i];
-			if (!fp.isFiller()) {
-				fp.setTarget(getPrefixedId("timi_") + i);
-			}
-		}
-		return pattern;
-	}
+    @Override
+    public Pattern[] getPattern() throws UnifyException {
+        Pattern[] pattern = super.getPattern();
+        for (int i = 0; i < pattern.length; i++) {
+            Pattern fp = pattern[i];
+            if (!fp.isFiller()) {
+                fp.setTarget(getPrefixedId("timi_") + i);
+            }
+        }
+        return pattern;
+    }
 
-	public DateTimeFormat[] getDateTimeFormat() {
-		return dateTimeFormat;
-	}
+    public DateTimeFormat[] getDateTimeFormat() {
+        return dateTimeFormat;
+    }
 }

@@ -25,11 +25,11 @@ import com.tcdng.unify.core.database.AbstractTestEntityQuery;
  */
 public class LoanDisbursementQuery extends AbstractTestEntityQuery<LoanDisbursement> {
 
-	public LoanDisbursementQuery() {
-		super(LoanDisbursement.class);
-	}
+    public LoanDisbursementQuery() {
+        super(LoanDisbursement.class);
+    }
 
-	public LoanDisbursementQuery loanAccountId(Long loanAccountId) {
-		return (LoanDisbursementQuery) equals("loanAccountId", loanAccountId);
-	}
+    public LoanDisbursementQuery loanAccountId(Long loanAccountId) {
+        return (LoanDisbursementQuery) equals("loanAccountId", loanAccountId);
+    }
 }

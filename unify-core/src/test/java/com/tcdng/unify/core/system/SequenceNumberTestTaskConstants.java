@@ -23,7 +23,7 @@ package com.tcdng.unify.core.system;
  */
 public interface SequenceNumberTestTaskConstants {
 
-	String SEQUENCEID = "sequenceId";
+    String SEQUENCEID = "sequenceId";
 
-	String SEQUENCECOUNT = "sequenceCount";
+    String SEQUENCECOUNT = "sequenceCount";
 }

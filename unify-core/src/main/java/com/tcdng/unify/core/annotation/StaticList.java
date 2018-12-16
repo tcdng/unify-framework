@@ -33,12 +33,12 @@ import com.tcdng.unify.core.ApplicationComponents;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StaticList {
 
-	/**
-	 * The datasource that static reference belongs to. Defaults to
-	 * {@link #ApplicationComponents.APPLICATION_DATASOURCE}
-	 */
-	String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
+    /**
+     * The datasource that static reference belongs to. Defaults to
+     * {@link #ApplicationComponents.APPLICATION_DATASOURCE}
+     */
+    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 
-	/** The static reference list */
-	String value();
+    /** The static reference list */
+    String value();
 }

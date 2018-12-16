@@ -29,21 +29,21 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "decimalformat", description = "$m{format.decimal}")
 public class DecimalFormatterImpl extends AbstractNumberFormatter<Number> implements DecimalFormatter {
 
-	public DecimalFormatterImpl() {
-		super(Number.class, NumberType.DECIMAL);
-	}
+    public DecimalFormatterImpl() {
+        super(Number.class, NumberType.DECIMAL);
+    }
 
-	@Override
-	public Number parse(String string) throws UnifyException {
-		try {
-			return getNumberFormat().parse(string);
-		} catch (ParseException e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public Number parse(String string) throws UnifyException {
+        try {
+            return getNumberFormat().parse(string);
+        } catch (ParseException e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 
-	protected DecimalFormatterImpl(NumberType type) {
-		super(Number.class, type);
-	}
+    protected DecimalFormatterImpl(NumberType type) {
+        super(Number.class, type);
+    }
 }

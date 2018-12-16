@@ -25,16 +25,16 @@ import com.tcdng.unify.core.database.Entity;
  */
 public interface BatchItemRecord extends Entity {
 
-	/**
-	 * Returns item's batch ID.
-	 */
-	Object getBatchId();
+    /**
+     * Returns item's batch ID.
+     */
+    Object getBatchId();
 
-	/**
-	 * Sets item's batch ID.
-	 * 
-	 * @param id
-	 *            the batch ID to set
-	 */
-	void setBatchId(Object id);
+    /**
+     * Sets item's batch ID.
+     * 
+     * @param id
+     *            the batch ID to set
+     */
+    void setBatchId(Object id);
 }

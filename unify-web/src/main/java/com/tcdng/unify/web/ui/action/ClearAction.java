@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-clear")
 public class ClearAction extends AbstractPageAction {
 
-	public ClearAction() {
-		super("clear");
-	}
+    public ClearAction() {
+        super("clear");
+    }
 }

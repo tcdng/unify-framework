@@ -23,9 +23,9 @@ package com.tcdng.unify.core.constant;
  */
 public interface ApplicationAttributeConstants {
 
-	/**
-	 * Key for storing or retrieving application menu object from application
-	 * context
-	 */
-	String APPLICATION_MENUSET = "APPLICATION_MENUSET";
+    /**
+     * Key for storing or retrieving application menu object from application
+     * context
+     */
+    String APPLICATION_MENUSET = "APPLICATION_MENUSET";
 }

@@ -25,16 +25,16 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractTransformCache<T, U, V> extends AbstractCache<T, U> implements TransformCache<T, U, V> {
 
-	@Override
-	public V transformPut(T key, U object, long expirationTime) throws UnifyException {
-		put(key, object, expirationTime);
-		return transformCachedObject(object);
-	}
+    @Override
+    public V transformPut(T key, U object, long expirationTime) throws UnifyException {
+        put(key, object, expirationTime);
+        return transformCachedObject(object);
+    }
 
-	@Override
-	public V getTransformed(T key) throws UnifyException {
-		return transformCachedObject(get(key));
-	}
+    @Override
+    public V getTransformed(T key) throws UnifyException {
+        return transformCachedObject(get(key));
+    }
 
-	protected abstract V transformCachedObject(U cachedObject) throws UnifyException;
+    protected abstract V transformCachedObject(U cachedObject) throws UnifyException;
 }

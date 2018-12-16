@@ -31,26 +31,26 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "PARAMETERSDEF", uniqueConstraints = { @UniqueConstraint({ "typeName" }) })
 public class ParametersDef extends AbstractSystemSequencedEntity {
 
-	@Column(name = "PARAMETERSDEF_NM", length = 64)
-	private String typeName;
+    @Column(name = "PARAMETERSDEF_NM", length = 64)
+    private String typeName;
 
-	@ChildList
-	private List<ParameterDef> parameterDefs;
+    @ChildList
+    private List<ParameterDef> parameterDefs;
 
-	public String getTypeName() {
-		return typeName;
-	}
+    public String getTypeName() {
+        return typeName;
+    }
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
-	public List<ParameterDef> getParameterDefs() {
-		return parameterDefs;
-	}
+    public List<ParameterDef> getParameterDefs() {
+        return parameterDefs;
+    }
 
-	public void setParameterDefs(List<ParameterDef> parameterDefs) {
-		this.parameterDefs = parameterDefs;
-	}
+    public void setParameterDefs(List<ParameterDef> parameterDefs) {
+        this.parameterDefs = parameterDefs;
+    }
 
 }

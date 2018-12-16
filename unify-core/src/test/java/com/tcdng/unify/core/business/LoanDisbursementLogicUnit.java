@@ -29,15 +29,15 @@ import com.tcdng.unify.core.annotation.Plugin;
 @Component("loandisbursement-logic")
 public class LoanDisbursementLogicUnit extends AbstractBusinessLogicUnit {
 
-	@Override
-	public void execute(BusinessLogicInput input, BusinessLogicOutput output) throws UnifyException {
-		LoanAccount loanAccount = input.getParameter(LoanAccount.class, "p0");
-		if (loanAccount != null && loanAccount.getPrincipalAmount() > 100000.00) {
-			LoanDisbursement loanDisbursement = new LoanDisbursement();
-			loanDisbursement.setLoanAccountId(loanAccount.getId());
-			loanDisbursement.setDisbursementCount(20);
-			loanDisbursement.setDisbursementAmount(loanAccount.getPrincipalAmount());
-			getDatabase(input).create(loanDisbursement);
-		}
-	}
+    @Override
+    public void execute(BusinessLogicInput input, BusinessLogicOutput output) throws UnifyException {
+        LoanAccount loanAccount = input.getParameter(LoanAccount.class, "p0");
+        if (loanAccount != null && loanAccount.getPrincipalAmount() > 100000.00) {
+            LoanDisbursement loanDisbursement = new LoanDisbursement();
+            loanDisbursement.setLoanAccountId(loanAccount.getId());
+            loanDisbursement.setDisbursementCount(20);
+            loanDisbursement.setDisbursementAmount(loanAccount.getPrincipalAmount());
+            getDatabase(input).create(loanDisbursement);
+        }
+    }
 }

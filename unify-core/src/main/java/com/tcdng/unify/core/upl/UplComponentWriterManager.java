@@ -29,14 +29,14 @@ import com.tcdng.unify.core.constant.UserPlatform;
  */
 public interface UplComponentWriterManager extends UnifyComponent {
 
-	/**
-	 * Gets UPL writers for specific platform. Returns default writers of no writers
-	 * were found for supplied platform.
-	 * 
-	 * @param platform
-	 *            the platform to get writers for
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform) throws UnifyException;
+    /**
+     * Gets UPL writers for specific platform. Returns default writers of no writers
+     * were found for supplied platform.
+     * 
+     * @param platform
+     *            the platform to get writers for
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform) throws UnifyException;
 }

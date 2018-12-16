@@ -27,15 +27,15 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface PageControllerResponse extends UplComponent {
 
-	/**
-	 * Generates response.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param pageController
-	 *            the page controller
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void generate(ResponseWriter writer, PageController pageController) throws UnifyException;
+    /**
+     * Generates response.
+     * 
+     * @param writer
+     *            the response writer
+     * @param pageController
+     *            the page controller
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void generate(ResponseWriter writer, PageController pageController) throws UnifyException;
 }

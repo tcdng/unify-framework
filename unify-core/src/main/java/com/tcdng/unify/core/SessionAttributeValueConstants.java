@@ -23,9 +23,9 @@ package com.tcdng.unify.core;
  */
 public interface SessionAttributeValueConstants {
 
-	String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogoutNoMultipleLogin";
+    String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogoutNoMultipleLogin";
 
-	String FORCE_LOGOUT_SYSTEM = "forceLogoutSystem";
+    String FORCE_LOGOUT_SYSTEM = "forceLogoutSystem";
 
-	String FORCE_LOGOUT_ADMINISTRATOR = "forceLogoutAdministrator";
+    String FORCE_LOGOUT_ADMINISTRATOR = "forceLogoutAdministrator";
 }

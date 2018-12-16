@@ -28,99 +28,99 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class Sms {
 
-	private String id;
+    private String id;
 
-	private String sender;
+    private String sender;
 
-	private String reciever;
+    private String reciever;
 
-	private String message;
+    private String message;
 
-	private boolean sent;
+    private boolean sent;
 
-	public Sms(String id, String sender, String reciever, String message) {
-		this.id = id;
-		this.sender = sender;
-		this.reciever = reciever;
-		this.message = message;
-	}
+    public Sms(String id, String sender, String reciever, String message) {
+        this.id = id;
+        this.sender = sender;
+        this.reciever = reciever;
+        this.message = message;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getSender() {
-		return sender;
-	}
+    public String getSender() {
+        return sender;
+    }
 
-	public String getReciever() {
-		return reciever;
-	}
+    public String getReciever() {
+        return reciever;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public boolean isSent() {
-		return sent;
-	}
+    public boolean isSent() {
+        return sent;
+    }
 
-	public void setSent(boolean sent) {
-		this.sent = sent;
-	}
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
+    public static Builder newBuilder() {
+        return new Builder();
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private String id;
+        private String id;
 
-		private String sender;
+        private String sender;
 
-		private String reciever;
+        private String reciever;
 
-		private String message;
+        private String message;
 
-		private Builder() {
+        private Builder() {
 
-		}
+        }
 
-		public Builder withId(String id) {
-			this.id = id;
-			return this;
-		}
+        public Builder withId(String id) {
+            this.id = id;
+            return this;
+        }
 
-		public Builder fromSender(String sender) {
-			this.sender = sender;
-			return this;
-		}
+        public Builder fromSender(String sender) {
+            this.sender = sender;
+            return this;
+        }
 
-		public Builder toReciever(String reciever) {
-			this.reciever = reciever;
-			return this;
-		}
+        public Builder toReciever(String reciever) {
+            this.reciever = reciever;
+            return this;
+        }
 
-		public Builder containingMessage(String message) {
-			this.message = message;
-			return this;
-		}
+        public Builder containingMessage(String message) {
+            this.message = message;
+            return this;
+        }
 
-		public Sms build() throws UnifyException {
-			if (StringUtils.isBlank(sender)) {
-				ErrorUtils.throwBuildError("SMS sender is required");
-			}
+        public Sms build() throws UnifyException {
+            if (StringUtils.isBlank(sender)) {
+                ErrorUtils.throwBuildError("SMS sender is required");
+            }
 
-			if (StringUtils.isBlank(reciever)) {
-				ErrorUtils.throwBuildError("SMS reciever is required");
-			}
+            if (StringUtils.isBlank(reciever)) {
+                ErrorUtils.throwBuildError("SMS reciever is required");
+            }
 
-			if (StringUtils.isBlank(message)) {
-				ErrorUtils.throwBuildError("SMS message is required");
-			}
+            if (StringUtils.isBlank(message)) {
+                ErrorUtils.throwBuildError("SMS message is required");
+            }
 
-			return new Sms(id, sender, reciever, message);
-		}
-	}
+            return new Sms(id, sender, reciever, message);
+        }
+    }
 }

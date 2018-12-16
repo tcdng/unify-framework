@@ -26,75 +26,75 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
  * @since 1.0
  */
 public interface DatabaseTransactionManager extends UnifyComponent {
-	/**
-	 * Begins a transaction. The transaction started is of
-	 * {@link #TransactionAttribute.REQUIRED} type.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void beginTransaction() throws UnifyException;
+    /**
+     * Begins a transaction. The transaction started is of
+     * {@link #TransactionAttribute.REQUIRED} type.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void beginTransaction() throws UnifyException;
 
-	/**
-	 * Begins a transaction using supplied transaction attribute.
-	 * 
-	 * @param txnAttribute
-	 *            the transaction attribute
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void beginTransaction(TransactionAttribute txnAttribute) throws UnifyException;
+    /**
+     * Begins a transaction using supplied transaction attribute.
+     * 
+     * @param txnAttribute
+     *            the transaction attribute
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void beginTransaction(TransactionAttribute txnAttribute) throws UnifyException;
 
-	/**
-	 * Ends current transaction. Commits current transaction if rollback has not
-	 * been set.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void endTransaction() throws UnifyException;
+    /**
+     * Ends current transaction. Commits current transaction if rollback has not
+     * been set.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void endTransaction() throws UnifyException;
 
-	/**
-	 * Tests if transaction is open.
-	 * 
-	 * @return true is transaction is open
-	 */
-	boolean isTransactionOpen();
+    /**
+     * Tests if transaction is open.
+     * 
+     * @return true is transaction is open
+     */
+    boolean isTransactionOpen();
 
-	/**
-	 * Sets save point for transaction session.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setSavePoint() throws UnifyException;
+    /**
+     * Sets save point for transaction session.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setSavePoint() throws UnifyException;
 
-	/**
-	 * Clears current save point for transaction.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void clearSavePoint() throws UnifyException;
+    /**
+     * Clears current save point for transaction.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void clearSavePoint() throws UnifyException;
 
-	/**
-	 * Roll back transaction to last save point.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void rollbackToSavepoint() throws UnifyException;
+    /**
+     * Roll back transaction to last save point.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void rollbackToSavepoint() throws UnifyException;
 
-	/**
-	 * Sets current transaction to roll back.
-	 */
-	void setRollback() throws UnifyException;
+    /**
+     * Sets current transaction to roll back.
+     */
+    void setRollback() throws UnifyException;
 
-	/**
-	 * Commits session transactions and clears all save points.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void commit() throws UnifyException;
+    /**
+     * Commits session transactions and clears all save points.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void commit() throws UnifyException;
 }

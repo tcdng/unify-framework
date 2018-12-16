@@ -29,41 +29,41 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractValueListMultiControl<T, U> extends AbstractMultiControl {
 
-	private List<U> oldItemList;
+    private List<U> oldItemList;
 
-	private List<T> valueList;
+    private List<T> valueList;
 
-	public AbstractValueListMultiControl() {
-		valueList = Collections.emptyList();
-	}
+    public AbstractValueListMultiControl() {
+        valueList = Collections.emptyList();
+    }
 
-	public List<T> getValueList() throws UnifyException {
-		List<U> itemList = getItemList();
-		if (oldItemList != itemList || (itemList != null && itemList.size() != valueList.size())) {
-			if (itemList != null && !itemList.isEmpty()) {
-				int size = itemList.size();
-				valueList = new ArrayList<T>(itemList.size());
-				for (int i = 0; i < size; i++) {
-					valueList.add(newValue(itemList.get(i), i));
-				}
-			} else {
-				valueList = Collections.emptyList();
-			}
+    public List<T> getValueList() throws UnifyException {
+        List<U> itemList = getItemList();
+        if (oldItemList != itemList || (itemList != null && itemList.size() != valueList.size())) {
+            if (itemList != null && !itemList.isEmpty()) {
+                int size = itemList.size();
+                valueList = new ArrayList<T>(itemList.size());
+                for (int i = 0; i < size; i++) {
+                    valueList.add(newValue(itemList.get(i), i));
+                }
+            } else {
+                valueList = Collections.emptyList();
+            }
 
-			oldItemList = itemList;
-			onCreateValueList(valueList);
-		}
-		return valueList;
-	}
+            oldItemList = itemList;
+            onCreateValueList(valueList);
+        }
+        return valueList;
+    }
 
-	protected void invalidateValueList() {
-		oldItemList = null;
-		valueList = null;
-	}
+    protected void invalidateValueList() {
+        oldItemList = null;
+        valueList = null;
+    }
 
-	protected abstract List<U> getItemList() throws UnifyException;
+    protected abstract List<U> getItemList() throws UnifyException;
 
-	protected abstract T newValue(U item, int index) throws UnifyException;
+    protected abstract T newValue(U item, int index) throws UnifyException;
 
-	protected abstract void onCreateValueList(List<T> valueList) throws UnifyException;
+    protected abstract void onCreateValueList(List<T> valueList) throws UnifyException;
 }

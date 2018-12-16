@@ -25,47 +25,47 @@ import com.tcdng.unify.core.data.AbstractDocument;
  */
 public class Biometric extends AbstractDocument {
 
-	private String marker;
+    private String marker;
 
-	private Double height;
+    private Double height;
 
-	public Biometric(String marker, Double height) {
-		this.marker = marker;
-		this.height = height;
-	}
+    public Biometric(String marker, Double height) {
+        this.marker = marker;
+        this.height = height;
+    }
 
-	public Biometric() {
+    public Biometric() {
 
-	}
+    }
 
-	@Override
-	public String getDescription() {
-		return null;
-	}
+    @Override
+    public String getDescription() {
+        return null;
+    }
 
-	@Override
-	public Object getId() {
-		return null;
-	}
+    @Override
+    public Object getId() {
+        return null;
+    }
 
-	@Override
-	public Object getOwnerId() {
-		return null;
-	}
+    @Override
+    public Object getOwnerId() {
+        return null;
+    }
 
-	public String getMarker() {
-		return marker;
-	}
+    public String getMarker() {
+        return marker;
+    }
 
-	public void setMarker(String marker) {
-		this.marker = marker;
-	}
+    public void setMarker(String marker) {
+        this.marker = marker;
+    }
 
-	public Double getHeight() {
-		return height;
-	}
+    public Double getHeight() {
+        return height;
+    }
 
-	public void setHeight(Double height) {
-		this.height = height;
-	}
+    public void setHeight(Double height) {
+        this.height = height;
+    }
 }

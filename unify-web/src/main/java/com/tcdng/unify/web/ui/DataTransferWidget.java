@@ -26,13 +26,13 @@ import com.tcdng.unify.web.DataTransferBlock;
  */
 public interface DataTransferWidget extends Widget {
 
-	/**
-	 * Populates control data value bean property.
-	 * 
-	 * @param transferBlock
-	 *            the transfer block
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void populate(DataTransferBlock transferBlock) throws UnifyException;
+    /**
+     * Populates control data value bean property.
+     * 
+     * @param transferBlock
+     *            the transfer block
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void populate(DataTransferBlock transferBlock) throws UnifyException;
 }

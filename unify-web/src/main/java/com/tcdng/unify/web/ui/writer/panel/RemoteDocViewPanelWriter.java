@@ -35,33 +35,33 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 @Component("remotedocviewpanel-writer")
 public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		RemoteDocViewPanel remoteDocViewPanel = (RemoteDocViewPanel) widget;
-		writer.write("ux.loadRemoteDocViewPanel({");
-		writer.write("\"pId\":\"").write(remoteDocViewPanel.getId()).write('"');
-		writer.write(",\"pWinPgNm\":\"").write(getResponseControllerWinId()).write("\"");
-		writer.write(",\"pRemoteURL\":\"").write(remoteDocViewPanel.getRemoteDocViewInfo().getRemoteDocUrl())
-				.write("\"");
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        RemoteDocViewPanel remoteDocViewPanel = (RemoteDocViewPanel) widget;
+        writer.write("ux.loadRemoteDocViewPanel({");
+        writer.write("\"pId\":\"").write(remoteDocViewPanel.getId()).write('"');
+        writer.write(",\"pWinPgNm\":\"").write(getResponseControllerWinId()).write("\"");
+        writer.write(",\"pRemoteURL\":\"").write(remoteDocViewPanel.getRemoteDocViewInfo().getRemoteDocUrl())
+                .write("\"");
 
-		UserToken userToken = getUserToken();
-		writer.write(",\"pRemoteLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
-		writer.write(",\"pRemoteUserName\":\"").write(userToken.getUserName()).write("\"");
-		if (userToken.getRoleCode() != null) {
-			writer.write(",\"pRemoteRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
-		}
+        UserToken userToken = getUserToken();
+        writer.write(",\"pRemoteLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
+        writer.write(",\"pRemoteUserName\":\"").write(userToken.getUserName()).write("\"");
+        if (userToken.getRoleCode() != null) {
+            writer.write(",\"pRemoteRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
+        }
 
-		writer.write("});");
-	}
+        writer.write("});");
+    }
 
-	@Override
-	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-		writer.write("<div id=\"").write(getResponseControllerWinId()).write("\" style=\"width:100%;height:100%;\">");
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+        writer.write("<div id=\"").write(getResponseControllerWinId()).write("\" style=\"width:100%;height:100%;\">");
+        writer.write("</div>");
+    }
 
-	private String getResponseControllerWinId() throws UnifyException {
-		return "win_" + getPageManager()
-				.getPageName(getRequestContextUtil().getResponsePageControllerInfo().getControllerId());
-	}
+    private String getResponseControllerWinId() throws UnifyException {
+        return "win_" + getPageManager()
+                .getPageName(getRequestContextUtil().getResponsePageControllerInfo().getControllerId());
+    }
 }

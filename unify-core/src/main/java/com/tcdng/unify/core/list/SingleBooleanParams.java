@@ -24,13 +24,13 @@ package com.tcdng.unify.core.list;
  */
 public class SingleBooleanParams {
 
-	private Boolean value;
+    private Boolean value;
 
-	public SingleBooleanParams(Boolean value) {
-		this.value = value;
-	}
+    public SingleBooleanParams(Boolean value) {
+        this.value = value;
+    }
 
-	public Boolean getValue() {
-		return value;
-	}
+    public Boolean getValue() {
+        return value;
+    }
 }

@@ -29,22 +29,22 @@ import org.junit.Test;
  */
 public class ApplicationContextTest {
 
-	private ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
-	@Before
-	public void setup() throws Exception {
-		applicationContext = new ApplicationContext(null, null, "\n");
-	}
+    @Before
+    public void setup() throws Exception {
+        applicationContext = new ApplicationContext(null, null, "\n");
+    }
 
-	@Test
-	public void testContextHasNoPrivilegesForRole() {
-		assertFalse(applicationContext.isRoleAttributes(""));
-	}
+    @Test
+    public void testContextHasNoPrivilegesForRole() {
+        assertFalse(applicationContext.isRoleAttributes(""));
+    }
 
-	@Test
-	public void testContextHasPrivilegesForRole() {
-		String roleCode = String.valueOf(1L);
-		applicationContext.setRoleAttributes(roleCode, new RoleAttributes());
-		assertTrue(applicationContext.isRoleAttributes(roleCode));
-	}
+    @Test
+    public void testContextHasPrivilegesForRole() {
+        String roleCode = String.valueOf(1L);
+        applicationContext.setRoleAttributes(roleCode, new RoleAttributes());
+        assertTrue(applicationContext.isRoleAttributes(roleCode));
+    }
 }

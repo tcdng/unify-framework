@@ -26,14 +26,14 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TaskLauncher extends UnifyComponent {
 
-	/**
-	 * Launches a task or a sequence of tasks using supplied task setup information.
-	 * 
-	 * @param taskSetup
-	 *            the task setup
-	 * @return the task monitor
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException;
+    /**
+     * Launches a task or a sequence of tasks using supplied task setup information.
+     * 
+     * @param taskSetup
+     *            the task setup
+     * @return the task monitor
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException;
 }

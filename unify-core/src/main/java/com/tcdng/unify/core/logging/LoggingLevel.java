@@ -22,5 +22,5 @@ package com.tcdng.unify.core.logging;
  * @since 1.0
  */
 public enum LoggingLevel {
-	DEBUG, INFO, WARN, ERROR, SEVERE
+    DEBUG, INFO, WARN, ERROR, SEVERE
 }

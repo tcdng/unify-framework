@@ -25,7 +25,7 @@ import java.util.Collection;
  */
 public class NotAmongst extends Criteria {
 
-	public NotAmongst(String field, Collection<? extends Object> values) {
-		super(Operator.NOT_AMONGST, field, values);
-	}
+    public NotAmongst(String field, Collection<? extends Object> values) {
+        super(Operator.NOT_AMONGST, field, values);
+    }
 }

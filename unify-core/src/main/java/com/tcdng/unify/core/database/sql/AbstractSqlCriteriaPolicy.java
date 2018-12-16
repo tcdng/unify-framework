@@ -28,76 +28,76 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
 
-	protected SqlDataSourceDialect sqlDataSourceDialect;
+    protected SqlDataSourceDialect sqlDataSourceDialect;
 
-	protected String opSql;
+    protected String opSql;
 
-	public AbstractSqlCriteriaPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
-		this.sqlDataSourceDialect = sqlDataSourceDialect;
-		this.opSql = opSql;
-	}
+    public AbstractSqlCriteriaPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
+        this.sqlDataSourceDialect = sqlDataSourceDialect;
+        this.opSql = opSql;
+    }
 
-	/**
-	 * Returns the SQL criteria policy for supplied criteria's operator.
-	 * 
-	 * @param criteria
-	 *            the criteria object
-	 * @return the criteria policy
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected SqlCriteriaPolicy getOperatorPolicy(Criteria criteria) throws UnifyException {
-		return sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getOperator());
-	}
+    /**
+     * Returns the SQL criteria policy for supplied criteria's operator.
+     * 
+     * @param criteria
+     *            the criteria object
+     * @return the criteria policy
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected SqlCriteriaPolicy getOperatorPolicy(Criteria criteria) throws UnifyException {
+        return sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getOperator());
+    }
 
-	/**
-	 * Returns SQL data type policy for column type.
-	 * 
-	 * @param columnType
-	 *            the column type
-	 * @throws UnifyException
-	 *             if column type is not supported
-	 */
-	protected SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException {
-		return sqlDataSourceDialect.getSqlTypePolicy(columnType);
-	}
+    /**
+     * Returns SQL data type policy for column type.
+     * 
+     * @param columnType
+     *            the column type
+     * @throws UnifyException
+     *             if column type is not supported
+     */
+    protected SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException {
+        return sqlDataSourceDialect.getSqlTypePolicy(columnType);
+    }
 
-	/**
-	 * Converts a value to its SQL string equivalent.
-	 * 
-	 * @param value
-	 *            the value to convert
-	 * @return the converted value
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected String getSqlStringValue(Object value) throws UnifyException {
-		return sqlDataSourceDialect.translateValue(value);
-	}
+    /**
+     * Converts a value to its SQL string equivalent.
+     * 
+     * @param value
+     *            the value to convert
+     * @return the converted value
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getSqlStringValue(Object value) throws UnifyException {
+        return sqlDataSourceDialect.translateValue(value);
+    }
 
-	/**
-	 * Returns the minimum clause values.
-	 */
-	protected int maximumClauseValues() {
-		return sqlDataSourceDialect.getMaxClauseValues();
-	}
+    /**
+     * Returns the minimum clause values.
+     */
+    protected int maximumClauseValues() {
+        return sqlDataSourceDialect.getMaxClauseValues();
+    }
 
-	/**
-	 * Converts value to field type if necessary.
-	 * 
-	 * @param sqlFieldInfo
-	 *            the field information
-	 * @param postOp
-	 *            the value
-	 * @return the converted value
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected Object convertType(SqlFieldInfo sqlFieldInfo, Object postOp) throws UnifyException {
-		if (postOp != null && !postOp.getClass().equals(sqlFieldInfo.getFieldClass())) {
-			return DataUtils.convert(sqlFieldInfo.getFieldClass(), postOp, null);
-		}
+    /**
+     * Converts value to field type if necessary.
+     * 
+     * @param sqlFieldInfo
+     *            the field information
+     * @param postOp
+     *            the value
+     * @return the converted value
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected Object convertType(SqlFieldInfo sqlFieldInfo, Object postOp) throws UnifyException {
+        if (postOp != null && !postOp.getClass().equals(sqlFieldInfo.getFieldClass())) {
+            return DataUtils.convert(sqlFieldInfo.getFieldClass(), postOp, null);
+        }
 
-		return postOp;
-	}
+        return postOp;
+    }
 }

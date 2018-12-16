@@ -23,27 +23,27 @@ package com.tcdng.unify.core.batch;
  */
 public class BatchFileReaderTestUtils {
 
-	private BatchFileReaderTestUtils() {
+    private BatchFileReaderTestUtils() {
 
-	}
+    }
 
-	public static BatchFileConfig createSampleFixedLengthBatchConfig(boolean trim) throws Exception {
-		BatchFileConfig fileBulkConfig = new BatchFileConfig();
-		fileBulkConfig.setReader("fixedlength-batchfilereader");
-		fileBulkConfig.addFieldConfig("accountNo", 10, trim);
-		fileBulkConfig.addFieldConfig("beneficiary", 20, trim);
-		fileBulkConfig.addFieldConfig("currency", 3, trim);
-		fileBulkConfig.addFieldConfig("amount", 13, trim);
-		return fileBulkConfig;
-	}
+    public static BatchFileConfig createSampleFixedLengthBatchConfig(boolean trim) throws Exception {
+        BatchFileConfig fileBulkConfig = new BatchFileConfig();
+        fileBulkConfig.setReader("fixedlength-batchfilereader");
+        fileBulkConfig.addFieldConfig("accountNo", 10, trim);
+        fileBulkConfig.addFieldConfig("beneficiary", 20, trim);
+        fileBulkConfig.addFieldConfig("currency", 3, trim);
+        fileBulkConfig.addFieldConfig("amount", 13, trim);
+        return fileBulkConfig;
+    }
 
-	public static BatchFileConfig createSampleDelimitedFileBatchConfig(boolean trim) throws Exception {
-		BatchFileConfig fileBulkConfig = new BatchFileConfig();
-		fileBulkConfig.setReader("delimited-batchfilereader");
-		fileBulkConfig.addFieldConfig("accountNo", 10, trim);
-		fileBulkConfig.addFieldConfig("beneficiary", 20, trim);
-		fileBulkConfig.addFieldConfig("currency", 3, trim);
-		fileBulkConfig.addFieldConfig("amount", 13, trim);
-		return fileBulkConfig;
-	}
+    public static BatchFileConfig createSampleDelimitedFileBatchConfig(boolean trim) throws Exception {
+        BatchFileConfig fileBulkConfig = new BatchFileConfig();
+        fileBulkConfig.setReader("delimited-batchfilereader");
+        fileBulkConfig.addFieldConfig("accountNo", 10, trim);
+        fileBulkConfig.addFieldConfig("beneficiary", 20, trim);
+        fileBulkConfig.addFieldConfig("currency", 3, trim);
+        fileBulkConfig.addFieldConfig("amount", 13, trim);
+        return fileBulkConfig;
+    }
 }

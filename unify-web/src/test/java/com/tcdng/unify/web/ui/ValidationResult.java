@@ -27,41 +27,41 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
  */
 public class ValidationResult {
 
-	private Map<String, ValidationInfo> validationInfo;
+    private Map<String, ValidationInfo> validationInfo;
 
-	private String[] pageNames;
+    private String[] pageNames;
 
-	private boolean pass;
+    private boolean pass;
 
-	public ValidationResult(String[] pageNames, boolean pass) {
-		this.pageNames = pageNames;
-		this.pass = pass;
-	}
+    public ValidationResult(String[] pageNames, boolean pass) {
+        this.pageNames = pageNames;
+        this.pass = pass;
+    }
 
-	public void setValidationInfo(Map<String, ValidationInfo> validationInfo) {
-		this.validationInfo = validationInfo;
-	}
+    public void setValidationInfo(Map<String, ValidationInfo> validationInfo) {
+        this.validationInfo = validationInfo;
+    }
 
-	/**
-	 * Returns the validation code.
-	 * 
-	 * @param componentIndex
-	 *            the component index
-	 */
-	public String validationCode(int componentIndex) {
-		return this.validationInfo.get(pageNames[componentIndex]).getValidationCode();
-	}
+    /**
+     * Returns the validation code.
+     * 
+     * @param componentIndex
+     *            the component index
+     */
+    public String validationCode(int componentIndex) {
+        return this.validationInfo.get(pageNames[componentIndex]).getValidationCode();
+    }
 
-	public boolean isPass() {
-		return pass;
-	}
+    public boolean isPass() {
+        return pass;
+    }
 
-	public Map<String, ValidationInfo> getValidationInfo() {
-		return validationInfo;
-	}
+    public Map<String, ValidationInfo> getValidationInfo() {
+        return validationInfo;
+    }
 
-	public String[] getPageNames() {
-		return pageNames;
-	}
+    public String[] getPageNames() {
+        return pageNames;
+    }
 
 }

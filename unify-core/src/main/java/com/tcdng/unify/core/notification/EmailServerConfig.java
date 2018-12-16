@@ -26,18 +26,18 @@ import com.tcdng.unify.core.constant.NetworkSecurityType;
  */
 public class EmailServerConfig extends NotificationServerConfig {
 
-	public EmailServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
-			String password) {
-		super(hostAddress, hostPort, securityType, username, password);
-	}
+    public EmailServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
+            String password) {
+        super(hostAddress, hostPort, securityType, username, password);
+    }
 
-	public EmailServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
-			String authentication) {
-		super(hostAddress, hostPort, securityType, authentication);
-	}
+    public EmailServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
+            String authentication) {
+        super(hostAddress, hostPort, securityType, authentication);
+    }
 
-	public EmailServerConfig(String hostAddress, Integer hostPort) {
-		super(hostAddress, hostPort);
-	}
+    public EmailServerConfig(String hostAddress, Integer hostPort) {
+        super(hostAddress, hostPort);
+    }
 
 }

@@ -26,24 +26,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum TabPosition implements EnumConst {
 
-	TOP("top"), BOTTOM("bottom"), LEFT("left"), RIGHT("right");
+    TOP("top"), BOTTOM("bottom"), LEFT("left"), RIGHT("right");
 
-	private final String code;
+    private final String code;
 
-	private TabPosition(String code) {
-		this.code = code;
-	}
+    private TabPosition(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static TabPosition fromCode(String code) {
-		return EnumUtils.fromCode(TabPosition.class, code);
-	}
+    public static TabPosition fromCode(String code) {
+        return EnumUtils.fromCode(TabPosition.class, code);
+    }
 
-	public static TabPosition fromName(String name) {
-		return EnumUtils.fromName(TabPosition.class, name);
-	}
+    public static TabPosition fromName(String name) {
+        return EnumUtils.fromName(TabPosition.class, name);
+    }
 }

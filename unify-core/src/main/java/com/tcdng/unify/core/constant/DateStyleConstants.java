@@ -22,15 +22,15 @@ package com.tcdng.unify.core.constant;
  * @since 1.0
  */
 public interface DateStyleConstants {
-	String DEFAULT_STYLE = "default";
+    String DEFAULT_STYLE = "default";
 
-	String SHORT_STYLE = "short";
+    String SHORT_STYLE = "short";
 
-	String CUSTOMSHORT_STYLE = "customshort";
+    String CUSTOMSHORT_STYLE = "customshort";
 
-	String MEDIUM_STYLE = "medium";
+    String MEDIUM_STYLE = "medium";
 
-	String LONG_STYLE = "long";
+    String LONG_STYLE = "long";
 
-	String FULL_STYLE = "full";
+    String FULL_STYLE = "full";
 }

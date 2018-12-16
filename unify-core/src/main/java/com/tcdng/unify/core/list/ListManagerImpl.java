@@ -43,81 +43,81 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(ApplicationComponents.APPLICATION_LISTMANAGER)
 public class ListManagerImpl extends AbstractUnifyComponent implements ListManager {
 
-	private LocaleFactoryMaps<String, List<? extends Listable>> staticLists;
+    private LocaleFactoryMaps<String, List<? extends Listable>> staticLists;
 
-	private LocaleFactoryMaps<String, Map<String, String>> staticListMaps;
+    private LocaleFactoryMaps<String, Map<String, String>> staticListMaps;
 
-	private Set<String> staticListNames;
+    private Set<String> staticListNames;
 
-	public ListManagerImpl() {
-		staticListNames = new HashSet<String>();
-		staticLists = new LocaleFactoryMaps<String, List<? extends Listable>>() {
-			@Override
-			protected List<? extends Listable> createObject(Locale locale, String listName, Object... params)
-					throws Exception {
-				String keyValueList = getMessage(locale, listName, params);
-				return Collections.unmodifiableList(StringUtils.readStaticList(keyValueList));
-			}
-		};
+    public ListManagerImpl() {
+        staticListNames = new HashSet<String>();
+        staticLists = new LocaleFactoryMaps<String, List<? extends Listable>>() {
+            @Override
+            protected List<? extends Listable> createObject(Locale locale, String listName, Object... params)
+                    throws Exception {
+                String keyValueList = getMessage(locale, listName, params);
+                return Collections.unmodifiableList(StringUtils.readStaticList(keyValueList));
+            }
+        };
 
-		staticListMaps = new LocaleFactoryMaps<String, Map<String, String>>() {
-			@Override
-			protected Map<String, String> createObject(Locale locale, String listName, Object... params)
-					throws Exception {
-				Map<String, String> listMap = new HashMap<String, String>();
-				for (Listable listable : staticLists.get(locale, listName, params)) {
-					listMap.put(listable.getListKey(), listable.getListDescription());
-				}
-				return Collections.unmodifiableMap(listMap);
-			}
-		};
-	}
+        staticListMaps = new LocaleFactoryMaps<String, Map<String, String>>() {
+            @Override
+            protected Map<String, String> createObject(Locale locale, String listName, Object... params)
+                    throws Exception {
+                Map<String, String> listMap = new HashMap<String, String>();
+                for (Listable listable : staticLists.get(locale, listName, params)) {
+                    listMap.put(listable.getListKey(), listable.getListDescription());
+                }
+                return Collections.unmodifiableMap(listMap);
+            }
+        };
+    }
 
-	@Override
-	public List<? extends Listable> getList(Locale locale, String listName, Object... params) throws UnifyException {
-		if (staticListNames.contains(listName)) {
-			return staticLists.get(locale, listName);
-		}
+    @Override
+    public List<? extends Listable> getList(Locale locale, String listName, Object... params) throws UnifyException {
+        if (staticListNames.contains(listName)) {
+            return staticLists.get(locale, listName);
+        }
 
-		return executeListCommand(listName, locale, params);
-	}
+        return executeListCommand(listName, locale, params);
+    }
 
-	@Override
-	public Map<String, String> getListMap(Locale locale, String listName, Object... params) throws UnifyException {
-		if (staticListNames.contains(listName)) {
-			return staticListMaps.get(locale, listName);
-		}
+    @Override
+    public Map<String, String> getListMap(Locale locale, String listName, Object... params) throws UnifyException {
+        if (staticListNames.contains(listName)) {
+            return staticListMaps.get(locale, listName);
+        }
 
-		Map<String, String> listMap = new HashMap<String, String>();
-		for (Listable listable : executeListCommand(listName, locale, params)) {
-			listMap.put(listable.getListKey(), listable.getListDescription());
-		}
-		return listMap;
-	}
+        Map<String, String> listMap = new HashMap<String, String>();
+        for (Listable listable : executeListCommand(listName, locale, params)) {
+            listMap.put(listable.getListKey(), listable.getListDescription());
+        }
+        return listMap;
+    }
 
-	@Override
-	public String getListKeyDescription(Locale locale, String listKey, String listName, Object... params)
-			throws UnifyException {
-		return getListMap(locale, listName, params).get(listKey);
-	}
+    @Override
+    public String getListKeyDescription(Locale locale, String listKey, String listName, Object... params)
+            throws UnifyException {
+        return getListMap(locale, listName, params).get(listKey);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		for (Class<? extends EnumConst> enumClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
-			StaticList sa = enumClass.getAnnotation(StaticList.class);
-			staticListNames.add(sa.value());
-		}
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        for (Class<? extends EnumConst> enumClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
+            StaticList sa = enumClass.getAnnotation(StaticList.class);
+            staticListNames.add(sa.value());
+        }
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	private <T> List<? extends Listable> executeListCommand(String listName, Locale locale, Object... params)
-			throws UnifyException {
-		ListCommand<T> listCommand = (ListCommand<T>) getComponent(listName);
-		return listCommand.execute(locale, DataUtils.constructDataObject(listCommand.getParamType(), params));
-	}
+    @SuppressWarnings("unchecked")
+    private <T> List<? extends Listable> executeListCommand(String listName, Locale locale, Object... params)
+            throws UnifyException {
+        ListCommand<T> listCommand = (ListCommand<T>) getComponent(listName);
+        return listCommand.execute(locale, DataUtils.constructDataObject(listCommand.getParamType(), params));
+    }
 }

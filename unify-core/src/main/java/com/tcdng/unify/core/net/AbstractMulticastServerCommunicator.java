@@ -27,35 +27,35 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public abstract class AbstractMulticastServerCommunicator extends AbstractNetworkMulticastCommunicator
-		implements MulticastServerCommunicator {
+        implements MulticastServerCommunicator {
 
-	@Override
-	public void open(OutputStream out) throws UnifyException {
-		if (open) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
-		}
-		onOpen(out);
-		open = true;
-	}
+    @Override
+    public void open(OutputStream out) throws UnifyException {
+        if (open) {
+            throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
+        }
+        onOpen(out);
+        open = true;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	/**
-	 * Executed on open of communicator.
-	 * 
-	 * @param out
-	 *            the output stream to communicate with
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void onOpen(OutputStream out) throws UnifyException;
+    /**
+     * Executed on open of communicator.
+     * 
+     * @param out
+     *            the output stream to communicate with
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void onOpen(OutputStream out) throws UnifyException;
 
 }

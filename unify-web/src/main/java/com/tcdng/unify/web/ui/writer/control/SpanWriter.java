@@ -33,16 +33,16 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("span-writer")
 public class SpanWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Span span = (Span) widget;
-		writer.write("<span ");
-		writeTagAttributes(writer, span);
-		writer.write(">");
-		String value = span.getStringValue();
-		if (value != null) {
-			writer.writeWithHtmlEscape(value);
-		}
-		writer.write("</span>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        Span span = (Span) widget;
+        writer.write("<span ");
+        writeTagAttributes(writer, span);
+        writer.write(">");
+        String value = span.getStringValue();
+        if (value != null) {
+            writer.writeWithHtmlEscape(value);
+        }
+        writer.write("</span>");
+    }
 }

@@ -31,9 +31,9 @@ import com.tcdng.unify.web.ui.AbstractListControl;
 @UplAttributes({ @UplAttribute(name = "binding", type = String.class, mandatory = false) })
 public class ListArea extends AbstractListControl {
 
-	@Override
-	public boolean isMultiple() {
-		return false;
-	}
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 
 }

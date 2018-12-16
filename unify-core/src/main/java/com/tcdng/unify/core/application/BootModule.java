@@ -26,19 +26,19 @@ import com.tcdng.unify.core.business.BusinessModule;
  */
 public interface BootModule extends BusinessModule {
 
-	/**
-	 * Executes start sequence.
-	 * 
-	 * @throws UnifyException
-	 *             if an error roccurs
-	 */
-	void startup() throws UnifyException;
+    /**
+     * Executes start sequence.
+     * 
+     * @throws UnifyException
+     *             if an error roccurs
+     */
+    void startup() throws UnifyException;
 
-	/**
-	 * Executes shutdown sequence.
-	 * 
-	 * @throws UnifyException
-	 *             if an error roccurs
-	 */
-	void shutdown() throws UnifyException;
+    /**
+     * Executes shutdown sequence.
+     * 
+     * @throws UnifyException
+     *             if an error roccurs
+     */
+    void shutdown() throws UnifyException;
 }

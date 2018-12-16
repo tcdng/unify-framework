@@ -32,11 +32,11 @@ import com.tcdng.unify.web.ui.Widget;
 @UplBinding("web/panels/upl/changepasswordpanel.upl")
 public class ChangePasswordPanel extends AbstractPanel {
 
-	@Action
-	@Override
-	public void switchState() throws UnifyException {
-		super.switchState();
-		Widget messageLabel = getWidgetByShortName("pwdChangeMsg");
-		messageLabel.setVisible(messageLabel.getValue(String.class) != null);
-	}
+    @Action
+    @Override
+    public void switchState() throws UnifyException {
+        super.switchState();
+        Widget messageLabel = getWidgetByShortName("pwdChangeMsg");
+        messageLabel.setVisible(messageLabel.getValue(String.class) != null);
+    }
 }

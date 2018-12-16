@@ -23,14 +23,14 @@ package com.tcdng.unify.core.util;
  */
 public class ContactAddress extends Address {
 
-	private long versionNo;
+    private long versionNo;
 
-	public long getVersionNo() {
-		return versionNo;
-	}
+    public long getVersionNo() {
+        return versionNo;
+    }
 
-	public void setVersionNo(long versionNo) {
-		this.versionNo = versionNo;
-	}
+    public void setVersionNo(long versionNo) {
+        this.versionNo = versionNo;
+    }
 
 }

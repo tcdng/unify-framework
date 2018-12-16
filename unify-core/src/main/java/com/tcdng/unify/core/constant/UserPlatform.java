@@ -25,24 +25,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum UserPlatform implements EnumConst {
 
-	DESKTOP("desktop"), MOBILE("mobile"), DEFAULT("desktop");
+    DESKTOP("desktop"), MOBILE("mobile"), DEFAULT("desktop");
 
-	private final String code;
+    private final String code;
 
-	private UserPlatform(String code) {
-		this.code = code;
-	}
+    private UserPlatform(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static UserPlatform fromCode(String code) {
-		return EnumUtils.fromCode(UserPlatform.class, code);
-	}
+    public static UserPlatform fromCode(String code) {
+        return EnumUtils.fromCode(UserPlatform.class, code);
+    }
 
-	public static UserPlatform fromName(String name) {
-		return EnumUtils.fromName(UserPlatform.class, name);
-	}
+    public static UserPlatform fromName(String name) {
+        return EnumUtils.fromName(UserPlatform.class, name);
+    }
 }

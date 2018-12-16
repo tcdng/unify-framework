@@ -27,53 +27,53 @@ import com.tcdng.unify.core.data.FluentSet;
  */
 public class Select extends FluentSet<String> {
 
-	private boolean distinct;
+    private boolean distinct;
 
-	public Select(Select select) {
-		super(select);
-		this.distinct = select.distinct;
-	}
+    public Select(Select select) {
+        super(select);
+        this.distinct = select.distinct;
+    }
 
-	public Select(String field) {
-		super.add(field);
-	}
+    public Select(String field) {
+        super.add(field);
+    }
 
-	public Select(String... fields) {
-		for (String field : fields) {
-			super.add(field);
-		}
-	}
+    public Select(String... fields) {
+        for (String field : fields) {
+            super.add(field);
+        }
+    }
 
-	public Select() {
+    public Select() {
 
-	}
+    }
 
-	@Override
-	public Select add(String field) {
-		return (Select) super.add(field);
-	}
+    @Override
+    public Select add(String field) {
+        return (Select) super.add(field);
+    }
 
-	@Override
-	public Select addAll(Collection<? extends String> collection) {
-		return (Select) super.addAll(collection);
-	}
+    @Override
+    public Select addAll(Collection<? extends String> collection) {
+        return (Select) super.addAll(collection);
+    }
 
-	@Override
-	public Select removeAll(Collection<? extends String> set) {
-		return (Select) super.removeAll(set);
-	}
+    @Override
+    public Select removeAll(Collection<? extends String> set) {
+        return (Select) super.removeAll(set);
+    }
 
-	@Override
-	public Select remove(String value) {
-		return (Select) super.remove(value);
-	}
+    @Override
+    public Select remove(String value) {
+        return (Select) super.remove(value);
+    }
 
-	public boolean isDistinct() {
-		return distinct;
-	}
+    public boolean isDistinct() {
+        return distinct;
+    }
 
-	public Select setDistinct(boolean distinct) {
-		this.distinct = distinct;
-		return this;
-	}
+    public Select setDistinct(boolean distinct) {
+        this.distinct = distinct;
+        return this;
+    }
 }

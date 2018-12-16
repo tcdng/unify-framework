@@ -28,7 +28,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
 @Component("formatterlist")
 public class FormatterListCommand extends AbstractTypeListCommand<Formatter> {
 
-	public FormatterListCommand() {
-		super(Formatter.class);
-	}
+    public FormatterListCommand() {
+        super(Formatter.class);
+    }
 }

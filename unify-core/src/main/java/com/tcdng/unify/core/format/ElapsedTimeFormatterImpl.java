@@ -30,25 +30,25 @@ import com.tcdng.unify.core.util.CalendarUtils;
 @Component(name = "elapsedtimeformat", description = "$m{format.elapsedtime}")
 public class ElapsedTimeFormatterImpl extends AbstractFormatter<Date> implements ElapsedTimeFormatter {
 
-	public ElapsedTimeFormatterImpl() {
-		super(Date.class);
-	}
+    public ElapsedTimeFormatterImpl() {
+        super(Date.class);
+    }
 
-	@Override
-	public String format(Date fromDate) throws UnifyException {
-		CalendarUtils.DateDifference difference = CalendarUtils.getDateDifference(fromDate, new Date());
-		String elapsedTime = getSessionMessage("elapsedtimeformat.message", difference.getDays(),
-				difference.getHours(), difference.getMinutes());
-		return elapsedTime;
-	}
+    @Override
+    public String format(Date fromDate) throws UnifyException {
+        CalendarUtils.DateDifference difference = CalendarUtils.getDateDifference(fromDate, new Date());
+        String elapsedTime = getSessionMessage("elapsedtimeformat.message", difference.getDays(), difference.getHours(),
+                difference.getMinutes());
+        return elapsedTime;
+    }
 
-	@Override
-	public Date parse(String string) throws UnifyException {
-		return null;
-	}
+    @Override
+    public Date parse(String string) throws UnifyException {
+        return null;
+    }
 
-	@Override
-	public String getPattern() throws UnifyException {
-		return null;
-	}
+    @Override
+    public String getPattern() throws UnifyException {
+        return null;
+    }
 }

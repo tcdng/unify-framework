@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @UplAttributes({ @UplAttribute(name = "valueComponentList", type = UplElementReferences.class) })
 public class DisableAction extends AbstractPageAction {
 
-	public DisableAction() {
-		super("disable");
-	}
+    public DisableAction() {
+        super("disable");
+    }
 }

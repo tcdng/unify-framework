@@ -23,8 +23,8 @@ package com.tcdng.unify.core.task;
  */
 public interface TaskableMethodConstants {
 
-	String TASKABLE_METHOD_TASK = "taskablemethod-task";
+    String TASKABLE_METHOD_TASK = "taskablemethod-task";
 
-	String TASK_RESULT = "taskResult";
+    String TASK_RESULT = "taskResult";
 
 }

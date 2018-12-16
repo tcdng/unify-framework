@@ -26,18 +26,18 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
  */
 public abstract class AbstractUnifyWebTest extends AbstractUnifyComponentTest {
 
-	public AbstractUnifyWebTest(boolean clusterMode) {
-		super(clusterMode);
-	}
+    public AbstractUnifyWebTest(boolean clusterMode) {
+        super(clusterMode);
+    }
 
-	public AbstractUnifyWebTest() {
-		super();
-	}
+    public AbstractUnifyWebTest() {
+        super();
+    }
 
-	@Override
-	protected void doAddSettingsAndDependencies() throws Exception {
-		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE,
-				new String[] { "com.tcdng.unify.core.resources.test" });
-	}
+    @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE,
+                new String[] { "com.tcdng.unify.core.resources.test" });
+    }
 
 }

@@ -29,35 +29,35 @@ import com.tcdng.unify.web.ClientRequest;
  */
 public class HttpClientRequest implements ClientRequest {
 
-	private String path;
+    private String path;
 
-	private Charset charset;
+    private Charset charset;
 
-	private Map<String, Object> parameters;
+    private Map<String, Object> parameters;
 
-	public HttpClientRequest(String path, Charset charset, Map<String, Object> parameters) {
-		this.path = path;
-		this.charset = charset;
-		this.parameters = parameters;
-	}
+    public HttpClientRequest(String path, Charset charset, Map<String, Object> parameters) {
+        this.path = path;
+        this.charset = charset;
+        this.parameters = parameters;
+    }
 
-	@Override
-	public String getPath() {
-		return path;
-	}
+    @Override
+    public String getPath() {
+        return path;
+    }
 
-	@Override
-	public Charset getCharset() {
-		return charset;
-	}
+    @Override
+    public Charset getCharset() {
+        return charset;
+    }
 
-	@Override
-	public Set<String> getParameterNames() {
-		return parameters.keySet();
-	}
+    @Override
+    public Set<String> getParameterNames() {
+        return parameters.keySet();
+    }
 
-	@Override
-	public Object getParameter(String name) {
-		return parameters.get(name);
-	}
+    @Override
+    public Object getParameter(String name) {
+        return parameters.get(name);
+    }
 }

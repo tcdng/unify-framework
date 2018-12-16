@@ -29,26 +29,26 @@ import com.tcdng.unify.web.ui.AbstractFormattedControl;
  */
 @Component("ui-label")
 @UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultValue = "true"),
-		@UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "draggable", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "draggable", type = boolean.class, defaultValue = "false") })
 public class Label extends AbstractFormattedControl {
 
-	public Label() {
-		super.setEditable(false);
-	}
+    public Label() {
+        super.setEditable(false);
+    }
 
-	@Override
-	public void setEditable(boolean editable) {
+    @Override
+    public void setEditable(boolean editable) {
 
-	}
+    }
 
-	@Override
-	public boolean isLayoutCaption() throws UnifyException {
-		super.isLayoutCaption();
-		return getUplAttribute(boolean.class, "layoutCaption");
-	}
+    @Override
+    public boolean isLayoutCaption() throws UnifyException {
+        super.isLayoutCaption();
+        return getUplAttribute(boolean.class, "layoutCaption");
+    }
 
-	public boolean isHtmlEscape() throws UnifyException {
-		return getUplAttribute(boolean.class, "htmlEscape");
-	}
+    public boolean isHtmlEscape() throws UnifyException {
+        return getUplAttribute(boolean.class, "htmlEscape");
+    }
 }

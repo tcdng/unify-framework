@@ -27,15 +27,15 @@ import com.tcdng.unify.core.database.Query;
  */
 public class ClusterDateSequenceNumberQuery extends Query<ClusterDateSequenceNumber> {
 
-	public ClusterDateSequenceNumberQuery() {
-		super(ClusterDateSequenceNumber.class);
-	}
+    public ClusterDateSequenceNumberQuery() {
+        super(ClusterDateSequenceNumber.class);
+    }
 
-	public ClusterDateSequenceNumberQuery sequenceName(String sequenceName) {
-		return (ClusterDateSequenceNumberQuery) equals("sequenceName", sequenceName);
-	}
+    public ClusterDateSequenceNumberQuery sequenceName(String sequenceName) {
+        return (ClusterDateSequenceNumberQuery) equals("sequenceName", sequenceName);
+    }
 
-	public ClusterDateSequenceNumberQuery sequenceDate(Date sequenceDate) {
-		return (ClusterDateSequenceNumberQuery) equals("sequenceDate", sequenceDate);
-	}
+    public ClusterDateSequenceNumberQuery sequenceDate(Date sequenceDate) {
+        return (ClusterDateSequenceNumberQuery) equals("sequenceDate", sequenceDate);
+    }
 }

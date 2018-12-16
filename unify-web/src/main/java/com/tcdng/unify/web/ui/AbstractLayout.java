@@ -27,41 +27,41 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "styleClass", type = String.class, defaultValue = "$e{}"),
-		@UplAttribute(name = "style", type = String.class),
-		@UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "captionStyle", type = String.class),
-		@UplAttribute(name = "captionSuffix", type = String.class),
-		@UplAttribute(name = "inlineCaption", type = boolean.class) })
+        @UplAttribute(name = "style", type = String.class),
+        @UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "captionStyle", type = String.class),
+        @UplAttribute(name = "captionSuffix", type = String.class),
+        @UplAttribute(name = "inlineCaption", type = boolean.class) })
 public abstract class AbstractLayout extends AbstractUplComponent implements Layout {
 
-	@Override
-	public boolean isInlineCaption() throws UnifyException {
-		return getUplAttribute(boolean.class, "inlineCaption");
-	}
+    @Override
+    public boolean isInlineCaption() throws UnifyException {
+        return getUplAttribute(boolean.class, "inlineCaption");
+    }
 
-	@Override
-	public boolean isShowCaption() throws UnifyException {
-		return getUplAttribute(boolean.class, "showCaption");
-	}
+    @Override
+    public boolean isShowCaption() throws UnifyException {
+        return getUplAttribute(boolean.class, "showCaption");
+    }
 
-	@Override
-	public String getCaptionStyle() throws UnifyException {
-		return getUplAttribute(String.class, "captionStyle");
-	}
+    @Override
+    public String getCaptionStyle() throws UnifyException {
+        return getUplAttribute(String.class, "captionStyle");
+    }
 
-	@Override
-	public String getCaptionSuffix() throws UnifyException {
-		return getUplAttribute(String.class, "captionSuffix");
-	}
+    @Override
+    public String getCaptionSuffix() throws UnifyException {
+        return getUplAttribute(String.class, "captionSuffix");
+    }
 
-	@Override
-	public String getStyleClass() throws UnifyException {
-		return getUplAttribute(String.class, "styleClass");
-	}
+    @Override
+    public String getStyleClass() throws UnifyException {
+        return getUplAttribute(String.class, "styleClass");
+    }
 
-	@Override
-	public String getStyle() throws UnifyException {
-		return getUplAttribute(String.class, "style");
-	}
+    @Override
+    public String getStyle() throws UnifyException {
+        return getUplAttribute(String.class, "style");
+    }
 
 }

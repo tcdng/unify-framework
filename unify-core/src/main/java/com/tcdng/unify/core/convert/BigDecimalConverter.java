@@ -27,23 +27,23 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class BigDecimalConverter extends AbstractConverter<BigDecimal> {
 
-	@Override
-	protected BigDecimal doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Number) {
-			return new BigDecimal(((Number) value).toString());
-		}
+    @Override
+    protected BigDecimal doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Number) {
+            return new BigDecimal(((Number) value).toString());
+        }
 
-		if (value instanceof String) {
-			String string = ((String) value).trim();
-			if (!string.isEmpty()) {
-				if (formatter == null) {
-					return new BigDecimal(string);
-				}
+        if (value instanceof String) {
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                if (formatter == null) {
+                    return new BigDecimal(string);
+                }
 
-				return doConvert(formatter.parse(string), null);
-			}
-		}
+                return doConvert(formatter.parse(string), null);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

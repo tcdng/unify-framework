@@ -25,5 +25,5 @@ import com.tcdng.unify.core.database.Entity;
  */
 public interface SequencedEntity extends Entity {
 
-	Long getId();
+    Long getId();
 }

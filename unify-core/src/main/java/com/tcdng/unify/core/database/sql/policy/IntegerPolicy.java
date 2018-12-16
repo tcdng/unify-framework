@@ -29,36 +29,36 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class IntegerPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("INTEGER");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("INTEGER");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.INTEGER);
-		} else {
-			((PreparedStatement) pstmt).setInt(index, ((Integer) data).intValue());
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.INTEGER);
+        } else {
+            ((PreparedStatement) pstmt).setInt(index, ((Integer) data).intValue());
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Object object = ((ResultSet) rs).getInt(column);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return object;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Object object = ((ResultSet) rs).getInt(column);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return object;
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Object object = ((ResultSet) rs).getInt(index);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return object;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Object object = ((ResultSet) rs).getInt(index);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return object;
+    }
 
 }

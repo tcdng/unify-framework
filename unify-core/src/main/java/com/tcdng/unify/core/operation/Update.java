@@ -27,31 +27,31 @@ import com.tcdng.unify.core.data.FluentMap;
  */
 public class Update extends FluentMap<String, Object> {
 
-	public Update() {
+    public Update() {
 
-	}
+    }
 
-	public Update(Update update) {
-		super(update);
-	}
+    public Update(Update update) {
+        super(update);
+    }
 
-	@Override
-	public Update add(String field, Object value) {
-		return (Update) super.add(field, value);
-	}
+    @Override
+    public Update add(String field, Object value) {
+        return (Update) super.add(field, value);
+    }
 
-	@Override
-	public Update addAll(Map<? extends String, ? extends Object> map) {
-		return (Update) super.addAll(map);
-	}
+    @Override
+    public Update addAll(Map<? extends String, ? extends Object> map) {
+        return (Update) super.addAll(map);
+    }
 
-	@Override
-	public Update remove(String key) {
-		return (Update) super.remove(key);
-	}
+    @Override
+    public Update remove(String key) {
+        return (Update) super.remove(key);
+    }
 
-	@Override
-	public Update clear() {
-		return (Update) super.clear();
-	}
+    @Override
+    public Update clear() {
+        return (Update) super.clear();
+    }
 }

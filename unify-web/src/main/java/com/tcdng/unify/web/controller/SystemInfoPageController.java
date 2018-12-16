@@ -35,24 +35,24 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
 @Component(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/systeminfo.upl")
 @ResultMappings({
-		@ResultMapping(name = SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING, response = {
-				"!showpopupresponse popup:$s{systemExceptionPopup} systemInfo:true" }),
-		@ResultMapping(name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING, response = {
-				"!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }),
-		@ResultMapping(name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING, response = {
-				"!hidepopupresponse systemInfo:true" }) })
+        @ResultMapping(name = SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING,
+                response = { "!showpopupresponse popup:$s{systemExceptionPopup} systemInfo:true" }),
+        @ResultMapping(name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,
+                response = { "!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }),
+        @ResultMapping(name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING,
+                response = { "!hidepopupresponse systemInfo:true" }) })
 public class SystemInfoPageController extends AbstractPageController {
 
-	@Action
-	public String closeSystemInfo() throws UnifyException {
-		if ((Boolean) getSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG)) {
-			return SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING;
-		}
-		return SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING;
-	}
+    @Action
+    public String closeSystemInfo() throws UnifyException {
+        if ((Boolean) getSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG)) {
+            return SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING;
+        }
+        return SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING;
+    }
 
-	@Override
-	protected void onSetPage() throws UnifyException {
-		setEditable("stackTrace", false);
-	}
+    @Override
+    protected void onSetPage() throws UnifyException {
+        setEditable("stackTrace", false);
+    }
 }

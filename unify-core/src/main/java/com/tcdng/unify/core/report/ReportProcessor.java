@@ -27,13 +27,13 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ReportProcessor extends UnifyComponent {
 
-	/**
-	 * Processes supplied report.
-	 * 
-	 * @param report
-	 *            the report to process
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void process(Report report) throws UnifyException;
+    /**
+     * Processes supplied report.
+     * 
+     * @param report
+     *            the report to process
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void process(Report report) throws UnifyException;
 }

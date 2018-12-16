@@ -28,23 +28,23 @@ import com.tcdng.unify.core.annotation.Taskable;
  */
 public interface ProxyBusinessModuleMethodRelay extends UnifyComponent {
 
-	/**
-	 * Returns taskable annotation for method with supplied signature if found.
-	 * 
-	 * @param signature
-	 *            the supplied signature
-	 * @throws UnifyException
-	 *             if an error occur
-	 */
-	Taskable getTaskable(String signature) throws UnifyException;
+    /**
+     * Returns taskable annotation for method with supplied signature if found.
+     * 
+     * @param signature
+     *            the supplied signature
+     * @throws UnifyException
+     *             if an error occur
+     */
+    Taskable getTaskable(String signature) throws UnifyException;
 
-	/**
-	 * Returns expirable annotation for method with supplied signature if found.
-	 * 
-	 * @param signature
-	 *            the supplied signature
-	 * @throws UnifyException
-	 *             if an error occur
-	 */
-	Expirable getExpirable(String signature) throws UnifyException;
+    /**
+     * Returns expirable annotation for method with supplied signature if found.
+     * 
+     * @param signature
+     *            the supplied signature
+     * @throws UnifyException
+     *             if an error occur
+     */
+    Expirable getExpirable(String signature) throws UnifyException;
 }

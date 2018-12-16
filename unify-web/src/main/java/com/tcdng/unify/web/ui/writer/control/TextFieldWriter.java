@@ -34,142 +34,142 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("textfield-writer")
 public class TextFieldWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		TextField textField = (TextField) widget;
-		writeTextField(writer, textField, "text");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        TextField textField = (TextField) widget;
+        writeTextField(writer, textField, "text");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget, boolean useFacade) throws UnifyException {
-		TextField textField = (TextField) widget;
-		boolean textUseFacade = !textField.getExtReadOnly();
-		super.doWriteBehavior(writer, textField, textUseFacade);
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget, boolean useFacade) throws UnifyException {
+        TextField textField = (TextField) widget;
+        boolean textUseFacade = !textField.getExtReadOnly();
+        super.doWriteBehavior(writer, textField, textUseFacade);
 
-		// Append formatting regex
-		writer.write("ux.setTextRegexFormatting(\"");
-		if (textUseFacade) {
-			writer.write(textField.getFacadeId());
-		} else {
-			writer.write(textField.getId());
-		}
-		writer.write("\",\"");
-		writeFormatRegex(writer, textField);
-		writer.write("\",");
-		String textCase = textField.getCase();
-		if (textCase == null) {
-			writer.write(textCase);
-		} else {
-			writer.write("\"").write(textCase).write("\"");
-		}
-		writer.write(");");
-	}
+        // Append formatting regex
+        writer.write("ux.setTextRegexFormatting(\"");
+        if (textUseFacade) {
+            writer.write(textField.getFacadeId());
+        } else {
+            writer.write(textField.getId());
+        }
+        writer.write("\",\"");
+        writeFormatRegex(writer, textField);
+        writer.write("\",");
+        String textCase = textField.getCase();
+        if (textCase == null) {
+            writer.write(textCase);
+        } else {
+            writer.write("\"").write(textCase).write("\"");
+        }
+        writer.write(");");
+    }
 
-	protected void writeTextField(ResponseWriter writer, TextField textField, String type) throws UnifyException {
-		writeTextField(writer, textField, type, textField.getExtensionType());
-	}
+    protected void writeTextField(ResponseWriter writer, TextField textField, String type) throws UnifyException {
+        writeTextField(writer, textField, type, textField.getExtensionType());
+    }
 
-	protected void writeLeadingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
+    protected void writeLeadingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
 
-	}
+    }
 
-	protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
+    protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
 
-	}
+    }
 
-	protected void writeBaseAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
+    protected void writeBaseAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
 
-	}
+    }
 
-	protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-		writer.write("");
-	}
+    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+        writer.write("");
+    }
 
-	private void writeTextField(ResponseWriter writer, TextField textField, String type, ExtensionType extensionType)
-			throws UnifyException {
-		if (extensionType.isExtended()) {
-			writer.write("<div ");
-			writeTagId(writer, textField.getBorderId());
-			writeTagStyleClass(writer, textField);
-			writeTagStyle(writer, textField);
-			writer.write(">");
-			writer.write("<div style=\"display:flex;width:100%;\">");
+    private void writeTextField(ResponseWriter writer, TextField textField, String type, ExtensionType extensionType)
+            throws UnifyException {
+        if (extensionType.isExtended()) {
+            writer.write("<div ");
+            writeTagId(writer, textField.getBorderId());
+            writeTagStyleClass(writer, textField);
+            writeTagStyle(writer, textField);
+            writer.write(">");
+            writer.write("<div style=\"display:flex;width:100%;\">");
 
-			writeLeadingAddOn(writer, textField);
+            writeLeadingAddOn(writer, textField);
 
-			if (ExtensionType.FACADE_HIDDEN.equals(extensionType)) {
-				writer.write("<input type=\"hidden\"");
-				writeTagId(writer, textField);
-				writeTagName(writer, textField);
+            if (ExtensionType.FACADE_HIDDEN.equals(extensionType)) {
+                writer.write("<input type=\"hidden\"");
+                writeTagId(writer, textField);
+                writeTagName(writer, textField);
 
-				String value = textField.getStringValue();
-				if (value != null) {
-					writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
-				}
-				writer.write("/>");
-			}
+                String value = textField.getStringValue();
+                if (value != null) {
+                    writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
+                }
+                writer.write("/>");
+            }
 
-			writeTextInput(writer, textField, type, extensionType);
+            writeTextInput(writer, textField, type, extensionType);
 
-			writeTrailingAddOn(writer, textField);
-			writer.write("</div>");
+            writeTrailingAddOn(writer, textField);
+            writer.write("</div>");
 
-			writeBaseAddOn(writer, textField);
-			writer.write("</div>");
-		} else {
-			writeTextInput(writer, textField, type, extensionType);
-		}
-	}
+            writeBaseAddOn(writer, textField);
+            writer.write("</div>");
+        } else {
+            writeTextInput(writer, textField, type, extensionType);
+        }
+    }
 
-	private void writeTextInput(ResponseWriter writer, TextField textField, String type, ExtensionType extensionType)
-			throws UnifyException {
-		writer.write("<input type=\"").write(type).write("\"");
+    private void writeTextInput(ResponseWriter writer, TextField textField, String type, ExtensionType extensionType)
+            throws UnifyException {
+        writer.write("<input type=\"").write(type).write("\"");
 
-		String value = null;
-		if (extensionType.isExtended()) {
-			if (extensionType.isFacade()) {
-				writeTagId(writer, textField.getFacadeId());
-				value = textField.getFacadeStringValue();
-			} else {
-				writeTagId(writer, textField);
-				writeTagName(writer, textField);
-				value = textField.getStringValue();
-			}
+        String value = null;
+        if (extensionType.isExtended()) {
+            if (extensionType.isFacade()) {
+                writeTagId(writer, textField.getFacadeId());
+                value = textField.getFacadeStringValue();
+            } else {
+                writeTagId(writer, textField);
+                writeTagName(writer, textField);
+                value = textField.getStringValue();
+            }
 
-			writeTagStyleClass(writer, textField.getExtStyleClass());
-			if (textField.getExtReadOnly()) {
-				writeTagReadOnly(writer);
-			} else {
-				writeTagEditAttributes(writer, textField);
-			}
-		} else {
-			writeTagAttributes(writer, textField);
-			value = textField.getStringValue();
+            writeTagStyleClass(writer, textField.getExtStyleClass());
+            if (textField.getExtReadOnly()) {
+                writeTagReadOnly(writer);
+            } else {
+                writeTagEditAttributes(writer, textField);
+            }
+        } else {
+            writeTagAttributes(writer, textField);
+            value = textField.getStringValue();
 
-			int size = textField.getUplAttribute(int.class, "size");
-			if (size > 0) {
-				writer.write(" size=\"").write(size).write("\"");
-			}
+            int size = textField.getUplAttribute(int.class, "size");
+            if (size > 0) {
+                writer.write(" size=\"").write(size).write("\"");
+            }
 
-			int maxLen = textField.getUplAttribute(int.class, "maxLen");
-			if (maxLen > 0) {
-				writer.write(" maxlength=\"").write(maxLen).write("\"");
-			}
+            int maxLen = textField.getUplAttribute(int.class, "maxLen");
+            if (maxLen > 0) {
+                writer.write(" maxlength=\"").write(maxLen).write("\"");
+            }
 
-			if (textField.isUplAttribute("autocomplete")) {
-				if (textField.getUplAttribute(boolean.class, "autocomplete")) {
-					writer.write(" autocomplete=\"on\"");
-				} else {
-					writer.write(" autocomplete=\"off\"");
-				}
-			}
-		}
+            if (textField.isUplAttribute("autocomplete")) {
+                if (textField.getUplAttribute(boolean.class, "autocomplete")) {
+                    writer.write(" autocomplete=\"on\"");
+                } else {
+                    writer.write(" autocomplete=\"off\"");
+                }
+            }
+        }
 
-		if (value != null) {
-			writer.write(" value=\"");
-			writer.writeWithHtmlEscape(value);
-			writer.write("\"");
-		}
-		writer.write("/>");
-	}
+        if (value != null) {
+            writer.write(" value=\"");
+            writer.writeWithHtmlEscape(value);
+            writer.write("\"");
+        }
+        writer.write("/>");
+    }
 }

@@ -25,30 +25,30 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class SqlTableInfo implements Listable {
 
-	private SqlTableType type;
+    private SqlTableType type;
 
-	private String tableName;
+    private String tableName;
 
-	public SqlTableInfo(SqlTableType type, String tableName) {
-		this.type = type;
-		this.tableName = tableName;
-	}
+    public SqlTableInfo(SqlTableType type, String tableName) {
+        this.type = type;
+        this.tableName = tableName;
+    }
 
-	@Override
-	public String getListKey() {
-		return tableName;
-	}
+    @Override
+    public String getListKey() {
+        return tableName;
+    }
 
-	@Override
-	public String getListDescription() {
-		return tableName;
-	}
+    @Override
+    public String getListDescription() {
+        return tableName;
+    }
 
-	public SqlTableType getType() {
-		return type;
-	}
+    public SqlTableType getType() {
+        return type;
+    }
 
-	public String getTableName() {
-		return tableName;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 }

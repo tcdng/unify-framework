@@ -28,69 +28,69 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public interface WidgetWriter extends UplComponentWriter {
 
-	/**
-	 * Writes widget structure and content to response writer.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param widget
-	 *            the user interface widget to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException;
+    /**
+     * Writes widget structure and content to response writer.
+     * 
+     * @param writer
+     *            the response writer
+     * @param widget
+     *            the user interface widget to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException;
 
-	/**
-	 * Writes widget structure and content to response writer.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param widget
-	 *            the widget to write
-	 * @param id
-	 *            the id to use
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeStructureAndContent(ResponseWriter writer, Widget widget, String id) throws UnifyException;
+    /**
+     * Writes widget structure and content to response writer.
+     * 
+     * @param writer
+     *            the response writer
+     * @param widget
+     *            the widget to write
+     * @param id
+     *            the id to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeStructureAndContent(ResponseWriter writer, Widget widget, String id) throws UnifyException;
 
-	/**
-	 * Writes widget section structure and content to response writer.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param widget
-	 *            the user interface widget to write
-	 * @param sectionId
-	 *            the section page name
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionId) throws UnifyException;
+    /**
+     * Writes widget section structure and content to response writer.
+     * 
+     * @param writer
+     *            the response writer
+     * @param widget
+     *            the user interface widget to write
+     * @param sectionId
+     *            the section page name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionId) throws UnifyException;
 
-	/**
-	 * Writes widget behavior to response writer.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param widget
-	 *            the user interface widget to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException;
+    /**
+     * Writes widget behavior to response writer.
+     * 
+     * @param writer
+     *            the response writer
+     * @param widget
+     *            the user interface widget to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException;
 
-	/**
-	 * Writes widget section behavior to response writer.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param widget
-	 *            the user interface widget to write
-	 * @param sectionId
-	 *            the section page name
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeSectionBehavior(ResponseWriter writer, Widget widget, String sectionId) throws UnifyException;
+    /**
+     * Writes widget section behavior to response writer.
+     * 
+     * @param writer
+     *            the response writer
+     * @param widget
+     *            the user interface widget to write
+     * @param sectionId
+     *            the section page name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeSectionBehavior(ResponseWriter writer, Widget widget, String sectionId) throws UnifyException;
 }

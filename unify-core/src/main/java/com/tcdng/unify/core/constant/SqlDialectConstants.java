@@ -23,17 +23,17 @@ package com.tcdng.unify.core.constant;
  */
 public interface SqlDialectConstants {
 
-	String HSQLDB = "hsqldb-dialect";
+    String HSQLDB = "hsqldb-dialect";
 
-	String JAVADB = "javadb-dialect";
+    String JAVADB = "javadb-dialect";
 
-	String MSSQL = "mssql-dialect";
+    String MSSQL = "mssql-dialect";
 
-	String MSSQL_2012 = "mssql2012-dialect";
+    String MSSQL_2012 = "mssql2012-dialect";
 
-	String MYSQL = "mysql-dialect";
+    String MYSQL = "mysql-dialect";
 
-	String ORACLE = "oracle-dialect";
+    String ORACLE = "oracle-dialect";
 
-	String ORACLE_12C = "oracle12c-dialect";
+    String ORACLE_12C = "oracle12c-dialect";
 }

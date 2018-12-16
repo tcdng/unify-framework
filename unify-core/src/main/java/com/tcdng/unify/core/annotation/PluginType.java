@@ -23,5 +23,5 @@ package com.tcdng.unify.core.annotation;
  */
 public enum PluginType {
 
-	PRE_LOGIC, POST_LOGIC
+    PRE_LOGIC, POST_LOGIC
 }

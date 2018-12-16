@@ -27,8 +27,8 @@ import com.tcdng.unify.core.database.Entity;
 @UplBinding("web/panels/upl/inmemoryrackcrudpanel.upl")
 public abstract class AbstractInMemoryRackCrudPanel<T extends Entity> extends AbstractInMemoryTableCrudPanel<T> {
 
-	public AbstractInMemoryRackCrudPanel(Class<T> entityClass, String titleKey, boolean populateListOnly) {
-		super(entityClass, titleKey, populateListOnly);
-	}
+    public AbstractInMemoryRackCrudPanel(Class<T> entityClass, String titleKey, boolean populateListOnly) {
+        super(entityClass, titleKey, populateListOnly);
+    }
 
 }

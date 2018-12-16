@@ -31,29 +31,29 @@ import com.tcdng.unify.core.util.CalendarUtils;
  */
 public class DatePolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("TIMESTAMP");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("TIMESTAMP");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.DATE);
-		} else {
-			((PreparedStatement) pstmt).setDate(index,
-					new Date((CalendarUtils.getMidnightDate((java.util.Date) data)).getTime()));
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.DATE);
+        } else {
+            ((PreparedStatement) pstmt).setDate(index,
+                    new Date((CalendarUtils.getMidnightDate((java.util.Date) data)).getTime()));
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		return CalendarUtils.getMidnightDate(((ResultSet) rs).getDate(column));
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        return CalendarUtils.getMidnightDate(((ResultSet) rs).getDate(column));
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		return CalendarUtils.getMidnightDate(((ResultSet) rs).getDate(index));
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        return CalendarUtils.getMidnightDate(((ResultSet) rs).getDate(index));
+    }
 
 }

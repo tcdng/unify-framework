@@ -32,91 +32,91 @@ import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 @Component(name = SqlDialectConstants.MSSQL, description = "$m{sqldialect.mssqldb}")
 public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
-	@Override
-	public String generateTestSql() throws UnifyException {
-		return "SELECT CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateTestSql() throws UnifyException {
+        return "SELECT CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public String generateNowSql() throws UnifyException {
-		return "SELECT CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateNowSql() throws UnifyException {
+        return "SELECT CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public int getMaxClauseValues() {
-		return -1;
-	}
+    @Override
+    public int getMaxClauseValues() {
+        return -1;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		if (offset > 0) {
-			throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
-		}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        if (offset > 0) {
+            throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
+        }
 
-		if (limit > 0) {
-			sql.append(" TOP ").append(limit);
-			return true;
-		}
-		return false;
-	}
+        if (limit > 0) {
+            sql.append(" TOP ").append(limit);
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	public String generateRenameTable(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-			SqlEntitySchemaInfo oldSqlRecordSchemaInfo, boolean format) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		sb.append("sp_RENAME '").append(oldSqlRecordSchemaInfo.getTable()).append('.')
-				.append(sqlRecordSchemaInfo.getTable()).append("'");
-		return sb.toString();
-	}
+    @Override
+    public String generateRenameTable(SqlEntitySchemaInfo sqlRecordSchemaInfo,
+            SqlEntitySchemaInfo oldSqlRecordSchemaInfo, boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("sp_RENAME '").append(oldSqlRecordSchemaInfo.getTable()).append('.')
+                .append(sqlRecordSchemaInfo.getTable()).append("'");
+        return sb.toString();
+    }
 
-	@Override
-	public String generateAlterColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-			boolean format) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
-		if (format) {
-			sb.append(getLineSeparator());
-		} else {
-			sb.append(' ');
-		}
-		sb.append("ALTER COLUMN ");
-		appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
-		return sb.toString();
-	}
+    @Override
+    public String generateAlterColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("ALTER COLUMN ");
+        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+        return sb.toString();
+    }
 
-	@Override
-	public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-			SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		sb.append("sp_RENAME '").append(sqlRecordSchemaInfo.getTable()).append('.')
-				.append(oldSqlFieldSchemaInfo.getColumn()).append("', '");
-		sb.append(sqlFieldSchemaInfo.getColumn()).append("' , 'COLUMN'");
-		return sb.toString();
-	}
+    @Override
+    public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("sp_RENAME '").append(sqlRecordSchemaInfo.getTable()).append('.')
+                .append(oldSqlFieldSchemaInfo.getColumn()).append("', '");
+        sb.append(sqlFieldSchemaInfo.getColumn()).append("' , 'COLUMN'");
+        return sb.toString();
+    }
 
-	@Override
-	public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-			boolean format) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
-		if (format) {
-			sb.append(getLineSeparator());
-		} else {
-			sb.append(' ');
-		}
-		sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getColumn());
-		return sb.toString();
-	}
+    @Override
+    public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+        return sb.toString();
+    }
 }

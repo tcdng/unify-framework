@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class Equal extends Criteria {
 
-	public Equal(String field, Object value) {
-		super(Operator.EQUAL, field, value);
-	}
+    public Equal(String field, Object value) {
+        super(Operator.EQUAL, field, value);
+    }
 }

@@ -30,15 +30,15 @@ import com.tcdng.unify.core.report.Report;
  */
 public interface JasperReportsLayoutManager extends UnifyComponent {
 
-	/**
-	 * Applies a layout to a jasper report design object.
-	 * 
-	 * @param jasperDesign
-	 *            the design to apply layout to
-	 * @param report
-	 *            the report definition object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void applyLayout(JasperDesign jasperDesign, Report report) throws UnifyException;
+    /**
+     * Applies a layout to a jasper report design object.
+     * 
+     * @param jasperDesign
+     *            the design to apply layout to
+     * @param report
+     *            the report definition object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void applyLayout(JasperDesign jasperDesign, Report report) throws UnifyException;
 }

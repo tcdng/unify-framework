@@ -23,42 +23,42 @@ package com.tcdng.unify.core.database.sql;
  */
 public class SqlDistinctRowListConfig {
 
-	private String dataSource;
+    private String dataSource;
 
-	private String schema;
+    private String schema;
 
-	private String table;
+    private String table;
 
-	private String keyColumn;
+    private String keyColumn;
 
-	private String descColumn;
+    private String descColumn;
 
-	public SqlDistinctRowListConfig(String dataSource, String schema, String table, String keyColumn,
-			String descColumn) {
-		this.dataSource = dataSource;
-		this.schema = schema;
-		this.table = table;
-		this.keyColumn = keyColumn;
-		this.descColumn = descColumn;
-	}
+    public SqlDistinctRowListConfig(String dataSource, String schema, String table, String keyColumn,
+            String descColumn) {
+        this.dataSource = dataSource;
+        this.schema = schema;
+        this.table = table;
+        this.keyColumn = keyColumn;
+        this.descColumn = descColumn;
+    }
 
-	public String getDataSource() {
-		return dataSource;
-	}
+    public String getDataSource() {
+        return dataSource;
+    }
 
-	public String getSchema() {
-		return schema;
-	}
+    public String getSchema() {
+        return schema;
+    }
 
-	public String getTable() {
-		return table;
-	}
+    public String getTable() {
+        return table;
+    }
 
-	public String getKeyColumn() {
-		return keyColumn;
-	}
+    public String getKeyColumn() {
+        return keyColumn;
+    }
 
-	public String getDescColumn() {
-		return descColumn;
-	}
+    public String getDescColumn() {
+        return descColumn;
+    }
 }

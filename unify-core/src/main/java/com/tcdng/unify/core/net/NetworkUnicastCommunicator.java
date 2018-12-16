@@ -28,23 +28,23 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface NetworkUnicastCommunicator extends NetworkCommunicator {
 
-	/**
-	 * Opens communicator for communication.
-	 * 
-	 * @param in
-	 *            the input stream
-	 * @param out
-	 *            the output stream
-	 * @throws UnifyException
-	 *             if communication is already open. If an error occurs
-	 */
-	void open(InputStream in, OutputStream out) throws UnifyException;
+    /**
+     * Opens communicator for communication.
+     * 
+     * @param in
+     *            the input stream
+     * @param out
+     *            the output stream
+     * @throws UnifyException
+     *             if communication is already open. If an error occurs
+     */
+    void open(InputStream in, OutputStream out) throws UnifyException;
 
-	/**
-	 * Closes communicator.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void close() throws UnifyException;
+    /**
+     * Closes communicator.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void close() throws UnifyException;
 }

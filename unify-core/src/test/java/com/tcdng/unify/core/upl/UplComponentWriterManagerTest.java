@@ -45,117 +45,118 @@ import com.tcdng.unify.core.upl.artifacts.TestDocumentWriter2;
  */
 public class UplComponentWriterManagerTest extends AbstractUnifyComponentTest {
 
-	private UplComponentWriterManager ucwManager;
+    private UplComponentWriterManager ucwManager;
 
-	@Test
-	public void testGetDefaultPlatformWriters() throws Exception {
-		Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
-		assertNotNull(writers);
-		assertTrue(writers.containsKey(TestDocumentA.class));
-		assertTrue(writers.containsKey(TestDocumentB.class));
-		assertTrue(writers.containsKey(TestDocumentC.class));
-		assertTrue(writers.containsKey(TestDocumentD.class));
-		assertTrue(writers.containsKey(TestDocumentE.class));
+    @Test
+    public void testGetDefaultPlatformWriters() throws Exception {
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
+        assertNotNull(writers);
+        assertTrue(writers.containsKey(TestDocumentA.class));
+        assertTrue(writers.containsKey(TestDocumentB.class));
+        assertTrue(writers.containsKey(TestDocumentC.class));
+        assertTrue(writers.containsKey(TestDocumentD.class));
+        assertTrue(writers.containsKey(TestDocumentE.class));
 
-		UplComponentWriter writer = writers.get(TestDocumentA.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentAWriter.class, writer.getClass());
+        UplComponentWriter writer = writers.get(TestDocumentA.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentAWriter.class, writer.getClass());
 
-		writer = writers.get(TestDocumentB.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentAWriter.class, writer.getClass());
+        writer = writers.get(TestDocumentB.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentAWriter.class, writer.getClass());
 
-		writer = writers.get(TestDocumentC.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentAWriter.class, writer.getClass());
+        writer = writers.get(TestDocumentC.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentAWriter.class, writer.getClass());
 
-		writer = writers.get(TestDocumentD.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter1.class, writer.getClass());
+        writer = writers.get(TestDocumentD.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter1.class, writer.getClass());
 
-		writer = writers.get(TestDocumentE.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter1.class, writer.getClass());
-	}
+        writer = writers.get(TestDocumentE.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter1.class, writer.getClass());
+    }
 
-	@Test
-	public void testGetKnownPlatformWritersFull() throws Exception {
-		Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.MOBILE);
-		assertNotNull(writers);
-		assertTrue(writers.containsKey(TestDocumentA.class));
-		assertTrue(writers.containsKey(TestDocumentB.class));
-		assertTrue(writers.containsKey(TestDocumentC.class));
-		assertTrue(writers.containsKey(TestDocumentD.class));
-		assertTrue(writers.containsKey(TestDocumentE.class));
+    @Test
+    public void testGetKnownPlatformWritersFull() throws Exception {
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.MOBILE);
+        assertNotNull(writers);
+        assertTrue(writers.containsKey(TestDocumentA.class));
+        assertTrue(writers.containsKey(TestDocumentB.class));
+        assertTrue(writers.containsKey(TestDocumentC.class));
+        assertTrue(writers.containsKey(TestDocumentD.class));
+        assertTrue(writers.containsKey(TestDocumentE.class));
 
-		UplComponentWriter writer = writers.get(TestDocumentA.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter2.class, writer.getClass());
+        UplComponentWriter writer = writers.get(TestDocumentA.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter2.class, writer.getClass());
 
-		writer = writers.get(TestDocumentB.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter2.class, writer.getClass());
+        writer = writers.get(TestDocumentB.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter2.class, writer.getClass());
 
-		writer = writers.get(TestDocumentC.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentCWriter.class, writer.getClass());
+        writer = writers.get(TestDocumentC.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentCWriter.class, writer.getClass());
 
-		writer = writers.get(TestDocumentD.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter2.class, writer.getClass());
+        writer = writers.get(TestDocumentD.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter2.class, writer.getClass());
 
-		writer = writers.get(TestDocumentE.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter2.class, writer.getClass());
-	}
+        writer = writers.get(TestDocumentE.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter2.class, writer.getClass());
+    }
 
-	@Test
-	public void testGetKnownPlatformWritersPartial() throws Exception {
-		Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
-		assertNotNull(writers);
-		assertTrue(writers.containsKey(TestDocumentA.class));
-		assertTrue(writers.containsKey(TestDocumentB.class));
-		assertTrue(writers.containsKey(TestDocumentC.class));
-		assertTrue(writers.containsKey(TestDocumentD.class));
-		assertTrue(writers.containsKey(TestDocumentE.class));
+    @Test
+    public void testGetKnownPlatformWritersPartial() throws Exception {
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
+        assertNotNull(writers);
+        assertTrue(writers.containsKey(TestDocumentA.class));
+        assertTrue(writers.containsKey(TestDocumentB.class));
+        assertTrue(writers.containsKey(TestDocumentC.class));
+        assertTrue(writers.containsKey(TestDocumentD.class));
+        assertTrue(writers.containsKey(TestDocumentE.class));
 
-		UplComponentWriter writer = writers.get(TestDocumentA.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentAWriter.class, writer.getClass());
+        UplComponentWriter writer = writers.get(TestDocumentA.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentAWriter.class, writer.getClass());
 
-		writer = writers.get(TestDocumentB.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentAWriter.class, writer.getClass());
+        writer = writers.get(TestDocumentB.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentAWriter.class, writer.getClass());
 
-		writer = writers.get(TestDocumentC.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentAWriter.class, writer.getClass());
+        writer = writers.get(TestDocumentC.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentAWriter.class, writer.getClass());
 
-		writer = writers.get(TestDocumentD.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter1.class, writer.getClass());
+        writer = writers.get(TestDocumentD.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter1.class, writer.getClass());
 
-		writer = writers.get(TestDocumentE.class);
-		assertNotNull(writer);
-		assertEquals(TestDocumentWriter1.class, writer.getClass());
-	}
+        writer = writers.get(TestDocumentE.class);
+        assertNotNull(writer);
+        assertEquals(TestDocumentWriter1.class, writer.getClass());
+    }
 
-	@Test
-	public void testGetUnknownPlatformWriters() throws Exception {
-		Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
-		Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters = ucwManager
-				.getWriters(UserPlatform.DEFAULT);
-		assertSame(defaultWriters, writers);
-	}
+    @Test
+    public void testGetUnknownPlatformWriters() throws Exception {
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
+        Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters = ucwManager
+                .getWriters(UserPlatform.DEFAULT);
+        assertSame(defaultWriters, writers);
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
-		ucwManager = (UplComponentWriterManager) getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
-	}
+    @Override
+    protected void onSetup() throws Exception {
+        ucwManager = (UplComponentWriterManager) getComponent(
+                ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 
 }

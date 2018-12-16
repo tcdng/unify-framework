@@ -27,5 +27,5 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SqlShutdownHook {
 
-	void commandShutdown(Connection connection) throws UnifyException;
+    void commandShutdown(Connection connection) throws UnifyException;
 }

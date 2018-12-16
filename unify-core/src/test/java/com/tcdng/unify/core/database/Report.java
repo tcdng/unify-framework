@@ -32,64 +32,64 @@ import com.tcdng.unify.core.annotation.Table;
 @Table("REPORT")
 public class Report extends AbstractTestEntity {
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	@Column
-	private String description;
+    @Column
+    private String description;
 
-	@Child
-	private ReportForm reportForm;
-	
-	@ChildList
-	private List<ReportParameter> parameters;
+    @Child
+    private ReportForm reportForm;
 
-	public Report(String name, String description) {
-		this.name = name;
-		this.description = description;
-	}
+    @ChildList
+    private List<ReportParameter> parameters;
 
-	public Report() {
+    public Report(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
-	}
+    public Report() {
 
-	public Report addParameter(ReportParameter rp) {
-		if (parameters == null) {
-			parameters = new ArrayList<ReportParameter>();
-		}
-		parameters.add(rp);
-		return this;
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Report addParameter(ReportParameter rp) {
+        if (parameters == null) {
+            parameters = new ArrayList<ReportParameter>();
+        }
+        parameters.add(rp);
+        return this;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public ReportForm getReportForm() {
-		return reportForm;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setReportForm(ReportForm reportForm) {
-		this.reportForm = reportForm;
-	}
+    public ReportForm getReportForm() {
+        return reportForm;
+    }
 
-	public List<ReportParameter> getParameters() {
-		return parameters;
-	}
+    public void setReportForm(ReportForm reportForm) {
+        this.reportForm = reportForm;
+    }
 
-	public void setParameters(List<ReportParameter> parameters) {
-		this.parameters = parameters;
-	}
+    public List<ReportParameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<ReportParameter> parameters) {
+        this.parameters = parameters;
+    }
 }

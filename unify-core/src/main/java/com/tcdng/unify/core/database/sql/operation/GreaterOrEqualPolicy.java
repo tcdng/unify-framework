@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  * @since 1.0
  */
 public class GreaterOrEqualPolicy extends SingleParameterPolicy {
-	public GreaterOrEqualPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" >= ", sqlDataSourceDialect);
-	}
+    public GreaterOrEqualPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" >= ", sqlDataSourceDialect);
+    }
 }

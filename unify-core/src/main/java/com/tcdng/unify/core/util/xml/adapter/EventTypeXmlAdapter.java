@@ -26,8 +26,8 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  */
 public class EventTypeXmlAdapter extends AbstractEnumConstXmlAdapter<EventType> {
 
-	public EventTypeXmlAdapter() {
-		super(EventType.class);
-	}
+    public EventTypeXmlAdapter() {
+        super(EventType.class);
+    }
 
 }

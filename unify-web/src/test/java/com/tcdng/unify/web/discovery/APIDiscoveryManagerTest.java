@@ -34,27 +34,27 @@ import com.tcdng.unify.web.discovery.gem.data.APIDiscoveryRemoteCallInfo;
  */
 public class APIDiscoveryManagerTest extends AbstractUnifyWebTest {
 
-	@Test
-	public void testGetRemoteCallInfo() throws Exception {
-		APIDiscoveryManager aPIDiscoveryManager = (APIDiscoveryManager) this
-				.getComponent(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER);
-		APIDiscoveryRemoteCallInfo adrci = aPIDiscoveryManager
-				.getRemoteCallInfo(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
-		assertNotNull(adrci);
-		assertEquals(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, adrci.getCode());
-		assertEquals("Discover Remote Call", adrci.getDescription());
-		assertEquals("http://localhost/default/apidiscovery/discoverRemoteCall", adrci.getUrl());
-		assertFalse(adrci.isRestricted());
-	}
+    @Test
+    public void testGetRemoteCallInfo() throws Exception {
+        APIDiscoveryManager aPIDiscoveryManager = (APIDiscoveryManager) this
+                .getComponent(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER);
+        APIDiscoveryRemoteCallInfo adrci = aPIDiscoveryManager
+                .getRemoteCallInfo(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
+        assertNotNull(adrci);
+        assertEquals(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, adrci.getCode());
+        assertEquals("Discover Remote Call", adrci.getDescription());
+        assertEquals("http://localhost/default/apidiscovery/discoverRemoteCall", adrci.getUrl());
+        assertFalse(adrci.isRestricted());
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 
 }

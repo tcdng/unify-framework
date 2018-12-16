@@ -29,31 +29,31 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("sqljointypelist")
 public enum SqlJoinType implements EnumConst {
 
-	INNER("INNER", "INNER JOIN"), LEFT("LEFT", "LEFT JOIN"), RIGHT("RIGHT", "RIGHT JOIN"), FULL("FULL", "FULL JOIN");
+    INNER("INNER", "INNER JOIN"), LEFT("LEFT", "LEFT JOIN"), RIGHT("RIGHT", "RIGHT JOIN"), FULL("FULL", "FULL JOIN");
 
-	private final String code;
+    private final String code;
 
-	private final String sql;
+    private final String sql;
 
-	private SqlJoinType(String code, String sql) {
-		this.code = code;
-		this.sql = sql;
-	}
+    private SqlJoinType(String code, String sql) {
+        this.code = code;
+        this.sql = sql;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public String sql() {
-		return sql;
-	}
+    public String sql() {
+        return sql;
+    }
 
-	public static SqlJoinType fromCode(String code) {
-		return EnumUtils.fromCode(SqlJoinType.class, code);
-	}
+    public static SqlJoinType fromCode(String code) {
+        return EnumUtils.fromCode(SqlJoinType.class, code);
+    }
 
-	public static SqlJoinType fromName(String name) {
-		return EnumUtils.fromName(SqlJoinType.class, name);
-	}
+    public static SqlJoinType fromName(String name) {
+        return EnumUtils.fromName(SqlJoinType.class, name);
+    }
 }

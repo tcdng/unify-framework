@@ -26,17 +26,17 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TwoFactorAutenticationService extends UnifyComponent {
 
-	/**
-	 * Authenticates a user with supplied one-time password.
-	 * 
-	 * @param userName
-	 *            the user name to authenticate
-	 * @param oneTimePassword
-	 *            the one-time password
-	 * @return a true is returned if supplied credentials are successfully
-	 *         authenticated
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean authenticate(String userName, String oneTimePassword) throws UnifyException;
+    /**
+     * Authenticates a user with supplied one-time password.
+     * 
+     * @param userName
+     *            the user name to authenticate
+     * @param oneTimePassword
+     *            the one-time password
+     * @return a true is returned if supplied credentials are successfully
+     *         authenticated
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean authenticate(String userName, String oneTimePassword) throws UnifyException;
 }

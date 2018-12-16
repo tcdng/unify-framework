@@ -29,50 +29,50 @@ import com.tcdng.unify.core.business.BusinessModule;
  */
 public interface SequenceNumberBusinessModule extends BusinessModule {
 
-	/**
-	 * Returns the next available sequence number for sequence with supplied name.
-	 * Creates a new sequence if one does not exist. All sequences start from 1L.
-	 * 
-	 * @param sequenceName
-	 *            the sequence name
-	 * @return the next sequence number
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Long getNextSequenceNumber(String sequenceName) throws UnifyException;
+    /**
+     * Returns the next available sequence number for sequence with supplied name.
+     * Creates a new sequence if one does not exist. All sequences start from 1L.
+     * 
+     * @param sequenceName
+     *            the sequence name
+     * @return the next sequence number
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Long getNextSequenceNumber(String sequenceName) throws UnifyException;
 
-	/**
-	 * Returns the next number in sequence specified by supplied sequence name and
-	 * date. Creates a new sequence if no sequence exists for supplied parameters.
-	 * All sequences start from 1L.
-	 * 
-	 * @param sequenceName
-	 *            the sequence name
-	 * @param date
-	 *            the date
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Long getNextSequenceNumber(String sequenceName, Date date) throws UnifyException;
+    /**
+     * Returns the next number in sequence specified by supplied sequence name and
+     * date. Creates a new sequence if no sequence exists for supplied parameters.
+     * All sequences start from 1L.
+     * 
+     * @param sequenceName
+     *            the sequence name
+     * @param date
+     *            the date
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Long getNextSequenceNumber(String sequenceName, Date date) throws UnifyException;
 
-	/**
-	 * Returns a unique long ID that represents supplied string. A new ID is created
-	 * the first time the string is supplied. Subsequent calls with the same string
-	 * returns the same ID.
-	 * 
-	 * @param uniqueString
-	 *            the supplied string
-	 * @return the unique ID
-	 * @throws UnifyException
-	 *             if supplied string is null. If an error occurs.
-	 */
-	Long getUniqueStringId(String uniqueString) throws UnifyException;
+    /**
+     * Returns a unique long ID that represents supplied string. A new ID is created
+     * the first time the string is supplied. Subsequent calls with the same string
+     * returns the same ID.
+     * 
+     * @param uniqueString
+     *            the supplied string
+     * @return the unique ID
+     * @throws UnifyException
+     *             if supplied string is null. If an error occurs.
+     */
+    Long getUniqueStringId(String uniqueString) throws UnifyException;
 
-	/**
-	 * Resets sequence number module.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void reset() throws UnifyException;
+    /**
+     * Resets sequence number module.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void reset() throws UnifyException;
 }

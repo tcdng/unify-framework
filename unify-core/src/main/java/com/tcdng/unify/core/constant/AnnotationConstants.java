@@ -23,6 +23,6 @@ package com.tcdng.unify.core.constant;
  */
 public interface AnnotationConstants {
 
-	/** Used typically for string annotation attributes that default to none. */
-	String NONE = "[none]";
+    /** Used typically for string annotation attributes that default to none. */
+    String NONE = "[none]";
 }

@@ -29,13 +29,13 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 @UplAttributes({ @UplAttribute(name = "staticBindingValue", type = String.class) })
 public abstract class AbstractTargetControl extends AbstractControl implements TargetControl {
 
-	@Override
-	public String getStaticBindingValue() throws UnifyException {
-		return getUplAttribute(String.class, "staticBindingValue");
-	}
+    @Override
+    public String getStaticBindingValue() throws UnifyException {
+        return getUplAttribute(String.class, "staticBindingValue");
+    }
 
-	@Override
-	public String getTargetId() throws UnifyException {
-		return getPrefixedId("trg_");
-	}
+    @Override
+    public String getTargetId() throws UnifyException {
+        return getPrefixedId("trg_");
+    }
 }

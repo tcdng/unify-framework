@@ -32,36 +32,36 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class ClobPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("CLOB");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("CLOB");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null || ((String) data).length() == 0) {
-			((PreparedStatement) pstmt).setNull(index, Types.CLOB);
-		} else {
-			((PreparedStatement) pstmt).setClob(index, new SerialClob(((String) data).toCharArray()));
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null || ((String) data).length() == 0) {
+            ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
+        } else {
+            ((PreparedStatement) pstmt).setClob(index, new SerialClob(((String) data).toCharArray()));
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Clob clob = ((ResultSet) rs).getClob(column);
-		if (clob != null) {
-			return clob.getSubString(1, (int) clob.length());
-		}
-		return null;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Clob clob = ((ResultSet) rs).getClob(column);
+        if (clob != null) {
+            return clob.getSubString(1, (int) clob.length());
+        }
+        return null;
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Clob clob = ((ResultSet) rs).getClob(index);
-		if (clob != null) {
-			return clob.getSubString(1, (int) clob.length());
-		}
-		return null;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Clob clob = ((ResultSet) rs).getClob(index);
+        if (clob != null) {
+            return clob.getSubString(1, (int) clob.length());
+        }
+        return null;
+    }
 
 }

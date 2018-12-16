@@ -34,6 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Policy {
 
-	/** The name of the entity policy */
-	String value();
+    /** The name of the entity policy */
+    String value();
 }

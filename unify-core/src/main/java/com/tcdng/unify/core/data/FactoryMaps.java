@@ -29,85 +29,85 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class FactoryMaps<T, U, V> extends FactoryMap<T, FactoryMap<U, V>> {
 
-	private boolean checkStale;
+    private boolean checkStale;
 
-	public FactoryMaps() {
-		this(false);
-	}
+    public FactoryMaps() {
+        this(false);
+    }
 
-	public FactoryMaps(boolean checkStale) {
-		this.checkStale = checkStale;
-	}
+    public FactoryMaps(boolean checkStale) {
+        this.checkStale = checkStale;
+    }
 
-	public V get(T mainKey, U key, Object... params) throws UnifyException {
-		return get(mainKey).get(key, params);
-	}
+    public V get(T mainKey, U key, Object... params) throws UnifyException {
+        return get(mainKey).get(key, params);
+    }
 
-	public Set<U> keySet(T key) throws UnifyException {
-		return get(key).keySet();
-	}
+    public Set<U> keySet(T key) throws UnifyException {
+        return get(key).keySet();
+    }
 
-	public Collection<V> values(T key) throws UnifyException {
-		return get(key).values();
-	}
+    public Collection<V> values(T key) throws UnifyException {
+        return get(key).values();
+    }
 
-	public V remove(T mainKey, U key) throws UnifyException {
-		return get(mainKey).remove(key);
-	}
+    public V remove(T mainKey, U key) throws UnifyException {
+        return get(mainKey).remove(key);
+    }
 
-	public void removeSiblingKeys(T mainKey, U key) throws UnifyException {
-		for (T siblingMainKey : keySet()) {
-			if (!siblingMainKey.equals(mainKey)) {
-				get(siblingMainKey).remove(key);
-			}
-		}
-	}
+    public void removeSiblingKeys(T mainKey, U key) throws UnifyException {
+        for (T siblingMainKey : keySet()) {
+            if (!siblingMainKey.equals(mainKey)) {
+                get(siblingMainKey).remove(key);
+            }
+        }
+    }
 
-	public Set<V> removeSubkeys(U key) throws UnifyException {
-		Set<V> result = new HashSet<V>();
-		for (T siblingMainKey : keySet()) {
-			V value = get(siblingMainKey).remove(key);
-			if (value != null) {
-				result.add(value);
-			}
-		}
-		return result;
-	}
+    public Set<V> removeSubkeys(U key) throws UnifyException {
+        Set<V> result = new HashSet<V>();
+        for (T siblingMainKey : keySet()) {
+            V value = get(siblingMainKey).remove(key);
+            if (value != null) {
+                result.add(value);
+            }
+        }
+        return result;
+    }
 
-	public boolean isKey(T mainKey, U key) throws UnifyException {
-		if (isKey(mainKey)) {
-			return get(mainKey).isKey(key);
-		}
-		return false;
-	}
+    public boolean isKey(T mainKey, U key) throws UnifyException {
+        if (isKey(mainKey)) {
+            return get(mainKey).isKey(key);
+        }
+        return false;
+    }
 
-	@Override
-	protected FactoryMap<U, V> create(final T mainKey, Object... params) throws Exception {
-		return new FactoryMap<U, V>(checkStale) {
-			@Override
-			protected boolean stale(U key, V value) throws Exception {
-				if (valueStale(key, value)) {
-					removeSiblingKeys(mainKey, key);
-					return true;
-				}
+    @Override
+    protected FactoryMap<U, V> create(final T mainKey, Object... params) throws Exception {
+        return new FactoryMap<U, V>(checkStale) {
+            @Override
+            protected boolean stale(U key, V value) throws Exception {
+                if (valueStale(key, value)) {
+                    removeSiblingKeys(mainKey, key);
+                    return true;
+                }
 
-				return false;
-			}
+                return false;
+            }
 
-			@Override
-			protected V create(U key, Object... params) throws Exception {
-				if (key == null) {
-					throw new IllegalArgumentException("Parameter key can not be null!");
-				}
+            @Override
+            protected V create(U key, Object... params) throws Exception {
+                if (key == null) {
+                    throw new IllegalArgumentException("Parameter key can not be null!");
+                }
 
-				return createObject(mainKey, key, params);
-			}
-		};
-	};
+                return createObject(mainKey, key, params);
+            }
+        };
+    };
 
-	protected boolean valueStale(U key, V value) throws Exception {
-		return false;
-	}
+    protected boolean valueStale(U key, V value) throws Exception {
+        return false;
+    }
 
-	protected abstract V createObject(T mainKey, U key, Object... params) throws Exception;
+    protected abstract V createObject(T mainKey, U key, Object... params) throws Exception;
 }

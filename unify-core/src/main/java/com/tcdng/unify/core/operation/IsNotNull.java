@@ -23,8 +23,8 @@ package com.tcdng.unify.core.operation;
  */
 public class IsNotNull extends Criteria {
 
-	public IsNotNull(String field) {
-		super(Operator.IS_NOT_NULL, field, null);
-	}
+    public IsNotNull(String field) {
+        super(Operator.IS_NOT_NULL, field, null);
+    }
 
 }

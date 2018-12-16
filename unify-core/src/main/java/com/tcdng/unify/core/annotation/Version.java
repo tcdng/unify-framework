@@ -32,12 +32,12 @@ import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Version {
-	/**
-	 * The field column name. If not set, the system generates a column name using
-	 * the field name.
-	 */
-	String name() default AnnotationConstants.NONE;
+    /**
+     * The field column name. If not set, the system generates a column name using
+     * the field name.
+     */
+    String name() default AnnotationConstants.NONE;
 
-	/** Column position */
-	int position() default DefaultColumnPositionConstants.VERSION_POSITION;
+    /** Column position */
+    int position() default DefaultColumnPositionConstants.VERSION_POSITION;
 }

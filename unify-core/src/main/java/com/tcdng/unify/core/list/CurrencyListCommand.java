@@ -37,40 +37,40 @@ import com.tcdng.unify.core.util.DataUtils;
 @Component("currencylist")
 public class CurrencyListCommand extends AbstractListCommand<CurrencyListParams> {
 
-	private FactoryMap<Locale, List<ListData>> currencyListByLocale;
+    private FactoryMap<Locale, List<ListData>> currencyListByLocale;
 
-	public CurrencyListCommand() {
-		super(CurrencyListParams.class);
-		currencyListByLocale = new FactoryMap<Locale, List<ListData>>() {
+    public CurrencyListCommand() {
+        super(CurrencyListParams.class);
+        currencyListByLocale = new FactoryMap<Locale, List<ListData>>() {
 
-			@Override
-			protected List<ListData> create(Locale locale, Object... params) throws Exception {
-				List<ListData> list = new ArrayList<ListData>();
-				for (Currency currency : Currency.getAvailableCurrencies()) {
-					list.add(new ListData(currency.getCurrencyCode(), currency.getDisplayName(locale)));
-				}
+            @Override
+            protected List<ListData> create(Locale locale, Object... params) throws Exception {
+                List<ListData> list = new ArrayList<ListData>();
+                for (Currency currency : Currency.getAvailableCurrencies()) {
+                    list.add(new ListData(currency.getCurrencyCode(), currency.getDisplayName(locale)));
+                }
 
-				DataUtils.sort(list, ListData.class, "listDescription", true);
-				return list;
-			}
+                DataUtils.sort(list, ListData.class, "listDescription", true);
+                return list;
+            }
 
-		};
-	}
+        };
+    }
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, CurrencyListParams params) throws UnifyException {
-		if (params.isCurrencyCodes()) {
-			List<ListData> list = new ArrayList<ListData>();
-			for (String currencyCode : params.getCurrencyCodes()) {
-				Currency currency = Currency.getInstance(currencyCode);
-				list.add(new ListData(currency.getCurrencyCode(), currency.getDisplayName(locale)));
-			}
+    @Override
+    public List<? extends Listable> execute(Locale locale, CurrencyListParams params) throws UnifyException {
+        if (params.isCurrencyCodes()) {
+            List<ListData> list = new ArrayList<ListData>();
+            for (String currencyCode : params.getCurrencyCodes()) {
+                Currency currency = Currency.getInstance(currencyCode);
+                list.add(new ListData(currency.getCurrencyCode(), currency.getDisplayName(locale)));
+            }
 
-			DataUtils.sort(list, ListData.class, "listDescription", true);
-			return list;
-		}
+            DataUtils.sort(list, ListData.class, "listDescription", true);
+            return list;
+        }
 
-		return currencyListByLocale.get(locale);
-	}
+        return currencyListByLocale.get(locale);
+    }
 
 }

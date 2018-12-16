@@ -27,71 +27,71 @@ import java.util.Map;
  */
 public class LocaleMaps<T, U> {
 
-	private Map<Locale, Map<T, U>> localeMaps;
+    private Map<Locale, Map<T, U>> localeMaps;
 
-	public LocaleMaps() {
-		this.localeMaps = new HashMap<Locale, Map<T, U>>();
-	}
+    public LocaleMaps() {
+        this.localeMaps = new HashMap<Locale, Map<T, U>>();
+    }
 
-	public void put(Locale locale, T key, U value) {
-		if (locale == null) {
-			throw new IllegalArgumentException("Parameter locale can not be null!");
-		}
+    public void put(Locale locale, T key, U value) {
+        if (locale == null) {
+            throw new IllegalArgumentException("Parameter locale can not be null!");
+        }
 
-		Map<T, U> map = this.localeMaps.get(locale);
-		if (map == null) {
-			map = new HashMap<T, U>();
-			this.localeMaps.put(locale, map);
-		}
+        Map<T, U> map = this.localeMaps.get(locale);
+        if (map == null) {
+            map = new HashMap<T, U>();
+            this.localeMaps.put(locale, map);
+        }
 
-		map.put(key, value);
-	}
+        map.put(key, value);
+    }
 
-	public U get(Locale locale, T key) {
-		if (locale == null) {
-			throw new IllegalArgumentException("Parameter locale can not be null!");
-		}
+    public U get(Locale locale, T key) {
+        if (locale == null) {
+            throw new IllegalArgumentException("Parameter locale can not be null!");
+        }
 
-		Map<T, U> map = this.localeMaps.get(locale);
-		if (map != null) {
-			return map.get(key);
-		}
+        Map<T, U> map = this.localeMaps.get(locale);
+        if (map != null) {
+            return map.get(key);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public U remove(Locale locale, T key) {
-		if (locale == null) {
-			throw new IllegalArgumentException("Parameter locale can not be null!");
-		}
+    public U remove(Locale locale, T key) {
+        if (locale == null) {
+            throw new IllegalArgumentException("Parameter locale can not be null!");
+        }
 
-		Map<T, U> map = this.localeMaps.get(locale);
-		if (map != null) {
-			return map.remove(key);
-		}
+        Map<T, U> map = this.localeMaps.get(locale);
+        if (map != null) {
+            return map.remove(key);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void clear() {
-		this.localeMaps.clear();
-	}
+    public void clear() {
+        this.localeMaps.clear();
+    }
 
-	public boolean containsKey(Locale locale, T key) {
-		if (locale == null) {
-			throw new IllegalArgumentException("Parameter locale can not be null!");
-		}
+    public boolean containsKey(Locale locale, T key) {
+        if (locale == null) {
+            throw new IllegalArgumentException("Parameter locale can not be null!");
+        }
 
-		Map<T, U> map = this.localeMaps.get(locale);
-		if (map != null) {
-			return map.containsKey(key);
-		}
+        Map<T, U> map = this.localeMaps.get(locale);
+        if (map != null) {
+            return map.containsKey(key);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public String toString() {
-		return localeMaps.toString();
-	}
+    @Override
+    public String toString() {
+        return localeMaps.toString();
+    }
 }

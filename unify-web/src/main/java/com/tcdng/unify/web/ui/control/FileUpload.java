@@ -30,67 +30,67 @@ import com.tcdng.unify.web.ui.AbstractControl;
  */
 @Component("ui-fileupload")
 @UplAttributes({ @UplAttribute(name = "accept", type = String.class),
-		@UplAttribute(name = "multiple", type = boolean.class),
-		@UplAttribute(name = "selectOnly", type = boolean.class), @UplAttribute(name = "maxSize", type = int.class),
-		@UplAttribute(name = "maxSizeProperty", type = String.class),
-		@UplAttribute(name = "uploadPath", type = String.class),
-		@UplAttribute(name = "browseCaption", type = String.class, defaultValue = "$m{button.browse}"),
-		@UplAttribute(name = "uploadCaption", type = String.class, defaultValue = "$m{button.upload}") })
+        @UplAttribute(name = "multiple", type = boolean.class),
+        @UplAttribute(name = "selectOnly", type = boolean.class), @UplAttribute(name = "maxSize", type = int.class),
+        @UplAttribute(name = "maxSizeProperty", type = String.class),
+        @UplAttribute(name = "uploadPath", type = String.class),
+        @UplAttribute(name = "browseCaption", type = String.class, defaultValue = "$m{button.browse}"),
+        @UplAttribute(name = "uploadCaption", type = String.class, defaultValue = "$m{button.upload}") })
 public class FileUpload extends AbstractControl {
 
-	private String accept;
+    private String accept;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		accept = getUplAttribute(String.class, "accept");
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        accept = getUplAttribute(String.class, "accept");
+    }
 
-	public String getAccept() {
-		return accept;
-	}
+    public String getAccept() {
+        return accept;
+    }
 
-	public void setAccept(String accept) {
-		this.accept = accept;
-	}
+    public void setAccept(String accept) {
+        this.accept = accept;
+    }
 
-	public int getMaxSize() throws UnifyException {
-		int maxSize = getUplAttribute(int.class, "maxSize");
-		if (maxSize <= 0) {
-			String maxSizeProperty = getUplAttribute(String.class, "maxSizeProperty");
-			if (!StringUtils.isBlank(maxSizeProperty)) {
-				maxSize = getValue(int.class, maxSizeProperty);
-			}
-		}
+    public int getMaxSize() throws UnifyException {
+        int maxSize = getUplAttribute(int.class, "maxSize");
+        if (maxSize <= 0) {
+            String maxSizeProperty = getUplAttribute(String.class, "maxSizeProperty");
+            if (!StringUtils.isBlank(maxSizeProperty)) {
+                maxSize = getValue(int.class, maxSizeProperty);
+            }
+        }
 
-		return maxSize;
-	}
+        return maxSize;
+    }
 
-	public String getUploadURL() throws UnifyException {
-		return getUplAttribute(String.class, "uploadPath");
-	}
+    public String getUploadURL() throws UnifyException {
+        return getUplAttribute(String.class, "uploadPath");
+    }
 
-	public String getBrowseCaption() throws UnifyException {
-		return getUplAttribute(String.class, "browseCaption");
-	}
+    public String getBrowseCaption() throws UnifyException {
+        return getUplAttribute(String.class, "browseCaption");
+    }
 
-	public String getUploadCaption() throws UnifyException {
-		return getUplAttribute(String.class, "uploadCaption");
-	}
+    public String getUploadCaption() throws UnifyException {
+        return getUplAttribute(String.class, "uploadCaption");
+    }
 
-	public boolean isSelectOnly() throws UnifyException {
-		return getUplAttribute(boolean.class, "selectOnly");
-	}
+    public boolean isSelectOnly() throws UnifyException {
+        return getUplAttribute(boolean.class, "selectOnly");
+    }
 
-	public String getButtonId() throws UnifyException {
-		return getPrefixedId("btn_");
-	}
+    public String getButtonId() throws UnifyException {
+        return getPrefixedId("btn_");
+    }
 
-	public String getSpanId() throws UnifyException {
-		return getPrefixedId("spn_");
-	}
+    public String getSpanId() throws UnifyException {
+        return getPrefixedId("spn_");
+    }
 
-	public String getUploadButtonId() throws UnifyException {
-		return getPrefixedId("btnu_");
-	}
+    public String getUploadButtonId() throws UnifyException {
+        return getPrefixedId("btnu_");
+    }
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class LessOrEqual extends Criteria {
 
-	public LessOrEqual(String field, Object value) {
-		super(Operator.LESS_OR_EQUAL, field, value);
-	}
+    public LessOrEqual(String field, Object value) {
+        super(Operator.LESS_OR_EQUAL, field, value);
+    }
 }

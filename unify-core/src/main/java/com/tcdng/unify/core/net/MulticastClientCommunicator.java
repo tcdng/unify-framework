@@ -27,21 +27,21 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface MulticastClientCommunicator extends NetworkMulticastCommunicator {
 
-	/**
-	 * Opens communicator for communication.
-	 * 
-	 * @param in
-	 *            the input stream
-	 * @throws UnifyException
-	 *             if communication is already open. If an error occurs
-	 */
-	void open(InputStream in) throws UnifyException;
+    /**
+     * Opens communicator for communication.
+     * 
+     * @param in
+     *            the input stream
+     * @throws UnifyException
+     *             if communication is already open. If an error occurs
+     */
+    void open(InputStream in) throws UnifyException;
 
-	/**
-	 * Receives a multicast message.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void receive() throws UnifyException;
+    /**
+     * Receives a multicast message.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void receive() throws UnifyException;
 }

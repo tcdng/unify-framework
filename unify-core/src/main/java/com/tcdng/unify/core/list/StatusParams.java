@@ -24,14 +24,14 @@ package com.tcdng.unify.core.list;
  */
 public class StatusParams {
 
-	private String status;
+    private String status;
 
-	public StatusParams(String status) {
-		this.status = status;
-	}
+    public StatusParams(String status) {
+        this.status = status;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
 }

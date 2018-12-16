@@ -34,18 +34,18 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("dynamicfield-writer")
 public class DynamicFieldWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		DynamicField dynamicField = (DynamicField) widget;
-		writer.writeStructureAndContent(dynamicField.getControl());
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        DynamicField dynamicField = (DynamicField) widget;
+        writer.writeStructureAndContent(dynamicField.getControl());
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		DynamicField dynamicField = (DynamicField) widget;
-		Control control = dynamicField.getControl();
-		if (control != null) {
-			writer.writeBehaviour(control);
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        DynamicField dynamicField = (DynamicField) widget;
+        Control control = dynamicField.getControl();
+        if (control != null) {
+            writer.writeBehaviour(control);
+        }
+    }
 }

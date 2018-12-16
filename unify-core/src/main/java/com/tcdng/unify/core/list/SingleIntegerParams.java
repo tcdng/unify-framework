@@ -24,13 +24,13 @@ package com.tcdng.unify.core.list;
  */
 public class SingleIntegerParams {
 
-	private Integer value;
+    private Integer value;
 
-	public SingleIntegerParams(Integer value) {
-		this.value = value;
-	}
+    public SingleIntegerParams(Integer value) {
+        this.value = value;
+    }
 
-	public Integer getValue() {
-		return value;
-	}
+    public Integer getValue() {
+        return value;
+    }
 }

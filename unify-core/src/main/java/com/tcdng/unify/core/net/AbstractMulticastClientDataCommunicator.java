@@ -31,177 +31,177 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractMulticastClientDataCommunicator extends AbstractMulticastClientCommunicator {
 
-	private DataInputStream in;
+    private DataInputStream in;
 
-	@Override
-	protected void onOpen(InputStream in) throws UnifyException {
-		this.in = new DataInputStream(in);
-	}
+    @Override
+    protected void onOpen(InputStream in) throws UnifyException {
+        this.in = new DataInputStream(in);
+    }
 
-	@Override
-	protected void onClose() throws UnifyException {
-		IOUtils.close(in);
-		in = null;
-	}
+    @Override
+    protected void onClose() throws UnifyException {
+        IOUtils.close(in);
+        in = null;
+    }
 
-	/**
-	 * Reads bytes into buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to read into
-	 * @return the number of bytes read
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected int readBytes(byte[] buffer) throws UnifyException {
-		try {
-			return in.read(buffer);
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads bytes into buffer.
+     * 
+     * @param buffer
+     *            the buffer to read into
+     * @return the number of bytes read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected int readBytes(byte[] buffer) throws UnifyException {
+        try {
+            return in.read(buffer);
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads bytes into portion of buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to read into
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the number of bytes to read
-	 * @return the number of bytes read
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected int readBytes(byte[] buffer, int offset, int length) throws UnifyException {
-		try {
-			return in.read(buffer, offset, length);
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads bytes into portion of buffer.
+     * 
+     * @param buffer
+     *            the buffer to read into
+     * @param offset
+     *            the offset
+     * @param length
+     *            the number of bytes to read
+     * @return the number of bytes read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected int readBytes(byte[] buffer, int offset, int length) throws UnifyException {
+        try {
+            return in.read(buffer, offset, length);
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads a boolean.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected boolean readBoolean() throws UnifyException {
-		try {
-			return in.readBoolean();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return false;
-	}
+    /**
+     * Reads a boolean.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected boolean readBoolean() throws UnifyException {
+        try {
+            return in.readBoolean();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return false;
+    }
 
-	/**
-	 * Reads a byte.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected byte readByte() throws UnifyException {
-		try {
-			return in.readByte();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads a byte.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected byte readByte() throws UnifyException {
+        try {
+            return in.readByte();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads a character.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected char readChar() throws UnifyException {
-		try {
-			return in.readChar();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads a character.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected char readChar() throws UnifyException {
+        try {
+            return in.readChar();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads a double.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected double readDouble() throws UnifyException {
-		try {
-			return in.readDouble();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads a double.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected double readDouble() throws UnifyException {
+        try {
+            return in.readDouble();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads a float.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected float readFloat() throws UnifyException {
-		try {
-			return in.readFloat();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads a float.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected float readFloat() throws UnifyException {
+        try {
+            return in.readFloat();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads an integer.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected int readInt() throws UnifyException {
-		try {
-			return in.readInt();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads an integer.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected int readInt() throws UnifyException {
+        try {
+            return in.readInt();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads a long.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected long readLong() throws UnifyException {
-		try {
-			return in.readLong();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads a long.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected long readLong() throws UnifyException {
+        try {
+            return in.readLong();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads a short.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected short readShort() throws UnifyException {
-		try {
-			return in.readShort();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads a short.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected short readShort() throws UnifyException {
+        try {
+            return in.readShort();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
 }

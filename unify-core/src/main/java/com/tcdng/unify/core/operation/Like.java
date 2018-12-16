@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class Like extends Criteria {
 
-	public Like(String field, String value) {
-		super(Operator.LIKE, field, value);
-	}
+    public Like(String field, String value) {
+        super(Operator.LIKE, field, value);
+    }
 }

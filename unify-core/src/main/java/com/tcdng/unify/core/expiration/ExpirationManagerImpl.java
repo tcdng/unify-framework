@@ -46,103 +46,103 @@ import com.tcdng.unify.core.util.ReflectUtils;
 @Component(ApplicationComponents.APPLICATION_EXPIRATIONMANAGER)
 public class ExpirationManagerImpl extends AbstractUnifyComponent implements ExpirationManager {
 
-	@Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSMODULEGENERATOR)
-	private ProxyBusinessModuleMethodRelay proxyMethodRelay;
+    @Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSMODULEGENERATOR)
+    private ProxyBusinessModuleMethodRelay proxyMethodRelay;
 
-	private List<ObservedExpirableInfo> expirablesList;
+    private List<ObservedExpirableInfo> expirablesList;
 
-	public ExpirationManagerImpl() {
-		expirablesList = new ArrayList<ObservedExpirableInfo>();
-	}
+    public ExpirationManagerImpl() {
+        expirablesList = new ArrayList<ObservedExpirableInfo>();
+    }
 
-	@Periodic(PeriodicType.NORMAL)
-	public synchronized void removeExpiredExpirables(TaskMonitor taskMonitor) throws UnifyException {
-		Date now = new Date();
-		for (ObservedExpirableInfo observedExpirableInfo : expirablesList) {
-			try {
-				if (observedExpirableInfo.isExpired(now)) {
-					logDebug("Invoking expiration method [{1}] on component [{0}]...",
-							observedExpirableInfo.getExpirable().getName(),
-							observedExpirableInfo.getMethod().getName());
-					observedExpirableInfo.getMethod().invoke(observedExpirableInfo.getExpirable());
-					observedExpirableInfo.reset();
-				}
-			} catch (Exception e) {
-				logError(e);
-			}
-		}
-	}
+    @Periodic(PeriodicType.NORMAL)
+    public synchronized void removeExpiredExpirables(TaskMonitor taskMonitor) throws UnifyException {
+        Date now = new Date();
+        for (ObservedExpirableInfo observedExpirableInfo : expirablesList) {
+            try {
+                if (observedExpirableInfo.isExpired(now)) {
+                    logDebug("Invoking expiration method [{1}] on component [{0}]...",
+                            observedExpirableInfo.getExpirable().getName(),
+                            observedExpirableInfo.getMethod().getName());
+                    observedExpirableInfo.getMethod().invoke(observedExpirableInfo.getExpirable());
+                    observedExpirableInfo.reset();
+                }
+            } catch (Exception e) {
+                logError(e);
+            }
+        }
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(UnifyComponent.class)) {
-			for (Method method : unifyComponentConfig.getType().getMethods()) {
-				Expirable ea = method.getAnnotation(Expirable.class);
-				if (ea == null) {
-					ea = proxyMethodRelay
-							.getExpirable(ReflectUtils.getMethodSignature(unifyComponentConfig.getName(), method));
-				}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(UnifyComponent.class)) {
+            for (Method method : unifyComponentConfig.getType().getMethods()) {
+                Expirable ea = method.getAnnotation(Expirable.class);
+                if (ea == null) {
+                    ea = proxyMethodRelay
+                            .getExpirable(ReflectUtils.getMethodSignature(unifyComponentConfig.getName(), method));
+                }
 
-				if (ea != null) {
-					if (!unifyComponentConfig.isSingleton()) {
-						throw new UnifyException(UnifyCoreErrorConstants.EXPIRABLE_METHOD_SINGLETON_ONLY,
-								method.getName(), unifyComponentConfig.getName());
-					}
+                if (ea != null) {
+                    if (!unifyComponentConfig.isSingleton()) {
+                        throw new UnifyException(UnifyCoreErrorConstants.EXPIRABLE_METHOD_SINGLETON_ONLY,
+                                method.getName(), unifyComponentConfig.getName());
+                    }
 
-					if (method.getParameterTypes().length != 0) {
-						throw new UnifyException(UnifyCoreErrorConstants.EXPIRABLE_METHOD_NO_PARAMS, method.getName(),
-								unifyComponentConfig.getName());
-					}
+                    if (method.getParameterTypes().length != 0) {
+                        throw new UnifyException(UnifyCoreErrorConstants.EXPIRABLE_METHOD_NO_PARAMS, method.getName(),
+                                unifyComponentConfig.getName());
+                    }
 
-					int cycle = ea.cycleInSec();
-					String setting = AnnotationUtils.getAnnotationString(ea.cycleInSecSetting());
-					if (setting != null) {
-						cycle = getContainerSetting(int.class, setting, ea.cycleInSec());
-					}
+                    int cycle = ea.cycleInSec();
+                    String setting = AnnotationUtils.getAnnotationString(ea.cycleInSecSetting());
+                    if (setting != null) {
+                        cycle = getContainerSetting(int.class, setting, ea.cycleInSec());
+                    }
 
-					UnifyComponent expirable = getComponent(unifyComponentConfig.getName());
-					expirablesList.add(new ObservedExpirableInfo(expirable, method, cycle));
-				}
-			}
-		}
-	}
+                    UnifyComponent expirable = getComponent(unifyComponentConfig.getName());
+                    expirablesList.add(new ObservedExpirableInfo(expirable, method, cycle));
+                }
+            }
+        }
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-		expirablesList.clear();
-	}
+    @Override
+    protected void onTerminate() throws UnifyException {
+        expirablesList.clear();
+    }
 
-	private class ObservedExpirableInfo {
+    private class ObservedExpirableInfo {
 
-		private UnifyComponent expirable;
+        private UnifyComponent expirable;
 
-		private Method method;
+        private Method method;
 
-		private int cycle;
+        private int cycle;
 
-		private Date expiryDate;
+        private Date expiryDate;
 
-		public ObservedExpirableInfo(UnifyComponent expirable, Method method, int cycle) {
-			this.expirable = expirable;
-			this.method = method;
-			this.cycle = cycle;
-			reset();
-		}
+        public ObservedExpirableInfo(UnifyComponent expirable, Method method, int cycle) {
+            this.expirable = expirable;
+            this.method = method;
+            this.cycle = cycle;
+            reset();
+        }
 
-		public UnifyComponent getExpirable() {
-			return expirable;
-		}
+        public UnifyComponent getExpirable() {
+            return expirable;
+        }
 
-		public Method getMethod() {
-			return method;
-		}
+        public Method getMethod() {
+            return method;
+        }
 
-		public boolean isExpired(Date now) {
-			return now.after(expiryDate);
-		}
+        public boolean isExpired(Date now) {
+            return now.after(expiryDate);
+        }
 
-		public void reset() {
-			expiryDate = CalendarUtils.getNowWithOffset(cycle);
-		}
-	}
+        public void reset() {
+            expiryDate = CalendarUtils.getNowWithOffset(cycle);
+        }
+    }
 }

@@ -26,17 +26,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonIntArrayConverter extends AbstractJsonArrayConverter<Integer> {
 
-	public JsonIntArrayConverter() {
-		super(Integer.class);
-	}
+    public JsonIntArrayConverter() {
+        super(Integer.class);
+    }
 
-	@Override
-	protected Integer getValue(JsonValue jsonValue) throws Exception {
-		return jsonValue.asInt();
-	}
+    @Override
+    protected Integer getValue(JsonValue jsonValue) throws Exception {
+        return jsonValue.asInt();
+    }
 
-	@Override
-	protected JsonValue setValue(Integer value) throws Exception {
-		return Json.value(value);
-	}
+    @Override
+    protected JsonValue setValue(Integer value) throws Exception {
+        return Json.value(value);
+    }
 }

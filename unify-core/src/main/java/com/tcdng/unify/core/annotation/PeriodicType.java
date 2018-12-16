@@ -22,34 +22,34 @@ package com.tcdng.unify.core.annotation;
  * @since 1.0
  */
 public enum PeriodicType {
-	/** 60 seconds */
-	SLOWEST(60000),
+    /** 60 seconds */
+    SLOWEST(60000),
 
-	/** 30 seconds */
-	SLOWER(30000),
+    /** 30 seconds */
+    SLOWER(30000),
 
-	/** 20 seconds */
-	SLOW(20000),
+    /** 20 seconds */
+    SLOW(20000),
 
-	/** 10 seconds */
-	NORMAL(10000),
+    /** 10 seconds */
+    NORMAL(10000),
 
-	/** 5 seconds */
-	FAST(5000),
+    /** 5 seconds */
+    FAST(5000),
 
-	/** 2 seconds */
-	FASTER(2000),
+    /** 2 seconds */
+    FASTER(2000),
 
-	/** 1 second */
-	FASTEST(1000);
+    /** 1 second */
+    FASTEST(1000);
 
-	private final long periodInMillSec;
+    private final long periodInMillSec;
 
-	private PeriodicType(long periodInMillSec) {
-		this.periodInMillSec = periodInMillSec;
-	}
+    private PeriodicType(long periodInMillSec) {
+        this.periodInMillSec = periodInMillSec;
+    }
 
-	public long getPeriodInMillSec() {
-		return periodInMillSec;
-	}
+    public long getPeriodInMillSec() {
+        return periodInMillSec;
+    }
 }

@@ -37,70 +37,70 @@ import com.tcdng.unify.web.ui.ListParamType;
  */
 @Component("ui-optionstextarea")
 @UplAttributes({ @UplAttribute(name = "list", type = String.class, mandatory = true),
-		@UplAttribute(name = "listParams", type = String[].class), @UplAttribute(name = "listKey", type = String.class),
-		@UplAttribute(name = "listDescription", type = String.class) })
+        @UplAttribute(name = "listParams", type = String[].class), @UplAttribute(name = "listKey", type = String.class),
+        @UplAttribute(name = "listDescription", type = String.class) })
 public class OptionsTextArea extends TextArea implements ListControl {
 
-	@Override
-	public ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels)
-			throws UnifyException {
-		return getListControlUtils().getListControlJsonData(this, indexes, keys, labels);
-	}
+    @Override
+    public ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels)
+            throws UnifyException {
+        return getListControlUtils().getListControlJsonData(this, indexes, keys, labels);
+    }
 
-	@Override
-	public List<? extends Listable> getListables() throws UnifyException {
-		return getListControlUtils().getListables(this);
-	}
+    @Override
+    public List<? extends Listable> getListables() throws UnifyException {
+        return getListControlUtils().getListables(this);
+    }
 
-	@Override
-	public Map<String, String> getListMap() throws UnifyException {
-		return getListControlUtils().getListMap(this);
-	}
+    @Override
+    public Map<String, String> getListMap() throws UnifyException {
+        return getListControlUtils().getListMap(this);
+    }
 
-	@Override
-	public String getList() throws UnifyException {
-		return getUplAttribute(String.class, "list");
-	}
+    @Override
+    public String getList() throws UnifyException {
+        return getUplAttribute(String.class, "list");
+    }
 
-	@Override
-	public String[] getListParams() throws UnifyException {
-		return getUplAttribute(String[].class, "listParams");
-	}
+    @Override
+    public String[] getListParams() throws UnifyException {
+        return getUplAttribute(String[].class, "listParams");
+    }
 
-	@Override
-	public ListParamType getListParamType() throws UnifyException {
-		return ListParamType.CONTROL;
-	}
+    @Override
+    public ListParamType getListParamType() throws UnifyException {
+        return ListParamType.CONTROL;
+    }
 
-	@Override
-	public String getListKey() throws UnifyException {
-		return getUplAttribute(String.class, "listKey");
-	}
+    @Override
+    public String getListKey() throws UnifyException {
+        return getUplAttribute(String.class, "listKey");
+    }
 
-	@Override
-	public String getListDescription() throws UnifyException {
-		return getUplAttribute(String.class, "listDescription");
-	}
+    @Override
+    public String getListDescription() throws UnifyException {
+        return getUplAttribute(String.class, "listDescription");
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return false;
-	}
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 
-	public String getPopupId() throws UnifyException {
-		return getPrefixedId("pop_");
-	}
+    public String getPopupId() throws UnifyException {
+        return getPrefixedId("pop_");
+    }
 
-	public String getFramePanelId() throws UnifyException {
-		return getPrefixedId("frm_");
-	}
+    public String getFramePanelId() throws UnifyException {
+        return getPrefixedId("frm_");
+    }
 
-	public String getListPanelId() throws UnifyException {
-		return getPrefixedId("lst_");
-	}
+    public String getListPanelId() throws UnifyException {
+        return getPrefixedId("lst_");
+    }
 
-	private ListControlUtils getListControlUtils() throws UnifyException {
-		return (ListControlUtils) getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
-	}
+    private ListControlUtils getListControlUtils() throws UnifyException {
+        return (ListControlUtils) getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
+    }
 
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class Less extends Criteria {
 
-	public Less(String field, Object value) {
-		super(Operator.LESS_THAN, field, value);
-	}
+    public Less(String field, Object value) {
+        super(Operator.LESS_THAN, field, value);
+    }
 }

@@ -27,29 +27,29 @@ import java.util.Set;
  */
 public class ReportParameters {
 
-	private Map<String, Object> parameters;
+    private Map<String, Object> parameters;
 
-	public ReportParameters() {
-		parameters = new HashMap<String, Object>();
-	}
+    public ReportParameters() {
+        parameters = new HashMap<String, Object>();
+    }
 
-	public ReportParameters(Map<String, Object> parameters) {
-		this.parameters = parameters;
-	}
+    public ReportParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
 
-	public Set<String> getNames() {
-		return parameters.keySet();
-	}
+    public Set<String> getNames() {
+        return parameters.keySet();
+    }
 
-	public Object getParameter(String name) {
-		return parameters.get(name);
-	}
+    public Object getParameter(String name) {
+        return parameters.get(name);
+    }
 
-	public void setParameter(String name, Object parameter) {
-		parameters.put(name, parameter);
-	}
+    public void setParameter(String name, Object parameter) {
+        parameters.put(name, parameter);
+    }
 
-	public Map<String, Object> getParameters() {
-		return parameters;
-	}
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
 }

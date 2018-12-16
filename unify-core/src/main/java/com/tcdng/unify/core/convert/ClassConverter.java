@@ -26,16 +26,16 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class ClassConverter extends AbstractConverter<Class<?>> {
 
-	@Override
-	protected Class<?> doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Class) {
-			return (Class<?>) value;
-		}
+    @Override
+    protected Class<?> doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Class) {
+            return (Class<?>) value;
+        }
 
-		if (value instanceof String) {
-			return Class.forName((String) value);
-		}
+        if (value instanceof String) {
+            return Class.forName((String) value);
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

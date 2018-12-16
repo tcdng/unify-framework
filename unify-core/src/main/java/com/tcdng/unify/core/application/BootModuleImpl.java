@@ -31,23 +31,23 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_DEFAULTBOOTMODULE)
 public class BootModuleImpl extends AbstractBootModule<FeatureDefinition> {
 
-	@Override
-	protected List<StartupShutdownHook> getStartupShutdownHooks() throws UnifyException {
-		return Collections.emptyList();
-	}
+    @Override
+    protected List<StartupShutdownHook> getStartupShutdownHooks() throws UnifyException {
+        return Collections.emptyList();
+    }
 
-	@Override
-	protected BootInstallationInfo<FeatureDefinition> prepareBootInstallation() throws UnifyException {
-		return new BootInstallationInfo<FeatureDefinition>();
-	}
+    @Override
+    protected BootInstallationInfo<FeatureDefinition> prepareBootInstallation() throws UnifyException {
+        return new BootInstallationInfo<FeatureDefinition>();
+    }
 
-	@Override
-	protected void onStartup() throws UnifyException {
+    @Override
+    protected void onStartup() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onShutdown() throws UnifyException {
+    @Override
+    protected void onShutdown() throws UnifyException {
 
-	}
+    }
 }

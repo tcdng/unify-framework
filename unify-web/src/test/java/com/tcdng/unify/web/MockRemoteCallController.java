@@ -30,8 +30,8 @@ import com.tcdng.unify.web.annotation.GatewayAction;
 @Component("/remotecall/mock")
 public class MockRemoteCallController extends AbstractRemoteCallController {
 
-	@GatewayAction(name = "mock-001", description = "Get Account Details")
-	public AccountDetailResult getAccountDetails(AccountDetailParams request) throws UnifyException {
-		return new AccountDetailResult(request.getAccountNo(), "Edward Banfa", BigDecimal.valueOf(250000.00));
-	}
+    @GatewayAction(name = "mock-001", description = "Get Account Details")
+    public AccountDetailResult getAccountDetails(AccountDetailParams request) throws UnifyException {
+        return new AccountDetailResult(request.getAccountNo(), "Edward Banfa", BigDecimal.valueOf(250000.00));
+    }
 }

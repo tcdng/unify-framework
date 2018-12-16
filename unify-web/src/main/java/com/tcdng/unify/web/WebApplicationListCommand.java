@@ -37,23 +37,23 @@ import com.tcdng.unify.web.annotation.WebApplication;
 @Component("webapplicationlist")
 public class WebApplicationListCommand extends AbstractZeroParamsListCommand {
 
-	private static List<ListData> list;
+    private static List<ListData> list;
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		if (list == null) {
-			synchronized (WebApplicationListCommand.class) {
-				if (list == null) {
-					list = new ArrayList<ListData>();
-					for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(PageController.class)) {
-						WebApplication aa = unifyComponentConfig.getType().getAnnotation(WebApplication.class);
-						if (aa != null) {
-							list.add(new ListData(unifyComponentConfig.getName(), resolveMessage(locale, aa.value())));
-						}
-					}
-				}
-			}
-		}
-		return list;
-	}
+    @Override
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        if (list == null) {
+            synchronized (WebApplicationListCommand.class) {
+                if (list == null) {
+                    list = new ArrayList<ListData>();
+                    for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(PageController.class)) {
+                        WebApplication aa = unifyComponentConfig.getType().getAnnotation(WebApplication.class);
+                        if (aa != null) {
+                            list.add(new ListData(unifyComponentConfig.getName(), resolveMessage(locale, aa.value())));
+                        }
+                    }
+                }
+            }
+        }
+        return list;
+    }
 }

@@ -26,22 +26,22 @@ import java.util.List;
  */
 public class SqlUniqueConstraintInfo implements SqlUniqueConstraintSchemaInfo {
 
-	private String name;
+    private String name;
 
-	private List<String> fieldNameList;
+    private List<String> fieldNameList;
 
-	public SqlUniqueConstraintInfo(String name, List<String> fieldNameList) {
-		this.name = name;
-		this.fieldNameList = Collections.unmodifiableList(fieldNameList);
-	}
+    public SqlUniqueConstraintInfo(String name, List<String> fieldNameList) {
+        this.name = name;
+        this.fieldNameList = Collections.unmodifiableList(fieldNameList);
+    }
 
-	@Override
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
-	@Override
-	public List<String> getFieldNameList() {
-		return fieldNameList;
-	}
+    @Override
+    public List<String> getFieldNameList() {
+        return fieldNameList;
+    }
 }

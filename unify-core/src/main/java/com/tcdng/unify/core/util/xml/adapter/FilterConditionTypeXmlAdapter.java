@@ -26,8 +26,8 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  */
 public class FilterConditionTypeXmlAdapter extends AbstractEnumConstXmlAdapter<FilterConditionType> {
 
-	public FilterConditionTypeXmlAdapter() {
-		super(FilterConditionType.class);
-	}
+    public FilterConditionTypeXmlAdapter() {
+        super(FilterConditionType.class);
+    }
 
 }

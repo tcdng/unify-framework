@@ -34,24 +34,24 @@ import com.tcdng.unify.web.ui.layout.DesktopType0Layout;
 @Component("desktoptype0-writer")
 public class DesktopType0LayoutWriter extends AbstractDocumentLayoutWriter {
 
-	@Override
-	public void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException {
+    @Override
+    public void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
-			throws UnifyException {
-		writer.write("<div class=\"dt0row\"><div class=\"dt0cell\">");
-		for (String longName : document.getLayoutWidgetLongNames()) {
-			Widget widget = document.getWidgetByLongName(longName);
-			if (widget.isVisible()) {
-				writer.writeStructureAndContent(widget);
-			} else if (widget.isHidden()) {
-				writer.writeStructureAndContent(widget);
-			}
-		}
-		writer.write("</div></div>");
-	}
+    @Override
+    protected void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
+            throws UnifyException {
+        writer.write("<div class=\"dt0row\"><div class=\"dt0cell\">");
+        for (String longName : document.getLayoutWidgetLongNames()) {
+            Widget widget = document.getWidgetByLongName(longName);
+            if (widget.isVisible()) {
+                writer.writeStructureAndContent(widget);
+            } else if (widget.isHidden()) {
+                writer.writeStructureAndContent(widget);
+            }
+        }
+        writer.write("</div></div>");
+    }
 
 }

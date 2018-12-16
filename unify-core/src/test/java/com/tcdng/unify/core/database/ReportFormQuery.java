@@ -23,11 +23,11 @@ package com.tcdng.unify.core.database;
  */
 public class ReportFormQuery extends AbstractTestEntityQuery<ReportForm> {
 
-	public ReportFormQuery() {
-		super(ReportForm.class);
-	}
+    public ReportFormQuery() {
+        super(ReportForm.class);
+    }
 
-	public ReportFormQuery reportId(Long reportId) {
-		return (ReportFormQuery) equals("reportId", reportId);
-	}
+    public ReportFormQuery reportId(Long reportId) {
+        return (ReportFormQuery) equals("reportId", reportId);
+    }
 }

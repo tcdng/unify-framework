@@ -30,60 +30,60 @@ import com.tcdng.unify.core.annotation.Singleton;
 @Singleton(false)
 public abstract class AbstractUplComponent extends AbstractUnifyComponent implements UplComponent {
 
-	private UplElementAttributes uplAttributes;
+    private UplElementAttributes uplAttributes;
 
-	@Override
-	public String getParentLongName() throws UnifyException {
-		return uplAttributes.getParentLongName();
-	}
+    @Override
+    public String getParentLongName() throws UnifyException {
+        return uplAttributes.getParentLongName();
+    }
 
-	@Override
-	public String getLongName() throws UnifyException {
-		return uplAttributes.getLongName();
-	}
+    @Override
+    public String getLongName() throws UnifyException {
+        return uplAttributes.getLongName();
+    }
 
-	@Override
-	public String getShortName() throws UnifyException {
-		return uplAttributes.getShortName();
-	}
+    @Override
+    public String getShortName() throws UnifyException {
+        return uplAttributes.getShortName();
+    }
 
-	@Override
-	public String getUplId() throws UnifyException {
-		return uplAttributes.getId();
-	}
+    @Override
+    public String getUplId() throws UnifyException {
+        return uplAttributes.getId();
+    }
 
-	@Override
-	public void setUplAttributes(UplElementAttributes uplAttributes) {
-		this.uplAttributes = uplAttributes;
-	}
+    @Override
+    public void setUplAttributes(UplElementAttributes uplAttributes) {
+        this.uplAttributes = uplAttributes;
+    }
 
-	@Override
-	public UplElementAttributes getUplElementAttributes() {
-		return uplAttributes;
-	}
+    @Override
+    public UplElementAttributes getUplElementAttributes() {
+        return uplAttributes;
+    }
 
-	@Override
-	public boolean isUplAttribute(String name) throws UnifyException {
-		return uplAttributes.isAttribute(name);
-	}
+    @Override
+    public boolean isUplAttribute(String name) throws UnifyException {
+        return uplAttributes.isAttribute(name);
+    }
 
-	@Override
-	public <T> T getUplAttribute(Class<T> clazz, String attribute) throws UnifyException {
-		return uplAttributes.getAttributeValue(clazz, attribute);
-	}
+    @Override
+    public <T> T getUplAttribute(Class<T> clazz, String attribute) throws UnifyException {
+        return uplAttributes.getAttributeValue(clazz, attribute);
+    }
 
-	@Override
-	public List<String> getShallowReferencedLongNames(String attribute) throws UnifyException {
-		return uplAttributes.getShallowReferencedLongNames(attribute);
-	}
+    @Override
+    public List<String> getShallowReferencedLongNames(String attribute) throws UnifyException {
+        return uplAttributes.getShallowReferencedLongNames(attribute);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

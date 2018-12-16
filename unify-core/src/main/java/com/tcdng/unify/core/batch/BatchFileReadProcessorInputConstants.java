@@ -23,7 +23,7 @@ package com.tcdng.unify.core.batch;
  */
 public interface BatchFileReadProcessorInputConstants {
 
-	String BATCHFILECONFIG = "coreBatchFileConfig";
+    String BATCHFILECONFIG = "coreBatchFileConfig";
 
-	String FILEOBJECTS = "coreFileObjects";
+    String FILEOBJECTS = "coreFileObjects";
 }

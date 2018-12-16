@@ -27,7 +27,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
 @Component("batchfilereadprocessorlist")
 public class BatchFileReadProcessorListCommand extends AbstractTypeListCommand<BatchFileReadProcessor> {
 
-	public BatchFileReadProcessorListCommand() {
-		super(BatchFileReadProcessor.class);
-	}
+    public BatchFileReadProcessorListCommand() {
+        super(BatchFileReadProcessor.class);
+    }
 }

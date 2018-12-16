@@ -26,16 +26,16 @@ import com.tcdng.unify.core.annotation.Configurable;
 @Configurable("test-dummy")
 public class TestDummyComponent extends AbstractUnifyComponent {
 
-	@Configurable
-	private String[] valueList;
+    @Configurable
+    private String[] valueList;
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

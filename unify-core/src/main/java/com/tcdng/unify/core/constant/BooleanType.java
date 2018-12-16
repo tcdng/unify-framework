@@ -29,24 +29,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("booleanlist")
 public enum BooleanType implements EnumConst {
 
-	TRUE("true"), FALSE("false");
+    TRUE("true"), FALSE("false");
 
-	private final String code;
+    private final String code;
 
-	private BooleanType(String code) {
-		this.code = code;
-	}
+    private BooleanType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static BooleanType fromCode(String code) {
-		return EnumUtils.fromCode(BooleanType.class, code);
-	}
+    public static BooleanType fromCode(String code) {
+        return EnumUtils.fromCode(BooleanType.class, code);
+    }
 
-	public static BooleanType fromName(String name) {
-		return EnumUtils.fromName(BooleanType.class, name);
-	}
+    public static BooleanType fromName(String name) {
+        return EnumUtils.fromName(BooleanType.class, name);
+    }
 }

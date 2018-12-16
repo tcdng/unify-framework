@@ -27,48 +27,48 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class PropertyConfig {
 
-	private String name;
+    private String name;
 
-	private String value;
+    private String value;
 
-	private List<String> valueList;
+    private List<String> valueList;
 
-	private boolean hidden;
+    private boolean hidden;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@XmlAttribute(required = true)
-	public void setName(String name) {
-		this.name = name;
-	}
+    @XmlAttribute(required = true)
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	@XmlAttribute
-	public void setValue(String value) {
-		this.value = value;
-	}
+    @XmlAttribute
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public List<String> getValueList() {
-		return valueList;
-	}
+    public List<String> getValueList() {
+        return valueList;
+    }
 
-	@XmlElement(name = "value")
-	public void setValueList(List<String> valueList) {
-		this.valueList = valueList;
-	}
+    @XmlElement(name = "value")
+    public void setValueList(List<String> valueList) {
+        this.valueList = valueList;
+    }
 
-	public boolean isHidden() {
-		return hidden;
-	}
+    public boolean isHidden() {
+        return hidden;
+    }
 
-	@XmlAttribute
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
-	}
+    @XmlAttribute
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
 
 }

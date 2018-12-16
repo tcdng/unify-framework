@@ -23,23 +23,23 @@ package com.tcdng.unify.web.constant;
  */
 public enum ExtensionType {
 
-	NONE(false, false), EXTENDED(true, false), FACADE(true, true), FACADE_HIDDEN(true, true);
+    NONE(false, false), EXTENDED(true, false), FACADE(true, true), FACADE_HIDDEN(true, true);
 
-	private final boolean extended;
+    private final boolean extended;
 
-	private final boolean facade;
+    private final boolean facade;
 
-	private ExtensionType(boolean extended, boolean facade) {
-		this.extended = extended;
-		this.facade = facade;
-	}
+    private ExtensionType(boolean extended, boolean facade) {
+        this.extended = extended;
+        this.facade = facade;
+    }
 
-	public boolean isExtended() {
-		return extended;
-	}
+    public boolean isExtended() {
+        return extended;
+    }
 
-	public boolean isFacade() {
-		return facade;
-	}
+    public boolean isFacade() {
+        return facade;
+    }
 
 }

@@ -25,68 +25,68 @@ import java.util.Set;
  */
 public class Criteria implements Cloneable {
 
-	private Operator operator;
+    private Operator operator;
 
-	private Object preOp;
+    private Object preOp;
 
-	private Object postOp;
+    private Object postOp;
 
-	public Criteria(Operator operator, Object preOp, Object postOp) {
-		this.operator = operator;
-		this.preOp = preOp;
-		this.postOp = postOp;
-	}
+    public Criteria(Operator operator, Object preOp, Object postOp) {
+        this.operator = operator;
+        this.preOp = preOp;
+        this.postOp = postOp;
+    }
 
-	/**
-	 * @return the operator
-	 */
-	public final Operator getOperator() {
-		return operator;
-	}
+    /**
+     * @return the operator
+     */
+    public final Operator getOperator() {
+        return operator;
+    }
 
-	/**
-	 * @return the preOp
-	 */
-	public final Object getPreOp() {
-		return preOp;
-	}
+    /**
+     * @return the preOp
+     */
+    public final Object getPreOp() {
+        return preOp;
+    }
 
-	/**
-	 * @return the postOp
-	 */
-	public final Object getPostOp() {
-		return postOp;
-	}
+    /**
+     * @return the postOp
+     */
+    public final Object getPostOp() {
+        return postOp;
+    }
 
-	public final void getFields(Set<String> fields) {
-		if (preOp instanceof String) {
-			fields.add((String) preOp);
-		} else {
-			((Criteria) preOp).getFields(fields);
-		}
+    public final void getFields(Set<String> fields) {
+        if (preOp instanceof String) {
+            fields.add((String) preOp);
+        } else {
+            ((Criteria) preOp).getFields(fields);
+        }
 
-		if (postOp instanceof Criteria) {
-			((Criteria) postOp).getFields(fields);
-		}
-	}
+        if (postOp instanceof Criteria) {
+            ((Criteria) postOp).getFields(fields);
+        }
+    }
 
-	public Criteria copy() {
-		try {
-			return (Criteria) clone();
-		} catch (CloneNotSupportedException e) {
-		}
-		return null;
-	}
+    public Criteria copy() {
+        try {
+            return (Criteria) clone();
+        } catch (CloneNotSupportedException e) {
+        }
+        return null;
+    }
 
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		Criteria clone = (Criteria) super.clone();
-		if (preOp != null && preOp instanceof Criteria) {
-			clone.preOp = ((Criteria) preOp).clone();
-		}
-		if (postOp != null && postOp instanceof Criteria) {
-			clone.postOp = ((Criteria) postOp).clone();
-		}
-		return clone;
-	}
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Criteria clone = (Criteria) super.clone();
+        if (preOp != null && preOp instanceof Criteria) {
+            clone.preOp = ((Criteria) preOp).clone();
+        }
+        if (postOp != null && postOp instanceof Criteria) {
+            clone.postOp = ((Criteria) postOp).clone();
+        }
+        return clone;
+    }
 }

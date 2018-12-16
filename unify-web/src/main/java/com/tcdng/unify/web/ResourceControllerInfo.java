@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.BindingInfo;
  */
 public class ResourceControllerInfo extends UserInterfaceControllerInfo {
 
-	public ResourceControllerInfo(String controllerName, Map<String, BindingInfo> propertyBindingMap) {
-		super(controllerName, propertyBindingMap);
-	}
+    public ResourceControllerInfo(String controllerName, Map<String, BindingInfo> propertyBindingMap) {
+        super(controllerName, propertyBindingMap);
+    }
 }

@@ -29,37 +29,37 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "PARAMVALUE", uniqueConstraints = { @UniqueConstraint({ "parameterValuesId", "paramKey" }) })
 public class ParameterValue extends AbstractSystemSequencedEntity {
 
-	@ForeignKey(ParameterValues.class)
-	private Long parameterValuesId;
+    @ForeignKey(ParameterValues.class)
+    private Long parameterValuesId;
 
-	@Column
-	private String paramKey;
+    @Column
+    private String paramKey;
 
-	@Column(length = 128, nullable = true)
-	private String paramValue;
+    @Column(length = 128, nullable = true)
+    private String paramValue;
 
-	public Long getParameterValuesId() {
-		return parameterValuesId;
-	}
+    public Long getParameterValuesId() {
+        return parameterValuesId;
+    }
 
-	public void setParameterValuesId(Long parameterValuesId) {
-		this.parameterValuesId = parameterValuesId;
-	}
+    public void setParameterValuesId(Long parameterValuesId) {
+        this.parameterValuesId = parameterValuesId;
+    }
 
-	public String getParamKey() {
-		return paramKey;
-	}
+    public String getParamKey() {
+        return paramKey;
+    }
 
-	public void setParamKey(String paramKey) {
-		this.paramKey = paramKey;
-	}
+    public void setParamKey(String paramKey) {
+        this.paramKey = paramKey;
+    }
 
-	public String getParamValue() {
-		return paramValue;
-	}
+    public String getParamValue() {
+        return paramValue;
+    }
 
-	public void setParamValue(String paramValue) {
-		this.paramValue = paramValue;
-	}
+    public void setParamValue(String paramValue) {
+        this.paramValue = paramValue;
+    }
 
 }

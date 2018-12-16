@@ -32,76 +32,76 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatchFileReader {
 
-	private BatchFileConfig batchFileConfig;
+    private BatchFileConfig batchFileConfig;
 
-	private BufferedReader reader;
+    private BufferedReader reader;
 
-	private int entryCounter;
+    private int entryCounter;
 
-	@Override
-	public void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException {
-		batchFileConfig = configuration;
-		reader = IOUtils.detectAndOpenBufferedReader(file[0]);
-		if (configuration.isSkipFirstRecord()) {
-			nextEntry();
-		}
-	}
+    @Override
+    public void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException {
+        batchFileConfig = configuration;
+        reader = IOUtils.detectAndOpenBufferedReader(file[0]);
+        if (configuration.isSkipFirstRecord()) {
+            nextEntry();
+        }
+    }
 
-	@Override
-	public void close() {
-		IOUtils.close(reader);
-		reader = null;
-	}
+    @Override
+    public void close() {
+        IOUtils.close(reader);
+        reader = null;
+    }
 
-	@Override
-	public boolean readNextRecord(ValueStore recordStore) throws UnifyException {
-		String[] splitRecord = readNextRecord();
-		if (splitRecord != null) {
-			int index = 0;
-			for (BatchFileFieldConfig fieldConfig : batchFileConfig.getFieldConfigs()) {
-				Formatter<?> formatter = null;
-				if (fieldConfig.isFormatter()) {
-					formatter = getApplicationLocaleFormatter(fieldConfig.getFormatter());
-				}
+    @Override
+    public boolean readNextRecord(ValueStore recordStore) throws UnifyException {
+        String[] splitRecord = readNextRecord();
+        if (splitRecord != null) {
+            int index = 0;
+            for (BatchFileFieldConfig fieldConfig : batchFileConfig.getFieldConfigs()) {
+                Formatter<?> formatter = null;
+                if (fieldConfig.isFormatter()) {
+                    formatter = getApplicationLocaleFormatter(fieldConfig.getFormatter());
+                }
 
-				recordStore.store(fieldConfig.getFieldName(), splitRecord[index++], formatter);
-			}
-			return true;
-		}
-		return false;
-	}
+                recordStore.store(fieldConfig.getFieldName(), splitRecord[index++], formatter);
+            }
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public boolean skipNextRecord() throws UnifyException {
-		return readNextRecord() != null;
-	}
+    @Override
+    public boolean skipNextRecord() throws UnifyException {
+        return readNextRecord() != null;
+    }
 
-	protected BatchFileConfig getBatchFileConfig() {
-		return batchFileConfig;
-	}
+    protected BatchFileConfig getBatchFileConfig() {
+        return batchFileConfig;
+    }
 
-	protected int getEntryCounter() {
-		return entryCounter;
-	}
+    protected int getEntryCounter() {
+        return entryCounter;
+    }
 
-	protected abstract String[] parseEntry(String entry) throws UnifyException;
+    protected abstract String[] parseEntry(String entry) throws UnifyException;
 
-	private String[] readNextRecord() throws UnifyException {
-		String line = nextEntry();
-		if (line != null) {
-			entryCounter++;
-			return parseEntry(line);
-		}
+    private String[] readNextRecord() throws UnifyException {
+        String line = nextEntry();
+        if (line != null) {
+            entryCounter++;
+            return parseEntry(line);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private String nextEntry() throws UnifyException {
-		try {
-			return reader.readLine();
-		} catch (IOException e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    private String nextEntry() throws UnifyException {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 }

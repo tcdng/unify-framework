@@ -26,9 +26,9 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractGroupListControl extends AbstractListControl {
 
-	@Override
-	public String getGroupId() throws UnifyException {
-		return getId();
-	}
+    @Override
+    public String getGroupId() throws UnifyException {
+        return getId();
+    }
 
 }

@@ -25,62 +25,62 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class APIDiscoveryRemoteCallInfo {
 
-	private String code;
+    private String code;
 
-	private String description;
+    private String description;
 
-	private String url;
+    private String url;
 
-	private boolean restricted;
+    private boolean restricted;
 
-	// TODO Add parameter definition
+    // TODO Add parameter definition
 
-	// TODO Add result definition
+    // TODO Add result definition
 
-	public APIDiscoveryRemoteCallInfo(String code, String description, String url, boolean restricted) {
-		this.code = code;
-		this.description = description;
-		this.url = url;
-		this.restricted = restricted;
-	}
+    public APIDiscoveryRemoteCallInfo(String code, String description, String url, boolean restricted) {
+        this.code = code;
+        this.description = description;
+        this.url = url;
+        this.restricted = restricted;
+    }
 
-	public APIDiscoveryRemoteCallInfo() {
+    public APIDiscoveryRemoteCallInfo() {
 
-	}
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	@XmlElement(required = true)
-	public void setCode(String code) {
-		this.code = code;
-	}
+    @XmlElement(required = true)
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	@XmlElement(required = true)
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @XmlElement(required = true)
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	@XmlElement(required = true)
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    @XmlElement(required = true)
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public boolean isRestricted() {
-		return restricted;
-	}
+    public boolean isRestricted() {
+        return restricted;
+    }
 
-	@XmlElement(required = true)
-	public void setRestricted(boolean restricted) {
-		this.restricted = restricted;
-	}
+    @XmlElement(required = true)
+    public void setRestricted(boolean restricted) {
+        this.restricted = restricted;
+    }
 }

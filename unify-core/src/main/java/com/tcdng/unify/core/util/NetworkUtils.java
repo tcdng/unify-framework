@@ -32,63 +32,63 @@ import com.tcdng.unify.core.UnifyException;
  */
 public final class NetworkUtils {
 
-	private NetworkUtils() {
+    private NetworkUtils() {
 
-	}
+    }
 
-	public static String constructURL(String baseUrl, String path) throws UnifyException {
-		if (baseUrl.endsWith("/")) {
-			baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-		}
+    public static String constructURL(String baseUrl, String path) throws UnifyException {
+        if (baseUrl.endsWith("/")) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
 
-		if (!path.startsWith("/")) {
-			return baseUrl + "/" + path;
-		}
+        if (!path.startsWith("/")) {
+            return baseUrl + "/" + path;
+        }
 
-		return baseUrl + path;
-	}
+        return baseUrl + path;
+    }
 
-	public static String constructURL(String scheme, String host, short port, String context, String path)
-			throws UnifyException {
-		try {
-			URL url = null;
-			if (port == 0) {
-				url = new URL(scheme, host, context + path);
-			} else {
-				url = new URL(scheme, host, port, context + path);
-			}
-			return url.toString();
-		} catch (MalformedURLException e) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORK_OPERATION_ERROR, e);
-		}
-	}
+    public static String constructURL(String scheme, String host, short port, String context, String path)
+            throws UnifyException {
+        try {
+            URL url = null;
+            if (port == 0) {
+                url = new URL(scheme, host, context + path);
+            } else {
+                url = new URL(scheme, host, port, context + path);
+            }
+            return url.toString();
+        } catch (MalformedURLException e) {
+            throw new UnifyException(UnifyCoreErrorConstants.NETWORK_OPERATION_ERROR, e);
+        }
+    }
 
-	public static String getLocalHostIpAddress() throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		try {
-			String address = InetAddress.getLocalHost().getHostAddress();
-			sb.append(address);
-		} catch (UnknownHostException e) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORK_OPERATION_ERROR, e);
-		}
-		return sb.toString();
-	}
+    public static String getLocalHostIpAddress() throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        try {
+            String address = InetAddress.getLocalHost().getHostAddress();
+            sb.append(address);
+        } catch (UnknownHostException e) {
+            throw new UnifyException(UnifyCoreErrorConstants.NETWORK_OPERATION_ERROR, e);
+        }
+        return sb.toString();
+    }
 
-	public static String getLocalHostMacAddress() throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		try {
-			byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
-			if (mac != null) {
-				for (int i = 0; i < mac.length; i++) {
-					sb.append(String.format("%02X", mac[i]));
-					if (i < (mac.length - 1)) {
-						sb.append('-');
-					}
-				}
-			}
-		} catch (Exception e) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORK_OPERATION_ERROR, e);
-		}
-		return sb.toString();
-	}
+    public static String getLocalHostMacAddress() throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        try {
+            byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+            if (mac != null) {
+                for (int i = 0; i < mac.length; i++) {
+                    sb.append(String.format("%02X", mac[i]));
+                    if (i < (mac.length - 1)) {
+                        sb.append('-');
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.NETWORK_OPERATION_ERROR, e);
+        }
+        return sb.toString();
+    }
 }
