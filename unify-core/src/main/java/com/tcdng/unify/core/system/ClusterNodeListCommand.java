@@ -36,12 +36,12 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
 @Component("clusternodelist")
 public class ClusterNodeListCommand extends AbstractZeroParamsListCommand {
 
-	@Configurable(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
-	private ClusterManagerBusinessModule clusterManager;
+    @Configurable(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
+    private ClusterManagerBusinessModule clusterManager;
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return clusterManager
-				.findClusterNodes((ClusterNodeQuery) new ClusterNodeQuery().ignoreEmptyCriteria(true).order("nodeId"));
-	}
+    @Override
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        return clusterManager
+                .findClusterNodes((ClusterNodeQuery) new ClusterNodeQuery().ignoreEmptyCriteria(true).order("nodeId"));
+    }
 }

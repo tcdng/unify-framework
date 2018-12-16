@@ -22,34 +22,34 @@ package com.tcdng.unify.core;
  * @since 1.0
  */
 public interface UnifyComponent {
-	/**
-	 * Returns the component name.
-	 */
-	String getName();
+    /**
+     * Returns the component name.
+     */
+    String getName();
 
-	/**
-	 * Returns this components component context.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	UnifyComponentContext getUnifyComponentContext() throws UnifyException;
+    /**
+     * Returns this components component context.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    UnifyComponentContext getUnifyComponentContext() throws UnifyException;
 
-	/**
-	 * Initializes component with specified context.
-	 * 
-	 * @param unifyComponentContext
-	 *            the component context
-	 * @throws UnifyException
-	 *             if component is already initialized. If an error occurs.
-	 */
-	void initialize(UnifyComponentContext unifyComponentContext) throws UnifyException;
+    /**
+     * Initializes component with specified context.
+     * 
+     * @param unifyComponentContext
+     *            the component context
+     * @throws UnifyException
+     *             if component is already initialized. If an error occurs.
+     */
+    void initialize(UnifyComponentContext unifyComponentContext) throws UnifyException;
 
-	/**
-	 * Terminates component.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void terminate() throws UnifyException;
+    /**
+     * Terminates component.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void terminate() throws UnifyException;
 }

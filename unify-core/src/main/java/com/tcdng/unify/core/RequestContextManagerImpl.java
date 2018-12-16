@@ -31,82 +31,82 @@ import com.tcdng.unify.core.util.ApplicationUtils;
 @Component(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER)
 public class RequestContextManagerImpl extends AbstractUnifyComponent implements RequestContextManager {
 
-	private static final ThreadLocal<ThreadRequestContextInfo> requestContextThreadLocal = new ThreadLocal<ThreadRequestContextInfo>() {
+    private static final ThreadLocal<ThreadRequestContextInfo> requestContextThreadLocal = new ThreadLocal<ThreadRequestContextInfo>() {
 
-		@Override
-		protected ThreadRequestContextInfo initialValue() {
-			return new ThreadRequestContextInfo(newDefaultContext());
-		}
-	};
+        @Override
+        protected ThreadRequestContextInfo initialValue() {
+            return new ThreadRequestContextInfo(newDefaultContext());
+        }
+    };
 
-	@Override
-	public RequestContext getRequestContext() {
-		RequestContext requestContext = requestContextThreadLocal.get().getRequestContext();
-		return requestContext != null ? requestContext : requestContextThreadLocal.get().getDefaultRequestContext();
-	}
+    @Override
+    public RequestContext getRequestContext() {
+        RequestContext requestContext = requestContextThreadLocal.get().getRequestContext();
+        return requestContext != null ? requestContext : requestContextThreadLocal.get().getDefaultRequestContext();
+    }
 
-	@Override
-	public void loadRequestContext(UserSession userSession, String requestPath) throws UnifyException {
-		requestContextThreadLocal.get().setRequestContext(
-				new RequestContext(requestPath != null ? requestPath : "", userSession.getSessionContext()));
-	}
+    @Override
+    public void loadRequestContext(UserSession userSession, String requestPath) throws UnifyException {
+        requestContextThreadLocal.get().setRequestContext(
+                new RequestContext(requestPath != null ? requestPath : "", userSession.getSessionContext()));
+    }
 
-	@Override
-	public void loadRequestContext(RequestContext requestContext) throws UnifyException {
-		requestContextThreadLocal.get().setRequestContext(requestContext);
-	}
+    @Override
+    public void loadRequestContext(RequestContext requestContext) throws UnifyException {
+        requestContextThreadLocal.get().setRequestContext(requestContext);
+    }
 
-	@Override
-	public void unloadRequestContext() {
-		requestContextThreadLocal.remove();
-	}
+    @Override
+    public void unloadRequestContext() {
+        requestContextThreadLocal.remove();
+    }
 
-	@Override
-	public void reset() throws UnifyException {
+    @Override
+    public void reset() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	private static RequestContext newDefaultContext() {
-		try {
-			InetAddress inetAddress = InetAddress.getLocalHost();
-			return new RequestContext(null,
-					new SessionContext(ApplicationUtils.generateSessionContextId(), "http://localhost", "/default",
-							inetAddress.getHostName(), inetAddress.getHostAddress(), null, null, UserPlatform.DEFAULT));
-		} catch (UnknownHostException e) {
-		}
-		return null;
-	}
+    private static RequestContext newDefaultContext() {
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            return new RequestContext(null,
+                    new SessionContext(ApplicationUtils.generateSessionContextId(), "http://localhost", "/default",
+                            inetAddress.getHostName(), inetAddress.getHostAddress(), null, null, UserPlatform.DEFAULT));
+        } catch (UnknownHostException e) {
+        }
+        return null;
+    }
 
-	private static class ThreadRequestContextInfo {
+    private static class ThreadRequestContextInfo {
 
-		private RequestContext requestContext;
+        private RequestContext requestContext;
 
-		private RequestContext defaultRequestContext;
+        private RequestContext defaultRequestContext;
 
-		public ThreadRequestContextInfo(RequestContext defaultRequestContext) {
-			this.defaultRequestContext = defaultRequestContext;
-		}
+        public ThreadRequestContextInfo(RequestContext defaultRequestContext) {
+            this.defaultRequestContext = defaultRequestContext;
+        }
 
-		public RequestContext getRequestContext() {
-			return requestContext;
-		}
+        public RequestContext getRequestContext() {
+            return requestContext;
+        }
 
-		public void setRequestContext(RequestContext requestContext) {
-			this.requestContext = requestContext;
-		}
+        public void setRequestContext(RequestContext requestContext) {
+            this.requestContext = requestContext;
+        }
 
-		public RequestContext getDefaultRequestContext() {
-			return defaultRequestContext;
-		}
-	}
+        public RequestContext getDefaultRequestContext() {
+            return defaultRequestContext;
+        }
+    }
 }

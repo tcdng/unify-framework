@@ -23,27 +23,27 @@ package com.tcdng.unify.core.upl;
  */
 public class UplAttributeInfo {
 
-	private Class<?> attributeClass;
+    private Class<?> attributeClass;
 
-	private String defaultValue;
+    private String defaultValue;
 
-	private boolean mandatory;
+    private boolean mandatory;
 
-	public UplAttributeInfo(Class<?> attributeClass, String defaultValue, boolean mandatory) {
-		this.attributeClass = attributeClass;
-		this.defaultValue = defaultValue;
-		this.mandatory = mandatory;
-	}
+    public UplAttributeInfo(Class<?> attributeClass, String defaultValue, boolean mandatory) {
+        this.attributeClass = attributeClass;
+        this.defaultValue = defaultValue;
+        this.mandatory = mandatory;
+    }
 
-	public Class<?> getAttributeClass() {
-		return attributeClass;
-	}
+    public Class<?> getAttributeClass() {
+        return attributeClass;
+    }
 
-	public String getDefaultValue() {
-		return defaultValue;
-	}
+    public String getDefaultValue() {
+        return defaultValue;
+    }
 
-	public boolean isMandatory() {
-		return mandatory;
-	}
+    public boolean isMandatory() {
+        return mandatory;
+    }
 }

@@ -42,195 +42,195 @@ import com.tcdng.unify.core.util.SqlUtils;
 @Component(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
 public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements DataSourceManager {
 
-	@Configurable("true")
-	private boolean forceForeignConstraints;
+    @Configurable("true")
+    private boolean forceForeignConstraints;
 
-	@Configurable("false")
-	private boolean formatSql;
+    @Configurable("false")
+    private boolean formatSql;
 
-	private FactoryMap<String, List<Class<?>>> datasourceEntityTypeMap;
+    private FactoryMap<String, List<Class<?>>> datasourceEntityTypeMap;
 
-	public SqlDataSourceManagerImpl() {
-		datasourceEntityTypeMap = new FactoryMap<String, List<Class<?>>>() {
-			@Override
-			protected List<Class<?>> create(String datasource, Object... params) throws Exception {
-				SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
-				List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
-				for (Class<?> entityClass : sqlDataSource.getEntityTypes()) {
-					logDebug("Building dependency list for entity type {0}", entityClass);
-					buildDependencyList(sqlDataSource, entityTypeList, entityClass);
-				}
-				return entityTypeList;
-			}
-		};
-	}
+    public SqlDataSourceManagerImpl() {
+        datasourceEntityTypeMap = new FactoryMap<String, List<Class<?>>>() {
+            @Override
+            protected List<Class<?>> create(String datasource, Object... params) throws Exception {
+                SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
+                List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
+                for (Class<?> entityClass : sqlDataSource.getEntityTypes()) {
+                    logDebug("Building dependency list for entity type {0}", entityClass);
+                    buildDependencyList(sqlDataSource, entityTypeList, entityClass);
+                }
+                return entityTypeList;
+            }
+        };
+    }
 
-	@Override
-	public void initDataSource(String datasource) throws UnifyException {
-		SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
-		Connection connection = (Connection) sqlDataSource.getConnection();
-		PreparedStatement pstmt = null;
-		try {
-			for (SqlStatement sqlStatement : sqlDataSource.getDialect().prepareDataSourceInitStatements()) {
-				pstmt = connection.prepareStatement(sqlStatement.getSql());
-				pstmt.executeUpdate();
-				SqlUtils.close(pstmt);
-			}
-		} catch (SQLException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, datasource);
-		} finally {
-			SqlUtils.close(pstmt);
-			sqlDataSource.restoreConnection(connection);
-		}
-	}
+    @Override
+    public void initDataSource(String datasource) throws UnifyException {
+        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
+        Connection connection = (Connection) sqlDataSource.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            for (SqlStatement sqlStatement : sqlDataSource.getDialect().prepareDataSourceInitStatements()) {
+                pstmt = connection.prepareStatement(sqlStatement.getSql());
+                pstmt.executeUpdate();
+                SqlUtils.close(pstmt);
+            }
+        } catch (SQLException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, datasource);
+        } finally {
+            SqlUtils.close(pstmt);
+            sqlDataSource.restoreConnection(connection);
+        }
+    }
 
-	@Override
-	public void manageDataSource(String datasource) throws UnifyException {
-		SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
-		Connection connection = (Connection) sqlDataSource.getConnection();
-		try {
-			logInfo("Scanning datasource {0} schema...", datasource);
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
-			for (Class<?> entityClass : datasourceEntityTypeMap.get(datasource)) {
-				logDebug("Managing schema for entity type {0}...", entityClass);
-				manageSchema(databaseMetaData, sqlDataSource, entityClass);
-			}
-		} catch (SQLException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, datasource);
-		} finally {
-			sqlDataSource.restoreConnection(connection);
-		}
-	}
+    @Override
+    public void manageDataSource(String datasource) throws UnifyException {
+        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
+        Connection connection = (Connection) sqlDataSource.getConnection();
+        try {
+            logInfo("Scanning datasource {0} schema...", datasource);
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            for (Class<?> entityClass : datasourceEntityTypeMap.get(datasource)) {
+                logDebug("Managing schema for entity type {0}...", entityClass);
+                manageSchema(databaseMetaData, sqlDataSource, entityClass);
+            }
+        } catch (SQLException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, datasource);
+        } finally {
+            sqlDataSource.restoreConnection(connection);
+        }
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	private void manageSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass)
-			throws UnifyException {
-		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+    private void manageSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass)
+            throws UnifyException {
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
 
-		Connection connection = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			connection = databaseMetaData.getConnection();
-			// Manage table
-			List<String> tableUpdateSQL = new ArrayList<String>();
-			rs = databaseMetaData.getTables(null, null, sqlEntityInfo.getTable(), null);
-			if (rs.next()) {
-				// Table exists. Check for updates
-				String tableType = rs.getString("TABLE_TYPE");
-				if ("TABLE".equalsIgnoreCase(tableType)) {
-					SqlUtils.close(rs);
-					rs = databaseMetaData.getColumns(null, null, sqlEntityInfo.getTable(), null);
-					while (rs.next()) {
-						// TODO
-					}
-				} else {
-					throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
-							sqlDataSource.getName(), sqlEntityInfo.getTable(), tableType);
-				}
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            connection = databaseMetaData.getConnection();
+            // Manage table
+            List<String> tableUpdateSQL = new ArrayList<String>();
+            rs = databaseMetaData.getTables(null, null, sqlEntityInfo.getTable(), null);
+            if (rs.next()) {
+                // Table exists. Check for updates
+                String tableType = rs.getString("TABLE_TYPE");
+                if ("TABLE".equalsIgnoreCase(tableType)) {
+                    SqlUtils.close(rs);
+                    rs = databaseMetaData.getColumns(null, null, sqlEntityInfo.getTable(), null);
+                    while (rs.next()) {
+                        // TODO
+                    }
+                } else {
+                    throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
+                            sqlDataSource.getName(), sqlEntityInfo.getTable(), tableType);
+                }
 
-			} else {
-				logInfo("Creating datasource table {0}...", sqlEntityInfo.getTable());
+            } else {
+                logInfo("Creating datasource table {0}...", sqlEntityInfo.getTable());
 
-				// Create table with constraints and indexes
-				tableUpdateSQL.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, formatSql));
+                // Create table with constraints and indexes
+                tableUpdateSQL.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, formatSql));
 
-				if (forceForeignConstraints && sqlEntityInfo.isForeignKeys()) {
-					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
-						if (!sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
-							tableUpdateSQL.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
-									sqlForeignKeyInfo, formatSql));
-						}
-					}
-				}
+                if (forceForeignConstraints && sqlEntityInfo.isForeignKeys()) {
+                    for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
+                        if (!sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
+                            tableUpdateSQL.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
+                                    sqlForeignKeyInfo, formatSql));
+                        }
+                    }
+                }
 
-				if (sqlEntityInfo.isUniqueConstraints()) {
-					for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
-							.values()) {
-						tableUpdateSQL.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(sqlEntityInfo,
-								sqlUniqueConstraintInfo, formatSql));
-					}
-				}
+                if (sqlEntityInfo.isUniqueConstraints()) {
+                    for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
+                            .values()) {
+                        tableUpdateSQL.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(sqlEntityInfo,
+                                sqlUniqueConstraintInfo, formatSql));
+                    }
+                }
 
-				if (sqlEntityInfo.isIndexes()) {
-					for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
-						tableUpdateSQL.add(
-								sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo, sqlIndexInfo, formatSql));
-					}
-				}
-			}
-			SqlUtils.close(rs);
+                if (sqlEntityInfo.isIndexes()) {
+                    for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
+                        tableUpdateSQL.add(
+                                sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo, sqlIndexInfo, formatSql));
+                    }
+                }
+            }
+            SqlUtils.close(rs);
 
-			boolean isAltered = !tableUpdateSQL.isEmpty();
+            boolean isAltered = !tableUpdateSQL.isEmpty();
 
-			// Manage view
-			List<String> viewUpdateSQL = new ArrayList<String>();
-			if (sqlEntityInfo.isViewable()) {
-				if (isAltered) {
-					// Check if we have to drop view first
-					rs = databaseMetaData.getTables(null, null, sqlEntityInfo.getView(), null);
-					if (rs.next()) {
-						String tableType = rs.getString("TABLE_TYPE");
-						if ("VIEW".equalsIgnoreCase(tableType)) {
-							viewUpdateSQL.add(sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo));
-						} else {
-							throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
-									sqlDataSource.getName(), sqlEntityInfo.getView(), tableType);
-						}
-					}
-					SqlUtils.close(rs);
+            // Manage view
+            List<String> viewUpdateSQL = new ArrayList<String>();
+            if (sqlEntityInfo.isViewable()) {
+                if (isAltered) {
+                    // Check if we have to drop view first
+                    rs = databaseMetaData.getTables(null, null, sqlEntityInfo.getView(), null);
+                    if (rs.next()) {
+                        String tableType = rs.getString("TABLE_TYPE");
+                        if ("VIEW".equalsIgnoreCase(tableType)) {
+                            viewUpdateSQL.add(sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo));
+                        } else {
+                            throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
+                                    sqlDataSource.getName(), sqlEntityInfo.getView(), tableType);
+                        }
+                    }
+                    SqlUtils.close(rs);
 
-					// Create view
-					viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, formatSql));
-				}
-			}
+                    // Create view
+                    viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, formatSql));
+                }
+            }
 
-			// Apply updates
-			tableUpdateSQL.addAll(viewUpdateSQL);
-			for (String sql : tableUpdateSQL) {
-				logDebug("Executing managed datasource script {0}...", sql);
-				pstmt = connection.prepareStatement(sql);
-				pstmt.executeUpdate();
-				SqlUtils.close(pstmt);
-			}
-			connection.commit();
-		} catch (SQLException e) {
-			try {
-				connection.rollback();
-			} catch (SQLException e1) {
-			}
-			throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR,
-					sqlDataSource.getName());
-		} finally {
-			SqlUtils.close(rs);
-			SqlUtils.close(pstmt);
-		}
-	}
+            // Apply updates
+            tableUpdateSQL.addAll(viewUpdateSQL);
+            for (String sql : tableUpdateSQL) {
+                logDebug("Executing managed datasource script {0}...", sql);
+                pstmt = connection.prepareStatement(sql);
+                pstmt.executeUpdate();
+                SqlUtils.close(pstmt);
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+            }
+            throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR,
+                    sqlDataSource.getName());
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pstmt);
+        }
+    }
 
-	private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
-			throws UnifyException {
-		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+    private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
+            throws UnifyException {
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
 
-		for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-			if (sqlFieldInfo.isForeignKey()) {
-				SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
-				buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
-			}
-		}
+        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+            if (sqlFieldInfo.isForeignKey()) {
+                SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
+                buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
+            }
+        }
 
-		if (!entityTypeList.contains(entityClass)) {
-			entityTypeList.add(entityClass);
-		}
-	}
+        if (!entityTypeList.contains(entityClass)) {
+            entityTypeList.add(entityClass);
+        }
+    }
 }

@@ -29,35 +29,35 @@ import com.tcdng.unify.core.database.AbstractEntity;
 @Table("FEATURE")
 public class FeatureData extends AbstractEntity {
 
-	@Id(name = "FEATURE_CD", length = 40)
-	private String code;
+    @Id(name = "FEATURE_CD", length = 40)
+    private String code;
 
-	@Column(name = "FEATURE_VALUE", length = 64)
-	private String value;
+    @Column(name = "FEATURE_VALUE", length = 64)
+    private String value;
 
-	@Override
-	public Object getId() {
-		return code;
-	}
+    @Override
+    public Object getId() {
+        return code;
+    }
 
-	@Override
-	public String getDescription() {
-		return value;
-	}
+    @Override
+    public String getDescription() {
+        return value;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

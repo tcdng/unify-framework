@@ -28,36 +28,36 @@ import java.util.Set;
  */
 public class TestClientRequest implements ClientRequest {
 
-	private String path;
+    private String path;
 
-	private Map<String, Object> parameters;
+    private Map<String, Object> parameters;
 
-	public TestClientRequest(String path) {
-		this.path = path;
-		parameters = new HashMap<String, Object>();
-	}
+    public TestClientRequest(String path) {
+        this.path = path;
+        parameters = new HashMap<String, Object>();
+    }
 
-	@Override
-	public String getPath() {
-		return path;
-	}
+    @Override
+    public String getPath() {
+        return path;
+    }
 
-	@Override
-	public Charset getCharset() {
-		return null;
-	}
+    @Override
+    public Charset getCharset() {
+        return null;
+    }
 
-	@Override
-	public Set<String> getParameterNames() {
-		return parameters.keySet();
-	}
+    @Override
+    public Set<String> getParameterNames() {
+        return parameters.keySet();
+    }
 
-	@Override
-	public Object getParameter(String name) {
-		return parameters.get(name);
-	}
+    @Override
+    public Object getParameter(String name) {
+        return parameters.get(name);
+    }
 
-	public void setParameter(String name, Object value) {
-		parameters.put(name, value);
-	}
+    public void setParameter(String name, Object value) {
+        parameters.put(name, value);
+    }
 }

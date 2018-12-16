@@ -36,85 +36,85 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class TwoWayByteArrayCryptographImplTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testEncryptNull() throws Exception {
-		TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographA");
-		assertNull(byteArrayCryptographA.encrypt(null));
-	}
+    @Test
+    public void testEncryptNull() throws Exception {
+        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographA");
+        assertNull(byteArrayCryptographA.encrypt(null));
+    }
 
-	@Test
-	public void testEncryptByteArray() throws Exception {
-		TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographA");
-		byte[] array = { 1, 2, 3, 4 };
-		byte[] encryptedArray = byteArrayCryptographA.encrypt(array);
-		assertNotNull(encryptedArray);
-		assertFalse(Arrays.equals(array, encryptedArray));
-	}
+    @Test
+    public void testEncryptByteArray() throws Exception {
+        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographA");
+        byte[] array = { 1, 2, 3, 4 };
+        byte[] encryptedArray = byteArrayCryptographA.encrypt(array);
+        assertNotNull(encryptedArray);
+        assertFalse(Arrays.equals(array, encryptedArray));
+    }
 
-	@Test
-	public void testEncryptByteArrayConsistent() throws Exception {
-		TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographA");
-		byte[] array = { 1, 2, 3, 4, 5 };
-		byte[] encryptedA = byteArrayCryptographA.encrypt(array);
-		byte[] encryptedB = byteArrayCryptographA.encrypt(array);
-		byte[] encryptedC = byteArrayCryptographA.encrypt(array);
-		assertTrue(Arrays.equals(encryptedA, encryptedB));
-		assertTrue(Arrays.equals(encryptedB, encryptedC));
-	}
+    @Test
+    public void testEncryptByteArrayConsistent() throws Exception {
+        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographA");
+        byte[] array = { 1, 2, 3, 4, 5 };
+        byte[] encryptedA = byteArrayCryptographA.encrypt(array);
+        byte[] encryptedB = byteArrayCryptographA.encrypt(array);
+        byte[] encryptedC = byteArrayCryptographA.encrypt(array);
+        assertTrue(Arrays.equals(encryptedA, encryptedB));
+        assertTrue(Arrays.equals(encryptedB, encryptedC));
+    }
 
-	@Test
-	public void testEncryptByteArrayWithDifferentCryptographs() throws Exception {
-		TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographA");
-		TwoWayByteArrayCryptograph byteArrayCryptographB = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographB");
-		byte[] array = { 1, 2, 3, 4, 5 };
-		byte[] encryptedA = byteArrayCryptographA.encrypt(array);
-		byte[] encryptedB = byteArrayCryptographB.encrypt(array);
-		assertFalse(Arrays.equals(encryptedA, encryptedB));
-	}
+    @Test
+    public void testEncryptByteArrayWithDifferentCryptographs() throws Exception {
+        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographB = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographB");
+        byte[] array = { 1, 2, 3, 4, 5 };
+        byte[] encryptedA = byteArrayCryptographA.encrypt(array);
+        byte[] encryptedB = byteArrayCryptographB.encrypt(array);
+        assertFalse(Arrays.equals(encryptedA, encryptedB));
+    }
 
-	@Test
-	public void testDecryptNull() throws Exception {
-		TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographA");
-		assertNull(byteArrayCryptographA.decrypt(null));
-	}
+    @Test
+    public void testDecryptNull() throws Exception {
+        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographA");
+        assertNull(byteArrayCryptographA.decrypt(null));
+    }
 
-	@Test(expected = UnifyException.class)
-	public void testDecryptArray() throws Exception {
-		TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographA");
-		byte[] array = { 1, 2, 3, 4, 5 };
-		byteArrayCryptographA.decrypt(array);
-	}
+    @Test(expected = UnifyException.class)
+    public void testDecryptArray() throws Exception {
+        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographA");
+        byte[] array = { 1, 2, 3, 4, 5 };
+        byteArrayCryptographA.decrypt(array);
+    }
 
-	@Test
-	public void testDecryptEncryptedByteArray() throws Exception {
-		TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-				.getComponent("cryptographA");
-		byte[] array = { 1, 2, 3, 4, 5 };
-		byte[] encrypted = byteArrayCryptographA.encrypt(array);
-		byte[] decrypted = byteArrayCryptographA.decrypt(encrypted);
-		assertTrue(Arrays.equals(array, decrypted));
-	}
+    @Test
+    public void testDecryptEncryptedByteArray() throws Exception {
+        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
+                .getComponent("cryptographA");
+        byte[] array = { 1, 2, 3, 4, 5 };
+        byte[] encrypted = byteArrayCryptographA.encrypt(array);
+        byte[] decrypted = byteArrayCryptographA.decrypt(encrypted);
+        assertTrue(Arrays.equals(array, decrypted));
+    }
 
-	@Override
-	protected void doAddSettingsAndDependencies() throws Exception {
-		addDependency("cryptographA", TwoWayByteArrayCryptographImpl.class, new Setting("encryptionKey", "Orange"));
-		addDependency("cryptographB", TwoWayByteArrayCryptographImpl.class, new Setting("encryptionKey", "Banana"));
-	}
+    @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        addDependency("cryptographA", TwoWayByteArrayCryptographImpl.class, new Setting("encryptionKey", "Orange"));
+        addDependency("cryptographB", TwoWayByteArrayCryptographImpl.class, new Setting("encryptionKey", "Banana"));
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

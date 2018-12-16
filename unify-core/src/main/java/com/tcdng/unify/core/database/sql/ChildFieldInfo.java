@@ -28,48 +28,48 @@ import com.tcdng.unify.core.database.Entity;
  */
 public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
-	private Method attrFkSetter;
+    private Method attrFkSetter;
 
-	private Field field;
+    private Field field;
 
-	private Method getter;
+    private Method getter;
 
-	private Method setter;
+    private Method setter;
 
-	private boolean list;
-	
-	public ChildFieldInfo(Class<? extends Entity> childEntityClass, Field childFkField, Method attrFkSetter,
-			Field field, Method getter, Method setter, boolean list) {
-		super(childEntityClass, childFkField);
-		this.attrFkSetter = attrFkSetter;
-		this.field = field;
-		this.getter = getter;
-		this.setter = setter;
-		this.list = list;
-	}
+    private boolean list;
 
-	public String getName() {
-		return field.getName();
-	}
+    public ChildFieldInfo(Class<? extends Entity> childEntityClass, Field childFkField, Method attrFkSetter,
+            Field field, Method getter, Method setter, boolean list) {
+        super(childEntityClass, childFkField);
+        this.attrFkSetter = attrFkSetter;
+        this.field = field;
+        this.getter = getter;
+        this.setter = setter;
+        this.list = list;
+    }
 
-	public Method getAttrFkSetter() {
-		return attrFkSetter;
-	}
+    public String getName() {
+        return field.getName();
+    }
 
-	public Field getField() {
-		return field;
-	}
+    public Method getAttrFkSetter() {
+        return attrFkSetter;
+    }
 
-	public Method getGetter() {
-		return getter;
-	}
+    public Field getField() {
+        return field;
+    }
 
-	public Method getSetter() {
-		return setter;
-	}
+    public Method getGetter() {
+        return getter;
+    }
 
-	public boolean isList() {
-		return list;
-	}
+    public Method getSetter() {
+        return setter;
+    }
+
+    public boolean isList() {
+        return list;
+    }
 
 }

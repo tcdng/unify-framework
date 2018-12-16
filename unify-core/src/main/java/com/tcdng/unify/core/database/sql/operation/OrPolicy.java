@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class OrPolicy extends BinaryPolicy {
 
-	public OrPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" OR ", sqlDataSourceDialect);
-	}
+    public OrPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" OR ", sqlDataSourceDialect);
+    }
 }

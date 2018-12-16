@@ -27,13 +27,13 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("test-textunicastclientcomm")
 public class TestUnicastClientTextCommunicator extends AbstractUnicastClientTextCommunicator {
 
-	@Override
-	public NetworkMessage communicate(NetworkMessage message) throws UnifyException {
-		TestTextRequest request = (TestTextRequest) message;
-		writeLine(request.getFirstName());
-		writeLine(request.getLastName());
-		String fullName = readLine();
-		return new TestTextResponse(fullName);
-	}
+    @Override
+    public NetworkMessage communicate(NetworkMessage message) throws UnifyException {
+        TestTextRequest request = (TestTextRequest) message;
+        writeLine(request.getFirstName());
+        writeLine(request.getLastName());
+        String fullName = readLine();
+        return new TestTextResponse(fullName);
+    }
 
 }

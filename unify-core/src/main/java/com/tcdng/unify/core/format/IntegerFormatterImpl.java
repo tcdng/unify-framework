@@ -29,22 +29,22 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "integerformat", description = "$m{format.integer}")
 public class IntegerFormatterImpl extends AbstractNumberFormatter<Integer> implements IntegerFormatter {
 
-	public IntegerFormatterImpl() {
-		super(Integer.class, NumberType.INTEGER);
-	}
+    public IntegerFormatterImpl() {
+        super(Integer.class, NumberType.INTEGER);
+    }
 
-	@Override
-	public Integer parse(String string) throws UnifyException {
-		try {
-			return Integer.valueOf(getNumberFormat().parse(string).intValue());
-		} catch (ParseException e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public Integer parse(String string) throws UnifyException {
+        try {
+            return Integer.valueOf(getNumberFormat().parse(string).intValue());
+        } catch (ParseException e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 
-	@Override
-	public void setScale(int scale) {
+    @Override
+    public void setScale(int scale) {
 
-	}
+    }
 }

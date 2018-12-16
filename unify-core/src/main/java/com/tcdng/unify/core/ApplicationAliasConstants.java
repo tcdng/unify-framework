@@ -23,6 +23,6 @@ package com.tcdng.unify.core;
  */
 public interface ApplicationAliasConstants {
 
-	String SQL_DISTINCTROWLIST_CONFIG_MANAGER = "sqldistinctrowlistconfigmanager";
+    String SQL_DISTINCTROWLIST_CONFIG_MANAGER = "sqldistinctrowlistconfigmanager";
 
 }

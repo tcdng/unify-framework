@@ -22,24 +22,24 @@ package com.tcdng.unify.core.operation;
  * @since 1.0
  */
 public enum Operator {
-	EQUAL(ParameterType.SINGLE), NOT_EQUAL(ParameterType.SINGLE), LESS_THAN(ParameterType.SINGLE), LESS_OR_EQUAL(
-			ParameterType.SINGLE), GREATER(ParameterType.SINGLE), GREATER_OR_EQUAL(ParameterType.SINGLE), BETWEEN(
-					ParameterType.BINARY), NOT_BETWEEN(ParameterType.BINARY), AMONGST(
-							ParameterType.MULTIPLE), NOT_AMONGST(ParameterType.MULTIPLE), LIKE(
-									ParameterType.SINGLE), NOT_LIKE(ParameterType.SINGLE), LIKE_BEGIN(
-											ParameterType.SINGLE), NOT_LIKE_BEGIN(ParameterType.SINGLE), LIKE_END(
-													ParameterType.SINGLE), NOT_LIKE_END(ParameterType.SINGLE), IS_NULL(
-															ParameterType.VOID), IS_NOT_NULL(ParameterType.VOID), AND(
-																	ParameterType.BINARY), OR(ParameterType.BINARY);
+    EQUAL(ParameterType.SINGLE), NOT_EQUAL(ParameterType.SINGLE), LESS_THAN(ParameterType.SINGLE), LESS_OR_EQUAL(
+            ParameterType.SINGLE), GREATER(ParameterType.SINGLE), GREATER_OR_EQUAL(ParameterType.SINGLE), BETWEEN(
+                    ParameterType.BINARY), NOT_BETWEEN(ParameterType.BINARY), AMONGST(
+                            ParameterType.MULTIPLE), NOT_AMONGST(ParameterType.MULTIPLE), LIKE(
+                                    ParameterType.SINGLE), NOT_LIKE(ParameterType.SINGLE), LIKE_BEGIN(
+                                            ParameterType.SINGLE), NOT_LIKE_BEGIN(ParameterType.SINGLE), LIKE_END(
+                                                    ParameterType.SINGLE), NOT_LIKE_END(ParameterType.SINGLE), IS_NULL(
+                                                            ParameterType.VOID), IS_NOT_NULL(ParameterType.VOID), AND(
+                                                                    ParameterType.BINARY), OR(ParameterType.BINARY);
 
-	private final ParameterType paramType;
+    private final ParameterType paramType;
 
-	private Operator(ParameterType paramType) {
-		this.paramType = paramType;
-	}
+    private Operator(ParameterType paramType) {
+        this.paramType = paramType;
+    }
 
-	public ParameterType paramType() {
-		return paramType;
-	}
+    public ParameterType paramType() {
+        return paramType;
+    }
 
 }

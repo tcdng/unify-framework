@@ -23,21 +23,21 @@ package com.tcdng.unify.web;
  */
 public class ControllerResponseInfo {
 
-	private String controllerName;
+    private String controllerName;
 
-	private String controllerId;
+    private String controllerId;
 
-	public ControllerResponseInfo(String controllerName, String controllerId) {
-		this.controllerName = controllerName;
-		this.controllerId = controllerId;
-	}
+    public ControllerResponseInfo(String controllerName, String controllerId) {
+        this.controllerName = controllerName;
+        this.controllerId = controllerId;
+    }
 
-	public String getControllerName() {
-		return controllerName;
-	}
+    public String getControllerName() {
+        return controllerName;
+    }
 
-	public String getControllerId() {
-		return controllerId;
-	}
+    public String getControllerId() {
+        return controllerId;
+    }
 
 }

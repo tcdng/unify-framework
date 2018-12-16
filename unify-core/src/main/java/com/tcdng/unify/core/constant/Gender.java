@@ -29,24 +29,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("genderlist")
 public enum Gender implements EnumConst {
 
-	MALE("M"), FEMALE("F"), OTHER("O");
+    MALE("M"), FEMALE("F"), OTHER("O");
 
-	private final String code;
+    private final String code;
 
-	private Gender(String code) {
-		this.code = code;
-	}
+    private Gender(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static Gender fromCode(String code) {
-		return EnumUtils.fromCode(Gender.class, code);
-	}
+    public static Gender fromCode(String code) {
+        return EnumUtils.fromCode(Gender.class, code);
+    }
 
-	public static Gender fromName(String name) {
-		return EnumUtils.fromName(Gender.class, name);
-	}
+    public static Gender fromName(String name) {
+        return EnumUtils.fromName(Gender.class, name);
+    }
 }

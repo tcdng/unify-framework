@@ -31,41 +31,41 @@ import com.tcdng.unify.core.database.Entity;
 @Component("sequencenumber-policy")
 public class ClusterSequenceNumberPolicy extends AbstractEntityPolicy {
 
-	@Override
-	public Object preCreate(Entity record, Date now) throws UnifyException {
-		((ClusterSequenceNumber) record).setVersionNo(1L);
-		return record.getId();
-	}
+    @Override
+    public Object preCreate(Entity record, Date now) throws UnifyException {
+        ((ClusterSequenceNumber) record).setVersionNo(1L);
+        return record.getId();
+    }
 
-	@Override
-	public void preUpdate(Entity record, Date now) throws UnifyException {
-		ClusterSequenceNumber clusterSequenceNumber = (ClusterSequenceNumber) record;
-		clusterSequenceNumber.setVersionNo(clusterSequenceNumber.getVersionNo() + 1L);
-	}
+    @Override
+    public void preUpdate(Entity record, Date now) throws UnifyException {
+        ClusterSequenceNumber clusterSequenceNumber = (ClusterSequenceNumber) record;
+        clusterSequenceNumber.setVersionNo(clusterSequenceNumber.getVersionNo() + 1L);
+    }
 
-	@Override
-	public void preDelete(Entity record, Date now) throws UnifyException {
+    @Override
+    public void preDelete(Entity record, Date now) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void onCreateError(Entity record) {
+    @Override
+    public void onCreateError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public void onUpdateError(Entity record) {
-		ClusterSequenceNumber clusterSequenceNumber = (ClusterSequenceNumber) record;
-		clusterSequenceNumber.setVersionNo(clusterSequenceNumber.getVersionNo() - 1L);
-	}
+    @Override
+    public void onUpdateError(Entity record) {
+        ClusterSequenceNumber clusterSequenceNumber = (ClusterSequenceNumber) record;
+        clusterSequenceNumber.setVersionNo(clusterSequenceNumber.getVersionNo() - 1L);
+    }
 
-	@Override
-	public void onDeleteError(Entity record) {
+    @Override
+    public void onDeleteError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public boolean isSetNow() {
-		return false;
-	}
+    @Override
+    public boolean isSetNow() {
+        return false;
+    }
 }

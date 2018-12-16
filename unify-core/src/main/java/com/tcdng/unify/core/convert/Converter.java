@@ -26,16 +26,16 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public interface Converter<T> {
 
-	/**
-	 * Convert supplied value to type. Returns a null if value is inconvertible.
-	 * 
-	 * @param value
-	 *            the value to convert
-	 * @param formatter
-	 *            for conversions that need formatting information. Can be null.
-	 * @return the converted value
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	T convert(Object value, Formatter<?> formatter) throws UnifyException;
+    /**
+     * Convert supplied value to type. Returns a null if value is inconvertible.
+     * 
+     * @param value
+     *            the value to convert
+     * @param formatter
+     *            for conversions that need formatting information. Can be null.
+     * @return the converted value
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    T convert(Object value, Formatter<?> formatter) throws UnifyException;
 }

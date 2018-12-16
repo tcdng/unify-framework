@@ -25,18 +25,18 @@ import java.util.List;
  */
 public interface SqlIndexSchemaInfo {
 
-	/**
-	 * Returns the index name.
-	 */
-	String getName();
+    /**
+     * Returns the index name.
+     */
+    String getName();
 
-	/**
-	 * Returns the index field list.
-	 */
-	List<String> getFieldNameList();
+    /**
+     * Returns the index field list.
+     */
+    List<String> getFieldNameList();
 
-	/**
-	 * Returns true if index is unique.
-	 */
-	boolean isUnique();
+    /**
+     * Returns true if index is unique.
+     */
+    boolean isUnique();
 }

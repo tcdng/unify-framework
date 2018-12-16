@@ -23,101 +23,101 @@ package com.tcdng.unify.core.database.sql;
  */
 public class SqlCache {
 
-	private String findSql;
-	private String findByPkSql;
-	private String findByPkVersionSql;
-	private String listSql;
-	private String listByPkSql;
-	private String listByPkVersionSql;
-	private String createSql;
-	private String updateSql;
-	private String updateByPkSql;
-	private String updateByPkVersionSql;
-	private String deleteSql;
-	private String deleteByPkSql;
-	private String deleteByPkVersionSql;
-	private String countSql;
-	private String testSql;
+    private String findSql;
+    private String findByPkSql;
+    private String findByPkVersionSql;
+    private String listSql;
+    private String listByPkSql;
+    private String listByPkVersionSql;
+    private String createSql;
+    private String updateSql;
+    private String updateByPkSql;
+    private String updateByPkVersionSql;
+    private String deleteSql;
+    private String deleteByPkSql;
+    private String deleteByPkVersionSql;
+    private String countSql;
+    private String testSql;
 
-	public SqlCache(String findSql, String findByPkSql, final String findByPkVersionSql, String listSql,
-			final String listByPkSql, String listByPkVersionSql, final String createSql, String updateSql,
-			final String updateByPkSql, String updateByPkVersionSql, final String deleteSql, String deleteByPkSql,
-			final String deleteByPkVersionSql, String countSql, final String testSql) {
-		this.findSql = findSql;
-		this.findByPkSql = findByPkSql;
-		this.findByPkVersionSql = findByPkVersionSql;
-		this.listSql = listSql;
-		this.listByPkSql = listByPkSql;
-		this.listByPkVersionSql = listByPkVersionSql;
-		this.createSql = createSql;
-		this.updateSql = updateSql;
-		this.updateByPkSql = updateByPkSql;
-		this.updateByPkVersionSql = updateByPkVersionSql;
-		this.deleteSql = deleteSql;
-		this.deleteByPkSql = deleteByPkSql;
-		this.deleteByPkVersionSql = deleteByPkVersionSql;
-		this.countSql = countSql;
-		this.testSql = testSql;
-	}
+    public SqlCache(String findSql, String findByPkSql, final String findByPkVersionSql, String listSql,
+            final String listByPkSql, String listByPkVersionSql, final String createSql, String updateSql,
+            final String updateByPkSql, String updateByPkVersionSql, final String deleteSql, String deleteByPkSql,
+            final String deleteByPkVersionSql, String countSql, final String testSql) {
+        this.findSql = findSql;
+        this.findByPkSql = findByPkSql;
+        this.findByPkVersionSql = findByPkVersionSql;
+        this.listSql = listSql;
+        this.listByPkSql = listByPkSql;
+        this.listByPkVersionSql = listByPkVersionSql;
+        this.createSql = createSql;
+        this.updateSql = updateSql;
+        this.updateByPkSql = updateByPkSql;
+        this.updateByPkVersionSql = updateByPkVersionSql;
+        this.deleteSql = deleteSql;
+        this.deleteByPkSql = deleteByPkSql;
+        this.deleteByPkVersionSql = deleteByPkVersionSql;
+        this.countSql = countSql;
+        this.testSql = testSql;
+    }
 
-	public String getFindSql() {
-		return findSql;
-	}
+    public String getFindSql() {
+        return findSql;
+    }
 
-	public String getFindByPkSql() {
-		return findByPkSql;
-	}
+    public String getFindByPkSql() {
+        return findByPkSql;
+    }
 
-	public String getFindByPkVersionSql() {
-		return findByPkVersionSql;
-	}
+    public String getFindByPkVersionSql() {
+        return findByPkVersionSql;
+    }
 
-	public String getListSql() {
-		return listSql;
-	}
+    public String getListSql() {
+        return listSql;
+    }
 
-	public String getListByPkSql() {
-		return listByPkSql;
-	}
+    public String getListByPkSql() {
+        return listByPkSql;
+    }
 
-	public String getListByPkVersionSql() {
-		return listByPkVersionSql;
-	}
+    public String getListByPkVersionSql() {
+        return listByPkVersionSql;
+    }
 
-	public String getCreateSql() {
-		return createSql;
-	}
+    public String getCreateSql() {
+        return createSql;
+    }
 
-	public String getUpdateSql() {
-		return updateSql;
-	}
+    public String getUpdateSql() {
+        return updateSql;
+    }
 
-	public String getUpdateByPkSql() {
-		return updateByPkSql;
-	}
+    public String getUpdateByPkSql() {
+        return updateByPkSql;
+    }
 
-	public String getUpdateByPkVersionSql() {
-		return updateByPkVersionSql;
-	}
+    public String getUpdateByPkVersionSql() {
+        return updateByPkVersionSql;
+    }
 
-	public String getDeleteSql() {
-		return deleteSql;
-	}
+    public String getDeleteSql() {
+        return deleteSql;
+    }
 
-	public String getDeleteByPkSql() {
-		return deleteByPkSql;
-	}
+    public String getDeleteByPkSql() {
+        return deleteByPkSql;
+    }
 
-	public String getDeleteByPkVersionSql() {
-		return deleteByPkVersionSql;
-	}
+    public String getDeleteByPkVersionSql() {
+        return deleteByPkVersionSql;
+    }
 
-	public String getCountSql() {
-		return countSql;
-	}
+    public String getCountSql() {
+        return countSql;
+    }
 
-	public String getTestSql() {
-		return testSql;
-	}
+    public String getTestSql() {
+        return testSql;
+    }
 
 }

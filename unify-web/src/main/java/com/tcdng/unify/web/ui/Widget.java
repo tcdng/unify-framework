@@ -35,445 +35,445 @@ import com.tcdng.unify.core.upl.UplComponent;
  */
 public interface Widget extends UplComponent {
 
-	/**
-	 * Returns the widget id
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getId() throws UnifyException;
+    /**
+     * Returns the widget id
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getId() throws UnifyException;
 
-	/**
-	 * Sets the widget id.
-	 * 
-	 * @param id
-	 *            the id to set
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setId(String id) throws UnifyException;
+    /**
+     * Sets the widget id.
+     * 
+     * @param id
+     *            the id to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setId(String id) throws UnifyException;
 
-	/**
-	 * Returns the group id
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getGroupId() throws UnifyException;
+    /**
+     * Returns the group id
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getGroupId() throws UnifyException;
 
-	/**
-	 * Sets the widget group id.
-	 * 
-	 * @param id
-	 *            the id to set
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setGroupId(String id) throws UnifyException;
+    /**
+     * Sets the widget group id.
+     * 
+     * @param id
+     *            the id to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setGroupId(String id) throws UnifyException;
 
-	/**
-	 * Returns the widget facade Id
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getFacadeId() throws UnifyException;
+    /**
+     * Returns the widget facade Id
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getFacadeId() throws UnifyException;
 
-	/**
-	 * Returns prefixed form of id
-	 * 
-	 * @param prefix
-	 *            the prefix to set
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPrefixedId(String prefix) throws UnifyException;
+    /**
+     * Returns prefixed form of id
+     * 
+     * @param prefix
+     *            the prefix to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPrefixedId(String prefix) throws UnifyException;
 
-	/**
-	 * Returns naming indexed form of id
-	 * 
-	 * @param index
-	 *            the index to use
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getNamingIndexedId(int index) throws UnifyException;
+    /**
+     * Returns naming indexed form of id
+     * 
+     * @param index
+     *            the index to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getNamingIndexedId(int index) throws UnifyException;
 
-	/**
-	 * Returns widget data binding.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getBinding() throws UnifyException;
+    /**
+     * Returns widget data binding.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getBinding() throws UnifyException;
 
-	/**
-	 * Returns widget caption.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getCaption() throws UnifyException;
+    /**
+     * Returns widget caption.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getCaption() throws UnifyException;
 
-	/**
-	 * Returns widget style class.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStyleClass() throws UnifyException;
+    /**
+     * Returns widget style class.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStyleClass() throws UnifyException;
 
-	/**
-	 * Returns widget style.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStyle() throws UnifyException;
+    /**
+     * Returns widget style.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStyle() throws UnifyException;
 
-	/**
-	 * Returns widget style class binding.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStyleClassBinding() throws UnifyException;
+    /**
+     * Returns widget style class binding.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStyleClassBinding() throws UnifyException;
 
-	/**
-	 * Returns widget table column style.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getColumnStyle() throws UnifyException;
+    /**
+     * Returns widget table column style.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getColumnStyle() throws UnifyException;
 
-	/**
-	 * Returns widget hint.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getHint() throws UnifyException;
+    /**
+     * Returns widget hint.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getHint() throws UnifyException;
 
-	/**
-	 * Returns the ID of this component parent container.
-	 * 
-	 * @return the parent container ID, otherwise null if component is not in a
-	 *         container
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getContainerId() throws UnifyException;
+    /**
+     * Returns the ID of this component parent container.
+     * 
+     * @return the parent container ID, otherwise null if component is not in a
+     *         container
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getContainerId() throws UnifyException;
 
-	/**
-	 * Returns the ID of this component parent panel.
-	 * 
-	 * @return the parent panel ID, otherwise null if component is not in a
-	 *         container
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPanelId() throws UnifyException;
+    /**
+     * Returns the ID of this component parent panel.
+     * 
+     * @return the parent panel ID, otherwise null if component is not in a
+     *         container
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPanelId() throws UnifyException;
 
-	/**
-	 * Sets the component container.
-	 * 
-	 * @param container
-	 *            the container to set
-	 */
-	void setContainer(Container container);
+    /**
+     * Sets the component container.
+     * 
+     * @param container
+     *            the container to set
+     */
+    void setContainer(Container container);
 
-	/**
-	 * Returns the component container.
-	 */
-	Container getContainer();
+    /**
+     * Returns the component container.
+     */
+    Container getContainer();
 
-	/**
-	 * Sets the component value store. Binds the component to a value store.
-	 * 
-	 * @param valueStore
-	 *            the value store to set
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setValueStore(ValueStore valueStore) throws UnifyException;
+    /**
+     * Sets the component value store. Binds the component to a value store.
+     * 
+     * @param valueStore
+     *            the value store to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setValueStore(ValueStore valueStore) throws UnifyException;
 
-	/**
-	 * Returns the component value store.
-	 */
-	ValueStore getValueStore();
+    /**
+     * Returns the component value store.
+     */
+    ValueStore getValueStore();
 
-	/**
-	 * Returns value index.
-	 */
-	int getValueIndex();
+    /**
+     * Returns value index.
+     */
+    int getValueIndex();
 
-	/**
-	 * Returns the component current value.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Object getValue() throws UnifyException;
+    /**
+     * Returns the component current value.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Object getValue() throws UnifyException;
 
-	/**
-	 * Returns the component current value.
-	 * 
-	 * @param valueClass
-	 *            the expected value type
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T> T getValue(Class<T> valueClass) throws UnifyException;
+    /**
+     * Returns the component current value.
+     * 
+     * @param valueClass
+     *            the expected value type
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T getValue(Class<T> valueClass) throws UnifyException;
 
-	/**
-	 * Sets the value of the bean attribute this component is binded to.
-	 * 
-	 * @param value
-	 *            the value to set.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setValue(Object value) throws UnifyException;
+    /**
+     * Sets the value of the bean attribute this component is binded to.
+     * 
+     * @param value
+     *            the value to set.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setValue(Object value) throws UnifyException;
 
-	/**
-	 * Returns the component value as a string.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	String getStringValue() throws UnifyException;
+    /**
+     * Returns the component value as a string.
+     * 
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    String getStringValue() throws UnifyException;
 
-	/**
-	 * Returns the string value of this component value bean attribute.
-	 * 
-	 * @param attribute
-	 *            the attribute to fetch
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	String getStringValue(String attribute) throws UnifyException;
+    /**
+     * Returns the string value of this component value bean attribute.
+     * 
+     * @param attribute
+     *            the attribute to fetch
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    String getStringValue(String attribute) throws UnifyException;
 
-	/**
-	 * Returns the type converted value of this component value bean attribute.
-	 * 
-	 * @param attribute
-	 *            the attribute to fetch
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	<T> T getValue(Class<T> clazz, String attribute) throws UnifyException;
+    /**
+     * Returns the type converted value of this component value bean attribute.
+     * 
+     * @param attribute
+     *            the attribute to fetch
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    <T> T getValue(Class<T> clazz, String attribute) throws UnifyException;
 
-	/**
-	 * Returns the value associated with supplied attribute. If this component is
-	 * associated with a value store, retrieves value from store using supplied
-	 * property as value name. Otherwise attempts to fetch attribute value from
-	 * session context, then application context and finally request context,
-	 * returning value where it first finds attribute
-	 * 
-	 * @param attribute
-	 *            the attribute name
-	 * @return the attribute value
-	 * @throws UnifyException
-	 *             if associated value object or application scopes have no such
-	 *             attribute
-	 */
-	Object getValue(String attribute) throws UnifyException;
+    /**
+     * Returns the value associated with supplied attribute. If this component is
+     * associated with a value store, retrieves value from store using supplied
+     * property as value name. Otherwise attempts to fetch attribute value from
+     * session context, then application context and finally request context,
+     * returning value where it first finds attribute
+     * 
+     * @param attribute
+     *            the attribute name
+     * @return the attribute value
+     * @throws UnifyException
+     *             if associated value object or application scopes have no such
+     *             attribute
+     */
+    Object getValue(String attribute) throws UnifyException;
 
-	/**
-	 * Returns style class value based on style class binding otherwise a null is
-	 * returned.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStyleClassValue() throws UnifyException;
+    /**
+     * Returns style class value based on style class binding otherwise a null is
+     * returned.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStyleClassValue() throws UnifyException;
 
-	/**
-	 * Returns the type converted collection value of this component value bean
-	 * attribute.
-	 * 
-	 * @param attribute
-	 *            the attribute to fetch
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	<T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException;
+    /**
+     * Returns the type converted collection value of this component value bean
+     * attribute.
+     * 
+     * @param attribute
+     *            the attribute to fetch
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException;
 
-	/**
-	 * Returns this component's containing panel.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	Panel getPanel() throws UnifyException;
+    /**
+     * Returns this component's containing panel.
+     * 
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    Panel getPanel() throws UnifyException;
 
-	/**
-	 * Returns the relay widget otherwise null.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Widget getRelayWidget() throws UnifyException;
+    /**
+     * Returns the relay widget otherwise null.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Widget getRelayWidget() throws UnifyException;
 
-	/**
-	 * Indicates that commands should be relayed to internal widget.
-	 */
-	boolean isRelayCommand();
+    /**
+     * Indicates that commands should be relayed to internal widget.
+     */
+    boolean isRelayCommand();
 
-	/**
-	 * Indicates that component is a field.
-	 */
-	boolean isField();
+    /**
+     * Indicates that component is a field.
+     */
+    boolean isField();
 
-	/**
-	 * Indicates that a component is hidden. Hidden components are always rendered
-	 * but are not visible.
-	 * 
-	 * @return a true value if component is hidden
-	 */
-	boolean isHidden() throws UnifyException;
+    /**
+     * Indicates that a component is hidden. Hidden components are always rendered
+     * but are not visible.
+     * 
+     * @return a true value if component is hidden
+     */
+    boolean isHidden() throws UnifyException;
 
-	/**
-	 * Indicates that a component is masked.
-	 * 
-	 * @return a true value if component is hidden
-	 */
-	boolean isMasked() throws UnifyException;
+    /**
+     * Indicates that a component is masked.
+     * 
+     * @return a true value if component is hidden
+     */
+    boolean isMasked() throws UnifyException;
 
-	/**
-	 * Sets the conforming flag. A conforming component's
-	 * {@link #setValueBean(Object)} is always invoked during a cascade
-	 * 
-	 * @param conforming
-	 *            the flag to set
-	 */
-	void setConforming(boolean conforming);
+    /**
+     * Sets the conforming flag. A conforming component's
+     * {@link #setValueBean(Object)} is always invoked during a cascade
+     * 
+     * @param conforming
+     *            the flag to set
+     */
+    void setConforming(boolean conforming);
 
-	/**
-	 * Returns the conforming flag.
-	 */
-	boolean isConforming();
+    /**
+     * Returns the conforming flag.
+     */
+    boolean isConforming();
 
-	/**
-	 * Tests if widget is value conforming.
-	 */
-	boolean isValueConforming(Container container);
+    /**
+     * Tests if widget is value conforming.
+     */
+    boolean isValueConforming(Container container);
 
-	/**
-	 * Tests if widget is fixed conforming.
-	 */
-	boolean isFixedConforming() throws UnifyException;
+    /**
+     * Tests if widget is fixed conforming.
+     */
+    boolean isFixedConforming() throws UnifyException;
 
-	/**
-	 * Sets the component editable state.
-	 * 
-	 * @param editable
-	 *            the editable state to set
-	 */
-	void setEditable(boolean editable);
+    /**
+     * Sets the component editable state.
+     * 
+     * @param editable
+     *            the editable state to set
+     */
+    void setEditable(boolean editable);
 
-	/**
-	 * Tests if component is editable.
-	 * 
-	 * @return true value if component is editable
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isEditable() throws UnifyException;
+    /**
+     * Tests if component is editable.
+     * 
+     * @return true value if component is editable
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isEditable() throws UnifyException;
 
-	/**
-	 * Tests if component is editable also considering the component's container
-	 * editable state.
-	 * 
-	 * @return true value if component is editable
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isContainerEditable() throws UnifyException;
+    /**
+     * Tests if component is editable also considering the component's container
+     * editable state.
+     * 
+     * @return true value if component is editable
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isContainerEditable() throws UnifyException;
 
-	/**
-	 * Sets the component disabled state.
-	 * 
-	 * @param disabled
-	 *            the disabled state to set
-	 */
-	void setDisabled(boolean disabled);
+    /**
+     * Sets the component disabled state.
+     * 
+     * @param disabled
+     *            the disabled state to set
+     */
+    void setDisabled(boolean disabled);
 
-	/**
-	 * Tests if component is disabled.
-	 * 
-	 * @return true value if component is disabled
-	 */
-	boolean isDisabled() throws UnifyException;
+    /**
+     * Tests if component is disabled.
+     * 
+     * @return true value if component is disabled
+     */
+    boolean isDisabled() throws UnifyException;
 
-	/**
-	 * Tests if component is disabled also considering the component's container
-	 * disabled state.
-	 * 
-	 * @return true value if component is disabled
-	 */
-	boolean isContainerDisabled() throws UnifyException;
+    /**
+     * Tests if component is disabled also considering the component's container
+     * disabled state.
+     * 
+     * @return true value if component is disabled
+     */
+    boolean isContainerDisabled() throws UnifyException;
 
-	/**
-	 * Tests if the component is visible and privilege exists in the current user
-	 * role.
-	 * 
-	 * @return true if component is visible and user role has component privilege
-	 */
-	boolean isVisible() throws UnifyException;
+    /**
+     * Tests if the component is visible and privilege exists in the current user
+     * role.
+     * 
+     * @return true if component is visible and user role has component privilege
+     */
+    boolean isVisible() throws UnifyException;
 
-	/**
-	 * Sets the component visible state.
-	 * 
-	 * @param visible
-	 *            the visible state to set
-	 */
-	void setVisible(boolean visible);
+    /**
+     * Sets the component visible state.
+     * 
+     * @param visible
+     *            the visible state to set
+     */
+    void setVisible(boolean visible);
 
-	/**
-	 * Tests if component is visible also considering the component's container
-	 * visible state.
-	 * 
-	 * @return true value if component is visible
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isContainerVisible() throws UnifyException;
+    /**
+     * Tests if component is visible also considering the component's container
+     * visible state.
+     * 
+     * @return true value if component is visible
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isContainerVisible() throws UnifyException;
 
-	/**
-	 * Tests if component is validatable.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isValidatable() throws UnifyException;
+    /**
+     * Tests if component is validatable.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isValidatable() throws UnifyException;
 
-	/**
-	 * Returns true if component's rendered element supports HTML readonly attribute
-	 * otherwise false. Subclasses should override this if necessary.
-	 */
-	boolean isSupportReadOnly();
+    /**
+     * Returns true if component's rendered element supports HTML readonly attribute
+     * otherwise false. Subclasses should override this if necessary.
+     */
+    boolean isSupportReadOnly();
 
-	/**
-	 * Returns true if this components caption is layout based.
-	 */
-	boolean isLayoutCaption() throws UnifyException;
+    /**
+     * Returns true if this components caption is layout based.
+     */
+    boolean isLayoutCaption() throws UnifyException;
 
-	/**
-	 * Expects widget to add page name aliases to current request context.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void addPageAliases() throws UnifyException;
+    /**
+     * Expects widget to add page name aliases to current request context.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void addPageAliases() throws UnifyException;
 
-	/**
-	 * Executed on page initialization. Called by framework after all component
-	 * properties have been set and containing page is initialized.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void onPageInitialize() throws UnifyException;
+    /**
+     * Executed on page initialization. Called by framework after all component
+     * properties have been set and containing page is initialized.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void onPageInitialize() throws UnifyException;
 }

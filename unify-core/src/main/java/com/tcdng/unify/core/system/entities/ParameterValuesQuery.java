@@ -25,20 +25,20 @@ import com.tcdng.unify.core.database.Query;
  */
 public class ParameterValuesQuery extends Query<ParameterValues> {
 
-	public ParameterValuesQuery() {
-		super(ParameterValues.class);
-	}
+    public ParameterValuesQuery() {
+        super(ParameterValues.class);
+    }
 
-	public ParameterValuesQuery typeName(String typeName) {
-		return (ParameterValuesQuery) equals("typeName", typeName);
-	}
+    public ParameterValuesQuery typeName(String typeName) {
+        return (ParameterValuesQuery) equals("typeName", typeName);
+    }
 
-	public ParameterValuesQuery instTypeName(String instTypeName) {
-		return (ParameterValuesQuery) equals("instTypeName", instTypeName);
-	}
+    public ParameterValuesQuery instTypeName(String instTypeName) {
+        return (ParameterValuesQuery) equals("instTypeName", instTypeName);
+    }
 
-	public ParameterValuesQuery instId(Long instId) {
-		return (ParameterValuesQuery) equals("instId", instId);
-	}
+    public ParameterValuesQuery instId(Long instId) {
+        return (ParameterValuesQuery) equals("instId", instId);
+    }
 
 }

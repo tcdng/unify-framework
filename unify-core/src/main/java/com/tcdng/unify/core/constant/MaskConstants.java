@@ -23,5 +23,5 @@ package com.tcdng.unify.core.constant;
  */
 public interface MaskConstants {
 
-	String MASK = "******";
+    String MASK = "******";
 }

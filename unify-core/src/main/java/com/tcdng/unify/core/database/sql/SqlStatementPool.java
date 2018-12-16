@@ -25,12 +25,12 @@ import com.tcdng.unify.core.data.AbstractPool;
  */
 public abstract class SqlStatementPool extends AbstractPool<SqlStatement> {
 
-	public SqlStatementPool(long getTimeout, int minObjects, int maxObjects) {
-		super(getTimeout, minObjects, maxObjects, true);
-	}
+    public SqlStatementPool(long getTimeout, int minObjects, int maxObjects) {
+        super(getTimeout, minObjects, maxObjects, true);
+    }
 
-	@Override
-	protected void destroyObject(SqlStatement object) {
+    @Override
+    protected void destroyObject(SqlStatement object) {
 
-	}
+    }
 }

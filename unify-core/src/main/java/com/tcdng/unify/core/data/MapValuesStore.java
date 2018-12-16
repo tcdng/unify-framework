@@ -26,27 +26,27 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class MapValuesStore extends AbstractValueStore<MapValues> {
 
-	public MapValuesStore(MapValues map, int dataIndex) {
-		super(map, dataIndex);
-	}
+    public MapValuesStore(MapValues map, int dataIndex) {
+        super(map, dataIndex);
+    }
 
-	@Override
-	public boolean isGettable(String name) throws UnifyException {
-		return storage.isMapValue(name);
-	}
+    @Override
+    public boolean isGettable(String name) throws UnifyException {
+        return storage.isMapValue(name);
+    }
 
-	@Override
-	public boolean isSettable(String name) throws UnifyException {
-		return storage.isMapValue(name);
-	}
+    @Override
+    public boolean isSettable(String name) throws UnifyException {
+        return storage.isMapValue(name);
+    }
 
-	@Override
-	protected Object doRetrieve(String property) throws UnifyException {
-		return storage.getValue(property);
-	}
+    @Override
+    protected Object doRetrieve(String property) throws UnifyException {
+        return storage.getValue(property);
+    }
 
-	@Override
-	protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
-		storage.setValue(property, value, formatter);
-	}
+    @Override
+    protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
+        storage.setValue(property, value, formatter);
+    }
 }

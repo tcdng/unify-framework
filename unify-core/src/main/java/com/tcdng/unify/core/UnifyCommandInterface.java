@@ -29,39 +29,39 @@ import com.tcdng.unify.core.net.NetworkInterfaceConfigType;
 @Component("unify-commandinterface")
 public class UnifyCommandInterface extends AbstractUnifyContainerInterface {
 
-	private static final String UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG = "unify-commandinterface-netconfig";
+    private static final String UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG = "unify-commandinterface-netconfig";
 
-	@Configurable(ApplicationComponents.APPLICATION_NETWORKINTERFACE)
-	private NetworkInterface networkInterface;
+    @Configurable(ApplicationComponents.APPLICATION_NETWORKINTERFACE)
+    private NetworkInterface networkInterface;
 
-	private int listeningPort;
+    private int listeningPort;
 
-	@Override
-	public int getPort() {
-		return listeningPort;
-	}
+    @Override
+    public int getPort() {
+        return listeningPort;
+    }
 
-	@Override
-	protected void onStartServicingRequests() throws UnifyException {
-		networkInterface.startLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
-	}
+    @Override
+    protected void onStartServicingRequests() throws UnifyException {
+        networkInterface.startLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
+    }
 
-	@Override
-	protected void onStopServicingRequests() throws UnifyException {
-		networkInterface.stopLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
-	}
+    @Override
+    protected void onStopServicingRequests() throws UnifyException {
+        networkInterface.stopLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		listeningPort = getContainerSetting(short.class, UnifyCorePropertyConstants.APPLICATION_COMMAND_PORT,
-				UnifyContainer.DEFAULT_COMMAND_PORT);
-		networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER,
-				UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG, "unify-commandinterface-comm", "localhost",
-				listeningPort, 32);
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        listeningPort = getContainerSetting(short.class, UnifyCorePropertyConstants.APPLICATION_COMMAND_PORT,
+                UnifyContainer.DEFAULT_COMMAND_PORT);
+        networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER,
+                UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG, "unify-commandinterface-comm", "localhost", listeningPort,
+                32);
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

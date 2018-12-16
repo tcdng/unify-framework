@@ -27,23 +27,23 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "fixedlength-batchfilereader", description = "$m{batchfilereader.fixedlength}")
 public class FixedLengthBatchFileReader extends AbstractMultiLineTextFileRecordReader {
 
-	@Override
-	protected String[] parseEntry(String entry) throws UnifyException {
-		String[] result = new String[getBatchFileConfig().getFieldConfigs().size()];
-		logDebug("Parsing fixed length [{0}] in line number = {1}", entry, getEntryCounter());
-		int index = 0;
-		int beginIndex = 0;
-		for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigs()) {
-			int endIndex = beginIndex + fieldConfig.getLength();
-			result[index] = entry.substring(beginIndex, endIndex);
+    @Override
+    protected String[] parseEntry(String entry) throws UnifyException {
+        String[] result = new String[getBatchFileConfig().getFieldConfigs().size()];
+        logDebug("Parsing fixed length [{0}] in line number = {1}", entry, getEntryCounter());
+        int index = 0;
+        int beginIndex = 0;
+        for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigs()) {
+            int endIndex = beginIndex + fieldConfig.getLength();
+            result[index] = entry.substring(beginIndex, endIndex);
 
-			if (fieldConfig.isTrim()) {
-				result[index] = result[index].trim();
-			}
+            if (fieldConfig.isTrim()) {
+                result[index] = result[index].trim();
+            }
 
-			beginIndex = endIndex;
-			index++;
-		}
-		return result;
-	}
+            beginIndex = endIndex;
+            index++;
+        }
+        return result;
+    }
 }

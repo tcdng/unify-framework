@@ -23,8 +23,8 @@ package com.tcdng.unify.core.database.sql;
  */
 public interface SqlForeignKeySchemaInfo {
 
-	/**
-	 * Returns the foreign key field name.
-	 */
-	String getFieldName();
+    /**
+     * Returns the foreign key field name.
+     */
+    String getFieldName();
 }

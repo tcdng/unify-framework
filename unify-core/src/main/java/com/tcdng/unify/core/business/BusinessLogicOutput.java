@@ -30,21 +30,21 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class BusinessLogicOutput {
 
-	private Map<String, Object> results;
+    private Map<String, Object> results;
 
-	public BusinessLogicOutput() {
-		results = new HashMap<String, Object>();
-	}
+    public BusinessLogicOutput() {
+        results = new HashMap<String, Object>();
+    }
 
-	public void setResult(String name, Object value) {
-		results.put(name, value);
-	}
+    public void setResult(String name, Object value) {
+        results.put(name, value);
+    }
 
-	public Set<String> getResultNames() {
-		return results.keySet();
-	}
+    public Set<String> getResultNames() {
+        return results.keySet();
+    }
 
-	public <T> T getResult(Class<T> valueType, String name) throws UnifyException {
-		return DataUtils.convert(valueType, results.get(name), null);
-	}
+    public <T> T getResult(Class<T> valueType, String name) throws UnifyException {
+        return DataUtils.convert(valueType, results.get(name), null);
+    }
 }

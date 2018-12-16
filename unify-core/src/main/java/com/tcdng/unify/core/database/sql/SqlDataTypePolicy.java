@@ -23,61 +23,61 @@ package com.tcdng.unify.core.database.sql;
  */
 public interface SqlDataTypePolicy {
 
-	/**
-	 * Appends a type SQL to string buffer.
-	 * 
-	 * @param sb
-	 *            the string buffer
-	 * @param length
-	 *            the data length
-	 * @param precision
-	 *            the number precision
-	 * @param scale
-	 *            the number scale
-	 */
-	void appendTypeSql(StringBuilder sb, int length, int precision, int scale);
+    /**
+     * Appends a type SQL to string buffer.
+     * 
+     * @param sb
+     *            the string buffer
+     * @param length
+     *            the data length
+     * @param precision
+     *            the number precision
+     * @param scale
+     *            the number scale
+     */
+    void appendTypeSql(StringBuilder sb, int length, int precision, int scale);
 
-	/**
-	 * Executes the setter of a prepared statement.
-	 * 
-	 * @param pstmt
-	 *            the prepared statement
-	 * @param index
-	 *            the data index
-	 * @param data
-	 *            the data to set
-	 * @throws Exception
-	 *             if an error occurs
-	 */
-	void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception;
+    /**
+     * Executes the setter of a prepared statement.
+     * 
+     * @param pstmt
+     *            the prepared statement
+     * @param index
+     *            the data index
+     * @param data
+     *            the data to set
+     * @throws Exception
+     *             if an error occurs
+     */
+    void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception;
 
-	/**
-	 * Executes resultset getter using supplied column name.
-	 * 
-	 * @param rs
-	 *            the result set
-	 * @param type
-	 *            the result type
-	 * @param column
-	 *            tthe result column
-	 * @return the result value
-	 * @throws Exception
-	 *             if an error occurs
-	 */
-	Object executeGetResult(Object rs, Class<?> type, String column) throws Exception;
+    /**
+     * Executes resultset getter using supplied column name.
+     * 
+     * @param rs
+     *            the result set
+     * @param type
+     *            the result type
+     * @param column
+     *            tthe result column
+     * @return the result value
+     * @throws Exception
+     *             if an error occurs
+     */
+    Object executeGetResult(Object rs, Class<?> type, String column) throws Exception;
 
-	/**
-	 * Executes resultset getter using supplied column index.
-	 * 
-	 * @param rs
-	 *            the result set
-	 * @param type
-	 *            the result type
-	 * @param index
-	 *            the result column index
-	 * @return the result value
-	 * @throws Exception
-	 *             if an error occurs
-	 */
-	Object executeGetResult(Object rs, Class<?> type, int index) throws Exception;
+    /**
+     * Executes resultset getter using supplied column index.
+     * 
+     * @param rs
+     *            the result set
+     * @param type
+     *            the result type
+     * @param index
+     *            the result column index
+     * @return the result value
+     * @throws Exception
+     *             if an error occurs
+     */
+    Object executeGetResult(Object rs, Class<?> type, int index) throws Exception;
 }

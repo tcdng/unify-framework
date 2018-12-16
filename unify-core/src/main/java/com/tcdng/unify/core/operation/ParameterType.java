@@ -23,5 +23,5 @@ package com.tcdng.unify.core.operation;
  * @since 1.0
  */
 public enum ParameterType {
-	VOID, SINGLE, BINARY, MULTIPLE
+    VOID, SINGLE, BINARY, MULTIPLE
 }

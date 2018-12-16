@@ -24,25 +24,25 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 public class AliasConfig {
 
-	private String name;
+    private String name;
 
-	private String actualName;
+    private String actualName;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@XmlAttribute(required = true)
-	public void setName(String name) {
-		this.name = name;
-	}
+    @XmlAttribute(required = true)
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getActualName() {
-		return actualName;
-	}
+    public String getActualName() {
+        return actualName;
+    }
 
-	@XmlAttribute(required = true)
-	public void setActualName(String actualName) {
-		this.actualName = actualName;
-	}
+    @XmlAttribute(required = true)
+    public void setActualName(String actualName) {
+        this.actualName = actualName;
+    }
 }

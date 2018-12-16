@@ -26,8 +26,8 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("test-batchfileprocessor-a")
 public class TestBatchFileProcessorA extends AbstractDBBatchItemFileReadProcessor<TestBatchItemRecordA> {
 
-	public TestBatchFileProcessorA() {
-		super(TestBatchItemRecordA.class);
-	}
+    public TestBatchFileProcessorA() {
+        super(TestBatchItemRecordA.class);
+    }
 
 }

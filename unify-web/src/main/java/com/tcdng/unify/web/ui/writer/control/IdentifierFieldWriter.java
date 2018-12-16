@@ -32,9 +32,9 @@ import com.tcdng.unify.web.ui.control.TextField;
 @Component("identifierfield-writer")
 public class IdentifierFieldWriter extends TextFieldWriter {
 
-	@Override
-	protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-		writer.writeIdentifierFormatRegex();
-	}
+    @Override
+    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+        writer.writeIdentifierFormatRegex();
+    }
 
 }

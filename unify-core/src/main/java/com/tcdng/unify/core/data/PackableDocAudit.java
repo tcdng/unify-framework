@@ -28,45 +28,45 @@ import java.util.Map;
  */
 public class PackableDocAudit {
 
-	private Map<String, TrailItem> items;
+    private Map<String, TrailItem> items;
 
-	public PackableDocAudit(List<TrailItem> items) {
-		Map<String, TrailItem> map = new HashMap<String, TrailItem>();
-		for (TrailItem item : items) {
-			map.put(item.getFieldName(), item);
-		}
+    public PackableDocAudit(List<TrailItem> items) {
+        Map<String, TrailItem> map = new HashMap<String, TrailItem>();
+        for (TrailItem item : items) {
+            map.put(item.getFieldName(), item);
+        }
 
-		this.items = Collections.unmodifiableMap(map);
-	}
+        this.items = Collections.unmodifiableMap(map);
+    }
 
-	public Map<String, TrailItem> getTrailItems() {
-		return items;
-	}
+    public Map<String, TrailItem> getTrailItems() {
+        return items;
+    }
 
-	public static class TrailItem {
+    public static class TrailItem {
 
-		private String fieldName;
+        private String fieldName;
 
-		private Object oldValue;
+        private Object oldValue;
 
-		private Object newValue;
+        private Object newValue;
 
-		public TrailItem(String fieldName, Object oldValue, Object newValue) {
-			this.fieldName = fieldName;
-			this.oldValue = oldValue;
-			this.newValue = newValue;
-		}
+        public TrailItem(String fieldName, Object oldValue, Object newValue) {
+            this.fieldName = fieldName;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
 
-		public String getFieldName() {
-			return fieldName;
-		}
+        public String getFieldName() {
+            return fieldName;
+        }
 
-		public Object getOldValue() {
-			return oldValue;
-		}
+        public Object getOldValue() {
+            return oldValue;
+        }
 
-		public Object getNewValue() {
-			return newValue;
-		}
-	}
+        public Object getNewValue() {
+            return newValue;
+        }
+    }
 }

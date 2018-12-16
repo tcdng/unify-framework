@@ -24,38 +24,38 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface NumberFormatter<T extends Number> extends Formatter<T> {
-	/**
-	 * Gets the formatter number precision.
-	 */
-	int getPrecision() throws UnifyException;
+    /**
+     * Gets the formatter number precision.
+     */
+    int getPrecision() throws UnifyException;
 
-	/**
-	 * Sets the formatter number precision.
-	 */
-	void setPrecision(int precision);
+    /**
+     * Sets the formatter number precision.
+     */
+    void setPrecision(int precision);
 
-	/**
-	 * Gets the formatter number scale.
-	 */
-	int getScale() throws UnifyException;
+    /**
+     * Gets the formatter number scale.
+     */
+    int getScale() throws UnifyException;
 
-	/**
-	 * Sets the formatter number scale.
-	 */
-	void setScale(int scale);
+    /**
+     * Sets the formatter number scale.
+     */
+    void setScale(int scale);
 
-	/**
-	 * Sets the grouping used flag.
-	 */
-	void setGroupingUsed(boolean groupingUsed);
+    /**
+     * Sets the grouping used flag.
+     */
+    void setGroupingUsed(boolean groupingUsed);
 
-	/**
-	 * Gets the grouping used flag.
-	 */
-	boolean isGroupingUsed() throws UnifyException;
+    /**
+     * Gets the grouping used flag.
+     */
+    boolean isGroupingUsed() throws UnifyException;
 
-	/**
-	 * Gets the formatter number symbols.
-	 */
-	NumberSymbols getNumberSymbols() throws UnifyException;
+    /**
+     * Gets the formatter number symbols.
+     */
+    NumberSymbols getNumberSymbols() throws UnifyException;
 }

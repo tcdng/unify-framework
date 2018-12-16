@@ -23,20 +23,20 @@ package com.tcdng.unify.web.http;
  */
 public class HttpClientTextResponse {
 
-	private int responseCode;
+    private int responseCode;
 
-	private String responseText;
+    private String responseText;
 
-	public HttpClientTextResponse(int responseCode, String responseText) {
-		this.responseCode = responseCode;
-		this.responseText = responseText;
-	}
+    public HttpClientTextResponse(int responseCode, String responseText) {
+        this.responseCode = responseCode;
+        this.responseText = responseText;
+    }
 
-	public int getResponseCode() {
-		return responseCode;
-	}
+    public int getResponseCode() {
+        return responseCode;
+    }
 
-	public String getResponseText() {
-		return responseText;
-	}
+    public String getResponseText() {
+        return responseText;
+    }
 }

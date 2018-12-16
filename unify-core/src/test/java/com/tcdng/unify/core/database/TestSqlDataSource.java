@@ -30,10 +30,10 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceImpl;
 @Singleton(true)
 @Component("test-sqldatasource")
 @Configuration({ @Configurable(property = "driver", value = "org.hsqldb.jdbcDriver"),
-		@Configurable(property = "connectionUrl", value = "jdbc:hsqldb:mem:test"),
-		@Configurable(property = "getConnectionTimeout", value = "1000"),
-		@Configurable(property = "dialect", value = "hsqldb-dialect"),
-		@Configurable(property = "shutdownOnTerminate", value = "true") })
+        @Configurable(property = "connectionUrl", value = "jdbc:hsqldb:mem:test"),
+        @Configurable(property = "getConnectionTimeout", value = "1000"),
+        @Configurable(property = "dialect", value = "hsqldb-dialect"),
+        @Configurable(property = "shutdownOnTerminate", value = "true") })
 public class TestSqlDataSource extends SqlDataSourceImpl {
 
 }

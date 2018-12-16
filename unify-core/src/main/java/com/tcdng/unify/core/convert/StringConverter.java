@@ -30,57 +30,57 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 public class StringConverter extends AbstractConverter<String> {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected String doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value != null) {
-			if (value instanceof String) {
-				if (formatter != null && String.class.equals(formatter.getDataType())) {
-					return ((Formatter<Object>) formatter).format(value);
-				}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected String doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value != null) {
+            if (value instanceof String) {
+                if (formatter != null && String.class.equals(formatter.getDataType())) {
+                    return ((Formatter<Object>) formatter).format(value);
+                }
 
-				return (String) value;
-			}
+                return (String) value;
+            }
 
-			if (value instanceof EnumConst) {
-				return ((EnumConst) value).code();
-			}
+            if (value instanceof EnumConst) {
+                return ((EnumConst) value).code();
+            }
 
-			if (value instanceof UplElementReferences) {
-				UplElementReferences uer = (UplElementReferences) value;
-				StringBuilder sb = new StringBuilder();
-				boolean isAppendSymbol = false;
-				for (String longName : uer.getLongNames()) {
-					if (isAppendSymbol) {
-						sb.append(',');
-					} else {
-						isAppendSymbol = true;
-					}
-					sb.append(longName);
-				}
-				return sb.toString();
-			}
+            if (value instanceof UplElementReferences) {
+                UplElementReferences uer = (UplElementReferences) value;
+                StringBuilder sb = new StringBuilder();
+                boolean isAppendSymbol = false;
+                for (String longName : uer.getLongNames()) {
+                    if (isAppendSymbol) {
+                        sb.append(',');
+                    } else {
+                        isAppendSymbol = true;
+                    }
+                    sb.append(longName);
+                }
+                return sb.toString();
+            }
 
-			if (value instanceof Money) {
-				StringBuilder sb = new StringBuilder();
-				Money money = (Money) value;
-				if (money.getCurrencyCode() != null) {
-					sb.append(money.getCurrencyCode()).append(" ");
-				}
+            if (value instanceof Money) {
+                StringBuilder sb = new StringBuilder();
+                Money money = (Money) value;
+                if (money.getCurrencyCode() != null) {
+                    sb.append(money.getCurrencyCode()).append(" ");
+                }
 
-				if (money.getAmount() != null) {
-					sb.append(((Formatter<BigDecimal>) formatter).format(money.getAmount()));
-				}
+                if (money.getAmount() != null) {
+                    sb.append(((Formatter<BigDecimal>) formatter).format(money.getAmount()));
+                }
 
-				return sb.toString();
-			}
+                return sb.toString();
+            }
 
-			if (formatter == null) {
-				return String.valueOf(value);
-			}
+            if (formatter == null) {
+                return String.valueOf(value);
+            }
 
-			return ((Formatter<Object>) formatter).format(value);
-		}
-		return null;
-	}
+            return ((Formatter<Object>) formatter).format(value);
+        }
+        return null;
+    }
 }

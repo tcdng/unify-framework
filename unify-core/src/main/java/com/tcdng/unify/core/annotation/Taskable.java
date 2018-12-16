@@ -36,21 +36,21 @@ import com.tcdng.unify.core.task.TaskExecLimit;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Taskable {
 
-	/** The task name */
-	String name();
+    /** The task name */
+    String name();
 
-	/** The task description */
-	String description();
+    /** The task description */
+    String description();
 
-	/** Method parameters */
-	Parameter[] parameters() default {};
+    /** Method parameters */
+    Parameter[] parameters() default {};
 
-	/** Taskable execution instance limit */
-	TaskExecLimit limit() default TaskExecLimit.ALLOW_SINGLE;
+    /** Taskable execution instance limit */
+    TaskExecLimit limit() default TaskExecLimit.ALLOW_SINGLE;
 
-	/** Indicates taskable is schedulable */
-	boolean schedulable() default false;
+    /** Indicates taskable is schedulable */
+    boolean schedulable() default false;
 
-	/** Name of task ID generator */
-	String idGenerator() default AnnotationConstants.NONE;
+    /** Name of task ID generator */
+    String idGenerator() default AnnotationConstants.NONE;
 }

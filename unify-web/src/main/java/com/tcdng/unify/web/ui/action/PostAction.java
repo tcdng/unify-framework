@@ -29,15 +29,15 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
  */
 @Component("ui-post")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class, mandatory = true),
-		@UplAttribute(name = "valueList", type = String[].class),
-		@UplAttribute(name = "validations", type = UplElementReferences.class) })
+        @UplAttribute(name = "valueList", type = String[].class),
+        @UplAttribute(name = "validations", type = UplElementReferences.class) })
 public class PostAction extends AbstractPageAction {
 
-	public PostAction() {
-		super("post");
-	}
+    public PostAction() {
+        super("post");
+    }
 
-	protected PostAction(String action) {
-		super(action);
-	}
+    protected PostAction(String action) {
+        super(action);
+    }
 }

@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class BetweenPolicy extends DoubleParameterPolicy {
 
-	public BetweenPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" BETWEEN ", sqlDataSourceDialect);
-	}
+    public BetweenPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" BETWEEN ", sqlDataSourceDialect);
+    }
 }

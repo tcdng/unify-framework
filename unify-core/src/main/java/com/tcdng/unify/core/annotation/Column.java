@@ -34,30 +34,30 @@ import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
 
-	/** The field {@link ColumnType}. */
-	ColumnType type() default ColumnType.AUTO;
+    /** The field {@link ColumnType}. */
+    ColumnType type() default ColumnType.AUTO;
 
-	/**
-	 * The field column name. If not set, the system generates a column name using
-	 * the field name.
-	 */
-	String name() default AnnotationConstants.NONE;
+    /**
+     * The field column name. If not set, the system generates a column name using
+     * the field name.
+     */
+    String name() default AnnotationConstants.NONE;
 
-	/** The name of the field transformer. */
-	String transformer() default AnnotationConstants.NONE;
+    /** The name of the field transformer. */
+    String transformer() default AnnotationConstants.NONE;
 
-	/** The length of the field. Applied for character columns. */
-	int length() default -1;
+    /** The length of the field. Applied for character columns. */
+    int length() default -1;
 
-	/** The precision of the field. Applied to numeric columns. */
-	int precision() default -1;
+    /** The precision of the field. Applied to numeric columns. */
+    int precision() default -1;
 
-	/** The scale of the field. Applied to numeric columns */
-	int scale() default -1;
+    /** The scale of the field. Applied to numeric columns */
+    int scale() default -1;
 
-	/** Indicates the field is nullable. */
-	boolean nullable() default false;
+    /** Indicates the field is nullable. */
+    boolean nullable() default false;
 
-	/** Column position */
-	int position() default DefaultColumnPositionConstants.COLUMN_POSITION;
+    /** Column position */
+    int position() default DefaultColumnPositionConstants.COLUMN_POSITION;
 }

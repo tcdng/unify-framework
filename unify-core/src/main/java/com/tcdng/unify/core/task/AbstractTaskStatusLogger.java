@@ -26,18 +26,18 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractTaskStatusLogger extends AbstractUnifyComponent implements TaskStatusLogger {
 
-	@Override
-	public void logTaskException(Exception e) {
-		logError(e);
-	}
+    @Override
+    public void logTaskException(Exception e) {
+        logError(e);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

@@ -27,11 +27,11 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  */
 @Component("ui-horizontalflyoutmenu")
 @UplAttributes({ @UplAttribute(name = "backImgSrc", type = String.class, defaultValue = "$t{images/previous.png}"),
-		@UplAttribute(name = "forwardImgSrc", type = String.class, defaultValue = "$t{images/next.png}") })
+        @UplAttribute(name = "forwardImgSrc", type = String.class, defaultValue = "$t{images/next.png}") })
 public class HorizontalFlyoutMenu extends AbstractFlyoutMenu {
 
-	@Override
-	public boolean isVertical() {
-		return false;
-	}
+    @Override
+    public boolean isVertical() {
+        return false;
+    }
 }

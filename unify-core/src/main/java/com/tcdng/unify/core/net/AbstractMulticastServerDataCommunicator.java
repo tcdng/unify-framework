@@ -31,188 +31,188 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractMulticastServerDataCommunicator extends AbstractMulticastServerCommunicator {
 
-	private DataOutputStream out;
+    private DataOutputStream out;
 
-	@Override
-	protected void onOpen(OutputStream out) throws UnifyException {
-		this.out = new DataOutputStream(out);
-	}
+    @Override
+    protected void onOpen(OutputStream out) throws UnifyException {
+        this.out = new DataOutputStream(out);
+    }
 
-	@Override
-	protected void onClose() throws UnifyException {
-		IOUtils.close(out);
-		out = null;
-	}
+    @Override
+    protected void onClose() throws UnifyException {
+        IOUtils.close(out);
+        out = null;
+    }
 
-	/**
-	 * Writes bytes into buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to write into
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeBytes(byte[] buffer) throws UnifyException {
-		try {
-			out.write(buffer);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes bytes into buffer.
+     * 
+     * @param buffer
+     *            the buffer to write into
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeBytes(byte[] buffer) throws UnifyException {
+        try {
+            out.write(buffer);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
-	/**
-	 * Writes bytes into portion of buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to write into
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the number of bytes to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeBytes(byte[] buffer, int offset, int length) throws UnifyException {
-		try {
-			out.write(buffer, offset, length);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
+    /**
+     * Writes bytes into portion of buffer.
+     * 
+     * @param buffer
+     *            the buffer to write into
+     * @param offset
+     *            the offset
+     * @param length
+     *            the number of bytes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeBytes(byte[] buffer, int offset, int length) throws UnifyException {
+        try {
+            out.write(buffer, offset, length);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * Writes a boolean.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeBoolean(boolean data) throws UnifyException {
-		try {
-			out.writeBoolean(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes a boolean.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeBoolean(boolean data) throws UnifyException {
+        try {
+            out.writeBoolean(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
-	/**
-	 * Writes a byte.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeByte(byte data) throws UnifyException {
-		try {
-			out.writeByte(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
+    /**
+     * Writes a byte.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeByte(byte data) throws UnifyException {
+        try {
+            out.writeByte(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * Writes a character.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeChar(char data) throws UnifyException {
-		try {
-			out.writeChar(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
+    /**
+     * Writes a character.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeChar(char data) throws UnifyException {
+        try {
+            out.writeChar(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * Writes a double.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeDouble(double data) throws UnifyException {
-		try {
-			out.writeDouble(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
-	}
+    /**
+     * Writes a double.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeDouble(double data) throws UnifyException {
+        try {
+            out.writeDouble(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
+    }
 
-	/**
-	 * Writes a float.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeFloat(float data) throws UnifyException {
-		try {
-			out.writeFloat(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
+    /**
+     * Writes a float.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeFloat(float data) throws UnifyException {
+        try {
+            out.writeFloat(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * Writes an integer.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeInt(int data) throws UnifyException {
-		try {
-			out.writeInt(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
+    /**
+     * Writes an integer.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeInt(int data) throws UnifyException {
+        try {
+            out.writeInt(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * Writes a long.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeLong(long data) throws UnifyException {
-		try {
-			out.writeLong(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
+    /**
+     * Writes a long.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeLong(long data) throws UnifyException {
+        try {
+            out.writeLong(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * Writes a short.
-	 * 
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void writeShort(short data) throws UnifyException {
-		try {
-			out.writeShort(data);
-		} catch (IOException e) {
-			throwTransmitException(e);
-		}
+    /**
+     * Writes a short.
+     * 
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void writeShort(short data) throws UnifyException {
+        try {
+            out.writeShort(data);
+        } catch (IOException e) {
+            throwTransmitException(e);
+        }
 
-	}
+    }
 
 }

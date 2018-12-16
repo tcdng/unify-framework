@@ -23,59 +23,59 @@ package com.tcdng.unify.web.util;
  */
 public final class HtmlUtils {
 
-	private HtmlUtils() {
+    private HtmlUtils() {
 
-	}
+    }
 
-	public static String getStringWithHtmlEscape(String string) {
-		StringBuilder sb = new StringBuilder();
-		HtmlUtils.writeStringWithHtmlEscape(sb, string);
-		return sb.toString();
-	}
+    public static String getStringWithHtmlEscape(String string) {
+        StringBuilder sb = new StringBuilder();
+        HtmlUtils.writeStringWithHtmlEscape(sb, string);
+        return sb.toString();
+    }
 
-	public static void writeStringWithHtmlEscape(StringBuilder sb, String string) {
-		if (string == null) {
-			sb.append(string);
-			return;
-		}
+    public static void writeStringWithHtmlEscape(StringBuilder sb, String string) {
+        if (string == null) {
+            sb.append(string);
+            return;
+        }
 
-		int length = string.length();
-		for (int i = 0; i < length; i++) {
-			char ch = string.charAt(i);
-			switch (ch) {
-			case '<':
-				sb.append("&lt;");
-				break;
-			case '>':
-				sb.append("&gt;");
-				break;
-			case '&':
-				sb.append("&amp;");
-				break;
-			case '"':
-				sb.append("&quot;");
-				break;
-			case '\'':
-				sb.append("&apos;");
-				break;
-			default:
-				sb.append(ch);
-			}
-		}
-	}
+        int length = string.length();
+        for (int i = 0; i < length; i++) {
+            char ch = string.charAt(i);
+            switch (ch) {
+            case '<':
+                sb.append("&lt;");
+                break;
+            case '>':
+                sb.append("&gt;");
+                break;
+            case '&':
+                sb.append("&amp;");
+                break;
+            case '"':
+                sb.append("&quot;");
+                break;
+            case '\'':
+                sb.append("&apos;");
+                break;
+            default:
+                sb.append(ch);
+            }
+        }
+    }
 
-	public static String extractStyleAttribute(String style, String attributeName) {
-		if (style != null && !style.isEmpty()) {
-			int startIndex = style.indexOf(attributeName);
-			if (startIndex >= 0) {
-				int stopIndex = style.indexOf(';', startIndex);
-				if (stopIndex > 0) {
-					return style.substring(startIndex, ++stopIndex);
-				}
-			}
-		}
+    public static String extractStyleAttribute(String style, String attributeName) {
+        if (style != null && !style.isEmpty()) {
+            int startIndex = style.indexOf(attributeName);
+            if (startIndex >= 0) {
+                int stopIndex = style.indexOf(';', startIndex);
+                if (stopIndex > 0) {
+                    return style.substring(startIndex, ++stopIndex);
+                }
+            }
+        }
 
-		return "";
-	}
+        return "";
+    }
 
 }

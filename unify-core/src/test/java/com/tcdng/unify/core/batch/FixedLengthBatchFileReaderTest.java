@@ -36,202 +36,202 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testOpenBatchFileReader() throws Exception {
-		BatchFileReader reader = null;
-		try {
-			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-			byte[][] fileObject = new byte[1][];
-			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-			reader.open(null, fileBulkConfig, fileObject);
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-	}
+    @Test
+    public void testOpenBatchFileReader() throws Exception {
+        BatchFileReader reader = null;
+        try {
+            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+            byte[][] fileObject = new byte[1][];
+            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                    "6758495839Bamanga Tukur       NGN0000000052000");
+            reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
+            reader.open(null, fileBulkConfig, fileObject);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 
-	@Test
-	public void testReadEmptyFile() throws Exception {
-		BatchFileReader reader = null;
-		try {
-			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-			byte[][] fileObject = new byte[1][];
-			fileObject[0] = IOUtils.createInMemoryTextFile();
-			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-			reader.open(null, fileBulkConfig, fileObject);
+    @Test
+    public void testReadEmptyFile() throws Exception {
+        BatchFileReader reader = null;
+        try {
+            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+            byte[][] fileObject = new byte[1][];
+            fileObject[0] = IOUtils.createInMemoryTextFile();
+            reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
+            reader.open(null, fileBulkConfig, fileObject);
 
-			boolean read = reader.readNextRecord(getValueStore(new TestBatchItemRecordB()));
-			assertFalse(read);
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-	}
+            boolean read = reader.readNextRecord(getValueStore(new TestBatchItemRecordB()));
+            assertFalse(read);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 
-	@Test
-	public void testReadNextRecordWithTrimmingOn() throws Exception {
-		BatchFileReader reader = null;
-		try {
-			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-			byte[][] fileObject = new byte[1][];
-			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-			reader.open(null, fileBulkConfig, fileObject);
+    @Test
+    public void testReadNextRecordWithTrimmingOn() throws Exception {
+        BatchFileReader reader = null;
+        try {
+            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+            byte[][] fileObject = new byte[1][];
+            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                    "6758495839Bamanga Tukur       NGN0000000052000");
+            reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
+            reader.open(null, fileBulkConfig, fileObject);
 
-			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = getValueStore(batchItemRecord);
-			boolean read = reader.readNextRecord(store);
-			assertTrue(read);
-			assertEquals("0123456789", batchItemRecord.getAccountNo());
-			assertEquals("Abel Turner", batchItemRecord.getBeneficiary());
-			assertEquals("NGN", batchItemRecord.getCurrency());
-			assertEquals(Double.valueOf(20000), batchItemRecord.getAmount());
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-	}
+            TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
+            ValueStore store = getValueStore(batchItemRecord);
+            boolean read = reader.readNextRecord(store);
+            assertTrue(read);
+            assertEquals("0123456789", batchItemRecord.getAccountNo());
+            assertEquals("Abel Turner", batchItemRecord.getBeneficiary());
+            assertEquals("NGN", batchItemRecord.getCurrency());
+            assertEquals(Double.valueOf(20000), batchItemRecord.getAmount());
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 
-	@Test
-	public void testReadNextRecordWithTrimmingOff() throws Exception {
-		BatchFileReader reader = null;
-		try {
-			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(false);
-			byte[][] fileObject = new byte[1][];
-			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-			reader.open(null, fileBulkConfig, fileObject);
+    @Test
+    public void testReadNextRecordWithTrimmingOff() throws Exception {
+        BatchFileReader reader = null;
+        try {
+            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(false);
+            byte[][] fileObject = new byte[1][];
+            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                    "6758495839Bamanga Tukur       NGN0000000052000");
+            reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
+            reader.open(null, fileBulkConfig, fileObject);
 
-			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = getValueStore(batchItemRecord);
-			boolean read = reader.readNextRecord(store);
-			assertTrue(read);
-			assertEquals("0123456789", batchItemRecord.getAccountNo());
-			assertEquals("Abel Turner         ", batchItemRecord.getBeneficiary());
-			assertEquals("NGN", batchItemRecord.getCurrency());
-			assertEquals(Double.valueOf(20000), batchItemRecord.getAmount());
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-	}
+            TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
+            ValueStore store = getValueStore(batchItemRecord);
+            boolean read = reader.readNextRecord(store);
+            assertTrue(read);
+            assertEquals("0123456789", batchItemRecord.getAccountNo());
+            assertEquals("Abel Turner         ", batchItemRecord.getBeneficiary());
+            assertEquals("NGN", batchItemRecord.getCurrency());
+            assertEquals(Double.valueOf(20000), batchItemRecord.getAmount());
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 
-	@Test
-	public void testReadNextRecordMultiple() throws Exception {
-		BatchFileReader reader = null;
-		try {
-			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-			byte[][] fileObject = new byte[1][];
-			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-			reader.open(null, fileBulkConfig, fileObject);
+    @Test
+    public void testReadNextRecordMultiple() throws Exception {
+        BatchFileReader reader = null;
+        try {
+            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+            byte[][] fileObject = new byte[1][];
+            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                    "6758495839Bamanga Tukur       NGN0000000052000");
+            reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
+            reader.open(null, fileBulkConfig, fileObject);
 
-			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = getValueStore(batchItemRecord);
-			boolean read = reader.readNextRecord(store);
-			assertTrue(read);
-			assertEquals("0123456789", batchItemRecord.getAccountNo());
-			assertEquals("Abel Turner", batchItemRecord.getBeneficiary());
-			assertEquals("NGN", batchItemRecord.getCurrency());
-			assertEquals(Double.valueOf(20000), batchItemRecord.getAmount());
+            TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
+            ValueStore store = getValueStore(batchItemRecord);
+            boolean read = reader.readNextRecord(store);
+            assertTrue(read);
+            assertEquals("0123456789", batchItemRecord.getAccountNo());
+            assertEquals("Abel Turner", batchItemRecord.getBeneficiary());
+            assertEquals("NGN", batchItemRecord.getCurrency());
+            assertEquals(Double.valueOf(20000), batchItemRecord.getAmount());
 
-			read = reader.readNextRecord(store);
-			assertTrue(read);
-			assertEquals("6758495839", batchItemRecord.getAccountNo());
-			assertEquals("Bamanga Tukur", batchItemRecord.getBeneficiary());
-			assertEquals("NGN", batchItemRecord.getCurrency());
-			assertEquals(Double.valueOf(52000), batchItemRecord.getAmount());
+            read = reader.readNextRecord(store);
+            assertTrue(read);
+            assertEquals("6758495839", batchItemRecord.getAccountNo());
+            assertEquals("Bamanga Tukur", batchItemRecord.getBeneficiary());
+            assertEquals("NGN", batchItemRecord.getCurrency());
+            assertEquals(Double.valueOf(52000), batchItemRecord.getAmount());
 
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-	}
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 
-	@Test
-	public void testReadNextRecordWithFormatter() throws Exception {
-		BatchFileReader reader = null;
-		try {
-			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-			fileBulkConfig.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true,
-					'0');
+    @Test
+    public void testReadNextRecordWithFormatter() throws Exception {
+        BatchFileReader reader = null;
+        try {
+            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+            fileBulkConfig.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true,
+                    '0');
 
-			byte[][] fileObject = new byte[1][];
-			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-					"6758495839Bamanga Tukur       NGN0000000052043");
-			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-			reader.open(null, fileBulkConfig, fileObject);
+            byte[][] fileObject = new byte[1][];
+            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                    "6758495839Bamanga Tukur       NGN0000000052043");
+            reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
+            reader.open(null, fileBulkConfig, fileObject);
 
-			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = getValueStore(batchItemRecord);
-			boolean read = reader.readNextRecord(store);
-			assertTrue(read);
-			assertEquals("0123456789", batchItemRecord.getAccountNo());
-			assertEquals("Abel Turner", batchItemRecord.getBeneficiary());
-			assertEquals("NGN", batchItemRecord.getCurrency());
-			assertEquals(Double.valueOf(200.00), batchItemRecord.getAmount());
+            TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
+            ValueStore store = getValueStore(batchItemRecord);
+            boolean read = reader.readNextRecord(store);
+            assertTrue(read);
+            assertEquals("0123456789", batchItemRecord.getAccountNo());
+            assertEquals("Abel Turner", batchItemRecord.getBeneficiary());
+            assertEquals("NGN", batchItemRecord.getCurrency());
+            assertEquals(Double.valueOf(200.00), batchItemRecord.getAmount());
 
-			read = reader.readNextRecord(store);
-			assertTrue(read);
-			assertEquals("6758495839", batchItemRecord.getAccountNo());
-			assertEquals("Bamanga Tukur", batchItemRecord.getBeneficiary());
-			assertEquals("NGN", batchItemRecord.getCurrency());
-			assertEquals(Double.valueOf(520.43), batchItemRecord.getAmount());
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-	}
+            read = reader.readNextRecord(store);
+            assertTrue(read);
+            assertEquals("6758495839", batchItemRecord.getAccountNo());
+            assertEquals("Bamanga Tukur", batchItemRecord.getBeneficiary());
+            assertEquals("NGN", batchItemRecord.getCurrency());
+            assertEquals(Double.valueOf(520.43), batchItemRecord.getAmount());
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 
-	@Test
-	public void testReadNextRecordTillEof() throws Exception {
-		BatchFileReader reader = null;
-		try {
-			BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-			byte[][] fileObject = new byte[1][];
-			fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-					"6758495839Bamanga Tukur       NGN0000000052000");
-			reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-			reader.open(null, fileBulkConfig, fileObject);
+    @Test
+    public void testReadNextRecordTillEof() throws Exception {
+        BatchFileReader reader = null;
+        try {
+            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+            byte[][] fileObject = new byte[1][];
+            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                    "6758495839Bamanga Tukur       NGN0000000052000");
+            reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
+            reader.open(null, fileBulkConfig, fileObject);
 
-			TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
-			ValueStore store = getValueStore(batchItemRecord);
-			boolean read = reader.readNextRecord(store);
-			assertTrue(read);
-			read = reader.readNextRecord(store);
-			assertTrue(read);
-			read = reader.readNextRecord(store);
-			assertFalse(read);
-		} finally {
-			if (reader != null) {
-				reader.close();
-			}
-		}
-	}
+            TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
+            ValueStore store = getValueStore(batchItemRecord);
+            boolean read = reader.readNextRecord(store);
+            assertTrue(read);
+            read = reader.readNextRecord(store);
+            assertTrue(read);
+            read = reader.readNextRecord(store);
+            assertFalse(read);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 
-	private ValueStore getValueStore(Object record) throws Exception {
-		return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-				.getValueStore(record, 0);
-	}
+    private ValueStore getValueStore(Object record) throws Exception {
+        return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+                .getValueStore(record, 0);
+    }
 }

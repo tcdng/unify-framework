@@ -32,40 +32,40 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public abstract class AbstractPageControllerResponse extends AbstractUplComponent implements PageControllerResponse {
 
-	@Configurable(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
-	private RequestContextUtil requestContextUtil;
+    @Configurable(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
+    private RequestContextUtil requestContextUtil;
 
-	@Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
-	private PageManager pageManager;
+    @Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
+    private PageManager pageManager;
 
-	@Configurable(ApplicationComponents.APPLICATION_FORMATHELPER)
-	private FormatHelper formatHelper;
+    @Configurable(ApplicationComponents.APPLICATION_FORMATHELPER)
+    private FormatHelper formatHelper;
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected PageManager getPageManager() throws UnifyException {
-		return pageManager;
-	}
+    protected PageManager getPageManager() throws UnifyException {
+        return pageManager;
+    }
 
-	protected RequestContextUtil getRequestContextUtil() throws UnifyException {
-		return requestContextUtil;
-	}
+    protected RequestContextUtil getRequestContextUtil() throws UnifyException {
+        return requestContextUtil;
+    }
 
-	protected FormatHelper getFormatHelper() throws UnifyException {
-		return formatHelper;
-	}
+    protected FormatHelper getFormatHelper() throws UnifyException {
+        return formatHelper;
+    }
 
-	protected void appendRefreshAttributesJson(ResponseWriter writer, boolean clearShortcuts) throws UnifyException {
-		writer.write("\"clearShortcuts\":").write(clearShortcuts);
-		writer.write(",\"pageNameAliases\":");
-		writer.writeJsonPageNameAliasesArray();
-	}
+    protected void appendRefreshAttributesJson(ResponseWriter writer, boolean clearShortcuts) throws UnifyException {
+        writer.write("\"clearShortcuts\":").write(clearShortcuts);
+        writer.write(",\"pageNameAliases\":");
+        writer.writeJsonPageNameAliasesArray();
+    }
 }

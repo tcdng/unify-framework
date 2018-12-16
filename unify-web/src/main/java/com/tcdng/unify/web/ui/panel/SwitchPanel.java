@@ -30,29 +30,29 @@ import com.tcdng.unify.web.ui.Widget;
 @Component("ui-switchpanel")
 public class SwitchPanel extends AbstractPanel {
 
-	private String currentComponent;
+    private String currentComponent;
 
-	public void switchContent(String shortName) throws UnifyException {
-		currentComponent = shortName;
-	}
+    public void switchContent(String shortName) throws UnifyException {
+        currentComponent = shortName;
+    }
 
-	public Widget getCurrentWidget() throws UnifyException {
-		if (currentComponent != null) {
-			return getWidgetByShortName(currentComponent);
-		}
-		return null;
-	}
+    public Widget getCurrentWidget() throws UnifyException {
+        if (currentComponent != null) {
+            return getWidgetByShortName(currentComponent);
+        }
+        return null;
+    }
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
 
-		for (String longName : getLayoutWidgetLongNames()) {
-			Widget widget = getWidgetByLongName(longName);
-			if (!widget.isHidden()) {
-				currentComponent = widget.getShortName();
-				break;
-			}
-		}
-	}
+        for (String longName : getLayoutWidgetLongNames()) {
+            Widget widget = getWidgetByLongName(longName);
+            if (!widget.isHidden()) {
+                currentComponent = widget.getShortName();
+                break;
+            }
+        }
+    }
 }

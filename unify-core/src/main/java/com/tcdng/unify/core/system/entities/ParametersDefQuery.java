@@ -25,11 +25,11 @@ import com.tcdng.unify.core.database.Query;
  */
 public class ParametersDefQuery extends Query<ParametersDef> {
 
-	public ParametersDefQuery() {
-		super(ParametersDef.class);
-	}
+    public ParametersDefQuery() {
+        super(ParametersDef.class);
+    }
 
-	public ParametersDefQuery typeName(String typeName) {
-		return (ParametersDefQuery) equals("typeName", typeName);
-	}
+    public ParametersDefQuery typeName(String typeName) {
+        return (ParametersDefQuery) equals("typeName", typeName);
+    }
 }

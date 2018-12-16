@@ -29,9 +29,9 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Index {
 
-	/** The index properties */
-	String[] value();
+    /** The index properties */
+    String[] value();
 
-	/** Specifies if index should have unique values */
-	boolean unique() default false;
+    /** Specifies if index should have unique values */
+    boolean unique() default false;
 }

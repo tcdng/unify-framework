@@ -23,31 +23,31 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("staticdayinweeklist")
 public enum DayInWeek implements EnumConst {
 
-	SUNDAY("Sun"), MONDAY("Mon"), TUESDAY("Tue"), WEDNESDAY("Wed"), THURSDAY("Thu"), FRIDAY("Fri"), SATURDAY("Sat");
+    SUNDAY("Sun"), MONDAY("Mon"), TUESDAY("Tue"), WEDNESDAY("Wed"), THURSDAY("Thu"), FRIDAY("Fri"), SATURDAY("Sat");
 
-	private static final DayInWeek[] BY_CALENDAR_INDEX = { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,
-			SATURDAY };
+    private static final DayInWeek[] BY_CALENDAR_INDEX = { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,
+            SATURDAY };
 
-	private final String code;
+    private final String code;
 
-	private DayInWeek(String code) {
-		this.code = code;
-	}
+    private DayInWeek(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static DayInWeek byJavaCalendarIndex(int index) {
-		return BY_CALENDAR_INDEX[index - 1];
-	}
+    public static DayInWeek byJavaCalendarIndex(int index) {
+        return BY_CALENDAR_INDEX[index - 1];
+    }
 
-	public static DayInWeek fromCode(String code) {
-		return EnumUtils.fromCode(DayInWeek.class, code);
-	}
+    public static DayInWeek fromCode(String code) {
+        return EnumUtils.fromCode(DayInWeek.class, code);
+    }
 
-	public static DayInWeek fromName(String name) {
-		return EnumUtils.fromName(DayInWeek.class, name);
-	}
+    public static DayInWeek fromName(String name) {
+        return EnumUtils.fromName(DayInWeek.class, name);
+    }
 }

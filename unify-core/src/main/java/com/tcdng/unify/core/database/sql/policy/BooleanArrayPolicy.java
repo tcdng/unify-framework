@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database.sql.policy;
  */
 public class BooleanArrayPolicy extends StringArrayPolicy {
 
-	public BooleanArrayPolicy() {
-		super(Boolean[].class);
-	}
+    public BooleanArrayPolicy() {
+        super(Boolean[].class);
+    }
 }

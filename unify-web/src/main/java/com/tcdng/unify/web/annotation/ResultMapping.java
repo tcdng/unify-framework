@@ -29,9 +29,9 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ResultMapping {
-	/** The result mapping name */
-	String name();
+    /** The result mapping name */
+    String name();
 
-	/** List of page bean responses */
-	String[] response() default {};
+    /** List of page bean responses */
+    String[] response() default {};
 }

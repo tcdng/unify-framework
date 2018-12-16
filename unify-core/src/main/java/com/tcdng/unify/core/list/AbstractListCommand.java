@@ -26,24 +26,24 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractListCommand<T> extends AbstractUnifyComponent implements ListCommand<T> {
 
-	private Class<T> paramType;
+    private Class<T> paramType;
 
-	public AbstractListCommand(Class<T> paramType) {
-		this.paramType = paramType;
-	}
+    public AbstractListCommand(Class<T> paramType) {
+        this.paramType = paramType;
+    }
 
-	@Override
-	public Class<T> getParamType() throws UnifyException {
-		return paramType;
-	}
+    @Override
+    public Class<T> getParamType() throws UnifyException {
+        return paramType;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

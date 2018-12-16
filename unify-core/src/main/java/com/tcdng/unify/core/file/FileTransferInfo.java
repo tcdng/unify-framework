@@ -31,194 +31,194 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class FileTransferInfo {
 
-	private String remoteHost;
+    private String remoteHost;
 
-	private String authenticationId;
+    private String authenticationId;
 
-	private String authenticationPassword;
+    private String authenticationPassword;
 
-	private String remotePath;
+    private String remotePath;
 
-	private String localPath;
+    private String localPath;
 
-	private Set<String> filePrefixes;
+    private Set<String> filePrefixes;
 
-	private Set<String> fileSuffixes;
+    private Set<String> fileSuffixes;
 
-	private int remotePort;
+    private int remotePort;
 
-	private boolean deleteSourceOnTransfer;
+    private boolean deleteSourceOnTransfer;
 
-	private FileTransferInfo(String remoteHost, int remotePort, String authenticationId, String authenticationPassword,
-			String remotePath, String localPath, Set<String> filePrefixes, Set<String> fileSuffixes,
-			boolean deleteSourceOnTransfer) {
-		this.remoteHost = remoteHost;
-		this.remotePort = remotePort;
-		this.authenticationId = authenticationId;
-		this.authenticationPassword = authenticationPassword;
-		this.remotePath = remotePath;
-		this.localPath = localPath;
-		this.deleteSourceOnTransfer = deleteSourceOnTransfer;
-		this.filePrefixes = filePrefixes;
-		this.fileSuffixes = fileSuffixes;
-	}
+    private FileTransferInfo(String remoteHost, int remotePort, String authenticationId, String authenticationPassword,
+            String remotePath, String localPath, Set<String> filePrefixes, Set<String> fileSuffixes,
+            boolean deleteSourceOnTransfer) {
+        this.remoteHost = remoteHost;
+        this.remotePort = remotePort;
+        this.authenticationId = authenticationId;
+        this.authenticationPassword = authenticationPassword;
+        this.remotePath = remotePath;
+        this.localPath = localPath;
+        this.deleteSourceOnTransfer = deleteSourceOnTransfer;
+        this.filePrefixes = filePrefixes;
+        this.fileSuffixes = fileSuffixes;
+    }
 
-	public String getRemoteHost() {
-		return remoteHost;
-	}
+    public String getRemoteHost() {
+        return remoteHost;
+    }
 
-	public int getRemotePort() {
-		return remotePort;
-	}
+    public int getRemotePort() {
+        return remotePort;
+    }
 
-	public String getAuthenticationId() {
-		return authenticationId;
-	}
+    public String getAuthenticationId() {
+        return authenticationId;
+    }
 
-	public String getAuthenticationPassword() {
-		return authenticationPassword;
-	}
+    public String getAuthenticationPassword() {
+        return authenticationPassword;
+    }
 
-	public String getRemotePath() {
-		return remotePath;
-	}
+    public String getRemotePath() {
+        return remotePath;
+    }
 
-	public String getLocalPath() {
-		return localPath;
-	}
+    public String getLocalPath() {
+        return localPath;
+    }
 
-	public Set<String> getFilePrefixes() {
-		return filePrefixes;
-	}
+    public Set<String> getFilePrefixes() {
+        return filePrefixes;
+    }
 
-	public Set<String> getFileSuffixes() {
-		return fileSuffixes;
-	}
+    public Set<String> getFileSuffixes() {
+        return fileSuffixes;
+    }
 
-	public boolean isDeleteSourceOnTransfer() {
-		return deleteSourceOnTransfer;
-	}
+    public boolean isDeleteSourceOnTransfer() {
+        return deleteSourceOnTransfer;
+    }
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
+    public static Builder newBuilder() {
+        return new Builder();
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private String remoteHost;
+        private String remoteHost;
 
-		private String authenticationId;
+        private String authenticationId;
 
-		private String authenticationPassword;
+        private String authenticationPassword;
 
-		private String remotePath;
+        private String remotePath;
 
-		private String localPath;
+        private String localPath;
 
-		private Set<String> filePrefixes;
+        private Set<String> filePrefixes;
 
-		private Set<String> fileSuffixes;
+        private Set<String> fileSuffixes;
 
-		private int remotePort;
+        private int remotePort;
 
-		private boolean deleteSourceOnTransfer;
+        private boolean deleteSourceOnTransfer;
 
-		private Builder() {
+        private Builder() {
 
-		}
+        }
 
-		public Builder remoteHost(String remoteHost) {
-			this.remoteHost = remoteHost;
-			return this;
-		}
+        public Builder remoteHost(String remoteHost) {
+            this.remoteHost = remoteHost;
+            return this;
+        }
 
-		public Builder remotePath(String remotePath) {
-			this.remotePath = remotePath;
-			return this;
-		}
+        public Builder remotePath(String remotePath) {
+            this.remotePath = remotePath;
+            return this;
+        }
 
-		public Builder remotePort(int remotePort) {
-			this.remotePort = remotePort;
-			return this;
-		}
+        public Builder remotePort(int remotePort) {
+            this.remotePort = remotePort;
+            return this;
+        }
 
-		public Builder localPath(String localPath) {
-			this.localPath = localPath;
-			return this;
-		}
+        public Builder localPath(String localPath) {
+            this.localPath = localPath;
+            return this;
+        }
 
-		public Builder useAuthenticationId(String authenticationId) {
-			this.authenticationId = authenticationId;
-			return this;
-		}
+        public Builder useAuthenticationId(String authenticationId) {
+            this.authenticationId = authenticationId;
+            return this;
+        }
 
-		public Builder useAuthenticationPassword(String authenticationPassword) {
-			this.authenticationPassword = authenticationPassword;
-			return this;
-		}
+        public Builder useAuthenticationPassword(String authenticationPassword) {
+            this.authenticationPassword = authenticationPassword;
+            return this;
+        }
 
-		public Builder deleteSourceOnTransfer(boolean deleteSourceOnTransfer) {
-			this.deleteSourceOnTransfer = deleteSourceOnTransfer;
-			return this;
-		}
+        public Builder deleteSourceOnTransfer(boolean deleteSourceOnTransfer) {
+            this.deleteSourceOnTransfer = deleteSourceOnTransfer;
+            return this;
+        }
 
-		public Builder filterByPrefix(String prefix) {
-			if (filePrefixes == null) {
-				filePrefixes = new HashSet<String>();
-			}
+        public Builder filterByPrefix(String prefix) {
+            if (filePrefixes == null) {
+                filePrefixes = new HashSet<String>();
+            }
 
-			filePrefixes.add(prefix);
-			return this;
-		}
+            filePrefixes.add(prefix);
+            return this;
+        }
 
-		public Builder filterByPrefixes(Collection<String> prefixes) {
-			if (!DataUtils.isBlank(prefixes)) {
-				if (filePrefixes == null) {
-					filePrefixes = new HashSet<String>();
-				}
+        public Builder filterByPrefixes(Collection<String> prefixes) {
+            if (!DataUtils.isBlank(prefixes)) {
+                if (filePrefixes == null) {
+                    filePrefixes = new HashSet<String>();
+                }
 
-				filePrefixes.addAll(prefixes);
-			}
+                filePrefixes.addAll(prefixes);
+            }
 
-			return this;
-		}
+            return this;
+        }
 
-		public Builder filterByExtension(String extension) {
-			if (fileSuffixes == null) {
-				fileSuffixes = new HashSet<String>();
-			}
+        public Builder filterByExtension(String extension) {
+            if (fileSuffixes == null) {
+                fileSuffixes = new HashSet<String>();
+            }
 
-			fileSuffixes.add(extension);
-			return this;
-		}
+            fileSuffixes.add(extension);
+            return this;
+        }
 
-		public Builder filterByExtensions(Collection<String> extensions) {
-			if (!DataUtils.isBlank(extensions)) {
-				if (fileSuffixes == null) {
-					fileSuffixes = new HashSet<String>();
-				}
+        public Builder filterByExtensions(Collection<String> extensions) {
+            if (!DataUtils.isBlank(extensions)) {
+                if (fileSuffixes == null) {
+                    fileSuffixes = new HashSet<String>();
+                }
 
-				fileSuffixes.addAll(extensions);
-			}
+                fileSuffixes.addAll(extensions);
+            }
 
-			return this;
-		}
+            return this;
+        }
 
-		public FileTransferInfo build() throws UnifyException {
-			if (filePrefixes == null) {
-				filePrefixes = Collections.emptySet();
-			} else {
-				filePrefixes = Collections.unmodifiableSet(filePrefixes);
-			}
+        public FileTransferInfo build() throws UnifyException {
+            if (filePrefixes == null) {
+                filePrefixes = Collections.emptySet();
+            } else {
+                filePrefixes = Collections.unmodifiableSet(filePrefixes);
+            }
 
-			if (fileSuffixes == null) {
-				fileSuffixes = Collections.emptySet();
-			} else {
-				fileSuffixes = Collections.unmodifiableSet(fileSuffixes);
-			}
+            if (fileSuffixes == null) {
+                fileSuffixes = Collections.emptySet();
+            } else {
+                fileSuffixes = Collections.unmodifiableSet(fileSuffixes);
+            }
 
-			return new FileTransferInfo(remoteHost, remotePort, authenticationId, authenticationPassword, remotePath,
-					localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer);
-		}
-	}
+            return new FileTransferInfo(remoteHost, remotePort, authenticationId, authenticationPassword, remotePath,
+                    localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer);
+        }
+    }
 }

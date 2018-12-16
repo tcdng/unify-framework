@@ -26,27 +26,27 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum ColumnType implements EnumConst {
 
-	AUTO("AUT"), CHARACTER("CHR"), BLOB("BLB"), BOOLEAN("BLN"), BOOLEAN_ARRAY("BLA"), CLOB("CLB"), DATE("DTE"), DECIMAL(
-			"DEC"), DOUBLE("DBL"), DOUBLE_ARRAY("DBA"), FLOAT("FLT"), FLOAT_ARRAY("FLA"), SHORT("SHT"), SHORT_ARRAY(
-					"SHA"), INTEGER("INT"), INTEGER_ARRAY("INA"), LONG("LNG"), LONG_ARRAY(
-							"LNA"), STRING("STR"), STRING_ARRAY("STA"), TIMESTAMP("TSP"), ENUMCONST("ECT");
+    AUTO("AUT"), CHARACTER("CHR"), BLOB("BLB"), BOOLEAN("BLN"), BOOLEAN_ARRAY("BLA"), CLOB("CLB"), DATE("DTE"), DECIMAL(
+            "DEC"), DOUBLE("DBL"), DOUBLE_ARRAY("DBA"), FLOAT("FLT"), FLOAT_ARRAY("FLA"), SHORT("SHT"), SHORT_ARRAY(
+                    "SHA"), INTEGER("INT"), INTEGER_ARRAY("INA"), LONG("LNG"), LONG_ARRAY(
+                            "LNA"), STRING("STR"), STRING_ARRAY("STA"), TIMESTAMP("TSP"), ENUMCONST("ECT");
 
-	private final String code;
+    private final String code;
 
-	private ColumnType(String code) {
-		this.code = code;
-	}
+    private ColumnType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static ColumnType fromCode(String code) {
-		return EnumUtils.fromCode(ColumnType.class, code);
-	}
+    public static ColumnType fromCode(String code) {
+        return EnumUtils.fromCode(ColumnType.class, code);
+    }
 
-	public static ColumnType fromName(String name) {
-		return EnumUtils.fromName(ColumnType.class, name);
-	}
+    public static ColumnType fromName(String name) {
+        return EnumUtils.fromName(ColumnType.class, name);
+    }
 }

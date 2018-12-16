@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class GreaterPolicy extends SingleParameterPolicy {
 
-	public GreaterPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" > ", sqlDataSourceDialect);
-	}
+    public GreaterPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" > ", sqlDataSourceDialect);
+    }
 }

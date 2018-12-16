@@ -42,197 +42,197 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest {
 
-	private Database db;
+    private Database db;
 
-	private DatabaseTransactionManager tm;
+    private DatabaseTransactionManager tm;
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testBatchItemProcessing() throws Exception {
-		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-		byte[][] fileObject = new byte[1][];
-		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-				"6758495839Bamanga Tukur       NGN0000000052000");
-		input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-		input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testBatchItemProcessing() throws Exception {
+        // Setup parameters
+        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
+        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+        byte[][] fileObject = new byte[1][];
+        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                "6758495839Bamanga Tukur       NGN0000000052000");
+        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
+        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
-		// Perform batch file processing and do some assertions
-		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-		tm.beginTransaction();
-		try {
-			blu.execute(input, output);
-		} finally {
-			tm.endTransaction();
-		}
+        // Perform batch file processing and do some assertions
+        BusinessLogicOutput output = new BusinessLogicOutput();
+        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
+        tm.beginTransaction();
+        try {
+            blu.execute(input, output);
+        } finally {
+            tm.endTransaction();
+        }
 
-		List<Object> result = output.getResult(List.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
-		assertNotNull(result);
-		assertEquals(2, result.size());
+        List<Object> result = output.getResult(List.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        assertNotNull(result);
+        assertEquals(2, result.size());
 
-		// Assert persistent records are created
-		List<TestBatchItemRecordA> batchItemList = null;
-		tm.beginTransaction();
-		try {
-			batchItemList = db.findAll(
-					new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
-		} finally {
-			tm.endTransaction();
-		}
+        // Assert persistent records are created
+        List<TestBatchItemRecordA> batchItemList = null;
+        tm.beginTransaction();
+        try {
+            batchItemList = db.findAll(
+                    new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
+        } finally {
+            tm.endTransaction();
+        }
 
-		assertEquals(2, batchItemList.size());
+        assertEquals(2, batchItemList.size());
 
-		TestBatchItemRecordA record = batchItemList.get(0);
-		assertEquals("0123456789", record.getAccountNo());
-		assertEquals("Abel Turner", record.getBeneficiary());
-		assertEquals("NGN", record.getCurrency());
-		assertEquals(Double.valueOf(20000), record.getAmount());
+        TestBatchItemRecordA record = batchItemList.get(0);
+        assertEquals("0123456789", record.getAccountNo());
+        assertEquals("Abel Turner", record.getBeneficiary());
+        assertEquals("NGN", record.getCurrency());
+        assertEquals(Double.valueOf(20000), record.getAmount());
 
-		record = batchItemList.get(1);
-		assertEquals("6758495839", record.getAccountNo());
-		assertEquals("Bamanga Tukur", record.getBeneficiary());
-		assertEquals("NGN", record.getCurrency());
-		assertEquals(Double.valueOf(52000), record.getAmount());
-	}
+        record = batchItemList.get(1);
+        assertEquals("6758495839", record.getAccountNo());
+        assertEquals("Bamanga Tukur", record.getBeneficiary());
+        assertEquals("NGN", record.getCurrency());
+        assertEquals(Double.valueOf(52000), record.getAmount());
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testBatchItemProcessingSkipExisting() throws Exception {
-		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-		byte[][] fileObject = new byte[1][];
-		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-				"6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteNGN0000000040000");
-		input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-		input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testBatchItemProcessingSkipExisting() throws Exception {
+        // Setup parameters
+        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
+        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+        byte[][] fileObject = new byte[1][];
+        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                "6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteNGN0000000040000");
+        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
+        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
-		// Perform batch file processing and do some assertions
-		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-		tm.beginTransaction();
-		try {
-			blu.execute(input, output);
-		} finally {
-			tm.endTransaction();
-		}
+        // Perform batch file processing and do some assertions
+        BusinessLogicOutput output = new BusinessLogicOutput();
+        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
+        tm.beginTransaction();
+        try {
+            blu.execute(input, output);
+        } finally {
+            tm.endTransaction();
+        }
 
-		List<Object> result = output.getResult(List.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
-		assertNotNull(result);
-		assertEquals(2, result.size());
+        List<Object> result = output.getResult(List.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        assertNotNull(result);
+        assertEquals(2, result.size());
 
-		// Assert persistent records are created
-		List<TestBatchItemRecordA> batchItemList = null;
-		tm.beginTransaction();
-		try {
-			batchItemList = db.findAll(
-					new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
-		} finally {
-			tm.endTransaction();
-		}
+        // Assert persistent records are created
+        List<TestBatchItemRecordA> batchItemList = null;
+        tm.beginTransaction();
+        try {
+            batchItemList = db.findAll(
+                    new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
+        } finally {
+            tm.endTransaction();
+        }
 
-		assertEquals(2, batchItemList.size());
+        assertEquals(2, batchItemList.size());
 
-		TestBatchItemRecordA record = batchItemList.get(0);
-		assertEquals("0123456789", record.getAccountNo());
-		assertEquals("Abel Turner", record.getBeneficiary());
-		assertEquals("NGN", record.getCurrency());
-		assertEquals(Double.valueOf(20000), record.getAmount());
+        TestBatchItemRecordA record = batchItemList.get(0);
+        assertEquals("0123456789", record.getAccountNo());
+        assertEquals("Abel Turner", record.getBeneficiary());
+        assertEquals("NGN", record.getCurrency());
+        assertEquals(Double.valueOf(20000), record.getAmount());
 
-		record = batchItemList.get(1);
-		assertEquals("6758495839", record.getAccountNo());
-		assertEquals("Bamanga Tukur", record.getBeneficiary());
-		assertEquals("NGN", record.getCurrency());
-		assertEquals(Double.valueOf(52000), record.getAmount());
-	}
+        record = batchItemList.get(1);
+        assertEquals("6758495839", record.getAccountNo());
+        assertEquals("Bamanga Tukur", record.getBeneficiary());
+        assertEquals("NGN", record.getCurrency());
+        assertEquals(Double.valueOf(52000), record.getAmount());
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testBatchItemProcessingUpdateExisting() throws Exception {
-		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-		fileBulkConfig.setOnConstraint(ConstraintAction.UPDATE);
-		byte[][] fileObject = new byte[1][];
-		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-				"6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteGBP0000000040000");
-		input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-		input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testBatchItemProcessingUpdateExisting() throws Exception {
+        // Setup parameters
+        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
+        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+        fileBulkConfig.setOnConstraint(ConstraintAction.UPDATE);
+        byte[][] fileObject = new byte[1][];
+        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                "6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteGBP0000000040000");
+        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
+        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
-		// Perform batch file processing and do some assertions
-		BusinessLogicOutput output = new BusinessLogicOutput();
-		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-		tm.beginTransaction();
-		try {
-			blu.execute(input, output);
-		} finally {
-			tm.endTransaction();
-		}
+        // Perform batch file processing and do some assertions
+        BusinessLogicOutput output = new BusinessLogicOutput();
+        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
+        tm.beginTransaction();
+        try {
+            blu.execute(input, output);
+        } finally {
+            tm.endTransaction();
+        }
 
-		List<Object> result = (List<Object>) output.getResult(List.class,
-				BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
-		assertNotNull(result);
-		assertEquals(2, result.size());
+        List<Object> result = (List<Object>) output.getResult(List.class,
+                BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        assertNotNull(result);
+        assertEquals(2, result.size());
 
-		// Assert persistent records are created
-		List<TestBatchItemRecordA> batchItemList = null;
-		tm.beginTransaction();
-		try {
-			batchItemList = db.findAll(
-					new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
-		} finally {
-			tm.endTransaction();
-		}
+        // Assert persistent records are created
+        List<TestBatchItemRecordA> batchItemList = null;
+        tm.beginTransaction();
+        try {
+            batchItemList = db.findAll(
+                    new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
+        } finally {
+            tm.endTransaction();
+        }
 
-		assertEquals(2, batchItemList.size());
+        assertEquals(2, batchItemList.size());
 
-		TestBatchItemRecordA record = batchItemList.get(0);
-		assertEquals("0123456789", record.getAccountNo());
-		assertEquals("Abel Turner", record.getBeneficiary());
-		assertEquals("NGN", record.getCurrency());
-		assertEquals(Double.valueOf(20000), record.getAmount());
+        TestBatchItemRecordA record = batchItemList.get(0);
+        assertEquals("0123456789", record.getAccountNo());
+        assertEquals("Abel Turner", record.getBeneficiary());
+        assertEquals("NGN", record.getCurrency());
+        assertEquals(Double.valueOf(20000), record.getAmount());
 
-		record = batchItemList.get(1); // Entity 2 has been updated with record
-										// 3
-		assertEquals("6758495839", record.getAccountNo());
-		assertEquals("William Thomas Tutte", record.getBeneficiary());
-		assertEquals("GBP", record.getCurrency());
-		assertEquals(Double.valueOf(40000), record.getAmount());
-	}
+        record = batchItemList.get(1); // Entity 2 has been updated with record
+                                       // 3
+        assertEquals("6758495839", record.getAccountNo());
+        assertEquals("William Thomas Tutte", record.getBeneficiary());
+        assertEquals("GBP", record.getCurrency());
+        assertEquals(Double.valueOf(40000), record.getAmount());
+    }
 
-	@Test(expected = UnifyException.class)
-	public void testBatchItemProcessingFailOnExisting() throws Exception {
-		// Setup parameters
-		BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-		BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-		fileBulkConfig.setOnConstraint(ConstraintAction.FAIL);
-		byte[][] fileObject = new byte[1][];
-		fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
-				"6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteGBP0000000040000");
-		input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-		input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
+    @Test(expected = UnifyException.class)
+    public void testBatchItemProcessingFailOnExisting() throws Exception {
+        // Setup parameters
+        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
+        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
+        fileBulkConfig.setOnConstraint(ConstraintAction.FAIL);
+        byte[][] fileObject = new byte[1][];
+        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+                "6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteGBP0000000040000");
+        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
+        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
-		// Perform batch file processing and do some assertions
-		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-		tm.beginTransaction();
-		try {
-			blu.execute(input, new BusinessLogicOutput());
-		} finally {
-			tm.endTransaction();
-		}
-	}
+        // Perform batch file processing and do some assertions
+        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
+        tm.beginTransaction();
+        try {
+            blu.execute(input, new BusinessLogicOutput());
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
-		db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-		tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-	}
+    @Override
+    protected void onSetup() throws Exception {
+        db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+    }
 
-	@SuppressWarnings({ "unchecked" })
-	@Override
-	protected void onTearDown() throws Exception {
-		deleteAll(TestBatchItemRecordA.class, TestBatchItemRecordB.class, TestBatchRecordB.class);
-	}
+    @SuppressWarnings({ "unchecked" })
+    @Override
+    protected void onTearDown() throws Exception {
+        deleteAll(TestBatchItemRecordA.class, TestBatchItemRecordB.class, TestBatchRecordB.class);
+    }
 }

@@ -25,29 +25,29 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractWrappedData<T> implements WrappedData<T> {
 
-	private T data;
+    private T data;
 
-	public AbstractWrappedData(T data) {
-		this.data = data;
-	}
+    public AbstractWrappedData(T data) {
+        this.data = data;
+    }
 
-	@Override
-	public void copyData(WrappedData<T> data) {
-		this.data = data.getData();
-	}
+    @Override
+    public void copyData(WrappedData<T> data) {
+        this.data = data.getData();
+    }
 
-	@Override
-	public T getData() {
-		return this.data;
-	}
+    @Override
+    public T getData() {
+        return this.data;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Class<T> getDataType() {
-		return (Class<T>) this.data.getClass();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<T> getDataType() {
+        return (Class<T>) this.data.getClass();
+    }
 
-	public String toString() {
-		return StringUtils.beanToString(this);
-	}
+    public String toString() {
+        return StringUtils.beanToString(this);
+    }
 }

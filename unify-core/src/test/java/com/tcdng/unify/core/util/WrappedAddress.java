@@ -25,18 +25,18 @@ import com.tcdng.unify.core.data.AbstractWrappedData;
  */
 public class WrappedAddress extends AbstractWrappedData<Address> {
 
-	private String addressLine3;
+    private String addressLine3;
 
-	public WrappedAddress() {
-		super(new Address());
-	}
+    public WrappedAddress() {
+        super(new Address());
+    }
 
-	public String getAddressLine3() {
-		return addressLine3;
-	}
+    public String getAddressLine3() {
+        return addressLine3;
+    }
 
-	public void setAddressLine3(String addressLine3) {
-		this.addressLine3 = addressLine3;
-	}
+    public void setAddressLine3(String addressLine3) {
+        this.addressLine3 = addressLine3;
+    }
 
 }

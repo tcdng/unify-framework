@@ -26,22 +26,22 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ResponseWriterPool extends UnifyComponent {
 
-	/**
-	 * Returns a response writer from pool based on current session context.
-	 * 
-	 * @throws UnifyException
-	 *             if get operation times out.
-	 */
-	ResponseWriter getResponseWriter() throws UnifyException;
+    /**
+     * Returns a response writer from pool based on current session context.
+     * 
+     * @throws UnifyException
+     *             if get operation times out.
+     */
+    ResponseWriter getResponseWriter() throws UnifyException;
 
-	/**
-	 * Restores response writer to this pool.
-	 * 
-	 * @param writer
-	 * @return a true value if writer belongs to this pool and was successfully
-	 *         restored.
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	boolean restore(ResponseWriter writer) throws UnifyException;
+    /**
+     * Restores response writer to this pool.
+     * 
+     * @param writer
+     * @return a true value if writer belongs to this pool and was successfully
+     *         restored.
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    boolean restore(ResponseWriter writer) throws UnifyException;
 }

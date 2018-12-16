@@ -32,17 +32,17 @@ import com.tcdng.unify.web.ui.control.FileDownload;
 @Component("filedownload-writer")
 public class FileDownloadWriter extends ButtonWriter {
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
 
-		// Append rigging
-		FileDownload fileDownload = (FileDownload) widget;
-		writer.write("ux.rigFileDownload({");
-		writer.write("\"pId\":\"").write(fileDownload.getId()).write('"');
-		writer.write(",\"pCmdURL\":\"");
-		writer.writeCommandURL();
-		writer.write("\"});");
-	}
+        // Append rigging
+        FileDownload fileDownload = (FileDownload) widget;
+        writer.write("ux.rigFileDownload({");
+        writer.write("\"pId\":\"").write(fileDownload.getId()).write('"');
+        writer.write(",\"pCmdURL\":\"");
+        writer.writeCommandURL();
+        writer.write("\"});");
+    }
 
 }

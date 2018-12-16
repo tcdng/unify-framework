@@ -22,20 +22,20 @@ package com.tcdng.unify.web.ui;
  * @since 1.0
  */
 public class ValidationPart {
-	private String validation;
+    private String validation;
 
-	private String[] components;
+    private String[] components;
 
-	public ValidationPart(String validation, String... components) {
-		this.validation = validation;
-		this.components = components;
-	}
+    public ValidationPart(String validation, String... components) {
+        this.validation = validation;
+        this.components = components;
+    }
 
-	public String getValidation() {
-		return validation;
-	}
+    public String getValidation() {
+        return validation;
+    }
 
-	public String[] getComponents() {
-		return components;
-	}
+    public String[] getComponents() {
+        return components;
+    }
 }

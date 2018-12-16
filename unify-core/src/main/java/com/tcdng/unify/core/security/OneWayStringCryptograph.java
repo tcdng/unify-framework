@@ -25,14 +25,14 @@ import com.tcdng.unify.core.transform.Transformer;
  * @since 1.0
  */
 public interface OneWayStringCryptograph extends Transformer<String, String> {
-	/**
-	 * Encrypts a string.
-	 * 
-	 * @param string
-	 *            the string to encrypt
-	 * @return the encrypted string
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String encrypt(String string) throws UnifyException;
+    /**
+     * Encrypts a string.
+     * 
+     * @param string
+     *            the string to encrypt
+     * @return the encrypted string
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String encrypt(String string) throws UnifyException;
 }

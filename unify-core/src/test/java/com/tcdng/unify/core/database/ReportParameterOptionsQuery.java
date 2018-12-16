@@ -23,12 +23,12 @@ package com.tcdng.unify.core.database;
  */
 public class ReportParameterOptionsQuery extends AbstractTestEntityQuery<ReportParameterOptions> {
 
-	public ReportParameterOptionsQuery() {
-		super(ReportParameterOptions.class);
-	}
+    public ReportParameterOptionsQuery() {
+        super(ReportParameterOptions.class);
+    }
 
-	public ReportParameterOptionsQuery reportParameterId(Long reportParameterId) {
-		return (ReportParameterOptionsQuery) this.equals("reportParameterId", reportParameterId);
-	}
+    public ReportParameterOptionsQuery reportParameterId(Long reportParameterId) {
+        return (ReportParameterOptionsQuery) this.equals("reportParameterId", reportParameterId);
+    }
 
 }

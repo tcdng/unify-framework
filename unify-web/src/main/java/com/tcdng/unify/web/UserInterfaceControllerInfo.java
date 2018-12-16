@@ -28,22 +28,22 @@ import com.tcdng.unify.web.ui.BindingInfo;
  */
 public class UserInterfaceControllerInfo extends ControllerInfo {
 
-	private Map<String, BindingInfo> idPropertyBindingMap;
+    private Map<String, BindingInfo> idPropertyBindingMap;
 
-	public UserInterfaceControllerInfo(String controllerName, Map<String, BindingInfo> idPropertyBindingMap) {
-		super(controllerName);
-		this.idPropertyBindingMap = idPropertyBindingMap;
-	}
+    public UserInterfaceControllerInfo(String controllerName, Map<String, BindingInfo> idPropertyBindingMap) {
+        super(controllerName);
+        this.idPropertyBindingMap = idPropertyBindingMap;
+    }
 
-	public Set<String> getPropertyIds() {
-		return idPropertyBindingMap.keySet();
-	}
+    public Set<String> getPropertyIds() {
+        return idPropertyBindingMap.keySet();
+    }
 
-	public BindingInfo getBindingInfo(String id) {
-		return idPropertyBindingMap.get(id);
-	}
+    public BindingInfo getBindingInfo(String id) {
+        return idPropertyBindingMap.get(id);
+    }
 
-	public void addBindings(Map<String, BindingInfo> pageNamePropertyBindingMap) {
-		idPropertyBindingMap.putAll(pageNamePropertyBindingMap);
-	}
+    public void addBindings(Map<String, BindingInfo> pageNamePropertyBindingMap) {
+        idPropertyBindingMap.putAll(pageNamePropertyBindingMap);
+    }
 }

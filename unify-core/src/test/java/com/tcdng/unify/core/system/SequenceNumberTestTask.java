@@ -33,22 +33,22 @@ import com.tcdng.unify.core.task.TaskOutput;
 @Component("sequencenumber-test")
 public class SequenceNumberTestTask extends AbstractTask {
 
-	@Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-	private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
+    private SequenceNumberBusinessModule sequenceNumberBusinessModule;
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		String sequenceId = input.getParam(String.class, SequenceNumberTestTaskConstants.SEQUENCEID);
-		int seqCount = input.getParam(int.class, SequenceNumberTestTaskConstants.SEQUENCECOUNT);
-		for (int i = 0; i < seqCount; i++) {
-			sequenceNumberBusinessModule.getNextSequenceNumber(sequenceId);
-			if (seqCount % 11 == 0) {
-				Thread.yield();
-			}
-		}
-	}
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        String sequenceId = input.getParam(String.class, SequenceNumberTestTaskConstants.SEQUENCEID);
+        int seqCount = input.getParam(int.class, SequenceNumberTestTaskConstants.SEQUENCECOUNT);
+        for (int i = 0; i < seqCount; i++) {
+            sequenceNumberBusinessModule.getNextSequenceNumber(sequenceId);
+            if (seqCount % 11 == 0) {
+                Thread.yield();
+            }
+        }
+    }
 
-	protected SequenceNumberBusinessModule getSequenceNumberBusinessModule() {
-		return sequenceNumberBusinessModule;
-	}
+    protected SequenceNumberBusinessModule getSequenceNumberBusinessModule() {
+        return sequenceNumberBusinessModule;
+    }
 }

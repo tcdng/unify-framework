@@ -25,39 +25,39 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface Logger extends UnifyComponent {
-	/**
-	 * Logs a message.
-	 * 
-	 * @param loggingLevel
-	 *            the logging level
-	 * @param message
-	 *            the message to log
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void log(LoggingLevel loggingLevel, String message) throws UnifyException;
+    /**
+     * Logs a message.
+     * 
+     * @param loggingLevel
+     *            the logging level
+     * @param message
+     *            the message to log
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void log(LoggingLevel loggingLevel, String message) throws UnifyException;
 
-	/**
-	 * Logs a message with accompanying exception.
-	 * 
-	 * @param loggingLevel
-	 *            the logging level
-	 * @param message
-	 *            the message to log
-	 * @param exception
-	 *            exception to log
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void log(LoggingLevel loggingLevel, String message, Exception exception) throws UnifyException;
+    /**
+     * Logs a message with accompanying exception.
+     * 
+     * @param loggingLevel
+     *            the logging level
+     * @param message
+     *            the message to log
+     * @param exception
+     *            exception to log
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void log(LoggingLevel loggingLevel, String message, Exception exception) throws UnifyException;
 
-	/**
-	 * Returns true value if supplied logging level is enabled.
-	 * 
-	 * @param loggingLevel
-	 *            the logging level
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isEnabled(LoggingLevel loggingLevel) throws UnifyException;
+    /**
+     * Returns true value if supplied logging level is enabled.
+     * 
+     * @param loggingLevel
+     *            the logging level
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isEnabled(LoggingLevel loggingLevel) throws UnifyException;
 }

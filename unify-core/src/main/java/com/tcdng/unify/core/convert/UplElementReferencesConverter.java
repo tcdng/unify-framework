@@ -28,22 +28,22 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 public class UplElementReferencesConverter extends AbstractConverter<UplElementReferences> {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected UplElementReferences doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof UplElementReferences) {
-			return (UplElementReferences) value;
-		}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected UplElementReferences doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof UplElementReferences) {
+            return (UplElementReferences) value;
+        }
 
-		if (value instanceof List) {
-			UplElementReferences uer = new UplElementReferences();
-			for (Object listValue : (List<Object>) value) {
-				if (listValue instanceof UplElementReferences) {
-					uer.add((UplElementReferences) listValue);
-				}
-			}
-			return uer;
-		}
-		return null;
-	}
+        if (value instanceof List) {
+            UplElementReferences uer = new UplElementReferences();
+            for (Object listValue : (List<Object>) value) {
+                if (listValue instanceof UplElementReferences) {
+                    uer.add((UplElementReferences) listValue);
+                }
+            }
+            return uer;
+        }
+        return null;
+    }
 }

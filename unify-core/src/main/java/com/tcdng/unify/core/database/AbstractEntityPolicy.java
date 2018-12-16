@@ -26,13 +26,13 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractEntityPolicy extends AbstractUnifyComponent implements EntityPolicy {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

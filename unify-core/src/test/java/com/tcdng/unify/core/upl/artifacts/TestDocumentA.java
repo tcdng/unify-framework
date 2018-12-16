@@ -31,16 +31,16 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 @Component("test-upldocumenta")
 @UplBinding("com/tcdng/unify/core/resources/test-upldocumenta.upl")
 @UplAttributes({ @UplAttribute(name = "rootList", type = UplElementReferences.class),
-		@UplAttribute(name = "longNameRef", type = String.class) })
+        @UplAttribute(name = "longNameRef", type = String.class) })
 public class TestDocumentA extends AbstractTestDocument {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

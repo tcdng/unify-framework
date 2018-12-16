@@ -30,37 +30,37 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class BigDecimalPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		if (scale <= 0) {
-			scale = 2;
-		}
-		if (precision <= 0) {
-			precision = 14;
-		}
-		if (precision < scale) {
-			precision = scale;
-		}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        if (scale <= 0) {
+            scale = 2;
+        }
+        if (precision <= 0) {
+            precision = 14;
+        }
+        if (precision < scale) {
+            precision = scale;
+        }
 
-		sb.append("DECIMAL(").append(precision).append(',').append(scale).append(')');
-	}
+        sb.append("DECIMAL(").append(precision).append(',').append(scale).append(')');
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.DECIMAL);
-		} else {
-			((PreparedStatement) pstmt).setBigDecimal(index, (BigDecimal) data);
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.DECIMAL);
+        } else {
+            ((PreparedStatement) pstmt).setBigDecimal(index, (BigDecimal) data);
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		return ((ResultSet) rs).getBigDecimal(column);
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        return ((ResultSet) rs).getBigDecimal(column);
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		return ((ResultSet) rs).getBigDecimal(index);
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        return ((ResultSet) rs).getBigDecimal(index);
+    }
 }

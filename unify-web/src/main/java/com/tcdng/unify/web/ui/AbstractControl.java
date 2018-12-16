@@ -29,81 +29,81 @@ import com.tcdng.unify.web.util.WidgetUtils;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "focus", type = boolean.class),
-		@UplAttribute(name = "sortable", type = boolean.class),
-		@UplAttribute(name = "required", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "sortable", type = boolean.class),
+        @UplAttribute(name = "required", type = boolean.class, defaultValue = "false") })
 public abstract class AbstractControl extends AbstractWidget implements Control {
 
-	private TriState required;
+    private TriState required;
 
-	public AbstractControl() {
-		required = TriState.CONFORMING;
-	}
+    public AbstractControl() {
+        required = TriState.CONFORMING;
+    }
 
-	@Override
-	public String getId() throws UnifyException {
-		int index = getValueIndex();
-		if (index >= 0) {
-			return WidgetUtils.getDataIndexId(super.getId(), index);
-		}
+    @Override
+    public String getId() throws UnifyException {
+        int index = getValueIndex();
+        if (index >= 0) {
+            return WidgetUtils.getDataIndexId(super.getId(), index);
+        }
 
-		return super.getId();
-	}
+        return super.getId();
+    }
 
-	@Override
-	public String getBaseId() throws UnifyException {
-		return super.getId();
-	}
+    @Override
+    public String getBaseId() throws UnifyException {
+        return super.getId();
+    }
 
-	@Override
-	public String getFacadeId() throws UnifyException {
-		return getPrefixedId("fac_");
-	}
+    @Override
+    public String getFacadeId() throws UnifyException {
+        return getPrefixedId("fac_");
+    }
 
-	@Override
-	public String getBorderId() throws UnifyException {
-		return getId();
-	}
+    @Override
+    public String getBorderId() throws UnifyException {
+        return getId();
+    }
 
-	@Override
-	public String getNotificationId() throws UnifyException {
-		return getPrefixedId("notf_");
-	}
+    @Override
+    public String getNotificationId() throws UnifyException {
+        return getPrefixedId("notf_");
+    }
 
-	@Override
-	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		getValueStore().store(transferBlock.getItemIndex(), getBinding(), transferBlock.getValue());
-	}
+    @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        getValueStore().store(transferBlock.getItemIndex(), getBinding(), transferBlock.getValue());
+    }
 
-	@Override
-	public boolean isFocus() throws UnifyException {
-		return getUplAttribute(boolean.class, "focus");
-	}
+    @Override
+    public boolean isFocus() throws UnifyException {
+        return getUplAttribute(boolean.class, "focus");
+    }
 
-	@Override
-	public void setRequired(TriState required) throws UnifyException {
-		this.required = required;
-	}
+    @Override
+    public void setRequired(TriState required) throws UnifyException {
+        this.required = required;
+    }
 
-	@Override
-	public TriState getRequired() throws UnifyException {
-		TriState result = getPrivilegeSettings().getRequired();
-		if (result.isConforming()) {
-			result = required;
-			if (result.isConforming()) {
-				result = TriState.getTriState(getUplAttribute(boolean.class, "required"));
-			}
-		}
+    @Override
+    public TriState getRequired() throws UnifyException {
+        TriState result = getPrivilegeSettings().getRequired();
+        if (result.isConforming()) {
+            result = required;
+            if (result.isConforming()) {
+                result = TriState.getTriState(getUplAttribute(boolean.class, "required"));
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public boolean isField() {
-		return true;
-	}
+    @Override
+    public boolean isField() {
+        return true;
+    }
 
-	@Override
-	public void updateState() throws UnifyException {
+    @Override
+    public void updateState() throws UnifyException {
 
-	}
+    }
 }

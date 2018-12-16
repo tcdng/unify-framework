@@ -34,44 +34,44 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("label-writer")
 public class LabelWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Label label = (Label) widget;
-		writer.write("<span");
-		writeTagAttributes(writer, label);
-		writer.write(">");
-		String value = label.getStringValue();
-		if (value != null) {
-			if (label.isHtmlEscape()) {
-				writer.writeWithHtmlEscape(value);
-			} else {
-				writer.write(value);
-			}
-		} else {
-			if (!StringUtils.isBlank(label.getBinding())) {
-				writer.writeHtmlFixedSpace();
-			} else if (!label.isLayoutCaption()) {
-				String caption = label.getCaption();
-				if (caption != null) {
-					if (label.isHtmlEscape()) {
-						writer.writeWithHtmlEscape(caption);
-					} else {
-						writer.write(caption);
-					}
-				}
-			}
-		}
-		writer.write("</span>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        Label label = (Label) widget;
+        writer.write("<span");
+        writeTagAttributes(writer, label);
+        writer.write(">");
+        String value = label.getStringValue();
+        if (value != null) {
+            if (label.isHtmlEscape()) {
+                writer.writeWithHtmlEscape(value);
+            } else {
+                writer.write(value);
+            }
+        } else {
+            if (!StringUtils.isBlank(label.getBinding())) {
+                writer.writeHtmlFixedSpace();
+            } else if (!label.isLayoutCaption()) {
+                String caption = label.getCaption();
+                if (caption != null) {
+                    if (label.isHtmlEscape()) {
+                        writer.writeWithHtmlEscape(caption);
+                    } else {
+                        writer.write(caption);
+                    }
+                }
+            }
+        }
+        writer.write("</span>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
-		Label label = (Label) widget;
-		if (label.getUplAttribute(boolean.class, "draggable")) {
-			writer.write("ux.rigDragAndDropPopup({");
-			writer.write("\"pId\":\"").write(label.getId()).write("\"});");
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        Label label = (Label) widget;
+        if (label.getUplAttribute(boolean.class, "draggable")) {
+            writer.write("ux.rigDragAndDropPopup({");
+            writer.write("\"pId\":\"").write(label.getId()).write("\"});");
+        }
+    }
 
 }

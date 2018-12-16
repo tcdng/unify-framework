@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class IsNotNullPolicy extends ZeroParameterPolicy {
 
-	public IsNotNullPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" IS NOT NULL ", sqlDataSourceDialect);
-	}
+    public IsNotNullPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" IS NOT NULL ", sqlDataSourceDialect);
+    }
 }

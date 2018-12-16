@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-hidepopup")
 public class HidePopupAction extends AbstractPageAction {
 
-	public HidePopupAction() {
-		super("hidepopup");
-	}
+    public HidePopupAction() {
+        super("hidepopup");
+    }
 }

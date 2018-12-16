@@ -27,24 +27,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("requirementtypelist")
 public enum RequirementType implements EnumConst {
 
-	MANDATORY("M"), OPTIONAL("O"), NONE("N");
+    MANDATORY("M"), OPTIONAL("O"), NONE("N");
 
-	private final String code;
+    private final String code;
 
-	private RequirementType(String code) {
-		this.code = code;
-	}
+    private RequirementType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static RequirementType fromCode(String code) {
-		return EnumUtils.fromCode(RequirementType.class, code);
-	}
+    public static RequirementType fromCode(String code) {
+        return EnumUtils.fromCode(RequirementType.class, code);
+    }
 
-	public static RequirementType fromName(String name) {
-		return EnumUtils.fromName(RequirementType.class, name);
-	}
+    public static RequirementType fromName(String name) {
+        return EnumUtils.fromName(RequirementType.class, name);
+    }
 }

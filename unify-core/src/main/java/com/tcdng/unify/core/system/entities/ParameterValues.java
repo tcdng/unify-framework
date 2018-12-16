@@ -33,58 +33,58 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "PARAMVALUES", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "instTypeName", "instId" }) })
 public class ParameterValues extends AbstractSystemSequencedEntity {
 
-	@ForeignKey(ParametersDef.class)
-	private Long parametersDefId;
+    @ForeignKey(ParametersDef.class)
+    private Long parametersDefId;
 
-	@Column(length = 64)
-	private String instTypeName;
+    @Column(length = 64)
+    private String instTypeName;
 
-	@Column
-	private Long instId;
+    @Column
+    private Long instId;
 
-	@ChildList
-	private List<ParameterValue> parameterValues;
+    @ChildList
+    private List<ParameterValue> parameterValues;
 
-	@ListOnly(key = "parametersDefId", property = "typeName")
-	private String typeName;
+    @ListOnly(key = "parametersDefId", property = "typeName")
+    private String typeName;
 
-	public Long getParametersDefId() {
-		return parametersDefId;
-	}
+    public Long getParametersDefId() {
+        return parametersDefId;
+    }
 
-	public void setParametersDefId(Long parametersDefId) {
-		this.parametersDefId = parametersDefId;
-	}
+    public void setParametersDefId(Long parametersDefId) {
+        this.parametersDefId = parametersDefId;
+    }
 
-	public String getInstTypeName() {
-		return instTypeName;
-	}
+    public String getInstTypeName() {
+        return instTypeName;
+    }
 
-	public void setInstTypeName(String instTypeName) {
-		this.instTypeName = instTypeName;
-	}
+    public void setInstTypeName(String instTypeName) {
+        this.instTypeName = instTypeName;
+    }
 
-	public Long getInstId() {
-		return instId;
-	}
+    public Long getInstId() {
+        return instId;
+    }
 
-	public void setInstId(Long instId) {
-		this.instId = instId;
-	}
+    public void setInstId(Long instId) {
+        this.instId = instId;
+    }
 
-	public List<ParameterValue> getParameterValues() {
-		return parameterValues;
-	}
+    public List<ParameterValue> getParameterValues() {
+        return parameterValues;
+    }
 
-	public void setParameterValues(List<ParameterValue> parameterValues) {
-		this.parameterValues = parameterValues;
-	}
+    public void setParameterValues(List<ParameterValue> parameterValues) {
+        this.parameterValues = parameterValues;
+    }
 
-	public String getTypeName() {
-		return typeName;
-	}
+    public String getTypeName() {
+        return typeName;
+    }
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 }

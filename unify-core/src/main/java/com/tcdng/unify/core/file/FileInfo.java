@@ -23,60 +23,60 @@ package com.tcdng.unify.core.file;
  */
 public class FileInfo {
 
-	private String filename;
+    private String filename;
 
-	private String absolutePath;
+    private String absolutePath;
 
-	private long length;
+    private long length;
 
-	private long created;
+    private long created;
 
-	private long modified;
+    private long modified;
 
-	private boolean file;
+    private boolean file;
 
-	private boolean hidden;
+    private boolean hidden;
 
-	public FileInfo(String filename, String absolutePath, long length, long created, long modified, boolean file,
-			boolean hidden) {
-		this.filename = filename;
-		this.absolutePath = absolutePath;
-		this.length = length;
-		this.created = created;
-		this.modified = modified;
-		this.file = file;
-		this.hidden = hidden;
-	}
+    public FileInfo(String filename, String absolutePath, long length, long created, long modified, boolean file,
+            boolean hidden) {
+        this.filename = filename;
+        this.absolutePath = absolutePath;
+        this.length = length;
+        this.created = created;
+        this.modified = modified;
+        this.file = file;
+        this.hidden = hidden;
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public String getAbsolutePath() {
-		return absolutePath;
-	}
+    public String getAbsolutePath() {
+        return absolutePath;
+    }
 
-	public long getLength() {
-		return length;
-	}
+    public long getLength() {
+        return length;
+    }
 
-	public long getCreated() {
-		return created;
-	}
+    public long getCreated() {
+        return created;
+    }
 
-	public long getModified() {
-		return modified;
-	}
+    public long getModified() {
+        return modified;
+    }
 
-	public boolean isFile() {
-		return file;
-	}
+    public boolean isFile() {
+        return file;
+    }
 
-	public boolean isDirectory() {
-		return !file;
-	}
+    public boolean isDirectory() {
+        return !file;
+    }
 
-	public boolean isHidden() {
-		return hidden;
-	}
+    public boolean isHidden() {
+        return hidden;
+    }
 }

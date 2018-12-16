@@ -23,63 +23,63 @@ package com.tcdng.unify.core.database.sql;
  */
 public class DynamicSqlDataSourceConfig {
 
-	private String name;
+    private String name;
 
-	private String dialect;
+    private String dialect;
 
-	private String driver;
+    private String driver;
 
-	private String connectionUrl;
+    private String connectionUrl;
 
-	private String dbUsername;
+    private String dbUsername;
 
-	private String dbPassword;
+    private String dbPassword;
 
-	private int maxConnection;
+    private int maxConnection;
 
-	private boolean shutdownOnTerminate;
+    private boolean shutdownOnTerminate;
 
-	public DynamicSqlDataSourceConfig(String name, String dialect, String driver, String connectionUrl,
-			String dbUsername, String dbPassword, int maxConnection, boolean shutdownOnTerminate) {
-		this.name = name;
-		this.dialect = dialect;
-		this.driver = driver;
-		this.connectionUrl = connectionUrl;
-		this.dbUsername = dbUsername;
-		this.dbPassword = dbPassword;
-		this.maxConnection = maxConnection;
-		this.shutdownOnTerminate = shutdownOnTerminate;
-	}
+    public DynamicSqlDataSourceConfig(String name, String dialect, String driver, String connectionUrl,
+            String dbUsername, String dbPassword, int maxConnection, boolean shutdownOnTerminate) {
+        this.name = name;
+        this.dialect = dialect;
+        this.driver = driver;
+        this.connectionUrl = connectionUrl;
+        this.dbUsername = dbUsername;
+        this.dbPassword = dbPassword;
+        this.maxConnection = maxConnection;
+        this.shutdownOnTerminate = shutdownOnTerminate;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDialect() {
-		return dialect;
-	}
+    public String getDialect() {
+        return dialect;
+    }
 
-	public String getDriver() {
-		return driver;
-	}
+    public String getDriver() {
+        return driver;
+    }
 
-	public String getConnectionUrl() {
-		return connectionUrl;
-	}
+    public String getConnectionUrl() {
+        return connectionUrl;
+    }
 
-	public String getDbUsername() {
-		return dbUsername;
-	}
+    public String getDbUsername() {
+        return dbUsername;
+    }
 
-	public String getDbPassword() {
-		return dbPassword;
-	}
+    public String getDbPassword() {
+        return dbPassword;
+    }
 
-	public int getMaxConnection() {
-		return maxConnection;
-	}
+    public int getMaxConnection() {
+        return maxConnection;
+    }
 
-	public boolean isShutdownOnTerminate() {
-		return shutdownOnTerminate;
-	}
+    public boolean isShutdownOnTerminate() {
+        return shutdownOnTerminate;
+    }
 }

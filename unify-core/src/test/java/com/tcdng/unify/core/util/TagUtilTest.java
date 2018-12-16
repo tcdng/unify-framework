@@ -29,27 +29,27 @@ import org.junit.Test;
  */
 public class TagUtilTest {
 
-	@Test
-	public void testIsStringTag() throws Exception {
-		assertTrue(TokenUtils.isStringToken("$s{}"));
-		assertTrue(TokenUtils.isStringToken("$s{hello}"));
-		assertFalse(TokenUtils.isStringToken("$s{sky"));
-		assertFalse(TokenUtils.isStringToken("s{hello}"));
-	}
+    @Test
+    public void testIsStringTag() throws Exception {
+        assertTrue(TokenUtils.isStringToken("$s{}"));
+        assertTrue(TokenUtils.isStringToken("$s{hello}"));
+        assertFalse(TokenUtils.isStringToken("$s{sky"));
+        assertFalse(TokenUtils.isStringToken("s{hello}"));
+    }
 
-	@Test
-	public void testGetStringTagValue() throws Exception {
-		assertEquals("", TokenUtils.getStringTokenValue("$s{}"));
-		assertEquals("hello", TokenUtils.getStringTokenValue("$s{hello}"));
-		assertEquals("$s{sky", TokenUtils.getStringTokenValue("$s{sky"));
-		assertEquals("s{hello}", TokenUtils.getStringTokenValue("s{hello}"));
-	}
+    @Test
+    public void testGetStringTagValue() throws Exception {
+        assertEquals("", TokenUtils.getStringTokenValue("$s{}"));
+        assertEquals("hello", TokenUtils.getStringTokenValue("$s{hello}"));
+        assertEquals("$s{sky", TokenUtils.getStringTokenValue("$s{sky"));
+        assertEquals("s{hello}", TokenUtils.getStringTokenValue("s{hello}"));
+    }
 
-	@Test
-	public void testExtractTagValue() throws Exception {
-		assertTrue(TokenUtils.extractTokenValue("$m{tcdng.com}").equals("tcdng.com"));
-		// Bellow should also pass since method extractTagValue assumes supplied
-		// parameter is a valid tagged value
-		assertTrue(TokenUtils.extractTokenValue("Skynet").equals("ne"));
-	}
+    @Test
+    public void testExtractTagValue() throws Exception {
+        assertTrue(TokenUtils.extractTokenValue("$m{tcdng.com}").equals("tcdng.com"));
+        // Bellow should also pass since method extractTagValue assumes supplied
+        // parameter is a valid tagged value
+        assertTrue(TokenUtils.extractTokenValue("Skynet").equals("ne"));
+    }
 }

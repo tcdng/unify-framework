@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-populateselect")
 public class PopulateSelectAction extends AbstractPageAction {
 
-	public PopulateSelectAction() {
-		super("populateselect");
-	}
+    public PopulateSelectAction() {
+        super("populateselect");
+    }
 }

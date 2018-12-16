@@ -29,29 +29,29 @@ import com.tcdng.unify.web.ui.TabularLayout;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "cellType", type = TabularCellType.class, defaultValue = "top"),
-		@UplAttribute(name = "cellPadding", type = boolean.class, defaultValue = "true"),
-		@UplAttribute(name = "widths", type = String[].class),
-		@UplAttribute(name = "heights", type = String[].class), })
+        @UplAttribute(name = "cellPadding", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "widths", type = String[].class),
+        @UplAttribute(name = "heights", type = String[].class), })
 public abstract class AbstractTabularLayout extends AbstractLayout implements TabularLayout {
 
-	@Override
-	public TabularCellType getCellType() throws UnifyException {
-		return getUplAttribute(TabularCellType.class, "cellType");
-	}
+    @Override
+    public TabularCellType getCellType() throws UnifyException {
+        return getUplAttribute(TabularCellType.class, "cellType");
+    }
 
-	@Override
-	public boolean isCellPadding() throws UnifyException {
-		return getUplAttribute(boolean.class, "cellPadding");
-	}
+    @Override
+    public boolean isCellPadding() throws UnifyException {
+        return getUplAttribute(boolean.class, "cellPadding");
+    }
 
-	@Override
-	public String[] getWidths() throws UnifyException {
-		return getUplAttribute(String[].class, "widths");
-	}
+    @Override
+    public String[] getWidths() throws UnifyException {
+        return getUplAttribute(String[].class, "widths");
+    }
 
-	@Override
-	public String[] getHeights() throws UnifyException {
-		return getUplAttribute(String[].class, "heights");
-	}
+    @Override
+    public String[] getHeights() throws UnifyException {
+        return getUplAttribute(String[].class, "heights");
+    }
 
 }

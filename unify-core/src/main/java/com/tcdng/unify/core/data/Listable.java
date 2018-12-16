@@ -23,13 +23,13 @@ package com.tcdng.unify.core.data;
  */
 public interface Listable {
 
-	/**
-	 * Returns the listable object's unique list key.
-	 */
-	String getListKey();
+    /**
+     * Returns the listable object's unique list key.
+     */
+    String getListKey();
 
-	/**
-	 * Returns the listable object's list description.
-	 */
-	String getListDescription();
+    /**
+     * Returns the listable object's list description.
+     */
+    String getListDescription();
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database;
  */
 public class OfficeQuery extends AbstractTestEntityQuery<Office> {
 
-	public OfficeQuery() {
-		super(Office.class);
-	}
+    public OfficeQuery() {
+        super(Office.class);
+    }
 }

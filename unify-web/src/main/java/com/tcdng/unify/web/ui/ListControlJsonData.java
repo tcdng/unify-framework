@@ -23,50 +23,50 @@ package com.tcdng.unify.web.ui;
  */
 public class ListControlJsonData {
 
-	private String jsonSelectIds;
+    private String jsonSelectIds;
 
-	private String jsonKeys;
+    private String jsonKeys;
 
-	private String jsonLabels;
+    private String jsonLabels;
 
-	private String valueLabel;
+    private String valueLabel;
 
-	private int valueIndex;
+    private int valueIndex;
 
-	private int size;
+    private int size;
 
-	public ListControlJsonData(String jsonSelectIds, String jsonKeys, String jsonLabels, String valueLabel,
-			int valueIndex, int size) {
-		this.jsonSelectIds = jsonSelectIds;
-		this.jsonKeys = jsonKeys;
-		this.jsonLabels = jsonLabels;
-		this.valueLabel = valueLabel;
-		this.valueIndex = valueIndex;
-		this.size = size;
-	}
+    public ListControlJsonData(String jsonSelectIds, String jsonKeys, String jsonLabels, String valueLabel,
+            int valueIndex, int size) {
+        this.jsonSelectIds = jsonSelectIds;
+        this.jsonKeys = jsonKeys;
+        this.jsonLabels = jsonLabels;
+        this.valueLabel = valueLabel;
+        this.valueIndex = valueIndex;
+        this.size = size;
+    }
 
-	public String getJsonSelectIds() {
-		return jsonSelectIds;
-	}
+    public String getJsonSelectIds() {
+        return jsonSelectIds;
+    }
 
-	public String getJsonKeys() {
-		return jsonKeys;
-	}
+    public String getJsonKeys() {
+        return jsonKeys;
+    }
 
-	public String getJsonLabels() {
-		return jsonLabels;
-	}
+    public String getJsonLabels() {
+        return jsonLabels;
+    }
 
-	public String getValueLabel() {
-		return valueLabel;
-	}
+    public String getValueLabel() {
+        return valueLabel;
+    }
 
-	public int getValueIndex() {
-		return valueIndex;
-	}
+    public int getValueIndex() {
+        return valueIndex;
+    }
 
-	public int getSize() {
-		return size;
-	}
+    public int getSize() {
+        return size;
+    }
 
 }

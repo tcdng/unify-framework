@@ -27,44 +27,44 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public class SqlResult {
 
-	private SqlDataTypePolicy sqlDataTypePolicy;
+    private SqlDataTypePolicy sqlDataTypePolicy;
 
-	private SqlFieldInfo sqlFieldInfo;
+    private SqlFieldInfo sqlFieldInfo;
 
-	public SqlResult(SqlDataTypePolicy sqlDataTypePolicy, SqlFieldInfo sqlFieldInfo) {
-		this.sqlDataTypePolicy = sqlDataTypePolicy;
-		this.sqlFieldInfo = sqlFieldInfo;
-	}
+    public SqlResult(SqlDataTypePolicy sqlDataTypePolicy, SqlFieldInfo sqlFieldInfo) {
+        this.sqlDataTypePolicy = sqlDataTypePolicy;
+        this.sqlFieldInfo = sqlFieldInfo;
+    }
 
-	public SqlDataTypePolicy getSqlDataTypePolicy() {
-		return sqlDataTypePolicy;
-	}
+    public SqlDataTypePolicy getSqlDataTypePolicy() {
+        return sqlDataTypePolicy;
+    }
 
-	public Class<?> getType() {
-		return sqlFieldInfo.getFieldClass();
-	}
+    public Class<?> getType() {
+        return sqlFieldInfo.getFieldClass();
+    }
 
-	public String getColumn() {
-		return sqlFieldInfo.getColumn();
-	}
+    public String getColumn() {
+        return sqlFieldInfo.getColumn();
+    }
 
-	public String getName() {
-		return sqlFieldInfo.getName();
-	}
+    public String getName() {
+        return sqlFieldInfo.getName();
+    }
 
-	public Transformer<?, ?> getTransformer() {
-		return sqlFieldInfo.getTransformer();
-	}
+    public Transformer<?, ?> getTransformer() {
+        return sqlFieldInfo.getTransformer();
+    }
 
-	public boolean isTransformed() {
-		return sqlFieldInfo.isTransformed();
-	}
+    public boolean isTransformed() {
+        return sqlFieldInfo.isTransformed();
+    }
 
-	public Method getGetter() {
-		return sqlFieldInfo.getGetter();
-	}
+    public Method getGetter() {
+        return sqlFieldInfo.getGetter();
+    }
 
-	public Method getSetter() {
-		return sqlFieldInfo.getSetter();
-	}
+    public Method getSetter() {
+        return sqlFieldInfo.getSetter();
+    }
 }

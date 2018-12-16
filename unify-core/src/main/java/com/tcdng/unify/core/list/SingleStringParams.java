@@ -24,13 +24,13 @@ package com.tcdng.unify.core.list;
  */
 public class SingleStringParams {
 
-	private String value;
+    private String value;
 
-	public SingleStringParams(String value) {
-		this.value = value;
-	}
+    public SingleStringParams(String value) {
+        this.value = value;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 }

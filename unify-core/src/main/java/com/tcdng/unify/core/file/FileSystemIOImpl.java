@@ -31,28 +31,28 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("filesystemio")
 public class FileSystemIOImpl extends AbstractFileSystemIO {
 
-	@Override
-	public boolean isFile(String absoluteFilename) {
-		return IOUtils.isFile(absoluteFilename);
-	}
+    @Override
+    public boolean isFile(String absoluteFilename) {
+        return IOUtils.isFile(absoluteFilename);
+    }
 
-	@Override
-	public InputStream openFileInputStream(String filename) throws UnifyException {
-		return IOUtils.openFileInputStream(filename);
-	}
+    @Override
+    public InputStream openFileInputStream(String filename) throws UnifyException {
+        return IOUtils.openFileInputStream(filename);
+    }
 
-	@Override
-	public InputStream openFileInputStream(String filename, long skip) throws UnifyException {
-		return IOUtils.openFileInputStream(filename, skip);
-	}
+    @Override
+    public InputStream openFileInputStream(String filename, long skip) throws UnifyException {
+        return IOUtils.openFileInputStream(filename, skip);
+    }
 
-	@Override
-	public OutputStream openFileOutputStream(String filename) throws UnifyException {
-		return IOUtils.openFileOutputStream(filename);
-	}
+    @Override
+    public OutputStream openFileOutputStream(String filename) throws UnifyException {
+        return IOUtils.openFileOutputStream(filename);
+    }
 
-	@Override
-	public OutputStream openFileOutputStream(String filename, boolean append) throws UnifyException {
-		return IOUtils.openFileOutputStream(filename, append);
-	}
+    @Override
+    public OutputStream openFileOutputStream(String filename, boolean append) throws UnifyException {
+        return IOUtils.openFileOutputStream(filename, append);
+    }
 }

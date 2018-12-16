@@ -34,32 +34,31 @@ import com.tcdng.unify.web.ui.data.FileAttachmentsInfo;
 @Component("/resource/fileattachment")
 public class FileAttachmentResourceController extends AbstractResourceController {
 
-	public FileAttachmentResourceController() {
-		super(false);
-	}
+    public FileAttachmentResourceController() {
+        super(false);
+    }
 
-	@Override
-	public void prepareExecution() throws UnifyException {
-		setContentDisposition(getResourceName());
-	}
+    @Override
+    public void prepareExecution() throws UnifyException {
+        setContentDisposition(getResourceName());
+    }
 
-	@Override
-	public void execute(OutputStream outputStream) throws UnifyException {
-		FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) this
-				.removeSessionAttribute(getResourceName());
-		FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
-		byte[] data = fileAttachmentInfo.getAttachment();
-		if (data == null) {
-			String handler = fileAttachmentsInfo.getHandlerName();
-			if (handler != null) {
-				FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
-				FileAttachmentInfo viewFileAttachmentInfo = fileAttachmentHandler
-						.handleView(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
-				data = viewFileAttachmentInfo.getAttachment();
-			}
-		}
+    @Override
+    public void execute(OutputStream outputStream) throws UnifyException {
+        FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) this.removeSessionAttribute(getResourceName());
+        FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
+        byte[] data = fileAttachmentInfo.getAttachment();
+        if (data == null) {
+            String handler = fileAttachmentsInfo.getHandlerName();
+            if (handler != null) {
+                FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
+                FileAttachmentInfo viewFileAttachmentInfo = fileAttachmentHandler
+                        .handleView(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
+                data = viewFileAttachmentInfo.getAttachment();
+            }
+        }
 
-		IOUtils.writeAll(outputStream, data);
-	}
+        IOUtils.writeAll(outputStream, data);
+    }
 
 }

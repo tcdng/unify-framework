@@ -34,22 +34,22 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("labeledtext-writer")
 public class LabeledTextWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		LabeledText labeledText = (LabeledText) widget;
-		writer.write("<div ");
-		writeTagAttributes(writer, labeledText);
-		writer.write(">");
-		writer.write("<span class=\"lttitle\">");
-		writeCaption(writer, labeledText);
-		writer.write(":</span>&nbsp;");
-		String valueString = labeledText.getStringValue();
-		if (labeledText.getUplAttribute(int.class, "maxLen") > 0) {
-			valueString = StringUtils.ellipsize(valueString, labeledText.getUplAttribute(int.class, "maxLen"));
-		}
-		writer.write("<span class=\"ltcontent\">").writeWithHtmlEscape(valueString);
-		writer.write("</span>&nbsp;");
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        LabeledText labeledText = (LabeledText) widget;
+        writer.write("<div ");
+        writeTagAttributes(writer, labeledText);
+        writer.write(">");
+        writer.write("<span class=\"lttitle\">");
+        writeCaption(writer, labeledText);
+        writer.write(":</span>&nbsp;");
+        String valueString = labeledText.getStringValue();
+        if (labeledText.getUplAttribute(int.class, "maxLen") > 0) {
+            valueString = StringUtils.ellipsize(valueString, labeledText.getUplAttribute(int.class, "maxLen"));
+        }
+        writer.write("<span class=\"ltcontent\">").writeWithHtmlEscape(valueString);
+        writer.write("</span>&nbsp;");
+        writer.write("</div>");
+    }
 
 }

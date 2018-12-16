@@ -33,27 +33,27 @@ import com.tcdng.unify.web.DataTransferBlock;
 @UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class) })
 public abstract class AbstractFormattedControl extends AbstractControl {
 
-	@Override
-	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		getValueStore().store(transferBlock.getItemIndex(), getBinding(), transferBlock.getValue(), getFormatter());
-	}
+    @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        getValueStore().store(transferBlock.getItemIndex(), getBinding(), transferBlock.getValue(), getFormatter());
+    }
 
-	@Override
-	public <T> T getValue(Class<T> clazz) throws UnifyException {
-		return DataUtils.convert(clazz, getValue(), getFormatter());
-	}
+    @Override
+    public <T> T getValue(Class<T> clazz) throws UnifyException {
+        return DataUtils.convert(clazz, getValue(), getFormatter());
+    }
 
-	@Override
-	public String getStringValue() throws UnifyException {
-		return DataUtils.convert(String.class, getValue(), getFormatter());
-	}
+    @Override
+    public String getStringValue() throws UnifyException {
+        return DataUtils.convert(String.class, getValue(), getFormatter());
+    }
 
-	@Override
-	public <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException {
-		return DataUtils.convert(clazz, dataClass, getValue(), getFormatter());
-	}
+    @Override
+    public <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException {
+        return DataUtils.convert(clazz, dataClass, getValue(), getFormatter());
+    }
 
-	public Formatter<?> getFormatter() throws UnifyException {
-		return (Formatter<?>) getUplAttribute(Formatter.class, "formatter");
-	}
+    public Formatter<?> getFormatter() throws UnifyException {
+        return (Formatter<?>) getUplAttribute(Formatter.class, "formatter");
+    }
 }

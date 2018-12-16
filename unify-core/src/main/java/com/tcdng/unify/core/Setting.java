@@ -26,40 +26,40 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class Setting {
 
-	private String name;
+    private String name;
 
-	private Object value;
+    private Object value;
 
-	private boolean hidden;
+    private boolean hidden;
 
-	public Setting(String name, Object value) {
-		this(name, value, false);
-	}
+    public Setting(String name, Object value) {
+        this(name, value, false);
+    }
 
-	public Setting(String name, Object value, boolean hidden) {
-		this.name = name;
-		this.value = value;
-		this.hidden = hidden;
-	}
+    public Setting(String name, Object value, boolean hidden) {
+        this.name = name;
+        this.value = value;
+        this.hidden = hidden;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Object getValue() {
-		return value;
-	}
+    public Object getValue() {
+        return value;
+    }
 
-	public String getValueString() {
-		if (this.hidden) {
-			return StringUtils.MASK;
-		}
+    public String getValueString() {
+        if (this.hidden) {
+            return StringUtils.MASK;
+        }
 
-		return String.valueOf(this.value);
-	}
+        return String.valueOf(this.value);
+    }
 
-	public boolean isHidden() {
-		return hidden;
-	}
+    public boolean isHidden() {
+        return hidden;
+    }
 
 }

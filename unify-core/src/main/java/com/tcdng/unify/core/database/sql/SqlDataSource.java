@@ -31,150 +31,150 @@ import com.tcdng.unify.core.database.NativeQuery;
  */
 public interface SqlDataSource extends DataSource {
 
-	/**
-	 * Returns a list of schemas in this data source.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<String> getSchemaList() throws UnifyException;
+    /**
+     * Returns a list of schemas in this data source.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> getSchemaList() throws UnifyException;
 
-	/**
-	 * Returns a list information on tables that belong to supplied schema.
-	 * 
-	 * @param schemaName
-	 *            the name of schema to check
-	 * @param sqlTableType
-	 *            the optional table type
-	 * @return list of table information. Empty list is returned if schemaName is
-	 *         null.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<SqlTableInfo> getTableList(String schemaName, SqlTableType sqlTableType) throws UnifyException;
+    /**
+     * Returns a list information on tables that belong to supplied schema.
+     * 
+     * @param schemaName
+     *            the name of schema to check
+     * @param sqlTableType
+     *            the optional table type
+     * @return list of table information. Empty list is returned if schemaName is
+     *         null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<SqlTableInfo> getTableList(String schemaName, SqlTableType sqlTableType) throws UnifyException;
 
-	/**
-	 * Returns a map of table information by table name.
-	 * 
-	 * @param schemaName
-	 *            the name of schema to check
-	 * @param sqlTableType
-	 *            the optional table type
-	 * @return map of table information. Empty map is returned if schemaName is
-	 *         null.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Map<String, SqlTableInfo> getTableMap(String schemaName, SqlTableType sqlTableType) throws UnifyException;
+    /**
+     * Returns a map of table information by table name.
+     * 
+     * @param schemaName
+     *            the name of schema to check
+     * @param sqlTableType
+     *            the optional table type
+     * @return map of table information. Empty map is returned if schemaName is
+     *         null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<String, SqlTableInfo> getTableMap(String schemaName, SqlTableType sqlTableType) throws UnifyException;
 
-	/**
-	 * Returns a list information on columns that belong to specified table in a
-	 * particular schema.
-	 * 
-	 * @param schemaName
-	 *            the schema name
-	 * @param tableName
-	 *            the table name
-	 * @return list of column information. Empty list is returned if schemaName or
-	 *         tableName is null.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<SqlColumnInfo> getColumnList(String schemaName, String tableName) throws UnifyException;
+    /**
+     * Returns a list information on columns that belong to specified table in a
+     * particular schema.
+     * 
+     * @param schemaName
+     *            the schema name
+     * @param tableName
+     *            the table name
+     * @return list of column information. Empty list is returned if schemaName or
+     *         tableName is null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<SqlColumnInfo> getColumnList(String schemaName, String tableName) throws UnifyException;
 
-	/**
-	 * Returns a map of column information by column name.
-	 * 
-	 * @param schemaName
-	 *            the schema name
-	 * @param tableName
-	 *            the table name
-	 * @return map of column information. Empty map is returned if schemaName or
-	 *         tableName is null.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException;
+    /**
+     * Returns a map of column information by column name.
+     * 
+     * @param schemaName
+     *            the schema name
+     * @param tableName
+     *            the table name
+     * @return map of column information. Empty map is returned if schemaName or
+     *         tableName is null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException;
 
-	/**
-	 * Executes supplied native query and returns rows.
-	 * 
-	 * @param query
-	 *            the native query to run
-	 * @return a list of rows. A row is represented by an array of objects in
-	 *         sequence determined by column sequence in native query.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<Object[]> getRows(NativeQuery query) throws UnifyException;
+    /**
+     * Executes supplied native query and returns rows.
+     * 
+     * @param query
+     *            the native query to run
+     * @return a list of rows. A row is represented by an array of objects in
+     *         sequence determined by column sequence in native query.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<Object[]> getRows(NativeQuery query) throws UnifyException;
 
-	/**
-	 * Returns the data source dialect.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	SqlDataSourceDialect getDialect() throws UnifyException;
+    /**
+     * Returns the data source dialect.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlDataSourceDialect getDialect() throws UnifyException;
 
-	/**
-	 * Returns an SQL connection object from data source.
-	 * 
-	 * @return Object - the connection
-	 * @throws UnifyException
-	 *             if there is no available connection. If some other error occurs
-	 */
-	Connection getConnection() throws UnifyException;
+    /**
+     * Returns an SQL connection object from data source.
+     * 
+     * @return Object - the connection
+     * @throws UnifyException
+     *             if there is no available connection. If some other error occurs
+     */
+    Connection getConnection() throws UnifyException;
 
-	/**
-	 * Restores an SQL connection.
-	 * 
-	 * @param connection
-	 *            the connection to restore
-	 * @return true if connection is restored.
-	 * @throws UnifyException
-	 *             if supplied connection object did not originate from this data
-	 *             source. if an error occurs.
-	 */
-	boolean restoreConnection(Connection connection) throws UnifyException;
+    /**
+     * Restores an SQL connection.
+     * 
+     * @param connection
+     *            the connection to restore
+     * @return true if connection is restored.
+     * @throws UnifyException
+     *             if supplied connection object did not originate from this data
+     *             source. if an error occurs.
+     */
+    boolean restoreConnection(Connection connection) throws UnifyException;
 
-	/**
-	 * Tests connection to data source
-	 *
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean testConnection() throws UnifyException;
+    /**
+     * Tests connection to data source
+     *
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean testConnection() throws UnifyException;
 
-	/**
-	 * Tests a native query.
-	 * 
-	 * @param query
-	 *            the native query
-	 * @return the result count
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	int testNativeQuery(NativeQuery query) throws UnifyException;
+    /**
+     * Tests a native query.
+     * 
+     * @param query
+     *            the native query
+     * @return the result count
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int testNativeQuery(NativeQuery query) throws UnifyException;
 
-	/**
-	 * Tests a native query.
-	 * 
-	 * @param nativeSql
-	 *            the native SQL
-	 * @return the result count
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	int testNativeQuery(String nativeSql) throws UnifyException;
+    /**
+     * Tests a native query.
+     * 
+     * @param nativeSql
+     *            the native SQL
+     * @return the result count
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int testNativeQuery(String nativeSql) throws UnifyException;
 
-	/**
-	 * Tests a native update.
-	 * 
-	 * @param nativeSql
-	 *            the native SQL
-	 * @return the update count
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	int testNativeUpdate(String nativeSql) throws UnifyException;
+    /**
+     * Tests a native update.
+     * 
+     * @param nativeSql
+     *            the native SQL
+     * @return the update count
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int testNativeUpdate(String nativeSql) throws UnifyException;
 }

@@ -28,11 +28,11 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("uppercase-transformer")
 public class UpperCaseTransformer extends AbstractStringTransformer {
 
-	@Override
-	public String forwardTransform(String value) throws UnifyException {
-		if (value != null) {
-			return value.toUpperCase();
-		}
-		return null;
-	}
+    @Override
+    public String forwardTransform(String value) throws UnifyException {
+        if (value != null) {
+            return value.toUpperCase();
+        }
+        return null;
+    }
 }

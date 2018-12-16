@@ -28,24 +28,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("taskstatuslist")
 public enum TaskStatus implements EnumConst {
 
-	INITIALISED("I"), RUNNING("R"), COMPLETED("C"), CANCELED("X"), FAILED("F"), ABORTED("A"), CRITICAL("T");
+    INITIALISED("I"), RUNNING("R"), COMPLETED("C"), CANCELED("X"), FAILED("F"), ABORTED("A"), CRITICAL("T");
 
-	private final String code;
+    private final String code;
 
-	private TaskStatus(String code) {
-		this.code = code;
-	}
+    private TaskStatus(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static TaskStatus fromCode(String code) {
-		return EnumUtils.fromCode(TaskStatus.class, code);
-	}
+    public static TaskStatus fromCode(String code) {
+        return EnumUtils.fromCode(TaskStatus.class, code);
+    }
 
-	public static TaskStatus fromName(String name) {
-		return EnumUtils.fromName(TaskStatus.class, name);
-	}
+    public static TaskStatus fromName(String name) {
+        return EnumUtils.fromName(TaskStatus.class, name);
+    }
 }

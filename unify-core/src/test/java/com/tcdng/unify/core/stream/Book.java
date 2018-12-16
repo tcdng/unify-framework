@@ -32,58 +32,58 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "title", "price", "quantity" })
 public class Book {
 
-	private String title;
+    private String title;
 
-	private String genre;
+    private String genre;
 
-	private BigDecimal price;
+    private BigDecimal price;
 
-	private int quantity;
+    private int quantity;
 
-	public Book(String title, String genre, BigDecimal price, int quantity) {
-		this.title = title;
-		this.genre = genre;
-		this.price = price;
-		this.quantity = quantity;
-	}
+    public Book(String title, String genre, BigDecimal price, int quantity) {
+        this.title = title;
+        this.genre = genre;
+        this.price = price;
+        this.quantity = quantity;
+    }
 
-	public Book() {
+    public Book() {
 
-	}
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	@XmlElement
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    @XmlElement
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getGenre() {
-		return genre;
-	}
+    public String getGenre() {
+        return genre;
+    }
 
-	@XmlAttribute
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
+    @XmlAttribute
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
-	public BigDecimal getPrice() {
-		return price;
-	}
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-	@XmlElement
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
+    @XmlElement
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public int getQuantity() {
+        return quantity;
+    }
 
-	@XmlElement
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+    @XmlElement
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

@@ -23,5 +23,5 @@ package com.tcdng.unify.web.constant;
  */
 public interface SessionAttributeConstants extends com.tcdng.unify.core.SessionAttributeConstants {
 
-	String REFRESH_MENU = "refreshMenu";
+    String REFRESH_MENU = "refreshMenu";
 }

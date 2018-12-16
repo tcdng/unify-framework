@@ -31,11 +31,11 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_FILECACHE)
 public class FileCacheImpl extends AbstractTransformCache<String, byte[], InputStream> implements FileCache {
 
-	@Override
-	protected InputStream transformCachedObject(byte[] cachedObject) throws UnifyException {
-		if (cachedObject != null) {
-			return new ByteArrayInputStream(cachedObject);
-		}
-		return null;
-	}
+    @Override
+    protected InputStream transformCachedObject(byte[] cachedObject) throws UnifyException {
+        if (cachedObject != null) {
+            return new ByteArrayInputStream(cachedObject);
+        }
+        return null;
+    }
 }

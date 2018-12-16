@@ -40,127 +40,127 @@ import com.tcdng.unify.web.ui.data.FileAttachmentsInfo;
  */
 @Component("ui-fileattachment")
 @UplAttributes({ @UplAttribute(name = "handler", type = String.class),
-		@UplAttribute(name = "viewPath", type = String.class) })
+        @UplAttribute(name = "viewPath", type = String.class) })
 public class FileAttachment extends AbstractValueListMultiControl<ValueStore, FileAttachmentInfo> {
 
-	private FileUpload fileCtrl;
+    private FileUpload fileCtrl;
 
-	private Control attachCtrl;
+    private Control attachCtrl;
 
-	private Control viewCtrl;
+    private Control viewCtrl;
 
-	private Control removeCtrl;
+    private Control removeCtrl;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
 
-		fileCtrl = (FileUpload) addInternalChildControl("!ui-fileupload selectOnly:true hidden:true");
-		attachCtrl = addInternalChildControl(
-				"!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach}");
-		viewCtrl = addInternalChildControl(
-				"!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view}");
-		removeCtrl = addInternalChildControl(
-				"!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove}");
-	}
+        fileCtrl = (FileUpload) addInternalChildControl("!ui-fileupload selectOnly:true hidden:true");
+        attachCtrl = addInternalChildControl(
+                "!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach}");
+        viewCtrl = addInternalChildControl(
+                "!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view}");
+        removeCtrl = addInternalChildControl(
+                "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove}");
+    }
 
-	@Override
-	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		if (transferBlock != null) {
-			DataTransferBlock nextBlock = transferBlock.getChildBlock();
-			Object value = nextBlock.getValue();
-			// Attach
-			FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
-			fileAttachmentsInfo.setSelectedIndex(nextBlock.getItemIndex());
-			FileAttachmentInfo fileAttachmentInfo = (FileAttachmentInfo) fileAttachmentsInfo
-					.getSelectedAttachmentInfo();
-			UploadedFile uploadedFile = ((UploadedFile[]) value)[0];
-			fileAttachmentInfo.setFilename(uploadedFile.getFilename());
-			fileAttachmentInfo.setAttachment(uploadedFile.getData());
-			fileAttachmentsInfo.attach();
+    @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        if (transferBlock != null) {
+            DataTransferBlock nextBlock = transferBlock.getChildBlock();
+            Object value = nextBlock.getValue();
+            // Attach
+            FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
+            fileAttachmentsInfo.setSelectedIndex(nextBlock.getItemIndex());
+            FileAttachmentInfo fileAttachmentInfo = (FileAttachmentInfo) fileAttachmentsInfo
+                    .getSelectedAttachmentInfo();
+            UploadedFile uploadedFile = ((UploadedFile[]) value)[0];
+            fileAttachmentInfo.setFilename(uploadedFile.getFilename());
+            fileAttachmentInfo.setAttachment(uploadedFile.getData());
+            fileAttachmentsInfo.attach();
 
-			String handler = getUplAttribute(String.class, "handler");
-			if (handler != null) {
-				FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
-				fileAttachmentHandler.handleAttach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
-				fileAttachmentInfo.setAttachment(null);
-			}
-		}
-	}
+            String handler = getUplAttribute(String.class, "handler");
+            if (handler != null) {
+                FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
+                fileAttachmentHandler.handleAttach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
+                fileAttachmentInfo.setAttachment(null);
+            }
+        }
+    }
 
-	@Action
-	public void view() throws UnifyException {
-		// Setup view
-		FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
-		fileAttachmentsInfo.setSelectedIndex(getRequestTarget(int.class));
-		fileAttachmentsInfo.setHandlerName(getUplAttribute(String.class, "handler"));
-		setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentsInfo);
-		setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
-	}
+    @Action
+    public void view() throws UnifyException {
+        // Setup view
+        FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
+        fileAttachmentsInfo.setSelectedIndex(getRequestTarget(int.class));
+        fileAttachmentsInfo.setHandlerName(getUplAttribute(String.class, "handler"));
+        setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentsInfo);
+        setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
+    }
 
-	@Action
-	public void detach() throws UnifyException {
-		// Detach
-		FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
-		fileAttachmentsInfo.setSelectedIndex(getRequestTarget(int.class));
-		FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.detach();
+    @Action
+    public void detach() throws UnifyException {
+        // Detach
+        FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
+        fileAttachmentsInfo.setSelectedIndex(getRequestTarget(int.class));
+        FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.detach();
 
-		String handler = getUplAttribute(String.class, "handler");
-		if (handler != null) {
-			FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
-			fileAttachmentHandler.handleDetach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
-		}
+        String handler = getUplAttribute(String.class, "handler");
+        if (handler != null) {
+            FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
+            fileAttachmentHandler.handleDetach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
+        }
 
-		invalidateValueList();
-	}
+        invalidateValueList();
+    }
 
-	@Override
-	public void addPageAliases() throws UnifyException {
-		addPageAlias(fileCtrl);
-	}
+    @Override
+    public void addPageAliases() throws UnifyException {
+        addPageAlias(fileCtrl);
+    }
 
-	public String getViewPath() throws UnifyException {
-		return getUplAttribute(String.class, "viewPath");
-	}
+    public String getViewPath() throws UnifyException {
+        return getUplAttribute(String.class, "viewPath");
+    }
 
-	public FileAttachmentsInfo getAttachmentsInfo() throws UnifyException {
-		return getValue(FileAttachmentsInfo.class);
-	}
+    public FileAttachmentsInfo getAttachmentsInfo() throws UnifyException {
+        return getValue(FileAttachmentsInfo.class);
+    }
 
-	public FileUpload getFileCtrl() {
-		return fileCtrl;
-	}
+    public FileUpload getFileCtrl() {
+        return fileCtrl;
+    }
 
-	public Control getAttachCtrl() {
-		return attachCtrl;
-	}
+    public Control getAttachCtrl() {
+        return attachCtrl;
+    }
 
-	public Control getViewCtrl() {
-		return viewCtrl;
-	}
+    public Control getViewCtrl() {
+        return viewCtrl;
+    }
 
-	public Control getRemoveCtrl() {
-		return removeCtrl;
-	}
+    public Control getRemoveCtrl() {
+        return removeCtrl;
+    }
 
-	@Override
-	protected List<FileAttachmentInfo> getItemList() throws UnifyException {
-		FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
-		if (fileAttachmentsInfo != null) {
-			return fileAttachmentsInfo.getAttachmentInfoList();
-		}
+    @Override
+    protected List<FileAttachmentInfo> getItemList() throws UnifyException {
+        FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
+        if (fileAttachmentsInfo != null) {
+            return fileAttachmentsInfo.getAttachmentInfoList();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	protected ValueStore newValue(FileAttachmentInfo item, int index) throws UnifyException {
-		return createValueStore(item, index);
-	}
+    @Override
+    protected ValueStore newValue(FileAttachmentInfo item, int index) throws UnifyException {
+        return createValueStore(item, index);
+    }
 
-	@Override
-	protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
+    @Override
+    protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
 
-	}
+    }
 
 }

@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  * @since 1.0
  */
 public class EqualPolicy extends SingleParameterPolicy {
-	public EqualPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" = ", sqlDataSourceDialect);
-	}
+    public EqualPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" = ", sqlDataSourceDialect);
+    }
 }

@@ -28,85 +28,85 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface RemoteCallClient extends UnifyComponent {
 
-	String USER_AGENT_ID = "Unify/1.0";
+    String USER_AGENT_ID = "Unify/1.0";
 
-	/**
-	 * Setup remote call.
-	 * 
-	 * @param remoteAppURL
-	 *            the remote application URL
-	 * @param methodCode
-	 *            the method code
-	 * @throws UnifyException
-	 *             if setup already exists. If an error occurs
-	 */
-	void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
+    /**
+     * Setup remote call.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param methodCode
+     *            the method code
+     * @throws UnifyException
+     *             if setup already exists. If an error occurs
+     */
+    void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
 
-	/**
-	 * Setup remote call.
-	 * 
-	 * @param remoteAppURL
-	 *            the remote application URL
-	 * @param methodCode
-	 *            the method code
-	 * @param format
-	 *            the message format
-	 * @param charset
-	 *            the character set
-	 * @throws UnifyException
-	 *             if setup already exists. If an error occurs
-	 */
-	void setupRemoteCall(String remoteAppURL, String methodCode, RemoteCallFormat format, Charset charset)
-			throws UnifyException;
+    /**
+     * Setup remote call.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param methodCode
+     *            the method code
+     * @param format
+     *            the message format
+     * @param charset
+     *            the character set
+     * @throws UnifyException
+     *             if setup already exists. If an error occurs
+     */
+    void setupRemoteCall(String remoteAppURL, String methodCode, RemoteCallFormat format, Charset charset)
+            throws UnifyException;
 
-	/**
-	 * Tests if any remote call is setup for supplied remote URL.
-	 * 
-	 * @param remoteAppURL
-	 *            the remote application URL
-	 * @param methodCode
-	 *            the method code
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException;
+    /**
+     * Tests if any remote call is setup for supplied remote URL.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param methodCode
+     *            the method code
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException;
 
-	/**
-	 * Clears all remote call setup for specified application.
-	 * 
-	 * @param remoteAppURL
-	 *            the remote application URL
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void clearAllRemoteCallSetup(String remoteAppURL) throws UnifyException;
+    /**
+     * Clears all remote call setup for specified application.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void clearAllRemoteCallSetup(String remoteAppURL) throws UnifyException;
 
-	/**
-	 * Clears remote call setup if found.
-	 * 
-	 * @param remoteAppURL
-	 *            the remote application URL
-	 * @param methodCode
-	 *            the method code
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void clearRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException;
+    /**
+     * Clears remote call setup if found.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param methodCode
+     *            the method code
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void clearRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException;
 
-	/**
-	 * Executes a remote call.
-	 * 
-	 * @param resultType
-	 *            the result type
-	 * @param remoteAppURL
-	 *            the remote application URL
-	 * @param param
-	 *            the remote call parameter
-	 * @return the remote call result
-	 * @throws UnifyException
-	 *             if setup with application and code is unknown is unknown. If an
-	 *             error occurs
-	 */
-	<T extends RemoteCallResult> T remoteCall(Class<T> resultType, String remoteAppURL, RemoteCallParams param)
-			throws UnifyException;
+    /**
+     * Executes a remote call.
+     * 
+     * @param resultType
+     *            the result type
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param param
+     *            the remote call parameter
+     * @return the remote call result
+     * @throws UnifyException
+     *             if setup with application and code is unknown is unknown. If an
+     *             error occurs
+     */
+    <T extends RemoteCallResult> T remoteCall(Class<T> resultType, String remoteAppURL, RemoteCallParams param)
+            throws UnifyException;
 }

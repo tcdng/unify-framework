@@ -26,32 +26,32 @@ import java.util.List;
  */
 public class BootInstallationInfo<T extends FeatureDefinition> {
 
-	private List<String> featureInstallerNames;
+    private List<String> featureInstallerNames;
 
-	private List<T> features;
+    private List<T> features;
 
-	public BootInstallationInfo(List<String> featureInstallerNames, List<T> features) {
-		this.featureInstallerNames = featureInstallerNames;
-		this.features = features;
-	}
+    public BootInstallationInfo(List<String> featureInstallerNames, List<T> features) {
+        this.featureInstallerNames = featureInstallerNames;
+        this.features = features;
+    }
 
-	public BootInstallationInfo() {
+    public BootInstallationInfo() {
 
-	}
+    }
 
-	public List<String> getFeatureInstallerNames() {
-		return featureInstallerNames;
-	}
+    public List<String> getFeatureInstallerNames() {
+        return featureInstallerNames;
+    }
 
-	public List<T> getFeatures() {
-		return features;
-	}
+    public List<T> getFeatures() {
+        return features;
+    }
 
-	public boolean isInstallers() {
-		return featureInstallerNames != null && !featureInstallerNames.isEmpty();
-	}
+    public boolean isInstallers() {
+        return featureInstallerNames != null && !featureInstallerNames.isEmpty();
+    }
 
-	public boolean isFeatures() {
-		return features != null && !features.isEmpty();
-	}
+    public boolean isFeatures() {
+        return features != null && !features.isEmpty();
+    }
 }

@@ -27,19 +27,19 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface MockBusinessModule extends BusinessModule {
 
-	String hello() throws UnifyException;
+    String hello() throws UnifyException;
 
-	int add(int a, int b) throws UnifyException;
+    int add(int a, int b) throws UnifyException;
 
-	int multiply(int a, int b) throws UnifyException;
+    int multiply(int a, int b) throws UnifyException;
 
-	Long createAccount(Account account) throws UnifyException;
+    Long createAccount(Account account) throws UnifyException;
 
-	Account findAccount(Long accountId) throws UnifyException;
+    Account findAccount(Long accountId) throws UnifyException;
 
-	List<Account> find(AccountQuery query) throws UnifyException;
+    List<Account> find(AccountQuery query) throws UnifyException;
 
-	Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException;
+    Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException;
 
-	LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
+    LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
 }

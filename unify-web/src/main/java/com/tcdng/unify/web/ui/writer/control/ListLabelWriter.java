@@ -33,20 +33,20 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("listlabel-writer")
 public class ListLabelWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		ListLabel listLabel = (ListLabel) widget;
-		writer.write("<span");
-		writeTagAttributes(writer, listLabel);
-		writer.write(">");
-		String value = listLabel.getListMap().get(listLabel.getStringValue());
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        ListLabel listLabel = (ListLabel) widget;
+        writer.write("<span");
+        writeTagAttributes(writer, listLabel);
+        writer.write(">");
+        String value = listLabel.getListMap().get(listLabel.getStringValue());
 
-		if (value == null || value.trim().isEmpty()) {
-			writer.writeHtmlFixedSpace();
-		} else {
-			writer.writeWithHtmlEscape(value);
-		}
-		writer.write("</span>");
-	}
+        if (value == null || value.trim().isEmpty()) {
+            writer.writeHtmlFixedSpace();
+        } else {
+            writer.writeWithHtmlEscape(value);
+        }
+        writer.write("</span>");
+    }
 
 }

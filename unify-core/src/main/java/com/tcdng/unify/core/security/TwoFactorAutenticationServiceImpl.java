@@ -30,19 +30,19 @@ import com.tcdng.unify.core.business.AbstractBusinessModule;
 @Component(ApplicationComponents.APPLICATION_TWOFACTORAUTHENTICATIONSERVICE)
 public class TwoFactorAutenticationServiceImpl extends AbstractBusinessModule implements TwoFactorAutenticationService {
 
-	@Override
-	public boolean authenticate(String userName, String oneTimePassword) throws UnifyException {
-		throw new UnifyException(UnifyCoreErrorConstants.NO_TWOFACTOR_AUTH_SERVICE_COMP);
-	}
+    @Override
+    public boolean authenticate(String userName, String oneTimePassword) throws UnifyException {
+        throw new UnifyException(UnifyCoreErrorConstants.NO_TWOFACTOR_AUTH_SERVICE_COMP);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
 }

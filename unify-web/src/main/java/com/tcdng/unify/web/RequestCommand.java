@@ -23,20 +23,20 @@ package com.tcdng.unify.web;
  */
 public class RequestCommand {
 
-	private String targetId;
+    private String targetId;
 
-	private String command;
+    private String command;
 
-	public RequestCommand(String targetId, String command) {
-		this.targetId = targetId;
-		this.command = command;
-	}
+    public RequestCommand(String targetId, String command) {
+        this.targetId = targetId;
+        this.command = command;
+    }
 
-	public String getTargetId() {
-		return targetId;
-	}
+    public String getTargetId() {
+        return targetId;
+    }
 
-	public String getCommand() {
-		return command;
-	}
+    public String getCommand() {
+        return command;
+    }
 }

@@ -31,21 +31,21 @@ import com.tcdng.unify.core.util.CalendarUtils;
 @Component("timeofday-transformer")
 public class TimeOfDayTransformer extends AbstractUnifyComponent implements Transformer<Date, Date> {
 
-	@Override
-	public Date forwardTransform(Date date) throws UnifyException {
-		return CalendarUtils.getTimeOfDay(date);
-	}
+    @Override
+    public Date forwardTransform(Date date) throws UnifyException {
+        return CalendarUtils.getTimeOfDay(date);
+    }
 
-	@Override
-	public Date reverseTransform(Date date) throws UnifyException {
-		return CalendarUtils.getTimeOfDay(date);
-	}
+    @Override
+    public Date reverseTransform(Date date) throws UnifyException {
+        return CalendarUtils.getTimeOfDay(date);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-	}
+    @Override
+    protected void onTerminate() throws UnifyException {
+    }
 }

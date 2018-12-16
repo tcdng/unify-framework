@@ -30,12 +30,12 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("/resource/classloader")
 public class ClassLoaderResourceController extends FileResourceController {
 
-	public ClassLoaderResourceController() {
-		super(false);
-	}
+    public ClassLoaderResourceController() {
+        super(false);
+    }
 
-	@Override
-	protected InputStream getInputStream() throws UnifyException {
-		return IOUtils.openClassLoaderResourceInputStream(getResourceName());
-	}
+    @Override
+    protected InputStream getInputStream() throws UnifyException {
+        return IOUtils.openClassLoaderResourceInputStream(getResourceName());
+    }
 }

@@ -34,54 +34,54 @@ import com.tcdng.unify.core.system.SequenceNumberBusinessModule;
 @Component("sequencedentity-policy")
 public class SequencedEntityPolicy extends AbstractEntityPolicy {
 
-	@Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-	private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
+    private SequenceNumberBusinessModule sequenceNumberBusinessModule;
 
-	private boolean setNow;
+    private boolean setNow;
 
-	public SequencedEntityPolicy() {
-		this(false);
-	}
+    public SequencedEntityPolicy() {
+        this(false);
+    }
 
-	public SequencedEntityPolicy(boolean setNow) {
-		this.setNow = setNow;
-	}
+    public SequencedEntityPolicy(boolean setNow) {
+        this.setNow = setNow;
+    }
 
-	@Override
-	public Object preCreate(Entity record, Date now) throws UnifyException {
-		Long id = sequenceNumberBusinessModule.getNextSequenceNumber(record.getClass().getName());
-		((AbstractSequencedEntity) record).setId(id);
-		return id;
-	}
+    @Override
+    public Object preCreate(Entity record, Date now) throws UnifyException {
+        Long id = sequenceNumberBusinessModule.getNextSequenceNumber(record.getClass().getName());
+        ((AbstractSequencedEntity) record).setId(id);
+        return id;
+    }
 
-	@Override
-	public void preUpdate(Entity record, Date now) throws UnifyException {
+    @Override
+    public void preUpdate(Entity record, Date now) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void preDelete(Entity record, Date now) throws UnifyException {
+    @Override
+    public void preDelete(Entity record, Date now) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void onCreateError(Entity record) {
+    @Override
+    public void onCreateError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public void onUpdateError(Entity record) {
+    @Override
+    public void onUpdateError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public void onDeleteError(Entity record) {
+    @Override
+    public void onDeleteError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public boolean isSetNow() {
-		return setNow;
-	}
+    @Override
+    public boolean isSetNow() {
+        return setNow;
+    }
 
 }

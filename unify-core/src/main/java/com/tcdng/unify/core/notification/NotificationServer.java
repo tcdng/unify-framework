@@ -26,25 +26,25 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface NotificationServer<T extends NotificationServerConfig> extends UnifyComponent {
 
-	/**
-	 * Configures server replacing existing if necessary.
-	 * 
-	 * @param configurationCode
-	 *            the configuration code
-	 * @param config
-	 *            the email server configuration
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void configure(String configurationCode, T config) throws UnifyException;
+    /**
+     * Configures server replacing existing if necessary.
+     * 
+     * @param configurationCode
+     *            the configuration code
+     * @param config
+     *            the email server configuration
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void configure(String configurationCode, T config) throws UnifyException;
 
-	/**
-	 * Returns true if configuration with supplied code exists on server.
-	 * 
-	 * @param configurationCode
-	 *            the configuration code to check
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isConfigured(String configurationCode) throws UnifyException;
+    /**
+     * Returns true if configuration with supplied code exists on server.
+     * 
+     * @param configurationCode
+     *            the configuration code to check
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isConfigured(String configurationCode) throws UnifyException;
 }

@@ -28,14 +28,14 @@ import com.tcdng.unify.web.ui.AbstractControl;
 @Component("ui-link")
 public class Link extends AbstractControl {
 
-	@Override
-	public boolean isContainerDisabled() throws UnifyException {
-		return super.isContainerDisabled() || !isContainerEditable();
-	}
+    @Override
+    public boolean isContainerDisabled() throws UnifyException {
+        return super.isContainerDisabled() || !isContainerEditable();
+    }
 
-	@Override
-	public boolean isLayoutCaption() {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
 
 }

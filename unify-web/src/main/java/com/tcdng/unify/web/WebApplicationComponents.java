@@ -23,27 +23,27 @@ package com.tcdng.unify.web;
  */
 public interface WebApplicationComponents {
 
-	String APPLICATION_APIDISCOVERYMANAGER = "application-apidiscoverymanager";
+    String APPLICATION_APIDISCOVERYMANAGER = "application-apidiscoverymanager";
 
-	String APPLICATION_APIDISCOVERY_CONTROLLER = "/apidiscovery";
+    String APPLICATION_APIDISCOVERY_CONTROLLER = "/apidiscovery";
 
-	String APPLICATION_CONTROLLERMANAGER = "application-controllermanager";
+    String APPLICATION_CONTROLLERMANAGER = "application-controllermanager";
 
-	String APPLICATION_HTTPCONTROLLER = "application-httpcontroller";
+    String APPLICATION_HTTPCONTROLLER = "application-httpcontroller";
 
-	String APPLICATION_HTTPCLIENT = "application-httpclient";
+    String APPLICATION_HTTPCLIENT = "application-httpclient";
 
-	String APPLICATION_LISTCONTROLUTIL = "application-listcontrolutil";
+    String APPLICATION_LISTCONTROLUTIL = "application-listcontrolutil";
 
-	String APPLICATION_PAGEMANAGER = "application-pagemanager";
+    String APPLICATION_PAGEMANAGER = "application-pagemanager";
 
-	String APPLICATION_REMOTECALLCLIENT = "application-remotecallclient";
+    String APPLICATION_REMOTECALLCLIENT = "application-remotecallclient";
 
-	String APPLICATION_RESPONSEWRITER = "application-responsewriter";
+    String APPLICATION_RESPONSEWRITER = "application-responsewriter";
 
-	String APPLICATION_RESPONSEWRITERPOOL = "application-responsewriterpool";
+    String APPLICATION_RESPONSEWRITERPOOL = "application-responsewriterpool";
 
-	String APPLICATION_REQUESTCONTEXTUTIL = "application-requestcontextutil";
+    String APPLICATION_REQUESTCONTEXTUTIL = "application-requestcontextutil";
 
-	String APPLICATION_UICOMMANDMANAGER = "application-uicommandmanager";
+    String APPLICATION_UICOMMANDMANAGER = "application-uicommandmanager";
 }

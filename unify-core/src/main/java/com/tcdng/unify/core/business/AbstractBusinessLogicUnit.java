@@ -30,24 +30,24 @@ import com.tcdng.unify.core.database.Database;
  */
 public abstract class AbstractBusinessLogicUnit extends AbstractUnifyComponent implements BusinessLogicUnit {
 
-	@Configurable(ApplicationComponents.APPLICATION_VALUESTOREFACTORY)
-	private ValueStoreFactory valueStoreFactory;
+    @Configurable(ApplicationComponents.APPLICATION_VALUESTOREFACTORY)
+    private ValueStoreFactory valueStoreFactory;
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected ValueStoreFactory getValueStoreFactory() {
-		return valueStoreFactory;
-	}
+    protected ValueStoreFactory getValueStoreFactory() {
+        return valueStoreFactory;
+    }
 
-	protected Database getDatabase(BusinessLogicInput input) throws UnifyException {
-		return (Database) getComponent(input.getDbName());
-	}
+    protected Database getDatabase(BusinessLogicInput input) throws UnifyException {
+        return (Database) getComponent(input.getDbName());
+    }
 }

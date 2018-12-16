@@ -29,52 +29,52 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_VALUESTOREFACTORY)
 public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements ValueStoreFactory {
 
-	@Override
-	public ValueStore getValueStore(Object storageObject) throws UnifyException {
-		return getValueStore(storageObject, -1);
-	}
+    @Override
+    public ValueStore getValueStore(Object storageObject) throws UnifyException {
+        return getValueStore(storageObject, -1);
+    }
 
-	@Override
-	public ValueStore getValueStore(Object storageObject, int dataIndex) throws UnifyException {
-		if (storageObject != null) {
-			if (storageObject instanceof PackableDoc) {
-				return new PackableDocStore((PackableDoc) storageObject, dataIndex);
-			}
+    @Override
+    public ValueStore getValueStore(Object storageObject, int dataIndex) throws UnifyException {
+        if (storageObject != null) {
+            if (storageObject instanceof PackableDoc) {
+                return new PackableDocStore((PackableDoc) storageObject, dataIndex);
+            }
 
-			if (storageObject instanceof MapValues) {
-				return new MapValuesStore((MapValues) storageObject, dataIndex);
-			}
+            if (storageObject instanceof MapValues) {
+                return new MapValuesStore((MapValues) storageObject, dataIndex);
+            }
 
-			return new BeanValueStore(storageObject, dataIndex);
-		}
+            return new BeanValueStore(storageObject, dataIndex);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public ValueStore getArrayValueStore(Object[] storageObject, int dataIndex) throws UnifyException {
-		if (storageObject != null) {
-			if (storageObject instanceof PackableDoc[]) {
-				return new PackableDocArrayStore((PackableDoc[]) storageObject, dataIndex);
-			}
+    @Override
+    public ValueStore getArrayValueStore(Object[] storageObject, int dataIndex) throws UnifyException {
+        if (storageObject != null) {
+            if (storageObject instanceof PackableDoc[]) {
+                return new PackableDocArrayStore((PackableDoc[]) storageObject, dataIndex);
+            }
 
-			if (storageObject instanceof MapValues[]) {
-				return new MapValuesArrayStore((MapValues[]) storageObject, dataIndex);
-			}
+            if (storageObject instanceof MapValues[]) {
+                return new MapValuesArrayStore((MapValues[]) storageObject, dataIndex);
+            }
 
-			return new BeanValueArrayStore(storageObject, dataIndex);
-		}
+            return new BeanValueArrayStore(storageObject, dataIndex);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

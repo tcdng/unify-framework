@@ -26,17 +26,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonBooleanArrayConverter extends AbstractJsonArrayConverter<Boolean> {
 
-	public JsonBooleanArrayConverter() {
-		super(Boolean.class);
-	}
+    public JsonBooleanArrayConverter() {
+        super(Boolean.class);
+    }
 
-	@Override
-	protected Boolean getValue(JsonValue jsonValue) throws Exception {
-		return jsonValue.asBoolean();
-	}
+    @Override
+    protected Boolean getValue(JsonValue jsonValue) throws Exception {
+        return jsonValue.asBoolean();
+    }
 
-	@Override
-	protected JsonValue setValue(Boolean value) throws Exception {
-		return Json.value(value);
-	}
+    @Override
+    protected JsonValue setValue(Boolean value) throws Exception {
+        return Json.value(value);
+    }
 }

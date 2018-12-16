@@ -23,16 +23,16 @@ package com.tcdng.unify.core.net;
  */
 public class TestTextResponse implements NetworkMessage {
 
-	private static final long serialVersionUID = 3691731772102685479L;
+    private static final long serialVersionUID = 3691731772102685479L;
 
-	private String fullname;
+    private String fullname;
 
-	public TestTextResponse(String fullname) {
-		this.fullname = fullname;
-	}
+    public TestTextResponse(String fullname) {
+        this.fullname = fullname;
+    }
 
-	public String getFullname() {
-		return fullname;
-	}
+    public String getFullname() {
+        return fullname;
+    }
 
 }

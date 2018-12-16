@@ -25,19 +25,19 @@ import java.util.Map;
  */
 public class TestTaskStatusLogger extends AbstractTaskStatusLogger {
 
-	@Override
-	public void logTaskException(Exception e) {
+    @Override
+    public void logTaskException(Exception e) {
 
-	}
+    }
 
-	@Override
-	public void logTaskStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) {
+    @Override
+    public void logTaskStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) {
 
-	}
+    }
 
-	@Override
-	public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
+    @Override
+    public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
 
-	}
+    }
 
 }

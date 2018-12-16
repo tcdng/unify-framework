@@ -27,13 +27,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonBigDecimalConverter implements JsonValueConverter<BigDecimal> {
-	@Override
-	public BigDecimal read(JsonValue jsonValue) throws Exception {
-		return BigDecimal.valueOf(jsonValue.asDouble());
-	}
+    @Override
+    public BigDecimal read(JsonValue jsonValue) throws Exception {
+        return BigDecimal.valueOf(jsonValue.asDouble());
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value(((BigDecimal) value).doubleValue());
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value(((BigDecimal) value).doubleValue());
+    }
 }

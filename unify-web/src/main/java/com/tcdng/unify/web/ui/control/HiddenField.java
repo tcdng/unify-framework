@@ -31,9 +31,9 @@ import com.tcdng.unify.web.ui.AbstractControl;
 @UplAttributes({ @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "true") })
 public class HiddenField extends AbstractControl {
 
-	@Override
-	public boolean isVisible() throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean isVisible() throws UnifyException {
+        return false;
+    }
 
 }

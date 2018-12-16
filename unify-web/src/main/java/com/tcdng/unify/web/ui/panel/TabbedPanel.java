@@ -39,67 +39,67 @@ import com.tcdng.unify.web.ui.Widget;
 @UplAttributes({ @UplAttribute(name = "tabPosition", type = TabPosition.class, defaultValue = "top") })
 public class TabbedPanel extends SwitchPanel {
 
-	private String activeTabId;
+    private String activeTabId;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		setComponentValueBeanToThis("selectedTabId");
-		for (String longName : getLayoutWidgetLongNames()) {
-			Widget widget = getWidgetByLongName(longName);
-			if (!widget.isHidden()) {
-				activeTabId = widget.getId();
-				break;
-			}
-		}
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        setComponentValueBeanToThis("selectedTabId");
+        for (String longName : getLayoutWidgetLongNames()) {
+            Widget widget = getWidgetByLongName(longName);
+            if (!widget.isHidden()) {
+                activeTabId = widget.getId();
+                break;
+            }
+        }
+    }
 
-	@Override
-	@Action
-	public void switchState() throws UnifyException {
-		String shortName = getWidgetByLongName(getPageManager().getLongName(activeTabId)).getShortName();
-		switchContent(shortName);
-	}
+    @Override
+    @Action
+    public void switchState() throws UnifyException {
+        String shortName = getWidgetByLongName(getPageManager().getLongName(activeTabId)).getShortName();
+        switchContent(shortName);
+    }
 
-	public TabPosition getTabPosition() throws UnifyException {
-		return getUplAttribute(TabPosition.class, "tabPosition");
-	}
+    public TabPosition getTabPosition() throws UnifyException {
+        return getUplAttribute(TabPosition.class, "tabPosition");
+    }
 
-	public String getSelectedTabId() throws UnifyException {
-		return getWidgetByShortName("selectedTabId").getId();
-	}
+    public String getSelectedTabId() throws UnifyException {
+        return getWidgetByShortName("selectedTabId").getId();
+    }
 
-	public String getActiveTabId() throws UnifyException {
-		return activeTabId;
-	}
+    public String getActiveTabId() throws UnifyException {
+        return activeTabId;
+    }
 
-	public void setActiveTabId(String activeTabPageName) {
-		activeTabId = activeTabPageName;
-	}
+    public void setActiveTabId(String activeTabPageName) {
+        activeTabId = activeTabPageName;
+    }
 
-	public List<String> getActiveTabExpandedIdList() throws UnifyException {
-		Widget widget = getCurrentWidget();
-		if (widget instanceof Container) {
-			return getPageManager().getPageNames(((Container) widget).getWidgetLongNames());
-		}
+    public List<String> getActiveTabExpandedIdList() throws UnifyException {
+        Widget widget = getCurrentWidget();
+        if (widget instanceof Container) {
+            return getPageManager().getPageNames(((Container) widget).getWidgetLongNames());
+        }
 
-		List<String> resultList = new ArrayList<String>();
-		resultList.add(widget.getId());
-		return resultList;
-	}
+        List<String> resultList = new ArrayList<String>();
+        resultList.add(widget.getId());
+        return resultList;
+    }
 
-	public List<String> getTabIds() throws UnifyException {
-		List<String> resultList = new ArrayList<String>();
-		for (String longName : getLayoutWidgetLongNames()) {
-			Widget widget = getWidgetByLongName(longName);
-			if (!widget.isHidden()) {
-				resultList.add(widget.getId());
-			}
-		}
-		return resultList;
-	}
+    public List<String> getTabIds() throws UnifyException {
+        List<String> resultList = new ArrayList<String>();
+        for (String longName : getLayoutWidgetLongNames()) {
+            Widget widget = getWidgetByLongName(longName);
+            if (!widget.isHidden()) {
+                resultList.add(widget.getId());
+            }
+        }
+        return resultList;
+    }
 
-	public Control getSelectedTabIdCtrl() throws UnifyException {
-		return (Control) getWidgetByShortName("selectedTabId");
-	}
+    public Control getSelectedTabIdCtrl() throws UnifyException {
+        return (Control) getWidgetByShortName("selectedTabId");
+    }
 }

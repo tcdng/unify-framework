@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-setcheckedpatternvalue")
 public class SetCheckedPatternValueAction extends AbstractPageAction {
 
-	public SetCheckedPatternValueAction() {
-		super("setcheckedpatternvalue");
-	}
+    public SetCheckedPatternValueAction() {
+        super("setcheckedpatternvalue");
+    }
 }

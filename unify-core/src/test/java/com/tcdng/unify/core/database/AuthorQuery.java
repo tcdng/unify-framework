@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database;
  */
 public class AuthorQuery extends AbstractTestEntityQuery<Author> {
 
-	public AuthorQuery() {
-		super(Author.class);
-	}
+    public AuthorQuery() {
+        super(Author.class);
+    }
 }

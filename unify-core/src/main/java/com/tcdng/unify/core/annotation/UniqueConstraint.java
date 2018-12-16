@@ -29,6 +29,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueConstraint {
 
-	/** The unique constraint properties */
-	String[] value();
+    /** The unique constraint properties */
+    String[] value();
 }

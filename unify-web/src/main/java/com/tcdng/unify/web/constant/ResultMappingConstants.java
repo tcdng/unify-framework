@@ -23,35 +23,35 @@ package com.tcdng.unify.web.constant;
  */
 public interface ResultMappingConstants {
 
-	String COMMAND = "resrv.command";
+    String COMMAND = "resrv.command";
 
-	String CLOSE = "resrv.close";
+    String CLOSE = "resrv.close";
 
-	String POST_RESPONSE = "resrv.postresponse";
+    String POST_RESPONSE = "resrv.postresponse";
 
-	String HIDE_POPUP = "resrv.hidepopup";
+    String HIDE_POPUP = "resrv.hidepopup";
 
-	String HIDE_POPUP_FIRE_CONFIRM = "resrv.hidepopupfireconfirm";
+    String HIDE_POPUP_FIRE_CONFIRM = "resrv.hidepopupfireconfirm";
 
-	String HINT_USER = "resrv.hintuser";
+    String HINT_USER = "resrv.hintuser";
 
-	String INDEX = "resrv.index";
+    String INDEX = "resrv.index";
 
-	String NONE = "resrv.none";
+    String NONE = "resrv.none";
 
-	String OPEN = "resrv.open";
+    String OPEN = "resrv.open";
 
-	String SAVE = "resrv.save";
+    String SAVE = "resrv.save";
 
-	String SHOW_POPUP = "resrv.showpopup";
+    String SHOW_POPUP = "resrv.showpopup";
 
-	String DOWNLOAD_FILE = "resrv.downloadfile";
+    String DOWNLOAD_FILE = "resrv.downloadfile";
 
-	String REFRESH_SHOW_POPUP = "resrv.refreshshowpopup";
+    String REFRESH_SHOW_POPUP = "resrv.refreshshowpopup";
 
-	String REFRESH_SECTION = "resrv.refreshsection";
+    String REFRESH_SECTION = "resrv.refreshsection";
 
-	String SHOW_ATTACHMENT = "resrv.showattachment";
+    String SHOW_ATTACHMENT = "resrv.showattachment";
 
-	String VALIDATION_ERROR = "resrv.validationerror";
+    String VALIDATION_ERROR = "resrv.validationerror";
 }

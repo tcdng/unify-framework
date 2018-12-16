@@ -31,14 +31,14 @@ import com.tcdng.unify.web.ui.data.FileAttachmentsInfo;
 @Component("fileattachmentresponse")
 public class FileAttachmentResponse extends AbstractOpenWindowPageControllerResponse {
 
-	@Override
-	protected WindowResourceInfo prepareWindowResource() throws UnifyException {
-		FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) this
-				.getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
-		FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
-		String resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
-		return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", resourceName,
-				fileAttachmentInfo.getType().contentType(), false);
-	}
+    @Override
+    protected WindowResourceInfo prepareWindowResource() throws UnifyException {
+        FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) this
+                .getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
+        FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
+        String resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
+        return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", resourceName,
+                fileAttachmentInfo.getType().contentType(), false);
+    }
 
 }

@@ -28,5 +28,5 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface FeatureInstaller<T extends FeatureDefinition> extends UnifyComponent {
 
-	void installFeatures(List<T> featureDefinitions) throws UnifyException;
+    void installFeatures(List<T> featureDefinitions) throws UnifyException;
 }

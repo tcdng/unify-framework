@@ -34,29 +34,29 @@ import com.tcdng.unify.web.ui.Widget;
 @Component("ui-upldescriptorvalidation")
 public class UplDescriptorValidation extends AbstractPageValidation {
 
-	@Override
-	public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
-		boolean pass = true;
-		for (Widget widget : widgets) {
-			boolean localPass = true;
-			DataTransferBlock transferBlock = dataTransfer.getDataTransferBlock(widget.getId());
-			if (transferBlock != null) {
-				try {
-					String descriptor = getTransferValue(String.class, transferBlock);
-					getUplComponent(getSessionLocale(), descriptor, false);
-				} catch (Exception e) {
-					String caption = widget.getUplAttribute(String.class, "caption");
-					String message = getSessionMessage("validation.invalidupldescriptor", caption);
-					addValidationFail((Control) widget, "upldescriptor", message);
-					pass = localPass = false;
-				}
-			}
+    @Override
+    public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
+        boolean pass = true;
+        for (Widget widget : widgets) {
+            boolean localPass = true;
+            DataTransferBlock transferBlock = dataTransfer.getDataTransferBlock(widget.getId());
+            if (transferBlock != null) {
+                try {
+                    String descriptor = getTransferValue(String.class, transferBlock);
+                    getUplComponent(getSessionLocale(), descriptor, false);
+                } catch (Exception e) {
+                    String caption = widget.getUplAttribute(String.class, "caption");
+                    String message = getSessionMessage("validation.invalidupldescriptor", caption);
+                    addValidationFail((Control) widget, "upldescriptor", message);
+                    pass = localPass = false;
+                }
+            }
 
-			if (localPass) {
-				addValidationPass((Control) widget, "upldescriptor");
-			}
-		}
-		return pass;
-	}
+            if (localPass) {
+                addValidationPass((Control) widget, "upldescriptor");
+            }
+        }
+        return pass;
+    }
 
 }

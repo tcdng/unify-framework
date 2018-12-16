@@ -28,31 +28,31 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("sqltabletypelist")
 public enum SqlTableType implements EnumConst {
 
-	TABLE("TABLE", false), VIEW("VIEW", true);
+    TABLE("TABLE", false), VIEW("VIEW", true);
 
-	private final String code;
+    private final String code;
 
-	private final boolean view;
+    private final boolean view;
 
-	private SqlTableType(String code, boolean view) {
-		this.code = code;
-		this.view = view;
-	}
+    private SqlTableType(String code, boolean view) {
+        this.code = code;
+        this.view = view;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public boolean isView() {
-		return view;
-	}
+    public boolean isView() {
+        return view;
+    }
 
-	public static SqlTableType fromCode(String code) {
-		return EnumUtils.fromCode(SqlTableType.class, code);
-	}
+    public static SqlTableType fromCode(String code) {
+        return EnumUtils.fromCode(SqlTableType.class, code);
+    }
 
-	public static SqlTableType fromName(String name) {
-		return EnumUtils.fromName(SqlTableType.class, name);
-	}
+    public static SqlTableType fromName(String name) {
+        return EnumUtils.fromName(SqlTableType.class, name);
+    }
 }

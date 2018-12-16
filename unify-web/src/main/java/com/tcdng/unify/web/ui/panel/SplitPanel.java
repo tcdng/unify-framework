@@ -29,41 +29,41 @@ import com.tcdng.unify.web.ui.AbstractPanel;
  */
 @Component("ui-splitpanel")
 @UplAttributes({ @UplAttribute(name = "minorMin", type = int.class), @UplAttribute(name = "minorMax", type = int.class),
-		@UplAttribute(name = "minorDefault", type = int.class, defaultValue = "150"),
-		@UplAttribute(name = "vertical", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "minorDefault", type = int.class, defaultValue = "150"),
+        @UplAttribute(name = "vertical", type = boolean.class, defaultValue = "true") })
 public class SplitPanel extends AbstractPanel {
 
-	public String getSplitCtrlId() throws UnifyException {
-		return getPrefixedId("ctrl");
-	}
+    public String getSplitCtrlId() throws UnifyException {
+        return getPrefixedId("ctrl");
+    }
 
-	public String getMinorWinId() throws UnifyException {
-		return getPrefixedId("win");
-	}
+    public String getMinorWinId() throws UnifyException {
+        return getPrefixedId("win");
+    }
 
-	public String getMinorPaneId() throws UnifyException {
-		return getPrefixedId("pane");
-	}
+    public String getMinorPaneId() throws UnifyException {
+        return getPrefixedId("pane");
+    }
 
-	public int getMinorWinMax() throws UnifyException {
-		return getUplAttribute(int.class, "minorMax");
-	}
+    public int getMinorWinMax() throws UnifyException {
+        return getUplAttribute(int.class, "minorMax");
+    }
 
-	public int getMinorWinMin() throws UnifyException {
-		return getUplAttribute(int.class, "minorMin");
-	}
+    public int getMinorWinMin() throws UnifyException {
+        return getUplAttribute(int.class, "minorMin");
+    }
 
-	public boolean isVertical() throws UnifyException {
-		return getUplAttribute(boolean.class, "vertical");
-	}
+    public boolean isVertical() throws UnifyException {
+        return getUplAttribute(boolean.class, "vertical");
+    }
 
-	public int getMinorWidth() throws UnifyException {
-		int minorWidth = getUplAttribute(int.class, "minorDefault");
-		if (minorWidth < getMinorWinMin()) {
-			minorWidth = getMinorWinMin();
-		} else if (minorWidth > getMinorWinMax()) {
-			minorWidth = getMinorWinMax();
-		}
-		return minorWidth;
-	}
+    public int getMinorWidth() throws UnifyException {
+        int minorWidth = getUplAttribute(int.class, "minorDefault");
+        if (minorWidth < getMinorWinMin()) {
+            minorWidth = getMinorWinMin();
+        } else if (minorWidth > getMinorWinMax()) {
+            minorWidth = getMinorWinMax();
+        }
+        return minorWidth;
+    }
 }

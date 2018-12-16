@@ -28,21 +28,21 @@ import org.junit.Test;
  */
 public class VersionUtilsTest {
 
-	@Test
-	public void testIsNewerVersion() throws Exception {
-		assertTrue(VersionUtils.isNewerVersion("1.1", "1.0"));
-		assertTrue(VersionUtils.isNewerVersion("1.1", "1.0.5"));
-		assertTrue(VersionUtils.isNewerVersion("1.0.4", "1.0.3"));
-		assertTrue(VersionUtils.isNewerVersion("1.1", "1.0.0.16"));
-		assertTrue(VersionUtils.isNewerVersion("1.5.1.12", "1.5.0.17"));
-	}
+    @Test
+    public void testIsNewerVersion() throws Exception {
+        assertTrue(VersionUtils.isNewerVersion("1.1", "1.0"));
+        assertTrue(VersionUtils.isNewerVersion("1.1", "1.0.5"));
+        assertTrue(VersionUtils.isNewerVersion("1.0.4", "1.0.3"));
+        assertTrue(VersionUtils.isNewerVersion("1.1", "1.0.0.16"));
+        assertTrue(VersionUtils.isNewerVersion("1.5.1.12", "1.5.0.17"));
+    }
 
-	@Test
-	public void testIsNotNewerVersion() throws Exception {
-		assertFalse(VersionUtils.isNewerVersion("1.0", "1.0"));
-		assertFalse(VersionUtils.isNewerVersion("1.1", "1.1.5"));
-		assertFalse(VersionUtils.isNewerVersion("1.2.32", "1.3.3"));
-		assertFalse(VersionUtils.isNewerVersion("1.0.0.2", "1.0.0.16"));
-		assertFalse(VersionUtils.isNewerVersion("1.5.0.17", "1.5.0.17"));
-	}
+    @Test
+    public void testIsNotNewerVersion() throws Exception {
+        assertFalse(VersionUtils.isNewerVersion("1.0", "1.0"));
+        assertFalse(VersionUtils.isNewerVersion("1.1", "1.1.5"));
+        assertFalse(VersionUtils.isNewerVersion("1.2.32", "1.3.3"));
+        assertFalse(VersionUtils.isNewerVersion("1.0.0.2", "1.0.0.16"));
+        assertFalse(VersionUtils.isNewerVersion("1.5.0.17", "1.5.0.17"));
+    }
 }

@@ -36,57 +36,57 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractDBSearchProvider extends AbstractSearchProviderListCommand {
 
-	@Configurable(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)
-	private GenericBusinessModule genericBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)
+    private GenericBusinessModule genericBusinessModule;
 
-	@Configurable("30")
-	private int searchLimit;
+    @Configurable("30")
+    private int searchLimit;
 
-	private Class<? extends Entity> recordType;
+    private Class<? extends Entity> recordType;
 
-	private String keyProperty;
+    private String keyProperty;
 
-	private String descProperty;
+    private String descProperty;
 
-	public AbstractDBSearchProvider(Class<? extends Entity> recordType) {
-		this(recordType, "id", "description");
-	}
+    public AbstractDBSearchProvider(Class<? extends Entity> recordType) {
+        this(recordType, "id", "description");
+    }
 
-	public AbstractDBSearchProvider(Class<? extends Entity> recordType, String keyProperty, String descProperty) {
-		this.recordType = recordType;
-		this.keyProperty = keyProperty;
-		this.descProperty = descProperty;
-	}
+    public AbstractDBSearchProvider(Class<? extends Entity> recordType, String keyProperty, String descProperty) {
+        this.recordType = recordType;
+        this.keyProperty = keyProperty;
+        this.descProperty = descProperty;
+    }
 
-	@Override
-	public List<? extends Listable> search(String filter) throws UnifyException {
-		return execute(getSessionLocale(), new SearchProviderParams(null, filter));
-	}
+    @Override
+    public List<? extends Listable> search(String filter) throws UnifyException {
+        return execute(getSessionLocale(), new SearchProviderParams(null, filter));
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<? extends Listable> execute(Locale locale, SearchProviderParams params) throws UnifyException {
-		String key = params.getKey();
-		if (!StringUtils.isBlank(key)) {
-			return genericBusinessModule.listAll(new Query(recordType).equals(keyProperty, key).limit(searchLimit));
-		}
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public List<? extends Listable> execute(Locale locale, SearchProviderParams params) throws UnifyException {
+        String key = params.getKey();
+        if (!StringUtils.isBlank(key)) {
+            return genericBusinessModule.listAll(new Query(recordType).equals(keyProperty, key).limit(searchLimit));
+        }
 
-		String filter = params.getFilter();
-		if (!StringUtils.isBlank(filter)) {
-			return genericBusinessModule.listAll(new Query(recordType).like(descProperty, filter).limit(searchLimit));
-		}
+        String filter = params.getFilter();
+        if (!StringUtils.isBlank(filter)) {
+            return genericBusinessModule.listAll(new Query(recordType).like(descProperty, filter).limit(searchLimit));
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
-	@Override
-	public String getKeyProperty() throws UnifyException {
-		return keyProperty;
-	}
+    @Override
+    public String getKeyProperty() throws UnifyException {
+        return keyProperty;
+    }
 
-	@Override
-	public String getDescProperty() throws UnifyException {
-		return descProperty;
-	}
+    @Override
+    public String getDescProperty() throws UnifyException {
+        return descProperty;
+    }
 
 }

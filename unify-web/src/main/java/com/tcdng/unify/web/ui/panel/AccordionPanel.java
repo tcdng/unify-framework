@@ -30,72 +30,72 @@ import com.tcdng.unify.web.ui.Control;
 @Component("ui-accordionpanel")
 public class AccordionPanel extends AbstractPanel {
 
-	private Control currentSelCtrl;
+    private Control currentSelCtrl;
 
-	private int currentSel;
+    private int currentSel;
 
-	private int sectionCount;
+    private int sectionCount;
 
-	private boolean collapsed;
+    private boolean collapsed;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		currentSelCtrl = (Control) addInternalControl("!ui-hidden binding:currentSel");
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        currentSelCtrl = (Control) addInternalControl("!ui-hidden binding:currentSel");
+    }
 
-	@Action
-	@Override
-	public void switchState() throws UnifyException {
+    @Action
+    @Override
+    public void switchState() throws UnifyException {
 
-	}
+    }
 
-	@Action
-	@Override
-	public void resetState() throws UnifyException {
+    @Action
+    @Override
+    public void resetState() throws UnifyException {
 
-	}
+    }
 
-	@Action
-	public void expandContent() throws UnifyException {
-		collapsed = false;
-	}
+    @Action
+    public void expandContent() throws UnifyException {
+        collapsed = false;
+    }
 
-	@Action
-	public void collapseContent() throws UnifyException {
-		collapsed = true;
-	}
+    @Action
+    public void collapseContent() throws UnifyException {
+        collapsed = true;
+    }
 
-	public boolean isCollapsed() {
-		return collapsed;
-	}
+    public boolean isCollapsed() {
+        return collapsed;
+    }
 
-	public String getHeaderIdBase() throws UnifyException {
-		return getPrefixedId("hdr_");
-	}
+    public String getHeaderIdBase() throws UnifyException {
+        return getPrefixedId("hdr_");
+    }
 
-	public Control getCurrentSelCtrl() {
-		return currentSelCtrl;
-	}
+    public Control getCurrentSelCtrl() {
+        return currentSelCtrl;
+    }
 
-	public void clearSectionCount() {
-		sectionCount = 0;
-	}
+    public void clearSectionCount() {
+        sectionCount = 0;
+    }
 
-	public void incrementSectionCount() {
-		sectionCount++;
-	}
+    public void incrementSectionCount() {
+        sectionCount++;
+    }
 
-	public int getSectionCount() {
-		return sectionCount;
-	}
+    public int getSectionCount() {
+        return sectionCount;
+    }
 
-	public int getCurrentSel() {
-		return currentSel;
-	}
+    public int getCurrentSel() {
+        return currentSel;
+    }
 
-	public void setCurrentSel(int currentSel) {
-		this.currentSel = currentSel;
-	}
+    public void setCurrentSel(int currentSel) {
+        this.currentSel = currentSel;
+    }
 
 }

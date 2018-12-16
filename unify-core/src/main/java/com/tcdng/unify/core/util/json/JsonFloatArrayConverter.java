@@ -26,17 +26,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonFloatArrayConverter extends AbstractJsonArrayConverter<Float> {
 
-	public JsonFloatArrayConverter() {
-		super(Float.class);
-	}
+    public JsonFloatArrayConverter() {
+        super(Float.class);
+    }
 
-	@Override
-	protected Float getValue(JsonValue jsonValue) throws Exception {
-		return jsonValue.asFloat();
-	}
+    @Override
+    protected Float getValue(JsonValue jsonValue) throws Exception {
+        return jsonValue.asFloat();
+    }
 
-	@Override
-	protected JsonValue setValue(Float value) throws Exception {
-		return Json.value(value);
-	}
+    @Override
+    protected JsonValue setValue(Float value) throws Exception {
+        return Json.value(value);
+    }
 }

@@ -27,18 +27,18 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("oneway-bytearraycryptograph")
 public class OneWayByteArrayCryptographImpl extends AbstractOneWayCryptograph implements OneWayByteArrayCryptograph {
 
-	@Override
-	public byte[] forwardTransform(byte[] value) throws UnifyException {
-		return encrypt(value);
-	}
+    @Override
+    public byte[] forwardTransform(byte[] value) throws UnifyException {
+        return encrypt(value);
+    }
 
-	@Override
-	public byte[] reverseTransform(byte[] value) throws UnifyException {
-		return value;
-	}
+    @Override
+    public byte[] reverseTransform(byte[] value) throws UnifyException {
+        return value;
+    }
 
-	@Override
-	public byte[] encrypt(byte[] toEncrypt) throws UnifyException {
-		return doEncrypt(toEncrypt);
-	}
+    @Override
+    public byte[] encrypt(byte[] toEncrypt) throws UnifyException {
+        return doEncrypt(toEncrypt);
+    }
 }

@@ -25,25 +25,25 @@ import com.tcdng.unify.core.transform.Transformer;
  * @since 1.0
  */
 public interface TwoWayByteArrayCryptograph extends Transformer<byte[], byte[]> {
-	/**
-	 * Encrypts a byte array.
-	 * 
-	 * @param array
-	 *            the array to encrypt
-	 * @return the encrypted array
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	byte[] encrypt(byte[] array) throws UnifyException;
+    /**
+     * Encrypts a byte array.
+     * 
+     * @param array
+     *            the array to encrypt
+     * @return the encrypted array
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    byte[] encrypt(byte[] array) throws UnifyException;
 
-	/**
-	 * Decrypts a byte array.
-	 * 
-	 * @param array
-	 *            the array to decrypt
-	 * @return the decrypted array
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	byte[] decrypt(byte[] array) throws UnifyException;
+    /**
+     * Decrypts a byte array.
+     * 
+     * @param array
+     *            the array to decrypt
+     * @return the decrypted array
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    byte[] decrypt(byte[] array) throws UnifyException;
 }

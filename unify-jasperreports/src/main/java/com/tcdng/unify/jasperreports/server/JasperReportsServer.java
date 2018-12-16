@@ -76,186 +76,186 @@ import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
 @Component(name = JasperReportsApplicationComponents.JASPERREPORTS_SERVER, description = "Jasper Reports Server")
 public class JasperReportsServer extends AbstractReportServer {
 
-	private JasperReportsCache jasperReportsCache;
+    private JasperReportsCache jasperReportsCache;
 
-	@Configurable("20")
-	private int reportExpirationPeriod;
+    @Configurable("20")
+    private int reportExpirationPeriod;
 
-	private EnumMap<ReportLayout, JasperReportsLayoutManager> layoutManagers;
+    private EnumMap<ReportLayout, JasperReportsLayoutManager> layoutManagers;
 
-	public JasperReportsServer() {
-		layoutManagers = new EnumMap<ReportLayout, JasperReportsLayoutManager>(ReportLayout.class);
-	}
+    public JasperReportsServer() {
+        layoutManagers = new EnumMap<ReportLayout, JasperReportsLayoutManager>(ReportLayout.class);
+    }
 
-	public void setJasperReportCache(JasperReportsCache jasperReportsCache) {
-		this.jasperReportsCache = jasperReportsCache;
-	}
+    public void setJasperReportCache(JasperReportsCache jasperReportsCache) {
+        this.jasperReportsCache = jasperReportsCache;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		super.onInitialize();
-		jasperReportsCache = (JasperReportsCache) getComponent("jasperreports-cache");
-		layoutManagers.put(ReportLayout.TABULAR,
-				(JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
-		layoutManagers.put(ReportLayout.COLUMNAR,
-				(JasperReportsLayoutManager) getComponent("jasperreports-columnarlayoutmanager"));
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
+        jasperReportsCache = (JasperReportsCache) getComponent("jasperreports-cache");
+        layoutManagers.put(ReportLayout.TABULAR,
+                (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
+        layoutManagers.put(ReportLayout.COLUMNAR,
+                (JasperReportsLayoutManager) getComponent("jasperreports-columnarlayoutmanager"));
+    }
 
-	@Override
-	protected void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException {
-		DataSource dataSource = getDataSource(report);
-		Connection connection = null;
-		try {
-			JasperReport jasperReport = null;
-			if (report.isDynamic()) {
-				jasperReport = generateJasperReport(report);
-			} else {
-				jasperReport = getCachedJasperReport(report.getTemplate());
-			}
+    @Override
+    protected void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException {
+        DataSource dataSource = getDataSource(report);
+        Connection connection = null;
+        try {
+            JasperReport jasperReport = null;
+            if (report.isDynamic()) {
+                jasperReport = generateJasperReport(report);
+            } else {
+                jasperReport = getCachedJasperReport(report.getTemplate());
+            }
 
-			JasperPrint jasperPrint = null;
-			Collection<?> content = report.getBeanCollection();
-			if (content != null) {
-				JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(content);
-				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
-						jrBeanDataSource);
-			} else {
-				connection = (Connection) dataSource.getConnection();
-				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
-						connection);
-			}
+            JasperPrint jasperPrint = null;
+            Collection<?> content = report.getBeanCollection();
+            if (content != null) {
+                JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(content);
+                jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
+                        jrBeanDataSource);
+            } else {
+                connection = (Connection) dataSource.getConnection();
+                jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
+                        connection);
+            }
 
-			Exporter<ExporterInput, ?, ?, ?> exporter = getExporter(report.getFormat(), outputStream);
-			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-			exporter.exportReport();
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		} finally {
-			if (connection != null) {
-				dataSource.restoreConnection(connection);
-			}
-		}
-	}
+            Exporter<ExporterInput, ?, ?, ?> exporter = getExporter(report.getFormat(), outputStream);
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.exportReport();
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        } finally {
+            if (connection != null) {
+                dataSource.restoreConnection(connection);
+            }
+        }
+    }
 
-	private JasperReport getCachedJasperReport(String template) throws UnifyException {
-		InputStream inputStream = null;
-		try {
-			JasperReport jasperReport = jasperReportsCache.get(template);
-			if (jasperReport == null) {
-				inputStream = IOUtils.openFileResourceInputStream(template,
-						getUnifyComponentContext().getWorkingPath());
-				jasperReport = JasperCompileManager.compileReport(inputStream);
-				jasperReportsCache.put(template, jasperReport,
-						CalendarUtils.getMilliSecondsByFrequency(FrequencyUnit.MINUTE, reportExpirationPeriod));
-			}
-			return jasperReport;
-		} catch (JRException e) {
-			throwOperationErrorException(e);
-		} finally {
-			IOUtils.close(inputStream);
-		}
-		return null;
-	}
+    private JasperReport getCachedJasperReport(String template) throws UnifyException {
+        InputStream inputStream = null;
+        try {
+            JasperReport jasperReport = jasperReportsCache.get(template);
+            if (jasperReport == null) {
+                inputStream = IOUtils.openFileResourceInputStream(template,
+                        getUnifyComponentContext().getWorkingPath());
+                jasperReport = JasperCompileManager.compileReport(inputStream);
+                jasperReportsCache.put(template, jasperReport,
+                        CalendarUtils.getMilliSecondsByFrequency(FrequencyUnit.MINUTE, reportExpirationPeriod));
+            }
+            return jasperReport;
+        } catch (JRException e) {
+            throwOperationErrorException(e);
+        } finally {
+            IOUtils.close(inputStream);
+        }
+        return null;
+    }
 
-	private JasperReport generateJasperReport(Report report) throws UnifyException {
-		InputStream inputStream = null;
-		try {
-			inputStream = IOUtils.openFileResourceInputStream(report.getTemplate(),
-					getUnifyComponentContext().getWorkingPath());
+    private JasperReport generateJasperReport(Report report) throws UnifyException {
+        InputStream inputStream = null;
+        try {
+            inputStream = IOUtils.openFileResourceInputStream(report.getTemplate(),
+                    getUnifyComponentContext().getWorkingPath());
 
-			JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
-			jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
-			if (!report.isBeanCollection()) {
-				String query = null;
-				if (report.isQuery()) {
-					query = report.getQuery();
-				} else {
-					DataSourceDialect dataSourceDialect = getDataSource(report).getDialect();
-					NativeQuery nativeQuery = new NativeQuery();
-					nativeQuery.tableName(report.getTable().getName());
-					for (ReportColumn rc : report.getColumns()) {
-						nativeQuery.addColumn(rc.getTable(), rc.getName());
-					}
+            JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
+            jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
+            if (!report.isBeanCollection()) {
+                String query = null;
+                if (report.isQuery()) {
+                    query = report.getQuery();
+                } else {
+                    DataSourceDialect dataSourceDialect = getDataSource(report).getDialect();
+                    NativeQuery nativeQuery = new NativeQuery();
+                    nativeQuery.tableName(report.getTable().getName());
+                    for (ReportColumn rc : report.getColumns()) {
+                        nativeQuery.addColumn(rc.getTable(), rc.getName());
+                    }
 
-					for (ReportTableJoin rj : report.getJoins()) {
-						nativeQuery.addJoin(rj.getType(), rj.getTableA(), rj.getColumnA(), rj.getTableB(),
-								rj.getColumnB());
-					}
+                    for (ReportTableJoin rj : report.getJoins()) {
+                        nativeQuery.addJoin(rj.getType(), rj.getTableA(), rj.getColumnA(), rj.getTableB(),
+                                rj.getColumnB());
+                    }
 
-					for (ReportColumnFilter rf : report.getFilters()) {
-						nativeQuery.addFilter(rf.getOp(), rf.getTableName(), rf.getColumnName(), rf.getParam1(),
-								rf.getParam2());
-					}
-					query = dataSourceDialect.generateNativeQuery(nativeQuery);
-				}
+                    for (ReportColumnFilter rf : report.getFilters()) {
+                        nativeQuery.addFilter(rf.getOp(), rf.getTableName(), rf.getColumnName(), rf.getParam1(),
+                                rf.getParam2());
+                    }
+                    query = dataSourceDialect.generateNativeQuery(nativeQuery);
+                }
 
-				logDebug("Setting jasper reports query [{0}]...", query);
-				JRDesignQuery jRDesignQuery = new JRDesignQuery();
-				jRDesignQuery.setText(query);
-				jasperDesign.setQuery(jRDesignQuery);
-			}
+                logDebug("Setting jasper reports query [{0}]...", query);
+                JRDesignQuery jRDesignQuery = new JRDesignQuery();
+                jRDesignQuery.setText(query);
+                jasperDesign.setQuery(jRDesignQuery);
+            }
 
-			JasperReportsLayoutManager jasperReportsLayoutManager = layoutManagers.get(report.getLayout());
-			jasperReportsLayoutManager.applyLayout(jasperDesign, report);
-			return JasperCompileManager.compileReport(jasperDesign);
-		} catch (JRException e) {
-			throwOperationErrorException(e);
-		} finally {
-			IOUtils.close(inputStream);
-		}
-		return null;
-	}
+            JasperReportsLayoutManager jasperReportsLayoutManager = layoutManagers.get(report.getLayout());
+            jasperReportsLayoutManager.applyLayout(jasperDesign, report);
+            return JasperCompileManager.compileReport(jasperDesign);
+        } catch (JRException e) {
+            throwOperationErrorException(e);
+        } finally {
+            IOUtils.close(inputStream);
+        }
+        return null;
+    }
 
-	private Exporter<ExporterInput, ?, ?, ?> getExporter(ReportFormat reportFormatType, OutputStream outputStream)
-			throws Exception {
-		switch (reportFormatType) {
-		case CSV:
-			JRCsvExporter csvExporter = new JRCsvExporter();
-			csvExporter.setConfiguration(new SimpleCsvReportConfiguration());
-			csvExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
-			return csvExporter;
-		case DOC:
-			JRRtfExporter docExporter = new JRRtfExporter();
-			docExporter.setConfiguration(new SimpleRtfReportConfiguration());
-			docExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
-			return docExporter;
-		case DOCX:
-			JRDocxExporter docxExporter = new JRDocxExporter();
-			docxExporter.setConfiguration(new SimpleDocxReportConfiguration());
-			docxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-			return docxExporter;
-		case XLS:
-			JRXlsExporter xlsExporter = new JRXlsExporter();
-			xlsExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
-			xlsExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-			return xlsExporter;
-		case XLSX:
-			JRXlsExporter xlsxExporter = new JRXlsExporter();
-			xlsxExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
-			xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-			return xlsxExporter;
-		case XML:
-			JRXmlExporter xmlExporter = new JRXmlExporter();
-			xmlExporter.setExporterOutput(new SimpleXmlExporterOutput(outputStream));
-			return xmlExporter;
-		case PDF:
-		default:
-			JRPdfExporter pdfExporter = new JRPdfExporter();
-			pdfExporter.setConfiguration(new SimplePdfExporterConfiguration());
-			pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-			return pdfExporter;
-		}
-	}
+    private Exporter<ExporterInput, ?, ?, ?> getExporter(ReportFormat reportFormatType, OutputStream outputStream)
+            throws Exception {
+        switch (reportFormatType) {
+        case CSV:
+            JRCsvExporter csvExporter = new JRCsvExporter();
+            csvExporter.setConfiguration(new SimpleCsvReportConfiguration());
+            csvExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
+            return csvExporter;
+        case DOC:
+            JRRtfExporter docExporter = new JRRtfExporter();
+            docExporter.setConfiguration(new SimpleRtfReportConfiguration());
+            docExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
+            return docExporter;
+        case DOCX:
+            JRDocxExporter docxExporter = new JRDocxExporter();
+            docxExporter.setConfiguration(new SimpleDocxReportConfiguration());
+            docxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            return docxExporter;
+        case XLS:
+            JRXlsExporter xlsExporter = new JRXlsExporter();
+            xlsExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
+            xlsExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            return xlsExporter;
+        case XLSX:
+            JRXlsExporter xlsxExporter = new JRXlsExporter();
+            xlsxExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
+            xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            return xlsxExporter;
+        case XML:
+            JRXmlExporter xmlExporter = new JRXmlExporter();
+            xmlExporter.setExporterOutput(new SimpleXmlExporterOutput(outputStream));
+            return xmlExporter;
+        case PDF:
+        default:
+            JRPdfExporter pdfExporter = new JRPdfExporter();
+            pdfExporter.setConfiguration(new SimplePdfExporterConfiguration());
+            pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            return pdfExporter;
+        }
+    }
 
-	private SimpleXlsMetadataReportConfiguration getSimpleXlsMetadataReportConfiguration() {
-		SimpleXlsMetadataReportConfiguration sxmrc = new SimpleXlsMetadataReportConfiguration();
-		sxmrc.setOnePagePerSheet(false);
-		sxmrc.setRemoveEmptySpaceBetweenColumns(true);
-		sxmrc.setRemoveEmptySpaceBetweenRows(true);
-		sxmrc.setWhitePageBackground(false);
-		sxmrc.setDetectCellType(true);
-		return sxmrc;
-	}
+    private SimpleXlsMetadataReportConfiguration getSimpleXlsMetadataReportConfiguration() {
+        SimpleXlsMetadataReportConfiguration sxmrc = new SimpleXlsMetadataReportConfiguration();
+        sxmrc.setOnePagePerSheet(false);
+        sxmrc.setRemoveEmptySpaceBetweenColumns(true);
+        sxmrc.setRemoveEmptySpaceBetweenRows(true);
+        sxmrc.setWhitePageBackground(false);
+        sxmrc.setDetectCellType(true);
+        return sxmrc;
+    }
 }

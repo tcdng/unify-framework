@@ -23,7 +23,7 @@ package com.tcdng.unify.core.system;
  */
 public interface UniqueStringTestTaskConstants {
 
-	String UNIQUESTRINGLIST = "uniqueStringList";
+    String UNIQUESTRINGLIST = "uniqueStringList";
 
-	String ITERATIONS = "iterations";
+    String ITERATIONS = "iterations";
 }

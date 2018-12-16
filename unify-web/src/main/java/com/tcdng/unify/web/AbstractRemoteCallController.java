@@ -26,17 +26,17 @@ import com.tcdng.unify.core.annotation.Singleton;
 @Singleton(true)
 public abstract class AbstractRemoteCallController extends AbstractController implements RemoteCallController {
 
-	public AbstractRemoteCallController() {
-		super(false);
-	}
+    public AbstractRemoteCallController() {
+        super(false);
+    }
 
-	@Override
-	public ControllerType getType() {
-		return ControllerType.REMOTECALL_CONTROLLER;
-	}
+    @Override
+    public ControllerType getType() {
+        return ControllerType.REMOTECALL_CONTROLLER;
+    }
 
-	@Override
-	public boolean isUserInterface() {
-		return false;
-	}
+    @Override
+    public boolean isUserInterface() {
+        return false;
+    }
 }

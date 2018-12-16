@@ -39,184 +39,184 @@ import com.tcdng.unify.core.annotation.Configurable;
  */
 public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
-	@Test(expected = UnifyException.class)
-	public void testGetUnknownComponent() throws Exception {
-		getComponent("component-c");
-	}
+    @Test(expected = UnifyException.class)
+    public void testGetUnknownComponent() throws Exception {
+        getComponent("component-c");
+    }
 
-	@Test
-	public void testGetSingletonComponent() throws Exception {
-		UnifyComponent c1 = getComponent("component-a1");
-		UnifyComponent c2 = getComponent("component-a1");
-		UnifyComponent c3 = getComponent("component-a1");
-		assertSame(c1, c2);
-		assertSame(c1, c3);
-		assertSame(c2, c3);
-	}
+    @Test
+    public void testGetSingletonComponent() throws Exception {
+        UnifyComponent c1 = getComponent("component-a1");
+        UnifyComponent c2 = getComponent("component-a1");
+        UnifyComponent c3 = getComponent("component-a1");
+        assertSame(c1, c2);
+        assertSame(c1, c3);
+        assertSame(c2, c3);
+    }
 
-	@Test
-	public void testGetNonSingletonComponent() throws Exception {
-		UnifyComponent c1 = getComponent("component-a2");
-		UnifyComponent c2 = getComponent("component-a2");
-		UnifyComponent c3 = getComponent("component-a2");
-		assertNotSame(c1, c2);
-		assertNotSame(c1, c3);
-		assertNotSame(c2, c3);
-	}
+    @Test
+    public void testGetNonSingletonComponent() throws Exception {
+        UnifyComponent c1 = getComponent("component-a2");
+        UnifyComponent c2 = getComponent("component-a2");
+        UnifyComponent c3 = getComponent("component-a2");
+        assertNotSame(c1, c2);
+        assertNotSame(c1, c3);
+        assertNotSame(c2, c3);
+    }
 
-	@Test
-	public void testGetComponentWithConfigurableProperties() throws Exception {
-		TestComponentB testComponentB = (TestComponentB) getComponent("component-b");
-		assertNotNull(testComponentB.getTestComponentA1());
-		assertTrue(TestComponentA1.class.equals(testComponentB.getTestComponentA1().getClass()));
-		assertEquals("127.0.0.1", testComponentB.getAddress());
-	}
+    @Test
+    public void testGetComponentWithConfigurableProperties() throws Exception {
+        TestComponentB testComponentB = (TestComponentB) getComponent("component-b");
+        assertNotNull(testComponentB.getTestComponentA1());
+        assertTrue(TestComponentA1.class.equals(testComponentB.getTestComponentA1().getClass()));
+        assertEquals("127.0.0.1", testComponentB.getAddress());
+    }
 
-	@Test
-	public void testGetUnknownComponentConfig() throws Exception {
-		assertNull(getComponentConfig("component-c"));
-	}
+    @Test
+    public void testGetUnknownComponentConfig() throws Exception {
+        assertNull(getComponentConfig("component-c"));
+    }
 
-	@Test
-	public void testGetSingletonComponentConfig() throws Exception {
-		UnifyComponentConfig ucc = getComponentConfig("component-a1");
-		assertNotNull(ucc);
-		assertTrue(ucc.isSingleton());
-	}
+    @Test
+    public void testGetSingletonComponentConfig() throws Exception {
+        UnifyComponentConfig ucc = getComponentConfig("component-a1");
+        assertNotNull(ucc);
+        assertTrue(ucc.isSingleton());
+    }
 
-	@Test
-	public void testGetNonSingletonComponentConfig() throws Exception {
-		UnifyComponentConfig ucc = getComponentConfig("component-a2");
-		assertNotNull(ucc);
-		assertFalse(ucc.isSingleton());
-	}
+    @Test
+    public void testGetNonSingletonComponentConfig() throws Exception {
+        UnifyComponentConfig ucc = getComponentConfig("component-a2");
+        assertNotNull(ucc);
+        assertFalse(ucc.isSingleton());
+    }
 
-	@Test
-	public void testGetComponentConfigs() throws Exception {
-		List<UnifyComponentConfig> unifyComponentConfigList = getComponentConfigs(UnifyComponent.class);
-		assertNotNull(unifyComponentConfigList);
-		Set<String> componentNames = new HashSet<String>();
-		for (UnifyComponentConfig unifyComponentConfig : unifyComponentConfigList) {
-			componentNames.add(unifyComponentConfig.getName());
-		}
-		assertTrue(componentNames.contains("component-a1"));
-		assertTrue(componentNames.contains("component-a2"));
-		assertTrue(componentNames.contains("component-b"));
-	}
+    @Test
+    public void testGetComponentConfigs() throws Exception {
+        List<UnifyComponentConfig> unifyComponentConfigList = getComponentConfigs(UnifyComponent.class);
+        assertNotNull(unifyComponentConfigList);
+        Set<String> componentNames = new HashSet<String>();
+        for (UnifyComponentConfig unifyComponentConfig : unifyComponentConfigList) {
+            componentNames.add(unifyComponentConfig.getName());
+        }
+        assertTrue(componentNames.contains("component-a1"));
+        assertTrue(componentNames.contains("component-a2"));
+        assertTrue(componentNames.contains("component-b"));
+    }
 
-	@Test
-	public void testGetComponentNames() throws Exception {
-		List<String> unifyComponentNameList = getComponentNames(UnifyComponent.class);
-		assertNotNull(unifyComponentNameList);
-		Set<String> componentNames = new HashSet<String>();
-		componentNames.addAll(unifyComponentNameList);
-		assertTrue(componentNames.contains("component-a1"));
-		assertTrue(componentNames.contains("component-a2"));
-		assertTrue(componentNames.contains("component-b"));
-	}
+    @Test
+    public void testGetComponentNames() throws Exception {
+        List<String> unifyComponentNameList = getComponentNames(UnifyComponent.class);
+        assertNotNull(unifyComponentNameList);
+        Set<String> componentNames = new HashSet<String>();
+        componentNames.addAll(unifyComponentNameList);
+        assertTrue(componentNames.contains("component-a1"));
+        assertTrue(componentNames.contains("component-a2"));
+        assertTrue(componentNames.contains("component-b"));
+    }
 
-	@Test
-	public void testComponentCustomisation() throws Exception {
-		UnifyComponent component1 = getComponent("component-b3");
-		assertNotNull(component1);
-		assertTrue(component1 instanceof TestComponentC);
+    @Test
+    public void testComponentCustomisation() throws Exception {
+        UnifyComponent component1 = getComponent("component-b3");
+        assertNotNull(component1);
+        assertTrue(component1 instanceof TestComponentC);
 
-		UnifyComponent component2 = getComponent("component-b3_tiger");
-		assertNotNull(component2);
-		assertTrue(component2 == component1);
-	}
+        UnifyComponent component2 = getComponent("component-b3_tiger");
+        assertNotNull(component2);
+        assertTrue(component2 == component1);
+    }
 
-	public void testComponentCustomisationResolved() throws Exception {
-	}
+    public void testComponentCustomisationResolved() throws Exception {
+    }
 
-	public static class TestComponentA1 extends AbstractUnifyComponent {
+    public static class TestComponentA1 extends AbstractUnifyComponent {
 
-		@Override
-		protected void onInitialize() throws UnifyException {
+        @Override
+        protected void onInitialize() throws UnifyException {
 
-		}
+        }
 
-		@Override
-		protected void onTerminate() throws UnifyException {
+        @Override
+        protected void onTerminate() throws UnifyException {
 
-		}
-	}
+        }
+    }
 
-	public static class TestComponentA2 extends AbstractUnifyComponent {
+    public static class TestComponentA2 extends AbstractUnifyComponent {
 
-		@Override
-		protected void onInitialize() throws UnifyException {
+        @Override
+        protected void onInitialize() throws UnifyException {
 
-		}
+        }
 
-		@Override
-		protected void onTerminate() throws UnifyException {
+        @Override
+        protected void onTerminate() throws UnifyException {
 
-		}
-	}
+        }
+    }
 
-	public static class TestComponentB extends AbstractUnifyComponent {
+    public static class TestComponentB extends AbstractUnifyComponent {
 
-		@Configurable("component-a1")
-		private TestComponentA1 testComponentA1;
+        @Configurable("component-a1")
+        private TestComponentA1 testComponentA1;
 
-		@Configurable("127.0.0.1")
-		private String address;
+        @Configurable("127.0.0.1")
+        private String address;
 
-		public TestComponentA1 getTestComponentA1() {
-			return testComponentA1;
-		}
+        public TestComponentA1 getTestComponentA1() {
+            return testComponentA1;
+        }
 
-		public String getAddress() {
-			return address;
-		}
+        public String getAddress() {
+            return address;
+        }
 
-		@Override
-		protected void onInitialize() throws UnifyException {
+        @Override
+        protected void onInitialize() throws UnifyException {
 
-		}
+        }
 
-		@Override
-		protected void onTerminate() throws UnifyException {
+        @Override
+        protected void onTerminate() throws UnifyException {
 
-		}
-	}
+        }
+    }
 
-	public static class TestComponentC extends AbstractUnifyComponent {
+    public static class TestComponentC extends AbstractUnifyComponent {
 
-		@Override
-		protected void onInitialize() throws UnifyException {
+        @Override
+        protected void onInitialize() throws UnifyException {
 
-		}
+        }
 
-		@Override
-		protected void onTerminate() throws UnifyException {
+        @Override
+        protected void onTerminate() throws UnifyException {
 
-		}
-	}
+        }
+    }
 
-	@Override
-	protected void doAddSettingsAndDependencies() throws Exception {
-		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMISATION, "tiger"); // Customise
-		// for
-		// tiger
+    @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMISATION, "tiger"); // Customise
+        // for
+        // tiger
 
-		addDependency("component-a1", TestComponentA1.class);// Singleton
-		addDependency("component-a2", TestComponentA2.class, false);// Non-singleton
-		addDependency("component-b", TestComponentB.class);// Singleton
+        addDependency("component-a1", TestComponentA1.class);// Singleton
+        addDependency("component-a2", TestComponentA2.class, false);// Non-singleton
+        addDependency("component-b", TestComponentB.class);// Singleton
 
-		addDependency("component-b3", TestComponentB.class);// For custom
-															// override test
-		addDependency("component-b3_tiger", TestComponentC.class);
-	}
+        addDependency("component-b3", TestComponentB.class);// For custom
+                                                            // override test
+        addDependency("component-b3_tiger", TestComponentC.class);
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

@@ -31,44 +31,44 @@ import com.tcdng.unify.core.util.ReflectUtils;
 @UplBinding("web/panels/upl/inmemorytablecrudpanel.upl")
 public abstract class AbstractInMemoryTableCrudPanel<T extends Entity> extends AbstractTableCrudPanel<T> {
 
-	private boolean populateListOnly;
+    private boolean populateListOnly;
 
-	public AbstractInMemoryTableCrudPanel(Class<T> entityClass, String titleKey, boolean populateListOnly) {
-		super(entityClass, titleKey);
-		this.populateListOnly = populateListOnly;
-	}
+    public AbstractInMemoryTableCrudPanel(Class<T> entityClass, String titleKey, boolean populateListOnly) {
+        super(entityClass, titleKey);
+        this.populateListOnly = populateListOnly;
+    }
 
-	@Override
-	protected List<T> doFindRecords() throws UnifyException {
-		return getCrudData().getRecordList();
-	}
+    @Override
+    protected List<T> doFindRecords() throws UnifyException {
+        return getCrudData().getRecordList();
+    }
 
-	@Override
-	protected T doPrepareCreateRecord() throws UnifyException {
-		return ReflectUtils.newInstance(getCrudData().getEntityClass());
-	}
+    @Override
+    protected T doPrepareCreateRecord() throws UnifyException {
+        return ReflectUtils.newInstance(getCrudData().getEntityClass());
+    }
 
-	@Override
-	protected void doCreateRecord() throws UnifyException {
-		T record = getCrudData().getRecord();
-		if (populateListOnly) {
-			getGenericBusinessModule().populateListOnly(record);
-		}
+    @Override
+    protected void doCreateRecord() throws UnifyException {
+        T record = getCrudData().getRecord();
+        if (populateListOnly) {
+            getGenericBusinessModule().populateListOnly(record);
+        }
 
-		getCrudData().getRecordList().add(record);
-	}
+        getCrudData().getRecordList().add(record);
+    }
 
-	@Override
-	protected void doUpdateRecord() throws UnifyException {
-		T record = getCrudData().getRecord();
-		if (populateListOnly) {
-			getGenericBusinessModule().populateListOnly(record);
-		}
-	}
+    @Override
+    protected void doUpdateRecord() throws UnifyException {
+        T record = getCrudData().getRecord();
+        if (populateListOnly) {
+            getGenericBusinessModule().populateListOnly(record);
+        }
+    }
 
-	@Override
-	protected void doDeleteRecord() throws UnifyException {
-		T record = getCrudData().getRecord();
-		getCrudData().getRecordList().remove(record);
-	}
+    @Override
+    protected void doDeleteRecord() throws UnifyException {
+        T record = getCrudData().getRecord();
+        getCrudData().getRecordList().remove(record);
+    }
 }

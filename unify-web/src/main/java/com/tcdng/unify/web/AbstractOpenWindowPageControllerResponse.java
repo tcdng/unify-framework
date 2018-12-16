@@ -27,67 +27,67 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJsonPageControllerResponse {
 
-	public AbstractOpenWindowPageControllerResponse() {
-		super("openWindowHdl");
-	}
+    public AbstractOpenWindowPageControllerResponse() {
+        super("openWindowHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		WindowResourceInfo windowResourceInfo = prepareWindowResource();
-		setSessionAttribute(windowResourceInfo.getResourceName(), windowResourceInfo.getResourceObject());
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        WindowResourceInfo windowResourceInfo = prepareWindowResource();
+        setSessionAttribute(windowResourceInfo.getResourceName(), windowResourceInfo.getResourceObject());
 
-		writer.write(",\"openWindow\":");
-		writer.useSecondary(128);
-		writer.writeContextResourceURL(windowResourceInfo.resourcePath, windowResourceInfo.getContentType(),
-				windowResourceInfo.getResourceName(), null, windowResourceInfo.isDownload(), false);
-		WebStringWriter urlLsw = writer.discardSecondary();
+        writer.write(",\"openWindow\":");
+        writer.useSecondary(128);
+        writer.writeContextResourceURL(windowResourceInfo.resourcePath, windowResourceInfo.getContentType(),
+                windowResourceInfo.getResourceName(), null, windowResourceInfo.isDownload(), false);
+        WebStringWriter urlLsw = writer.discardSecondary();
 
-		writer.writeJsonQuote(urlLsw);
-		writer.write(",\"attachment\":").write(windowResourceInfo.isDownload());
-	}
+        writer.writeJsonQuote(urlLsw);
+        writer.write(",\"attachment\":").write(windowResourceInfo.isDownload());
+    }
 
-	protected abstract WindowResourceInfo prepareWindowResource() throws UnifyException;
+    protected abstract WindowResourceInfo prepareWindowResource() throws UnifyException;
 
-	protected class WindowResourceInfo {
+    protected class WindowResourceInfo {
 
-		private Object resourceObject;
+        private Object resourceObject;
 
-		private String resourcePath;
+        private String resourcePath;
 
-		private String resourceName;
+        private String resourceName;
 
-		private String contentType;
+        private String contentType;
 
-		private boolean download;
+        private boolean download;
 
-		public WindowResourceInfo(Object resourceObject, String resourcePath, String resourceName, String contentType,
-				boolean download) {
-			this.resourceObject = resourceObject;
-			this.resourcePath = resourcePath;
-			this.resourceName = resourceName;
-			this.contentType = contentType;
-			this.download = download;
-		}
+        public WindowResourceInfo(Object resourceObject, String resourcePath, String resourceName, String contentType,
+                boolean download) {
+            this.resourceObject = resourceObject;
+            this.resourcePath = resourcePath;
+            this.resourceName = resourceName;
+            this.contentType = contentType;
+            this.download = download;
+        }
 
-		public Object getResourceObject() {
-			return resourceObject;
-		}
+        public Object getResourceObject() {
+            return resourceObject;
+        }
 
-		public String getResourcePath() {
-			return resourcePath;
-		}
+        public String getResourcePath() {
+            return resourcePath;
+        }
 
-		public String getResourceName() {
-			return resourceName;
-		}
+        public String getResourceName() {
+            return resourceName;
+        }
 
-		public String getContentType() {
-			return contentType;
-		}
+        public String getContentType() {
+            return contentType;
+        }
 
-		public boolean isDownload() {
-			return download;
-		}
+        public boolean isDownload() {
+            return download;
+        }
 
-	}
+    }
 }

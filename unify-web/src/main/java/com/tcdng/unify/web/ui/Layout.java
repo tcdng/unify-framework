@@ -26,51 +26,51 @@ import com.tcdng.unify.core.upl.UplComponent;
  */
 public interface Layout extends UplComponent {
 
-	/**
-	 * Returns layout show caption.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isShowCaption() throws UnifyException;
+    /**
+     * Returns layout show caption.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isShowCaption() throws UnifyException;
 
-	/**
-	 * Returns layout inline caption flag.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isInlineCaption() throws UnifyException;
+    /**
+     * Returns layout inline caption flag.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isInlineCaption() throws UnifyException;
 
-	/**
-	 * Returns the layout's caption style.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getCaptionStyle() throws UnifyException;
+    /**
+     * Returns the layout's caption style.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getCaptionStyle() throws UnifyException;
 
-	/**
-	 * Returns the layout's caption suffix.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getCaptionSuffix() throws UnifyException;
+    /**
+     * Returns the layout's caption suffix.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getCaptionSuffix() throws UnifyException;
 
-	/**
-	 * Returns layout style class.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStyleClass() throws UnifyException;
+    /**
+     * Returns layout style class.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStyleClass() throws UnifyException;
 
-	/**
-	 * Returns layout style.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStyle() throws UnifyException;
+    /**
+     * Returns layout style.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStyle() throws UnifyException;
 }

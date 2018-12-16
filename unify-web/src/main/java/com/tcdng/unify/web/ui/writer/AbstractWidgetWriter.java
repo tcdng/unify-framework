@@ -31,89 +31,89 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implements WidgetWriter {
 
-	@Override
-	public void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		doWriteStructureAndContent(writer, widget);
-		widget.addPageAliases();
-	}
+    @Override
+    public void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        doWriteStructureAndContent(writer, widget);
+        widget.addPageAliases();
+    }
 
-	@Override
-	public void writeStructureAndContent(ResponseWriter writer, Widget widget, String id) throws UnifyException {
-		String origId = widget.getId();
-		widget.setId(id);
-		doWriteStructureAndContent(writer, widget);
-		widget.addPageAliases();
-		widget.setId(origId);
-	}
+    @Override
+    public void writeStructureAndContent(ResponseWriter writer, Widget widget, String id) throws UnifyException {
+        String origId = widget.getId();
+        widget.setId(id);
+        doWriteStructureAndContent(writer, widget);
+        widget.addPageAliases();
+        widget.setId(origId);
+    }
 
-	@Override
-	public void writeSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionId)
-			throws UnifyException {
-		doWriteSectionStructureAndContent(writer, widget, sectionId);
-	}
+    @Override
+    public void writeSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionId)
+            throws UnifyException {
+        doWriteSectionStructureAndContent(writer, widget, sectionId);
+    }
 
-	@Override
-	public void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		doWriteBehavior(writer, widget);
-	}
+    @Override
+    public void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        doWriteBehavior(writer, widget);
+    }
 
-	@Override
-	public void writeSectionBehavior(ResponseWriter writer, Widget widget, String sectionId) throws UnifyException {
-		doWriteSectionBehavior(writer, widget, sectionId);
-	}
+    @Override
+    public void writeSectionBehavior(ResponseWriter writer, Widget widget, String sectionId) throws UnifyException {
+        doWriteSectionBehavior(writer, widget, sectionId);
+    }
 
-	protected abstract void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException;
+    protected abstract void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException;
 
-	protected void doWriteSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionId)
-			throws UnifyException {
+    protected void doWriteSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionId)
+            throws UnifyException {
 
-	}
+    }
 
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		doWriteBehavior(writer, widget, false);
-	}
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        doWriteBehavior(writer, widget, false);
+    }
 
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget, boolean useFacade) throws UnifyException {
-		EventHandler[] eventHandlers = widget.getUplAttribute(EventHandler[].class, "eventHandler");
-		if (eventHandlers != null) {
-			String id = widget.getId();
-			if (useFacade) {
-				id = widget.getFacadeId();
-			}
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget, boolean useFacade) throws UnifyException {
+        EventHandler[] eventHandlers = widget.getUplAttribute(EventHandler[].class, "eventHandler");
+        if (eventHandlers != null) {
+            String id = widget.getId();
+            if (useFacade) {
+                id = widget.getFacadeId();
+            }
 
-			getRequestContext().setQuickReference(widget.getValueStore());
-			for (EventHandler eventHandler : eventHandlers) {
-				writer.writeBehavior(eventHandler, id);
-			}
-		}
-	}
+            getRequestContext().setQuickReference(widget.getValueStore());
+            for (EventHandler eventHandler : eventHandlers) {
+                writer.writeBehavior(eventHandler, id);
+            }
+        }
+    }
 
-	protected void doWriteSectionBehavior(ResponseWriter writer, Widget widget, String sectionId)
-			throws UnifyException {
+    protected void doWriteSectionBehavior(ResponseWriter writer, Widget widget, String sectionId)
+            throws UnifyException {
 
-	}
+    }
 
-	protected PageManager getPageManager() throws UnifyException {
-		return (PageManager) getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
-	}
+    protected PageManager getPageManager() throws UnifyException {
+        return (PageManager) getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
+    }
 
-	protected String getCommandURL() throws UnifyException {
-		return getContextURL(getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), "/command");
-	}
+    protected String getCommandURL() throws UnifyException {
+        return getContextURL(getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), "/command");
+    }
 
-	protected String getContextURL(String path, String... pathElement) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		RequestContext requestContext = getRequestContext();
-		if (getRequestContextUtil().isRemoteViewer()) {
-			sb.append(getSessionContext().getUriBase());
-		}
+    protected String getContextURL(String path, String... pathElement) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        RequestContext requestContext = getRequestContext();
+        if (getRequestContextUtil().isRemoteViewer()) {
+            sb.append(getSessionContext().getUriBase());
+        }
 
-		sb.append(requestContext.getContextPath()).append(requestContext.getRequestPath());
-		sb.append(path);
-		for (String element : pathElement) {
-			sb.append(element);
-		}
-		return sb.toString();
-	}
+        sb.append(requestContext.getContextPath()).append(requestContext.getRequestPath());
+        sb.append(path);
+        for (String element : pathElement) {
+            sb.append(element);
+        }
+        return sb.toString();
+    }
 
 }

@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-viewrefrequest")
 public class ViewRefRequestAction extends AbstractPageAction {
 
-	public ViewRefRequestAction() {
-		super("viewrefrequest");
-	}
+    public ViewRefRequestAction() {
+        super("viewrefrequest");
+    }
 }

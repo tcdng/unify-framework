@@ -23,13 +23,13 @@ package com.tcdng.unify.web;
  */
 public interface UnifyWebPropertyConstants {
 
-	String APPLICATION_HOME = "application.web.home";
+    String APPLICATION_HOME = "application.web.home";
 
-	String APPLICATION_DOCUMENT_STYLESHEET = "application.web.document.stylesheet";
+    String APPLICATION_DOCUMENT_STYLESHEET = "application.web.document.stylesheet";
 
-	String APPLICATION_DOCUMENT_SCRIPT = "application.web.document.script";
+    String APPLICATION_DOCUMENT_SCRIPT = "application.web.document.script";
 
-	String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing.enabled";
+    String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing.enabled";
 
-	String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
+    String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
 }

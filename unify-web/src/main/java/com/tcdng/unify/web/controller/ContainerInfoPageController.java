@@ -35,64 +35,64 @@ import com.tcdng.unify.web.ui.control.Table;
 @Component("/reserved/info")
 @UplBinding("web/reserved/upl/containerinfo.upl")
 @ResultMappings({
-		@ResultMapping(name = "showcomponentpopup", response = { "!showpopupresponse popup:$s{componentDtlPopup}" }),
-		@ResultMapping(name = "refresh", response = { "!refreshpanelresponse panels:$l{content}" }) })
+        @ResultMapping(name = "showcomponentpopup", response = { "!showpopupresponse popup:$s{componentDtlPopup}" }),
+        @ResultMapping(name = "refresh", response = { "!refreshpanelresponse panels:$l{content}" }) })
 public class ContainerInfoPageController extends AbstractPageController {
 
-	private UnifyContainerInfo info;
+    private UnifyContainerInfo info;
 
-	private UnifyComponentInfo componentInfo;
+    private UnifyComponentInfo componentInfo;
 
-	private Table componentListTableState;
+    private Table componentListTableState;
 
-	@Action
-	public String refresh() throws UnifyException {
-		getContainerInfo();
-		return "refresh";
-	}
+    @Action
+    public String refresh() throws UnifyException {
+        getContainerInfo();
+        return "refresh";
+    }
 
-	@Action
-	public String prepareViewComponent() throws UnifyException {
-		componentInfo = info.getComponentInfoList().get(componentListTableState.getViewIndex());
-		return "showcomponentpopup";
-	}
+    @Action
+    public String prepareViewComponent() throws UnifyException {
+        componentInfo = info.getComponentInfoList().get(componentListTableState.getViewIndex());
+        return "showcomponentpopup";
+    }
 
-	@Action
-	public String viewComponentDone() throws UnifyException {
-		return hidePopup();
-	}
+    @Action
+    public String viewComponentDone() throws UnifyException {
+        return hidePopup();
+    }
 
-	@Override
-	protected void onSetPage() throws UnifyException {
-		componentListTableState = getPageWidgetByShortName(Table.class, "componentTbl");
-	}
+    @Override
+    protected void onSetPage() throws UnifyException {
+        componentListTableState = getPageWidgetByShortName(Table.class, "componentTbl");
+    }
 
-	@Override
-	public UnifyContainerInfo getContainerInfo() throws UnifyException {
-		return info = super.getContainerInfo();
-	}
+    @Override
+    public UnifyContainerInfo getContainerInfo() throws UnifyException {
+        return info = super.getContainerInfo();
+    }
 
-	public UnifyContainerInfo getInfo() {
-		return info;
-	}
+    public UnifyContainerInfo getInfo() {
+        return info;
+    }
 
-	public UnifyComponentInfo getComponentInfo() {
-		return componentInfo;
-	}
+    public UnifyComponentInfo getComponentInfo() {
+        return componentInfo;
+    }
 
-	@Override
-	protected void onIndexPage() throws UnifyException {
-		getContainerInfo();
-	}
+    @Override
+    protected void onIndexPage() throws UnifyException {
+        getContainerInfo();
+    }
 
-	@Override
-	protected void onOpenPage() throws UnifyException {
-		getContainerInfo();
-	}
+    @Override
+    protected void onOpenPage() throws UnifyException {
+        getContainerInfo();
+    }
 
-	@Override
-	protected void onClosePage() throws UnifyException {
-		info = null;
-		componentInfo = null;
-	}
+    @Override
+    protected void onClosePage() throws UnifyException {
+        info = null;
+        componentInfo = null;
+    }
 }

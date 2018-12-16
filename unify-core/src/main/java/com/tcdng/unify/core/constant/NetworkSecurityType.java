@@ -28,24 +28,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("networksecuritytypelist")
 public enum NetworkSecurityType implements EnumConst {
 
-	SSL("S"), TLS("T");
+    SSL("S"), TLS("T");
 
-	private final String code;
+    private final String code;
 
-	private NetworkSecurityType(String code) {
-		this.code = code;
-	}
+    private NetworkSecurityType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return code;
-	}
+    @Override
+    public String code() {
+        return code;
+    }
 
-	public static NetworkSecurityType fromCode(String code) {
-		return EnumUtils.fromCode(NetworkSecurityType.class, code);
-	}
+    public static NetworkSecurityType fromCode(String code) {
+        return EnumUtils.fromCode(NetworkSecurityType.class, code);
+    }
 
-	public static NetworkSecurityType fromName(String name) {
-		return EnumUtils.fromName(NetworkSecurityType.class, name);
-	}
+    public static NetworkSecurityType fromName(String name) {
+        return EnumUtils.fromName(NetworkSecurityType.class, name);
+    }
 }

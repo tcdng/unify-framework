@@ -30,13 +30,13 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("firepreconfirmresponse")
 public class FirePreConfirmResponse extends AbstractJsonPageControllerResponse {
 
-	public FirePreConfirmResponse() {
-		super("firePreConfirmHdl");
-	}
+    public FirePreConfirmResponse() {
+        super("firePreConfirmHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing fire pre-confirm response: controller = [{0}]", pageController.getName());
-		writer.write(",\"fire\":true");
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing fire pre-confirm response: controller = [{0}]", pageController.getName());
+        writer.write(",\"fire\":true");
+    }
 }

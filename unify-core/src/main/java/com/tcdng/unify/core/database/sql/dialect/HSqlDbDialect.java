@@ -36,69 +36,69 @@ import com.tcdng.unify.core.util.SqlUtils;
 @Component(name = SqlDialectConstants.HSQLDB, description = "$m{sqldialect.hsqldb}")
 public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
-	private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
+    private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
 
-	@Override
-	public int getMaxClauseValues() {
-		return -1;
-	}
+    @Override
+    public int getMaxClauseValues() {
+        return -1;
+    }
 
-	@Override
-	public String generateTestSql() throws UnifyException {
-		return "VALUES CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateTestSql() throws UnifyException {
+        return "VALUES CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public String generateNowSql() throws UnifyException {
-		return "VALUES CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateNowSql() throws UnifyException {
+        return "VALUES CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public SqlShutdownHook getShutdownHook() throws UnifyException {
-		return sqlShutdownHook;
-	}
+    @Override
+    public SqlShutdownHook getShutdownHook() throws UnifyException {
+        return sqlShutdownHook;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		boolean isAppend = false;
-		if (limit > 0) {
-			sql.append(" LIMIT ").append(limit);
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        boolean isAppend = false;
+        if (limit > 0) {
+            sql.append(" LIMIT ").append(limit);
+            isAppend = true;
+        }
 
-		if (offset > 0) {
-			sql.append(" OFFSET ").append(offset);
-			isAppend = true;
-		}
+        if (offset > 0) {
+            sql.append(" OFFSET ").append(offset);
+            isAppend = true;
+        }
 
-		return isAppend;
-	}
+        return isAppend;
+    }
 
-	private class HSqlDbShutdownHook implements SqlShutdownHook {
+    private class HSqlDbShutdownHook implements SqlShutdownHook {
 
-		@Override
-		public void commandShutdown(Connection connection) throws UnifyException {
-			Statement st = null;
-			try {
-				st = connection.createStatement();
-				st.execute("SHUTDOWN");
-			} catch (SQLException e) {
-				throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName());
-			} finally {
-				SqlUtils.close(st);
-			}
-		}
-	}
+        @Override
+        public void commandShutdown(Connection connection) throws UnifyException {
+            Statement st = null;
+            try {
+                st = connection.createStatement();
+                st.execute("SHUTDOWN");
+            } catch (SQLException e) {
+                throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName());
+            } finally {
+                SqlUtils.close(st);
+            }
+        }
+    }
 }

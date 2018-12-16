@@ -28,8 +28,8 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
 @Component("twowaystringcryptographlist")
 public class TwoWayStringCryptographListCommand extends AbstractTypeListCommand<TwoWayStringCryptograph> {
 
-	public TwoWayStringCryptographListCommand() {
-		super(TwoWayStringCryptograph.class);
-	}
+    public TwoWayStringCryptographListCommand() {
+        super(TwoWayStringCryptograph.class);
+    }
 
 }

@@ -36,68 +36,68 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("textarea-writer")
 public class TextAreaWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		writeTextArea(writer, (TextArea) widget, null);
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        writeTextArea(writer, (TextArea) widget, null);
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
-		TextArea textArea = (TextArea) widget;
-		writer.write("ux.rigTextArea({");
-		writer.write("\"pId\":\"").write(textArea.getId()).write('"');
-		writer.write(",\"pScrEnd\":").write(textArea.isScrollToEnd());
-		writer.write("});");
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        TextArea textArea = (TextArea) widget;
+        writer.write("ux.rigTextArea({");
+        writer.write("\"pId\":\"").write(textArea.getId()).write('"');
+        writer.write(",\"pScrEnd\":").write(textArea.isScrollToEnd());
+        writer.write("});");
+    }
 
-	@SuppressWarnings("unchecked")
-	protected void writeTextArea(ResponseWriter writer, TextArea textArea, String styleClass) throws UnifyException {
-		writer.write("<textarea");
-		if (StringUtils.isBlank(styleClass)) {
-			writeTagAttributes(writer, textArea);
-		} else {
-			writeTagId(writer, textArea);
-			writeTagStyleClass(writer, styleClass);
-		}
-		int columns = textArea.getColumns();
-		if (columns > 0) {
-			writer.write(" cols=\"").write(columns).write("\"");
-		}
+    @SuppressWarnings("unchecked")
+    protected void writeTextArea(ResponseWriter writer, TextArea textArea, String styleClass) throws UnifyException {
+        writer.write("<textarea");
+        if (StringUtils.isBlank(styleClass)) {
+            writeTagAttributes(writer, textArea);
+        } else {
+            writeTagId(writer, textArea);
+            writeTagStyleClass(writer, styleClass);
+        }
+        int columns = textArea.getColumns();
+        if (columns > 0) {
+            writer.write(" cols=\"").write(columns).write("\"");
+        }
 
-		int rows = textArea.getRows();
-		if (rows > 0) {
-			writer.write(" rows=\"").write(rows).write("\"");
-		}
+        int rows = textArea.getRows();
+        if (rows > 0) {
+            writer.write(" rows=\"").write(rows).write("\"");
+        }
 
-		int maxLen = textArea.getMaxLen();
-		if (maxLen > 0) {
-			writer.write(" maxlength=\"").write(maxLen).write("\"");
-		}
+        int maxLen = textArea.getMaxLen();
+        if (maxLen > 0) {
+            writer.write(" maxlength=\"").write(maxLen).write("\"");
+        }
 
-		if (textArea.isWordWrap()) {
-			writer.write(" wrap=\"virtual\"");
-		} else {
-			writer.write(" wrap=\"off\"");
-		}
-		writer.write(">");
+        if (textArea.isWordWrap()) {
+            writer.write(" wrap=\"virtual\"");
+        } else {
+            writer.write(" wrap=\"off\"");
+        }
+        writer.write(">");
 
-		Object value = textArea.getValue();
-		if (value != null) {
-			if (value instanceof String[]) {
-				for (String line : (String[]) value) {
-					writer.writeWithHtmlEscape(line);
-					writer.writeWithHtmlEscape("\n");
-				}
-			} else if (value instanceof Collection) {
-				for (Object obj : (Collection<Object>) value) {
-					writer.writeWithHtmlEscape(String.valueOf(obj));
-					writer.writeWithHtmlEscape("\n");
-				}
-			} else {
-				writer.writeWithHtmlEscape(textArea.getStringValue());
-			}
-		}
-		writer.write("</textarea>");
-	}
+        Object value = textArea.getValue();
+        if (value != null) {
+            if (value instanceof String[]) {
+                for (String line : (String[]) value) {
+                    writer.writeWithHtmlEscape(line);
+                    writer.writeWithHtmlEscape("\n");
+                }
+            } else if (value instanceof Collection) {
+                for (Object obj : (Collection<Object>) value) {
+                    writer.writeWithHtmlEscape(String.valueOf(obj));
+                    writer.writeWithHtmlEscape("\n");
+                }
+            } else {
+                writer.writeWithHtmlEscape(textArea.getStringValue());
+            }
+        }
+        writer.write("</textarea>");
+    }
 }

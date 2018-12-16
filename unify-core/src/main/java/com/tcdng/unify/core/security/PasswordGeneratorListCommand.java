@@ -27,7 +27,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
 @Component("passwordgeneratorlist")
 public class PasswordGeneratorListCommand extends AbstractTypeListCommand<PasswordGenerator> {
 
-	public PasswordGeneratorListCommand() {
-		super(PasswordGenerator.class);
-	}
+    public PasswordGeneratorListCommand() {
+        super(PasswordGenerator.class);
+    }
 }

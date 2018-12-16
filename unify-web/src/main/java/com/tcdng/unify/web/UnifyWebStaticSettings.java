@@ -28,8 +28,8 @@ import com.tcdng.unify.core.annotation.AutoDetect;
 @AutoDetect
 public class UnifyWebStaticSettings extends AbstractUnifyStaticSettings {
 
-	public UnifyWebStaticSettings() {
-		super("com.tcdng.unify.web.resources.messages", -4);
-	}
+    public UnifyWebStaticSettings() {
+        super("com.tcdng.unify.web.resources.messages", -4);
+    }
 
 }

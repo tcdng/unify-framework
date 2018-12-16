@@ -23,10 +23,10 @@ package com.tcdng.unify.core.list;
  * @since 1.0
  */
 public abstract class AbstractSearchProviderListCommand extends AbstractListCommand<SearchProviderParams>
-		implements SearchProvider {
+        implements SearchProvider {
 
-	public AbstractSearchProviderListCommand() {
-		super(SearchProviderParams.class);
-	}
+    public AbstractSearchProviderListCommand() {
+        super(SearchProviderParams.class);
+    }
 
 }

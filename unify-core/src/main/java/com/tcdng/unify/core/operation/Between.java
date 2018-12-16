@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class Between extends Criteria {
 
-	public Between(String field, Object lowerValue, Object upperValue) {
-		super(Operator.BETWEEN, field, new Object[] { lowerValue, upperValue });
-	}
+    public Between(String field, Object lowerValue, Object upperValue) {
+        super(Operator.BETWEEN, field, new Object[] { lowerValue, upperValue });
+    }
 }

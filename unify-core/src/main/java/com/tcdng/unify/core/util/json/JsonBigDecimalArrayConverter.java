@@ -28,17 +28,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonBigDecimalArrayConverter extends AbstractJsonArrayConverter<BigDecimal> {
 
-	public JsonBigDecimalArrayConverter() {
-		super(BigDecimal.class);
-	}
+    public JsonBigDecimalArrayConverter() {
+        super(BigDecimal.class);
+    }
 
-	@Override
-	protected BigDecimal getValue(JsonValue jsonValue) throws Exception {
-		return BigDecimal.valueOf(jsonValue.asDouble());
-	}
+    @Override
+    protected BigDecimal getValue(JsonValue jsonValue) throws Exception {
+        return BigDecimal.valueOf(jsonValue.asDouble());
+    }
 
-	@Override
-	protected JsonValue setValue(BigDecimal value) throws Exception {
-		return Json.value(value.doubleValue());
-	}
+    @Override
+    protected JsonValue setValue(BigDecimal value) throws Exception {
+        return Json.value(value.doubleValue());
+    }
 }

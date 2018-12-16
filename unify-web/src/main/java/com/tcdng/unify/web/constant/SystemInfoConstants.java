@@ -23,19 +23,19 @@ package com.tcdng.unify.web.constant;
  */
 public interface SystemInfoConstants {
 
-	String SYSTEMINFO_CONTROLLER_NAME = "/reserved/systeminfo";
+    String SYSTEMINFO_CONTROLLER_NAME = "/reserved/systeminfo";
 
-	String UNAUTHORISED_CONTROLLER_NAME = "/unauthorised";
+    String UNAUTHORISED_CONTROLLER_NAME = "/unauthorised";
 
-	String SHOW_SYSTEM_EXCEPTION_MAPPING = "showsystemexception";
+    String SHOW_SYSTEM_EXCEPTION_MAPPING = "showsystemexception";
 
-	String FORWARD_TO_APPLICATION_MAPPING = "forwardtoapplication";
+    String FORWARD_TO_APPLICATION_MAPPING = "forwardtoapplication";
 
-	String HIDE_SYSTEM_INFO_MAPPING = "hidesysteminfo";
+    String HIDE_SYSTEM_INFO_MAPPING = "hidesysteminfo";
 
-	String LOGIN_REQUIRED_FLAG = "reserved.systeminfo.loginrequired.flag";
+    String LOGIN_REQUIRED_FLAG = "reserved.systeminfo.loginrequired.flag";
 
-	String EXCEPTION_MESSAGE_KEY = "reserved.systeminfo.message";
+    String EXCEPTION_MESSAGE_KEY = "reserved.systeminfo.message";
 
-	String EXCEPTION_STACKTRACE_KEY = "reserved.systeminfo.stacktrace";
+    String EXCEPTION_STACKTRACE_KEY = "reserved.systeminfo.stacktrace";
 }

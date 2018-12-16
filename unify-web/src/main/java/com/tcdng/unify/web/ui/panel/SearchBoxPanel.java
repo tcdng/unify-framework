@@ -42,64 +42,64 @@ import com.tcdng.unify.web.ui.data.SearchBox;
 @UplAttributes({ @UplAttribute(name = "searchProvider", type = String.class, mandatory = true) })
 public class SearchBoxPanel extends AbstractPanel {
 
-	private String filter;
+    private String filter;
 
-	private List<?> resultList;
+    private List<?> resultList;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		setComponentValueBeanToThis("filter");
-		setComponentValueBeanToThis("searchResultTablePanel");
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        setComponentValueBeanToThis("filter");
+        setComponentValueBeanToThis("searchResultTablePanel");
+    }
 
-	@Override
-	@Action
-	public void switchState() throws UnifyException {
-		if (QueryUtils.isValidStringCriteria(filter)) {
-			SearchProvider searchProvider = (SearchProvider) this
-					.getComponent(getUplAttribute(String.class, "searchProvider"));
-			resultList = searchProvider.search(filter);
-		} else {
-			resultList = Collections.emptyList();
-		}
-	}
+    @Override
+    @Action
+    public void switchState() throws UnifyException {
+        if (QueryUtils.isValidStringCriteria(filter)) {
+            SearchProvider searchProvider = (SearchProvider) this
+                    .getComponent(getUplAttribute(String.class, "searchProvider"));
+            resultList = searchProvider.search(filter);
+        } else {
+            resultList = Collections.emptyList();
+        }
+    }
 
-	public void clear() throws UnifyException {
-		filter = null;
-		resultList = null;
-	}
+    public void clear() throws UnifyException {
+        filter = null;
+        resultList = null;
+    }
 
-	public void setResultBeanProperties() throws UnifyException {
-		SearchBox searchBoxInfo = (SearchBox) getValue();
-		TablePanel tablePanel = (TablePanel) getWidgetByShortName("searchResultTablePanel");
-		Object item = resultList.get(tablePanel.getTable().getViewIndex());
-		Object resultBean = searchBoxInfo.getResultBean();
-		for (SearchBox.Mapping mapping : searchBoxInfo.getMappings()) {
-			Object fieldValue = ReflectUtils.getBeanProperty(item, mapping.getSelectFieldName());
-			DataUtils.setBeanProperty(resultBean, mapping.getResultFieldName(), fieldValue);
-		}
-	}
+    public void setResultBeanProperties() throws UnifyException {
+        SearchBox searchBoxInfo = (SearchBox) getValue();
+        TablePanel tablePanel = (TablePanel) getWidgetByShortName("searchResultTablePanel");
+        Object item = resultList.get(tablePanel.getTable().getViewIndex());
+        Object resultBean = searchBoxInfo.getResultBean();
+        for (SearchBox.Mapping mapping : searchBoxInfo.getMappings()) {
+            Object fieldValue = ReflectUtils.getBeanProperty(item, mapping.getSelectFieldName());
+            DataUtils.setBeanProperty(resultBean, mapping.getResultFieldName(), fieldValue);
+        }
+    }
 
-	public <T> T getSelectedItemProperty(Class<T> typeClass, String property) throws UnifyException {
-		TablePanel tablePanel = (TablePanel) getWidgetByShortName("searchResultTablePanel");
-		Object item = resultList.get(tablePanel.getTable().getViewIndex());
-		return convert(typeClass, ReflectUtils.getBeanProperty(item, property), null);
-	}
+    public <T> T getSelectedItemProperty(Class<T> typeClass, String property) throws UnifyException {
+        TablePanel tablePanel = (TablePanel) getWidgetByShortName("searchResultTablePanel");
+        Object item = resultList.get(tablePanel.getTable().getViewIndex());
+        return convert(typeClass, ReflectUtils.getBeanProperty(item, property), null);
+    }
 
-	public String getFilter() {
-		return filter;
-	}
+    public String getFilter() {
+        return filter;
+    }
 
-	public void setFilter(String filter) {
-		this.filter = filter;
-	}
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
 
-	public List<?> getResultList() {
-		return resultList;
-	}
+    public List<?> getResultList() {
+        return resultList;
+    }
 
-	public void setResultList(List<?> resultList) {
-		this.resultList = resultList;
-	}
+    public void setResultList(List<?> resultList) {
+        this.resultList = resultList;
+    }
 }

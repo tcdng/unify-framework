@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-hide")
 public class HideAction extends AbstractPageAction {
 
-	public HideAction() {
-		super("hide");
-	}
+    public HideAction() {
+        super("hide");
+    }
 }

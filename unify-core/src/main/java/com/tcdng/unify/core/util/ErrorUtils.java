@@ -27,11 +27,11 @@ import com.tcdng.unify.core.UnifyException;
  */
 public final class ErrorUtils {
 
-	private ErrorUtils() {
+    private ErrorUtils() {
 
-	}
+    }
 
-	public static void throwBuildError(String message) throws UnifyException {
-		throw new UnifyException(UnifyCoreErrorConstants.BUILD_ERROR, message);
-	}
+    public static void throwBuildError(String message) throws UnifyException {
+        throw new UnifyException(UnifyCoreErrorConstants.BUILD_ERROR, message);
+    }
 }

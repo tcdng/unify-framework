@@ -25,35 +25,35 @@ import java.util.List;
  */
 public class LinkCategoryInfo {
 
-	private String name;
+    private String name;
 
-	private String caption;
+    private String caption;
 
-	private String path;
+    private String path;
 
-	private List<LinkInfo> linkInfoList;
+    private List<LinkInfo> linkInfoList;
 
-	public LinkCategoryInfo(String name, String caption, String path, List<LinkInfo> linkInfoList) {
-		this.name = name;
-		this.caption = caption;
-		this.path = path;
-		this.linkInfoList = linkInfoList;
-	}
+    public LinkCategoryInfo(String name, String caption, String path, List<LinkInfo> linkInfoList) {
+        this.name = name;
+        this.caption = caption;
+        this.path = path;
+        this.linkInfoList = linkInfoList;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public List<LinkInfo> getLinkInfoList() {
-		return linkInfoList;
-	}
+    public List<LinkInfo> getLinkInfoList() {
+        return linkInfoList;
+    }
 
 }

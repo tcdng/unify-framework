@@ -36,71 +36,71 @@ import com.tcdng.unify.web.annotation.Action;
 @Component(WebApplicationComponents.APPLICATION_UICOMMANDMANAGER)
 public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements WidgetCommandManager {
 
-	private FactoryMap<Class<? extends Widget>, UICommandInfo> uiCommandInfoMap;
+    private FactoryMap<Class<? extends Widget>, UICommandInfo> uiCommandInfoMap;
 
-	public WidgetCommandManagerImpl() {
-		uiCommandInfoMap = new FactoryMap<Class<? extends Widget>, UICommandInfo>() {
+    public WidgetCommandManagerImpl() {
+        uiCommandInfoMap = new FactoryMap<Class<? extends Widget>, UICommandInfo>() {
 
-			@Override
-			protected UICommandInfo create(Class<? extends Widget> key, Object... params) throws Exception {
-				UICommandInfo uiCommandInfo = new UICommandInfo();
-				Method[] methods = key.getMethods();
-				for (Method method : methods) {
-					Action ca = method.getAnnotation(Action.class);
-					if (ca != null) {
-						if (void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
-							uiCommandInfo.addCommandMethod(method.getName(), method);
-						} else {
-							throw new UnifyException(UnifyWebErrorConstants.WIDGET_INVALID_COMMAND_HANDLER_SIGNATURE,
-									key, method.getName());
-						}
-					}
-				}
-				return uiCommandInfo;
-			}
-		};
-	}
+            @Override
+            protected UICommandInfo create(Class<? extends Widget> key, Object... params) throws Exception {
+                UICommandInfo uiCommandInfo = new UICommandInfo();
+                Method[] methods = key.getMethods();
+                for (Method method : methods) {
+                    Action ca = method.getAnnotation(Action.class);
+                    if (ca != null) {
+                        if (void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
+                            uiCommandInfo.addCommandMethod(method.getName(), method);
+                        } else {
+                            throw new UnifyException(UnifyWebErrorConstants.WIDGET_INVALID_COMMAND_HANDLER_SIGNATURE,
+                                    key, method.getName());
+                        }
+                    }
+                }
+                return uiCommandInfo;
+            }
+        };
+    }
 
-	@Override
-	public void executeCommand(Widget widget, String command) throws UnifyException {
-		try {
-			Method method = uiCommandInfoMap.get(widget.getClass()).getCommandMethod(command);
-			if (method == null) {
-				throw new UnifyException(UnifyWebErrorConstants.WIDGET_UNKNOWN_COMMANDHANDLER, widget.getClass(),
-						command);
-			}
-			method.invoke(widget);
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-	}
+    @Override
+    public void executeCommand(Widget widget, String command) throws UnifyException {
+        try {
+            Method method = uiCommandInfoMap.get(widget.getClass()).getCommandMethod(command);
+            if (method == null) {
+                throw new UnifyException(UnifyWebErrorConstants.WIDGET_UNKNOWN_COMMANDHANDLER, widget.getClass(),
+                        command);
+            }
+            method.invoke(widget);
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	private class UICommandInfo {
+    private class UICommandInfo {
 
-		private Map<String, Method> commandMethods;
+        private Map<String, Method> commandMethods;
 
-		public UICommandInfo() {
-			commandMethods = new HashMap<String, Method>();
-		}
+        public UICommandInfo() {
+            commandMethods = new HashMap<String, Method>();
+        }
 
-		public void addCommandMethod(String name, Method method) {
-			commandMethods.put(name, method);
-		}
+        public void addCommandMethod(String name, Method method) {
+            commandMethods.put(name, method);
+        }
 
-		public Method getCommandMethod(String name) throws UnifyException {
-			return commandMethods.get(name);
-		}
-	}
+        public Method getCommandMethod(String name) throws UnifyException {
+            return commandMethods.get(name);
+        }
+    }
 }

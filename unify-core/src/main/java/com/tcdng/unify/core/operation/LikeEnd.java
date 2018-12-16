@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class LikeEnd extends Criteria {
 
-	public LikeEnd(String field, String value) {
-		super(Operator.LIKE_END, field, value);
-	}
+    public LikeEnd(String field, String value) {
+        super(Operator.LIKE_END, field, value);
+    }
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class NotLikeEnd extends Criteria {
 
-	public NotLikeEnd(String field, String value) {
-		super(Operator.NOT_LIKE_END, field, value);
-	}
+    public NotLikeEnd(String field, String value) {
+        super(Operator.NOT_LIKE_END, field, value);
+    }
 }

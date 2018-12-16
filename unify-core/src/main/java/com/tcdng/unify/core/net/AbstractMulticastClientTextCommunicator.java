@@ -31,87 +31,87 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractMulticastClientTextCommunicator extends AbstractMulticastClientCommunicator {
 
-	private BufferedReader reader;
+    private BufferedReader reader;
 
-	@Override
-	protected void onOpen(InputStream in) throws UnifyException {
-		reader = new BufferedReader(new InputStreamReader(in));
-	}
+    @Override
+    protected void onOpen(InputStream in) throws UnifyException {
+        reader = new BufferedReader(new InputStreamReader(in));
+    }
 
-	@Override
-	protected void onClose() throws UnifyException {
-		IOUtils.close(reader);
-		reader = null;
-	}
+    @Override
+    protected void onClose() throws UnifyException {
+        IOUtils.close(reader);
+        reader = null;
+    }
 
-	/**
-	 * Reads a line of text.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected String readLine() throws UnifyException {
-		try {
-			return reader.readLine();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return null;
-	}
+    /**
+     * Reads a line of text.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String readLine() throws UnifyException {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return null;
+    }
 
-	/**
-	 * Reads characters into buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to read into
-	 * @return the number of characters read
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected int readChar(char[] buffer) throws UnifyException {
-		try {
-			return reader.read(buffer);
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads characters into buffer.
+     * 
+     * @param buffer
+     *            the buffer to read into
+     * @return the number of characters read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected int readChar(char[] buffer) throws UnifyException {
+        try {
+            return reader.read(buffer);
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads characters into portion of buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to read into
-	 * @param offset
-	 *            the offset
-	 * @param length
-	 *            the number of characters to read
-	 * @return the number of characters read
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected int readChar(char[] buffer, int offset, int length) throws UnifyException {
-		try {
-			return reader.read(buffer, offset, length);
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads characters into portion of buffer.
+     * 
+     * @param buffer
+     *            the buffer to read into
+     * @param offset
+     *            the offset
+     * @param length
+     *            the number of characters to read
+     * @return the number of characters read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected int readChar(char[] buffer, int offset, int length) throws UnifyException {
+        try {
+            return reader.read(buffer, offset, length);
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
-	/**
-	 * Reads a character.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected int readChar() throws UnifyException {
-		try {
-			return reader.read();
-		} catch (IOException e) {
-			throwReceiveException(e);
-		}
-		return 0;
-	}
+    /**
+     * Reads a character.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected int readChar() throws UnifyException {
+        try {
+            return reader.read();
+        } catch (IOException e) {
+            throwReceiveException(e);
+        }
+        return 0;
+    }
 
 }

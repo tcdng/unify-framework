@@ -27,32 +27,32 @@ import org.junit.Test;
  */
 public class ApplicationContextManagerTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testLoadRequestContext() throws Exception {
-		RequestContextManager requestContextManager = (RequestContextManager) this
-				.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-		requestContextManager.reset();
-		requestContextManager.loadRequestContext(null);
-		assertNotNull(requestContextManager.getRequestContext());
-	}
+    @Test
+    public void testLoadRequestContext() throws Exception {
+        RequestContextManager requestContextManager = (RequestContextManager) this
+                .getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+        requestContextManager.reset();
+        requestContextManager.loadRequestContext(null);
+        assertNotNull(requestContextManager.getRequestContext());
+    }
 
-	@Test
-	public void testUnloadRequestContext() throws Exception {
-		RequestContextManager requestContextManager = (RequestContextManager) this
-				.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-		requestContextManager.reset();
-		requestContextManager.loadRequestContext(null);
-		assertNotNull(requestContextManager.getRequestContext());
-		requestContextManager.unloadRequestContext();
-	}
+    @Test
+    public void testUnloadRequestContext() throws Exception {
+        RequestContextManager requestContextManager = (RequestContextManager) this
+                .getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+        requestContextManager.reset();
+        requestContextManager.loadRequestContext(null);
+        assertNotNull(requestContextManager.getRequestContext());
+        requestContextManager.unloadRequestContext();
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

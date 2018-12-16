@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractRegexPageValidation;
 @Component("ui-emailvalidation")
 public class EmailValidation extends AbstractRegexPageValidation {
 
-	public EmailValidation() {
-		super("email", "email.regex", "validation.invalidemail");
-	}
+    public EmailValidation() {
+        super("email", "email.regex", "validation.invalidemail");
+    }
 }

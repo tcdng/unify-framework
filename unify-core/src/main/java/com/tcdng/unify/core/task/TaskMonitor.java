@@ -26,133 +26,133 @@ import com.tcdng.unify.core.UnifyError;
  */
 public interface TaskMonitor {
 
-	/**
-	 * Returns the name of the task being monitored.
-	 * 
-	 * @param taskIndex
-	 *            the task index
-	 */
-	String getTaskName(int taskIndex);
+    /**
+     * Returns the name of the task being monitored.
+     * 
+     * @param taskIndex
+     *            the task index
+     */
+    String getTaskName(int taskIndex);
 
-	/**
-	 * Returns the task status.
-	 * 
-	 * @param taskIndex
-	 *            the task index
-	 */
-	TaskStatus getTaskStatus(int taskIndex);
+    /**
+     * Returns the task status.
+     * 
+     * @param taskIndex
+     *            the task index
+     */
+    TaskStatus getTaskStatus(int taskIndex);
 
-	/**
-	 * Returns the current task status.
-	 * 
-	 * @param taskIndex
-	 *            the task index
-	 */
-	TaskStatus getCurrentTaskStatus();
+    /**
+     * Returns the current task status.
+     * 
+     * @param taskIndex
+     *            the task index
+     */
+    TaskStatus getCurrentTaskStatus();
 
-	/**
-	 * Returns the task ID.
-	 * 
-	 * @param taskIndex
-	 *            the task index
-	 */
-	String getTaskId(int taskIndex);
+    /**
+     * Returns the task ID.
+     * 
+     * @param taskIndex
+     *            the task index
+     */
+    String getTaskId(int taskIndex);
 
-	/**
-	 * Returns the task output object.
-	 * 
-	 * @param taskIndex
-	 *            the task index
-	 */
-	TaskOutput getTaskOutput(int taskIndex);
+    /**
+     * Returns the task output object.
+     * 
+     * @param taskIndex
+     *            the task index
+     */
+    TaskOutput getTaskOutput(int taskIndex);
 
-	/**
-	 * Returns the current task output object.
-	 */
-	TaskOutput getCurrentTaskOutput();
+    /**
+     * Returns the current task output object.
+     */
+    TaskOutput getCurrentTaskOutput();
 
-	/**
-	 * Returns the number of tasks associated with this task monitor.
-	 */
-	int getTaskCount();
+    /**
+     * Returns the number of tasks associated with this task monitor.
+     */
+    int getTaskCount();
 
-	/**
-	 * Returns current task index.
-	 */
-	int getCurrentTaskIndex();
+    /**
+     * Returns current task index.
+     */
+    int getCurrentTaskIndex();
 
-	/**
-	 * Adds a task message. Typically set by the executing task to give real-time
-	 * information on task's progress.
-	 */
-	void addMessage(String message);
+    /**
+     * Adds a task message. Typically set by the executing task to give real-time
+     * information on task's progress.
+     */
+    void addMessage(String message);
 
-	/**
-	 * Adds an error message to the task monitor using information from supplied
-	 * error object.
-	 * 
-	 * @param unifyError
-	 *            the error object to use
-	 */
-	void addErrorMessage(UnifyError unifyError);
+    /**
+     * Adds an error message to the task monitor using information from supplied
+     * error object.
+     * 
+     * @param unifyError
+     *            the error object to use
+     */
+    void addErrorMessage(UnifyError unifyError);
 
-	/**
-	 * Gets the task messages. Typically called by the monitoring process. For
-	 * instance a process that displays information about the progress of the task.
-	 */
-	String[] getMessages();
+    /**
+     * Gets the task messages. Typically called by the monitoring process. For
+     * instance a process that displays information about the progress of the task.
+     */
+    String[] getMessages();
 
-	/**
-	 * Returns the last message added to task.
-	 */
-	String getLastMessage();
+    /**
+     * Returns the last message added to task.
+     */
+    String getLastMessage();
 
-	/**
-	 * Clears all task messages.
-	 */
-	void clearMessages();
+    /**
+     * Clears all task messages.
+     */
+    void clearMessages();
 
-	/**
-	 * Adds a task exception. Exceptions are added by the task manager if any is
-	 * thrown during execution of the task.
-	 * 
-	 * @param e
-	 *            the exception to add
-	 */
-	void addException(Exception e);
+    /**
+     * Adds a task exception. Exceptions are added by the task manager if any is
+     * thrown during execution of the task.
+     * 
+     * @param e
+     *            the exception to add
+     */
+    void addException(Exception e);
 
-	/**
-	 * Gets all exceptions thrown during execution of the task.
-	 */
-	Exception[] getExceptions();
+    /**
+     * Gets all exceptions thrown during execution of the task.
+     */
+    Exception[] getExceptions();
 
-	/**
-	 * Cancels task.
-	 */
-	void cancel();
+    /**
+     * Cancels task.
+     */
+    void cancel();
 
-	/**
-	 * Returns true if task has been canceled.
-	 */
-	boolean isCanceled();
+    /**
+     * Returns true if task has been canceled.
+     */
+    boolean isCanceled();
 
-	/**
-	 * Returns true if task has any exceptions.
-	 */
-	boolean isExceptions();
+    /**
+     * Returns true if task has any exceptions.
+     */
+    boolean isExceptions();
 
-	/**
-	 * Returns true if task has not started running.
-	 */
-	boolean isPending();
+    /**
+     * Returns true if task has not started running.
+     */
+    boolean isPending();
 
-	/**
-	 * Returns true if task is done running.
-	 */
-	boolean isDone();
+    /**
+     * Returns true if task is done running.
+     */
+    boolean isDone();
 
-	/**
-	 * Returns true if task is running
-	 */
-	boolean isRunning();
+    /**
+     * Returns true if task is running
+     */
+    boolean isRunning();
 }

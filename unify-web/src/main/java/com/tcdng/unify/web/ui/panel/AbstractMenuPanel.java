@@ -29,29 +29,29 @@ import com.tcdng.unify.web.ui.PanelEventListener;
  */
 public abstract class AbstractMenuPanel extends AbstractContainer implements Panel {
 
-	public AbstractMenuPanel() {
-		super(false);
-	}
+    public AbstractMenuPanel() {
+        super(false);
+    }
 
-	@Override
-	@Action
-	public void switchState() throws UnifyException {
+    @Override
+    @Action
+    public void switchState() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void resetState() throws UnifyException {
+    @Override
+    public void resetState() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void addEventListener(PanelEventListener listener) {
+    @Override
+    public void addEventListener(PanelEventListener listener) {
 
-	}
+    }
 
-	@Override
-	public void removeEventListener(PanelEventListener listener) {
+    @Override
+    public void removeEventListener(PanelEventListener listener) {
 
-	}
+    }
 
 }

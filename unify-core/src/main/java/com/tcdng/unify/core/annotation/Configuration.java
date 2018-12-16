@@ -33,6 +33,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Configuration {
 
-	/** List of property configurations. */
-	Configurable[] value();
+    /** List of property configurations. */
+    Configurable[] value();
 }

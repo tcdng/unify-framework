@@ -29,19 +29,19 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "lowercaseprincipal-passwordgenerator", description = "$m{passwordgenerator.lowercaseprincipal}")
 public class LowerCasePrincipalPasswordGenerator extends AbstractUnifyComponent implements PasswordGenerator {
 
-	@Override
-	public String generatePassword(String principal, int length) throws UnifyException {
-		return principal.toLowerCase();
-	}
+    @Override
+    public String generatePassword(String principal, int length) throws UnifyException {
+        return principal.toLowerCase();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
 }

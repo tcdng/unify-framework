@@ -25,13 +25,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonShortConverter implements JsonValueConverter<Short> {
-	@Override
-	public Short read(JsonValue jsonValue) throws Exception {
-		return (short) jsonValue.asInt();
-	}
+    @Override
+    public Short read(JsonValue jsonValue) throws Exception {
+        return (short) jsonValue.asInt();
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value((Short) value);
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value((Short) value);
+    }
 }

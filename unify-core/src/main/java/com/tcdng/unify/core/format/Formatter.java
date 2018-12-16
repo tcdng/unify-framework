@@ -29,51 +29,51 @@ import com.tcdng.unify.core.upl.UplComponent;
  */
 public interface Formatter<T> extends UplComponent {
 
-	/**
-	 * Returns the formatter format helper.
-	 */
-	FormatHelper getFormatHelper() throws UnifyException;
+    /**
+     * Returns the formatter format helper.
+     */
+    FormatHelper getFormatHelper() throws UnifyException;
 
-	/**
-	 * Returns the format data type.
-	 */
-	Class<T> getDataType();
+    /**
+     * Returns the format data type.
+     */
+    Class<T> getDataType();
 
-	/**
-	 * Formats a value to a string.
-	 * 
-	 * @param value
-	 *            the value to format
-	 * @return the formatted value
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String format(T value) throws UnifyException;
+    /**
+     * Formats a value to a string.
+     * 
+     * @param value
+     *            the value to format
+     * @return the formatted value
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String format(T value) throws UnifyException;
 
-	/**
-	 * Parses a formatted string to a value.
-	 * 
-	 * @param string
-	 *            the string to parse
-	 * @return the resulting value
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	T parse(String string) throws UnifyException;
+    /**
+     * Parses a formatted string to a value.
+     * 
+     * @param string
+     *            the string to parse
+     * @return the resulting value
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    T parse(String string) throws UnifyException;
 
-	/**
-	 * Returns the formatter format pattern.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPattern() throws UnifyException;
+    /**
+     * Returns the formatter format pattern.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPattern() throws UnifyException;
 
-	/**
-	 * Returns the formatter locale.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Locale getLocale() throws UnifyException;
+    /**
+     * Returns the formatter locale.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Locale getLocale() throws UnifyException;
 }

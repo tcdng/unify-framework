@@ -27,14 +27,14 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TaskIdGenerator extends UnifyComponent {
 
-	/**
-	 * Generates a task ID based on task input.
-	 * 
-	 * @param taskInput
-	 *            the task input to use
-	 * @return the generated ID
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String generateID(TaskInput taskInput) throws UnifyException;
+    /**
+     * Generates a task ID based on task input.
+     * 
+     * @param taskInput
+     *            the task input to use
+     * @return the generated ID
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateID(TaskInput taskInput) throws UnifyException;
 }

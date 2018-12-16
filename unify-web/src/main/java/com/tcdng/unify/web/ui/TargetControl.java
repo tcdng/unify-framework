@@ -26,20 +26,20 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TargetControl extends Control {
 
-	/**
-	 * Returns target control's static binding value.
-	 * 
-	 * @return the value if set otherwise null
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStaticBindingValue() throws UnifyException;
+    /**
+     * Returns target control's static binding value.
+     * 
+     * @return the value if set otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStaticBindingValue() throws UnifyException;
 
-	/**
-	 * Returns the target element Id.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getTargetId() throws UnifyException;
+    /**
+     * Returns the target element Id.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getTargetId() throws UnifyException;
 }

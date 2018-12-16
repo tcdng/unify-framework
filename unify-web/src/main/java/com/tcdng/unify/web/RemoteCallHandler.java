@@ -27,45 +27,45 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class RemoteCallHandler {
 
-	private String methodCode;
+    private String methodCode;
 
-	private Method method;
+    private Method method;
 
-	private boolean restricted;
+    private boolean restricted;
 
-	public RemoteCallHandler(String methodCode, Method method, boolean restricted) {
-		this.methodCode = methodCode;
-		this.method = method;
-		this.restricted = restricted;
-	}
+    public RemoteCallHandler(String methodCode, Method method, boolean restricted) {
+        this.methodCode = methodCode;
+        this.method = method;
+        this.restricted = restricted;
+    }
 
-	public String getMethodCode() {
-		return methodCode;
-	}
+    public String getMethodCode() {
+        return methodCode;
+    }
 
-	public String getName() {
-		return method.getName();
-	}
+    public String getName() {
+        return method.getName();
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public Method getMethod() {
+        return method;
+    }
 
-	public boolean isRestricted() {
-		return restricted;
-	}
+    public boolean isRestricted() {
+        return restricted;
+    }
 
-	@SuppressWarnings("unchecked")
-	public Class<? extends RemoteCallParams> getParamType() {
-		return (Class<? extends RemoteCallParams>) method.getParameterTypes()[0];
-	}
+    @SuppressWarnings("unchecked")
+    public Class<? extends RemoteCallParams> getParamType() {
+        return (Class<? extends RemoteCallParams>) method.getParameterTypes()[0];
+    }
 
-	@SuppressWarnings("unchecked")
-	public Class<? extends RemoteCallResult> getReturnType() {
-		return (Class<? extends RemoteCallResult>) method.getReturnType();
-	}
+    @SuppressWarnings("unchecked")
+    public Class<? extends RemoteCallResult> getReturnType() {
+        return (Class<? extends RemoteCallResult>) method.getReturnType();
+    }
 
-	public String toString() {
-		return StringUtils.beanToString(this);
-	}
+    public String toString() {
+        return StringUtils.beanToString(this);
+    }
 }

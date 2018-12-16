@@ -36,23 +36,23 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("datesequencenumber-task")
 public class DateSequenceNumberTask extends AbstractTask {
 
-	@Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-	private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
+    private SequenceNumberBusinessModule sequenceNumberBusinessModule;
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		int iterations = input.getParam(int.class, DateSequenceNumberTaskConstants.ITERATIONS);
-		Date testDate = input.getParam(Date.class, DateSequenceNumberTaskConstants.DATE);
-		String testSequenceName = input.getParam(String.class, DateSequenceNumberTaskConstants.SEQUENCENAME);
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        int iterations = input.getParam(int.class, DateSequenceNumberTaskConstants.ITERATIONS);
+        Date testDate = input.getParam(Date.class, DateSequenceNumberTaskConstants.DATE);
+        String testSequenceName = input.getParam(String.class, DateSequenceNumberTaskConstants.SEQUENCENAME);
 
-		Long prevSequenceNo = null;
-		for (int i = 0; i < iterations; i++) {
-			Long sequenceNo = sequenceNumberBusinessModule.getNextSequenceNumber(testSequenceName, testDate);
-			if (prevSequenceNo != null && (prevSequenceNo + 1) != sequenceNo) {
-				throwOperationErrorException(null);
-			}
-			prevSequenceNo = sequenceNo;
-			ThreadUtils.yield();
-		}
-	}
+        Long prevSequenceNo = null;
+        for (int i = 0; i < iterations; i++) {
+            Long sequenceNo = sequenceNumberBusinessModule.getNextSequenceNumber(testSequenceName, testDate);
+            if (prevSequenceNo != null && (prevSequenceNo + 1) != sequenceNo) {
+                throwOperationErrorException(null);
+            }
+            prevSequenceNo = sequenceNo;
+            ThreadUtils.yield();
+        }
+    }
 }

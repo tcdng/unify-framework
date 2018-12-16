@@ -23,6 +23,6 @@ package com.tcdng.unify.core.batch;
  */
 public interface BatchFileReadProcessorOutputConstants {
 
-	String BATCHFILEREADRESULT = "batchFileReadResult";
+    String BATCHFILEREADRESULT = "batchFileReadResult";
 
 }

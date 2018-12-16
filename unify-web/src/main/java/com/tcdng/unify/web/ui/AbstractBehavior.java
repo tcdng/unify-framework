@@ -28,8 +28,8 @@ import com.tcdng.unify.web.WebApplicationComponents;
  */
 public abstract class AbstractBehavior extends AbstractUplComponent implements Behavior {
 
-	protected RequestContextUtil getRequestContextUtil() throws UnifyException {
-		return (RequestContextUtil) getComponent(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL);
-	}
+    protected RequestContextUtil getRequestContextUtil() throws UnifyException {
+        return (RequestContextUtil) getComponent(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL);
+    }
 
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core;
  */
 public interface SessionAttributeConstants {
 
-	String FORCE_LOGOUT = "S.forceLogout";
+    String FORCE_LOGOUT = "S.forceLogout";
 
-	String UPLCOMPONENT_WRITERS = "S.uplComponentWriters";
+    String UPLCOMPONENT_WRITERS = "S.uplComponentWriters";
 }

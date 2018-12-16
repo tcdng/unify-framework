@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class AmongstPolicy extends MultipleParameterPolicy {
 
-	public AmongstPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" IN ", sqlDataSourceDialect, " OR ");
-	}
+    public AmongstPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" IN ", sqlDataSourceDialect, " OR ");
+    }
 }

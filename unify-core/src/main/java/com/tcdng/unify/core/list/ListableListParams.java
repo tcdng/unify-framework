@@ -28,17 +28,17 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class ListableListParams {
 
-	private List<? extends Listable> listableList;
+    private List<? extends Listable> listableList;
 
-	public ListableListParams(List<? extends Listable> listableList) {
-		this.listableList = listableList;
-	}
+    public ListableListParams(List<? extends Listable> listableList) {
+        this.listableList = listableList;
+    }
 
-	public List<? extends Listable> getListableList() {
-		return listableList;
-	}
+    public List<? extends Listable> getListableList() {
+        return listableList;
+    }
 
-	public boolean isListableList() {
-		return listableList != null && !listableList.isEmpty();
-	}
+    public boolean isListableList() {
+        return listableList != null && !listableList.isEmpty();
+    }
 }

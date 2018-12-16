@@ -23,20 +23,20 @@ package com.tcdng.unify.web.ui.data;
  */
 public class LinkInfo {
 
-	private String code;
+    private String code;
 
-	private String caption;
+    private String caption;
 
-	public LinkInfo(String code, String caption) {
-		this.code = code;
-		this.caption = caption;
-	}
+    public LinkInfo(String code, String caption) {
+        this.code = code;
+        this.caption = caption;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 }

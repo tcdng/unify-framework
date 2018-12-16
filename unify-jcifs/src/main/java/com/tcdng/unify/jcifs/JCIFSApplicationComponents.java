@@ -23,5 +23,5 @@ package com.tcdng.unify.jcifs;
  */
 public interface JCIFSApplicationComponents {
 
-	String JCIFS_TRANSFERSERVER = "jcifs-server";
+    String JCIFS_TRANSFERSERVER = "jcifs-server";
 }

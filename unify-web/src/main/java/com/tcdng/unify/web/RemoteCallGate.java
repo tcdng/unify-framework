@@ -26,15 +26,15 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface RemoteCallGate extends UnifyComponent {
 
-	/**
-	 * Grants application access to remote function.
-	 * 
-	 * @param applicationCode
-	 *            the application code
-	 * @param functionCode
-	 *            the function code
-	 * @throws UnifyException
-	 *             if access is not granted
-	 */
-	void grantPass(String applicationCode, String functionCode) throws UnifyException;
+    /**
+     * Grants application access to remote function.
+     * 
+     * @param applicationCode
+     *            the application code
+     * @param functionCode
+     *            the function code
+     * @throws UnifyException
+     *             if access is not granted
+     */
+    void grantPass(String applicationCode, String functionCode) throws UnifyException;
 }

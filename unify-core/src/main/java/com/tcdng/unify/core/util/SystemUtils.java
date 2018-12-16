@@ -30,43 +30,43 @@ import com.tcdng.unify.core.system.ClusterCommandConstants;
  */
 public final class SystemUtils {
 
-	private static final Map<String, String> forcelogoutValueMap = new HashMap<String, String>();
+    private static final Map<String, String> forcelogoutValueMap = new HashMap<String, String>();
 
-	private static final Map<String, String> forceLogoutErrorMap = new HashMap<String, String>();
+    private static final Map<String, String> forceLogoutErrorMap = new HashMap<String, String>();
 
-	static {
-		forcelogoutValueMap.put(ClusterCommandConstants.FORCE_LOGOUT_ADMINISTRATOR,
-				SessionAttributeValueConstants.FORCE_LOGOUT_ADMINISTRATOR);
-		forcelogoutValueMap.put(ClusterCommandConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN,
-				SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN);
-		forcelogoutValueMap.put(ClusterCommandConstants.FORCE_LOGOUT_SYSTEM,
-				SessionAttributeValueConstants.FORCE_LOGOUT_SYSTEM);
+    static {
+        forcelogoutValueMap.put(ClusterCommandConstants.FORCE_LOGOUT_ADMINISTRATOR,
+                SessionAttributeValueConstants.FORCE_LOGOUT_ADMINISTRATOR);
+        forcelogoutValueMap.put(ClusterCommandConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN,
+                SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN);
+        forcelogoutValueMap.put(ClusterCommandConstants.FORCE_LOGOUT_SYSTEM,
+                SessionAttributeValueConstants.FORCE_LOGOUT_SYSTEM);
 
-		forceLogoutErrorMap.put(SessionAttributeValueConstants.FORCE_LOGOUT_ADMINISTRATOR,
-				UnifyCoreErrorConstants.FORCELOGOUT_ADMINISTRATOR);
-		forceLogoutErrorMap.put(SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN,
-				UnifyCoreErrorConstants.FORCELOGOUT_MULTIPLE_LOGIN);
-		forceLogoutErrorMap.put(SessionAttributeValueConstants.FORCE_LOGOUT_SYSTEM,
-				UnifyCoreErrorConstants.FORCELOGOUT_SYSTEM);
-	}
+        forceLogoutErrorMap.put(SessionAttributeValueConstants.FORCE_LOGOUT_ADMINISTRATOR,
+                UnifyCoreErrorConstants.FORCELOGOUT_ADMINISTRATOR);
+        forceLogoutErrorMap.put(SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN,
+                UnifyCoreErrorConstants.FORCELOGOUT_MULTIPLE_LOGIN);
+        forceLogoutErrorMap.put(SessionAttributeValueConstants.FORCE_LOGOUT_SYSTEM,
+                UnifyCoreErrorConstants.FORCELOGOUT_SYSTEM);
+    }
 
-	private SystemUtils() {
+    private SystemUtils() {
 
-	}
+    }
 
-	public static boolean isForceLogoutClusterCommand(String cmd) {
-		return forcelogoutValueMap.containsKey(cmd);
-	}
+    public static boolean isForceLogoutClusterCommand(String cmd) {
+        return forcelogoutValueMap.containsKey(cmd);
+    }
 
-	public static boolean isForceLogoutErrorCode(String errorCode) {
-		return forceLogoutErrorMap.containsValue(errorCode);
-	}
+    public static boolean isForceLogoutErrorCode(String errorCode) {
+        return forceLogoutErrorMap.containsValue(errorCode);
+    }
 
-	public static String getSessionAttributeValue(String cmd) {
-		return forcelogoutValueMap.get(cmd);
-	}
+    public static String getSessionAttributeValue(String cmd) {
+        return forcelogoutValueMap.get(cmd);
+    }
 
-	public static String getSessionAttributeErrorCode(String value) {
-		return forceLogoutErrorMap.get(value);
-	}
+    public static String getSessionAttributeErrorCode(String value) {
+        return forceLogoutErrorMap.get(value);
+    }
 }

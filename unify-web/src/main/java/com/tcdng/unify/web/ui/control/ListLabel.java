@@ -27,23 +27,23 @@ import com.tcdng.unify.web.ui.AbstractListControl;
 @Component("ui-listlabel")
 public class ListLabel extends AbstractListControl {
 
-	public ListLabel() {
-		setEditable(false);
-	}
+    public ListLabel() {
+        setEditable(false);
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return false;
-	}
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 
-	@Override
-	public void setEditable(boolean editable) {
-		super.setEditable(false);
-	}
+    @Override
+    public void setEditable(boolean editable) {
+        super.setEditable(false);
+    }
 
-	@Override
-	public boolean isLayoutCaption() {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
 
 }

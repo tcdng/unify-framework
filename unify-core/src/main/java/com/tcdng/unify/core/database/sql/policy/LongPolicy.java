@@ -29,35 +29,35 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class LongPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("BIGINT");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("BIGINT");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.BIGINT);
-		} else {
-			((PreparedStatement) pstmt).setLong(index, ((Long) data).longValue());
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.BIGINT);
+        } else {
+            ((PreparedStatement) pstmt).setLong(index, ((Long) data).longValue());
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Object object = ((ResultSet) rs).getLong(column);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return object;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Object object = ((ResultSet) rs).getLong(column);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return object;
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Object object = ((ResultSet) rs).getLong(index);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return object;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Object object = ((ResultSet) rs).getLong(index);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return object;
+    }
 }

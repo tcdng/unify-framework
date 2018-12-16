@@ -29,13 +29,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonByteArrayConverter implements JsonValueConverter<byte[]> {
-	@Override
-	public byte[] read(JsonValue jsonValue) throws Exception {
-		return Base64.decodeBase64(jsonValue.asString().getBytes(StandardCharsets.UTF_8));
-	}
+    @Override
+    public byte[] read(JsonValue jsonValue) throws Exception {
+        return Base64.decodeBase64(jsonValue.asString().getBytes(StandardCharsets.UTF_8));
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value(new String(Base64.encodeBase64((byte[]) value), StandardCharsets.UTF_8));
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value(new String(Base64.encodeBase64((byte[]) value), StandardCharsets.UTF_8));
+    }
 }

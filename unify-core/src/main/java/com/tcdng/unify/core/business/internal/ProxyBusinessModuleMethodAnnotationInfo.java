@@ -26,20 +26,20 @@ import com.tcdng.unify.core.annotation.Taskable;
  */
 public class ProxyBusinessModuleMethodAnnotationInfo {
 
-	private Taskable taskable;
+    private Taskable taskable;
 
-	private Expirable expirable;
+    private Expirable expirable;
 
-	public ProxyBusinessModuleMethodAnnotationInfo(Taskable taskable, Expirable expirable) {
-		this.taskable = taskable;
-		this.expirable = expirable;
-	}
+    public ProxyBusinessModuleMethodAnnotationInfo(Taskable taskable, Expirable expirable) {
+        this.taskable = taskable;
+        this.expirable = expirable;
+    }
 
-	public Taskable getTaskable() {
-		return taskable;
-	}
+    public Taskable getTaskable() {
+        return taskable;
+    }
 
-	public Expirable getExpirable() {
-		return expirable;
-	}
+    public Expirable getExpirable() {
+        return expirable;
+    }
 }

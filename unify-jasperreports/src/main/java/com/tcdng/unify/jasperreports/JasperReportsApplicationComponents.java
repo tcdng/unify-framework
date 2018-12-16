@@ -23,11 +23,11 @@ package com.tcdng.unify.jasperreports;
  */
 public interface JasperReportsApplicationComponents {
 
-	String JASPERREPORTS_SERVER = "jasperreports-server";
+    String JASPERREPORTS_SERVER = "jasperreports-server";
 
-	String JASPERREPORTS_CACHE = "jasperreports-cache";
+    String JASPERREPORTS_CACHE = "jasperreports-cache";
 
-	String JASPERREPORTS_TABULARLAYOUTMANAGER = "jasperreports-tabularlayoutmanager";
+    String JASPERREPORTS_TABULARLAYOUTMANAGER = "jasperreports-tabularlayoutmanager";
 
-	String JASPERREPORTS_COLUMNARLAYOUTMANAGER = "jasperreports-columnarlayoutmanager";
+    String JASPERREPORTS_COLUMNARLAYOUTMANAGER = "jasperreports-columnarlayoutmanager";
 }

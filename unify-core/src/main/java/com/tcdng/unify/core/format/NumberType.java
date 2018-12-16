@@ -22,5 +22,5 @@ package com.tcdng.unify.core.format;
  * @since 1.0
  */
 public enum NumberType {
-	INTEGER, DECIMAL, PERCENT
+    INTEGER, DECIMAL, PERCENT
 }

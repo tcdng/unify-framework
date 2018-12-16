@@ -29,52 +29,52 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 @Component(name = SqlDialectConstants.JAVADB, description = "$m{sqldialect.javadb}")
 public class JavaDbDialect extends AbstractSqlDataSourceDialect {
 
-	@Override
-	public String generateTestSql() throws UnifyException {
-		return "SELECT 1 FROM SYSIBM.SYSDUMMY1";
-	}
+    @Override
+    public String generateTestSql() throws UnifyException {
+        return "SELECT 1 FROM SYSIBM.SYSDUMMY1";
+    }
 
-	@Override
-	public String generateNowSql() throws UnifyException {
-		return "VALUES CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateNowSql() throws UnifyException {
+        return "VALUES CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public int getMaxClauseValues() {
-		return -1;
-	}
+    @Override
+    public int getMaxClauseValues() {
+        return -1;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		boolean isAppend = false;
-		if (offset > 0) {
-			sql.append(" OFFSET ").append(offset).append(" ROWS");
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        boolean isAppend = false;
+        if (offset > 0) {
+            sql.append(" OFFSET ").append(offset).append(" ROWS");
+            isAppend = true;
+        }
 
-		if (limit > 0) {
-			if (isAppend) {
-				sql.append(" FETCH NEXT ");
-			} else {
-				sql.append(" FETCH FIRST ");
-			}
+        if (limit > 0) {
+            if (isAppend) {
+                sql.append(" FETCH NEXT ");
+            } else {
+                sql.append(" FETCH FIRST ");
+            }
 
-			sql.append(limit).append(" ROWS ONLY");
-			isAppend = true;
-		}
+            sql.append(limit).append(" ROWS ONLY");
+            isAppend = true;
+        }
 
-		return isAppend;
-	}
+        return isAppend;
+    }
 }

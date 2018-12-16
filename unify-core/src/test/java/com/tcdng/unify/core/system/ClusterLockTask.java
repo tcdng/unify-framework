@@ -34,28 +34,28 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("clustershareddata-test")
 public class ClusterLockTask extends AbstractTask {
 
-	@Configurable("40")
-	private int sharedTestCount;
+    @Configurable("40")
+    private int sharedTestCount;
 
-	@Configurable(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
-	private ClusterManagerBusinessModule clusterManager;
+    @Configurable(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
+    private ClusterManagerBusinessModule clusterManager;
 
-	private static double sharedValue;
+    private static double sharedValue;
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		for (int i = 0; i < sharedTestCount; i++) {
-			double testValue = Math.random();
-			clusterManager.beginSynchronization("sharedSync");
-			try {
-				sharedValue = testValue;
-				ThreadUtils.yield();
-				if (sharedValue != testValue) {
-					throwOperationErrorException(new Exception("Shared value corrupted!"));
-				}
-			} finally {
-				clusterManager.endSynchronization("sharedSync");
-			}
-		}
-	}
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        for (int i = 0; i < sharedTestCount; i++) {
+            double testValue = Math.random();
+            clusterManager.beginSynchronization("sharedSync");
+            try {
+                sharedValue = testValue;
+                ThreadUtils.yield();
+                if (sharedValue != testValue) {
+                    throwOperationErrorException(new Exception("Shared value corrupted!"));
+                }
+            } finally {
+                clusterManager.endSynchronization("sharedSync");
+            }
+        }
+    }
 }

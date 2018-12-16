@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-openwindow")
 public class OpenWindowAction extends AbstractPageAction {
 
-	public OpenWindowAction() {
-		super("openwindow");
-	}
+    public OpenWindowAction() {
+        super("openwindow");
+    }
 }

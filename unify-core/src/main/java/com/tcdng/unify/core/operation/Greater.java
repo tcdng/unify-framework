@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class Greater extends Criteria {
 
-	public Greater(String field, Object value) {
-		super(Operator.GREATER, field, value);
-	}
+    public Greater(String field, Object value) {
+        super(Operator.GREATER, field, value);
+    }
 }

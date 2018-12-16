@@ -26,20 +26,20 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class ByteArrayConverter extends AbstractConverter<byte[]> {
 
-	@Override
-	protected byte[] doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof byte[]) {
-			return (byte[]) value;
-		}
+    @Override
+    protected byte[] doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof byte[]) {
+            return (byte[]) value;
+        }
 
-		if (value instanceof UploadedFile) {
-			return ((UploadedFile) value).getData();
-		}
+        if (value instanceof UploadedFile) {
+            return ((UploadedFile) value).getData();
+        }
 
-		if (value instanceof UploadedFile[]) {
-			return ((UploadedFile[]) value)[0].getData();
-		}
-		return null;
-	}
+        if (value instanceof UploadedFile[]) {
+            return ((UploadedFile[]) value)[0].getData();
+        }
+        return null;
+    }
 
 }

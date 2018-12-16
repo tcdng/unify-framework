@@ -23,5 +23,5 @@ package com.tcdng.unify.core;
  */
 public interface RequestAttributeConstants {
 
-	String SUPPRESS_BROADCAST = "R.suppressBroadcast";
+    String SUPPRESS_BROADCAST = "R.suppressBroadcast";
 }

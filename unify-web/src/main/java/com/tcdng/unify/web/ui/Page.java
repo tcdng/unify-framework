@@ -26,119 +26,119 @@ import com.tcdng.unify.web.ui.panel.StandalonePanel;
  */
 public interface Page extends StandalonePanel {
 
-	/**
-	 * Returns stand-alone panel with specified name.
-	 * 
-	 * @param name
-	 *            the panel name.
-	 * 
-	 * @return the panel if found otherwise null
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	StandalonePanel getStandalonePanel(String name) throws UnifyException;
+    /**
+     * Returns stand-alone panel with specified name.
+     * 
+     * @param name
+     *            the panel name.
+     * 
+     * @return the panel if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    StandalonePanel getStandalonePanel(String name) throws UnifyException;
 
-	/**
-	 * Adds a standalone panel to this page.
-	 * 
-	 * @param name
-	 *            the standalone panel name
-	 * @param standalonePanel
-	 *            the standalone panel to add
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void addStandalonePanel(String name, StandalonePanel standalonePanel) throws UnifyException;
+    /**
+     * Adds a standalone panel to this page.
+     * 
+     * @param name
+     *            the standalone panel name
+     * @param standalonePanel
+     *            the standalone panel to add
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void addStandalonePanel(String name, StandalonePanel standalonePanel) throws UnifyException;
 
-	/**
-	 * Returns a panel contained in this page by long name.
-	 * 
-	 * @param longName
-	 *            the panel long name
-	 * @return the panel with the specified long name
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Panel getPanelByLongName(String longName) throws UnifyException;
+    /**
+     * Returns a panel contained in this page by long name.
+     * 
+     * @param longName
+     *            the panel long name
+     * @return the panel with the specified long name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Panel getPanelByLongName(String longName) throws UnifyException;
 
-	/**
-	 * Returns a panel contained in this page by short name.
-	 * 
-	 * @param shortName
-	 *            the panel short name
-	 * @return the panel with the specified short name
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Panel getPanelByShortName(String shortName) throws UnifyException;
+    /**
+     * Returns a panel contained in this page by short name.
+     * 
+     * @param shortName
+     *            the panel short name
+     * @return the panel with the specified short name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Panel getPanelByShortName(String shortName) throws UnifyException;
 
-	/**
-	 * Sets a page attribute.
-	 * 
-	 * @param name
-	 *            the attribute name
-	 * @param value
-	 *            the attribute value
-	 */
-	void setAttribute(String name, Object value);
+    /**
+     * Sets a page attribute.
+     * 
+     * @param name
+     *            the attribute name
+     * @param value
+     *            the attribute value
+     */
+    void setAttribute(String name, Object value);
 
-	/**
-	 * Returns a page attribute.
-	 * 
-	 * @param name
-	 *            the name of the attribute
-	 * @return the attribute value if found otherwise null
-	 */
-	Object getAttribute(String name);
+    /**
+     * Returns a page attribute.
+     * 
+     * @param name
+     *            the name of the attribute
+     * @return the attribute value if found otherwise null
+     */
+    Object getAttribute(String name);
 
-	/**
-	 * Clears a page attribute.
-	 * 
-	 * @param name
-	 *            the name of the attribute
-	 * @return the attribute value if found otherwise null
-	 */
-	Object clearAttribute(String name);
+    /**
+     * Clears a page attribute.
+     * 
+     * @param name
+     *            the name of the attribute
+     * @return the attribute value if found otherwise null
+     */
+    Object clearAttribute(String name);
 
-	/**
-	 * Returns true if page is document.
-	 */
-	boolean isDocument();
+    /**
+     * Returns true if page is document.
+     */
+    boolean isDocument();
 
-	/**
-	 * Sets this page session ID
-	 * 
-	 * @param id
-	 *            the ID to set
-	 */
-	void setSessionId(String id);
+    /**
+     * Sets this page session ID
+     * 
+     * @param id
+     *            the ID to set
+     */
+    void setSessionId(String id);
 
-	/**
-	 * Returns the page session ID
-	 */
-	String getSessionId();
+    /**
+     * Returns the page session ID
+     */
+    String getSessionId();
 
-	/**
-	 * Returns popup base ID
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPopupBaseId() throws UnifyException;
+    /**
+     * Returns popup base ID
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPopupBaseId() throws UnifyException;
 
-	/**
-	 * Returns popup window ID
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPopupWinId() throws UnifyException;
+    /**
+     * Returns popup window ID
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPopupWinId() throws UnifyException;
 
-	/**
-	 * Returns popup sys ID
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPopupSysId() throws UnifyException;
+    /**
+     * Returns popup sys ID
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPopupSysId() throws UnifyException;
 }

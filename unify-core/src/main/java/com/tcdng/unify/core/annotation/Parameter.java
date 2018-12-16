@@ -30,21 +30,21 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Parameter {
-	/** The parameter name that unique in a parameter set. */
-	String value() default AnnotationConstants.NONE;
+    /** The parameter name that unique in a parameter set. */
+    String value() default AnnotationConstants.NONE;
 
-	/** The parameter name that unique in a parameter set. */
-	String name() default AnnotationConstants.NONE;
+    /** The parameter name that unique in a parameter set. */
+    String name() default AnnotationConstants.NONE;
 
-	/** The parameter description. Can be a message key. */
-	String description() default AnnotationConstants.NONE;
+    /** The parameter description. Can be a message key. */
+    String description() default AnnotationConstants.NONE;
 
-	/** The parameter editor. Used for presentation purposes. */
-	String editor() default AnnotationConstants.NONE;
+    /** The parameter editor. Used for presentation purposes. */
+    String editor() default AnnotationConstants.NONE;
 
-	/** The parameter data type. */
-	Class<?> type() default String.class;
+    /** The parameter data type. */
+    Class<?> type() default String.class;
 
-	/** Indicates the parameter is mandatory */
-	boolean mandatory() default false;
+    /** Indicates the parameter is mandatory */
+    boolean mandatory() default false;
 }

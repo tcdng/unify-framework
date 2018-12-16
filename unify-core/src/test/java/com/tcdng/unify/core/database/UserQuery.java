@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database;
  */
 public class UserQuery extends AbstractTestEntityQuery<User> {
 
-	public UserQuery() {
-		super(User.class);
-	}
+    public UserQuery() {
+        super(User.class);
+    }
 }

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
 @Component("reportservertypelist")
 public class ReportServerTypeListCommand extends AbstractTypeListCommand<ReportServer> {
 
-	public ReportServerTypeListCommand() {
-		super(ReportServer.class);
-	}
+    public ReportServerTypeListCommand() {
+        super(ReportServer.class);
+    }
 }

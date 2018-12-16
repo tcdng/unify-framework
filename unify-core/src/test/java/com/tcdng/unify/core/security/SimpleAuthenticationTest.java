@@ -30,37 +30,37 @@ import com.tcdng.unify.core.Setting;
  */
 public class SimpleAuthenticationTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testEncrypted() throws Exception {
-		Authentication dpa = (SimpleAuthentication) getComponent("simple-auth1");
-		assertEquals("scott", dpa.getUsername());
-		assertEquals("tiger", dpa.getPassword());
-	}
+    @Test
+    public void testEncrypted() throws Exception {
+        Authentication dpa = (SimpleAuthentication) getComponent("simple-auth1");
+        assertEquals("scott", dpa.getUsername());
+        assertEquals("tiger", dpa.getPassword());
+    }
 
-	@Test
-	public void testUnencrypted() throws Exception {
-		Authentication dpa = (SimpleAuthentication) getComponent("simple-auth2");
-		assertEquals("scott", dpa.getUsername());
-		assertEquals("tiger", dpa.getPassword());
-	}
+    @Test
+    public void testUnencrypted() throws Exception {
+        Authentication dpa = (SimpleAuthentication) getComponent("simple-auth2");
+        assertEquals("scott", dpa.getUsername());
+        assertEquals("tiger", dpa.getPassword());
+    }
 
-	@Override
-	protected void doAddSettingsAndDependencies() throws Exception {
-		addDependency("twowaycryptograph", TwoWayStringCryptographImpl.class,
-				new Setting("encryptionKey", "Into The Sun"));
-		addDependency("simple-auth1", SimpleAuthentication.class, new Setting("username", "scott"),
-				new Setting("password", "FjmgFbJrrNY="), new Setting("cryptograph", "twowaycryptograph"));
-		addDependency("simple-auth2", SimpleAuthentication.class, new Setting("username", "scott"),
-				new Setting("password", "tiger"));
-	}
+    @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        addDependency("twowaycryptograph", TwoWayStringCryptographImpl.class,
+                new Setting("encryptionKey", "Into The Sun"));
+        addDependency("simple-auth1", SimpleAuthentication.class, new Setting("username", "scott"),
+                new Setting("password", "FjmgFbJrrNY="), new Setting("cryptograph", "twowaycryptograph"));
+        addDependency("simple-auth2", SimpleAuthentication.class, new Setting("username", "scott"),
+                new Setting("password", "tiger"));
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

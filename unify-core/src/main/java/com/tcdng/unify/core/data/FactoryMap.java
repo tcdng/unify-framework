@@ -34,192 +34,192 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class FactoryMap<T, U> {
 
-	private final Object accessKey = new Object();
+    private final Object accessKey = new Object();
 
-	private Map<T, U> map;
+    private Map<T, U> map;
 
-	private boolean checkStale;
+    private boolean checkStale;
 
-	public FactoryMap() {
-		this(false);
-	}
+    public FactoryMap() {
+        this(false);
+    }
 
-	public FactoryMap(boolean checkStale) {
-		map = new ConcurrentHashMap<T, U>();
-		this.checkStale = checkStale;
-	}
+    public FactoryMap(boolean checkStale) {
+        map = new ConcurrentHashMap<T, U>();
+        this.checkStale = checkStale;
+    }
 
-	/**
-	 * Gets a value by supplied key. Functions like {@link #get(Object, Object...)}
-	 * with no parameters.
-	 * 
-	 * @param key
-	 *            the value key
-	 * @return the value identified by the supplied key
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public U get(T key) throws UnifyException {
-		if (key == null) {
-			throw new IllegalArgumentException("Parameter key can not be null!");
-		}
+    /**
+     * Gets a value by supplied key. Functions like {@link #get(Object, Object...)}
+     * with no parameters.
+     * 
+     * @param key
+     *            the value key
+     * @return the value identified by the supplied key
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public U get(T key) throws UnifyException {
+        if (key == null) {
+            throw new IllegalArgumentException("Parameter key can not be null!");
+        }
 
-		return get(key, DataUtils.ZEROLEN_OBJECT_ARRAY);
-	}
+        return get(key, DataUtils.ZEROLEN_OBJECT_ARRAY);
+    }
 
-	/**
-	 * Gets a value by supplied key. The methods checks for the value that maps to
-	 * the supplied key and returns it. If no key-value mapping is found, the
-	 * protected {@link #create(Object, Object...)} method is called to create a
-	 * value for the supplied key. The new key-value mapping is stored and created
-	 * value is returned.
-	 * 
-	 * @param key
-	 *            the value key
-	 * @param params
-	 *            optional value creation parameters
-	 * @return the value identified by the supplied key
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public U get(T key, Object... params) throws UnifyException {
-		if (key == null) {
-			throw new IllegalArgumentException("Parameter key can not be null!");
-		}
+    /**
+     * Gets a value by supplied key. The methods checks for the value that maps to
+     * the supplied key and returns it. If no key-value mapping is found, the
+     * protected {@link #create(Object, Object...)} method is called to create a
+     * value for the supplied key. The new key-value mapping is stored and created
+     * value is returned.
+     * 
+     * @param key
+     *            the value key
+     * @param params
+     *            optional value creation parameters
+     * @return the value identified by the supplied key
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public U get(T key, Object... params) throws UnifyException {
+        if (key == null) {
+            throw new IllegalArgumentException("Parameter key can not be null!");
+        }
 
-		try {
-			U value = map.get(key);
-			if (value != null) {
-				if (checkStale && stale(key, value)) {
-					remove(key);
-					value = null;
-				}
-			}
+        try {
+            U value = map.get(key);
+            if (value != null) {
+                if (checkStale && stale(key, value)) {
+                    remove(key);
+                    value = null;
+                }
+            }
 
-			if (value == null) {
-				synchronized (accessKey) {
-					value = map.get(key);
-					if (value == null) {
-						value = create(key, params);
-						if (value != null) {
-							map.put(key, value);
-						}
-					}
-				}
-			}
-			return value;
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
-		}
-	}
+            if (value == null) {
+                synchronized (accessKey) {
+                    value = map.get(key);
+                    if (value == null) {
+                        value = create(key, params);
+                        if (value != null) {
+                            map.put(key, value);
+                        }
+                    }
+                }
+            }
+            return value;
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        }
+    }
 
-	/**
-	 * Clears all the key-value mappings.
-	 */
-	public void clear() {
-		map.clear();
-	}
+    /**
+     * Clears all the key-value mappings.
+     */
+    public void clear() {
+        map.clear();
+    }
 
-	/**
-	 * Removes an element from the map by key.
-	 * 
-	 * @param key
-	 *            the key of the value to remove
-	 * @return the removed value, otherwise null
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public U remove(T key) throws UnifyException {
-		if (key == null) {
-			throw new IllegalArgumentException("Parameter key can not be null!");
-		}
+    /**
+     * Removes an element from the map by key.
+     * 
+     * @param key
+     *            the key of the value to remove
+     * @return the removed value, otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public U remove(T key) throws UnifyException {
+        if (key == null) {
+            throw new IllegalArgumentException("Parameter key can not be null!");
+        }
 
-		return map.remove(key);
-	}
+        return map.remove(key);
+    }
 
-	/**
-	 * Returns a set of all the keys in this map.
-	 * 
-	 * @return a set of keys
-	 */
-	public Set<T> keySet() {
-		return map.keySet();
-	}
+    /**
+     * Returns a set of all the keys in this map.
+     * 
+     * @return a set of keys
+     */
+    public Set<T> keySet() {
+        return map.keySet();
+    }
 
-	public Set<Map.Entry<T, U>> entrySet() {
-		return map.entrySet();
-	}
+    public Set<Map.Entry<T, U>> entrySet() {
+        return map.entrySet();
+    }
 
-	/**
-	 * Returns a collection of all the values in this map.
-	 * 
-	 * @return the collection of values
-	 */
-	public Collection<U> values() {
-		return map.values();
-	}
+    /**
+     * Returns a collection of all the values in this map.
+     * 
+     * @return the collection of values
+     */
+    public Collection<U> values() {
+        return map.values();
+    }
 
-	/**
-	 * Returns the size of this map.
-	 */
-	public int size() {
-		return map.size();
-	}
+    /**
+     * Returns the size of this map.
+     */
+    public int size() {
+        return map.size();
+    }
 
-	/**
-	 * Returns true if map is empty.
-	 */
-	public boolean isEmpty() {
-		return map.isEmpty();
-	}
+    /**
+     * Returns true if map is empty.
+     */
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
 
-	/**
-	 * Returns true if factory map containts entry that matches supplied key.
-	 * 
-	 * @param key
-	 *            the key to match
-	 */
-	public boolean isKey(T key) {
-		return map.containsKey(key);
-	}
+    /**
+     * Returns true if factory map containts entry that matches supplied key.
+     * 
+     * @param key
+     *            the key to match
+     */
+    public boolean isKey(T key) {
+        return map.containsKey(key);
+    }
 
-	/**
-	 * Creates a value for specified key using supplied parameters.
-	 * 
-	 * @param key
-	 *            the value key
-	 * @param params
-	 *            optional parameters
-	 * @return object that would be mapped to supplied key
-	 * @throws Exception
-	 */
-	protected abstract U create(T key, Object... params) throws Exception;
+    /**
+     * Creates a value for specified key using supplied parameters.
+     * 
+     * @param key
+     *            the value key
+     * @param params
+     *            optional parameters
+     * @return object that would be mapped to supplied key
+     * @throws Exception
+     */
+    protected abstract U create(T key, Object... params) throws Exception;
 
-	/**
-	 * Presets a key value.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value to set
-	 */
-	protected void preset(T key, U value) {
-		map.put(key, value);
-	}
+    /**
+     * Presets a key value.
+     * 
+     * @param key
+     *            the key
+     * @param value
+     *            the value to set
+     */
+    protected void preset(T key, U value) {
+        map.put(key, value);
+    }
 
-	/**
-	 * Returns true is value is stale.
-	 * 
-	 * @param key
-	 *            the value's key
-	 * @param value
-	 *            the value to check
-	 * @throws Exception
-	 *             if an error occurs
-	 */
-	protected boolean stale(T key, U value) throws Exception {
-		return false;
-	}
+    /**
+     * Returns true is value is stale.
+     * 
+     * @param key
+     *            the value's key
+     * @param value
+     *            the value to check
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected boolean stale(T key, U value) throws Exception {
+        return false;
+    }
 }

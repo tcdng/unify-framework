@@ -28,163 +28,163 @@ import java.util.Arrays;
  */
 public class LargeStringWriter extends Writer {
 
-	private static final int DEFAULT_INITIAL_CAPACITY = 1024;
+    private static final int DEFAULT_INITIAL_CAPACITY = 1024;
 
-	private char[] data;
+    private char[] data;
 
-	private int len;
+    private int len;
 
-	public LargeStringWriter() {
-		this(DEFAULT_INITIAL_CAPACITY);
-	}
+    public LargeStringWriter() {
+        this(DEFAULT_INITIAL_CAPACITY);
+    }
 
-	public LargeStringWriter(int initialCapacity) {
-		data = new char[initialCapacity];
-	}
+    public LargeStringWriter(int initialCapacity) {
+        data = new char[initialCapacity];
+    }
 
-	@Override
-	public void write(int c) {
-		ensureFit(1);
-		data[len++] = (char) c;
-	}
+    @Override
+    public void write(int c) {
+        ensureFit(1);
+        data[len++] = (char) c;
+    }
 
-	@Override
-	public void write(char[] cbuf) {
-		ensureFit(cbuf.length);
-		System.arraycopy(cbuf, 0, data, len, cbuf.length);
-		len += cbuf.length;
-	}
+    @Override
+    public void write(char[] cbuf) {
+        ensureFit(cbuf.length);
+        System.arraycopy(cbuf, 0, data, len, cbuf.length);
+        len += cbuf.length;
+    }
 
-	@Override
-	public void write(char[] cbuf, int off, int len) {
-		ensureFit(len);
-		System.arraycopy(cbuf, off, data, this.len, len);
-		this.len += len;
-	}
+    @Override
+    public void write(char[] cbuf, int off, int len) {
+        ensureFit(len);
+        System.arraycopy(cbuf, off, data, this.len, len);
+        this.len += len;
+    }
 
-	@Override
-	public void write(String str) {
-		if (str == null) {
-			write("null");
-			return;
-		}
+    @Override
+    public void write(String str) {
+        if (str == null) {
+            write("null");
+            return;
+        }
 
-		int len = str.length();
-		ensureFit(len);
-		str.getChars(0, len, data, this.len);
-		this.len += len;
-	}
+        int len = str.length();
+        ensureFit(len);
+        str.getChars(0, len, data, this.len);
+        this.len += len;
+    }
 
-	@Override
-	public void write(String str, int off, int len) {
-		ensureFit(len);
-		str.getChars(off, off + len, data, this.len);
-		this.len += len;
-	}
+    @Override
+    public void write(String str, int off, int len) {
+        ensureFit(len);
+        str.getChars(off, off + len, data, this.len);
+        this.len += len;
+    }
 
-	@Override
-	public LargeStringWriter append(CharSequence csq) {
-		if (csq == null) {
-			write("null");
-		} else {
-			write(csq.toString());
-		}
+    @Override
+    public LargeStringWriter append(CharSequence csq) {
+        if (csq == null) {
+            write("null");
+        } else {
+            write(csq.toString());
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	@Override
-	public LargeStringWriter append(CharSequence csq, int start, int end) {
-		if (csq == null) {
-			write("null");
-		} else {
-			write(csq.subSequence(start, end).toString());
-		}
+    @Override
+    public LargeStringWriter append(CharSequence csq, int start, int end) {
+        if (csq == null) {
+            write("null");
+        } else {
+            write(csq.subSequence(start, end).toString());
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	@Override
-	public LargeStringWriter append(char c) {
-		ensureFit(1);
-		data[len++] = c;
-		return this;
-	}
+    @Override
+    public LargeStringWriter append(char c) {
+        ensureFit(1);
+        data[len++] = c;
+        return this;
+    }
 
-	public LargeStringWriter append(boolean bool) {
-		if (bool) {
-			write("true");
-		} else {
-			write("false");
-		}
+    public LargeStringWriter append(boolean bool) {
+        if (bool) {
+            write("true");
+        } else {
+            write("false");
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	public LargeStringWriter append(String str) {
-		write(str);
-		return this;
-	}
+    public LargeStringWriter append(String str) {
+        write(str);
+        return this;
+    }
 
-	public LargeStringWriter append(Object obj) {
-		if (obj == null) {
-			write("null");
-		} else {
-			write(String.valueOf(obj));
-		}
+    public LargeStringWriter append(Object obj) {
+        if (obj == null) {
+            write("null");
+        } else {
+            write(String.valueOf(obj));
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	public LargeStringWriter append(LargeStringWriter lsw) {
-		write(lsw.data, 0, lsw.len);
-		return this;
-	}
+    public LargeStringWriter append(LargeStringWriter lsw) {
+        write(lsw.data, 0, lsw.len);
+        return this;
+    }
 
-	public void writeTo(Writer writer) throws IOException {
-		writer.write(data, 0, len);
-	}
+    public void writeTo(Writer writer) throws IOException {
+        writer.write(data, 0, len);
+    }
 
-	@Override
-	public void flush() throws IOException {
+    @Override
+    public void flush() throws IOException {
 
-	}
+    }
 
-	@Override
-	public void close() throws IOException {
+    @Override
+    public void close() throws IOException {
 
-	}
+    }
 
-	@Override
-	public String toString() {
-		return new String(data, 0, len);
-	}
+    @Override
+    public String toString() {
+        return new String(data, 0, len);
+    }
 
-	public int capacity() {
-		return data.length;
-	}
+    public int capacity() {
+        return data.length;
+    }
 
-	public int length() {
-		return len;
-	}
+    public int length() {
+        return len;
+    }
 
-	public boolean isEmpty() {
-		return len == 0;
-	}
+    public boolean isEmpty() {
+        return len == 0;
+    }
 
-	protected char[] getData() {
-		return data;
-	}
+    protected char[] getData() {
+        return data;
+    }
 
-	private void ensureFit(int numNewChars) {
-		int newMinimumRequired = len + numNewChars;
-		if (newMinimumRequired > data.length) {
-			int newCapacity = data.length << 1; // Double capacity.
-			if (newCapacity < newMinimumRequired) {
-				newCapacity = newMinimumRequired;
-			}
+    private void ensureFit(int numNewChars) {
+        int newMinimumRequired = len + numNewChars;
+        if (newMinimumRequired > data.length) {
+            int newCapacity = data.length << 1; // Double capacity.
+            if (newCapacity < newMinimumRequired) {
+                newCapacity = newMinimumRequired;
+            }
 
-			data = Arrays.copyOf(data, newCapacity);
-		}
-	}
+            data = Arrays.copyOf(data, newCapacity);
+        }
+    }
 }

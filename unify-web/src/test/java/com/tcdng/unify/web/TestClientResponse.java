@@ -32,78 +32,78 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public class TestClientResponse implements ClientResponse {
 
-	private Map<String, String> metas;
+    private Map<String, String> metas;
 
-	private String contentType;
+    private String contentType;
 
-	private ByteArrayOutputStream outputStream;
+    private ByteArrayOutputStream outputStream;
 
-	private Writer writer;
+    private Writer writer;
 
-	private boolean used;
+    private boolean used;
 
-	public TestClientResponse() {
-		metas = new HashMap<String, String>();
-		outputStream = new ByteArrayOutputStream();
-		writer = new OutputStreamWriter(outputStream);
-	}
+    public TestClientResponse() {
+        metas = new HashMap<String, String>();
+        outputStream = new ByteArrayOutputStream();
+        writer = new OutputStreamWriter(outputStream);
+    }
 
-	@Override
-	public void setMetaData(String key, String value) {
-		metas.put(key, value);
-	}
+    @Override
+    public void setMetaData(String key, String value) {
+        metas.put(key, value);
+    }
 
-	@Override
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
+    @Override
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
-	@Override
-	public void setCharacterEncoding(String charset) {
+    @Override
+    public void setCharacterEncoding(String charset) {
 
-	}
+    }
 
-	@Override
-	public OutputStream getOutputStream() throws Exception {
-		used = true;
-		return outputStream;
-	}
+    @Override
+    public OutputStream getOutputStream() throws Exception {
+        used = true;
+        return outputStream;
+    }
 
-	@Override
-	public Writer getWriter() throws Exception {
-		used = true;
-		return writer;
-	}
+    @Override
+    public Writer getWriter() throws Exception {
+        used = true;
+        return writer;
+    }
 
-	@Override
-	public boolean isOutUsed() {
-		return used;
-	}
+    @Override
+    public boolean isOutUsed() {
+        return used;
+    }
 
-	@Override
-	public void setStatus(int status) {
+    @Override
+    public void setStatus(int status) {
 
-	}
+    }
 
-	@Override
-	public void close() {
-		IOUtils.close(writer);
-		IOUtils.close(outputStream);
-	}
+    @Override
+    public void close() {
+        IOUtils.close(writer);
+        IOUtils.close(outputStream);
+    }
 
-	public Map<String, String> getMetas() {
-		return metas;
-	}
+    public Map<String, String> getMetas() {
+        return metas;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public byte[] getBytes() {
-		return outputStream.toByteArray();
-	}
+    public byte[] getBytes() {
+        return outputStream.toByteArray();
+    }
 
-	public String toString() {
-		return new String(getBytes());
-	}
+    public String toString() {
+        return new String(getBytes());
+    }
 }

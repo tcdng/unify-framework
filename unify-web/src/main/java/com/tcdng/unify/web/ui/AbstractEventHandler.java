@@ -26,17 +26,17 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "event", type = String.class, mandatory = true),
-		@UplAttribute(name = "action", type = UplElementReferences.class) })
+        @UplAttribute(name = "action", type = UplElementReferences.class) })
 public abstract class AbstractEventHandler extends AbstractBehavior implements EventHandler {
 
-	private PageAction[] pageAction;
+    private PageAction[] pageAction;
 
-	@Override
-	public void setPageAction(PageAction[] pageAction) {
-		this.pageAction = pageAction;
-	}
+    @Override
+    public void setPageAction(PageAction[] pageAction) {
+        this.pageAction = pageAction;
+    }
 
-	public PageAction[] getPageAction() {
-		return pageAction;
-	}
+    public PageAction[] getPageAction() {
+        return pageAction;
+    }
 }

@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("checkbox-writer")
 public class CheckBoxWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		CheckBox checkBox = (CheckBox) widget;
-		writer.write("<input type=\"checkbox\"");
-		writeTagAttributes(writer, checkBox);
-		if (checkBox.getValue(boolean.class)) {
-			writer.write(" checked=\"checked\"");
-		}
-		writer.write("/>");
-		if (!checkBox.isLayoutCaption()) {
-			writeCaption(writer, checkBox);
-		}
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        CheckBox checkBox = (CheckBox) widget;
+        writer.write("<input type=\"checkbox\"");
+        writeTagAttributes(writer, checkBox);
+        if (checkBox.getValue(boolean.class)) {
+            writer.write(" checked=\"checked\"");
+        }
+        writer.write("/>");
+        if (!checkBox.isLayoutCaption()) {
+            writeCaption(writer, checkBox);
+        }
+    }
 
 }

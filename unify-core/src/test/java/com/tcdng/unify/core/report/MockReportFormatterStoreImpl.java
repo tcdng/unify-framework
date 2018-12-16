@@ -29,20 +29,20 @@ import com.tcdng.unify.core.format.Formatter;
 @Component("mock-reportformatterstore")
 public class MockReportFormatterStoreImpl extends AbstractUnifyComponent implements ReportFormatterStore {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
-		return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
+        return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		ReportFormatUtils.setReportFormatterStore(this);
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        ReportFormatUtils.setReportFormatterStore(this);
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-		ReportFormatUtils.setReportFormatterStore(null);
-	}
+    @Override
+    protected void onTerminate() throws UnifyException {
+        ReportFormatUtils.setReportFormatterStore(null);
+    }
 
 }

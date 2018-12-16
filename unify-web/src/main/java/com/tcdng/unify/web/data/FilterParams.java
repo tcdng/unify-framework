@@ -24,14 +24,14 @@ package com.tcdng.unify.web.data;
  */
 public class FilterParams {
 
-	private Long filterId;
+    private Long filterId;
 
-	public FilterParams(Long filterId) {
-		this.filterId = filterId;
-	}
+    public FilterParams(Long filterId) {
+        this.filterId = filterId;
+    }
 
-	public Long getFilterId() {
-		return filterId;
-	}
+    public Long getFilterId() {
+        return filterId;
+    }
 
 }

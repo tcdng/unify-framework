@@ -21,14 +21,14 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class AliasesConfig {
 
-	private List<AliasConfig> aliasConfigList;
+    private List<AliasConfig> aliasConfigList;
 
-	public List<AliasConfig> getAliasConfigList() {
-		return aliasConfigList;
-	}
+    public List<AliasConfig> getAliasConfigList() {
+        return aliasConfigList;
+    }
 
-	@XmlElement(name = "alias")
-	public void setAliasConfigList(List<AliasConfig> aliasConfigList) {
-		this.aliasConfigList = aliasConfigList;
-	}
+    @XmlElement(name = "alias")
+    public void setAliasConfigList(List<AliasConfig> aliasConfigList) {
+        this.aliasConfigList = aliasConfigList;
+    }
 }

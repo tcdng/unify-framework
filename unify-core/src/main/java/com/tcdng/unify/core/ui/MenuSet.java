@@ -26,43 +26,43 @@ import java.util.List;
  */
 public class MenuSet {
 
-	private List<Menu> menuList;
+    private List<Menu> menuList;
 
-	private boolean alwaysSelect;
+    private boolean alwaysSelect;
 
-	public MenuSet() {
-		this.menuList = new ArrayList<Menu>();
-	}
+    public MenuSet() {
+        this.menuList = new ArrayList<Menu>();
+    }
 
-	public void add(Menu menu) {
-		this.menuList.add(menu);
-	}
+    public void add(Menu menu) {
+        this.menuList.add(menu);
+    }
 
-	public Menu getMenu(int index) {
-		return this.menuList.get(index);
-	}
+    public Menu getMenu(int index) {
+        return this.menuList.get(index);
+    }
 
-	public boolean isAlwaysSelect() {
-		return alwaysSelect;
-	}
+    public boolean isAlwaysSelect() {
+        return alwaysSelect;
+    }
 
-	public void setAlwaysSelect(boolean alwaysSelect) {
-		this.alwaysSelect = alwaysSelect;
-	}
+    public void setAlwaysSelect(boolean alwaysSelect) {
+        this.alwaysSelect = alwaysSelect;
+    }
 
-	public boolean isShowSelect() {
-		return alwaysSelect || this.menuList.size() > 1;
-	}
+    public boolean isShowSelect() {
+        return alwaysSelect || this.menuList.size() > 1;
+    }
 
-	public List<Menu> getMenuList() {
-		return menuList;
-	}
+    public List<Menu> getMenuList() {
+        return menuList;
+    }
 
-	public int size() {
-		return this.menuList.size();
-	}
+    public int size() {
+        return this.menuList.size();
+    }
 
-	public boolean isEmpty() {
-		return this.menuList.isEmpty();
-	}
+    public boolean isEmpty() {
+        return this.menuList.isEmpty();
+    }
 }

@@ -27,33 +27,33 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface UplDocumentAttributes extends UplElementAttributes {
 
-	/**
-	 * Returns the document child element long names.
-	 */
-	Set<String> getLongNames();
+    /**
+     * Returns the document child element long names.
+     */
+    Set<String> getLongNames();
 
-	/**
-	 * Returns the document child short element names
-	 */
-	Set<String> getShortNames();
+    /**
+     * Returns the document child short element names
+     */
+    Set<String> getShortNames();
 
-	/**
-	 * Gets an element by long name.
-	 * 
-	 * @param longName
-	 *            the specified long name
-	 * @return the element attributes
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	UplElementAttributes getChildElementByLongName(String longName) throws UnifyException;
+    /**
+     * Gets an element by long name.
+     * 
+     * @param longName
+     *            the specified long name
+     * @return the element attributes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    UplElementAttributes getChildElementByLongName(String longName) throws UnifyException;
 
-	/**
-	 * Tests if there is an element with the specified long name.
-	 * 
-	 * @param longName
-	 *            the long name
-	 * @return a true value if element eith long name exists, otherwise false/.
-	 */
-	boolean isElementWithLongName(String longName);
+    /**
+     * Tests if there is an element with the specified long name.
+     * 
+     * @param longName
+     *            the long name
+     * @return a true value if element eith long name exists, otherwise false/.
+     */
+    boolean isElementWithLongName(String longName);
 }

@@ -22,5 +22,5 @@ package com.tcdng.unify.core.report;
  * @since 1.0
  */
 public enum ReportLayout {
-	COLUMNAR, TABULAR
+    COLUMNAR, TABULAR
 }

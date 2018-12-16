@@ -26,18 +26,18 @@ import com.tcdng.unify.core.constant.NetworkSecurityType;
  */
 public class SmsServerConfig extends NotificationServerConfig {
 
-	public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
-			String password) {
-		super(hostAddress, hostPort, securityType, username, password);
-	}
+    public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
+            String password) {
+        super(hostAddress, hostPort, securityType, username, password);
+    }
 
-	public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
-			String authentication) {
-		super(hostAddress, hostPort, securityType, authentication);
-	}
+    public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
+            String authentication) {
+        super(hostAddress, hostPort, securityType, authentication);
+    }
 
-	public SmsServerConfig(String hostAddress, Integer hostPort) {
-		super(hostAddress, hostPort);
-	}
+    public SmsServerConfig(String hostAddress, Integer hostPort) {
+        super(hostAddress, hostPort);
+    }
 
 }

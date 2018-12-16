@@ -29,60 +29,60 @@ import com.tcdng.unify.core.data.FactoryMap;
  */
 public final class EnumUtils {
 
-	private static FactoryMap<Class<? extends EnumConst>, EnumConstMap> enumConstMap = new FactoryMap<Class<? extends EnumConst>, EnumConstMap>() {
-		@Override
-		protected EnumConstMap create(Class<? extends EnumConst> key, Object... params) throws Exception {
-			Map<String, EnumConst> map = new HashMap<String, EnumConst>();
-			for (EnumConst enumConst : key.getEnumConstants()) {
-				map.put(enumConst.code(), enumConst);
-			}
-			return new EnumConstMap(key);
-		}
-	};
+    private static FactoryMap<Class<? extends EnumConst>, EnumConstMap> enumConstMap = new FactoryMap<Class<? extends EnumConst>, EnumConstMap>() {
+        @Override
+        protected EnumConstMap create(Class<? extends EnumConst> key, Object... params) throws Exception {
+            Map<String, EnumConst> map = new HashMap<String, EnumConst>();
+            for (EnumConst enumConst : key.getEnumConstants()) {
+                map.put(enumConst.code(), enumConst);
+            }
+            return new EnumConstMap(key);
+        }
+    };
 
-	private EnumUtils() {
+    private EnumUtils() {
 
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	public static <T extends EnumConst> T fromCode(Class<T> clazz, String code) {
-		try {
-			return (T) enumConstMap.get(clazz).getByCode(code);
-		} catch (Exception e) {
-		}
-		return null;
-	}
+    @SuppressWarnings("unchecked")
+    public static <T extends EnumConst> T fromCode(Class<T> clazz, String code) {
+        try {
+            return (T) enumConstMap.get(clazz).getByCode(code);
+        } catch (Exception e) {
+        }
+        return null;
+    }
 
-	@SuppressWarnings("unchecked")
-	public static <T extends EnumConst> T fromName(Class<T> clazz, String name) {
-		try {
-			return (T) enumConstMap.get(clazz).getByName(name);
-		} catch (Exception e) {
-		}
-		return null;
-	}
+    @SuppressWarnings("unchecked")
+    public static <T extends EnumConst> T fromName(Class<T> clazz, String name) {
+        try {
+            return (T) enumConstMap.get(clazz).getByName(name);
+        } catch (Exception e) {
+        }
+        return null;
+    }
 
-	private static class EnumConstMap {
+    private static class EnumConstMap {
 
-		private Map<String, EnumConst> mapByCode;
+        private Map<String, EnumConst> mapByCode;
 
-		private Map<String, EnumConst> mapByName;
+        private Map<String, EnumConst> mapByName;
 
-		public EnumConstMap(Class<? extends EnumConst> key) {
-			mapByCode = new HashMap<String, EnumConst>();
-			mapByName = new HashMap<String, EnumConst>();
-			for (EnumConst enumConst : key.getEnumConstants()) {
-				mapByCode.put(enumConst.code(), enumConst);
-				mapByName.put(enumConst.name().toLowerCase(), enumConst);
-			}
-		}
+        public EnumConstMap(Class<? extends EnumConst> key) {
+            mapByCode = new HashMap<String, EnumConst>();
+            mapByName = new HashMap<String, EnumConst>();
+            for (EnumConst enumConst : key.getEnumConstants()) {
+                mapByCode.put(enumConst.code(), enumConst);
+                mapByName.put(enumConst.name().toLowerCase(), enumConst);
+            }
+        }
 
-		public EnumConst getByCode(String code) {
-			return mapByCode.get(code);
-		}
+        public EnumConst getByCode(String code) {
+            return mapByCode.get(code);
+        }
 
-		public EnumConst getByName(String name) {
-			return mapByName.get(name.toLowerCase());
-		}
-	}
+        public EnumConst getByName(String name) {
+            return mapByName.get(name.toLowerCase());
+        }
+    }
 }

@@ -26,18 +26,18 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractStringTransformer extends AbstractUnifyComponent implements Transformer<String, String> {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public String reverseTransform(String value) throws UnifyException {
-		return value;
-	}
+    @Override
+    public String reverseTransform(String value) throws UnifyException {
+        return value;
+    }
 }

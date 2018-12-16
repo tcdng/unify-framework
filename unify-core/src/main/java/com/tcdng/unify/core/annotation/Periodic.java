@@ -35,7 +35,7 @@ import com.tcdng.unify.core.task.TaskMonitor;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Periodic {
 
-	PeriodicType value() default PeriodicType.NORMAL;
+    PeriodicType value() default PeriodicType.NORMAL;
 
-	String taskStatusLogger() default AnnotationConstants.NONE;
+    String taskStatusLogger() default AnnotationConstants.NONE;
 }

@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-openpopup")
 public class OpenPopupAction extends AbstractPageAction {
 
-	public OpenPopupAction() {
-		super("openpopup");
-	}
+    public OpenPopupAction() {
+        super("openpopup");
+    }
 }

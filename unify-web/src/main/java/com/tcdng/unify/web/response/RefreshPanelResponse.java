@@ -33,48 +33,48 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @UplAttributes({ @UplAttribute(name = "panels", type = String[].class) })
 public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
 
-	public RefreshPanelResponse() {
-		super("refreshPanelHdl");
-	}
+    public RefreshPanelResponse() {
+        super("refreshPanelHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		boolean useLongNames = false;
-		String[] refreshList = getPanels();
-		if (refreshList == null || refreshList.length == 0) {
-			refreshList = getRequestContextUtil().getResponseRefreshPanels();
-			useLongNames = true;
-		}
-		appendRefreshPanelsJson(writer, pageController, refreshList, useLongNames);
-		writer.write(",");
-		appendRefreshAttributesJson(writer, false);
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        boolean useLongNames = false;
+        String[] refreshList = getPanels();
+        if (refreshList == null || refreshList.length == 0) {
+            refreshList = getRequestContextUtil().getResponseRefreshPanels();
+            useLongNames = true;
+        }
+        appendRefreshPanelsJson(writer, pageController, refreshList, useLongNames);
+        writer.write(",");
+        appendRefreshAttributesJson(writer, false);
+    }
 
-	protected String[] getPanels() throws UnifyException {
-		return getUplAttribute(String[].class, "panels");
-	}
+    protected String[] getPanels() throws UnifyException {
+        return getUplAttribute(String[].class, "panels");
+    }
 
-	private void appendRefreshPanelsJson(ResponseWriter writer, PageController pageController, String[] panelIds,
-			boolean useLongNames) throws UnifyException {
-		logDebug("Preparing refresh panel response: controller = [{0}], useLongNames = [{1}]", pageController.getName(),
-				useLongNames);
-		writer.write(",\"refreshPanels\":[");
-		if (panelIds != null) {
-			boolean appendSym = false;
-			for (int i = 0; i < panelIds.length; i++) {
-				if (appendSym) {
-					writer.write(',');
-				} else {
-					appendSym = true;
-				}
+    private void appendRefreshPanelsJson(ResponseWriter writer, PageController pageController, String[] panelIds,
+            boolean useLongNames) throws UnifyException {
+        logDebug("Preparing refresh panel response: controller = [{0}], useLongNames = [{1}]", pageController.getName(),
+                useLongNames);
+        writer.write(",\"refreshPanels\":[");
+        if (panelIds != null) {
+            boolean appendSym = false;
+            for (int i = 0; i < panelIds.length; i++) {
+                if (appendSym) {
+                    writer.write(',');
+                } else {
+                    appendSym = true;
+                }
 
-				if (useLongNames) {
-					writer.writeJsonPanel(pageController.getPanelByLongName(panelIds[i]), true);
-				} else {
-					writer.writeJsonPanel(pageController.getPanelByShortName(panelIds[i]), true);
-				}
-			}
-		}
-		writer.write("]");
-	}
+                if (useLongNames) {
+                    writer.writeJsonPanel(pageController.getPanelByLongName(panelIds[i]), true);
+                } else {
+                    writer.writeJsonPanel(pageController.getPanelByShortName(panelIds[i]), true);
+                }
+            }
+        }
+        writer.write("]");
+    }
 }

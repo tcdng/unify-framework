@@ -30,11 +30,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Plugin {
 
-	String target();
+    String target();
 
-	String method();
+    String method();
 
-	Class<?>[] paramTypes();
+    Class<?>[] paramTypes();
 
-	PluginType type() default PluginType.POST_LOGIC;
+    PluginType type() default PluginType.POST_LOGIC;
 }

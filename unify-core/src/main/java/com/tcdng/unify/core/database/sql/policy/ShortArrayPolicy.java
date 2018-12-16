@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database.sql.policy;
  */
 public class ShortArrayPolicy extends StringArrayPolicy {
 
-	public ShortArrayPolicy() {
-		super(Short[].class);
-	}
+    public ShortArrayPolicy() {
+        super(Short[].class);
+    }
 }

@@ -26,118 +26,118 @@ import java.util.List;
  */
 public class UnifyContainerInfo {
 
-	private String name;
+    private String name;
 
-	private String id;
+    private String id;
 
-	private String version;
+    private String version;
 
-	private String hostAddress;
+    private String hostAddress;
 
-	private String hostHome;
+    private String hostHome;
 
-	private Date startTime;
+    private Date startTime;
 
-	private long usedMemory;
+    private long usedMemory;
 
-	private long totalMemory;
+    private long totalMemory;
 
-	private boolean clusterMode;
+    private boolean clusterMode;
 
-	private boolean productionMode;
+    private boolean productionMode;
 
-	private boolean deploymentMode;
+    private boolean deploymentMode;
 
-	private List<UnifyComponentInfo> componentInfoList;
+    private List<UnifyComponentInfo> componentInfoList;
 
-	private List<UnifyInterfaceInfo> interfaceInfoList;
+    private List<UnifyInterfaceInfo> interfaceInfoList;
 
-	private List<UnifyContainerSettingInfo> settingInfoList;
+    private List<UnifyContainerSettingInfo> settingInfoList;
 
-	public UnifyContainerInfo(String name, String id, String version, String hostAddress, String hostHome,
-			Date startTime, long usedMemory, long totalMemory, boolean clusterMode, boolean productionMode,
-			boolean deploymentMode, List<UnifyComponentInfo> componentInfoList,
-			List<UnifyInterfaceInfo> interfaceInfoList, List<UnifyContainerSettingInfo> settingInfoList) {
-		this.name = name;
-		this.id = id;
-		this.version = version;
-		this.hostAddress = hostAddress;
-		this.hostHome = hostHome;
-		this.startTime = startTime;
-		this.usedMemory = usedMemory;
-		this.totalMemory = totalMemory;
-		this.clusterMode = clusterMode;
-		this.productionMode = productionMode;
-		this.deploymentMode = deploymentMode;
-		this.componentInfoList = componentInfoList;
-		this.interfaceInfoList = interfaceInfoList;
-		this.settingInfoList = settingInfoList;
-	}
+    public UnifyContainerInfo(String name, String id, String version, String hostAddress, String hostHome,
+            Date startTime, long usedMemory, long totalMemory, boolean clusterMode, boolean productionMode,
+            boolean deploymentMode, List<UnifyComponentInfo> componentInfoList,
+            List<UnifyInterfaceInfo> interfaceInfoList, List<UnifyContainerSettingInfo> settingInfoList) {
+        this.name = name;
+        this.id = id;
+        this.version = version;
+        this.hostAddress = hostAddress;
+        this.hostHome = hostHome;
+        this.startTime = startTime;
+        this.usedMemory = usedMemory;
+        this.totalMemory = totalMemory;
+        this.clusterMode = clusterMode;
+        this.productionMode = productionMode;
+        this.deploymentMode = deploymentMode;
+        this.componentInfoList = componentInfoList;
+        this.interfaceInfoList = interfaceInfoList;
+        this.settingInfoList = settingInfoList;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public String getHostAddress() {
-		return hostAddress;
-	}
+    public String getHostAddress() {
+        return hostAddress;
+    }
 
-	public String getHostHome() {
-		return hostHome;
-	}
+    public String getHostHome() {
+        return hostHome;
+    }
 
-	public Date getStartTime() {
-		return startTime;
-	}
+    public Date getStartTime() {
+        return startTime;
+    }
 
-	public long getUsedMemory() {
-		return usedMemory;
-	}
+    public long getUsedMemory() {
+        return usedMemory;
+    }
 
-	public long getTotalMemory() {
-		return totalMemory;
-	}
+    public long getTotalMemory() {
+        return totalMemory;
+    }
 
-	public boolean isClusterMode() {
-		return clusterMode;
-	}
+    public boolean isClusterMode() {
+        return clusterMode;
+    }
 
-	public boolean isProductionMode() {
-		return productionMode;
-	}
+    public boolean isProductionMode() {
+        return productionMode;
+    }
 
-	public boolean isDeploymentMode() {
-		return deploymentMode;
-	}
+    public boolean isDeploymentMode() {
+        return deploymentMode;
+    }
 
-	public List<UnifyComponentInfo> getComponentInfoList() {
-		return componentInfoList;
-	}
+    public List<UnifyComponentInfo> getComponentInfoList() {
+        return componentInfoList;
+    }
 
-	public List<UnifyInterfaceInfo> getInterfaceInfoList() {
-		return interfaceInfoList;
-	}
+    public List<UnifyInterfaceInfo> getInterfaceInfoList() {
+        return interfaceInfoList;
+    }
 
-	public List<UnifyContainerSettingInfo> getSettingInfoList() {
-		return settingInfoList;
-	}
+    public List<UnifyContainerSettingInfo> getSettingInfoList() {
+        return settingInfoList;
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("name=").append(name).append(',');
-		sb.append("id=").append(id).append(',');
-		sb.append("version=").append(version).append(',');
-		sb.append("clusterMode=").append(clusterMode).append(',');
-		sb.append("productionMode=").append(productionMode).append(',');
-		sb.append("deploymentMode=").append(deploymentMode);
-		return sb.toString();
-	}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("name=").append(name).append(',');
+        sb.append("id=").append(id).append(',');
+        sb.append("version=").append(version).append(',');
+        sb.append("clusterMode=").append(clusterMode).append(',');
+        sb.append("productionMode=").append(productionMode).append(',');
+        sb.append("deploymentMode=").append(deploymentMode);
+        return sb.toString();
+    }
 }

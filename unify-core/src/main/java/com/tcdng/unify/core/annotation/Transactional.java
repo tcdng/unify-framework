@@ -29,6 +29,6 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Transactional {
-	/** The transaction type */
-	TransactionAttribute value() default TransactionAttribute.REQUIRED;
+    /** The transaction type */
+    TransactionAttribute value() default TransactionAttribute.REQUIRED;
 }

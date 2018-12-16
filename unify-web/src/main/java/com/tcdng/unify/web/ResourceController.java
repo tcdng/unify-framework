@@ -28,66 +28,66 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ResourceController extends UserInterfaceController {
 
-	/**
-	 * Returns the resource content type.
-	 */
-	String getContentType();
+    /**
+     * Returns the resource content type.
+     */
+    String getContentType();
 
-	/**
-	 * Sets the content type.
-	 * 
-	 * @param contentType
-	 *            the content type to set
-	 */
-	void setContentType(String contentType);
+    /**
+     * Sets the content type.
+     * 
+     * @param contentType
+     *            the content type to set
+     */
+    void setContentType(String contentType);
 
-	/**
-	 * Sets the resource name.
-	 * 
-	 * @param resourceName
-	 *            the resource name to set
-	 */
-	void setResourceName(String resourceName);
+    /**
+     * Sets the resource name.
+     * 
+     * @param resourceName
+     *            the resource name to set
+     */
+    void setResourceName(String resourceName);
 
-	/**
-	 * Sets the attachment flag for this resource
-	 * 
-	 * @param attachment
-	 *            the flag to set
-	 */
-	void setAttachment(boolean attachment);
+    /**
+     * Sets the attachment flag for this resource
+     * 
+     * @param attachment
+     *            the flag to set
+     */
+    void setAttachment(boolean attachment);
 
-	/**
-	 * Gets resource meta-data keys.
-	 * 
-	 * @return A set of meta-data keys
-	 */
-	Set<String> getMetaDataKeys();
+    /**
+     * Gets resource meta-data keys.
+     * 
+     * @return A set of meta-data keys
+     */
+    Set<String> getMetaDataKeys();
 
-	/**
-	 * Gets a meta data by name.
-	 * 
-	 * @param name
-	 *            the non-case sensitive meta data name
-	 * @return the meta data if found, otherwise null
-	 */
-	String getMetaData(String name);
+    /**
+     * Gets a meta data by name.
+     * 
+     * @param name
+     *            the non-case sensitive meta data name
+     * @return the meta data if found, otherwise null
+     */
+    String getMetaData(String name);
 
-	/**
-	 * Prepare for execution.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void prepareExecution() throws UnifyException;
+    /**
+     * Prepare for execution.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void prepareExecution() throws UnifyException;
 
-	/**
-	 * Executes resource controller action.
-	 * 
-	 * @param outputStream
-	 *            the output stream to stream resource to
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void execute(OutputStream outputStream) throws UnifyException;
+    /**
+     * Executes resource controller action.
+     * 
+     * @param outputStream
+     *            the output stream to stream resource to
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void execute(OutputStream outputStream) throws UnifyException;
 }

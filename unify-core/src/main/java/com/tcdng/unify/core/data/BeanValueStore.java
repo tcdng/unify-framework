@@ -28,31 +28,31 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public class BeanValueStore extends AbstractValueStore<Object> {
 
-	public BeanValueStore(Object valueBean) {
-		this(valueBean, -1);
-	}
+    public BeanValueStore(Object valueBean) {
+        this(valueBean, -1);
+    }
 
-	public BeanValueStore(Object valueBean, int dataIndex) {
-		super(valueBean, dataIndex);
-	}
+    public BeanValueStore(Object valueBean, int dataIndex) {
+        super(valueBean, dataIndex);
+    }
 
-	@Override
-	public boolean isGettable(String name) throws UnifyException {
-		return storage != null && ReflectUtils.isGettableField(storage.getClass(), name);
-	}
+    @Override
+    public boolean isGettable(String name) throws UnifyException {
+        return storage != null && ReflectUtils.isGettableField(storage.getClass(), name);
+    }
 
-	@Override
-	public boolean isSettable(String name) throws UnifyException {
-		return storage != null && ReflectUtils.isSettableField(storage.getClass(), name);
-	}
+    @Override
+    public boolean isSettable(String name) throws UnifyException {
+        return storage != null && ReflectUtils.isSettableField(storage.getClass(), name);
+    }
 
-	@Override
-	protected Object doRetrieve(String property) throws UnifyException {
-		return ReflectUtils.findNestedBeanProperty(storage, property);
-	}
+    @Override
+    protected Object doRetrieve(String property) throws UnifyException {
+        return ReflectUtils.findNestedBeanProperty(storage, property);
+    }
 
-	@Override
-	protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
-		DataUtils.setNestedBeanProperty(storage, property, value, formatter);
-	}
+    @Override
+    protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
+        DataUtils.setNestedBeanProperty(storage, property, value, formatter);
+    }
 }

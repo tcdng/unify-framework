@@ -23,23 +23,23 @@ package com.tcdng.unify.core.net;
  */
 public class TestTextRequest implements NetworkMessage {
 
-	private static final long serialVersionUID = -1059994295641996490L;
+    private static final long serialVersionUID = -1059994295641996490L;
 
-	private String firstName;
+    private String firstName;
 
-	private String lastName;
+    private String lastName;
 
-	public TestTextRequest(String firstName, String lastName) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
+    public TestTextRequest(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
 }

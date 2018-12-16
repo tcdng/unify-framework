@@ -31,13 +31,13 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("/resource/downloadpath")
 public class DownloadPathResourceController extends RealPathResourceController {
 
-	@Override
-	public void prepareExecution() throws UnifyException {
-		super.prepareExecution();
-		file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(),
-				"download/" + getResourceName()));
-		if (file.exists()) {
-			setContentLength(file.length());
-		}
-	}
+    @Override
+    public void prepareExecution() throws UnifyException {
+        super.prepareExecution();
+        file = new File(
+                IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), "download/" + getResourceName()));
+        if (file.exists()) {
+            setContentLength(file.length());
+        }
+    }
 }

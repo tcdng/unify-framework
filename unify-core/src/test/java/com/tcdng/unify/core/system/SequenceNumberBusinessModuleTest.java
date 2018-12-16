@@ -43,335 +43,335 @@ import com.tcdng.unify.core.util.CalendarUtils;
  */
 public class SequenceNumberBusinessModuleTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testGetNextSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+    @Test
+    public void testGetNextSequenceNumber() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
 
-		sns.reset();
-		assertEquals(Long.valueOf(1L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(2L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(3L), sns.getNextSequenceNumber("sequenceA"));
+        sns.reset();
+        assertEquals(Long.valueOf(1L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(2L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(3L), sns.getNextSequenceNumber("sequenceA"));
 
-		assertEquals(Long.valueOf(4L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(5L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(6L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(7L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(8L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(9L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(10L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(11L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(12L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(4L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(5L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(6L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(7L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(8L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(9L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(10L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(11L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(12L), sns.getNextSequenceNumber("sequenceA"));
 
-		assertEquals(Long.valueOf(13L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(13L), sns.getNextSequenceNumber("sequenceA"));
 
-		assertEquals(Long.valueOf(1L), sns.getNextSequenceNumber("sequenceB"));
-		assertEquals(Long.valueOf(2L), sns.getNextSequenceNumber("sequenceB"));
-		assertEquals(Long.valueOf(3L), sns.getNextSequenceNumber("sequenceB"));
-		assertEquals(Long.valueOf(4L), sns.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(1L), sns.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(2L), sns.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(3L), sns.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(4L), sns.getNextSequenceNumber("sequenceB"));
 
-		assertEquals(Long.valueOf(14L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(15L), sns.getNextSequenceNumber("sequenceA"));
-		assertEquals(Long.valueOf(16L), sns.getNextSequenceNumber("sequenceA"));
-	}
+        assertEquals(Long.valueOf(14L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(15L), sns.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(16L), sns.getNextSequenceNumber("sequenceA"));
+    }
 
-	@Test
-	public void testMultiThreadGetNextSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		sns.reset();
-		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-		Map<String, Object> inputParameters1 = new HashMap<String, Object>();
-		inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
-		inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 773);
-		TaskMonitor taskMonitor1 = taskManager.startTask("sequencenumber-test", inputParameters1, false, null);
+    @Test
+    public void testMultiThreadGetNextSequenceNumber() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        sns.reset();
+        TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
+        Map<String, Object> inputParameters1 = new HashMap<String, Object>();
+        inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
+        inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 773);
+        TaskMonitor taskMonitor1 = taskManager.startTask("sequencenumber-test", inputParameters1, false, null);
 
-		Map<String, Object> inputParameters3 = new HashMap<String, Object>();
-		inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceB");
-		inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 345);
-		TaskMonitor taskMonitor3 = taskManager.startTask("sequencenumber-test", inputParameters3, false, null);
+        Map<String, Object> inputParameters3 = new HashMap<String, Object>();
+        inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceB");
+        inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 345);
+        TaskMonitor taskMonitor3 = taskManager.startTask("sequencenumber-test", inputParameters3, false, null);
 
-		Map<String, Object> inputParameters2 = new HashMap<String, Object>();
-		inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
-		inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 411);
-		TaskMonitor taskMonitor2 = taskManager.startTask("sequencenumber-test", inputParameters2, false, null);
+        Map<String, Object> inputParameters2 = new HashMap<String, Object>();
+        inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
+        inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 411);
+        TaskMonitor taskMonitor2 = taskManager.startTask("sequencenumber-test", inputParameters2, false, null);
 
-		Map<String, Object> inputParameters4 = new HashMap<String, Object>();
-		inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceC");
-		inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 206);
-		TaskMonitor taskMonitor4 = taskManager.startTask("sequencenumber-test", inputParameters4, false, null);
+        Map<String, Object> inputParameters4 = new HashMap<String, Object>();
+        inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceC");
+        inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 206);
+        TaskMonitor taskMonitor4 = taskManager.startTask("sequencenumber-test", inputParameters4, false, null);
 
-		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
-			Thread.yield();
-		}
+        while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
+            Thread.yield();
+        }
 
-		Long sequenceNo = sns.getNextSequenceNumber("sequenceA");
-		assertEquals(Long.valueOf(773L + 411L + 1L), sequenceNo);
+        Long sequenceNo = sns.getNextSequenceNumber("sequenceA");
+        assertEquals(Long.valueOf(773L + 411L + 1L), sequenceNo);
 
-		sequenceNo = sns.getNextSequenceNumber("sequenceB");
-		assertEquals(Long.valueOf(345L + 1L), sequenceNo);
+        sequenceNo = sns.getNextSequenceNumber("sequenceB");
+        assertEquals(Long.valueOf(345L + 1L), sequenceNo);
 
-		sequenceNo = sns.getNextSequenceNumber("sequenceC");
-		assertEquals(Long.valueOf(206L + 1L), sequenceNo);
-	}
+        sequenceNo = sns.getNextSequenceNumber("sequenceC");
+        assertEquals(Long.valueOf(206L + 1L), sequenceNo);
+    }
 
-	@Test
-	public void testSameDayGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Date testDate = CalendarUtils.getMidnightDate(new Date());
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(testDate);
-		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(testDate);
-		cal2.add(Calendar.HOUR, 1);
-		Calendar cal3 = Calendar.getInstance();
-		cal3.setTime(testDate);
-		cal3.add(Calendar.HOUR, 2);
+    @Test
+    public void testSameDayGetNextDateSequenceNumber() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Date testDate = CalendarUtils.getMidnightDate(new Date());
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(testDate);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(testDate);
+        cal2.add(Calendar.HOUR, 1);
+        Calendar cal3 = Calendar.getInstance();
+        cal3.setTime(testDate);
+        cal3.add(Calendar.HOUR, 2);
 
-		Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
-		Long sequenceNo2 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal2.getTime());
-		Long sequenceNo3 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal3.getTime());
-		assertEquals(Long.valueOf(1), sequenceNo1);
-		assertEquals(Long.valueOf(2), sequenceNo2);
-		assertEquals(Long.valueOf(3), sequenceNo3);
-	}
+        Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
+        Long sequenceNo2 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal2.getTime());
+        Long sequenceNo3 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal3.getTime());
+        assertEquals(Long.valueOf(1), sequenceNo1);
+        assertEquals(Long.valueOf(2), sequenceNo2);
+        assertEquals(Long.valueOf(3), sequenceNo3);
+    }
 
-	@Test
-	public void testSameSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Date testDate = new Date();
-		Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
-		Long sequenceNo2 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
-		Long sequenceNo3 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
-		assertEquals(Long.valueOf(1), sequenceNo1);
-		assertEquals(Long.valueOf(2), sequenceNo2);
-		assertEquals(Long.valueOf(3), sequenceNo3);
-	}
+    @Test
+    public void testSameSequenceSameDateGetNextDateSequenceNumber() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Date testDate = new Date();
+        Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        Long sequenceNo2 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        Long sequenceNo3 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        assertEquals(Long.valueOf(1), sequenceNo1);
+        assertEquals(Long.valueOf(2), sequenceNo2);
+        assertEquals(Long.valueOf(3), sequenceNo3);
+    }
 
-	@Test
-	public void testDifferentSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Date testDate = new Date();
-		Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
-		Long sequenceNo2 = sns.getNextSequenceNumber("day-rpt-batch-counter", testDate);
-		Long sequenceNo3 = sns.getNextSequenceNumber("day-outward-posting-batch-counter", testDate);
-		assertEquals(Long.valueOf(1), sequenceNo1);
-		assertEquals(Long.valueOf(1), sequenceNo2);
-		assertEquals(Long.valueOf(1), sequenceNo3);
-	}
+    @Test
+    public void testDifferentSequenceSameDateGetNextDateSequenceNumber() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Date testDate = new Date();
+        Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        Long sequenceNo2 = sns.getNextSequenceNumber("day-rpt-batch-counter", testDate);
+        Long sequenceNo3 = sns.getNextSequenceNumber("day-outward-posting-batch-counter", testDate);
+        assertEquals(Long.valueOf(1), sequenceNo1);
+        assertEquals(Long.valueOf(1), sequenceNo2);
+        assertEquals(Long.valueOf(1), sequenceNo3);
+    }
 
-	@Test
-	public void testSameSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		cal2.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar cal3 = Calendar.getInstance();
-		cal3.add(Calendar.DAY_OF_YEAR, 2);
+    @Test
+    public void testSameSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal2.add(Calendar.DAY_OF_YEAR, 1);
+        Calendar cal3 = Calendar.getInstance();
+        cal3.add(Calendar.DAY_OF_YEAR, 2);
 
-		Long sequenceNo1 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal1.getTime());
-		Long sequenceNo2 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
-		Long sequenceNo3 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal3.getTime());
-		assertEquals(Long.valueOf(1), sequenceNo1);
-		assertEquals(Long.valueOf(1), sequenceNo2);
-		assertEquals(Long.valueOf(1), sequenceNo3);
-	}
+        Long sequenceNo1 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal1.getTime());
+        Long sequenceNo2 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
+        Long sequenceNo3 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal3.getTime());
+        assertEquals(Long.valueOf(1), sequenceNo1);
+        assertEquals(Long.valueOf(1), sequenceNo2);
+        assertEquals(Long.valueOf(1), sequenceNo3);
+    }
 
-	@Test
-	public void testDifferentSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		cal2.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar cal3 = Calendar.getInstance();
-		cal3.add(Calendar.DAY_OF_YEAR, 2);
+    @Test
+    public void testDifferentSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal2.add(Calendar.DAY_OF_YEAR, 1);
+        Calendar cal3 = Calendar.getInstance();
+        cal3.add(Calendar.DAY_OF_YEAR, 2);
 
-		Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
-		Long sequenceNo2 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
-		Long sequenceNo3 = sns.getNextSequenceNumber("day-outward-posting-batch-counter", cal3.getTime());
-		assertEquals(Long.valueOf(1), sequenceNo1);
-		assertEquals(Long.valueOf(1), sequenceNo2);
-		assertEquals(Long.valueOf(1), sequenceNo3);
-	}
+        Long sequenceNo1 = sns.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
+        Long sequenceNo2 = sns.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
+        Long sequenceNo3 = sns.getNextSequenceNumber("day-outward-posting-batch-counter", cal3.getTime());
+        assertEquals(Long.valueOf(1), sequenceNo1);
+        assertEquals(Long.valueOf(1), sequenceNo2);
+        assertEquals(Long.valueOf(1), sequenceNo3);
+    }
 
-	@Test
-	public void testMultiThreadGetNextDateSequenceNumber() throws Exception {
-		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-		Date testDate = new Date();
-		Map<String, Object> inputParameters1 = new HashMap<String, Object>();
-		inputParameters1.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-cheque-upload-batch-counter");
-		inputParameters1.put(DateSequenceNumberTaskConstants.DATE, testDate);
-		inputParameters1.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor1 = taskManager.startTask("datesequencenumber-task", inputParameters1, true, null);
+    @Test
+    public void testMultiThreadGetNextDateSequenceNumber() throws Exception {
+        TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
+        Date testDate = new Date();
+        Map<String, Object> inputParameters1 = new HashMap<String, Object>();
+        inputParameters1.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-cheque-upload-batch-counter");
+        inputParameters1.put(DateSequenceNumberTaskConstants.DATE, testDate);
+        inputParameters1.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor1 = taskManager.startTask("datesequencenumber-task", inputParameters1, true, null);
 
-		Map<String, Object> inputParameters2 = new HashMap<String, Object>();
-		inputParameters2.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-rpt-batch-counter");
-		inputParameters2.put(DateSequenceNumberTaskConstants.DATE, testDate);
-		inputParameters2.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor2 = taskManager.startTask("datesequencenumber-task", inputParameters2, true, null);
+        Map<String, Object> inputParameters2 = new HashMap<String, Object>();
+        inputParameters2.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-rpt-batch-counter");
+        inputParameters2.put(DateSequenceNumberTaskConstants.DATE, testDate);
+        inputParameters2.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor2 = taskManager.startTask("datesequencenumber-task", inputParameters2, true, null);
 
-		Map<String, Object> inputParameters3 = new HashMap<String, Object>();
-		inputParameters3.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-outward-posting-batch-counter");
-		inputParameters3.put(DateSequenceNumberTaskConstants.DATE, testDate);
-		inputParameters3.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor3 = taskManager.startTask("datesequencenumber-task", inputParameters3, true, null);
+        Map<String, Object> inputParameters3 = new HashMap<String, Object>();
+        inputParameters3.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-outward-posting-batch-counter");
+        inputParameters3.put(DateSequenceNumberTaskConstants.DATE, testDate);
+        inputParameters3.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor3 = taskManager.startTask("datesequencenumber-task", inputParameters3, true, null);
 
-		Map<String, Object> inputParameters4 = new HashMap<String, Object>();
-		inputParameters4.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "I've got a feeling!");
-		inputParameters4.put(DateSequenceNumberTaskConstants.DATE, testDate);
-		inputParameters4.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor4 = taskManager.startTask("datesequencenumber-task", inputParameters4, true, null);
+        Map<String, Object> inputParameters4 = new HashMap<String, Object>();
+        inputParameters4.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "I've got a feeling!");
+        inputParameters4.put(DateSequenceNumberTaskConstants.DATE, testDate);
+        inputParameters4.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor4 = taskManager.startTask("datesequencenumber-task", inputParameters4, true, null);
 
-		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
-			Thread.yield();
-		}
+        while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
+            Thread.yield();
+        }
 
-		assertEquals("Test task 1 failed", 0, taskMonitor1.getExceptions().length);
-		assertEquals("Test task 2 failed", 0, taskMonitor2.getExceptions().length);
-		assertEquals("Test task 3 failed", 0, taskMonitor3.getExceptions().length);
-		assertEquals("Test task 4 failed", 0, taskMonitor4.getExceptions().length);
-	}
+        assertEquals("Test task 1 failed", 0, taskMonitor1.getExceptions().length);
+        assertEquals("Test task 2 failed", 0, taskMonitor2.getExceptions().length);
+        assertEquals("Test task 3 failed", 0, taskMonitor3.getExceptions().length);
+        assertEquals("Test task 4 failed", 0, taskMonitor4.getExceptions().length);
+    }
 
-	@Test
-	public void testSingleGetUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Long id = sns.getUniqueStringId("this.is.a.unique.string");
-		assertNotNull(id);
-	}
+    @Test
+    public void testSingleGetUniqueStringId() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Long id = sns.getUniqueStringId("this.is.a.unique.string");
+        assertNotNull(id);
+    }
 
-	@Test
-	public void testMultipleGetSameUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Long id1 = sns.getUniqueStringId("this.is.a.unique.string");
-		Long id2 = sns.getUniqueStringId("this.is.a.unique.string");
-		Long id3 = sns.getUniqueStringId("this.is.a.unique.string");
-		Long id4 = sns.getUniqueStringId("this.is.a.unique.string");
-		assertNotNull(id1);
-		assertNotNull(id2);
-		assertNotNull(id3);
-		assertNotNull(id4);
-		assertEquals(id1, id2);
-		assertEquals(id2, id3);
-		assertEquals(id3, id4);
-	}
+    @Test
+    public void testMultipleGetSameUniqueStringId() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Long id1 = sns.getUniqueStringId("this.is.a.unique.string");
+        Long id2 = sns.getUniqueStringId("this.is.a.unique.string");
+        Long id3 = sns.getUniqueStringId("this.is.a.unique.string");
+        Long id4 = sns.getUniqueStringId("this.is.a.unique.string");
+        assertNotNull(id1);
+        assertNotNull(id2);
+        assertNotNull(id3);
+        assertNotNull(id4);
+        assertEquals(id1, id2);
+        assertEquals(id2, id3);
+        assertEquals(id3, id4);
+    }
 
-	@Test
-	public void testSingleGetDifferentUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Long id1 = sns.getUniqueStringId("this.is.a.unique.string");
-		Long id2 = sns.getUniqueStringId("this.is.another.unique.string");
-		Long id3 = sns.getUniqueStringId("this.is.some.unique.string");
-		Long id4 = sns.getUniqueStringId("this.is.some.other.unique.string");
-		assertNotNull(id1);
-		assertNotNull(id2);
-		assertNotNull(id3);
-		assertNotNull(id4);
-		assertFalse(id1.equals(id2));
-		assertFalse(id1.equals(id3));
-		assertFalse(id1.equals(id4));
-		assertFalse(id2.equals(id3));
-		assertFalse(id2.equals(id4));
-		assertFalse(id3.equals(id4));
-	}
+    @Test
+    public void testSingleGetDifferentUniqueStringId() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Long id1 = sns.getUniqueStringId("this.is.a.unique.string");
+        Long id2 = sns.getUniqueStringId("this.is.another.unique.string");
+        Long id3 = sns.getUniqueStringId("this.is.some.unique.string");
+        Long id4 = sns.getUniqueStringId("this.is.some.other.unique.string");
+        assertNotNull(id1);
+        assertNotNull(id2);
+        assertNotNull(id3);
+        assertNotNull(id4);
+        assertFalse(id1.equals(id2));
+        assertFalse(id1.equals(id3));
+        assertFalse(id1.equals(id4));
+        assertFalse(id2.equals(id3));
+        assertFalse(id2.equals(id4));
+        assertFalse(id3.equals(id4));
+    }
 
-	@Test
-	public void testMultipleGetDifferentUniqueStringId() throws Exception {
-		SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
-				ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-		Long id1 = sns.getUniqueStringId("this.is.a.unique.string");
-		Long id2 = sns.getUniqueStringId("this.is.another.unique.string");
-		Long id3 = sns.getUniqueStringId("this.is.some.unique.string");
-		Long id4 = sns.getUniqueStringId("this.is.some.other.unique.string");
-		Long id5 = sns.getUniqueStringId("this.is.a.unique.string");
-		Long id6 = sns.getUniqueStringId("this.is.another.unique.string");
-		Long id7 = sns.getUniqueStringId("this.is.some.unique.string");
-		Long id8 = sns.getUniqueStringId("this.is.some.other.unique.string");
-		assertNotNull(id1);
-		assertNotNull(id2);
-		assertNotNull(id3);
-		assertNotNull(id4);
-		assertFalse(id1.equals(id2));
-		assertFalse(id1.equals(id3));
-		assertFalse(id1.equals(id4));
-		assertFalse(id2.equals(id3));
-		assertFalse(id2.equals(id4));
-		assertFalse(id3.equals(id4));
-		assertEquals(id1, id5);
-		assertEquals(id2, id6);
-		assertEquals(id3, id7);
-		assertEquals(id4, id8);
-	}
+    @Test
+    public void testMultipleGetDifferentUniqueStringId() throws Exception {
+        SequenceNumberBusinessModule sns = (SequenceNumberBusinessModule) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
+        Long id1 = sns.getUniqueStringId("this.is.a.unique.string");
+        Long id2 = sns.getUniqueStringId("this.is.another.unique.string");
+        Long id3 = sns.getUniqueStringId("this.is.some.unique.string");
+        Long id4 = sns.getUniqueStringId("this.is.some.other.unique.string");
+        Long id5 = sns.getUniqueStringId("this.is.a.unique.string");
+        Long id6 = sns.getUniqueStringId("this.is.another.unique.string");
+        Long id7 = sns.getUniqueStringId("this.is.some.unique.string");
+        Long id8 = sns.getUniqueStringId("this.is.some.other.unique.string");
+        assertNotNull(id1);
+        assertNotNull(id2);
+        assertNotNull(id3);
+        assertNotNull(id4);
+        assertFalse(id1.equals(id2));
+        assertFalse(id1.equals(id3));
+        assertFalse(id1.equals(id4));
+        assertFalse(id2.equals(id3));
+        assertFalse(id2.equals(id4));
+        assertFalse(id3.equals(id4));
+        assertEquals(id1, id5);
+        assertEquals(id2, id6);
+        assertEquals(id3, id7);
+        assertEquals(id4, id8);
+    }
 
-	@Test
-	public void testMultiThreadGetUniqueStringId() throws Exception {
-		String[] uniqueString = { "this.is.a.unique.string", "this.is.another.unique.string",
-				"this.is.some.other.unique.string" };
+    @Test
+    public void testMultiThreadGetUniqueStringId() throws Exception {
+        String[] uniqueString = { "this.is.a.unique.string", "this.is.another.unique.string",
+                "this.is.some.other.unique.string" };
 
-		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-		Map<String, Object> inputParameters1 = new HashMap<String, Object>();
-		inputParameters1.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
-		inputParameters1.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor1 = taskManager.startTask("uniquestringtest-task", inputParameters1, true, null);
+        TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
+        Map<String, Object> inputParameters1 = new HashMap<String, Object>();
+        inputParameters1.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
+        inputParameters1.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor1 = taskManager.startTask("uniquestringtest-task", inputParameters1, true, null);
 
-		Map<String, Object> inputParameters2 = new HashMap<String, Object>();
-		inputParameters2.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
-		inputParameters2.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor2 = taskManager.startTask("uniquestringtest-task", inputParameters2, true, null);
+        Map<String, Object> inputParameters2 = new HashMap<String, Object>();
+        inputParameters2.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
+        inputParameters2.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor2 = taskManager.startTask("uniquestringtest-task", inputParameters2, true, null);
 
-		Map<String, Object> inputParameters3 = new HashMap<String, Object>();
-		inputParameters3.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
-		inputParameters3.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor3 = taskManager.startTask("uniquestringtest-task", inputParameters3, true, null);
+        Map<String, Object> inputParameters3 = new HashMap<String, Object>();
+        inputParameters3.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
+        inputParameters3.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor3 = taskManager.startTask("uniquestringtest-task", inputParameters3, true, null);
 
-		Map<String, Object> inputParameters4 = new HashMap<String, Object>();
-		inputParameters4.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
-		inputParameters4.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor4 = taskManager.startTask("uniquestringtest-task", inputParameters4, true, null);
+        Map<String, Object> inputParameters4 = new HashMap<String, Object>();
+        inputParameters4.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
+        inputParameters4.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
+        TaskMonitor taskMonitor4 = taskManager.startTask("uniquestringtest-task", inputParameters4, true, null);
 
-		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
-			Thread.yield();
-		}
+        while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
+            Thread.yield();
+        }
 
-		if (taskMonitor1.getExceptions().length > 0) {
-			taskMonitor1.getExceptions()[0].printStackTrace();
-		}
-		assertEquals("Test task 1 failed", 0, taskMonitor1.getExceptions().length);
-		if (taskMonitor2.getExceptions().length > 0) {
-			taskMonitor2.getExceptions()[0].printStackTrace();
-		}
-		assertEquals("Test task 2 failed", 0, taskMonitor2.getExceptions().length);
-		if (taskMonitor3.getExceptions().length > 0) {
-			taskMonitor3.getExceptions()[0].printStackTrace();
-		}
-		assertEquals("Test task 3 failed", 0, taskMonitor3.getExceptions().length);
-		if (taskMonitor4.getExceptions().length > 0) {
-			taskMonitor4.getExceptions()[0].printStackTrace();
-		}
-		assertEquals("Test task 4 failed", 0, taskMonitor4.getExceptions().length);
-	}
+        if (taskMonitor1.getExceptions().length > 0) {
+            taskMonitor1.getExceptions()[0].printStackTrace();
+        }
+        assertEquals("Test task 1 failed", 0, taskMonitor1.getExceptions().length);
+        if (taskMonitor2.getExceptions().length > 0) {
+            taskMonitor2.getExceptions()[0].printStackTrace();
+        }
+        assertEquals("Test task 2 failed", 0, taskMonitor2.getExceptions().length);
+        if (taskMonitor3.getExceptions().length > 0) {
+            taskMonitor3.getExceptions()[0].printStackTrace();
+        }
+        assertEquals("Test task 3 failed", 0, taskMonitor3.getExceptions().length);
+        if (taskMonitor4.getExceptions().length > 0) {
+            taskMonitor4.getExceptions()[0].printStackTrace();
+        }
+        assertEquals("Test task 4 failed", 0, taskMonitor4.getExceptions().length);
+    }
 
-	@Override
-	protected void doAddSettingsAndDependencies() throws Exception {
-		addDependency(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE,
-				SequenceNumberBusinessModuleImpl.class, true, true, new Setting("sequenceBlockSize", "11"));
-	}
+    @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        addDependency(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE,
+                SequenceNumberBusinessModuleImpl.class, true, true, new Setting("sequenceBlockSize", "11"));
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@SuppressWarnings({ "unchecked" })
-	@Override
-	protected void onTearDown() throws Exception {
-		this.deleteAll(ClusterUniqueString.class, ClusterDateSequenceNumber.class);
-	}
+    @SuppressWarnings({ "unchecked" })
+    @Override
+    protected void onTearDown() throws Exception {
+        this.deleteAll(ClusterUniqueString.class, ClusterDateSequenceNumber.class);
+    }
 }

@@ -25,12 +25,12 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class LikePolicy extends SingleParameterPolicy {
 
-	public LikePolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" LIKE ", sqlDataSourceDialect);
-	}
+    public LikePolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" LIKE ", sqlDataSourceDialect);
+    }
 
-	@Override
-	protected Object adjustValue(Object value) {
-		return "%" + value + "%";
-	}
+    @Override
+    protected Object adjustValue(Object value) {
+        return "%" + value + "%";
+    }
 }

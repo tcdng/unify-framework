@@ -23,22 +23,22 @@ package com.tcdng.unify.core.util;
  */
 public final class ThreadUtils {
 
-	private ThreadUtils() {
+    private ThreadUtils() {
 
-	}
+    }
 
-	public static long currentThreadId() {
-		return Thread.currentThread().getId();
-	}
+    public static long currentThreadId() {
+        return Thread.currentThread().getId();
+    }
 
-	public static void yield() {
-		Thread.yield();
-	}
+    public static void yield() {
+        Thread.yield();
+    }
 
-	public static void sleep(long milliSeconds) {
-		try {
-			Thread.sleep(milliSeconds);
-		} catch (InterruptedException e) {
-		}
-	}
+    public static void sleep(long milliSeconds) {
+        try {
+            Thread.sleep(milliSeconds);
+        } catch (InterruptedException e) {
+        }
+    }
 }

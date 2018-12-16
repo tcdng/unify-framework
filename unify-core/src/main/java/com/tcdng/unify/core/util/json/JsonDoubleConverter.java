@@ -25,13 +25,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonDoubleConverter implements JsonValueConverter<Double> {
-	@Override
-	public Double read(JsonValue jsonValue) throws Exception {
-		return jsonValue.asDouble();
-	}
+    @Override
+    public Double read(JsonValue jsonValue) throws Exception {
+        return jsonValue.asDouble();
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value((Double) value);
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value((Double) value);
+    }
 }

@@ -23,9 +23,9 @@ package com.tcdng.unify.core.system.entities;
  */
 public abstract class AbstractSystemSequencedEntity extends AbstractSequencedEntity {
 
-	@Override
-	public String getDescription() {
-		return null;
-	}
+    @Override
+    public String getDescription() {
+        return null;
+    }
 
 }

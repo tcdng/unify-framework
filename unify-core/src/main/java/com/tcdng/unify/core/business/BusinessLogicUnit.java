@@ -26,15 +26,15 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface BusinessLogicUnit extends UnifyComponent {
 
-	/**
-	 * Executes business logic for this unit using supplied parameters.
-	 * 
-	 * @param input
-	 *            the logic input to use
-	 * @param output
-	 *            the logic output object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void execute(BusinessLogicInput input, BusinessLogicOutput output) throws UnifyException;
+    /**
+     * Executes business logic for this unit using supplied parameters.
+     * 
+     * @param input
+     *            the logic input to use
+     * @param output
+     *            the logic output object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void execute(BusinessLogicInput input, BusinessLogicOutput output) throws UnifyException;
 }

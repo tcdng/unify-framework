@@ -30,24 +30,24 @@ import com.tcdng.unify.web.discovery.gem.APIDiscoveryRemoteCallCodeConstants;
 @XmlRootElement
 public class DiscoverRemoteCallParams extends RemoteCallParams {
 
-	private String remoteCallCode;
+    private String remoteCallCode;
 
-	public DiscoverRemoteCallParams(String remoteCallCode) {
-		super(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
-		this.remoteCallCode = remoteCallCode;
-	}
+    public DiscoverRemoteCallParams(String remoteCallCode) {
+        super(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
+        this.remoteCallCode = remoteCallCode;
+    }
 
-	public DiscoverRemoteCallParams() {
-		super(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
-	}
+    public DiscoverRemoteCallParams() {
+        super(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
+    }
 
-	public String getRemoteCallCode() {
-		return remoteCallCode;
-	}
+    public String getRemoteCallCode() {
+        return remoteCallCode;
+    }
 
-	@XmlElement(required = true)
-	public void setRemoteCallCode(String remoteCallCode) {
-		this.remoteCallCode = remoteCallCode;
-	}
+    @XmlElement(required = true)
+    public void setRemoteCallCode(String remoteCallCode) {
+        this.remoteCallCode = remoteCallCode;
+    }
 
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database;
  */
 public abstract class AbstractTestEntityQuery<T extends AbstractTestEntity> extends Query<T> {
 
-	public AbstractTestEntityQuery(Class<T> entityClass) {
-		super(entityClass);
-	}
+    public AbstractTestEntityQuery(Class<T> entityClass) {
+        super(entityClass);
+    }
 }

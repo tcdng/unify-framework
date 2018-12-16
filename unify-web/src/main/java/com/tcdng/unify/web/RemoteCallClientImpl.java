@@ -45,171 +45,171 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 @Component(WebApplicationComponents.APPLICATION_REMOTECALLCLIENT)
 public class RemoteCallClientImpl extends AbstractUnifyComponent implements RemoteCallClient {
 
-	@Configurable(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER)
-	private ObjectStreamer xmlObjectStreamer;
+    @Configurable(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER)
+    private ObjectStreamer xmlObjectStreamer;
 
-	@Configurable(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER)
-	private ObjectStreamer jsonObjectStreamer;
+    @Configurable(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER)
+    private ObjectStreamer jsonObjectStreamer;
 
-	private FactoryMaps<String, String, RemoteCallSetup> preferences;
+    private FactoryMaps<String, String, RemoteCallSetup> preferences;
 
-	public RemoteCallClientImpl() {
-		preferences = new FactoryMaps<String, String, RemoteCallSetup>() {
+    public RemoteCallClientImpl() {
+        preferences = new FactoryMaps<String, String, RemoteCallSetup>() {
 
-			@Override
-			protected RemoteCallSetup createObject(String remoteAppURL, String methodCode, Object... params)
-					throws Exception {
-				return new RemoteCallSetup((RemoteCallFormat) params[1], (Charset) params[2], (String) params[0]);
-			}
-		};
-	}
+            @Override
+            protected RemoteCallSetup createObject(String remoteAppURL, String methodCode, Object... params)
+                    throws Exception {
+                return new RemoteCallSetup((RemoteCallFormat) params[1], (Charset) params[2], (String) params[0]);
+            }
+        };
+    }
 
-	@Override
-	public void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
-		setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.JSON, StandardCharsets.UTF_8);
-	}
+    @Override
+    public void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
+        setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.JSON, StandardCharsets.UTF_8);
+    }
 
-	@Override
-	public void setupRemoteCall(String remoteAppURL, String methodCode, RemoteCallFormat format, Charset charset)
-			throws UnifyException {
-		logDebug("Setting up remote call with code = [{0}], remoteAppURL = [{1}]...", methodCode, remoteAppURL);
-		if (preferences.isKey(remoteAppURL, methodCode)) {
-			throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_CLIENT_SETUP_CODE_EXISTS, remoteAppURL,
-					methodCode);
-		}
+    @Override
+    public void setupRemoteCall(String remoteAppURL, String methodCode, RemoteCallFormat format, Charset charset)
+            throws UnifyException {
+        logDebug("Setting up remote call with code = [{0}], remoteAppURL = [{1}]...", methodCode, remoteAppURL);
+        if (preferences.isKey(remoteAppURL, methodCode)) {
+            throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_CLIENT_SETUP_CODE_EXISTS, remoteAppURL,
+                    methodCode);
+        }
 
-		logDebug("Discovering remote call method with code [{0}] for remote application [{1}]...", methodCode,
-				remoteAppURL);
-		String discoveryURL = getDiscoveryURL(remoteAppURL);
-		if (!isRemoteCallSetup(discoveryURL, APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL)) {
-			preferences.get(discoveryURL, APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, discoveryURL,
-					RemoteCallFormat.JSON, StandardCharsets.UTF_8);
-		}
+        logDebug("Discovering remote call method with code [{0}] for remote application [{1}]...", methodCode,
+                remoteAppURL);
+        String discoveryURL = getDiscoveryURL(remoteAppURL);
+        if (!isRemoteCallSetup(discoveryURL, APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL)) {
+            preferences.get(discoveryURL, APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, discoveryURL,
+                    RemoteCallFormat.JSON, StandardCharsets.UTF_8);
+        }
 
-		DiscoverRemoteCallResult result = remoteCall(DiscoverRemoteCallResult.class, discoveryURL,
-				new DiscoverRemoteCallParams(methodCode));
-		checkError(result);
+        DiscoverRemoteCallResult result = remoteCall(DiscoverRemoteCallResult.class, discoveryURL,
+                new DiscoverRemoteCallParams(methodCode));
+        checkError(result);
 
-		preferences.get(remoteAppURL, methodCode, result.getRemoteCallInfo().getUrl(), format, charset);
-		logDebug("...remote call setup completed.");
-	}
+        preferences.get(remoteAppURL, methodCode, result.getRemoteCallInfo().getUrl(), format, charset);
+        logDebug("...remote call setup completed.");
+    }
 
-	@Override
-	public void clearAllRemoteCallSetup(String remoteAppURL) throws UnifyException {
-		preferences.remove(remoteAppURL);
-	}
+    @Override
+    public void clearAllRemoteCallSetup(String remoteAppURL) throws UnifyException {
+        preferences.remove(remoteAppURL);
+    }
 
-	@Override
-	public void clearRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException {
-		preferences.remove(remoteAppURL, methodCode);
-	}
+    @Override
+    public void clearRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException {
+        preferences.remove(remoteAppURL, methodCode);
+    }
 
-	@Override
-	public boolean isRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException {
-		return preferences.isKey(remoteAppURL, methodCode);
-	}
+    @Override
+    public boolean isRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException {
+        return preferences.isKey(remoteAppURL, methodCode);
+    }
 
-	@Override
-	public <T extends RemoteCallResult> T remoteCall(Class<T> resultType, String remoteAppURL, RemoteCallParams param)
-			throws UnifyException {
-		T result = null;
-		if (!preferences.isKey(remoteAppURL, param.methodCode())) {
-			throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_CLIENT_SETUP_CODE_UNKNOWN, remoteAppURL,
-					param.methodCode());
-		}
+    @Override
+    public <T extends RemoteCallResult> T remoteCall(Class<T> resultType, String remoteAppURL, RemoteCallParams param)
+            throws UnifyException {
+        T result = null;
+        if (!preferences.isKey(remoteAppURL, param.methodCode())) {
+            throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_CLIENT_SETUP_CODE_UNKNOWN, remoteAppURL,
+                    param.methodCode());
+        }
 
-		RemoteCallSetup remoteCallSetup = preferences.get(remoteAppURL, param.methodCode());
-		param.setClientAppCode(getApplicationCode());
-		OutputStream out = null;
-		InputStream in = null;
-		try {
-			Charset charset = remoteCallSetup.getCharset();
+        RemoteCallSetup remoteCallSetup = preferences.get(remoteAppURL, param.methodCode());
+        param.setClientAppCode(getApplicationCode());
+        OutputStream out = null;
+        InputStream in = null;
+        try {
+            Charset charset = remoteCallSetup.getCharset();
 
-			// Choose streamer based on format
-			ObjectStreamer streamer = jsonObjectStreamer;
-			if (RemoteCallFormat.XML.equals(remoteCallSetup.getFormat())) {
-				streamer = xmlObjectStreamer;
-			}
+            // Choose streamer based on format
+            ObjectStreamer streamer = jsonObjectStreamer;
+            if (RemoteCallFormat.XML.equals(remoteCallSetup.getFormat())) {
+                streamer = xmlObjectStreamer;
+            }
 
-			// Establish connection
-			HttpURLConnection conn = (HttpURLConnection) new URL(remoteCallSetup.getTargetURL()).openConnection();
-			conn.setDoOutput(true);
-			conn.setDoInput(true);
-			conn.setRequestMethod("POST");
-			conn.setUseCaches(false);
-			conn.setRequestProperty("User-Agent", USER_AGENT_ID);
-			conn.setRequestProperty("Accept-Charset", charset.name());
-			conn.setRequestProperty("Content-Type", remoteCallSetup.getFormat().getContentType());
-			conn.connect();
+            // Establish connection
+            HttpURLConnection conn = (HttpURLConnection) new URL(remoteCallSetup.getTargetURL()).openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setRequestMethod("POST");
+            conn.setUseCaches(false);
+            conn.setRequestProperty("User-Agent", USER_AGENT_ID);
+            conn.setRequestProperty("Accept-Charset", charset.name());
+            conn.setRequestProperty("Content-Type", remoteCallSetup.getFormat().getContentType());
+            conn.connect();
 
-			// Stream remote call parameter out
-			out = conn.getOutputStream();
-			streamer.marshal(param, out, charset);
-			out.flush();
-			out.close();
+            // Stream remote call parameter out
+            out = conn.getOutputStream();
+            streamer.marshal(param, out, charset);
+            out.flush();
+            out.close();
 
-			// Receive result
-			in = conn.getInputStream();
-			result = (T) streamer.unmarshal(resultType, in, charset);
-			checkError(result);
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		} finally {
-			IOUtils.close(out);
-			IOUtils.close(in);
-		}
+            // Receive result
+            in = conn.getInputStream();
+            result = (T) streamer.unmarshal(resultType, in, charset);
+            checkError(result);
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        } finally {
+            IOUtils.close(out);
+            IOUtils.close(in);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	private String getDiscoveryURL(String remoteAppURL) throws UnifyException {
-		return NetworkUtils.constructURL(remoteAppURL, APIDiscoveryPathConstants.DISCOVER_REMOTECALL_PATH);
-	}
+    private String getDiscoveryURL(String remoteAppURL) throws UnifyException {
+        return NetworkUtils.constructURL(remoteAppURL, APIDiscoveryPathConstants.DISCOVER_REMOTECALL_PATH);
+    }
 
-	private void checkError(RemoteCallResult result) throws UnifyException {
-		if (result.isError()) {
-			throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_CLIENT_ERROR, result.getErrorCode(),
-					result.getErrorMsg());
-		}
-	}
+    private void checkError(RemoteCallResult result) throws UnifyException {
+        if (result.isError()) {
+            throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_CLIENT_ERROR, result.getErrorCode(),
+                    result.getErrorMsg());
+        }
+    }
 
-	private class RemoteCallSetup {
+    private class RemoteCallSetup {
 
-		private RemoteCallFormat format;
+        private RemoteCallFormat format;
 
-		private Charset charset;
+        private Charset charset;
 
-		private String targetURL;
+        private String targetURL;
 
-		public RemoteCallSetup(RemoteCallFormat format, Charset charset, String targetURL) {
-			this.format = format;
-			this.charset = charset;
-			this.targetURL = targetURL;
-		}
+        public RemoteCallSetup(RemoteCallFormat format, Charset charset, String targetURL) {
+            this.format = format;
+            this.charset = charset;
+            this.targetURL = targetURL;
+        }
 
-		public RemoteCallFormat getFormat() {
-			return format;
-		}
+        public RemoteCallFormat getFormat() {
+            return format;
+        }
 
-		public Charset getCharset() {
-			return charset;
-		}
+        public Charset getCharset() {
+            return charset;
+        }
 
-		public String getTargetURL() {
-			return targetURL;
-		}
-	}
+        public String getTargetURL() {
+            return targetURL;
+        }
+    }
 
 }

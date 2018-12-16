@@ -38,116 +38,116 @@ import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
  */
 public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest {
 
-	private static final String TEST_CONFIG = "test-config";
+    private static final String TEST_CONFIG = "test-config";
 
-	@Test
-	public void testConfigureDataSource() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		dm.configure(dsConfig);
-	}
+    @Test
+    public void testConfigureDataSource() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        dm.configure(dsConfig);
+    }
 
-	@Test(expected = UnifyException.class)
-	public void testConfigureSameDataSourceMultiple() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		dm.configure(dsConfig);
-		dm.configure(dsConfig);
-	}
+    @Test(expected = UnifyException.class)
+    public void testConfigureSameDataSourceMultiple() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        dm.configure(dsConfig);
+        dm.configure(dsConfig);
+    }
 
-	@Test
-	public void testIsDataSourceConfigured() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		dm.configure(dsConfig);
-		assertTrue(dm.isConfigured(TEST_CONFIG));
-	}
+    @Test
+    public void testIsDataSourceConfigured() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        dm.configure(dsConfig);
+        assertTrue(dm.isConfigured(TEST_CONFIG));
+    }
 
-	@Test
-	public void testReconfigureDataSource() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		dm.configure(dsConfig);
-		assertTrue(dm.reconfigure(dsConfig));
-	}
+    @Test
+    public void testReconfigureDataSource() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        dm.configure(dsConfig);
+        assertTrue(dm.reconfigure(dsConfig));
+    }
 
-	@Test
-	public void testReconfigureNonManagedDataSource() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		assertFalse(dm.reconfigure(dsConfig));
-	}
+    @Test
+    public void testReconfigureNonManagedDataSource() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        assertFalse(dm.reconfigure(dsConfig));
+    }
 
-	@Test
-	public void testGetDataSourceCount() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		assertEquals(0, dm.getDataSourceCount());
+    @Test
+    public void testGetDataSourceCount() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        assertEquals(0, dm.getDataSourceCount());
 
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		dm.configure(dsConfig);
-		assertEquals(1, dm.getDataSourceCount());
-	}
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        dm.configure(dsConfig);
+        assertEquals(1, dm.getDataSourceCount());
+    }
 
-	@Test
-	public void testTestDataSourceConfiguration() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		assertTrue(dm.testConfiguration(dsConfig));
-		assertEquals(0, dm.getDataSourceCount());
-	}
+    @Test
+    public void testTestDataSourceConfiguration() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        assertTrue(dm.testConfiguration(dsConfig));
+        assertEquals(0, dm.getDataSourceCount());
+    }
 
-	@Test
-	public void testGetAndRestoreConnection() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		dm.configure(dsConfig);
+    @Test
+    public void testGetAndRestoreConnection() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        dm.configure(dsConfig);
 
-		Connection connection = dm.getConnection(TEST_CONFIG);
-		assertNotNull(connection);
-		assertTrue(dm.restoreConnection(TEST_CONFIG, connection));
-	}
+        Connection connection = dm.getConnection(TEST_CONFIG);
+        assertNotNull(connection);
+        assertTrue(dm.restoreConnection(TEST_CONFIG, connection));
+    }
 
-	@Test
-	public void testTerminateConfiguration() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		DynamicSqlDataSourceConfig dsConfig = getConfig();
-		dm.configure(dsConfig);
-		assertEquals(1, dm.getDataSourceCount());
+    @Test
+    public void testTerminateConfiguration() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        DynamicSqlDataSourceConfig dsConfig = getConfig();
+        dm.configure(dsConfig);
+        assertEquals(1, dm.getDataSourceCount());
 
-		dm.terminateConfiguration(TEST_CONFIG);
-		assertEquals(0, dm.getDataSourceCount());
-	}
+        dm.terminateConfiguration(TEST_CONFIG);
+        assertEquals(0, dm.getDataSourceCount());
+    }
 
-	@Test(expected = UnifyException.class)
-	public void testTerminateUnknownConfiguration() throws Exception {
-		DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-				ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-		dm.terminateConfiguration(TEST_CONFIG);
-	}
+    @Test(expected = UnifyException.class)
+    public void testTerminateUnknownConfiguration() throws Exception {
+        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        dm.terminateConfiguration(TEST_CONFIG);
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
-		((DynamicSqlDataSourceManager) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER))
-				.terminateAll();
-	}
+    @Override
+    protected void onTearDown() throws Exception {
+        ((DynamicSqlDataSourceManager) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER))
+                .terminateAll();
+    }
 
-	private DynamicSqlDataSourceConfig getConfig() {
-		return new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect", "org.hsqldb.jdbcDriver",
-				"jdbc:hsqldb:mem:dyntest", null, null, 2, true);
-	}
+    private DynamicSqlDataSourceConfig getConfig() {
+        return new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect", "org.hsqldb.jdbcDriver",
+                "jdbc:hsqldb:mem:dyntest", null, null, 2, true);
+    }
 
 }

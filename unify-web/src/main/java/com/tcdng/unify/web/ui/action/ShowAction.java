@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-show")
 public class ShowAction extends AbstractPageAction {
 
-	public ShowAction() {
-		super("show");
-	}
+    public ShowAction() {
+        super("show");
+    }
 }

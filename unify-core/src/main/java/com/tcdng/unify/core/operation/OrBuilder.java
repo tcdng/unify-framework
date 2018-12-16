@@ -23,22 +23,22 @@ package com.tcdng.unify.core.operation;
  */
 public class OrBuilder extends CriteriaBuilder {
 
-	public OrBuilder or(CriteriaBuilder criteriaBuilder) {
-		add(criteriaBuilder.getCriteria());
-		return this;
-	}
+    public OrBuilder or(CriteriaBuilder criteriaBuilder) {
+        add(criteriaBuilder.getCriteria());
+        return this;
+    }
 
-	public OrBuilder or(Criteria criteria) {
-		add(criteria);
-		return this;
-	}
+    public OrBuilder or(Criteria criteria) {
+        add(criteria);
+        return this;
+    }
 
-	protected CriteriaBuilder add(Criteria criteria) {
-		if (this.criteria == null) {
-			this.criteria = criteria;
-		} else {
-			this.criteria = new Or(this.criteria, criteria);
-		}
-		return this;
-	}
+    protected CriteriaBuilder add(Criteria criteria) {
+        if (this.criteria == null) {
+            this.criteria = criteria;
+        } else {
+            this.criteria = new Or(this.criteria, criteria);
+        }
+        return this;
+    }
 }

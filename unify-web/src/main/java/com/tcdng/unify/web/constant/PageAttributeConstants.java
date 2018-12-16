@@ -23,5 +23,5 @@ package com.tcdng.unify.web.constant;
  */
 public interface PageAttributeConstants {
 
-	String PAGE_TITLE = "pageTitle";
+    String PAGE_TITLE = "pageTitle";
 }

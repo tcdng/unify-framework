@@ -26,19 +26,19 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface Authentication extends UnifyComponent {
 
-	/**
-	 * Retrieves the authentication user name.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getUsername() throws UnifyException;
+    /**
+     * Retrieves the authentication user name.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getUsername() throws UnifyException;
 
-	/**
-	 * Retrieves the authentication password.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPassword() throws UnifyException;
+    /**
+     * Retrieves the authentication password.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPassword() throws UnifyException;
 }

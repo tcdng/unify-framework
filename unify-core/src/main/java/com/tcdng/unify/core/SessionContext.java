@@ -29,109 +29,109 @@ import com.tcdng.unify.core.data.Context;
  */
 public class SessionContext extends Context {
 
-	public static final String TRUE_ATTRIBUTE = "trueAttribute";
+    public static final String TRUE_ATTRIBUTE = "trueAttribute";
 
-	public static final String FALSE_ATTRIBUTE = "falseAttribute";
+    public static final String FALSE_ATTRIBUTE = "falseAttribute";
 
-	private UserToken userToken;
+    private UserToken userToken;
 
-	private Locale locale;
+    private Locale locale;
 
-	private String id;
+    private String id;
 
-	private String uriBase;
+    private String uriBase;
 
-	private String contextPath;
+    private String contextPath;
 
-	private String remoteHost;
+    private String remoteHost;
 
-	private String remoteAddress;
+    private String remoteAddress;
 
-	private String remoteUser;
+    private String remoteUser;
 
-	private String remoteViewer;
+    private String remoteViewer;
 
-	private UserPlatform platform;
+    private UserPlatform platform;
 
-	private Date lastAccessTime;
+    private Date lastAccessTime;
 
-	public SessionContext(String id, String uriBase, String contextPath, String remoteHost, String remoteAddress,
-			String remoteUser, String remoteViewer, UserPlatform platform) {
-		this.id = id;
-		this.locale = Locale.getDefault();
-		this.uriBase = uriBase;
-		this.contextPath = contextPath;
-		this.remoteHost = remoteHost;
-		this.remoteAddress = remoteAddress;
-		this.remoteUser = remoteUser;
-		this.platform = platform;
-		this.lastAccessTime = new Date();
-		this.remoteViewer = remoteViewer;
-		this.getAttributes().put(TRUE_ATTRIBUTE, Boolean.TRUE);
-		this.getAttributes().put(FALSE_ATTRIBUTE, Boolean.FALSE);
-	}
+    public SessionContext(String id, String uriBase, String contextPath, String remoteHost, String remoteAddress,
+            String remoteUser, String remoteViewer, UserPlatform platform) {
+        this.id = id;
+        this.locale = Locale.getDefault();
+        this.uriBase = uriBase;
+        this.contextPath = contextPath;
+        this.remoteHost = remoteHost;
+        this.remoteAddress = remoteAddress;
+        this.remoteUser = remoteUser;
+        this.platform = platform;
+        this.lastAccessTime = new Date();
+        this.remoteViewer = remoteViewer;
+        this.getAttributes().put(TRUE_ATTRIBUTE, Boolean.TRUE);
+        this.getAttributes().put(FALSE_ATTRIBUTE, Boolean.FALSE);
+    }
 
-	public UserToken getUserToken() {
-		return userToken;
-	}
+    public UserToken getUserToken() {
+        return userToken;
+    }
 
-	public void setUserToken(UserToken userToken) {
-		this.userToken = userToken;
-	}
+    public void setUserToken(UserToken userToken) {
+        this.userToken = userToken;
+    }
 
-	public Locale getLocale() {
-		return locale;
-	}
+    public Locale getLocale() {
+        return locale;
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getUriBase() {
-		return uriBase;
-	}
+    public String getUriBase() {
+        return uriBase;
+    }
 
-	public String getContextPath() {
-		return contextPath;
-	}
+    public String getContextPath() {
+        return contextPath;
+    }
 
-	public String getRemoteHost() {
-		return remoteHost;
-	}
+    public String getRemoteHost() {
+        return remoteHost;
+    }
 
-	public String getRemoteAddress() {
-		return remoteAddress;
-	}
+    public String getRemoteAddress() {
+        return remoteAddress;
+    }
 
-	public String getRemoteUser() {
-		return remoteUser;
-	}
+    public String getRemoteUser() {
+        return remoteUser;
+    }
 
-	public String getRemoteViewer() {
-		return remoteViewer;
-	}
+    public String getRemoteViewer() {
+        return remoteViewer;
+    }
 
-	public UserPlatform getPlatform() {
-		return platform;
-	}
+    public UserPlatform getPlatform() {
+        return platform;
+    }
 
-	public boolean isRemoteViewer() {
-		return this.remoteViewer != null;
-	}
+    public boolean isRemoteViewer() {
+        return this.remoteViewer != null;
+    }
 
-	public boolean isUserLoggedIn() {
-		return this.userToken != null || this.isRemoteViewer();
-	}
+    public boolean isUserLoggedIn() {
+        return this.userToken != null || this.isRemoteViewer();
+    }
 
-	public Date getLastAccessTime() {
-		return lastAccessTime;
-	}
+    public Date getLastAccessTime() {
+        return lastAccessTime;
+    }
 
-	public void accessed() {
-		this.lastAccessTime = new Date();
-	}
+    public void accessed() {
+        this.lastAccessTime = new Date();
+    }
 }

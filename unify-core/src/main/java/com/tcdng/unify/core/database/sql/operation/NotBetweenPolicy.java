@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotBetweenPolicy extends DoubleParameterPolicy {
 
-	public NotBetweenPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" NOT BETWEEN ", sqlDataSourceDialect);
-	}
+    public NotBetweenPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" NOT BETWEEN ", sqlDataSourceDialect);
+    }
 }

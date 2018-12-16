@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  * @since 1.0
  */
 public class LessPolicy extends SingleParameterPolicy {
-	public LessPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" < ", sqlDataSourceDialect);
-	}
+    public LessPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" < ", sqlDataSourceDialect);
+    }
 }

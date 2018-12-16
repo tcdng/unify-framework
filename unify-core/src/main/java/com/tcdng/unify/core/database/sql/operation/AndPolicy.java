@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class AndPolicy extends BinaryPolicy {
 
-	public AndPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(" AND ", sqlDataSourceDialect);
-	}
+    public AndPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(" AND ", sqlDataSourceDialect);
+    }
 }

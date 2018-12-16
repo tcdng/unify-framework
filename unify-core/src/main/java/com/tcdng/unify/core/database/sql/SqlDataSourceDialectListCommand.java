@@ -27,7 +27,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
 @Component("sqldatasourcedialectlist")
 public class SqlDataSourceDialectListCommand extends AbstractTypeListCommand<SqlDataSourceDialect> {
 
-	public SqlDataSourceDialectListCommand() {
-		super(SqlDataSourceDialect.class);
-	}
+    public SqlDataSourceDialectListCommand() {
+        super(SqlDataSourceDialect.class);
+    }
 }

@@ -29,36 +29,36 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class ShortPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("SMALLINT");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("SMALLINT");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.SMALLINT);
-		} else {
-			((PreparedStatement) pstmt).setShort(index, ((Short) data).shortValue());
-		}
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.SMALLINT);
+        } else {
+            ((PreparedStatement) pstmt).setShort(index, ((Short) data).shortValue());
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Object object = ((ResultSet) rs).getShort(column);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return object;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Object object = ((ResultSet) rs).getShort(column);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return object;
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Object object = ((ResultSet) rs).getShort(index);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return object;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Object object = ((ResultSet) rs).getShort(index);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return object;
+    }
 
 }

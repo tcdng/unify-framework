@@ -23,8 +23,8 @@ package com.tcdng.unify.core.database;
  */
 public class ReportQuery extends AbstractTestEntityQuery<Report> {
 
-	public ReportQuery() {
-		super(Report.class);
-	}
+    public ReportQuery() {
+        super(Report.class);
+    }
 
 }

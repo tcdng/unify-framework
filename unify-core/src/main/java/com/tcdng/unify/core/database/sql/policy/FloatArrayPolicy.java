@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database.sql.policy;
  */
 public class FloatArrayPolicy extends StringArrayPolicy {
 
-	public FloatArrayPolicy() {
-		super(Float[].class);
-	}
+    public FloatArrayPolicy() {
+        super(Float[].class);
+    }
 }

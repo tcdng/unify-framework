@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class NotEqual extends Criteria {
 
-	public NotEqual(String field, Object value) {
-		super(Operator.NOT_EQUAL, field, value);
-	}
+    public NotEqual(String field, Object value) {
+        super(Operator.NOT_EQUAL, field, value);
+    }
 }

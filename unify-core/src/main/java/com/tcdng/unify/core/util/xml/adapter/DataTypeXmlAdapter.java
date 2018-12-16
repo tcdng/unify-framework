@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  */
 public class DataTypeXmlAdapter extends AbstractEnumConstXmlAdapter<DataType> {
 
-	public DataTypeXmlAdapter() {
-		super(DataType.class);
-	}
+    public DataTypeXmlAdapter() {
+        super(DataType.class);
+    }
 }

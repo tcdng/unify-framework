@@ -23,27 +23,27 @@ package com.tcdng.unify.core.data;
  */
 public class Aggregate<T> {
 
-	private String fieldName;
+    private String fieldName;
 
-	private int count;
+    private int count;
 
-	private T value;
+    private T value;
 
-	public Aggregate(String fieldName, int count, T value) {
-		this.fieldName = fieldName;
-		this.count = count;
-		this.value = value;
-	}
+    public Aggregate(String fieldName, int count, T value) {
+        this.fieldName = fieldName;
+        this.count = count;
+        this.value = value;
+    }
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    public String getFieldName() {
+        return fieldName;
+    }
 
-	public int getCount() {
-		return count;
-	}
+    public int getCount() {
+        return count;
+    }
 
-	public T getValue() {
-		return value;
-	}
+    public T getValue() {
+        return value;
+    }
 }

@@ -30,14 +30,14 @@ import com.tcdng.unify.web.ui.AbstractControl;
  */
 @Component("ui-swappableimage")
 @UplAttributes({ @UplAttribute(name = "src", type = String[].class, mandatory = true),
-		@UplAttribute(name = "alwaysFetch", type = boolean.class) })
+        @UplAttribute(name = "alwaysFetch", type = boolean.class) })
 public class SwappableImage extends AbstractControl {
 
-	public String[] getSrc() throws UnifyException {
-		return getUplAttribute(String[].class, "src");
-	}
+    public String[] getSrc() throws UnifyException {
+        return getUplAttribute(String[].class, "src");
+    }
 
-	public boolean isAlwaysFetch() throws UnifyException {
-		return getUplAttribute(boolean.class, "alwaysFetch");
-	}
+    public boolean isAlwaysFetch() throws UnifyException {
+        return getUplAttribute(boolean.class, "alwaysFetch");
+    }
 }

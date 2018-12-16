@@ -29,34 +29,34 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  */
 public abstract class AbstractFormatter<T> extends AbstractUplComponent implements Formatter<T> {
 
-	private Class<T> dataType;
+    private Class<T> dataType;
 
-	public AbstractFormatter(Class<T> dataType) {
-		this.dataType = dataType;
-	}
+    public AbstractFormatter(Class<T> dataType) {
+        this.dataType = dataType;
+    }
 
-	@Override
-	public Locale getLocale() throws UnifyException {
-		return getUplAttribute(Locale.class, "locale");
-	}
+    @Override
+    public Locale getLocale() throws UnifyException {
+        return getUplAttribute(Locale.class, "locale");
+    }
 
-	@Override
-	public FormatHelper getFormatHelper() throws UnifyException {
-		return (FormatHelper) getComponent(ApplicationComponents.APPLICATION_FORMATHELPER);
-	}
+    @Override
+    public FormatHelper getFormatHelper() throws UnifyException {
+        return (FormatHelper) getComponent(ApplicationComponents.APPLICATION_FORMATHELPER);
+    }
 
-	@Override
-	public Class<T> getDataType() {
-		return dataType;
-	}
+    @Override
+    public Class<T> getDataType() {
+        return dataType;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

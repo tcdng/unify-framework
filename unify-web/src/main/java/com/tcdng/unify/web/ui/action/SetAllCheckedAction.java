@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @Component("ui-setallchecked")
 public class SetAllCheckedAction extends AbstractPageAction {
 
-	public SetAllCheckedAction(String action) {
-		super("setallchecked");
-	}
+    public SetAllCheckedAction(String action) {
+        super("setallchecked");
+    }
 }

@@ -27,24 +27,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum MessageResult implements EnumConst {
 
-	OK("1"), CANCEL("2"), YES("3"), NO("4"), RETRY("5");
+    OK("1"), CANCEL("2"), YES("3"), NO("4"), RETRY("5");
 
-	private final String code;
+    private final String code;
 
-	private MessageResult(String code) {
-		this.code = code;
-	}
+    private MessageResult(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static MessageResult fromCode(String code) {
-		return EnumUtils.fromCode(MessageResult.class, code);
-	}
+    public static MessageResult fromCode(String code) {
+        return EnumUtils.fromCode(MessageResult.class, code);
+    }
 
-	public static MessageResult fromName(String name) {
-		return EnumUtils.fromName(MessageResult.class, name);
-	}
+    public static MessageResult fromName(String name) {
+        return EnumUtils.fromName(MessageResult.class, name);
+    }
 }

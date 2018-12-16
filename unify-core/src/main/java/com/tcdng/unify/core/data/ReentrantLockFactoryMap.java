@@ -25,9 +25,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ReentrantLockFactoryMap<T> extends FactoryMap<T, ReentrantLock> {
 
-	@Override
-	protected ReentrantLock create(T key, Object... params) throws Exception {
-		return new ReentrantLock();
-	}
+    @Override
+    protected ReentrantLock create(T key, Object... params) throws Exception {
+        return new ReentrantLock();
+    }
 
 }

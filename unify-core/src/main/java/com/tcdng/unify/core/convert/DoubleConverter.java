@@ -25,20 +25,20 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class DoubleConverter extends AbstractConverter<Double> {
 
-	@Override
-	protected Double doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Number) {
-			return Double.valueOf(((Number) value).doubleValue());
-		}
-		if (value instanceof String) {
-			String string = ((String) value).trim();
-			if (!string.isEmpty()) {
-				if (formatter == null) {
-					return Double.valueOf(string);
-				}
-				return doConvert(formatter.parse(string), null);
-			}
-		}
-		return null;
-	}
+    @Override
+    protected Double doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Number) {
+            return Double.valueOf(((Number) value).doubleValue());
+        }
+        if (value instanceof String) {
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                if (formatter == null) {
+                    return Double.valueOf(string);
+                }
+                return doConvert(formatter.parse(string), null);
+            }
+        }
+        return null;
+    }
 }

@@ -23,16 +23,16 @@ package com.tcdng.unify.web.ui;
  */
 public interface EventHandler extends Behavior {
 
-	/**
-	 * Sets page action components for this event handler.
-	 * 
-	 * @param pageAction
-	 *            the page actions to set
-	 */
-	void setPageAction(PageAction[] pageAction);
+    /**
+     * Sets page action components for this event handler.
+     * 
+     * @param pageAction
+     *            the page actions to set
+     */
+    void setPageAction(PageAction[] pageAction);
 
-	/**
-	 * Returns page actions.
-	 */
-	PageAction[] getPageAction();
+    /**
+     * Returns page actions.
+     */
+    PageAction[] getPageAction();
 }

@@ -33,17 +33,17 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @UplAttributes({ @UplAttribute(name = "systemInfo", type = boolean.class, defaultValue = "false") })
 public class HidePopupResponse extends AbstractJsonPageControllerResponse {
 
-	public HidePopupResponse() {
-		super("hidePopupHdl");
-	}
+    public HidePopupResponse() {
+        super("hidePopupHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing hide popup response: controller = [{0}]", pageController.getName());
-		if (getUplAttribute(boolean.class, "systemInfo")) {
-			writer.write(",\"hideSysInfoPopup\":true");
-		} else {
-			writer.write(",\"hidePopup\":true");
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing hide popup response: controller = [{0}]", pageController.getName());
+        if (getUplAttribute(boolean.class, "systemInfo")) {
+            writer.write(",\"hideSysInfoPopup\":true");
+        } else {
+            writer.write(",\"hidePopup\":true");
+        }
+    }
 }

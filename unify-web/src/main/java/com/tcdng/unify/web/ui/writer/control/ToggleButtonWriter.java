@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 @Component("togglebutton-writer")
 public class ToggleButtonWriter extends AbstractTargetControlWriter {
 
-	@Override
-	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
-		ToggleButton toggleButton = (ToggleButton) targetControl;
-		writer.write("<button type=\"button\"");
-		writeTagAttributes(writer, toggleButton);
-		writer.write(">");
-		if (toggleButton.getValue(boolean.class, toggleButton.getToggleAttribute())) {
-			writer.writeWithHtmlEscape(toggleButton.getOnMessageKey());
-		} else {
-			writer.writeWithHtmlEscape(toggleButton.getOffMessageKey());
-		}
-		writer.write("</button>");
-	}
+    @Override
+    protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+        ToggleButton toggleButton = (ToggleButton) targetControl;
+        writer.write("<button type=\"button\"");
+        writeTagAttributes(writer, toggleButton);
+        writer.write(">");
+        if (toggleButton.getValue(boolean.class, toggleButton.getToggleAttribute())) {
+            writer.writeWithHtmlEscape(toggleButton.getOnMessageKey());
+        } else {
+            writer.writeWithHtmlEscape(toggleButton.getOffMessageKey());
+        }
+        writer.write("</button>");
+    }
 
 }

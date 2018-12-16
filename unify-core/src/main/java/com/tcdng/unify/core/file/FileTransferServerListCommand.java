@@ -27,7 +27,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
 @Component("filetransferserverlist")
 public class FileTransferServerListCommand extends AbstractTypeListCommand<FileTransferServer> {
 
-	public FileTransferServerListCommand() {
-		super(FileTransferServer.class);
-	}
+    public FileTransferServerListCommand() {
+        super(FileTransferServer.class);
+    }
 }

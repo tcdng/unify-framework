@@ -28,21 +28,21 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TypeRepository {
 
-	/**
-	 * Gets classes of particular type which are annotated with specific annotation
-	 * and optionally in some particular packages.
-	 * 
-	 * @param classType
-	 *            the class type
-	 * @param annotationClass
-	 *            the annotation type
-	 * @param packages
-	 *            the packages to search
-	 * @return a list of classes in scanner annotation context that match supplied
-	 *         parameters.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType, Class<? extends Annotation> annotationClass,
-			String... packages) throws UnifyException;
+    /**
+     * Gets classes of particular type which are annotated with specific annotation
+     * and optionally in some particular packages.
+     * 
+     * @param classType
+     *            the class type
+     * @param annotationClass
+     *            the annotation type
+     * @param packages
+     *            the packages to search
+     * @return a list of classes in scanner annotation context that match supplied
+     *         parameters.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType, Class<? extends Annotation> annotationClass,
+            String... packages) throws UnifyException;
 }

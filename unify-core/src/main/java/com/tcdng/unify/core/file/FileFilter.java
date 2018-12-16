@@ -28,68 +28,68 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class FileFilter implements java.io.FileFilter {
 
-	private Set<String> prefixes;
+    private Set<String> prefixes;
 
-	private Set<String> suffixes;
+    private Set<String> suffixes;
 
-	private boolean fileOnly;
+    private boolean fileOnly;
 
-	public FileFilter(FileTransferInfo fileTransferInfo) {
-		this(fileTransferInfo.getFilePrefixes(), fileTransferInfo.getFileSuffixes());
-	}
+    public FileFilter(FileTransferInfo fileTransferInfo) {
+        this(fileTransferInfo.getFilePrefixes(), fileTransferInfo.getFileSuffixes());
+    }
 
-	public FileFilter(Set<String> prefixes, Set<String> suffixes) {
-		this(prefixes, suffixes, false);
-	}
+    public FileFilter(Set<String> prefixes, Set<String> suffixes) {
+        this(prefixes, suffixes, false);
+    }
 
-	public FileFilter(Set<String> prefixes, Set<String> suffixes, boolean fileOnly) {
-		this.prefixes = DataUtils.unmodifiableSet(prefixes);
-		this.suffixes = DataUtils.unmodifiableSet(suffixes);
-		this.fileOnly = fileOnly;
-	}
+    public FileFilter(Set<String> prefixes, Set<String> suffixes, boolean fileOnly) {
+        this.prefixes = DataUtils.unmodifiableSet(prefixes);
+        this.suffixes = DataUtils.unmodifiableSet(suffixes);
+        this.fileOnly = fileOnly;
+    }
 
-	public Set<String> getPrefixes() {
-		return prefixes;
-	}
+    public Set<String> getPrefixes() {
+        return prefixes;
+    }
 
-	public Set<String> getSuffixes() {
-		return suffixes;
-	}
+    public Set<String> getSuffixes() {
+        return suffixes;
+    }
 
-	public boolean isFileOnly() {
-		return fileOnly;
-	}
+    public boolean isFileOnly() {
+        return fileOnly;
+    }
 
-	@Override
-	public boolean accept(File file) {
-		return accept(file.getName(), file.isFile());
-	}
+    @Override
+    public boolean accept(File file) {
+        return accept(file.getName(), file.isFile());
+    }
 
-	public boolean accept(String filename, boolean isFile) {
-		if (!isFile) {
-			return !fileOnly;
-		}
+    public boolean accept(String filename, boolean isFile) {
+        if (!isFile) {
+            return !fileOnly;
+        }
 
-		boolean accept = true;
-		if (!prefixes.isEmpty()) {
-			accept = false;
-			for (String prefix : prefixes) {
-				if (filename.startsWith(prefix)) {
-					accept = true;
-					break;
-				}
-			}
-		}
+        boolean accept = true;
+        if (!prefixes.isEmpty()) {
+            accept = false;
+            for (String prefix : prefixes) {
+                if (filename.startsWith(prefix)) {
+                    accept = true;
+                    break;
+                }
+            }
+        }
 
-		if (accept && !suffixes.isEmpty()) {
-			accept = false;
-			for (String suffix : suffixes) {
-				if (filename.endsWith(suffix)) {
-					accept = true;
-					break;
-				}
-			}
-		}
-		return accept;
-	}
+        if (accept && !suffixes.isEmpty()) {
+            accept = false;
+            for (String suffix : suffixes) {
+                if (filename.endsWith(suffix)) {
+                    accept = true;
+                    break;
+                }
+            }
+        }
+        return accept;
+    }
 }

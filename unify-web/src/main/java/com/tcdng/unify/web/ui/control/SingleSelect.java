@@ -33,46 +33,46 @@ import com.tcdng.unify.web.ui.ListControlJsonData;
 @UplAttributes({ @UplAttribute(name = "blankOption", type = String.class) })
 public class SingleSelect extends AbstractListPopupTextField {
 
-	@Override
-	public boolean isContainerDisabled() throws UnifyException {
-		return super.isContainerDisabled() || !isContainerEditable();
-	}
+    @Override
+    public boolean isContainerDisabled() throws UnifyException {
+        return super.isContainerDisabled() || !isContainerEditable();
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return false;
-	}
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 
-	@Override
-	public boolean isSupportReadOnly() {
-		return false;
-	}
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
 
-	@Override
-	public ExtensionType getExtensionType() {
-		return ExtensionType.FACADE_HIDDEN;
-	}
+    @Override
+    public ExtensionType getExtensionType() {
+        return ExtensionType.FACADE_HIDDEN;
+    }
 
-	@Override
-	public String getFacadeStringValue() throws UnifyException {
-		ListControlJsonData listControlJsonData = getListControlJsonData(false, false, false);
-		return listControlJsonData.getValueLabel();
-	}
+    @Override
+    public String getFacadeStringValue() throws UnifyException {
+        ListControlJsonData listControlJsonData = getListControlJsonData(false, false, false);
+        return listControlJsonData.getValueLabel();
+    }
 
-	public String getBlankOption() throws UnifyException {
-		return getUplAttribute(String.class, "blankOption");
-	}
+    public String getBlankOption() throws UnifyException {
+        return getUplAttribute(String.class, "blankOption");
+    }
 
-	public String getFramePanelId() throws UnifyException {
-		return getPrefixedId("frm_");
-	}
+    public String getFramePanelId() throws UnifyException {
+        return getPrefixedId("frm_");
+    }
 
-	public String getListPanelId() throws UnifyException {
-		return getPrefixedId("lst_");
-	}
+    public String getListPanelId() throws UnifyException {
+        return getPrefixedId("lst_");
+    }
 
-	public String getBlankOptionId() throws UnifyException {
-		return getPrefixedId("blnk_");
-	}
+    public String getBlankOptionId() throws UnifyException {
+        return getPrefixedId("blnk_");
+    }
 
 }

@@ -25,17 +25,17 @@ import com.tcdng.unify.core.UnifyException;
  */
 public final class ReportFormatUtils {
 
-	private static ReportFormatterStore reportFormatterStore;
+    private static ReportFormatterStore reportFormatterStore;
 
-	private ReportFormatUtils() {
+    private ReportFormatUtils() {
 
-	}
+    }
 
-	public static void setReportFormatterStore(ReportFormatterStore reportFormatterStore) {
-		ReportFormatUtils.reportFormatterStore = reportFormatterStore;
-	}
+    public static void setReportFormatterStore(ReportFormatterStore reportFormatterStore) {
+        ReportFormatUtils.reportFormatterStore = reportFormatterStore;
+    }
 
-	public static String format(String formatterUpl, Object value) throws UnifyException {
-		return reportFormatterStore.getFormatter(formatterUpl).format(value);
-	}
+    public static String format(String formatterUpl, Object value) throws UnifyException {
+        return reportFormatterStore.getFormatter(formatterUpl).format(value);
+    }
 }

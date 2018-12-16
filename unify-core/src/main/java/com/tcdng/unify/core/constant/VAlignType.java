@@ -24,24 +24,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @since 1.0
  */
 public enum VAlignType implements EnumConst {
-	TOP("T"), MIDDLE("M"), BOTTOM("B");
+    TOP("T"), MIDDLE("M"), BOTTOM("B");
 
-	private final String code;
+    private final String code;
 
-	private VAlignType(String code) {
-		this.code = code;
-	}
+    private VAlignType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static VAlignType fromCode(String code) {
-		return EnumUtils.fromCode(VAlignType.class, code);
-	}
+    public static VAlignType fromCode(String code) {
+        return EnumUtils.fromCode(VAlignType.class, code);
+    }
 
-	public static VAlignType fromName(String name) {
-		return EnumUtils.fromName(VAlignType.class, name);
-	}
+    public static VAlignType fromName(String name) {
+        return EnumUtils.fromName(VAlignType.class, name);
+    }
 }

@@ -27,23 +27,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AccountDetailParams extends RemoteCallParams {
 
-	private String accountNo;
+    private String accountNo;
 
-	public AccountDetailParams(String accountNo) {
-		super("mock-001");
-		this.accountNo = accountNo;
-	}
+    public AccountDetailParams(String accountNo) {
+        super("mock-001");
+        this.accountNo = accountNo;
+    }
 
-	public AccountDetailParams() {
-		super("mock-001");
-	}
+    public AccountDetailParams() {
+        super("mock-001");
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public String getAccountNo() {
+        return accountNo;
+    }
 
-	@XmlElement
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
+    @XmlElement
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 }

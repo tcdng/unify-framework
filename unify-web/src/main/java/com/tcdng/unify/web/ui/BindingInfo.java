@@ -23,34 +23,34 @@ package com.tcdng.unify.web.ui;
  */
 public class BindingInfo {
 
-	private String property;
+    private String property;
 
-	private String shortProperty;
+    private String shortProperty;
 
-	private String longProperty;
+    private String longProperty;
 
-	private boolean masked;
+    private boolean masked;
 
-	public BindingInfo(String property, String shortProperty, String longProperty, boolean masked) {
-		this.property = property;
-		this.shortProperty = shortProperty;
-		this.longProperty = longProperty;
-		this.masked = masked;
-	}
+    public BindingInfo(String property, String shortProperty, String longProperty, boolean masked) {
+        this.property = property;
+        this.shortProperty = shortProperty;
+        this.longProperty = longProperty;
+        this.masked = masked;
+    }
 
-	public String getProperty() {
-		return property;
-	}
+    public String getProperty() {
+        return property;
+    }
 
-	public String getShortProperty() {
-		return shortProperty;
-	}
+    public String getShortProperty() {
+        return shortProperty;
+    }
 
-	public String getLongProperty() {
-		return longProperty;
-	}
+    public String getLongProperty() {
+        return longProperty;
+    }
 
-	public boolean isMasked() {
-		return masked;
-	}
+    public boolean isMasked() {
+        return masked;
+    }
 }

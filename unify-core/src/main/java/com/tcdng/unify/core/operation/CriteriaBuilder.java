@@ -25,112 +25,112 @@ import java.util.List;
  */
 public abstract class CriteriaBuilder implements Cloneable {
 
-	protected Criteria criteria;
+    protected Criteria criteria;
 
-	public Criteria getCriteria() {
-		return criteria;
-	}
+    public Criteria getCriteria() {
+        return criteria;
+    }
 
-	public CriteriaBuilder amongst(String field, List<? extends Object> values) {
-		return add(new Amongst(field, values));
-	}
+    public CriteriaBuilder amongst(String field, List<? extends Object> values) {
+        return add(new Amongst(field, values));
+    }
 
-	public CriteriaBuilder between(String field, Object lowerValue, Object upperValue) {
-		return add(new Between(field, lowerValue, upperValue));
-	}
+    public CriteriaBuilder between(String field, Object lowerValue, Object upperValue) {
+        return add(new Between(field, lowerValue, upperValue));
+    }
 
-	public CriteriaBuilder equal(String field, Object value) {
-		return add(new Equal(field, value));
-	}
+    public CriteriaBuilder equal(String field, Object value) {
+        return add(new Equal(field, value));
+    }
 
-	public CriteriaBuilder greater(String field, Object value) {
-		return add(new Greater(field, value));
-	}
+    public CriteriaBuilder greater(String field, Object value) {
+        return add(new Greater(field, value));
+    }
 
-	public CriteriaBuilder greaterEqual(String field, Object value) {
-		return add(new GreaterOrEqual(field, value));
-	}
+    public CriteriaBuilder greaterEqual(String field, Object value) {
+        return add(new GreaterOrEqual(field, value));
+    }
 
-	public CriteriaBuilder isNotNull(String field) {
-		return add(new IsNotNull(field));
-	}
+    public CriteriaBuilder isNotNull(String field) {
+        return add(new IsNotNull(field));
+    }
 
-	public CriteriaBuilder isNull(String field) {
-		return add(new IsNull(field));
-	}
+    public CriteriaBuilder isNull(String field) {
+        return add(new IsNull(field));
+    }
 
-	public CriteriaBuilder less(String field, Object value) {
-		return add(new Less(field, value));
-	}
+    public CriteriaBuilder less(String field, Object value) {
+        return add(new Less(field, value));
+    }
 
-	public CriteriaBuilder lessEqual(String field, Object value) {
-		return add(new LessOrEqual(field, value));
-	}
+    public CriteriaBuilder lessEqual(String field, Object value) {
+        return add(new LessOrEqual(field, value));
+    }
 
-	public CriteriaBuilder like(String field, String value) {
-		return add(new Like(field, value));
-	}
+    public CriteriaBuilder like(String field, String value) {
+        return add(new Like(field, value));
+    }
 
-	public CriteriaBuilder likeBegin(String field, String value) {
-		return add(new LikeBegin(field, value));
-	}
+    public CriteriaBuilder likeBegin(String field, String value) {
+        return add(new LikeBegin(field, value));
+    }
 
-	public CriteriaBuilder likeEnd(String field, String value) {
-		return add(new LikeEnd(field, value));
-	}
+    public CriteriaBuilder likeEnd(String field, String value) {
+        return add(new LikeEnd(field, value));
+    }
 
-	public CriteriaBuilder notAmongst(String field, List<? extends Object> values) {
-		return add(new NotAmongst(field, values));
-	}
+    public CriteriaBuilder notAmongst(String field, List<? extends Object> values) {
+        return add(new NotAmongst(field, values));
+    }
 
-	public CriteriaBuilder notBetween(String field, Object lowerValue, Object upperValue) {
-		return add(new NotBetween(field, lowerValue, upperValue));
-	}
+    public CriteriaBuilder notBetween(String field, Object lowerValue, Object upperValue) {
+        return add(new NotBetween(field, lowerValue, upperValue));
+    }
 
-	public CriteriaBuilder notEqual(String field, Object value) {
-		return add(new NotEqual(field, value));
-	}
+    public CriteriaBuilder notEqual(String field, Object value) {
+        return add(new NotEqual(field, value));
+    }
 
-	public CriteriaBuilder notLike(String field, String value) {
-		return add(new NotLike(field, value));
-	}
+    public CriteriaBuilder notLike(String field, String value) {
+        return add(new NotLike(field, value));
+    }
 
-	public CriteriaBuilder notLikeBegin(String field, String value) {
-		return add(new NotLikeBegin(field, value));
-	}
+    public CriteriaBuilder notLikeBegin(String field, String value) {
+        return add(new NotLikeBegin(field, value));
+    }
 
-	public CriteriaBuilder notLikeEnd(String field, String value) {
-		return add(new NotLikeEnd(field, value));
-	}
+    public CriteriaBuilder notLikeEnd(String field, String value) {
+        return add(new NotLikeEnd(field, value));
+    }
 
-	public void clear() {
-		criteria = null;
-	}
+    public void clear() {
+        criteria = null;
+    }
 
-	public boolean isEmpty() {
-		return criteria == null;
-	}
+    public boolean isEmpty() {
+        return criteria == null;
+    }
 
-	public CriteriaBuilder copy() {
-		try {
-			return (CriteriaBuilder) clone();
-		} catch (CloneNotSupportedException e) {
-		}
-		return null;
-	}
+    public CriteriaBuilder copy() {
+        try {
+            return (CriteriaBuilder) clone();
+        } catch (CloneNotSupportedException e) {
+        }
+        return null;
+    }
 
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		CriteriaBuilder clone = (CriteriaBuilder) super.clone();
-		if (criteria != null) {
-			clone.criteria = (Criteria) criteria.clone();
-		}
-		return clone;
-	}
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        CriteriaBuilder clone = (CriteriaBuilder) super.clone();
+        if (criteria != null) {
+            clone.criteria = (Criteria) criteria.clone();
+        }
+        return clone;
+    }
 
-	protected CriteriaBuilder add(CriteriaBuilder criteriaBuilder) {
-		return add(criteriaBuilder.getCriteria());
-	}
+    protected CriteriaBuilder add(CriteriaBuilder criteriaBuilder) {
+        return add(criteriaBuilder.getCriteria());
+    }
 
-	protected abstract CriteriaBuilder add(Criteria criteria);
+    protected abstract CriteriaBuilder add(Criteria criteria);
 }

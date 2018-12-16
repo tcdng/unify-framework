@@ -23,8 +23,8 @@ package com.tcdng.unify.core.operation;
  */
 public class Or extends Criteria {
 
-	public Or(Criteria leftOperation, Criteria rightOperation) {
-		super(Operator.OR, leftOperation, rightOperation);
-	}
+    public Or(Criteria leftOperation, Criteria rightOperation) {
+        super(Operator.OR, leftOperation, rightOperation);
+    }
 
 }

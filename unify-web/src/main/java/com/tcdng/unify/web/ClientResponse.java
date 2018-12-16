@@ -26,57 +26,57 @@ import java.io.Writer;
  */
 public interface ClientResponse {
 
-	/**
-	 * Sets response meta data
-	 * 
-	 * @param key
-	 *            the meta data key
-	 * @param value
-	 *            the meta data value
-	 */
-	void setMetaData(String key, String value);
+    /**
+     * Sets response meta data
+     * 
+     * @param key
+     *            the meta data key
+     * @param value
+     *            the meta data value
+     */
+    void setMetaData(String key, String value);
 
-	/**
-	 * Sets the response content type.
-	 * 
-	 * @param contentType
-	 *            the content type to set
-	 */
-	void setContentType(String contentType);
+    /**
+     * Sets the response content type.
+     * 
+     * @param contentType
+     *            the content type to set
+     */
+    void setContentType(String contentType);
 
-	/**
-	 * Sets response character encoding.
-	 * 
-	 * @param charset
-	 *            the character set
-	 */
-	void setCharacterEncoding(String charset);
+    /**
+     * Sets response character encoding.
+     * 
+     * @param charset
+     *            the character set
+     */
+    void setCharacterEncoding(String charset);
 
-	/**
-	 * Gets the response output stream
-	 */
-	OutputStream getOutputStream() throws Exception;
+    /**
+     * Gets the response output stream
+     */
+    OutputStream getOutputStream() throws Exception;
 
-	/**
-	 * Gets the response output stream
-	 */
-	Writer getWriter() throws Exception;
+    /**
+     * Gets the response output stream
+     */
+    Writer getWriter() throws Exception;
 
-	/**
-	 * Returns true if response output is used.
-	 */
-	boolean isOutUsed();
+    /**
+     * Returns true if response output is used.
+     */
+    boolean isOutUsed();
 
-	/**
-	 * Sets response status.
-	 * 
-	 * @param status
-	 *            the status to set
-	 */
-	void setStatus(int status);
+    /**
+     * Sets response status.
+     * 
+     * @param status
+     *            the status to set
+     */
+    void setStatus(int status);
 
-	/**
-	 * Closes response.
-	 */
-	void close();
+    /**
+     * Closes response.
+     */
+    void close();
 }

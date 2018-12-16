@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database.sql.policy;
  */
 public class DoubleArrayPolicy extends StringArrayPolicy {
 
-	public DoubleArrayPolicy() {
-		super(Double[].class);
-	}
+    public DoubleArrayPolicy() {
+        super(Double[].class);
+    }
 }

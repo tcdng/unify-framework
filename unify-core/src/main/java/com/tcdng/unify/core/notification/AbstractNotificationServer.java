@@ -26,15 +26,15 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public abstract class AbstractNotificationServer<T extends NotificationServerConfig> extends AbstractUnifyComponent
-		implements NotificationServer<T> {
+        implements NotificationServer<T> {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

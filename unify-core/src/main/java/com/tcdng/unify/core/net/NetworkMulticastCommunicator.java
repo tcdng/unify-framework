@@ -25,11 +25,11 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface NetworkMulticastCommunicator extends NetworkCommunicator {
 
-	/**
-	 * Closes communicator.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void close() throws UnifyException;
+    /**
+     * Closes communicator.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void close() throws UnifyException;
 }

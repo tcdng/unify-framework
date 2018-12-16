@@ -29,72 +29,72 @@ import com.tcdng.unify.web.UnifyWebErrorConstants;
  */
 public final class WriterUtils {
 
-	private static Map<String, String> actionToJSMap;
+    private static Map<String, String> actionToJSMap;
 
-	private static Map<String, String> eventToJSMap;
+    private static Map<String, String> eventToJSMap;
 
-	private static long refCounter;
+    private static long refCounter;
 
-	static {
-		actionToJSMap = new HashMap<String, String>();
-		actionToJSMap.put("forward", "ux.forward");
-		actionToJSMap.put("submit", "ux.submit");
-		actionToJSMap.put("post", "ux.post");
-		actionToJSMap.put("posttopath", "ux.postToPath");
-		actionToJSMap.put("postcommand", "ux.postCommand");
-		actionToJSMap.put("openwindow", "ux.openWindow");
-		actionToJSMap.put("download", "ux.download");
-		actionToJSMap.put("clear", "ux.clear");
-		actionToJSMap.put("disable", "ux.disable");
-		actionToJSMap.put("show", "ux.show");
-		actionToJSMap.put("hide", "ux.hide");
-		actionToJSMap.put("delegate", "ux.delegate");
-		actionToJSMap.put("setallchecked", "ux.setAllChecked");
-		actionToJSMap.put("setcheckedpatternvalue", "ux.setCheckedPatternValue");
-		actionToJSMap.put("populateselect", "ux.populateSelectOptions");
-		actionToJSMap.put("openpopup", "ux.openPopup");
-		actionToJSMap.put("hidepopup", "ux.hidePopup");
-		actionToJSMap.put("repositionmenupopup", "ux.repositionMenuPopup");
+    static {
+        actionToJSMap = new HashMap<String, String>();
+        actionToJSMap.put("forward", "ux.forward");
+        actionToJSMap.put("submit", "ux.submit");
+        actionToJSMap.put("post", "ux.post");
+        actionToJSMap.put("posttopath", "ux.postToPath");
+        actionToJSMap.put("postcommand", "ux.postCommand");
+        actionToJSMap.put("openwindow", "ux.openWindow");
+        actionToJSMap.put("download", "ux.download");
+        actionToJSMap.put("clear", "ux.clear");
+        actionToJSMap.put("disable", "ux.disable");
+        actionToJSMap.put("show", "ux.show");
+        actionToJSMap.put("hide", "ux.hide");
+        actionToJSMap.put("delegate", "ux.delegate");
+        actionToJSMap.put("setallchecked", "ux.setAllChecked");
+        actionToJSMap.put("setcheckedpatternvalue", "ux.setCheckedPatternValue");
+        actionToJSMap.put("populateselect", "ux.populateSelectOptions");
+        actionToJSMap.put("openpopup", "ux.openPopup");
+        actionToJSMap.put("hidepopup", "ux.hidePopup");
+        actionToJSMap.put("repositionmenupopup", "ux.repositionMenuPopup");
 
-		eventToJSMap = new HashMap<String, String>();
-		eventToJSMap.put("onblur", "blur");
-		eventToJSMap.put("onchange", "change");
-		eventToJSMap.put("onclick", "click");
-		eventToJSMap.put("ondblclick", "dblclick");
-		eventToJSMap.put("onmouseover", "mouseover");
-		eventToJSMap.put("onmouseout", "mouseout");
-		eventToJSMap.put("onenter", "enter");
-	}
+        eventToJSMap = new HashMap<String, String>();
+        eventToJSMap.put("onblur", "blur");
+        eventToJSMap.put("onchange", "change");
+        eventToJSMap.put("onclick", "click");
+        eventToJSMap.put("ondblclick", "dblclick");
+        eventToJSMap.put("onmouseover", "mouseover");
+        eventToJSMap.put("onmouseout", "mouseout");
+        eventToJSMap.put("onenter", "enter");
+    }
 
-	private WriterUtils() {
+    private WriterUtils() {
 
-	}
+    }
 
-	public static String getActionJSFunction(String actionType) throws UnifyException {
-		String functionName = actionToJSMap.get(actionType);
-		if (functionName == null) {
-			throw new UnifyException(UnifyWebErrorConstants.MISSING_ACTION_HANDLER, actionType);
-		}
-		return functionName;
-	}
+    public static String getActionJSFunction(String actionType) throws UnifyException {
+        String functionName = actionToJSMap.get(actionType);
+        if (functionName == null) {
+            throw new UnifyException(UnifyWebErrorConstants.MISSING_ACTION_HANDLER, actionType);
+        }
+        return functionName;
+    }
 
-	public static String getActionJSFunctionOptional(String actionType) throws UnifyException {
-		String functionName = actionToJSMap.get(actionType);
-		if (functionName == null) {
-			return actionType;
-		}
-		return functionName;
-	}
+    public static String getActionJSFunctionOptional(String actionType) throws UnifyException {
+        String functionName = actionToJSMap.get(actionType);
+        if (functionName == null) {
+            return actionType;
+        }
+        return functionName;
+    }
 
-	public static String getEventJS(String eventType) throws UnifyException {
-		String eventJS = eventToJSMap.get(eventType);
-		if (eventJS == null) {
-			throw new UnifyException(UnifyWebErrorConstants.MISSING_ACTION_HANDLER, eventType);
-		}
-		return eventJS;
-	}
+    public static String getEventJS(String eventType) throws UnifyException {
+        String eventJS = eventToJSMap.get(eventType);
+        if (eventJS == null) {
+            throw new UnifyException(UnifyWebErrorConstants.MISSING_ACTION_HANDLER, eventType);
+        }
+        return eventJS;
+    }
 
-	public static long getNextRefId() {
-		return ++refCounter;
-	}
+    public static long getNextRefId() {
+        return ++refCounter;
+    }
 }

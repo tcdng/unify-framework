@@ -31,57 +31,57 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "fullName", "books", "picture", "account" })
 public class Author {
 
-	private String fullName;
+    private String fullName;
 
-	private List<Book> books;
+    private List<Book> books;
 
-	private byte[] picture;
+    private byte[] picture;
 
-	private List<String> account;
+    private List<String> account;
 
-	public Author(String fullName, List<Book> books, byte[] picture) {
-		this.fullName = fullName;
-		this.books = books;
-		this.picture = picture;
-	}
+    public Author(String fullName, List<Book> books, byte[] picture) {
+        this.fullName = fullName;
+        this.books = books;
+        this.picture = picture;
+    }
 
-	public Author() {
+    public Author() {
 
-	}
+    }
 
-	public String getFullName() {
-		return fullName;
-	}
+    public String getFullName() {
+        return fullName;
+    }
 
-	@XmlElement
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+    @XmlElement
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	public List<Book> getBooks() {
-		return books;
-	}
+    public List<Book> getBooks() {
+        return books;
+    }
 
-	@XmlElement
-	public void setBooks(List<Book> books) {
-		this.books = books;
-	}
+    @XmlElement
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
 
-	public byte[] getPicture() {
-		return picture;
-	}
+    public byte[] getPicture() {
+        return picture;
+    }
 
-	@XmlElement
-	public void setPicture(byte[] picture) {
-		this.picture = picture;
-	}
+    @XmlElement
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
+    }
 
-	public List<String> getAccount() {
-		return account;
-	}
+    public List<String> getAccount() {
+        return account;
+    }
 
-	@XmlElement
-	public void setAccount(List<String> account) {
-		this.account = account;
-	}
+    @XmlElement
+    public void setAccount(List<String> account) {
+        this.account = account;
+    }
 }

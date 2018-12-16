@@ -28,21 +28,21 @@ import com.tcdng.unify.core.database.Entity;
  */
 public class OnDeleteCascadeInfo {
 
-	private Class<? extends Entity> childEntityClass;
+    private Class<? extends Entity> childEntityClass;
 
-	private Field childFkField;
+    private Field childFkField;
 
-	public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkField) {
-		this.childEntityClass = childEntityClass;
-		this.childFkField = childFkField;
-	}
+    public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkField) {
+        this.childEntityClass = childEntityClass;
+        this.childFkField = childFkField;
+    }
 
-	public Class<? extends Entity> getChildEntityClass() {
-		return childEntityClass;
-	}
+    public Class<? extends Entity> getChildEntityClass() {
+        return childEntityClass;
+    }
 
-	public Field getChildFkField() {
-		return childFkField;
-	}
+    public Field getChildFkField() {
+        return childFkField;
+    }
 
 }

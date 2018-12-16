@@ -23,5 +23,5 @@ package com.tcdng.unify.web.ui.data;
  * @since 1.0
  */
 public enum MessageMode {
-	OK, OK_CANCEL, YES_NO, YES_NO_CANCEL, RETRY_CANCEL
+    OK, OK_CANCEL, YES_NO, YES_NO_CANCEL, RETRY_CANCEL
 }

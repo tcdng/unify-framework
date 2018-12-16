@@ -32,99 +32,99 @@ import com.tcdng.unify.core.data.FactoryMap;
  */
 public abstract class AbstractCache<T, U> extends AbstractUnifyComponent implements Cache<T, U> {
 
-	@Configurable("60")
-	private int defaultExpiryPeriod;
+    @Configurable("60")
+    private int defaultExpiryPeriod;
 
-	private FactoryMap<T, CacheEntry> cacheEntries;
+    private FactoryMap<T, CacheEntry> cacheEntries;
 
-	public AbstractCache() {
-		cacheEntries = new FactoryMap<T, CacheEntry>() {
-			@SuppressWarnings("unchecked")
-			@Override
-			protected CacheEntry create(T key, Object... params) throws Exception {
-				return new CacheEntry((U) params[0], (Long) params[1]);
-			}
-		};
-	}
+    public AbstractCache() {
+        cacheEntries = new FactoryMap<T, CacheEntry>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected CacheEntry create(T key, Object... params) throws Exception {
+                return new CacheEntry((U) params[0], (Long) params[1]);
+            }
+        };
+    }
 
-	@Override
-	public U put(T key, U object) throws UnifyException {
-		return put(key, object, defaultExpiryPeriod);
-	}
+    @Override
+    public U put(T key, U object) throws UnifyException {
+        return put(key, object, defaultExpiryPeriod);
+    }
 
-	@Override
-	public U put(T key, U object, long expiryPeriod) throws UnifyException {
-		cacheEntries.remove(key);
-		cacheEntries.get(key, object, expiryPeriod);
-		return object;
-	}
+    @Override
+    public U put(T key, U object, long expiryPeriod) throws UnifyException {
+        cacheEntries.remove(key);
+        cacheEntries.get(key, object, expiryPeriod);
+        return object;
+    }
 
-	@Override
-	public U get(T key) throws UnifyException {
-		if (cacheEntries.isKey(key)) {
-			return cacheEntries.get(key).getObject();
-		}
-		return null;
-	}
+    @Override
+    public U get(T key) throws UnifyException {
+        if (cacheEntries.isKey(key)) {
+            return cacheEntries.get(key).getObject();
+        }
+        return null;
+    }
 
-	@Override
-	public U remove(T key) throws UnifyException {
-		return cacheEntries.remove(key).getObject();
-	}
+    @Override
+    public U remove(T key) throws UnifyException {
+        return cacheEntries.remove(key).getObject();
+    }
 
-	@Override
-	public void clear() throws UnifyException {
-		cacheEntries.clear();
-	}
+    @Override
+    public void clear() throws UnifyException {
+        cacheEntries.clear();
+    }
 
-	@Override
-	public int size() {
-		return cacheEntries.size();
-	}
+    @Override
+    public int size() {
+        return cacheEntries.size();
+    }
 
-	@Override
-	@Expirable(cycleInSec = 20)
-	public void removeExpiredCacheEntries() throws UnifyException {
-		long currentTime = System.currentTimeMillis();
-		for (Iterator<Map.Entry<T, CacheEntry>> it = cacheEntries.entrySet().iterator(); it.hasNext();) {
-			Map.Entry<T, CacheEntry> entry = it.next();
-			if (currentTime >= entry.getValue().getTimeToExpire()) {
-				it.remove();
-			}
-		}
-	}
+    @Override
+    @Expirable(cycleInSec = 20)
+    public void removeExpiredCacheEntries() throws UnifyException {
+        long currentTime = System.currentTimeMillis();
+        for (Iterator<Map.Entry<T, CacheEntry>> it = cacheEntries.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<T, CacheEntry> entry = it.next();
+            if (currentTime >= entry.getValue().getTimeToExpire()) {
+                it.remove();
+            }
+        }
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	private class CacheEntry {
+    private class CacheEntry {
 
-		private U object;
+        private U object;
 
-		private long expiryPeriod;
+        private long expiryPeriod;
 
-		private long timeToExpire;
+        private long timeToExpire;
 
-		public CacheEntry(U object, long expiryPeriod) {
-			this.expiryPeriod = expiryPeriod * 1000L;
-			this.object = object;
-			getObject();
-		}
+        public CacheEntry(U object, long expiryPeriod) {
+            this.expiryPeriod = expiryPeriod * 1000L;
+            this.object = object;
+            getObject();
+        }
 
-		public U getObject() {
-			timeToExpire = System.currentTimeMillis() + expiryPeriod;
-			return object;
-		}
+        public U getObject() {
+            timeToExpire = System.currentTimeMillis() + expiryPeriod;
+            return object;
+        }
 
-		public long getTimeToExpire() {
-			return timeToExpire;
-		}
-	}
+        public long getTimeToExpire() {
+            return timeToExpire;
+        }
+    }
 }

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("ui-forward")
 public class ForwardAction extends PostAction {
 
-	public ForwardAction() {
-		super("forward");
-	}
+    public ForwardAction() {
+        super("forward");
+    }
 }

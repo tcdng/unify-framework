@@ -47,744 +47,744 @@ import com.tcdng.unify.core.UnifyException;
  */
 public final class IOUtils {
 
-	private static final int BUFFER_SIZE = 1024 * 4;
+    private static final int BUFFER_SIZE = 1024 * 4;
 
-	private IOUtils() {
+    private IOUtils() {
 
-	}
+    }
 
-	/**
-	 * Detects an opens an input stream for a streamable object.
-	 * 
-	 * @param streamable
-	 *            the streamable object
-	 * @return opened inputstream on successful detection otherwise a null
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static InputStream detectAndOpenInputStream(Object streamable) throws UnifyException {
-		try {
-			if (streamable instanceof InputStream) {
-				return (InputStream) streamable;
-			} else if (streamable instanceof byte[]) {
-				return new ByteArrayInputStream((byte[]) streamable);
-			} else if (streamable instanceof File) {
-				return new FileInputStream((File) streamable);
-			}
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM,
-					String.valueOf(streamable));
-		}
-		return null;
-	}
+    /**
+     * Detects an opens an input stream for a streamable object.
+     * 
+     * @param streamable
+     *            the streamable object
+     * @return opened inputstream on successful detection otherwise a null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static InputStream detectAndOpenInputStream(Object streamable) throws UnifyException {
+        try {
+            if (streamable instanceof InputStream) {
+                return (InputStream) streamable;
+            } else if (streamable instanceof byte[]) {
+                return new ByteArrayInputStream((byte[]) streamable);
+            } else if (streamable instanceof File) {
+                return new FileInputStream((File) streamable);
+            }
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM,
+                    String.valueOf(streamable));
+        }
+        return null;
+    }
 
-	/**
-	 * Detects an opens a reader for a streamable object.
-	 * 
-	 * @param streamable
-	 *            the streamable object
-	 * @return opened reader on successful detection otherwise a null
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static BufferedReader detectAndOpenBufferedReader(Object streamable) throws UnifyException {
-		try {
-			if (streamable instanceof BufferedReader) {
-				return (BufferedReader) streamable;
-			} else if (streamable instanceof Reader) {
-				return new BufferedReader((Reader) streamable);
-			} else if (streamable instanceof InputStream) {
-				return new BufferedReader(new InputStreamReader((InputStream) streamable));
-			} else if (streamable instanceof byte[]) {
-				return new BufferedReader(new InputStreamReader(new ByteArrayInputStream((byte[]) streamable)));
-			} else if (streamable instanceof File) {
-				return new BufferedReader(new FileReader((File) streamable));
-			}
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM,
-					String.valueOf(streamable));
-		}
-		return null;
-	}
+    /**
+     * Detects an opens a reader for a streamable object.
+     * 
+     * @param streamable
+     *            the streamable object
+     * @return opened reader on successful detection otherwise a null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static BufferedReader detectAndOpenBufferedReader(Object streamable) throws UnifyException {
+        try {
+            if (streamable instanceof BufferedReader) {
+                return (BufferedReader) streamable;
+            } else if (streamable instanceof Reader) {
+                return new BufferedReader((Reader) streamable);
+            } else if (streamable instanceof InputStream) {
+                return new BufferedReader(new InputStreamReader((InputStream) streamable));
+            } else if (streamable instanceof byte[]) {
+                return new BufferedReader(new InputStreamReader(new ByteArrayInputStream((byte[]) streamable)));
+            } else if (streamable instanceof File) {
+                return new BufferedReader(new FileReader((File) streamable));
+            }
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM,
+                    String.valueOf(streamable));
+        }
+        return null;
+    }
 
-	/**
-	 * Opens a file resource input stream. Runs in the following sequence until it
-	 * finds resource to open.
-	 * 
-	 * <pre>
-	 *     1. Check for file with supplied resourceName.
-	 *     2. If real path is supplied, check for file with name Application RealPath + resourceName
-	 *     3. Check for file with name System User Directory + resourceName
-	 *     4. Open class loader resource inputStream with resourceName
-	 * </pre>
-	 * 
-	 * @param resourceName
-	 *            the resource name.
-	 * @param realPath
-	 *            the optional real path. Can be null.
-	 * @return the file resource input stream
-	 * @throws UnifyException
-	 *             if resource is not found. If an error occurs
-	 */
-	public static InputStream openFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
-		try {
-			File file = IOUtils.fileInstance(resourceName, realPath);
-			if (file.exists()) {
-				return new FileInputStream(file);
-			}
+    /**
+     * Opens a file resource input stream. Runs in the following sequence until it
+     * finds resource to open.
+     * 
+     * <pre>
+     *     1. Check for file with supplied resourceName.
+     *     2. If real path is supplied, check for file with name Application RealPath + resourceName
+     *     3. Check for file with name System User Directory + resourceName
+     *     4. Open class loader resource inputStream with resourceName
+     * </pre>
+     * 
+     * @param resourceName
+     *            the resource name.
+     * @param realPath
+     *            the optional real path. Can be null.
+     * @return the file resource input stream
+     * @throws UnifyException
+     *             if resource is not found. If an error occurs
+     */
+    public static InputStream openFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
+        try {
+            File file = IOUtils.fileInstance(resourceName, realPath);
+            if (file.exists()) {
+                return new FileInputStream(file);
+            }
 
-			return IOUtils.openClassLoaderResourceInputStream(resourceName);
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
-		}
-	}
+            return IOUtils.openClassLoaderResourceInputStream(resourceName);
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
+        }
+    }
 
-	/**
-	 * Opens a resource input stream from the current class loader.
-	 * 
-	 * @param resourceName
-	 *            the resource name
-	 * @return the opened input stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static InputStream openClassLoaderResourceInputStream(String resourceName) throws UnifyException {
-		InputStream inputStream = IOUtils.class.getClassLoader()
-				.getResourceAsStream(IOUtils.conformJarSeparator(resourceName));
-		if (inputStream != null) {
-			return inputStream;
-		}
-		throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
-	}
+    /**
+     * Opens a resource input stream from the current class loader.
+     * 
+     * @param resourceName
+     *            the resource name
+     * @return the opened input stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static InputStream openClassLoaderResourceInputStream(String resourceName) throws UnifyException {
+        InputStream inputStream = IOUtils.class.getClassLoader()
+                .getResourceAsStream(IOUtils.conformJarSeparator(resourceName));
+        if (inputStream != null) {
+            return inputStream;
+        }
+        throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
+    }
 
-	/**
-	 * List resources in class loader directory.
-	 * 
-	 * @param path
-	 *            the path of directory to list
-	 * @return list of directory items
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static List<String> getResourceListFromClassLoaderDirectory(String path) throws UnifyException {
-		List<String> list = new ArrayList<String>();
-		InputStream inputStream = null;
-		try {
-			inputStream = IOUtils.openClassLoaderResourceInputStream(path);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-			String resource;
-			while ((resource = reader.readLine()) != null) {
-				list.add(resource);
-			}
-		} catch (IOException ex) {
-			throw new UnifyException(ex, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(inputStream);
-		}
-		return list;
-	}
+    /**
+     * List resources in class loader directory.
+     * 
+     * @param path
+     *            the path of directory to list
+     * @return list of directory items
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static List<String> getResourceListFromClassLoaderDirectory(String path) throws UnifyException {
+        List<String> list = new ArrayList<String>();
+        InputStream inputStream = null;
+        try {
+            inputStream = IOUtils.openClassLoaderResourceInputStream(path);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String resource;
+            while ((resource = reader.readLine()) != null) {
+                list.add(resource);
+            }
+        } catch (IOException ex) {
+            throw new UnifyException(ex, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(inputStream);
+        }
+        return list;
+    }
 
-	/**
-	 * Opens a file input stream.
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @return the file input stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static InputStream openFileInputStream(String filename) throws UnifyException {
-		try {
-			return new FileInputStream(filename);
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
-		}
-	}
+    /**
+     * Opens a file input stream.
+     * 
+     * @param filename
+     *            the file name
+     * @return the file input stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static InputStream openFileInputStream(String filename) throws UnifyException {
+        try {
+            return new FileInputStream(filename);
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
+        }
+    }
 
-	/**
-	 * Opens a file input stream and skip by specified number of bytes..
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @param skip
-	 *            the number of bytes to skip by
-	 * @return the file input stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static InputStream openFileInputStream(String filename, long skip) throws UnifyException {
-		try {
-			InputStream inputStream = IOUtils.openFileInputStream(filename);
-			inputStream.skip(skip);
-			return inputStream;
-		} catch (IOException e) {
-			throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
-		}
-	}
+    /**
+     * Opens a file input stream and skip by specified number of bytes..
+     * 
+     * @param filename
+     *            the file name
+     * @param skip
+     *            the number of bytes to skip by
+     * @return the file input stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static InputStream openFileInputStream(String filename, long skip) throws UnifyException {
+        try {
+            InputStream inputStream = IOUtils.openFileInputStream(filename);
+            inputStream.skip(skip);
+            return inputStream;
+        } catch (IOException e) {
+            throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
+        }
+    }
 
-	/**
-	 * Opens a file output stream. Truncates file if file already exists.
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @return the file output stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static OutputStream openFileOutputStream(String filename) throws UnifyException {
-		try {
-			return new FileOutputStream(filename);
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
-		}
-	}
+    /**
+     * Opens a file output stream. Truncates file if file already exists.
+     * 
+     * @param filename
+     *            the file name
+     * @return the file output stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static OutputStream openFileOutputStream(String filename) throws UnifyException {
+        try {
+            return new FileOutputStream(filename);
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
+        }
+    }
 
-	/**
-	 * Opens a file output stream.
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @param append
-	 *            flag that indicates an append
-	 * @return the file output stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static OutputStream openFileOutputStream(String filename, boolean append) throws UnifyException {
-		try {
-			return new FileOutputStream(filename, append);
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
-		}
-	}
+    /**
+     * Opens a file output stream.
+     * 
+     * @param filename
+     *            the file name
+     * @param append
+     *            flag that indicates an append
+     * @return the file output stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static OutputStream openFileOutputStream(String filename, boolean append) throws UnifyException {
+        try {
+            return new FileOutputStream(filename, append);
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, filename, e);
+        }
+    }
 
-	/**
-	 * Gets a resource file instance for existing file with filename.
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @return the file instance.
-	 */
-	public static boolean isResourceFileInstance(String filename, String optionPath) {
-		File file = IOUtils.fileInstance(filename, optionPath);
-		if (!file.exists()) {
-			return IOUtils.class.getClassLoader().getResource(filename) != null;
-		}
-		return true;
-	}
+    /**
+     * Gets a resource file instance for existing file with filename.
+     * 
+     * @param filename
+     *            the file name
+     * @return the file instance.
+     */
+    public static boolean isResourceFileInstance(String filename, String optionPath) {
+        File file = IOUtils.fileInstance(filename, optionPath);
+        if (!file.exists()) {
+            return IOUtils.class.getClassLoader().getResource(filename) != null;
+        }
+        return true;
+    }
 
-	/**
-	 * Gets a file instance for existing file with filename.
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @return the file instance.
-	 */
-	public static File fileInstance(String filename, String optionPath) {
-		File file = new File(filename);
-		if (!file.exists()) {
-			if (!StringUtils.isBlank(optionPath)) {
-				file = new File(IOUtils.buildFilename(optionPath, filename));
-			}
-			if (!file.exists()) {
-				file = new File(IOUtils.buildFilename(System.getProperty("user.dir"), filename));
-			}
-		}
-		return file;
-	}
+    /**
+     * Gets a file instance for existing file with filename.
+     * 
+     * @param filename
+     *            the file name
+     * @return the file instance.
+     */
+    public static File fileInstance(String filename, String optionPath) {
+        File file = new File(filename);
+        if (!file.exists()) {
+            if (!StringUtils.isBlank(optionPath)) {
+                file = new File(IOUtils.buildFilename(optionPath, filename));
+            }
+            if (!file.exists()) {
+                file = new File(IOUtils.buildFilename(System.getProperty("user.dir"), filename));
+            }
+        }
+        return file;
+    }
 
-	/**
-	 * Reads file resource into memory.
-	 * {@link #openFileResourceInputStream(String, String)}
-	 * 
-	 * @param resourceName
-	 *            the resource name.
-	 * @return the file resource
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static byte[] readFileResourceInputStream(String resourceName) throws UnifyException {
-		return IOUtils.readFileResourceInputStream(resourceName, null);
-	}
+    /**
+     * Reads file resource into memory.
+     * {@link #openFileResourceInputStream(String, String)}
+     * 
+     * @param resourceName
+     *            the resource name.
+     * @return the file resource
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static byte[] readFileResourceInputStream(String resourceName) throws UnifyException {
+        return IOUtils.readFileResourceInputStream(resourceName, null);
+    }
 
-	/**
-	 * Reads file resource into memory.
-	 * {@link #openFileResourceInputStream(String, String)}
-	 * 
-	 * @param resourceName
-	 *            the resource name.
-	 * @param realPath
-	 *            the optional real path. Can be null.
-	 * @return the file resource
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static byte[] readFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
-		return IOUtils.readAll(IOUtils.openFileResourceInputStream(resourceName, realPath));
-	}
+    /**
+     * Reads file resource into memory.
+     * {@link #openFileResourceInputStream(String, String)}
+     * 
+     * @param resourceName
+     *            the resource name.
+     * @param realPath
+     *            the optional real path. Can be null.
+     * @return the file resource
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static byte[] readFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
+        return IOUtils.readAll(IOUtils.openFileResourceInputStream(resourceName, realPath));
+    }
 
-	/**
-	 * Reads data from input stream into supplied buffer. Reads at most the length
-	 * of the buffer.
-	 * 
-	 * @param buffer
-	 *            the buffer to read into
-	 * @param inputStream
-	 *            the input stream to read from
-	 * @return the number of bytes read
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static int read(byte[] buffer, InputStream inputStream) throws UnifyException {
-		try {
-			int read = 0;
-			int index = 0;
-			while ((index < buffer.length) && (read = inputStream.read(buffer, index, buffer.length - index)) >= 0) {
-				index += read;
-			}
-			return index;
-		} catch (IOException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		}
-	}
+    /**
+     * Reads data from input stream into supplied buffer. Reads at most the length
+     * of the buffer.
+     * 
+     * @param buffer
+     *            the buffer to read into
+     * @param inputStream
+     *            the input stream to read from
+     * @return the number of bytes read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static int read(byte[] buffer, InputStream inputStream) throws UnifyException {
+        try {
+            int read = 0;
+            int index = 0;
+            while ((index < buffer.length) && (read = inputStream.read(buffer, index, buffer.length - index)) >= 0) {
+                index += read;
+            }
+            return index;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        }
+    }
 
-	/**
-	 * Reads all data from file into a byte array.
-	 * 
-	 * @param file
-	 *            the file
-	 * @return byte[] the resulting byte array
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static byte[] readAll(File file) throws UnifyException {
-		byte[] data = null;
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
-			data = new byte[(int) file.length()];
-			fis.read(data);
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(fis);
-		}
+    /**
+     * Reads all data from file into a byte array.
+     * 
+     * @param file
+     *            the file
+     * @return byte[] the resulting byte array
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static byte[] readAll(File file) throws UnifyException {
+        byte[] data = null;
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            data = new byte[(int) file.length()];
+            fis.read(data);
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(fis);
+        }
 
-		return data;
-	}
+        return data;
+    }
 
-	/**
-	 * Reads all data from input stream into a byte array.
-	 * 
-	 * @param inputStream
-	 *            the input stream to read from
-	 * @return byte[] the resulting byte array
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static byte[] readAll(InputStream inputStream) throws UnifyException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		IOUtils.writeAll(baos, inputStream);
-		IOUtils.close(baos);
-		return baos.toByteArray();
-	}
+    /**
+     * Reads all data from input stream into a byte array.
+     * 
+     * @param inputStream
+     *            the input stream to read from
+     * @return byte[] the resulting byte array
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static byte[] readAll(InputStream inputStream) throws UnifyException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        IOUtils.writeAll(baos, inputStream);
+        IOUtils.close(baos);
+        return baos.toByteArray();
+    }
 
-	public static String readAll(BufferedReader reader) throws UnifyException {
-		try {
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line);
-			}
-			return sb.toString();
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		}
-	}
+    public static String readAll(BufferedReader reader) throws UnifyException {
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        }
+    }
 
-	/**
-	 * Writes all data from input stream to output stream. Closes input stream at
-	 * end of write.
-	 * 
-	 * @param outputStream
-	 *            the output stream to write to
-	 * @param inputStream
-	 *            the input stream to read from
-	 * @return the number of bytes written
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static long writeAll(OutputStream outputStream, InputStream inputStream) throws UnifyException {
-		try {
-			long totalRead = 0;
-			byte[] buffer = new byte[BUFFER_SIZE];
-			int read = 0;
-			while ((read = inputStream.read(buffer)) >= 0) {
-				outputStream.write(buffer, 0, read);
-				totalRead += read;
-			}
-			return totalRead;
-		} catch (IOException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(inputStream);
-		}
-	}
+    /**
+     * Writes all data from input stream to output stream. Closes input stream at
+     * end of write.
+     * 
+     * @param outputStream
+     *            the output stream to write to
+     * @param inputStream
+     *            the input stream to read from
+     * @return the number of bytes written
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static long writeAll(OutputStream outputStream, InputStream inputStream) throws UnifyException {
+        try {
+            long totalRead = 0;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int read = 0;
+            while ((read = inputStream.read(buffer)) >= 0) {
+                outputStream.write(buffer, 0, read);
+                totalRead += read;
+            }
+            return totalRead;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(inputStream);
+        }
+    }
 
-	/**
-	 * Writes all supplied data to specified output stream.
-	 * 
-	 * @param outputStream
-	 *            the output stream to write to
-	 * @param data
-	 *            the data to write
-	 * @return the number of bytes written
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static long writeAll(OutputStream outputStream, byte[] data) throws UnifyException {
-		try {
-			outputStream.write(data);
-			return data.length;
-		} catch (IOException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		}
-	}
+    /**
+     * Writes all supplied data to specified output stream.
+     * 
+     * @param outputStream
+     *            the output stream to write to
+     * @param data
+     *            the data to write
+     * @return the number of bytes written
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static long writeAll(OutputStream outputStream, byte[] data) throws UnifyException {
+        try {
+            outputStream.write(data);
+            return data.length;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        }
+    }
 
-	/**
-	 * Writes all input stream data into file.
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @param inputStream
-	 *            the input stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static void writeToFile(String filename, InputStream inputStream) throws UnifyException {
-		OutputStream outputStream = null;
-		try {
-			outputStream = new FileOutputStream(filename);
-			IOUtils.writeAll(outputStream, inputStream);
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(outputStream);
-		}
-	}
+    /**
+     * Writes all input stream data into file.
+     * 
+     * @param filename
+     *            the file name
+     * @param inputStream
+     *            the input stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static void writeToFile(String filename, InputStream inputStream) throws UnifyException {
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(filename);
+            IOUtils.writeAll(outputStream, inputStream);
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(outputStream);
+        }
+    }
 
-	/**
-	 * Writes all input stream data into file.
-	 * 
-	 * @param file
-	 *            the file
-	 * @param inputStream
-	 *            the input stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static void writeToFile(File file, InputStream inputStream) throws UnifyException {
-		OutputStream outputStream = null;
-		try {
-			outputStream = new FileOutputStream(file);
-			IOUtils.writeAll(outputStream, inputStream);
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(outputStream);
-		}
-	}
+    /**
+     * Writes all input stream data into file.
+     * 
+     * @param file
+     *            the file
+     * @param inputStream
+     *            the input stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static void writeToFile(File file, InputStream inputStream) throws UnifyException {
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            IOUtils.writeAll(outputStream, inputStream);
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(outputStream);
+        }
+    }
 
-	/**
-	 * Writes all input stream data into file.
-	 * 
-	 * @param filename
-	 *            the file name
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static void writeToFile(String filename, byte[] data) throws UnifyException {
-		OutputStream outputStream = null;
-		try {
-			outputStream = new FileOutputStream(filename);
-			outputStream.write(data);
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(outputStream);
-		}
-	}
+    /**
+     * Writes all input stream data into file.
+     * 
+     * @param filename
+     *            the file name
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static void writeToFile(String filename, byte[] data) throws UnifyException {
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(filename);
+            outputStream.write(data);
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(outputStream);
+        }
+    }
 
-	/**
-	 * Writes all input stream data into file.
-	 * 
-	 * @param file
-	 *            the file
-	 * @param data
-	 *            the data to write
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static void writeToFile(File file, byte[] data) throws UnifyException {
-		OutputStream outputStream = null;
-		try {
-			outputStream = new FileOutputStream(file);
-			outputStream.write(data);
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(outputStream);
-		}
-	}
+    /**
+     * Writes all input stream data into file.
+     * 
+     * @param file
+     *            the file
+     * @param data
+     *            the data to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static void writeToFile(File file, byte[] data) throws UnifyException {
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            outputStream.write(data);
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(outputStream);
+        }
+    }
 
-	/**
-	 * Streams a serializable object to bytes.
-	 * 
-	 * @param serializable
-	 *            the serializable object
-	 * @return the streamed object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static byte[] streamToBytes(Object serializable) throws UnifyException {
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream out = new ObjectOutputStream(baos);
-			out.writeObject(serializable);
-			out.flush();
-			out.close();
-			return baos.toByteArray();
-		} catch (IOException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		}
-	}
+    /**
+     * Streams a serializable object to bytes.
+     * 
+     * @param serializable
+     *            the serializable object
+     * @return the streamed object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static byte[] streamToBytes(Object serializable) throws UnifyException {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(baos);
+            out.writeObject(serializable);
+            out.flush();
+            out.close();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        }
+    }
 
-	/**
-	 * Reconstructs an object from a stream of bytes.
-	 * 
-	 * @param targetClass
-	 *            the target type
-	 * @param bytes
-	 *            the bytes to stream from
-	 * @return the constructed object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T streamFromBytes(Class<T> targetClass, byte[] bytes) throws UnifyException {
-		try {
-			ObjectInputStream objectinputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));
-			T object = (T) objectinputStream.readObject();
-			objectinputStream.close();
-			return object;
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		}
-	}
+    /**
+     * Reconstructs an object from a stream of bytes.
+     * 
+     * @param targetClass
+     *            the target type
+     * @param bytes
+     *            the bytes to stream from
+     * @return the constructed object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T streamFromBytes(Class<T> targetClass, byte[] bytes) throws UnifyException {
+        try {
+            ObjectInputStream objectinputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));
+            T object = (T) objectinputStream.readObject();
+            objectinputStream.close();
+            return object;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        }
+    }
 
-	/**
-	 * Closes a reader quietly.
-	 * 
-	 * @param reader
-	 *            the reader to close
-	 */
-	public static void close(Reader reader) {
-		if (reader != null) {
-			try {
-				reader.close();
-			} catch (IOException e) {
-			}
-		}
-	}
+    /**
+     * Closes a reader quietly.
+     * 
+     * @param reader
+     *            the reader to close
+     */
+    public static void close(Reader reader) {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+            }
+        }
+    }
 
-	/**
-	 * Closes an input stream quietly.
-	 * 
-	 * @param instream
-	 *            the input stream to close
-	 */
-	public static void close(InputStream instream) {
-		if (instream != null) {
-			try {
-				instream.close();
-			} catch (IOException e) {
-			}
-		}
-	}
+    /**
+     * Closes an input stream quietly.
+     * 
+     * @param instream
+     *            the input stream to close
+     */
+    public static void close(InputStream instream) {
+        if (instream != null) {
+            try {
+                instream.close();
+            } catch (IOException e) {
+            }
+        }
+    }
 
-	/**
-	 * Closes a writer quietly.
-	 * 
-	 * @param writer
-	 *            the writer to close
-	 */
-	public static void close(Writer writer) {
-		if (writer != null) {
-			try {
-				writer.flush();
-				writer.close();
-			} catch (IOException e) {
-			}
-		}
-	}
+    /**
+     * Closes a writer quietly.
+     * 
+     * @param writer
+     *            the writer to close
+     */
+    public static void close(Writer writer) {
+        if (writer != null) {
+            try {
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+            }
+        }
+    }
 
-	/**
-	 * Closes an output stream quietly.
-	 * 
-	 * @param outstream
-	 *            the output stream to close
-	 */
-	public static void close(OutputStream outstream) {
-		if (outstream != null) {
-			try {
-				outstream.flush();
-				outstream.close();
-			} catch (IOException e) {
-			}
-		}
-	}
+    /**
+     * Closes an output stream quietly.
+     * 
+     * @param outstream
+     *            the output stream to close
+     */
+    public static void close(OutputStream outstream) {
+        if (outstream != null) {
+            try {
+                outstream.flush();
+                outstream.close();
+            } catch (IOException e) {
+            }
+        }
+    }
 
-	/**
-	 * Ensures a directory exists. Checks if a directory exists. Creates one if
-	 * directory does not exist.
-	 * 
-	 * @param path
-	 *            the directory path
-	 * @return true value if directory exists now.
-	 */
-	public static boolean ensureDirectoryExists(String path) {
-		File file = new File(IOUtils.conform(System.getProperty("file.separator"), path));
+    /**
+     * Ensures a directory exists. Checks if a directory exists. Creates one if
+     * directory does not exist.
+     * 
+     * @param path
+     *            the directory path
+     * @return true value if directory exists now.
+     */
+    public static boolean ensureDirectoryExists(String path) {
+        File file = new File(IOUtils.conform(System.getProperty("file.separator"), path));
 
-		if (file.isFile()) {
-			return false;
-		}
+        if (file.isFile()) {
+            return false;
+        }
 
-		if (!file.isDirectory()) {
-			return file.mkdirs();
-		}
-		return true;
-	}
+        if (!file.isDirectory()) {
+            return file.mkdirs();
+        }
+        return true;
+    }
 
-	/**
-	 * Builds a canonical file name.
-	 * 
-	 * @param path
-	 *            the file path
-	 * @param filename
-	 *            the file name
-	 * @return the proper file name
-	 */
-	public static String buildFilename(String path, String filename) {
-		String fileSeparator = System.getProperty("file.separator");
-		path = IOUtils.conform(fileSeparator, path);
-		filename = IOUtils.conform(fileSeparator, filename);
-		if (path.endsWith(fileSeparator)) {
-			if (filename.startsWith(fileSeparator)) {
-				return path + filename.substring(fileSeparator.length());
-			}
-			return path + filename;
-		}
+    /**
+     * Builds a canonical file name.
+     * 
+     * @param path
+     *            the file path
+     * @param filename
+     *            the file name
+     * @return the proper file name
+     */
+    public static String buildFilename(String path, String filename) {
+        String fileSeparator = System.getProperty("file.separator");
+        path = IOUtils.conform(fileSeparator, path);
+        filename = IOUtils.conform(fileSeparator, filename);
+        if (path.endsWith(fileSeparator)) {
+            if (filename.startsWith(fileSeparator)) {
+                return path + filename.substring(fileSeparator.length());
+            }
+            return path + filename;
+        }
 
-		if (filename.startsWith(fileSeparator)) {
-			return path + filename;
-		}
-		return path + fileSeparator + filename;
-	}
+        if (filename.startsWith(fileSeparator)) {
+            return path + filename;
+        }
+        return path + fileSeparator + filename;
+    }
 
-	public static String conformFilePath(String path) {
-		String fileSeparator = System.getProperty("file.separator");
-		path = IOUtils.conform(fileSeparator, path);
-		if (!path.endsWith(fileSeparator)) {
-			return path + fileSeparator;
-		}
+    public static String conformFilePath(String path) {
+        String fileSeparator = System.getProperty("file.separator");
+        path = IOUtils.conform(fileSeparator, path);
+        if (!path.endsWith(fileSeparator)) {
+            return path + fileSeparator;
+        }
 
-		return path;
-	}
+        return path;
+    }
 
-	/**
-	 * Returns true if supplied file name is in file system.
-	 * 
-	 * @param absoluteFilename
-	 *            the file name to test
-	 */
-	public static boolean isFile(String absoluteFilename) {
-		File file = new File(absoluteFilename);
-		return file.isFile();
-	}
+    /**
+     * Returns true if supplied file name is in file system.
+     * 
+     * @param absoluteFilename
+     *            the file name to test
+     */
+    public static boolean isFile(String absoluteFilename) {
+        File file = new File(absoluteFilename);
+        return file.isFile();
+    }
 
-	/**
-	 * Reads a file resource, obtained from file system or class loader, as lines.
-	 * 
-	 * @param resourceName
-	 *            the resource name
-	 * @param realPath
-	 *            an optional real path
-	 * @return the lines read
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	public static List<String> readFileResourceLines(String resourceName, String realPath) throws UnifyException {
-		List<String> lines = Collections.emptyList();
-		InputStream in = null;
-		try {
-			in = IOUtils.openFileResourceInputStream(resourceName, realPath);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+    /**
+     * Reads a file resource, obtained from file system or class loader, as lines.
+     * 
+     * @param resourceName
+     *            the resource name
+     * @param realPath
+     *            an optional real path
+     * @return the lines read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static List<String> readFileResourceLines(String resourceName, String realPath) throws UnifyException {
+        List<String> lines = Collections.emptyList();
+        InputStream in = null;
+        try {
+            in = IOUtils.openFileResourceInputStream(resourceName, realPath);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-			lines = new ArrayList<String>();
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				lines.add(line);
-			}
-		} catch (FileNotFoundException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
-		} catch (IOException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
-		} finally {
-			IOUtils.close(in);
-		}
+            lines = new ArrayList<String>();
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        } finally {
+            IOUtils.close(in);
+        }
 
-		return lines;
-	}
+        return lines;
+    }
 
-	/**
-	 * Creats an in-memory text file.
-	 * 
-	 * @param lines
-	 *            the text file content
-	 * @return the created in file memory
-	 * @throws Exception
-	 *             if an error occurs
-	 */
-	public static byte[] createInMemoryTextFile(String... lines) throws Exception {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(baos));
-		for (String line : lines) {
-			bw.write(line);
-			bw.newLine();
-		}
-		bw.flush();
-		bw.close();
-		return baos.toByteArray();
-	}
+    /**
+     * Creats an in-memory text file.
+     * 
+     * @param lines
+     *            the text file content
+     * @return the created in file memory
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static byte[] createInMemoryTextFile(String... lines) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(baos));
+        for (String line : lines) {
+            bw.write(line);
+            bw.newLine();
+        }
+        bw.flush();
+        bw.close();
+        return baos.toByteArray();
+    }
 
-	private static String conformJarSeparator(String filename) {
-		filename = IOUtils.conform("/", filename);
-		if (filename.startsWith("/")) {
-			return filename.substring("/".length());
-		}
-		return filename;
-	}
+    private static String conformJarSeparator(String filename) {
+        filename = IOUtils.conform("/", filename);
+        if (filename.startsWith("/")) {
+            return filename.substring("/".length());
+        }
+        return filename;
+    }
 
-	private static String conform(String separator, String name) {
-		if (name == null) {
-			return "";
-		}
+    private static String conform(String separator, String name) {
+        if (name == null) {
+            return "";
+        }
 
-		if (separator.equals("\\")) {
-			return name.replace('/', '\\');
-		}
-		return name.replace('\\', '/');
-	}
+        if (separator.equals("\\")) {
+            return name.replace('/', '\\');
+        }
+        return name.replace('\\', '/');
+    }
 }

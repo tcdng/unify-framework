@@ -26,27 +26,27 @@ import java.util.Set;
  */
 public interface ClientRequest {
 
-	/**
-	 * Returns the request path
-	 */
-	String getPath();
+    /**
+     * Returns the request path
+     */
+    String getPath();
 
-	/**
-	 * Returns the request character set.
-	 */
-	Charset getCharset();
+    /**
+     * Returns the request character set.
+     */
+    Charset getCharset();
 
-	/**
-	 * Returns request parameter names.
-	 */
-	Set<String> getParameterNames();
+    /**
+     * Returns request parameter names.
+     */
+    Set<String> getParameterNames();
 
-	/**
-	 * Returns a request parameter
-	 * 
-	 * @param name
-	 *            the parameter name
-	 * @return object if found otherwise false
-	 */
-	Object getParameter(String name);
+    /**
+     * Returns a request parameter
+     * 
+     * @param name
+     *            the parameter name
+     * @return object if found otherwise false
+     */
+    Object getParameter(String name);
 }

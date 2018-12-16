@@ -37,29 +37,29 @@ import com.tcdng.unify.core.util.DataUtils;
 @Component("sqldistinctrowlist")
 public class SqlDistinctRowListCommand extends AbstractDynamicSqlDataSourceListCommand {
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-		if (params.getConfigName() != null) {
-			SqlDistinctRowListConfigManager manager = (SqlDistinctRowListConfigManager) this
-					.getComponent(ApplicationAliasConstants.SQL_DISTINCTROWLIST_CONFIG_MANAGER);
-			SqlDistinctRowListConfig config = manager.getSqlDistinctRowListConfig(params.getConfigName());
+    @Override
+    public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
+        if (params.getConfigName() != null) {
+            SqlDistinctRowListConfigManager manager = (SqlDistinctRowListConfigManager) this
+                    .getComponent(ApplicationAliasConstants.SQL_DISTINCTROWLIST_CONFIG_MANAGER);
+            SqlDistinctRowListConfig config = manager.getSqlDistinctRowListConfig(params.getConfigName());
 
-			String tableName = config.getTable();
-			NativeQuery query = new NativeQuery().schemaName(config.getSchema()).tableName(tableName)
-					.addColumn(tableName, config.getKeyColumn()).addColumn(tableName, config.getDescColumn())
-					.distinct(true);
-			List<Object[]> rows = getDsManager().getRows(config.getDataSource(), query);
+            String tableName = config.getTable();
+            NativeQuery query = new NativeQuery().schemaName(config.getSchema()).tableName(tableName)
+                    .addColumn(tableName, config.getKeyColumn()).addColumn(tableName, config.getDescColumn())
+                    .distinct(true);
+            List<Object[]> rows = getDsManager().getRows(config.getDataSource(), query);
 
-			List<ListData> resultList = new ArrayList<ListData>();
-			for (Object[] item : rows) {
-				resultList.add(new ListData(String.valueOf(item[0]), String.valueOf(item[1])));
-			}
+            List<ListData> resultList = new ArrayList<ListData>();
+            for (Object[] item : rows) {
+                resultList.add(new ListData(String.valueOf(item[0]), String.valueOf(item[1])));
+            }
 
-			DataUtils.sort(resultList, ListData.class, "listDescription", true);
-			return resultList;
-		}
+            DataUtils.sort(resultList, ListData.class, "listDescription", true);
+            return resultList;
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
 }

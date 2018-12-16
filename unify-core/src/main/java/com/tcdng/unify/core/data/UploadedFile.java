@@ -25,48 +25,48 @@ import java.util.Date;
  */
 public class UploadedFile {
 
-	private String filename;
+    private String filename;
 
-	private Date creationDate;
+    private Date creationDate;
 
-	private Date modificationDate;
+    private Date modificationDate;
 
-	byte[] data;
+    byte[] data;
 
-	public UploadedFile(String filename, Date creationDate, Date modificationDate, byte[] data) {
-		this.filename = filename;
-		this.creationDate = creationDate;
-		this.modificationDate = modificationDate;
-		this.data = data;
-	}
+    public UploadedFile(String filename, Date creationDate, Date modificationDate, byte[] data) {
+        this.filename = filename;
+        this.creationDate = creationDate;
+        this.modificationDate = modificationDate;
+        this.data = data;
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public Date getCreationDate() {
-		return creationDate;
-	}
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
-	public Date getModificationDate() {
-		return modificationDate;
-	}
+    public Date getModificationDate() {
+        return modificationDate;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public byte[] getData() {
+        return data;
+    }
 
-	public int getSize() {
-		if (data != null) {
-			return data.length;
-		}
+    public int getSize() {
+        if (data != null) {
+            return data.length;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	@Override
-	public String toString() {
-		return "file=\'" + this.filename + "\', size=" + this.getSize() + ", creationDate = " + creationDate
-				+ ", modificationDate = " + modificationDate;
-	}
+    @Override
+    public String toString() {
+        return "file=\'" + this.filename + "\', size=" + this.getSize() + ", creationDate = " + creationDate
+                + ", modificationDate = " + modificationDate;
+    }
 }

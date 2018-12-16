@@ -32,10 +32,10 @@ import com.tcdng.unify.web.ui.control.PasswordField;
 @Component("passwordfield-writer")
 public class PasswordFieldWriter extends TextFieldWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		PasswordField passwordField = (PasswordField) widget;
-		writeTextField(writer, passwordField, "password");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        PasswordField passwordField = (PasswordField) widget;
+        writeTextField(writer, passwordField, "password");
+    }
 
 }

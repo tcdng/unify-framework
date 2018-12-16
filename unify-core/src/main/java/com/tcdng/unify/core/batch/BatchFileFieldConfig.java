@@ -25,74 +25,74 @@ import com.tcdng.unify.core.constant.PadDirection;
  */
 public class BatchFileFieldConfig {
 
-	private String fieldName;
+    private String fieldName;
 
-	private String readerFieldName;
+    private String readerFieldName;
 
-	private String formatter;
+    private String formatter;
 
-	private PadDirection padDirection;
+    private PadDirection padDirection;
 
-	private Character padChar;
+    private Character padChar;
 
-	private int length;
+    private int length;
 
-	private boolean trim;
+    private boolean trim;
 
-	private boolean pad;
+    private boolean pad;
 
-	private boolean updateOnConstraint;
+    private boolean updateOnConstraint;
 
-	public BatchFileFieldConfig(String fieldName, String readerFieldName, String formatter, PadDirection padDirection,
-			int length, boolean trim, boolean pad, boolean updateOnConstraint, Character padChar) {
-		this.fieldName = fieldName;
-		this.readerFieldName = readerFieldName;
-		this.formatter = formatter;
-		this.padDirection = padDirection;
-		this.length = length;
-		this.trim = trim;
-		this.pad = pad;
-		this.updateOnConstraint = updateOnConstraint;
-		this.padChar = padChar;
-	}
+    public BatchFileFieldConfig(String fieldName, String readerFieldName, String formatter, PadDirection padDirection,
+            int length, boolean trim, boolean pad, boolean updateOnConstraint, Character padChar) {
+        this.fieldName = fieldName;
+        this.readerFieldName = readerFieldName;
+        this.formatter = formatter;
+        this.padDirection = padDirection;
+        this.length = length;
+        this.trim = trim;
+        this.pad = pad;
+        this.updateOnConstraint = updateOnConstraint;
+        this.padChar = padChar;
+    }
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    public String getFieldName() {
+        return fieldName;
+    }
 
-	public String getReaderFieldName() {
-		return readerFieldName;
-	}
+    public String getReaderFieldName() {
+        return readerFieldName;
+    }
 
-	public String getFormatter() {
-		return formatter;
-	}
+    public String getFormatter() {
+        return formatter;
+    }
 
-	protected PadDirection getPadDirection() {
-		return padDirection;
-	}
+    protected PadDirection getPadDirection() {
+        return padDirection;
+    }
 
-	public int getLength() {
-		return length;
-	}
+    public int getLength() {
+        return length;
+    }
 
-	public boolean isTrim() {
-		return trim;
-	}
+    public boolean isTrim() {
+        return trim;
+    }
 
-	public boolean isPad() {
-		return pad;
-	}
+    public boolean isPad() {
+        return pad;
+    }
 
-	public boolean isUpdateOnConstraint() {
-		return updateOnConstraint;
-	}
+    public boolean isUpdateOnConstraint() {
+        return updateOnConstraint;
+    }
 
-	public Character getPadChar() {
-		return padChar;
-	}
+    public Character getPadChar() {
+        return padChar;
+    }
 
-	public boolean isFormatter() {
-		return this.formatter != null;
-	}
+    public boolean isFormatter() {
+        return this.formatter != null;
+    }
 }

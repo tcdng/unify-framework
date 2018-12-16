@@ -23,35 +23,35 @@ package com.tcdng.unify.core.data;
  */
 public class Ledger extends AbstractDocument {
 
-	private Long id;
+    private Long id;
 
-	private String[] purchases;
+    private String[] purchases;
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	@Override
-	public String getDescription() {
-		return null;
-	}
+    @Override
+    public String getDescription() {
+        return null;
+    }
 
-	@Override
-	public Object getOwnerId() {
-		return null;
-	}
+    @Override
+    public Object getOwnerId() {
+        return null;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String[] getPurchases() {
-		return purchases;
-	}
+    public String[] getPurchases() {
+        return purchases;
+    }
 
-	public void setPurchases(String[] purchases) {
-		this.purchases = purchases;
-	}
+    public void setPurchases(String[] purchases) {
+        this.purchases = purchases;
+    }
 
 }

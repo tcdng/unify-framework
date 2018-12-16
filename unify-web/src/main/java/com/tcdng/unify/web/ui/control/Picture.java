@@ -31,48 +31,48 @@ import com.tcdng.unify.web.ui.Control;
 @Component("ui-picture")
 public class Picture extends AbstractMultiControl {
 
-	private Control fileControl;
+    private Control fileControl;
 
-	private Control imageControl;
+    private Control imageControl;
 
-	private UploadedFile[] uploadedFile;
+    private UploadedFile[] uploadedFile;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		fileControl = (Control) addInternalChildControl(
-				"!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");
-		StringBuilder sb = new StringBuilder();
-		sb.append("!ui-image src:$t{images/camera.png}");
-		appendUplAttribute(sb, "binding");
-		appendUplAttribute(sb, "styleClass");
-		appendUplAttribute(sb, "style");
-		imageControl = addInternalChildControl(sb.toString(), true, false);
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        fileControl = (Control) addInternalChildControl(
+                "!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");
+        StringBuilder sb = new StringBuilder();
+        sb.append("!ui-image src:$t{images/camera.png}");
+        appendUplAttribute(sb, "binding");
+        appendUplAttribute(sb, "styleClass");
+        appendUplAttribute(sb, "style");
+        imageControl = addInternalChildControl(sb.toString(), true, false);
+    }
 
-	@Override
-	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		super.populate(transferBlock);
-		if (uploadedFile != null && uploadedFile.length > 0) {
-			setValue(uploadedFile[0].getData());
-		}
+    @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        super.populate(transferBlock);
+        if (uploadedFile != null && uploadedFile.length > 0) {
+            setValue(uploadedFile[0].getData());
+        }
 
-		uploadedFile = null;
-	}
+        uploadedFile = null;
+    }
 
-	public Control getFileCtrl() {
-		return fileControl;
-	}
+    public Control getFileCtrl() {
+        return fileControl;
+    }
 
-	public Control getImageCtrl() {
-		return imageControl;
-	}
+    public Control getImageCtrl() {
+        return imageControl;
+    }
 
-	public UploadedFile[] getUploadedFile() {
-		return uploadedFile;
-	}
+    public UploadedFile[] getUploadedFile() {
+        return uploadedFile;
+    }
 
-	public void setUploadedFile(UploadedFile[] uploadedFile) {
-		this.uploadedFile = uploadedFile;
-	}
+    public void setUploadedFile(UploadedFile[] uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
 
 }

@@ -31,11 +31,11 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("loaddocumentresponse")
 public class LoadDocumentResponse extends AbstractPageControllerResponse {
 
-	@Override
-	public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing load document response: controller = [{0}]", pageController.getName());
-		Document document = (Document) pageController.getPage();
-		writer.writeStructureAndContent(document);
-		writer.writeBehaviour(document);
-	}
+    @Override
+    public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing load document response: controller = [{0}]", pageController.getName());
+        Document document = (Document) pageController.getPage();
+        writer.writeStructureAndContent(document);
+        writer.writeBehaviour(document);
+    }
 }

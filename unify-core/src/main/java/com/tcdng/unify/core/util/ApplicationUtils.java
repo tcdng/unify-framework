@@ -25,11 +25,11 @@ import java.util.UUID;
  */
 public final class ApplicationUtils {
 
-	private ApplicationUtils() {
+    private ApplicationUtils() {
 
-	}
+    }
 
-	public static String generateSessionContextId() {
-		return UUID.randomUUID().toString();
-	}
+    public static String generateSessionContextId() {
+        return UUID.randomUUID().toString();
+    }
 }

@@ -32,15 +32,15 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("docviewresponse")
 public class DocViewResponse extends AbstractJsonPageControllerResponse {
 
-	public DocViewResponse() {
-		super("docViewHdl");
-	}
+    public DocViewResponse() {
+        super("docViewHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		Panel docViewPanel = ((DocViewController) pageController).getDocViewPanel();
-		writer.write(",\"remoteTarget\":\"").write(getRequestContextUtil().getRemoteViewer());
-		writer.write("\",\"docView\":");
-		writer.writeJsonPanel(docViewPanel, false);
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        Panel docViewPanel = ((DocViewController) pageController).getDocViewPanel();
+        writer.write(",\"remoteTarget\":\"").write(getRequestContextUtil().getRemoteViewer());
+        writer.write("\",\"docView\":");
+        writer.writeJsonPanel(docViewPanel, false);
+    }
 }

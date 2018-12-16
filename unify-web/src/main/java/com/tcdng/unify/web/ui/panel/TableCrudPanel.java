@@ -29,52 +29,52 @@ import com.tcdng.unify.web.ui.Panel;
  */
 public interface TableCrudPanel<T extends Entity> extends Panel {
 
-	interface Event {
-		String CREATE = "CREATE";
+    interface Event {
+        String CREATE = "CREATE";
 
-		String CREATE_NEXT = "CREATE_NEXT";
+        String CREATE_NEXT = "CREATE_NEXT";
 
-		String UPDATE = "UPDATE";
+        String UPDATE = "UPDATE";
 
-		String DELETE = "DELETE";
+        String DELETE = "DELETE";
 
-		String CANCEL = "CANCEL";
-	}
+        String CANCEL = "CANCEL";
+    }
 
-	/**
-	 * Returns record at position.
-	 * 
-	 * @param index
-	 *            the record index
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	T getRecord(int index) throws UnifyException;
+    /**
+     * Returns record at position.
+     * 
+     * @param index
+     *            the record index
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    T getRecord(int index) throws UnifyException;
 
-	/**
-	 * Sets panel record list.
-	 * 
-	 * @param recordList
-	 *            the list to set.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setRecordList(List<T> recordList) throws UnifyException;
+    /**
+     * Sets panel record list.
+     * 
+     * @param recordList
+     *            the list to set.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setRecordList(List<T> recordList) throws UnifyException;
 
-	/**
-	 * Gets panel record list.
-	 * 
-	 * @return the record list
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<T> getRecordList() throws UnifyException;
+    /**
+     * Gets panel record list.
+     * 
+     * @return the record list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<T> getRecordList() throws UnifyException;
 
-	/**
-	 * Clears panel data.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void clear() throws UnifyException;
+    /**
+     * Clears panel data.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void clear() throws UnifyException;
 }

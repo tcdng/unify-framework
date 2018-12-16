@@ -32,18 +32,18 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("filedownloadresponse")
 public class FileDownloadResponse extends AbstractJsonPageControllerResponse {
 
-	public FileDownloadResponse() {
-		super("downloadHdl");
-	}
+    public FileDownloadResponse() {
+        super("downloadHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		DownloadFile downloadFile = (DownloadFile) getRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE);
-		setSessionAttribute(downloadFile.getFilename(), downloadFile.getData());
-		writer.write(",\"downloadPath\":\"");
-		writer.writeContextResourceURL("/resource/scope", downloadFile.getContentType(), downloadFile.getFilename(),
-				null, true, true); // Download is true. Clear on read is
-									// true
-		writer.write("\"");
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        DownloadFile downloadFile = (DownloadFile) getRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE);
+        setSessionAttribute(downloadFile.getFilename(), downloadFile.getData());
+        writer.write(",\"downloadPath\":\"");
+        writer.writeContextResourceURL("/resource/scope", downloadFile.getContentType(), downloadFile.getFilename(),
+                null, true, true); // Download is true. Clear on read is
+                                   // true
+        writer.write("\"");
+    }
 }

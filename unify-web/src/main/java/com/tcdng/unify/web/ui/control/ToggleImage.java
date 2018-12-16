@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  */
 @Component("ui-toggleimage")
 @UplAttributes({ @UplAttribute(name = "onImgSrc", type = String.class, defaultValue = "$t{images/toggleon.png}"),
-		@UplAttribute(name = "offImgSrc", type = String.class, defaultValue = "$t{images/toggleoff.png}") })
+        @UplAttribute(name = "offImgSrc", type = String.class, defaultValue = "$t{images/toggleoff.png}") })
 public class ToggleImage extends AbstractTargetControl {
 
 }

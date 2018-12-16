@@ -32,48 +32,48 @@ import com.tcdng.unify.core.database.DataSourceDialect;
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE)
 public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements DynamicSqlDataSource {
 
-	@Override
-	public void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
-		if (isConfigured()) {
-			throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED,
-					dynamicSqlDataSourceConfig.getName());
-		}
-		innerConfigure(dynamicSqlDataSourceConfig);
-	}
+    @Override
+    public void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
+        if (isConfigured()) {
+            throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED,
+                    dynamicSqlDataSourceConfig.getName());
+        }
+        innerConfigure(dynamicSqlDataSourceConfig);
+    }
 
-	@Override
-	public boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
-		if (isConfigured()) {
-			// Get old pool
-			SqlConnectionPool oldConnectionPool = getSqlConnectionPool();
+    @Override
+    public boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
+        if (isConfigured()) {
+            // Get old pool
+            SqlConnectionPool oldConnectionPool = getSqlConnectionPool();
 
-			// Create new pool
-			innerConfigure(dynamicSqlDataSourceConfig);
+            // Create new pool
+            innerConfigure(dynamicSqlDataSourceConfig);
 
-			// Terminate old pool
-			if (oldConnectionPool != null) {
-				oldConnectionPool.terminate();
-			}
+            // Terminate old pool
+            if (oldConnectionPool != null) {
+                oldConnectionPool.terminate();
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public boolean isConfigured() throws UnifyException {
-		return getDriver() != null;
-	}
+    @Override
+    public boolean isConfigured() throws UnifyException {
+        return getDriver() != null;
+    }
 
-	private void innerConfigure(DynamicSqlDataSourceConfig dataSourceConfig) throws UnifyException {
-		setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
-		setDriver(dataSourceConfig.getDriver());
-		setConnectionUrl(dataSourceConfig.getConnectionUrl());
-		setUsername(dataSourceConfig.getDbUsername());
-		setPassword(dataSourceConfig.getDbPassword());
-		setMaxConnections(dataSourceConfig.getMaxConnection());
-		setShutdownOnTerminate(dataSourceConfig.isShutdownOnTerminate());
-		doInitConnectionPool();
-	}
+    private void innerConfigure(DynamicSqlDataSourceConfig dataSourceConfig) throws UnifyException {
+        setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
+        setDriver(dataSourceConfig.getDriver());
+        setConnectionUrl(dataSourceConfig.getConnectionUrl());
+        setUsername(dataSourceConfig.getDbUsername());
+        setPassword(dataSourceConfig.getDbPassword());
+        setMaxConnections(dataSourceConfig.getMaxConnection());
+        setShutdownOnTerminate(dataSourceConfig.isShutdownOnTerminate());
+        doInitConnectionPool();
+    }
 }

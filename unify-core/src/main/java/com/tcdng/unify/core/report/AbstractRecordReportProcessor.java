@@ -36,47 +36,47 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public abstract class AbstractRecordReportProcessor extends AbstractReportProcessor {
 
-	@Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
-	private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
+    @Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
+    private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
-	private Class<? extends Query<? extends Entity>> queryClass;
+    private Class<? extends Query<? extends Entity>> queryClass;
 
-	public AbstractRecordReportProcessor(Class<? extends Query<? extends Entity>> queryClass) {
-		this.queryClass = queryClass;
-	}
+    public AbstractRecordReportProcessor(Class<? extends Query<? extends Entity>> queryClass) {
+        this.queryClass = queryClass;
+    }
 
-	@Override
-	public void process(Report report) throws UnifyException {
-		DataSourceDialect dialect = getDataSource(report).getDialect();
-		Query<? extends Entity> query = ReflectUtils.newInstance(queryClass);
+    @Override
+    public void process(Report report) throws UnifyException {
+        DataSourceDialect dialect = getDataSource(report).getDialect();
+        Query<? extends Entity> query = ReflectUtils.newInstance(queryClass);
 
-		Map<String, String> fieldToColumnMap = dialect.getFieldToNativeColumnMap(query.getEntityClass());
-		ReportColumn[] reportColumns = getReportColumns(report.getCode());
-		for (ReportColumn rc : reportColumns) {
-			report.addColumn(rc);
-			query.select(rc.getName());
-			if (rc.isGroup() || rc.getOrder() != null) {
-				query.order(rc.getName());
-			}
-			// Convert property names to native column name
-			rc.setName(fieldToColumnMap.get(rc.getName()));
-		}
+        Map<String, String> fieldToColumnMap = dialect.getFieldToNativeColumnMap(query.getEntityClass());
+        ReportColumn[] reportColumns = getReportColumns(report.getCode());
+        for (ReportColumn rc : reportColumns) {
+            report.addColumn(rc);
+            query.select(rc.getName());
+            if (rc.isGroup() || rc.getOrder() != null) {
+                query.order(rc.getName());
+            }
+            // Convert property names to native column name
+            rc.setName(fieldToColumnMap.get(rc.getName()));
+        }
 
-		populate(query, report.getReportParameters());
-		String nativeQuery = dialect.generateNativeQuery(query);
-		report.setQuery(nativeQuery);
-	}
+        populate(query, report.getReportParameters());
+        String nativeQuery = dialect.generateNativeQuery(query);
+        report.setQuery(nativeQuery);
+    }
 
-	protected DataSource getDataSource(Report report) throws UnifyException {
-		if (report.isDynamicDataSource()) {
-			return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
-		}
+    protected DataSource getDataSource(Report report) throws UnifyException {
+        if (report.isDynamicDataSource()) {
+            return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
+        }
 
-		return (DataSource) getComponent(report.getDataSource());
-	}
+        return (DataSource) getComponent(report.getDataSource());
+    }
 
-	protected abstract ReportColumn[] getReportColumns(String reportCode) throws UnifyException;
+    protected abstract ReportColumn[] getReportColumns(String reportCode) throws UnifyException;
 
-	protected abstract void populate(Query<? extends Entity> query, ReportParameters reportParameters)
-			throws UnifyException;
+    protected abstract void populate(Query<? extends Entity> query, ReportParameters reportParameters)
+            throws UnifyException;
 }

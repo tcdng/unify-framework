@@ -26,13 +26,13 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SqlDistinctRowListConfigManager extends UnifyComponent {
 
-	/**
-	 * Returns a distinct row list configuration.
-	 * 
-	 * @param configCode
-	 *            the configuration code
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	SqlDistinctRowListConfig getSqlDistinctRowListConfig(String configCode) throws UnifyException;
+    /**
+     * Returns a distinct row list configuration.
+     * 
+     * @param configCode
+     *            the configuration code
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlDistinctRowListConfig getSqlDistinctRowListConfig(String configCode) throws UnifyException;
 }

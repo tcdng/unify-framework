@@ -26,8 +26,8 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "fixeddatetimeformat", description = "$m{format.fixeddatetime}")
 public class FixedDateTimeFormatterImpl extends AbstractDateFormatter {
 
-	public FixedDateTimeFormatterImpl() {
-		super(TYPE.FIXED);
-	}
+    public FixedDateTimeFormatterImpl() {
+        super(TYPE.FIXED);
+    }
 
 }

@@ -23,11 +23,11 @@ package com.tcdng.unify.core.system;
  */
 public interface ClusterCommandConstants {
 
-	String BROADCAST_PARAMETERS = "broadcastParameters";
+    String BROADCAST_PARAMETERS = "broadcastParameters";
 
-	String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogOutNoMultipleLogin";
+    String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogOutNoMultipleLogin";
 
-	String FORCE_LOGOUT_SYSTEM = "forceLogOutSystem";
+    String FORCE_LOGOUT_SYSTEM = "forceLogOutSystem";
 
-	String FORCE_LOGOUT_ADMINISTRATOR = "forceLogOutAdministrator";
+    String FORCE_LOGOUT_ADMINISTRATOR = "forceLogOutAdministrator";
 }

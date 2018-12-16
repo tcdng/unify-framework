@@ -29,22 +29,22 @@ import com.tcdng.unify.web.ui.AbstractControl;
  */
 @Component("ui-textclock")
 @UplAttributes({ @UplAttribute(name = "dateTitle", type = String.class, defaultValue = "$m{textclock.date.title}"),
-		@UplAttribute(name = "timeTitle", type = String.class, defaultValue = "$m{textclock.time.title}") })
+        @UplAttribute(name = "timeTitle", type = String.class, defaultValue = "$m{textclock.time.title}") })
 public class TextClock extends AbstractControl {
 
-	public String getDateTitle() throws UnifyException {
-		return getUplAttribute(String.class, "dateTitle");
-	}
+    public String getDateTitle() throws UnifyException {
+        return getUplAttribute(String.class, "dateTitle");
+    }
 
-	public String getTimeTitle() throws UnifyException {
-		return getUplAttribute(String.class, "timeTitle");
-	}
+    public String getTimeTitle() throws UnifyException {
+        return getUplAttribute(String.class, "timeTitle");
+    }
 
-	public String getDateId() throws UnifyException {
-		return getPrefixedId("date_");
-	}
+    public String getDateId() throws UnifyException {
+        return getPrefixedId("date_");
+    }
 
-	public String getTimeId() throws UnifyException {
-		return getPrefixedId("time_");
-	}
+    public String getTimeId() throws UnifyException {
+        return getPrefixedId("time_");
+    }
 }

@@ -22,5 +22,5 @@ package com.tcdng.unify.core.constant;
  * @since 1.0
  */
 public enum LocaleType {
-	APPLICATION, SESSION
+    APPLICATION, SESSION
 }

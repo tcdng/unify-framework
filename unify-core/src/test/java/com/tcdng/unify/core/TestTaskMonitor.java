@@ -27,109 +27,109 @@ import com.tcdng.unify.core.task.TaskStatus;
  */
 public class TestTaskMonitor implements TaskMonitor {
 
-	@Override
-	public String getTaskName(int taskIndex) {
-		return null;
-	}
+    @Override
+    public String getTaskName(int taskIndex) {
+        return null;
+    }
 
-	@Override
-	public TaskStatus getTaskStatus(int taskIndex) {
-		return null;
-	}
+    @Override
+    public TaskStatus getTaskStatus(int taskIndex) {
+        return null;
+    }
 
-	@Override
-	public TaskStatus getCurrentTaskStatus() {
-		return null;
-	}
+    @Override
+    public TaskStatus getCurrentTaskStatus() {
+        return null;
+    }
 
-	@Override
-	public String getTaskId(int taskIndex) {
-		return null;
-	}
+    @Override
+    public String getTaskId(int taskIndex) {
+        return null;
+    }
 
-	@Override
-	public TaskOutput getTaskOutput(int taskIndex) {
-		return null;
-	}
+    @Override
+    public TaskOutput getTaskOutput(int taskIndex) {
+        return null;
+    }
 
-	@Override
-	public TaskOutput getCurrentTaskOutput() {
-		return null;
-	}
+    @Override
+    public TaskOutput getCurrentTaskOutput() {
+        return null;
+    }
 
-	@Override
-	public int getTaskCount() {
-		return 0;
-	}
+    @Override
+    public int getTaskCount() {
+        return 0;
+    }
 
-	@Override
-	public int getCurrentTaskIndex() {
-		return 0;
-	}
+    @Override
+    public int getCurrentTaskIndex() {
+        return 0;
+    }
 
-	@Override
-	public void addMessage(String message) {
+    @Override
+    public void addMessage(String message) {
 
-	}
+    }
 
-	@Override
-	public void addErrorMessage(UnifyError unifyError) {
+    @Override
+    public void addErrorMessage(UnifyError unifyError) {
 
-	}
+    }
 
-	@Override
-	public String[] getMessages() {
-		return null;
-	}
+    @Override
+    public String[] getMessages() {
+        return null;
+    }
 
-	@Override
-	public String getLastMessage() {
-		return null;
-	}
+    @Override
+    public String getLastMessage() {
+        return null;
+    }
 
-	@Override
-	public void clearMessages() {
+    @Override
+    public void clearMessages() {
 
-	}
+    }
 
-	@Override
-	public void addException(Exception e) {
+    @Override
+    public void addException(Exception e) {
 
-	}
+    }
 
-	@Override
-	public Exception[] getExceptions() {
-		return null;
-	}
+    @Override
+    public Exception[] getExceptions() {
+        return null;
+    }
 
-	@Override
-	public void cancel() {
+    @Override
+    public void cancel() {
 
-	}
+    }
 
-	@Override
-	public boolean isCanceled() {
-		return false;
-	}
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
 
-	@Override
-	public boolean isExceptions() {
-		return false;
-	}
+    @Override
+    public boolean isExceptions() {
+        return false;
+    }
 
-	@Override
-	public boolean isPending() {
-		return false;
-	}
+    @Override
+    public boolean isPending() {
+        return false;
+    }
 
-	@Override
-	public boolean isDone() {
-		return false;
-	}
+    @Override
+    public boolean isDone() {
+        return false;
+    }
 
-	@Override
-	public boolean isRunning() {
-		return false;
-	}
+    @Override
+    public boolean isRunning() {
+        return false;
+    }
 
 }

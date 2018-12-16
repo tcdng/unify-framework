@@ -30,48 +30,48 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractFileSystemIO extends AbstractUnifyComponent implements FileSystemIO {
 
-	@Override
-	public String buildFilename(String path, String filename) {
-		return IOUtils.buildFilename(path, filename);
-	}
+    @Override
+    public String buildFilename(String path, String filename) {
+        return IOUtils.buildFilename(path, filename);
+    }
 
-	@Override
-	public int read(byte[] buffer, InputStream inputStream) throws UnifyException {
-		return IOUtils.read(buffer, inputStream);
-	}
+    @Override
+    public int read(byte[] buffer, InputStream inputStream) throws UnifyException {
+        return IOUtils.read(buffer, inputStream);
+    }
 
-	@Override
-	public byte[] readAll(InputStream inputStream) throws UnifyException {
-		return IOUtils.readAll(inputStream);
-	}
+    @Override
+    public byte[] readAll(InputStream inputStream) throws UnifyException {
+        return IOUtils.readAll(inputStream);
+    }
 
-	@Override
-	public void close(InputStream inputStream) {
-		IOUtils.close(inputStream);
-	}
+    @Override
+    public void close(InputStream inputStream) {
+        IOUtils.close(inputStream);
+    }
 
-	@Override
-	public long writeAll(OutputStream outputStream, InputStream inputStream) throws UnifyException {
-		return IOUtils.writeAll(outputStream, inputStream);
-	}
+    @Override
+    public long writeAll(OutputStream outputStream, InputStream inputStream) throws UnifyException {
+        return IOUtils.writeAll(outputStream, inputStream);
+    }
 
-	@Override
-	public long writeAll(OutputStream outputStream, byte[] data) throws UnifyException {
-		return IOUtils.writeAll(outputStream, data);
-	}
+    @Override
+    public long writeAll(OutputStream outputStream, byte[] data) throws UnifyException {
+        return IOUtils.writeAll(outputStream, data);
+    }
 
-	@Override
-	public void close(OutputStream outputStream) {
-		IOUtils.close(outputStream);
-	}
+    @Override
+    public void close(OutputStream outputStream) {
+        IOUtils.close(outputStream);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

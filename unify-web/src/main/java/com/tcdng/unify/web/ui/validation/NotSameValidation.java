@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("ui-notsamevalidation")
 public class NotSameValidation extends AbstractComparisonPageValidation {
 
-	public NotSameValidation() {
-		super("notsame", false);
-	}
+    public NotSameValidation() {
+        super("notsame", false);
+    }
 }

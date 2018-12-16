@@ -26,133 +26,133 @@ import com.tcdng.unify.core.UnifyException;
  */
 public final class UplUtils {
 
-	private static final String GENERATOR_INFIX = ">g>";
+    private static final String GENERATOR_INFIX = ">g>";
 
-	private static final String CLONE_INFIX = ">c>";
+    private static final String CLONE_INFIX = ">c>";
 
-	private UplUtils() {
+    private UplUtils() {
 
-	}
+    }
 
-	public static UplGeneratorTarget getUplGeneratorTarget(String name) throws UnifyException {
-		if (!UplUtils.isUplGeneratorTargetName(name)) {
-			throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, "UplUtils",
-					"Invalid generator target name [" + name + "]");
-		}
+    public static UplGeneratorTarget getUplGeneratorTarget(String name) throws UnifyException {
+        if (!UplUtils.isUplGeneratorTargetName(name)) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, "UplUtils",
+                    "Invalid generator target name [" + name + "]");
+        }
 
-		String[] names = name.split(GENERATOR_INFIX);
-		String target = names[1];
-		if (UplUtils.isUplCloneName(target)) {
-			target = UplUtils.getUplComponentClone(target).getComponentName();
-		}
-		return new UplGeneratorTarget(names[0], target);
-	}
+        String[] names = name.split(GENERATOR_INFIX);
+        String target = names[1];
+        if (UplUtils.isUplCloneName(target)) {
+            target = UplUtils.getUplComponentClone(target).getComponentName();
+        }
+        return new UplGeneratorTarget(names[0], target);
+    }
 
-	public static String generateUplGeneratorTargetName(String generatorName, String target) {
-		return generatorName + GENERATOR_INFIX + target;
-	}
+    public static String generateUplGeneratorTargetName(String generatorName, String target) {
+        return generatorName + GENERATOR_INFIX + target;
+    }
 
-	public static boolean isUplGeneratorTargetName(String name) {
-		return name.indexOf(GENERATOR_INFIX) > 0;
-	}
+    public static boolean isUplGeneratorTargetName(String name) {
+        return name.indexOf(GENERATOR_INFIX) > 0;
+    }
 
-	public static UplComponentClone getUplComponentClone(String name) throws UnifyException {
-		if (!UplUtils.isUplCloneName(name)) {
-			throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, "UplUtils",
-					"Invalid UPL component clone name [" + name + "]");
-		}
+    public static UplComponentClone getUplComponentClone(String name) throws UnifyException {
+        if (!UplUtils.isUplCloneName(name)) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, "UplUtils",
+                    "Invalid UPL component clone name [" + name + "]");
+        }
 
-		String[] names = name.split(CLONE_INFIX);
-		return new UplComponentClone(names[0], names[1]);
-	}
+        String[] names = name.split(CLONE_INFIX);
+        return new UplComponentClone(names[0], names[1]);
+    }
 
-	public static String generateUplComponentCloneName(String componentName, String cloneId) {
-		return componentName + CLONE_INFIX + cloneId;
-	}
+    public static String generateUplComponentCloneName(String componentName, String cloneId) {
+        return componentName + CLONE_INFIX + cloneId;
+    }
 
-	public static boolean isUplCloneName(String name) {
-		return name.indexOf(CLONE_INFIX) > 0;
-	}
+    public static boolean isUplCloneName(String name) {
+        return name.indexOf(CLONE_INFIX) > 0;
+    }
 
-	public static String generateUplAttributesKey(int uplType, String componentName, String longName,
-			String descriptor) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(uplType);
-		UplUtils.appendKeyField(sb, 0, componentName);
-		UplUtils.appendKeyField(sb, 1, longName);
-		UplUtils.appendKeyField(sb, 2, descriptor);
-		return sb.toString();
-	}
+    public static String generateUplAttributesKey(int uplType, String componentName, String longName,
+            String descriptor) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(uplType);
+        UplUtils.appendKeyField(sb, 0, componentName);
+        UplUtils.appendKeyField(sb, 1, longName);
+        UplUtils.appendKeyField(sb, 2, descriptor);
+        return sb.toString();
+    }
 
-	public static UplAttributesKeyFields extractUplAtributesKeyFields(String uplAttributesKey) {
-		int uplType = Integer.valueOf(uplAttributesKey.substring(0, uplAttributesKey.indexOf("[0]>")));
-		String document = UplUtils.extractField(uplAttributesKey, "[0]>", "[1]>");
-		String longName = UplUtils.extractField(uplAttributesKey, "[1]>", "[2]>");
-		String descriptor = UplUtils.extractField(uplAttributesKey, "[2]>", null);
-		return new UplAttributesKeyFields(uplType, document, longName, descriptor);
-	}
+    public static UplAttributesKeyFields extractUplAtributesKeyFields(String uplAttributesKey) {
+        int uplType = Integer.valueOf(uplAttributesKey.substring(0, uplAttributesKey.indexOf("[0]>")));
+        String document = UplUtils.extractField(uplAttributesKey, "[0]>", "[1]>");
+        String longName = UplUtils.extractField(uplAttributesKey, "[1]>", "[2]>");
+        String descriptor = UplUtils.extractField(uplAttributesKey, "[2]>", null);
+        return new UplAttributesKeyFields(uplType, document, longName, descriptor);
+    }
 
-	private static void appendKeyField(StringBuilder sb, int index, String field) {
-		sb.append('[').append(index).append("]>");
-		if (field != null && !field.isEmpty()) {
-			sb.append(field);
-		}
-	}
+    private static void appendKeyField(StringBuilder sb, int index, String field) {
+        sb.append('[').append(index).append("]>");
+        if (field != null && !field.isEmpty()) {
+            sb.append(field);
+        }
+    }
 
-	private static String extractField(String key, String startMark, String stopMark) {
-		String field = null;
-		if (stopMark != null) {
-			field = key.substring(key.indexOf(startMark) + startMark.length(), key.indexOf(stopMark));
-		} else {
-			field = key.substring(key.indexOf(startMark) + startMark.length());
-		}
+    private static String extractField(String key, String startMark, String stopMark) {
+        String field = null;
+        if (stopMark != null) {
+            field = key.substring(key.indexOf(startMark) + startMark.length(), key.indexOf(stopMark));
+        } else {
+            field = key.substring(key.indexOf(startMark) + startMark.length());
+        }
 
-		if (field != null && field.isEmpty()) {
-			return null;
-		}
+        if (field != null && field.isEmpty()) {
+            return null;
+        }
 
-		return field;
-	}
+        return field;
+    }
 
-	public static class UplGeneratorTarget {
+    public static class UplGeneratorTarget {
 
-		private String generatorName;
+        private String generatorName;
 
-		private String target;
+        private String target;
 
-		public UplGeneratorTarget(String generatorName, String target) {
-			this.generatorName = generatorName;
-			this.target = target;
-		}
+        public UplGeneratorTarget(String generatorName, String target) {
+            this.generatorName = generatorName;
+            this.target = target;
+        }
 
-		public String getGeneratorName() {
-			return generatorName;
-		}
+        public String getGeneratorName() {
+            return generatorName;
+        }
 
-		public String getTarget() {
-			return target;
-		}
+        public String getTarget() {
+            return target;
+        }
 
-	}
+    }
 
-	public static class UplComponentClone {
+    public static class UplComponentClone {
 
-		private String componentName;
+        private String componentName;
 
-		private String cloneId;
+        private String cloneId;
 
-		public UplComponentClone(String componentName, String cloneId) {
-			this.componentName = componentName;
-			this.cloneId = cloneId;
-		}
+        public UplComponentClone(String componentName, String cloneId) {
+            this.componentName = componentName;
+            this.cloneId = cloneId;
+        }
 
-		public String getComponentName() {
-			return componentName;
-		}
+        public String getComponentName() {
+            return componentName;
+        }
 
-		public String getCloneId() {
-			return cloneId;
-		}
+        public String getCloneId() {
+            return cloneId;
+        }
 
-	}
+    }
 }

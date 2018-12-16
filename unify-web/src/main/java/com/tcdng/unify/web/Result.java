@@ -25,24 +25,24 @@ import com.tcdng.unify.core.constant.ContentTypeConstants;
  */
 public class Result {
 
-	private String contentType;
+    private String contentType;
 
-	private PageControllerResponse[] pageControllerResponses;
+    private PageControllerResponse[] pageControllerResponses;
 
-	public Result(PageControllerResponse[] responses) {
-		this(ContentTypeConstants.APPLICATION_JSON, responses);
-	}
+    public Result(PageControllerResponse[] responses) {
+        this(ContentTypeConstants.APPLICATION_JSON, responses);
+    }
 
-	public Result(String contentType, PageControllerResponse[] responses) {
-		this.contentType = contentType;
-		this.pageControllerResponses = responses;
-	}
+    public Result(String contentType, PageControllerResponse[] responses) {
+        this.contentType = contentType;
+        this.pageControllerResponses = responses;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public PageControllerResponse[] getResponses() {
-		return pageControllerResponses;
-	}
+    public PageControllerResponse[] getResponses() {
+        return pageControllerResponses;
+    }
 }

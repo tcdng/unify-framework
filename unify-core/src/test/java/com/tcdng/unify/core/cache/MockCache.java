@@ -27,13 +27,13 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("mock-cache")
 public class MockCache extends AbstractCache<String, String> {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

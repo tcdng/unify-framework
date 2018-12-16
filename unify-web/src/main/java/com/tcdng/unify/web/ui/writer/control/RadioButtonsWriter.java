@@ -37,34 +37,34 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("radiobuttons-writer")
 public class RadioButtonsWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		RadioButtons radioButtons = (RadioButtons) widget;
-		writeHiddenPush(writer, radioButtons, PushType.RADIO);
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        RadioButtons radioButtons = (RadioButtons) widget;
+        writeHiddenPush(writer, radioButtons, PushType.RADIO);
 
-		String value = radioButtons.getValue(String.class);
-		List<? extends Listable> listableList = radioButtons.getListables();
-		boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
-		int breaks = listableList.size();
-		for (Listable listable : listableList) {
-			writer.write("<input type=\"radio\"");
-			writeTagName(writer, radioButtons);
-			writeTagStyleClass(writer, radioButtons);
-			writeTagStyle(writer, radioButtons);
-			String key = listable.getListKey();
+        String value = radioButtons.getValue(String.class);
+        List<? extends Listable> listableList = radioButtons.getListables();
+        boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
+        int breaks = listableList.size();
+        for (Listable listable : listableList) {
+            writer.write("<input type=\"radio\"");
+            writeTagName(writer, radioButtons);
+            writeTagStyleClass(writer, radioButtons);
+            writeTagStyle(writer, radioButtons);
+            String key = listable.getListKey();
 
-			if (key.equals(value)) {
-				writer.write(" checked");
-			}
-			writer.write(" value=\"").write(key).write("\"/>");
-			writer.writeWithHtmlEscape(listable.getListDescription());
+            if (key.equals(value)) {
+                writer.write(" checked");
+            }
+            writer.write(" value=\"").write(key).write("\"/>");
+            writer.writeWithHtmlEscape(listable.getListDescription());
 
-			if (isNotFlow) {
-				if ((--breaks) > 0) {
-					writer.write("<br />");
-				}
-			}
-		}
-	}
+            if (isNotFlow) {
+                if ((--breaks) > 0) {
+                    writer.write("<br />");
+                }
+            }
+        }
+    }
 
 }

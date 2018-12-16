@@ -25,12 +25,12 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class LikeEndPolicy extends LikePolicy {
 
-	public LikeEndPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-		super(sqlDataSourceDialect);
-	}
+    public LikeEndPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
+        super(sqlDataSourceDialect);
+    }
 
-	@Override
-	protected Object adjustValue(Object value) {
-		return "%" + value;
-	}
+    @Override
+    protected Object adjustValue(Object value) {
+        return "%" + value;
+    }
 }

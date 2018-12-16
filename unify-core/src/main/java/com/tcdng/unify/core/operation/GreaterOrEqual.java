@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class GreaterOrEqual extends Criteria {
 
-	public GreaterOrEqual(String field, Object value) {
-		super(Operator.GREATER_OR_EQUAL, field, value);
-	}
+    public GreaterOrEqual(String field, Object value) {
+        super(Operator.GREATER_OR_EQUAL, field, value);
+    }
 }

@@ -23,5 +23,5 @@ package com.tcdng.unify.core.task;
  */
 public interface PeriodicExecutionTaskConstants {
 
-	String PERIODICEXECUTIONINFO = "periodicExecutionInfo";
+    String PERIODICEXECUTIONINFO = "periodicExecutionInfo";
 }

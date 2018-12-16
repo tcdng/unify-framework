@@ -29,28 +29,28 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("oneway-stringcryptograph")
 public class OneWayStringCryptographImpl extends AbstractOneWayCryptograph implements OneWayStringCryptograph {
 
-	@Override
-	public String forwardTransform(String value) throws UnifyException {
-		return encrypt(value);
-	}
+    @Override
+    public String forwardTransform(String value) throws UnifyException {
+        return encrypt(value);
+    }
 
-	@Override
-	public String reverseTransform(String value) throws UnifyException {
-		return value;
-	}
+    @Override
+    public String reverseTransform(String value) throws UnifyException {
+        return value;
+    }
 
-	@Override
-	public String encrypt(String string) throws UnifyException {
-		try {
-			if (string != null) {
-				byte encrypted[] = doEncrypt(string.getBytes("UTF-8"));
-				return DatatypeConverter.printBase64Binary(encrypted);
-			}
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public String encrypt(String string) throws UnifyException {
+        try {
+            if (string != null) {
+                byte encrypted[] = doEncrypt(string.getBytes("UTF-8"));
+                return DatatypeConverter.printBase64Binary(encrypted);
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 }

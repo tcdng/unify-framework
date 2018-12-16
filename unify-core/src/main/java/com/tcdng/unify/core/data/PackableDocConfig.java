@@ -33,92 +33,92 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class PackableDocConfig {
 
-	private String name;
+    private String name;
 
-	private Map<String, FieldConfig> fieldConfigs;
+    private Map<String, FieldConfig> fieldConfigs;
 
-	public PackableDocConfig(String name, FieldConfig... fieldConfigs) {
-		this(name, Arrays.asList(fieldConfigs));
-	}
+    public PackableDocConfig(String name, FieldConfig... fieldConfigs) {
+        this(name, Arrays.asList(fieldConfigs));
+    }
 
-	public PackableDocConfig(String name, List<FieldConfig> fieldConfigList) {
-		this.name = name;
-		fieldConfigs = new HashMap<String, FieldConfig>();
-		for (FieldConfig fieldConfig : fieldConfigList) {
-			fieldConfigs.put(fieldConfig.getName(), fieldConfig);
-		}
-	}
+    public PackableDocConfig(String name, List<FieldConfig> fieldConfigList) {
+        this.name = name;
+        fieldConfigs = new HashMap<String, FieldConfig>();
+        for (FieldConfig fieldConfig : fieldConfigList) {
+            fieldConfigs.put(fieldConfig.getName(), fieldConfig);
+        }
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public FieldConfig getFieldConfig(String fieldName) throws UnifyException {
-		FieldConfig fc = fieldConfigs.get(fieldName);
-		if (fc == null) {
-			throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_NO_SUCH_FIELD, fieldName);
-		}
+    public FieldConfig getFieldConfig(String fieldName) throws UnifyException {
+        FieldConfig fc = fieldConfigs.get(fieldName);
+        if (fc == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_NO_SUCH_FIELD, fieldName);
+        }
 
-		return fc;
-	}
+        return fc;
+    }
 
-	public boolean isFieldConfig(String fieldName) {
-		return fieldConfigs.containsKey(fieldName);
-	}
+    public boolean isFieldConfig(String fieldName) {
+        return fieldConfigs.containsKey(fieldName);
+    }
 
-	public Set<String> getFieldNames() {
-		return fieldConfigs.keySet();
-	}
+    public Set<String> getFieldNames() {
+        return fieldConfigs.keySet();
+    }
 
-	public Collection<FieldConfig> getFieldConfigs() {
-		return fieldConfigs.values();
-	}
+    public Collection<FieldConfig> getFieldConfigs() {
+        return fieldConfigs.values();
+    }
 
-	public int getFieldCount() {
-		return fieldConfigs.size();
-	}
+    public int getFieldCount() {
+        return fieldConfigs.size();
+    }
 
-	public static class FieldConfig {
+    public static class FieldConfig {
 
-		private String name;
+        private String name;
 
-		private Class<?> type;
+        private Class<?> type;
 
-		private PackableDocConfig packableDocConfig;
+        private PackableDocConfig packableDocConfig;
 
-		public FieldConfig(String name, Class<?> type) throws UnifyException {
-			this.name = name;
-			this.type = type;
-		}
+        public FieldConfig(String name, Class<?> type) throws UnifyException {
+            this.name = name;
+            this.type = type;
+        }
 
-		public FieldConfig(String name, Class<?> type, FieldConfig... fieldConfigs) {
-			this(name, type, Arrays.asList(fieldConfigs));
-		}
+        public FieldConfig(String name, Class<?> type, FieldConfig... fieldConfigs) {
+            this(name, type, Arrays.asList(fieldConfigs));
+        }
 
-		public FieldConfig(String name, Class<?> type, List<FieldConfig> fieldConfigList) {
-			this.name = name;
-			this.type = type;
-			this.packableDocConfig = new PackableDocConfig(name, fieldConfigList);
-		}
+        public FieldConfig(String name, Class<?> type, List<FieldConfig> fieldConfigList) {
+            this.name = name;
+            this.type = type;
+            this.packableDocConfig = new PackableDocConfig(name, fieldConfigList);
+        }
 
-		public String getName() {
-			return name;
-		}
+        public String getName() {
+            return name;
+        }
 
-		public Class<?> getType() {
-			return type;
-		}
+        public Class<?> getType() {
+            return type;
+        }
 
-		public PackableDocConfig getPackableDocConfig() {
-			return packableDocConfig;
-		}
+        public PackableDocConfig getPackableDocConfig() {
+            return packableDocConfig;
+        }
 
-		public boolean isComplex() {
-			return packableDocConfig != null;
-		}
+        public boolean isComplex() {
+            return packableDocConfig != null;
+        }
 
-		public boolean isArray() {
-			return type.isArray();
-		}
-	}
+        public boolean isArray() {
+            return type.isArray();
+        }
+    }
 }

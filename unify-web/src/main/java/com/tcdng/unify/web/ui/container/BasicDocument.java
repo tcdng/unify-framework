@@ -28,10 +28,10 @@ import com.tcdng.unify.web.ui.AbstractDocument;
 @Component("ui-document")
 public class BasicDocument extends AbstractDocument {
 
-	@Configurable
-	private String[] meta;
+    @Configurable
+    private String[] meta;
 
-	public String[] getMeta() {
-		return meta;
-	}
+    public String[] getMeta() {
+        return meta;
+    }
 }

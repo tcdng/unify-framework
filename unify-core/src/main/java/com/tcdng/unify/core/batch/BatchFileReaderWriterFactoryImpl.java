@@ -29,17 +29,17 @@ import com.tcdng.unify.core.business.BusinessLogicInput;
 @Component(ApplicationComponents.APPLICATION_BATCHFILEREADERWRITERFACTORY)
 public class BatchFileReaderWriterFactoryImpl extends AbstractBatchFileReaderWriterFactory {
 
-	@Override
-	public BatchFileReader getBatchFileReader(BusinessLogicInput input, BatchFileConfig batchFileConfig,
-			Object[] fileObject) throws UnifyException {
-		BatchFileReader reader = (BatchFileReader) getComponent(batchFileConfig.getReader());
-		reader.open(input, batchFileConfig, fileObject);
-		return reader;
-	}
+    @Override
+    public BatchFileReader getBatchFileReader(BusinessLogicInput input, BatchFileConfig batchFileConfig,
+            Object[] fileObject) throws UnifyException {
+        BatchFileReader reader = (BatchFileReader) getComponent(batchFileConfig.getReader());
+        reader.open(input, batchFileConfig, fileObject);
+        return reader;
+    }
 
-	@Override
-	public void disposeBatchRecordReader(BatchFileReader reader) {
-		reader.close();
-	}
+    @Override
+    public void disposeBatchRecordReader(BatchFileReader reader) {
+        reader.close();
+    }
 
 }

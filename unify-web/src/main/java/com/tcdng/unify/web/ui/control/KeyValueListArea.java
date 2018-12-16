@@ -30,8 +30,8 @@ import com.tcdng.unify.web.ui.AbstractControl;
 @Component("ui-keyvaluelistarea")
 public class KeyValueListArea extends AbstractControl {
 
-	@SuppressWarnings("unchecked")
-	public Map<Object, Object> getMapValue() throws UnifyException {
-		return (Map<Object, Object>) getValue();
-	}
+    @SuppressWarnings("unchecked")
+    public Map<Object, Object> getMapValue() throws UnifyException {
+        return (Map<Object, Object>) getValue();
+    }
 }

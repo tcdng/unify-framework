@@ -25,16 +25,16 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SmsServer extends NotificationServer<SmsServerConfig> {
 
-	/**
-	 * Sends an SMS.
-	 * 
-	 * @param configurationCode
-	 *            the code of the configuration to use
-	 * @param sms
-	 *            the sms to send
-	 * @throws UnifyException
-	 *             if configuration with code is unknown. if an error occurs
-	 */
-	void sendSms(String configurationCode, Sms sms) throws UnifyException;
+    /**
+     * Sends an SMS.
+     * 
+     * @param configurationCode
+     *            the code of the configuration to use
+     * @param sms
+     *            the sms to send
+     * @throws UnifyException
+     *             if configuration with code is unknown. if an error occurs
+     */
+    void sendSms(String configurationCode, Sms sms) throws UnifyException;
 
 }

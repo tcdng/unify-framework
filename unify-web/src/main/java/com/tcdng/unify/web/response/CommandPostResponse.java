@@ -31,16 +31,16 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("commandpostresponse")
 public class CommandPostResponse extends AbstractJsonPageControllerResponse {
 
-	public CommandPostResponse() {
-		super("commandPostHdl");
-	}
+    public CommandPostResponse() {
+        super("commandPostHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		String path = getRequestContextUtil().getCommandResponsePath();
-		if (!StringUtils.isBlank(path)) {
-			writer.write(",");
-			writer.writeJsonPathVariable("postPath", path);
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        String path = getRequestContextUtil().getCommandResponsePath();
+        if (!StringUtils.isBlank(path)) {
+            writer.write(",");
+            writer.writeJsonPathVariable("postPath", path);
+        }
+    }
 }

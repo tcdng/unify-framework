@@ -23,83 +23,83 @@ package com.tcdng.unify.core;
  */
 public class UserToken {
 
-	private String roleCode;
+    private String roleCode;
 
-	private String themePath;
+    private String themePath;
 
-	private String userLoginId;
+    private String userLoginId;
 
-	private String userName;
+    private String userName;
 
-	private Object userId;
+    private Object userId;
 
-	private Object branchId;
+    private Object branchId;
 
-	private String ipAddress;
+    private String ipAddress;
 
-	private boolean reservedUser;
+    private boolean reservedUser;
 
-	private boolean allowMultipleLogin;
+    private boolean allowMultipleLogin;
 
-	private boolean remote;
+    private boolean remote;
 
-	public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchId,
-			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
-		this.userLoginId = userLoginId;
-		this.userName = userName;
-		this.userId = userId;
-		this.branchId = branchId;
-		this.ipAddress = ipAddress;
-		this.reservedUser = reservedUser;
-		this.allowMultipleLogin = allowMultipleLogin;
-		this.remote = remote;
-	}
+    public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchId,
+            boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+        this.userLoginId = userLoginId;
+        this.userName = userName;
+        this.userId = userId;
+        this.branchId = branchId;
+        this.ipAddress = ipAddress;
+        this.reservedUser = reservedUser;
+        this.allowMultipleLogin = allowMultipleLogin;
+        this.remote = remote;
+    }
 
-	public String getRoleCode() {
-		return roleCode;
-	}
+    public String getRoleCode() {
+        return roleCode;
+    }
 
-	public String getThemePath() {
-		return themePath;
-	}
+    public String getThemePath() {
+        return themePath;
+    }
 
-	public void setRoleCode(String roleCode) {
-		this.roleCode = roleCode;
-	}
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
 
-	public void setThemePath(String themePath) {
-		this.themePath = themePath;
-	}
+    public void setThemePath(String themePath) {
+        this.themePath = themePath;
+    }
 
-	public String getUserLoginId() {
-		return userLoginId;
-	}
+    public String getUserLoginId() {
+        return userLoginId;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public Object getUserId() {
-		return userId;
-	}
+    public Object getUserId() {
+        return userId;
+    }
 
-	public Object getBranchId() {
-		return branchId;
-	}
+    public Object getBranchId() {
+        return branchId;
+    }
 
-	public String getIpAddress() {
-		return ipAddress;
-	}
+    public String getIpAddress() {
+        return ipAddress;
+    }
 
-	public boolean isReservedUser() {
-		return reservedUser;
-	}
+    public boolean isReservedUser() {
+        return reservedUser;
+    }
 
-	public boolean isAllowMultipleLogin() {
-		return allowMultipleLogin;
-	}
+    public boolean isAllowMultipleLogin() {
+        return allowMultipleLogin;
+    }
 
-	public boolean isRemote() {
-		return remote;
-	}
+    public boolean isRemote() {
+        return remote;
+    }
 }

@@ -27,13 +27,13 @@ import com.tcdng.unify.web.ui.AbstractGroupListControl;
 @Component("ui-checkboxlist")
 public class CheckBoxList extends AbstractGroupListControl {
 
-	@Override
-	public boolean isMultiple() {
-		return true;
-	}
+    @Override
+    public boolean isMultiple() {
+        return true;
+    }
 
-	@Override
-	public boolean isSupportReadOnly() {
-		return false;
-	}
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
 }

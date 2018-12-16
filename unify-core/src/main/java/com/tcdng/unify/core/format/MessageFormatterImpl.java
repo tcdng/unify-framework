@@ -27,23 +27,23 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "messageformat", description = "$m{format.message}")
 public class MessageFormatterImpl extends AbstractFormatter<String> implements MessageFormatter {
 
-	public MessageFormatterImpl() {
-		super(String.class);
-	}
+    public MessageFormatterImpl() {
+        super(String.class);
+    }
 
-	@Override
-	public String format(String value) throws UnifyException {
-		return resolveSessionMessage(value);
-	}
+    @Override
+    public String format(String value) throws UnifyException {
+        return resolveSessionMessage(value);
+    }
 
-	@Override
-	public String parse(String string) throws UnifyException {
-		return string;
-	}
+    @Override
+    public String parse(String string) throws UnifyException {
+        return string;
+    }
 
-	@Override
-	public String getPattern() throws UnifyException {
-		return null;
-	}
+    @Override
+    public String getPattern() throws UnifyException {
+        return null;
+    }
 
 }

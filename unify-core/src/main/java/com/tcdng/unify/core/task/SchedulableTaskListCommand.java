@@ -41,37 +41,37 @@ import com.tcdng.unify.core.util.DataUtils;
 @Component("schedulabletasklist")
 public class SchedulableTaskListCommand extends AbstractZeroParamsListCommand {
 
-	@Configurable(ApplicationComponents.APPLICATION_TASKMANAGER)
-	private TaskManager taskManager;
+    @Configurable(ApplicationComponents.APPLICATION_TASKMANAGER)
+    private TaskManager taskManager;
 
-	private FactoryMap<Locale, List<Listable>> schedulableListMap;
+    private FactoryMap<Locale, List<Listable>> schedulableListMap;
 
-	public SchedulableTaskListCommand() {
-		schedulableListMap = new FactoryMap<Locale, List<Listable>>() {
-			@Override
-			protected List<Listable> create(Locale key, Object... params) throws Exception {
-				List<Listable> list = new ArrayList<Listable>();
-				for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(Task.class)) {
-					if (unifyComponentConfig.getType().isAnnotationPresent(Schedulable.class)) {
-						list.add(new ListData(unifyComponentConfig.getName(),
-								resolveSessionMessage(unifyComponentConfig.getDescription())));
-					}
-				}
+    public SchedulableTaskListCommand() {
+        schedulableListMap = new FactoryMap<Locale, List<Listable>>() {
+            @Override
+            protected List<Listable> create(Locale key, Object... params) throws Exception {
+                List<Listable> list = new ArrayList<Listable>();
+                for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(Task.class)) {
+                    if (unifyComponentConfig.getType().isAnnotationPresent(Schedulable.class)) {
+                        list.add(new ListData(unifyComponentConfig.getName(),
+                                resolveSessionMessage(unifyComponentConfig.getDescription())));
+                    }
+                }
 
-				for (TaskableMethodConfig tmc : taskManager.getAllTaskableMethodConfigs()) {
-					if (tmc.isSchedulable()) {
-						list.add(new ListData(tmc.getName(), resolveSessionMessage(tmc.getDescription())));
-					}
-				}
+                for (TaskableMethodConfig tmc : taskManager.getAllTaskableMethodConfigs()) {
+                    if (tmc.isSchedulable()) {
+                        list.add(new ListData(tmc.getName(), resolveSessionMessage(tmc.getDescription())));
+                    }
+                }
 
-				DataUtils.sort(list, Listable.class, "listDescription", true);
-				return list;
-			}
-		};
-	}
+                DataUtils.sort(list, Listable.class, "listDescription", true);
+                return list;
+            }
+        };
+    }
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return schedulableListMap.get(locale);
-	}
+    @Override
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        return schedulableListMap.get(locale);
+    }
 }

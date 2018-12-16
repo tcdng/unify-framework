@@ -35,26 +35,26 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("unorderedlist-writer")
 public class UnorderedListWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		UnorderedList unorderedList = (UnorderedList) widget;
-		writer.write("<ul");
-		writeTagAttributes(writer, unorderedList);
-		writer.write(">");
-		String[] items = unorderedList.getItems();
-		if (items == null) {
-			items = DataUtils.convert(String[].class, unorderedList.getValue(), null);
-		}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        UnorderedList unorderedList = (UnorderedList) widget;
+        writer.write("<ul");
+        writeTagAttributes(writer, unorderedList);
+        writer.write(">");
+        String[] items = unorderedList.getItems();
+        if (items == null) {
+            items = DataUtils.convert(String[].class, unorderedList.getValue(), null);
+        }
 
-		if (items != null) {
-			for (String item : items) {
-				writer.write("<li>");
-				writer.writeWithHtmlEscape(item);
-				writer.write("</li>");
-			}
-		}
+        if (items != null) {
+            for (String item : items) {
+                writer.write("<li>");
+                writer.writeWithHtmlEscape(item);
+                writer.write("</li>");
+            }
+        }
 
-		writer.write("</ul>");
-	}
+        writer.write("</ul>");
+    }
 
 }

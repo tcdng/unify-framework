@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.layout.DesktopType1Layout;
 @Component("desktoptype1-writer")
 public class DesktopType1LayoutWriter extends AbstractDocumentLayoutWriter {
 
-	@Override
-	public void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException {
+    @Override
+    public void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
-			throws UnifyException {
-		writeSection(writer, "header", document.getHeaderPanel());
-		writeSection(writer, "menu", document.getMenuPanel());
-		writeSection(writer, "content", document.getContentPanel());
-		writeSection(writer, "footer", document.getFooterPanel());
-	}
+    @Override
+    protected void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
+            throws UnifyException {
+        writeSection(writer, "header", document.getHeaderPanel());
+        writeSection(writer, "menu", document.getMenuPanel());
+        writeSection(writer, "content", document.getContentPanel());
+        writeSection(writer, "footer", document.getFooterPanel());
+    }
 
 }

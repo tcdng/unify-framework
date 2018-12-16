@@ -26,35 +26,35 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TabularLayout extends Layout {
 
-	/**
-	 * Returns the layout cell type.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	TabularCellType getCellType() throws UnifyException;
+    /**
+     * Returns the layout cell type.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    TabularCellType getCellType() throws UnifyException;
 
-	/**
-	 * Returns true if layout cells should be padded otherwise a false is returned.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isCellPadding() throws UnifyException;
+    /**
+     * Returns true if layout cells should be padded otherwise a false is returned.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isCellPadding() throws UnifyException;
 
-	/**
-	 * Returns layout widths.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String[] getWidths() throws UnifyException;
+    /**
+     * Returns layout widths.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String[] getWidths() throws UnifyException;
 
-	/**
-	 * Returns layout heights.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String[] getHeights() throws UnifyException;
+    /**
+     * Returns layout heights.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String[] getHeights() throws UnifyException;
 }

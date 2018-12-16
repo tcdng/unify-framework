@@ -37,64 +37,64 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("multidynamic-writer")
 public class MultiDynamicWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		MultiDynamic multiDynamic = (MultiDynamic) widget;
-		writer.write("<div");
-		writeTagAttributes(writer, multiDynamic);
-		writer.write(">");
-		List<MultiDynamic.ValueStore> valueStoreList = multiDynamic.getValueList();
-		if (valueStoreList != null) {
-			String captionSuffix = multiDynamic.getCaptionSuffix();
-			String isRequiredSym = multiDynamic.getIsRequiredSymbol();
-			writer.write("<table style:\"width:100%;\">");
-			DynamicField valueCtrl = multiDynamic.getValueCtrl();
-			int len = valueStoreList.size();
-			for (int i = 0; i < len; i++) {
-				MultiDynamic.ValueStore itemValueStore = valueStoreList.get(i);
-				writer.write("<tr>");
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        MultiDynamic multiDynamic = (MultiDynamic) widget;
+        writer.write("<div");
+        writeTagAttributes(writer, multiDynamic);
+        writer.write(">");
+        List<MultiDynamic.ValueStore> valueStoreList = multiDynamic.getValueList();
+        if (valueStoreList != null) {
+            String captionSuffix = multiDynamic.getCaptionSuffix();
+            String isRequiredSym = multiDynamic.getIsRequiredSymbol();
+            writer.write("<table style:\"width:100%;\">");
+            DynamicField valueCtrl = multiDynamic.getValueCtrl();
+            int len = valueStoreList.size();
+            for (int i = 0; i < len; i++) {
+                MultiDynamic.ValueStore itemValueStore = valueStoreList.get(i);
+                writer.write("<tr>");
 
-				writer.write("<td class=\"secLabel\"></span>");
-				writer.write(itemValueStore.getValueStore().retrieve("description")).write(captionSuffix);
-				writer.write("</span></td>");
+                writer.write("<td class=\"secLabel\"></span>");
+                writer.write(itemValueStore.getValueStore().retrieve("description")).write(captionSuffix);
+                writer.write("</span></td>");
 
-				writer.write("<td class=\"secInputReq\">");
-				if (itemValueStore.isRequired()) {
-					writer.write("<span>").write(isRequiredSym).write("</span>");
-				}
-				writer.write("</td>");
+                writer.write("<td class=\"secInputReq\">");
+                if (itemValueStore.isRequired()) {
+                    writer.write("<span>").write(isRequiredSym).write("</span>");
+                }
+                writer.write("</td>");
 
-				writer.write("<td class=\"secInput\"><div>");
-				valueCtrl.setValueStore(itemValueStore.getValueStore());
-				writer.writeStructureAndContent(valueCtrl);
+                writer.write("<td class=\"secInput\"><div>");
+                valueCtrl.setValueStore(itemValueStore.getValueStore());
+                writer.writeStructureAndContent(valueCtrl);
 
-				writer.write("</div><div><span id=\"").write(valueCtrl.getControl().getNotificationId())
-						.write("\" class=\"secInputErr\"></span>");
-				writer.write("</div></td>");
+                writer.write("</div><div><span id=\"").write(valueCtrl.getControl().getNotificationId())
+                        .write("\" class=\"secInputErr\"></span>");
+                writer.write("</div></td>");
 
-				writer.write("</tr>");
-			}
-			writer.write("</table>");
-		}
-		writer.write("</div>");
-	}
+                writer.write("</tr>");
+            }
+            writer.write("</table>");
+        }
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
-		MultiDynamic multiDynamic = (MultiDynamic) widget;
-		List<MultiDynamic.ValueStore> valueStoreList = multiDynamic.getValueList();
-		if (valueStoreList != null) {
-			Control valueCtrl = multiDynamic.getValueCtrl();
-			int len = valueStoreList.size();
-			for (int i = 0; i < len; i++) {
-				valueCtrl.setValueStore(valueStoreList.get(i).getValueStore());
-				writer.writeBehaviour(valueCtrl);
-				if (multiDynamic.isContainerEditable()) {
-					addPageAlias(multiDynamic.getId(), valueCtrl);
-				}
-			}
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        MultiDynamic multiDynamic = (MultiDynamic) widget;
+        List<MultiDynamic.ValueStore> valueStoreList = multiDynamic.getValueList();
+        if (valueStoreList != null) {
+            Control valueCtrl = multiDynamic.getValueCtrl();
+            int len = valueStoreList.size();
+            for (int i = 0; i < len; i++) {
+                valueCtrl.setValueStore(valueStoreList.get(i).getValueStore());
+                writer.writeBehaviour(valueCtrl);
+                if (multiDynamic.isContainerEditable()) {
+                    addPageAlias(multiDynamic.getId(), valueCtrl);
+                }
+            }
+        }
+    }
 
 }

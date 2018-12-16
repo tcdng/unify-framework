@@ -27,13 +27,13 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public interface ReportFormatterStore extends UnifyComponent {
 
-	/**
-	 * Returns formatter instance based on supplied UPL formatter descriptor.
-	 * 
-	 * @param formatterUpl
-	 *            the UPL descriptor
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException;
+    /**
+     * Returns formatter instance based on supplied UPL formatter descriptor.
+     * 
+     * @param formatterUpl
+     *            the UPL descriptor
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException;
 }

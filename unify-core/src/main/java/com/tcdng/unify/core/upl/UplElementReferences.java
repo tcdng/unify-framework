@@ -30,54 +30,54 @@ import com.tcdng.unify.core.data.CycleDetector;
  */
 public class UplElementReferences {
 
-	private List<String> idList;
+    private List<String> idList;
 
-	private List<String> longNameList;
+    private List<String> longNameList;
 
-	public UplElementReferences() {
-		idList = new ArrayList<String>();
-		longNameList = new ArrayList<String>();
-	}
+    public UplElementReferences() {
+        idList = new ArrayList<String>();
+        longNameList = new ArrayList<String>();
+    }
 
-	public UplElementReferences(String[] ids) {
-		this();
-		for (String id : ids) {
-			idList.add(id);
-		}
-	}
+    public UplElementReferences(String[] ids) {
+        this();
+        for (String id : ids) {
+            idList.add(id);
+        }
+    }
 
-	public void add(UplElementReferences uplElementReferences) {
-		idList.addAll(uplElementReferences.getIds());
-		longNameList.addAll(uplElementReferences.getLongNames());
-	}
+    public void add(UplElementReferences uplElementReferences) {
+        idList.addAll(uplElementReferences.getIds());
+        longNameList.addAll(uplElementReferences.getLongNames());
+    }
 
-	public List<String> getIds() {
-		return Collections.unmodifiableList(idList);
-	}
+    public List<String> getIds() {
+        return Collections.unmodifiableList(idList);
+    }
 
-	public void setLongNames(UplElement ownerUplElement, CycleDetector<String> cycleDetector) throws UnifyException {
-		longNameList.clear();
-		for (String id : idList) {
-			String longName = ownerUplElement.getReferenceLongName(id);
-			longNameList.add(longName);
-			if (cycleDetector != null) {
-				cycleDetector.addReference(ownerUplElement.getLongName(), longName);
-			}
-		}
-	}
+    public void setLongNames(UplElement ownerUplElement, CycleDetector<String> cycleDetector) throws UnifyException {
+        longNameList.clear();
+        for (String id : idList) {
+            String longName = ownerUplElement.getReferenceLongName(id);
+            longNameList.add(longName);
+            if (cycleDetector != null) {
+                cycleDetector.addReference(ownerUplElement.getLongName(), longName);
+            }
+        }
+    }
 
-	public List<String> getLongNames() {
-		return Collections.unmodifiableList(longNameList);
-	}
+    public List<String> getLongNames() {
+        return Collections.unmodifiableList(longNameList);
+    }
 
-	public int length() {
-		return idList.size();
-	}
+    public int length() {
+        return idList.size();
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("references:(idList = ").append(idList).append(';');
-		sb.append("longNameList = ").append(longNameList).append(";)\n");
-		return sb.toString();
-	}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("references:(idList = ").append(idList).append(';');
+        sb.append("longNameList = ").append(longNameList).append(";)\n");
+        return sb.toString();
+    }
 }

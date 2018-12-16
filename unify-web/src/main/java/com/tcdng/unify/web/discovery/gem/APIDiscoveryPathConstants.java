@@ -25,6 +25,6 @@ import com.tcdng.unify.web.WebApplicationComponents;
  */
 public interface APIDiscoveryPathConstants {
 
-	String DISCOVER_REMOTECALL_PATH = WebApplicationComponents.APPLICATION_APIDISCOVERY_CONTROLLER
-			+ "/discoverRemoteCall";
+    String DISCOVER_REMOTECALL_PATH = WebApplicationComponents.APPLICATION_APIDISCOVERY_CONTROLLER
+            + "/discoverRemoteCall";
 }

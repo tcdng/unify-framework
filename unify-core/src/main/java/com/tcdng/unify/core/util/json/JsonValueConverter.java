@@ -25,7 +25,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public interface JsonValueConverter<T> {
 
-	T read(JsonValue jsonValue) throws Exception;
+    T read(JsonValue jsonValue) throws Exception;
 
-	JsonValue write(Object value) throws Exception;
+    JsonValue write(Object value) throws Exception;
 }

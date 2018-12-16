@@ -26,19 +26,19 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface StartupShutdownHook extends UnifyComponent {
 
-	/**
-	 * Executes on-startup operation.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void onApplicationStartup() throws UnifyException;
+    /**
+     * Executes on-startup operation.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void onApplicationStartup() throws UnifyException;
 
-	/**
-	 * Executes on-shutdown operation.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void onApplicationShutdown() throws UnifyException;
+    /**
+     * Executes on-shutdown operation.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void onApplicationShutdown() throws UnifyException;
 }

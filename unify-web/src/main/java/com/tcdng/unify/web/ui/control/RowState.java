@@ -23,8 +23,8 @@ package com.tcdng.unify.web.ui.control;
  */
 public interface RowState {
 
-	/**
-	 * Indicates the row is selected.
-	 */
-	boolean isSelected();
+    /**
+     * Indicates the row is selected.
+     */
+    boolean isSelected();
 }

@@ -23,7 +23,7 @@ package com.tcdng.unify.core.database;
  */
 public class FruitQuery extends AbstractTestEntityQuery<Fruit> {
 
-	public FruitQuery() {
-		super(Fruit.class);
-	}
+    public FruitQuery() {
+        super(Fruit.class);
+    }
 }

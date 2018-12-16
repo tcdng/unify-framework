@@ -23,24 +23,24 @@ package com.tcdng.unify.core.notification;
  */
 public class EmailRecipient {
 
-	public enum TYPE {
-		TO, CC, BCC
-	}
+    public enum TYPE {
+        TO, CC, BCC
+    }
 
-	private TYPE type;
+    private TYPE type;
 
-	private String address;
+    private String address;
 
-	public EmailRecipient(TYPE type, String address) {
-		this.type = type;
-		this.address = address;
-	}
+    public EmailRecipient(TYPE type, String address) {
+        this.type = type;
+        this.address = address;
+    }
 
-	public TYPE getType() {
-		return type;
-	}
+    public TYPE getType() {
+        return type;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getAddress() {
+        return address;
+    }
 }
