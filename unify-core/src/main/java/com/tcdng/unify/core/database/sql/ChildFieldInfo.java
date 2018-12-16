@@ -36,13 +36,20 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
 	private Method setter;
 
+	private boolean list;
+	
 	public ChildFieldInfo(Class<? extends Entity> childEntityClass, Field childFkField, Method attrFkSetter,
-			Field field, Method getter, Method setter) {
+			Field field, Method getter, Method setter, boolean list) {
 		super(childEntityClass, childFkField);
 		this.attrFkSetter = attrFkSetter;
 		this.field = field;
 		this.getter = getter;
 		this.setter = setter;
+		this.list = list;
+	}
+
+	public String getName() {
+		return field.getName();
 	}
 
 	public Method getAttrFkSetter() {
@@ -59,6 +66,10 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
 	public Method getSetter() {
 		return setter;
+	}
+
+	public boolean isList() {
+		return list;
 	}
 
 }

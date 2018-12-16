@@ -34,12 +34,12 @@ public class Office extends AbstractTestEntity {
 	private String telephone;
 
 	@Column
-	private int size;
+	private Integer size;
 
 	@Column(nullable = true)
 	private String[] workDays;
 
-	public Office(String address, String telephone, int size) {
+	public Office(String address, String telephone, Integer size) {
 		this.address = address;
 		this.telephone = telephone;
 		this.size = size;
@@ -49,11 +49,11 @@ public class Office extends AbstractTestEntity {
 
 	}
 
-	public int getSize() {
+	public Integer getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
+	public void setSize(Integer size) {
 		this.size = size;
 	}
 

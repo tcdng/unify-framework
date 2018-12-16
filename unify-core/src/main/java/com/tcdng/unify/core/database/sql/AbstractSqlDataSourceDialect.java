@@ -966,7 +966,21 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			if (select != null && !select.isEmpty()) {
 				returnFieldInfoList = new ArrayList<SqlFieldInfo>();
 				for (String name : select.values()) {
-					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
+					if (!sqlEntityInfo.isChildFieldInfo(name)) {
+						SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
+						if (appendSym) {
+							findSql.append(", ");
+						} else {
+							appendSym = true;
+						}
+						findSql.append(sqlFieldInfo.getColumn());
+						returnFieldInfoList.add(sqlFieldInfo);
+					}
+				}
+
+				// Select must always fetch primary keys because of child lists
+				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
+				if (!select.contains(sqlFieldInfo.getName())) {
 					if (appendSym) {
 						findSql.append(", ");
 					} else {
@@ -1032,13 +1046,27 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			if (!select.isEmpty()) {
 				returnFieldInfoList = new ArrayList<SqlFieldInfo>();
 				for (String name : select.values()) {
-					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(name);
+					if (!sqlEntityInfo.isChildFieldInfo(name)) {
+						SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(name);
+						if (appendSym) {
+							listSql.append(", ");
+						} else {
+							appendSym = true;
+						}
+
+						listSql.append(sqlFieldInfo.getColumn());
+						returnFieldInfoList.add(sqlFieldInfo);
+					}
+				}
+
+				// Select must always fetch primary keys because of child lists
+				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
+				if (!select.contains(sqlFieldInfo.getName())) {
 					if (appendSym) {
 						listSql.append(", ");
 					} else {
 						appendSym = true;
 					}
-
 					listSql.append(sqlFieldInfo.getColumn());
 					returnFieldInfoList.add(sqlFieldInfo);
 				}
