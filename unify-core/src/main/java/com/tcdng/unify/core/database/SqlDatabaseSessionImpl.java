@@ -892,7 +892,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 					if (sqlEntityInfo.isSingleChildList()) {
 						for (ChildFieldInfo clfi : sqlEntityInfo.getSingleChildInfoList()) {
-							if (isSelect && !select.contains(clfi.getField().getName())) {
+							if (isSelect && !select.contains(clfi.getName())) {
 								continue;
 							}
 
@@ -928,7 +928,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 					if (sqlEntityInfo.isManyChildList()) {
 						for (ChildFieldInfo clfi : sqlEntityInfo.getManyChildInfoList()) {
-							if (isSelect && !select.contains(clfi.getField().getName())) {
+							if (isSelect && !select.contains(clfi.getName())) {
 								continue;
 							}
 

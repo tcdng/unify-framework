@@ -38,7 +38,7 @@ public class Author extends AbstractTestEntity {
 	private String name;
 
 	@Column
-	private int age;
+	private Integer age;
 
 	@Column
 	private Gender gender;
@@ -47,7 +47,7 @@ public class Author extends AbstractTestEntity {
 	private BooleanType retired;
 
 	@ListOnly(key = "officeId", property = "size")
-	private int officeSize;
+	private Integer officeSize;
 
 	@ListOnly(key = "officeId", property = "address")
 	private String officeAddress;
@@ -58,7 +58,7 @@ public class Author extends AbstractTestEntity {
 	@ListOnly(key = "retired", property = "description")
 	private String retiredDesc;
 
-	public Author(String name, int age, Gender gender, BooleanType retired, Long officeId) {
+	public Author(String name, Integer age, Gender gender, BooleanType retired, Long officeId) {
 		this.name = name;
 		this.age = age;
 		this.gender = gender;
@@ -70,11 +70,11 @@ public class Author extends AbstractTestEntity {
 
 	}
 
-	public int getOfficeSize() {
+	public Integer getOfficeSize() {
 		return officeSize;
 	}
 
-	public void setOfficeSize(int officeSize) {
+	public void setOfficeSize(Integer officeSize) {
 		this.officeSize = officeSize;
 	}
 
@@ -94,11 +94,11 @@ public class Author extends AbstractTestEntity {
 		this.name = name;
 	}
 
-	public int getAge() {
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 

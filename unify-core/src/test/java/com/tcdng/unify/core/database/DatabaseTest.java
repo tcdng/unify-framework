@@ -597,6 +597,24 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 		}
 	}
 
+	@Test
+	public void testFindRecordByCriteriaWithSelect() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			db.create(new Fruit("apple", "red", 20.00));
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			Fruit foundFruit = db.find(new FruitQuery().equals("color", "cyan").select("name", "price"));
+			assertNotNull(foundFruit);
+			assertEquals("pineapple", foundFruit.getName());
+			assertNull(foundFruit.getColor());
+			assertEquals(Double.valueOf(60.00), foundFruit.getPrice());
+			assertNull(foundFruit.getQuantity());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
 	@Test(expected = UnifyException.class)
 	public void testFindRecordByCriteriaWithMultipleResult() throws Exception {
 		db.getTransactionManager().beginTransaction();
@@ -637,6 +655,38 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			assertEquals(2, testFruitList.size());
 			assertEquals(orange, testFruitList.get(0));
 			assertEquals(apple, testFruitList.get(1));
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testFindAllRecordsWithSelect() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Fruit apple = new Fruit("apple", "red", 20.00);
+			db.create(apple);
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			Fruit orange = new Fruit("orange", "orange", 15.00);
+			db.create(orange);
+			List<Fruit> testFruitList = db
+					.findAll(new FruitQuery().lessEqual("price", 20.00).order("price").select("name", "quantity"));
+			assertEquals(2, testFruitList.size());
+
+			Fruit foundFruit = testFruitList.get(0);
+			assertNotNull(foundFruit);
+			assertEquals("orange", foundFruit.getName());
+			assertNull(foundFruit.getColor());
+			assertNull(foundFruit.getPrice());
+			assertEquals(Integer.valueOf(0), foundFruit.getQuantity());
+
+			foundFruit = testFruitList.get(1);
+			assertNotNull(foundFruit);
+			assertEquals("apple", foundFruit.getName());
+			assertNull(foundFruit.getColor());
+			assertNull(foundFruit.getPrice());
+			assertEquals(Integer.valueOf(0), foundFruit.getQuantity());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -818,7 +868,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			assertTrue(!foundAuthor.equals(author));
 			assertEquals("Paul Horowitz", foundAuthor.getName());
-			assertEquals(72, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(72), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(testOfficeId, foundAuthor.getOfficeId());
 			assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
@@ -887,7 +937,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			assertTrue(!foundAuthor.equals(author));
 			assertEquals("Brian Bramer", foundAuthor.getName());
-			assertEquals(50, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(50), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(testOfficeId, foundAuthor.getOfficeId());
 			assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
@@ -919,13 +969,36 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			Author foundAuthor = db.list(new AuthorQuery().equals("age", 45));
 			assertEquals("Susan Bramer", foundAuthor.getName());
-			assertEquals(45, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(45), foundAuthor.getAge());
 			assertEquals(Gender.FEMALE, foundAuthor.getGender());
 			assertEquals(BooleanType.TRUE, foundAuthor.getRetired());
 			assertEquals("True", foundAuthor.getRetiredDesc());
 			assertEquals(testOfficeId, foundAuthor.getOfficeId());
 			assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
 			assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testListRecordByCriteriaWithSelect() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Long testOfficeId = (Long) db.create(warehouseOffice);
+			db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
+			db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, testOfficeId));
+
+			Author foundAuthor = db.list(new AuthorQuery().equals("age", 45).select("name", "gender", "retiredDesc",
+					"officeId", "officeAddress"));
+			assertEquals("Susan Bramer", foundAuthor.getName());
+			assertEquals(Gender.FEMALE, foundAuthor.getGender());
+			assertNull(foundAuthor.getRetired());
+			assertEquals("True", foundAuthor.getRetiredDesc());
+			assertEquals(testOfficeId, foundAuthor.getOfficeId());
+			assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
+			assertNull(foundAuthor.getOfficeTelephone());
+			assertNull(foundAuthor.getAge());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -942,7 +1015,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			Author foundAuthor = db.list(new AuthorQuery().equals("officeTelephone", "+2345555555"));
 			assertEquals("Susan Bramer", foundAuthor.getName());
-			assertEquals(45, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(45), foundAuthor.getAge());
 			assertEquals(Gender.FEMALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -1000,7 +1073,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			// Should pick the Bramers with different offices
 			Author foundAuthor = testAuthorList.get(0);
 			assertEquals("Brian Bramer", foundAuthor.getName());
-			assertEquals(50, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(50), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -1010,12 +1083,53 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			foundAuthor = testAuthorList.get(1);
 			assertEquals("Susan Bramer", foundAuthor.getName());
-			assertEquals(45, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(45), foundAuthor.getAge());
 			assertEquals(Gender.FEMALE, foundAuthor.getGender());
 			assertEquals(BooleanType.TRUE, foundAuthor.getRetired());
 			assertEquals("True", foundAuthor.getRetiredDesc());
 			assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
 			assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
+			assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testListAllRecordsWithSelect() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+			db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+			db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+			Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+			db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
+
+			// Pick authors with age less or equals 50 and order by name
+			List<Author> testAuthorList = db.listAll(new AuthorQuery().lessEqual("age", 50).order("name").select("age",
+					"retired", "gender", "officeTelephone"));
+			assertEquals(2, testAuthorList.size());
+
+			// Should pick the Bramers with different offices
+			Author foundAuthor = testAuthorList.get(0);
+			assertNull(foundAuthor.getName());
+			assertEquals(Integer.valueOf(50), foundAuthor.getAge());
+			assertEquals(Gender.MALE, foundAuthor.getGender());
+			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+			assertNull(foundAuthor.getRetiredDesc());
+			assertNull(foundAuthor.getOfficeId());
+			assertNull(foundAuthor.getOfficeAddress());
+			assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
+
+			foundAuthor = testAuthorList.get(1);
+			assertNull(foundAuthor.getName());
+			assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+			assertEquals(Gender.FEMALE, foundAuthor.getGender());
+			assertEquals(BooleanType.TRUE, foundAuthor.getRetired());
+			assertNull(foundAuthor.getRetiredDesc());
+			assertNull(foundAuthor.getOfficeId());
+			assertNull(foundAuthor.getOfficeAddress());
 			assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
 		} finally {
 			db.getTransactionManager().endTransaction();
@@ -1040,7 +1154,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			// Should pick the Bramers
 			Author foundAuthor = testAuthorMap.get("Brian Bramer");
 			assertEquals("Brian Bramer", foundAuthor.getName());
-			assertEquals(50, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(50), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -1050,7 +1164,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			foundAuthor = testAuthorMap.get("Susan Bramer");
 			assertEquals("Susan Bramer", foundAuthor.getName());
-			assertEquals(45, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(45), foundAuthor.getAge());
 			assertEquals(Gender.FEMALE, foundAuthor.getGender());
 			assertEquals(BooleanType.TRUE, foundAuthor.getRetired());
 			assertEquals("True", foundAuthor.getRetiredDesc());
@@ -1170,7 +1284,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			// Should pick the Brian and Winfield with different offices
 			Author foundAuthor = testAuthorList.get(0);
 			assertEquals("Brian Bramer", foundAuthor.getName());
-			assertEquals(50, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(50), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -1180,7 +1294,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			foundAuthor = testAuthorList.get(1);
 			assertEquals("Winfield Hill", foundAuthor.getName());
-			assertEquals(75, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(75), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -1319,12 +1433,12 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			// Susan's age should be first and remain same at 45
 			assertEquals("Susan Bramer", testAuthorList.get(0).getName());
-			assertEquals(45, testAuthorList.get(0).getAge());
+			assertEquals(Integer.valueOf(45), testAuthorList.get(0).getAge());
 			// The Brian and Paul with ages updated to 100
 			assertEquals("Brian Bramer", testAuthorList.get(1).getName());
-			assertEquals(100, testAuthorList.get(1).getAge());
+			assertEquals(Integer.valueOf(100), testAuthorList.get(1).getAge());
 			assertEquals("Paul Horowitz", testAuthorList.get(2).getName());
-			assertEquals(100, testAuthorList.get(2).getAge());
+			assertEquals(Integer.valueOf(100), testAuthorList.get(2).getAge());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -1928,6 +2042,26 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testFindRecordByCriteriaWithSelectChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("beanEditor"));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.find(new ReportQuery().equals("id", id).select("name", "reportForm"));
+			assertNotNull(foundReport);
+			assertEquals("weeklyReport", foundReport.getName());
+			assertNull(foundReport.getDescription());
+
+			assertNotNull(foundReport.getReportForm());
+			assertEquals("beanEditor", foundReport.getReportForm().getEditor());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
 	public void testFindRecordByCriteriaWithChildList() throws Exception {
 		db.getTransactionManager().beginTransaction();
 		try {
@@ -1940,6 +2074,39 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			assertNotNull(foundReport);
 			assertEquals("weeklyReport", foundReport.getName());
 			assertEquals("Weekly Report", foundReport.getDescription());
+
+			assertNotNull(foundReport.getParameters());
+			assertEquals(2, foundReport.getParameters().size());
+
+			ReportParameter rParam = foundReport.getParameters().get(0);
+			assertEquals("startDate", rParam.getName());
+			assertEquals(BooleanType.FALSE, rParam.getScheduled());
+			assertNull(rParam.getReportDesc());
+			assertNull(rParam.getScheduledDesc());
+
+			rParam = foundReport.getParameters().get(1);
+			assertEquals("endDate", rParam.getName());
+			assertEquals(BooleanType.TRUE, rParam.getScheduled());
+			assertNull(rParam.getReportDesc());
+			assertNull(rParam.getScheduledDesc());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testFindRecordByCriteriaWithSelectChildList() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
+					.addParameter(new ReportParameter("endDate", BooleanType.TRUE));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.find(new ReportQuery().equals("id", id).select("name", "parameters"));
+			assertNotNull(foundReport);
+			assertEquals("weeklyReport", foundReport.getName());
+			assertNull(foundReport.getDescription());
 
 			assertNotNull(foundReport.getParameters());
 			assertEquals(2, foundReport.getParameters().size());
@@ -2190,6 +2357,48 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			assertNotNull(foundReport.getReportForm());
 			assertEquals("grayEditor", foundReport.getReportForm().getEditor());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testListRecordByCriteriaWithSelectChild() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.setReportForm(new ReportForm("grayEditor"));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.list(new ReportQuery().equals("id", id).select("description", "reportForm"));
+			assertNotNull(foundReport);
+			assertNull(foundReport.getName());
+			assertEquals("Weekly Report", foundReport.getDescription());
+
+			assertNotNull(foundReport.getReportForm());
+			assertEquals("grayEditor", foundReport.getReportForm().getEditor());
+		} finally {
+			db.getTransactionManager().endTransaction();
+		}
+	}
+
+	@Test
+	public void testListRecordByCriteriaWithSelectChildList() throws Exception {
+		db.getTransactionManager().beginTransaction();
+		try {
+			Report report = new Report("weeklyReport", "Weekly Report");
+			report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+			Long id = (Long) db.create(report);
+
+			Report foundReport = db.list(new ReportQuery().equals("id", id).select("parameters"));
+			assertNotNull(foundReport);
+			assertNull(foundReport.getName());
+			assertNull(foundReport.getDescription());
+
+			assertNotNull(foundReport.getParameters());
+			assertEquals(2, foundReport.getParameters().size());
+			assertEquals("startDate", foundReport.getParameters().get(0).getName());
+			assertEquals("endDate", foundReport.getParameters().get(1).getName());
 		} finally {
 			db.getTransactionManager().endTransaction();
 		}
@@ -2940,7 +3149,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			// Should pick the Brian brammer because office has smaller size
 			Author foundAuthor = testAuthorList.get(0);
 			assertEquals("Brian Bramer", foundAuthor.getName());
-			assertEquals(50, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(50), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -2970,7 +3179,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			// Should pick the authors in parklane
 			Author foundAuthor = testAuthorList.get(0);
 			assertEquals("Brian Bramer", foundAuthor.getName());
-			assertEquals(50, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(50), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -2980,7 +3189,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
 			foundAuthor = testAuthorList.get(1);
 			assertEquals("Winfield Hill", foundAuthor.getName());
-			assertEquals(75, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(75), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -3050,7 +3259,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			// Should pick the Winfield Hill because is male with max age
 			Author foundAuthor = testAuthorList.get(0);
 			assertEquals("Winfield Hill", foundAuthor.getName());
-			assertEquals(75, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(75), foundAuthor.getAge());
 			assertEquals(Gender.MALE, foundAuthor.getGender());
 			assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
 			assertEquals("False", foundAuthor.getRetiredDesc());
@@ -3080,7 +3289,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 			// Should pick the authors in warehouse
 			Author foundAuthor = testAuthorList.get(0);
 			assertEquals("Susan Bramer", foundAuthor.getName());
-			assertEquals(45, foundAuthor.getAge());
+			assertEquals(Integer.valueOf(45), foundAuthor.getAge());
 			assertEquals(Gender.FEMALE, foundAuthor.getGender());
 			assertEquals(BooleanType.TRUE, foundAuthor.getRetired());
 			assertEquals("True", foundAuthor.getRetiredDesc());

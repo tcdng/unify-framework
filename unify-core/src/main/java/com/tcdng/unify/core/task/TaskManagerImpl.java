@@ -339,7 +339,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 		TaskInstanceInfo taskInstanceInfo = task.getTaskInstanceInfo(taskInput);
 		String executionId = taskInstanceInfo.getExecutionId();
 		if (TaskExecLimit.ALLOW_SINGLE.equals(taskInstanceInfo.getLimit())) {
-			// TODO the task ID set should be checked against execution IDs in cluster cache!
+			// TODO the task ID set should be checked against execution IDs in cluster
+			// cache!
 			// To use grabLock();
 			if (uniqueTaskIDSet.contains(executionId)) {
 				throw new UnifyException(UnifyCoreErrorConstants.TASK_WITH_ID_ALREADY_RUNNING, executionId);
@@ -348,6 +349,16 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 		}
 
 		return new TaskInfo(executionId, taskInput, new TaskOutput());
+	}
+
+	private void removeTask(TaskInfo taskInfo, TaskStatus taskStatus, boolean periodic) {
+		if (!periodic) {
+			uniqueTaskIDSet.remove(taskInfo.getTaskID());
+		}
+
+		if (taskStatus != null) {
+			taskInfo.setTaskStatus(taskStatus);
+		}
 	}
 
 	private class TaskThread extends Thread {
@@ -425,12 +436,12 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 						tasks[i].execute(taskMonitor, taskInfo.getTaskInput(), taskInfo.getTaskOutput());
 
 						if (!taskMonitor.isCanceled()) {
-							taskInfo.setTaskStatus(TaskStatus.COMPLETED);
+							removeTask(taskInfo, TaskStatus.COMPLETED, periodic);
 						}
 					}
 
 					if (taskMonitor.isCanceled()) {
-						taskInfo.setTaskStatus(TaskStatus.CANCELED);
+						removeTask(taskInfo, TaskStatus.CANCELED, periodic);
 					}
 				} catch (Exception e) {
 					if (taskMonitor.isTaskStatusLogger()) {
@@ -439,6 +450,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 						taskStatusLogger.logTaskException(e);
 					}
 
+					removeTask(taskInfo, TaskStatus.FAILED, periodic);
 					taskInfo.setTaskStatus(TaskStatus.FAILED);
 					taskMonitor.addException(e);
 					try {
@@ -467,7 +479,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 			for (; i < tasks.length; i++) {
 				taskMonitor.setCurrentTaskIndex(i);
 				TaskInfo taskInfo = taskMonitor.getTaskInfo(i);
-				taskInfo.setTaskStatus(TaskStatus.ABORTED);
+				removeTask(taskInfo, TaskStatus.ABORTED, periodic);
 				if (taskMonitor.isTaskStatusLogger()) {
 					taskMonitor.getTaskStatusLogger().logTaskStatus(taskMonitor, parameters);
 				}
@@ -480,9 +492,9 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 				}
 			}
 
-			if (!periodic || endPeriodic) {
+			if (endPeriodic) {
 				for (TaskInfo taskInfo : taskMonitor.getTaskInfoList()) {
-					uniqueTaskIDSet.remove(taskInfo.getTaskID());
+					removeTask(taskInfo, null, false);
 				}
 			}
 

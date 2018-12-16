@@ -390,7 +390,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							}
 
 							childInfoList.add(getChildFieldInfo(entityClass, field,
-									(Class<? extends Entity>) childType, attrFkField));
+									(Class<? extends Entity>) childType, attrFkField, false));
 						}
 
 						// Process child list
@@ -409,7 +409,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							}
 
 							childListInfoList.add(getChildFieldInfo(entityClass, field,
-									(Class<? extends Entity>) argumentType, attrFkField));
+									(Class<? extends Entity>) argumentType, attrFkField, true));
 						}
 
 						if (isPersistent) {
@@ -620,11 +620,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	}
 
 	private ChildFieldInfo getChildFieldInfo(Class<?> parentClass, Field childField, Class<? extends Entity> childClass,
-			Field childFkField) throws UnifyException {
+			Field childFkField, boolean list) throws UnifyException {
 		GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
 		GetterSetterInfo attrFkGetterSetterInfo = ReflectUtils.getGetterSetterInfo(childClass, childFkField.getName());
 		return new ChildFieldInfo(childClass, childFkField, attrFkGetterSetterInfo.getSetter(), childField,
-				getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+				getterSetterInfo.getGetter(), getterSetterInfo.getSetter(), list);
 	}
 
 	private Field getAttributeOnlyForeignKeyField(Class<?> entityClass, Class<?> argumentType) throws UnifyException {

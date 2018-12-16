@@ -60,13 +60,15 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 	private List<SqlFieldInfo> listFieldInfoList;
 
-	private Map<String, SqlFieldInfo> fieldInfoMapByName;
+	private Map<String, SqlFieldInfo> fieldInfoByName;
 
-	private Map<String, SqlFieldInfo> listFieldInfoMapByName;
+	private Map<String, SqlFieldInfo> listFieldInfoByName;
 
 	private Map<Long, SqlFieldInfo> listInfoMapByIndex;
 
 	private List<SqlForeignKeyInfo> foreignKeyList;
+	
+	private Map<String, ChildFieldInfo> childInfoByName;
 
 	private List<ChildFieldInfo> childInfoList;
 
@@ -97,12 +99,12 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		this.versionFieldInfo = versionFieldInfo;
 		this.fieldInfoList = new ArrayList<SqlFieldInfo>();
 		this.listFieldInfoList = new ArrayList<SqlFieldInfo>();
-		this.listFieldInfoMapByName = Collections.unmodifiableMap(sQLFieldInfoMap);
+		this.listFieldInfoByName = Collections.unmodifiableMap(sQLFieldInfoMap);
 		this.foreignKeyList = new ArrayList<SqlForeignKeyInfo>();
-		this.fieldInfoMapByName = new HashMap<String, SqlFieldInfo>();
-		for (SqlFieldInfo sqlFieldInfo : this.listFieldInfoMapByName.values()) {
+		this.fieldInfoByName = new HashMap<String, SqlFieldInfo>();
+		for (SqlFieldInfo sqlFieldInfo : this.listFieldInfoByName.values()) {
 			if (!sqlFieldInfo.isListOnly()) {
-				fieldInfoMapByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
+				fieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
 				fieldInfoList.add(sqlFieldInfo);
 				if (sqlFieldInfo.isForeignKey()) {
 					this.foreignKeyList.add(new SqlForeignKeyInfo(sqlFieldInfo));
@@ -123,13 +125,14 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		this.uniqueConstraintMap = DataUtils.unmodifiableMap(uniqueConstraintMap);
 		this.indexMap = DataUtils.unmodifiableMap(indexMap);
 
-		this.fieldInfoMapByName = DataUtils.unmodifiableMap(this.fieldInfoMapByName);
+		this.fieldInfoByName = DataUtils.unmodifiableMap(this.fieldInfoByName);
 		this.fieldInfoList = DataUtils.unmodifiableList(this.fieldInfoList);
 		this.listFieldInfoList = DataUtils.unmodifiableList(this.listFieldInfoList);
 
 		this.childInfoList = DataUtils.unmodifiableList(childInfoList);
 		this.childListInfoList = DataUtils.unmodifiableList(childListInfoList);
-
+		this.childInfoByName = null;
+		
 		if (this.childInfoList.isEmpty() && this.childListInfoList.isEmpty()) {
 			this.onDeleteCascadeInfoList = Collections.emptyList();
 		} else {
@@ -137,7 +140,15 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 			this.onDeleteCascadeInfoList.addAll(this.childInfoList);
 			this.onDeleteCascadeInfoList.addAll(this.childListInfoList);
 			this.onDeleteCascadeInfoList = Collections.unmodifiableList(this.onDeleteCascadeInfoList);
+
+			this.childInfoByName = new HashMap<String, ChildFieldInfo>();
+			for(OnDeleteCascadeInfo info: this.onDeleteCascadeInfoList) {
+				ChildFieldInfo childFieldInfo = (ChildFieldInfo) info;
+				this.childInfoByName.put(childFieldInfo.getName(), childFieldInfo);
+			}
 		}
+		
+		this.childInfoByName = DataUtils.unmodifiableMap(this.childInfoByName);
 		this.staticValueList = staticValueList;
 	}
 
@@ -192,16 +203,16 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 	@Override
 	public Set<String> getFieldNames() {
-		return fieldInfoMapByName.keySet();
+		return fieldInfoByName.keySet();
 	}
 
 	public Set<String> getListFieldNames() {
-		return listFieldInfoMapByName.keySet();
+		return listFieldInfoByName.keySet();
 	}
 
 	public Map<String, String> getFieldByColumnNames() {
 		Map<String, String> map = new HashMap<String, String>();
-		for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoMapByName.entrySet()) {
+		for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoByName.entrySet()) {
 			map.put(entry.getKey(), entry.getValue().getColumn());
 		}
 		return map;
@@ -209,19 +220,19 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 	@Override
 	public List<SqlFieldInfo> getFieldInfos() {
-		return this.fieldInfoList;
+		return fieldInfoList;
 	}
 
 	@Override
 	public List<SqlFieldInfo> getListFieldInfos() {
-		return this.listFieldInfoList;
+		return listFieldInfoList;
 	}
 
 	@Override
 	public SqlFieldInfo getFieldInfo(String name) throws UnifyException {
-		SqlFieldInfo sqlFieldInfo = fieldInfoMapByName.get(name);
+		SqlFieldInfo sqlFieldInfo = fieldInfoByName.get(name);
 		if (sqlFieldInfo == null) {
-			throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELDINFO_NOT_FOUND, this.entityClass, name);
+			throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELDINFO_NOT_FOUND, entityClass, name);
 		}
 		return sqlFieldInfo;
 	}
@@ -241,6 +252,14 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		return foreignKeyList;
 	}
 
+	public ChildFieldInfo getChildFieldInfo(String name) {
+		return childInfoByName.get(name);
+	}
+
+	public boolean isChildFieldInfo(String name) {
+		return childInfoByName.containsKey(name);
+	}
+	
 	public List<ChildFieldInfo> getSingleChildInfoList() {
 		return childInfoList;
 	}
@@ -301,11 +320,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	}
 
 	public boolean isField(String name) {
-		return fieldInfoMapByName.containsKey(name);
+		return fieldInfoByName.containsKey(name);
 	}
 
 	public SqlFieldInfo getListFieldInfo(String name) throws UnifyException {
-		SqlFieldInfo sqlFieldInfo = listFieldInfoMapByName.get(name);
+		SqlFieldInfo sqlFieldInfo = listFieldInfoByName.get(name);
 		if (sqlFieldInfo == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTFIELDINFO_NOT_FOUND, this.entityClass, name);
 		}
@@ -313,7 +332,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	}
 
 	public boolean isListField(String name) {
-		return listFieldInfoMapByName.containsKey(name);
+		return listFieldInfoByName.containsKey(name);
 	}
 
 	public boolean isVersioned() {
@@ -329,6 +348,6 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	}
 
 	public boolean testTrueFieldNamesOnly(final Collection<String> fieldNames) {
-		return this.fieldInfoMapByName.keySet().containsAll(fieldNames);
+		return this.fieldInfoByName.keySet().containsAll(fieldNames);
 	}
 }

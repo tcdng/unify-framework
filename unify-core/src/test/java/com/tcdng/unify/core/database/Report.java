@@ -54,10 +54,10 @@ public class Report extends AbstractTestEntity {
 	}
 
 	public Report addParameter(ReportParameter rp) {
-		if (this.parameters == null) {
-			this.parameters = new ArrayList<ReportParameter>();
+		if (parameters == null) {
+			parameters = new ArrayList<ReportParameter>();
 		}
-		this.parameters.add(rp);
+		parameters.add(rp);
 		return this;
 	}
 
