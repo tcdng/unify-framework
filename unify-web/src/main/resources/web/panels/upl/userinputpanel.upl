@@ -5,10 +5,10 @@
 !ui-userinputpanel components:$c{userInputBody}
 
 !ui-panel:userInputBody layout:$d{!ui-vertical style:$s{width:100%;}}
-	components:$c{titleBar}
-	components:$f{moreHeaderPanels}
-	components:$c{userInputs}
-	components:$f{moreFooterPanels}
+    components:$c{titleBar}
+    components:$f{moreHeaderPanels}
+    components:$c{userInputs}
+    components:$f{moreFooterPanels}
 !ui-titlebar:titleBar caption:$g{panelCaption} components:$c{captionCancelBtn} draggable:true
 !ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
      eventHandler:$d{!ui-event event:onclick action:$c{hideRptOptions}}

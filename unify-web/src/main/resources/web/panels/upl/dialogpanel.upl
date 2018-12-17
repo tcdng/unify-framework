@@ -3,12 +3,12 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 !ui-dialogpanel components:$c{basePanel} dialogBaseStyleClass:$e{ui-dialogpanel-base}
-	dialogBodyLayout:$d{!ui-horizontal} dialogActionLayout:$d{!ui-horizontal}
-	closeDialogPath:$n{/hidePopup}
+    dialogBodyLayout:$d{!ui-horizontal} dialogActionLayout:$d{!ui-horizontal}
+    closeDialogPath:$n{/hidePopup}
 
 // Base panel
 !ui-panel:basePanel layout:$d{!ui-vertical} styleClass:$f{dialogBaseStyleClass}
-	components:$c{titleBar bodyPanel actionPanel}
+    components:$c{titleBar bodyPanel actionPanel}
 
 // Title bar
 !ui-titlebar:titleBar caption:$g{dialogCaption} components:$c{captionCancelBtn} draggable:true
@@ -20,6 +20,6 @@
 
 // Action panel
 !ui-panel:actionPanel layout:$f{dialogActionLayout} components:$g{dialogActionComponents}
-	 
+     
 //Actions
 !ui-post:closeDialogAct path:$f{closeDialogPath}

@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 !ui-document layout:$d{!ui-desktoptype1} styleSheet:$t{css/cm.css} headerPanel:$c{topBanner} contentPanel:$c{content}
-	
+    
 // Header    
 !ui-panel:topBanner styleClass:$e{cm-banner} components:$c{headerLabel}
 !ui-label:headerLabel styleClass:$e{cm-banner-label} caption:$m{container.management}
@@ -11,18 +11,18 @@
 // Content
 !ui-panel:content styleClass:$e{cm-content} components:$c{innerContent}
 !ui-panel:innerContent style:$s{width:980px;  margin-left: auto; margin-right: auto;}
-	layout:$d{!ui-vertical style:$s{width:100%;}}
-	components:$c{detailSection detailBody detailFooter}
-	components:$c{settingSection settingsTbl settingFooter}
-	components:$c{interfaceSection interfacesTbl interfaceFooter}
-	components:$c{componentSection componentTbl componentFooter}
+    layout:$d{!ui-vertical style:$s{width:100%;}}
+    components:$c{detailSection detailBody detailFooter}
+    components:$c{settingSection settingsTbl settingFooter}
+    components:$c{interfaceSection interfacesTbl interfaceFooter}
+    components:$c{componentSection componentTbl componentFooter}
 
 // Details
 !ui-label:detailSection styleClass:$e{cm-section-label} caption:$m{container.details}
 !ui-panel:detailBody layout:$d{!ui-horizontal style:$s{width:100%;}} components:$c{detailPanel refreshBtn}
 !ui-panel:detailPanel layout:$d{!ui-vertical styleClass:$e{ui-vertical cm-detail-layout} showCaption:true captionSuffix:$s{:} }
-	components:$c{instanceName instanceId version hostHome hostAddress}
-	components:$c{clusterMode productionMode usedMemory totalMemory elapsedTime}
+    components:$c{instanceName instanceId version hostHome hostAddress}
+    components:$c{clusterMode productionMode usedMemory totalMemory elapsedTime}
 !ui-label:instanceName caption:$m{container.details.instancename} layoutCaption:true binding:info.name
 !ui-label:instanceId caption:$m{container.details.instanceid} layoutCaption:true binding:info.id
 !ui-label:version caption:$m{container.details.version} layoutCaption:true binding:info.version
@@ -45,7 +45,7 @@
     multiSelect:false sortable:true
 !ui-label:settingName caption:$m{container.setting.name} binding:name columnStyle:$s{width:150px;} sortable:true
 !ui-label:settingValue caption:$m{container.setting.value} binding:value htmlEscape:false
-	formatter:$d{!stringconcatformat newline:true} columnStyle:$s{width:250px;}
+    formatter:$d{!stringconcatformat newline:true} columnStyle:$s{width:250px;}
 !ui-panel:settingFooter styleClass:$e{cm-section-footer}
 
 // Interfaces
@@ -57,9 +57,9 @@
 !ui-label:interfaceName caption:$m{container.interface.name} binding:name columnStyle:$s{width:250px;} sortable:true
 !ui-label:interfacePort caption:$m{container.interface.portnumber} binding:portNumber  style:$s{text-align:right;} columnStyle:$s{width:100px;} sortable:true
 !ui-label:interfaceOpen caption:$m{container.interface.open} style:$s{text-align:center;} binding:open
-	columnStyle:$s{width:100px;} sortable:true
+    columnStyle:$s{width:100px;} sortable:true
 !ui-panel:interfaceFooter styleClass:$e{cm-section-footer}
-	
+    
 // Components
 !ui-label:componentSection styleClass:$e{cm-section-label} caption:$m{container.components}
 !ui-table:componentTbl styleClass:$e{ui-table cm-table} binding:info.componentInfoList
@@ -70,9 +70,9 @@
 !ui-label:componentName caption:$m{container.component.name} binding:name columnStyle:$s{width:250px;} sortable:true
 !ui-label:componentInst caption:$m{container.component.instances} binding:instanceCount  style:$s{text-align:right;} columnStyle:$s{width:100px;} sortable:true
 !ui-label:componentPass caption:$m{container.component.history} style:$s{text-align:right;} binding:passCount
-	columnStyle:$s{width:100px;} sortable:true
+    columnStyle:$s{width:100px;} sortable:true
 !ui-panel:componentFooter styleClass:$e{cm-section-footer}
-	
+    
 //Component popup    
 !ui-panel:componentDtlPopup styleClass:$e{cm-componentinfopanel-popup} layout:$d{!ui-vertical}
     components:$c{titleBar popContentPanel} 
@@ -83,7 +83,7 @@
         
 !ui-panel:popContentPanel layout:$d{!ui-vertical} components:$c{popFormPanel popCloseBtn}
 !ui-formpanel:popFormPanel formBinding:componentInfo
-	formSection:$d{!ui-section components:$c{popComponentName popComponentType popComponentInst popComponentPass popComponentFail componentAttrTblPnl}}
+    formSection:$d{!ui-section components:$c{popComponentName popComponentType popComponentInst popComponentPass popComponentFail componentAttrTblPnl}}
 !ui-text:popComponentName caption:$m{container.component.name} binding:name readOnly:true size:32
 !ui-text:popComponentType caption:$m{container.component.type} binding:type readOnly:true size:64
 !ui-integer:popComponentInst caption:$m{container.component.instances} binding:instanceCount readOnly:true size:10
@@ -95,7 +95,7 @@
     serialNumbers:false rowSelectable:false windowed:true pagination:false multiSelect:false sortable:true
 !ui-label:compSettingName caption:$m{container.component.setting.name} binding:name columnStyle:$s{width:100px;} sortable:true
 !ui-label:compSettingValue caption:$m{container.component.setting.value} binding:value htmlEscape:false
-	formatter:$d{!stringconcatformat  newline:true} columnStyle:$s{width:160px;}
+    formatter:$d{!stringconcatformat  newline:true} columnStyle:$s{width:160px;}
 
 
 !ui-button:popCloseBtn caption:$m{button.close} eventHandler:$d{!ui-event event:onclick action:$c{cancelAct}}

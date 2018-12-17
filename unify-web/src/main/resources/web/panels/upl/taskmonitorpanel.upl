@@ -1,20 +1,20 @@
 //Task monitor panel
 !ui-taskmonitorpanel layout:$d{!ui-vertical style:$s{width:100%;}}
-	components:$c{titleBar taskMonitorContentPanel taskMonitorActionPanel}
-	refreshEvery:500
+    components:$c{titleBar taskMonitorContentPanel taskMonitorActionPanel}
+    refreshEvery:500
     
 !ui-titlebar:titleBar captionBinding:caption draggable:true
 
 !ui-panel:taskMonitorContentPanel layout:$d{!ui-horizontal style:$s{width:100%;margin-bottom:8px;}  widths:$l{none 100%}}
-	components:$c{taskstateImage messages}
+    components:$c{taskstateImage messages}
 !ui-swappableimage:taskstateImage styleClass:$e{tpimage} binding:taskState
-	src:$t{images/spinner.gif} src:$t{images/pass.png} src:$t{images/fail.png} src:$t{images/error.png}
+    src:$t{images/spinner.gif} src:$t{images/pass.png} src:$t{images/fail.png} src:$t{images/error.png}
 !ui-textarea:messages styleClass:$e{tpmessages} binding:messages rows:10 scrollToEnd:true
 
 !ui-panel:taskMonitorActionPanel layout:$d{!ui-horizontal style:$s{width:100%;text-align:right;}} components:$c{cancelBtn doneBtn}
 !ui-button:cancelBtn caption:$m{button.cancel} eventHandler:$d{!ui-event event:onclick action:$c{cancelAct}}
 !ui-button:doneBtn caption:$m{button.done} eventHandler:$d{!ui-event event:onclick action:$c{doneAct}}
-	 
+     
 //Actions
 !ui-postcommand:cancelAct command:cancelTask
 !ui-postcommand:doneAct command:taskDone

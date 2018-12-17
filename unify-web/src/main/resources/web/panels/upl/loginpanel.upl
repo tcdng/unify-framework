@@ -1,10 +1,10 @@
 //Login Panel UPL
 !ui-loginpanel layout:$d{!ui-vertical} components:$c{headerPanel mainPanel loginActionPanel}
-	formCaptionSuffix:$s{:} loginNameCase:upper loginMessageStyleClass:$e{lpmessage}
+    formCaptionSuffix:$s{:} loginNameCase:upper loginMessageStyleClass:$e{lpmessage}
    
 !ui-panel:headerPanel layout:$f{headerLayout} components:$f{headerComponentList}
 !ui-form:mainPanel captionSuffix:$f{formCaptionSuffix}
-	section:$d{!ui-section components:$c{nameField passwordField tokenField loginMsgPanel}}
+    section:$d{!ui-section components:$c{nameField passwordField tokenField loginMsgPanel}}
 
 !ui-name:nameField caption:$m{loginpanel.username} binding:$g{loginNameBinding}
     case:$f{loginNameCase} focus:true

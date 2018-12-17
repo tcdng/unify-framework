@@ -1,6 +1,6 @@
 //Form Panel UPL
 !ui-formpanel layout:$d{!ui-vertical} components:$c{headerPanel mainBodyPanel footerPanel}
-	formStyleClass:$e{ui-form} formCaptionSuffix:$s{:} mainLayout:$d{!ui-horizontal style:$s{width:100%;}}
+    formStyleClass:$e{ui-form} formCaptionSuffix:$s{:} mainLayout:$d{!ui-horizontal style:$s{width:100%;}}
 
 !ui-panel:headerPanel layout:$f{headerLayout} components:$f{headerComponentList} space:true    
 !ui-panel:footerPanel layout:$f{footerLayout} components:$f{footerComponentList} space:true      

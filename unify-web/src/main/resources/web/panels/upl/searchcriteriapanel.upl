@@ -1,6 +1,6 @@
 //Search Panel UPL
 !ui-searchcriteriapanel layout:$d{!ui-vertical} components:$c{criteriaPanel buttonPanel}
-	searchClearList:$c{criteriaPanel} searchLayout:$d{!ui-grid showCaption:true captionSuffix:$s{:}}
+    searchClearList:$c{criteriaPanel} searchLayout:$d{!ui-grid showCaption:true captionSuffix:$s{:}}
 
 !ui-panel:criteriaPanel layout:$f{searchLayout} components:$g{searchByList}
 !ui-panel:buttonPanel layout:$d{!ui-horizontal} components:$c{searchBtn clearBtn}
