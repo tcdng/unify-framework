@@ -241,10 +241,10 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
             } else {
                 crudData.setCaption(getSessionMessage(captionKey));
             }
-        }
 
-        cascadeValueStore();
-        switchState();
+            cascadeValueStore();
+            switchState();
+        }
     }
 
     protected FORMMODE getFormMode() {
