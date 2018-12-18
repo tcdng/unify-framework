@@ -35,6 +35,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.BooleanType;
 import com.tcdng.unify.core.constant.Gender;
+import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.operation.Update;
@@ -661,6 +662,25 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindAllRecordsWithOrder() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            Fruit orange = new Fruit("orange", "orange", 15.00);
+            db.create(orange);
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().lessEqual("price", 20.00).order(OrderType.DESCENDING, "price"));
+            assertEquals(2, testFruitList.size());
+            assertEquals(apple, testFruitList.get(0));
+            assertEquals(orange, testFruitList.get(1));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testFindAllRecordsWithSelect() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -1090,6 +1110,46 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
             assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testListAllRecordsWithOrder() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
+
+            // Pick authors with age less or equals 50 and order by name
+            List<Author> testAuthorList = db.listAll(new AuthorQuery().lessEqual("age", 50).order(OrderType.DESCENDING, "name"));
+            assertEquals(2, testAuthorList.size());
+
+            // Should pick the Bramers with different offices
+            Author foundAuthor = testAuthorList.get(0);
+            assertEquals("Susan Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+            assertEquals(Gender.FEMALE, foundAuthor.getGender());
+            assertEquals(BooleanType.TRUE, foundAuthor.getRetired());
+            assertEquals("True", foundAuthor.getRetiredDesc());
+            assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
+            assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
+            assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
+
+            foundAuthor = testAuthorList.get(1);
+            assertEquals("Brian Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(50), foundAuthor.getAge());
+            assertEquals(Gender.MALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals("False", foundAuthor.getRetiredDesc());
+            assertEquals(parklaneOfficeId, foundAuthor.getOfficeId());
+            assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
+            assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
             db.getTransactionManager().endTransaction();
         }

@@ -1491,14 +1491,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
      */
     protected boolean appendOrderClause(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
             throws UnifyException {
-        Order order = query.getOrder();
-        if (order != null && !order.isEmpty()) {
+        if (query.isOrder()) {
             StringBuilder orderSql = new StringBuilder();
-            for (String name : order.values()) {
+            for (Order.Part part : query.getOrder().getParts()) {
                 if (orderSql.length() > 0) {
                     orderSql.append(',');
                 }
-                orderSql.append(sqlEntityInfo.getListFieldInfo(name).getColumn());
+                orderSql.append(sqlEntityInfo.getListFieldInfo(part.getField()).getColumn()).append(' ')
+                        .append(part.getType().code());
             }
             sql.append(" ORDER BY ").append(orderSql);
             return true;
