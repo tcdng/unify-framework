@@ -26,7 +26,8 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 @StaticList("orderlist")
 public enum OrderType implements EnumConst {
-    ASCENDING("A"), DESCENDING("D");
+
+    ASCENDING("ASC"), DESCENDING("DESC");
 
     private final String code;
 

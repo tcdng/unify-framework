@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.operation.Amongst;
 import com.tcdng.unify.core.operation.AndBuilder;
 import com.tcdng.unify.core.operation.Between;
@@ -212,6 +213,18 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> order(OrderType type, String field) {
+        getOrder().add(field, type);
+        return this;
+    }
+
+    public Query<T> order(OrderType type, String... fields) {
+        for (String field : fields) {
+            getOrder().add(field, type);
+        }
+        return this;
+    }
+
     public Query<T> max(String field) {
         maxProperty = field;
         return this;
@@ -270,7 +283,7 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public boolean isOrder() {
-        return order != null && !order.isEmpty();
+        return order != null;
     }
 
     public int getOffset() {
@@ -336,14 +349,6 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> distinct(boolean distinct) {
         innerGetSelect().setDistinct(distinct);
-        return this;
-    }
-
-    public Query<T> ascendingOrder(boolean ascendingOrder) {
-        if (order == null) {
-            order = new Order();
-        }
-        order.setAscending(ascendingOrder);
         return this;
     }
 
