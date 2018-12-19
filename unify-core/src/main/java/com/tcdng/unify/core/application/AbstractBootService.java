@@ -23,7 +23,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Transactional;
-import com.tcdng.unify.core.business.AbstractBusinessModule;
+import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.database.DataSourceManager;
@@ -33,13 +33,13 @@ import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.VersionUtils;
 
 /**
- * Convenient base class for boot business module.
+ * Convenient base class for boot business service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractBootModule<T extends FeatureDefinition> extends AbstractBusinessModule
-        implements BootModule {
+public abstract class AbstractBootService<T extends FeatureDefinition> extends AbstractBusinessService
+        implements BootService {
 
     @Configurable(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
     private DataSourceManager dataSourceManager;

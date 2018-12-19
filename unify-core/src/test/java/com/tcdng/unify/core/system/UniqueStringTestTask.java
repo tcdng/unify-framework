@@ -37,8 +37,8 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("uniquestringtest-task")
 public class UniqueStringTestTask extends AbstractTask {
 
-    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-    private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+    private SequenceNumberService sequenceNumberService;
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput taskInput, TaskOutput taskOutput) throws UnifyException {
@@ -46,7 +46,7 @@ public class UniqueStringTestTask extends AbstractTask {
         int iterations = taskInput.getParam(int.class, UniqueStringTestTaskConstants.ITERATIONS);
         for (int i = 0; i < iterations; i++) {
             for (String string : taskInput.getParam(String[].class, UniqueStringTestTaskConstants.UNIQUESTRINGLIST)) {
-                Long id = sequenceNumberBusinessModule.getUniqueStringId(string);
+                Long id = sequenceNumberService.getUniqueStringId(string);
                 if (resultMap.containsKey(string)) {
                     if (!id.equals(resultMap.get(string))) {
                         throwOperationErrorException(null);

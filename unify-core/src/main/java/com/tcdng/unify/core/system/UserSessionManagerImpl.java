@@ -37,7 +37,7 @@ import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
-import com.tcdng.unify.core.business.AbstractBusinessModule;
+import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.system.entities.UserSessionTracking;
 import com.tcdng.unify.core.system.entities.UserSessionTrackingQuery;
@@ -53,7 +53,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  */
 @Transactional
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)
-public class UserSessionManagerImpl extends AbstractBusinessModule implements UserSessionManager {
+public class UserSessionManagerImpl extends AbstractBusinessService implements UserSessionManager {
 
     @Configurable(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER)
     private UplComponentWriterManager uplComponentWriterManager;

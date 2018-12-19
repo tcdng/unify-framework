@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Plugin;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Plugin(target = "anothermock-businessmodule", method = "createLoanAccount", paramTypes = { LoanAccount.class })
+@Plugin(target = "anothermockservice", method = "createLoanAccount", paramTypes = { LoanAccount.class })
 @Component("loandisbursement-logic")
 public class LoanDisbursementLogicUnit extends AbstractBusinessLogicUnit {
 

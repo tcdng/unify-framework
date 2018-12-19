@@ -25,17 +25,17 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
 
 /**
- * A mock business module.
+ * A mock business service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Transactional
-@Component("mock-businessmodule")
-public class MockBusinessModuleImpl extends AbstractBusinessModule implements MockBusinessModule {
+@Component("mockservice")
+public class MockServiceImpl extends AbstractBusinessService implements MockService {
 
-    @Configurable("anothermock-businessmodule")
-    private AnotherMockBusinessModule anotherMockBusinessModule;
+    @Configurable("anothermockservice")
+    private AnotherMockService anotherMockService;
 
     @Override
     @Synchronized("sling")
@@ -73,11 +73,11 @@ public class MockBusinessModuleImpl extends AbstractBusinessModule implements Mo
     @Override
     public Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException {
         Long accountId = (Long) db().create(new Account(accountNo, accountName));
-        return anotherMockBusinessModule.createLoanAccount(new LoanAccount(accountId, amount));
+        return anotherMockService.createLoanAccount(new LoanAccount(accountId, amount));
     }
 
     @Override
     public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
-        return anotherMockBusinessModule.findLoanAccount(loanAccountId);
+        return anotherMockService.findLoanAccount(loanAccountId);
     }
 }

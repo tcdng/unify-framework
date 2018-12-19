@@ -15,17 +15,28 @@
  */
 package com.tcdng.unify.core.business;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Transactional;
 
 /**
- * Sub class test module.
+ * Another mock business service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Transactional
-@Component("submock-businessmodule")
-public class SubMockBusinessModuleImpl extends MockBusinessModuleImpl implements SubMockBusinessModule {
+@Component("anothermockservice")
+public class AnotherMockServiceImpl extends AbstractBusinessService implements AnotherMockService {
+
+    @Override
+    public Long createLoanAccount(LoanAccount loanAccount) throws UnifyException {
+        return (Long) db().create(loanAccount);
+    }
+
+    @Override
+    public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
+        return db().list(LoanAccount.class, loanAccountId);
+    }
 
 }

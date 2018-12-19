@@ -30,7 +30,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Transactional;
-import com.tcdng.unify.core.business.AbstractBusinessModule;
+import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.data.Input;
 import com.tcdng.unify.core.data.Inputs;
 import com.tcdng.unify.core.system.entities.ParameterDef;
@@ -45,14 +45,14 @@ import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
- * Default implementation of parameter module.
+ * Default implementation of parameter service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Transactional
-@Component(ApplicationComponents.APPLICATION_PARAMETERBUSINESSMODULE)
-public class ParameterBusinessModuleImpl extends AbstractBusinessModule implements ParameterBusinessModule {
+@Component(ApplicationComponents.APPLICATION_PARAMETERSERVICE)
+public class ParameterServiceImpl extends AbstractBusinessService implements ParameterService {
 
     @Override
     public void defineParameters(String name, Class<?> type) throws UnifyException {

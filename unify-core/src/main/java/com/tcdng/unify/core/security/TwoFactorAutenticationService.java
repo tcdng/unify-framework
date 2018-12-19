@@ -19,7 +19,7 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * A 2-factor authentication module component.
+ * A 2-factor authentication service component.
  * 
  * @author Lateef Ojulari
  * @since 1.0

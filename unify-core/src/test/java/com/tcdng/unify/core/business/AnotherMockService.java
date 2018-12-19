@@ -15,12 +15,17 @@
  */
 package com.tcdng.unify.core.business;
 
+import com.tcdng.unify.core.UnifyException;
+
 /**
- * Interface for business module sub class.
+ * Another mock business service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SubMockBusinessModule extends MockBusinessModule {
+public interface AnotherMockService extends BusinessService {
 
+    Long createLoanAccount(LoanAccount loanAccount) throws UnifyException;
+
+    LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
 }

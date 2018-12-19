@@ -86,7 +86,7 @@ public interface UnifyCoreErrorConstants {
     String REFLECT_FIELD_IS_NOT_PUBLIC_NONFINAL = "UC_0014";
 
     /**
-     * Business module transactional method {0} for class {1} must throw
+     * Business service transactional method {0} for class {1} must throw
      * UnifyException
      */
     String MODULE_TRANSACTIONAL_MUST_THROW_EXCEPTION = "UC_0015";
@@ -672,14 +672,14 @@ public interface UnifyCoreErrorConstants {
     String BUSINESSLOGIC_PLUGIN_TARGET_UNKNOWN = "UC_00AD";
 
     /**
-     * Business logic plug-in {0} can not plug into a non-business module component
+     * Business logic plug-in {0} can not plug into a non-business service component
      * {1}.
      */
     String BUSINESSLOGIC_PLUGIN_TARGET_NON_BUSINESSMODULE = "UC_00AE";
 
     /**
      * Business logic plug-in {0} is targeting an unknown socket {1} on business
-     * module component {2}.
+     * service component {2}.
      */
     String BUSINESSLOGIC_PLUGIN_TARGET_NON_SOCKET = "UC_00AF";
 

@@ -26,14 +26,14 @@ import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.operation.Update;
 
 /**
- * Generic business module implementation.
+ * Generic business service implementation.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Transactional
-@Component(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)
-public class GenericBusinessModuleImpl extends AbstractBusinessModule implements GenericBusinessModule {
+@Component(ApplicationComponents.APPLICATION_GENERICSERVICE)
+public class GenericServiceImpl extends AbstractBusinessService implements GenericService {
 
     @Override
     public Object create(Entity record) throws UnifyException {

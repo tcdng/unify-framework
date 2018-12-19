@@ -18,7 +18,7 @@ package com.tcdng.unify.core.system;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessModule;
+import com.tcdng.unify.core.business.BusinessService;
 import com.tcdng.unify.core.system.entities.ClusterLock;
 import com.tcdng.unify.core.system.entities.ClusterLockQuery;
 import com.tcdng.unify.core.system.entities.ClusterNode;
@@ -30,7 +30,7 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ClusterManagerBusinessModule extends BusinessModule {
+public interface ClusterService extends BusinessService {
 
     /**
      * Returns the node lock owner ID.

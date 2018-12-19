@@ -27,7 +27,7 @@ public interface ApplicationComponents {
 
     String APPLICATION_BYTEARRAYCRYPTOGRAPH = "application-bytearraycryptograph";
 
-    String APPLICATION_CLUSTERMANAGER = "application-clustermanager";
+    String APPLICATION_CLUSTERSERVICE = "application-clusterservice";
 
     String APPLICATION_CURRENCYSOURCE = "application-currencysource";
 
@@ -37,7 +37,7 @@ public interface ApplicationComponents {
 
     String APPLICATION_DATASOURCEMANAGER = "application-datasourcemanager";
 
-    String APPLICATION_DEFAULTBOOTMODULE = "default-bootmodule";
+    String APPLICATION_DEFAULTBOOTSERVICE = "default-bootservice";
 
     String APPLICATION_DEFAULTEMAILSERVER = "default-emailserver";
 
@@ -55,7 +55,7 @@ public interface ApplicationComponents {
 
     String APPLICATION_FORMATHELPER = "application-formathelper";
 
-    String APPLICATION_GENERICBUSINESSMODULE = "application-genericbusinessmodule";
+    String APPLICATION_GENERICSERVICE = "application-genericservice";
 
     String APPLICATION_JSONOBJECTSTREAMER = "application-jsonobjectstreamer";
 
@@ -67,15 +67,15 @@ public interface ApplicationComponents {
 
     String APPLICATION_NETWORKINTERFACE = "application-networkinterface";
 
-    String APPLICATION_PARAMETERBUSINESSMODULE = "parameter-businessmodule";
+    String APPLICATION_PARAMETERSERVICE = "parameterservice";
 
-    String APPLICATION_PROXYBUSINESSMODULEGENERATOR = "application-proxybusinessmodulegenerator";
+    String APPLICATION_PROXYBUSINESSSERVICEGENERATOR = "application-proxybusinessservicegenerator";
 
     String APPLICATION_REGEXPATTERNSTORE = "appication-regexpatternstore";
 
     String APPLICATION_REQUESTCONTEXTMANAGER = "application-requestcontextmanager";
 
-    String APPLICATION_SEQUENCENUMBERBUSINESSMODULE = "application-sequencenumberbusinessmodule";
+    String APPLICATION_SEQUENCENUMBERSERVICE = "application-sequencenumberservice";
 
     String APPLICATION_SQLENTITYINFOFACTORY = "application-sqlentityinfofactory";
 

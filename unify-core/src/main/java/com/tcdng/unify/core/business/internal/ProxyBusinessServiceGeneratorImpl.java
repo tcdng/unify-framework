@@ -42,19 +42,19 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.BusinessLogicInput;
 import com.tcdng.unify.core.business.BusinessLogicOutput;
 import com.tcdng.unify.core.business.BusinessLogicUnit;
-import com.tcdng.unify.core.business.BusinessModule;
-import com.tcdng.unify.core.system.ClusterManagerBusinessModule;
+import com.tcdng.unify.core.business.BusinessService;
+import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.util.NameUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
- * Default implementation proxy business module generator.
+ * Default implementation proxy business service generator.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_PROXYBUSINESSMODULEGENERATOR)
-public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent implements ProxyBusinessModuleGenerator {
+@Component(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR)
+public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent implements ProxyBusinessServiceGenerator {
 
     @Configurable("proxy")
     private String proxyPackageExtension;
@@ -65,48 +65,48 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
     @Configurable
     private boolean logSource;
 
-    private Map<String, ProxyBusinessModuleMethodAnnotationInfo> annotationInfoBySignature;
+    private Map<String, ProxyBusinessServiceMethodAnnotationInfo> annotationInfoBySignature;
 
-    public ProxyBusinessModuleGeneratorImpl() {
-        annotationInfoBySignature = new HashMap<String, ProxyBusinessModuleMethodAnnotationInfo>();
+    public ProxyBusinessServiceGeneratorImpl() {
+        annotationInfoBySignature = new HashMap<String, ProxyBusinessServiceMethodAnnotationInfo>();
     }
 
     @Override
-    public String generateProxyBusinessModuleName(Class<? extends BusinessModule> businessModuleClazz)
+    public String generateProxyBusinessServiceName(Class<? extends BusinessService> businessServiceClazz)
             throws UnifyException {
-        return businessModuleClazz.getPackage().getName() + "." + proxyPackageExtension + "."
-                + businessModuleClazz.getSimpleName() + proxyClassExtension;
+        return businessServiceClazz.getPackage().getName() + "." + proxyPackageExtension + "."
+                + businessServiceClazz.getSimpleName() + proxyClassExtension;
     }
 
     @Override
-    public String generateProxyBusinessModuleSimpleName(Class<? extends BusinessModule> businessModuleClazz)
+    public String generateProxyBusinessServiceSimpleName(Class<? extends BusinessService> businessServiceClazz)
             throws UnifyException {
-        return businessModuleClazz.getSimpleName() + proxyClassExtension;
+        return businessServiceClazz.getSimpleName() + proxyClassExtension;
     }
 
     @Override
-    public String generateProxyBusinessModuleSource(String name, Class<? extends BusinessModule> businessModuleClazz,
+    public String generateProxyBusinessServiceSource(String name, Class<? extends BusinessService> businessServiceClazz,
             Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, boolean isClusterMode) throws UnifyException {
-        String simpleName = generateProxyBusinessModuleSimpleName(businessModuleClazz);
-        String packageName = businessModuleClazz.getPackage().getName() + "." + proxyPackageExtension;
+        String simpleName = generateProxyBusinessServiceSimpleName(businessServiceClazz);
+        String packageName = businessServiceClazz.getPackage().getName() + "." + proxyPackageExtension;
 
-        ReflectUtils.assertPublicConcreteNonFinal(businessModuleClazz);
+        ReflectUtils.assertPublicConcreteNonFinal(businessServiceClazz);
 
-        ReflectUtils.assertInterface(businessModuleClazz, BusinessModule.class);
-        boolean isUseCsModule = !ApplicationComponents.APPLICATION_CLUSTERMANAGER.equals(name);
+        ReflectUtils.assertInterface(businessServiceClazz, BusinessService.class);
+        boolean isUseCsService = !ApplicationComponents.APPLICATION_CLUSTERSERVICE.equals(name);
 
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(packageName).append(";\n");
         sb.append('\n');
-        sb.append("public class ").append(simpleName).append(" extends ").append(businessModuleClazz.getName())
+        sb.append("public class ").append(simpleName).append(" extends ").append(businessServiceClazz.getName())
                 .append(" {\n");
 
         // Initialize method should be non-final
-        Method initMethod = ReflectUtils.getMethod(businessModuleClazz, "initialize", UnifyComponentContext.class);
+        Method initMethod = ReflectUtils.getMethod(businessServiceClazz, "initialize", UnifyComponentContext.class);
         ReflectUtils.assertOverridable(initMethod);
 
-        Transactional clazzTa = businessModuleClazz.getAnnotation(Transactional.class);
-        Method[] methods = businessModuleClazz.getMethods();
+        Transactional clazzTa = businessServiceClazz.getAnnotation(Transactional.class);
+        Method[] methods = businessServiceClazz.getMethods();
 
         // Identify locks and extract relayed annotation information
         Map<Method, String> methodLockMap = new HashMap<Method, String>();
@@ -122,13 +122,13 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
             Expirable ea = method.getAnnotation(Expirable.class);
             if (ta != null || ea != null) {
                 annotationInfoBySignature.put(ReflectUtils.getMethodSignature(name, method),
-                        new ProxyBusinessModuleMethodAnnotationInfo(ta, ea));
+                        new ProxyBusinessServiceMethodAnnotationInfo(ta, ea));
             }
         }
 
-        if (isUseCsModule) {
-            sb.append("\tprivate ").append(ClusterManagerBusinessModule.class.getCanonicalName())
-                    .append(" csModule;\n");
+        if (isUseCsService) {
+            sb.append("\tprivate ").append(ClusterService.class.getCanonicalName())
+                    .append(" csService;\n");
         }
 
         // Write methods
@@ -161,13 +161,13 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
                 }
                 if (!hasUnifyException) {
                     throw new UnifyException(UnifyCoreErrorConstants.MODULE_TRANSACTIONAL_MUST_THROW_EXCEPTION, method,
-                            businessModuleClazz);
+                            businessServiceClazz);
                 }
             }
 
             boolean isBroadcast = method.getAnnotation(Broadcast.class) != null;
             boolean isTransactional = ta != null;
-            boolean isSynchronized = isUseCsModule && methodLockMap.containsKey(method);
+            boolean isSynchronized = isUseCsService && methodLockMap.containsKey(method);
             if (!isTransactional && !isSynchronized && !isBroadcast) {
                 // No need to override method if it is not transactional or not
                 // synchronized or not broadcast
@@ -227,7 +227,7 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
                     extraTab = "\t\t\t";
                 }
                 String lock = methodLockMap.get(method);
-                sb.append(extraTab).append("\t\t\t\tcsModule.beginSynchronization(\"").append(lock).append("\");\n");
+                sb.append(extraTab).append("\t\t\t\tcsService.beginSynchronization(\"").append(lock).append("\");\n");
                 sb.append(extraTab).append("\t\t\t\t\ttry{\n");
             }
 
@@ -252,7 +252,7 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
                 }
             }
 
-            // Invoke proxied module
+            // Invoke proxied service
             sb.append("\t\t\t");
             if (nonVoidReturn) {
                 sb.append("result = ");
@@ -283,7 +283,7 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
             if (isSynchronized) {
                 String lock = methodLockMap.get(method);
                 sb.append(extraTab).append("\t\t\t\t}finally{\n");
-                sb.append(extraTab).append("\t\t\t\t\tcsModule.endSynchronization(\"").append(lock).append("\");\n");
+                sb.append(extraTab).append("\t\t\t\t\tcsService.endSynchronization(\"").append(lock).append("\");\n");
                 sb.append(extraTab).append("\t\t\t\t}\n");
             }
 
@@ -310,13 +310,13 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
             sb.append("\t}\n\n");
         }
 
-        if (isUseCsModule) {
+        if (isUseCsService) {
             sb.append("\tprotected void onInitialize() throws ").append(UnifyException.class.getCanonicalName())
                     .append(" {\n");
             sb.append("\t\tsuper.onInitialize();\n");
-            sb.append("\t\tthis.csModule = (").append(ClusterManagerBusinessModule.class.getCanonicalName())
+            sb.append("\t\tthis.csService = (").append(ClusterService.class.getCanonicalName())
                     .append(")this.getUnifyComponentContext().getComponent(\"")
-                    .append(ApplicationComponents.APPLICATION_CLUSTERMANAGER).append("\");\n");
+                    .append(ApplicationComponents.APPLICATION_CLUSTERSERVICE).append("\");\n");
             sb.append("\t}\n");
         }
 
@@ -326,22 +326,22 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
 
     @SuppressWarnings("unchecked")
     @Override
-    public Class<? extends BusinessModule> generateCompileLoadProxyBusinessModuleClass(String name,
-            Class<? extends BusinessModule> businessModuleClazz, Map<String, List<UnifyPluginInfo>> pluginsBySocketMap)
+    public Class<? extends BusinessService> generateCompileLoadProxyBusinessServiceClass(String name,
+            Class<? extends BusinessService> businessServiceClazz, Map<String, List<UnifyPluginInfo>> pluginsBySocketMap)
             throws UnifyException {
         boolean isClusterMode = isClusterMode();
         try {
-            String source = generateProxyBusinessModuleSource(name, businessModuleClazz, pluginsBySocketMap,
+            String source = generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap,
                     isClusterMode);
             if (logSource) {
-                logDebug("Generated source for [{0}]. Cluster mode: [{1}], Source:\n [{2}]", businessModuleClazz,
+                logDebug("Generated source for [{0}]. Cluster mode: [{1}], Source:\n [{2}]", businessServiceClazz,
                         isClusterMode, source);
             }
 
-            String className = generateProxyBusinessModuleName(businessModuleClazz);
+            String className = generateProxyBusinessServiceName(businessServiceClazz);
             SimpleCompiler compiler = new SimpleCompiler();
             compiler.cook(new StringReader(source));
-            return (Class<? extends BusinessModule>) compiler.getClassLoader().loadClass(className);
+            return (Class<? extends BusinessService>) compiler.getClassLoader().loadClass(className);
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -350,14 +350,14 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
     }
 
     @Override
-    public ProxyBusinessModuleMethodAnnotationInfo getProxyBusinessModuleMethodAnnotationInfo(String methodSignature)
+    public ProxyBusinessServiceMethodAnnotationInfo getProxyBusinessServiceMethodAnnotationInfo(String methodSignature)
             throws UnifyException {
         return annotationInfoBySignature.get(methodSignature);
     }
 
     @Override
     public Taskable getTaskable(String signature) throws UnifyException {
-        ProxyBusinessModuleMethodAnnotationInfo mpaInfo = annotationInfoBySignature.get(signature);
+        ProxyBusinessServiceMethodAnnotationInfo mpaInfo = annotationInfoBySignature.get(signature);
         if (mpaInfo != null) {
             return mpaInfo.getTaskable();
         }
@@ -366,7 +366,7 @@ public class ProxyBusinessModuleGeneratorImpl extends AbstractUnifyComponent imp
 
     @Override
     public Expirable getExpirable(String signature) throws UnifyException {
-        ProxyBusinessModuleMethodAnnotationInfo mpaInfo = this.annotationInfoBySignature.get(signature);
+        ProxyBusinessServiceMethodAnnotationInfo mpaInfo = this.annotationInfoBySignature.get(signature);
         if (mpaInfo != null) {
             return mpaInfo.getExpirable();
         }

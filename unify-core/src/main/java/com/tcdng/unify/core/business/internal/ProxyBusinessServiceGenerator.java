@@ -20,46 +20,46 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyPluginInfo;
-import com.tcdng.unify.core.business.BusinessModule;
+import com.tcdng.unify.core.business.BusinessService;
 
 /**
- * Proxy business module generator by extension class generator.
+ * Proxy business service generator by extension class generator.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ProxyBusinessModuleGenerator extends ProxyBusinessModuleMethodRelay {
+public interface ProxyBusinessServiceGenerator extends ProxyBusinessServiceMethodRelay {
 
     /**
-     * Generates a name for proxy version of a business module type.
+     * Generates a name for proxy version of a business service type.
      * 
-     * @param businessModuleClazz
-     *            the business module type
+     * @param businessServiceClazz
+     *            the business service type
      * @return the generated simple name
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateProxyBusinessModuleName(Class<? extends BusinessModule> businessModuleClazz) throws UnifyException;
+    String generateProxyBusinessServiceName(Class<? extends BusinessService> businessServiceClazz) throws UnifyException;
 
     /**
-     * Generates a simple name for proxy version of a business module type.
+     * Generates a simple name for proxy version of a business service type.
      * 
-     * @param businessModuleClazz
-     *            the business module type
+     * @param businessServiceClazz
+     *            the business service type
      * @return the generated simple name
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateProxyBusinessModuleSimpleName(Class<? extends BusinessModule> businessModuleClazz)
+    String generateProxyBusinessServiceSimpleName(Class<? extends BusinessService> businessServiceClazz)
             throws UnifyException;
 
     /**
-     * Generates the java source code for proxy version of a business module type.
+     * Generates the java source code for proxy version of a business service type.
      * 
      * @param name
      *            the component name
-     * @param businessModuleClazz
-     *            the business module type
+     * @param businessServiceClazz
+     *            the business service type
      * @param pluginsBySocketMap
      *            plug-ins by socket name
      * @param clusterMode
@@ -68,24 +68,24 @@ public interface ProxyBusinessModuleGenerator extends ProxyBusinessModuleMethodR
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateProxyBusinessModuleSource(String name, Class<? extends BusinessModule> businessModuleClazz,
+    String generateProxyBusinessServiceSource(String name, Class<? extends BusinessService> businessServiceClazz,
             Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, boolean clusterMode) throws UnifyException;
 
     /**
-     * Generates, compiles and loads a business module proxy class.
+     * Generates, compiles and loads a business service proxy class.
      * 
      * @param name
      *            the component name
-     * @param businessModuleClazz
-     *            the business module type
+     * @param businessServiceClazz
+     *            the business service type
      * @param pluginsBySocketMap
      *            plug-ins by socket name
      * @return the proxy class
      * @throws UnifyException
      *             if an error occurs
      */
-    Class<? extends BusinessModule> generateCompileLoadProxyBusinessModuleClass(String name,
-            Class<? extends BusinessModule> businessModuleClazz, Map<String, List<UnifyPluginInfo>> pluginsBySocketMap)
+    Class<? extends BusinessService> generateCompileLoadProxyBusinessServiceClass(String name,
+            Class<? extends BusinessService> businessServiceClazz, Map<String, List<UnifyPluginInfo>> pluginsBySocketMap)
             throws UnifyException;
 
     /**
@@ -97,6 +97,6 @@ public interface ProxyBusinessModuleGenerator extends ProxyBusinessModuleMethodR
      * @throws UnifyException
      *             if an error occurs
      */
-    ProxyBusinessModuleMethodAnnotationInfo getProxyBusinessModuleMethodAnnotationInfo(String methodSignature)
+    ProxyBusinessServiceMethodAnnotationInfo getProxyBusinessServiceMethodAnnotationInfo(String methodSignature)
             throws UnifyException;
 }

@@ -19,18 +19,18 @@ import com.tcdng.unify.core.annotation.Expirable;
 import com.tcdng.unify.core.annotation.Taskable;
 
 /**
- * Proxy business module method annotation information.
+ * Proxy business service method annotation information.
  * 
  * @author Lateef
  * @since 1.0
  */
-public class ProxyBusinessModuleMethodAnnotationInfo {
+public class ProxyBusinessServiceMethodAnnotationInfo {
 
     private Taskable taskable;
 
     private Expirable expirable;
 
-    public ProxyBusinessModuleMethodAnnotationInfo(Taskable taskable, Expirable expirable) {
+    public ProxyBusinessServiceMethodAnnotationInfo(Taskable taskable, Expirable expirable) {
         this.taskable = taskable;
         this.expirable = expirable;
     }

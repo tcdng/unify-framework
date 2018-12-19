@@ -45,8 +45,8 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Taskable;
-import com.tcdng.unify.core.business.internal.ProxyBusinessModuleMethodRelay;
-import com.tcdng.unify.core.system.ClusterManagerBusinessModule;
+import com.tcdng.unify.core.business.internal.ProxyBusinessServiceMethodRelay;
+import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -61,8 +61,8 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(ApplicationComponents.APPLICATION_TASKMANAGER)
 public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManager {
 
-    @Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSMODULEGENERATOR)
-    private ProxyBusinessModuleMethodRelay proxyMethodRelay;
+    @Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR)
+    private ProxyBusinessServiceMethodRelay proxyMethodRelay;
 
     @Configurable(ApplicationComponents.APPLICATION_TASKSTATUSLOGGER)
     private TaskStatusLogger taskStatusLogger;
@@ -401,8 +401,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
             } finally {
                 if (!StringUtils.isBlank(lockToRelease)) {
                     try {
-                        ClusterManagerBusinessModule clusterManager = (ClusterManagerBusinessModule) getComponent(
-                                ApplicationComponents.APPLICATION_CLUSTERMANAGER);
+                        ClusterService clusterManager = (ClusterService) getComponent(
+                                ApplicationComponents.APPLICATION_CLUSTERSERVICE);
                         clusterManager.releaseSynchronizationLock(lockToRelease);
                     } catch (Exception e) {
                     }

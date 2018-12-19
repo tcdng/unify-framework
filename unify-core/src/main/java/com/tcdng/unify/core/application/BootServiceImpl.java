@@ -13,33 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.business;
+package com.tcdng.unify.core.application;
 
+import java.util.Collections;
 import java.util.List;
 
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Transactional;
 
 /**
- * Loan disbursement module implementation.
+ * Default implementation of an boot business service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Transactional
-@Component("loandisbursement-businessmodule")
-public class LoanDisbursementBusinessModuleImpl extends AbstractBusinessModule
-        implements LoanDisbursementBusinessModule {
+@Component(ApplicationComponents.APPLICATION_DEFAULTBOOTSERVICE)
+public class BootServiceImpl extends AbstractBootService<FeatureDefinition> {
 
     @Override
-    public Long create(LoanDisbursement loanDisbursement) throws UnifyException {
-        return (Long) db().create(loanDisbursement);
+    protected List<StartupShutdownHook> getStartupShutdownHooks() throws UnifyException {
+        return Collections.emptyList();
     }
 
     @Override
-    public List<LoanDisbursement> find(LoanDisbursementQuery query) throws UnifyException {
-        return db().listAll(query);
+    protected BootInstallationInfo<FeatureDefinition> prepareBootInstallation() throws UnifyException {
+        return new BootInstallationInfo<FeatureDefinition>();
     }
 
+    @Override
+    protected void onStartup() throws UnifyException {
+
+    }
+
+    @Override
+    protected void onShutdown() throws UnifyException {
+
+    }
 }

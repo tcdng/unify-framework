@@ -52,7 +52,7 @@ public abstract class AbstractInMemoryTableCrudPanel<T extends Entity> extends A
     protected void doCreateRecord() throws UnifyException {
         T record = getCrudData().getRecord();
         if (populateListOnly) {
-            getGenericBusinessModule().populateListOnly(record);
+            getGenericService().populateListOnly(record);
         }
 
         getCrudData().getRecordList().add(record);
@@ -62,7 +62,7 @@ public abstract class AbstractInMemoryTableCrudPanel<T extends Entity> extends A
     protected void doUpdateRecord() throws UnifyException {
         T record = getCrudData().getRecord();
         if (populateListOnly) {
-            getGenericBusinessModule().populateListOnly(record);
+            getGenericService().populateListOnly(record);
         }
     }
 

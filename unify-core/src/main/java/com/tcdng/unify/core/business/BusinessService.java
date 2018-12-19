@@ -15,28 +15,26 @@
  */
 package com.tcdng.unify.core.business;
 
+import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Transactional;
+import com.tcdng.unify.core.database.DatabaseTransactionManager;
 
 /**
- * Another mock business module.
+ * Interface that must be implemented by any class that is to be considered a
+ * business service component by the framework. Business service components are treated
+ * specially by the framework for transaction and synchronization management.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Transactional
-@Component("anothermock-businessmodule")
-public class AnotherMockBusinessModuleImpl extends AbstractBusinessModule implements AnotherMockBusinessModule {
+public interface BusinessService extends UnifyComponent {
 
-    @Override
-    public Long createLoanAccount(LoanAccount loanAccount) throws UnifyException {
-        return (Long) db().create(loanAccount);
-    }
-
-    @Override
-    public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
-        return db().list(LoanAccount.class, loanAccountId);
-    }
-
+    /**
+     * Gets the business service application database transaction manager.
+     * 
+     * @return DatabaseTransactionManager the transaction manager
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    DatabaseTransactionManager tm() throws UnifyException;
 }

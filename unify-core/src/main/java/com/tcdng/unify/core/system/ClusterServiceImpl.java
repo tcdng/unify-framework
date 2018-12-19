@@ -31,7 +31,7 @@ import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
-import com.tcdng.unify.core.business.AbstractBusinessModule;
+import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.data.ReentrantLockFactoryMap;
 import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.system.entities.ClusterCommand;
@@ -54,8 +54,8 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * @since 1.0
  */
 @Transactional
-@Component(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
-public class ClusterManagerBusinessModuleImpl extends AbstractBusinessModule implements ClusterManagerBusinessModule {
+@Component(ApplicationComponents.APPLICATION_CLUSTERSERVICE)
+public class ClusterServiceImpl extends AbstractBusinessService implements ClusterService {
 
     @Configurable("1") // Node expiration in minutes
     private int nodeExpirationPeriod;
@@ -64,7 +64,7 @@ public class ClusterManagerBusinessModuleImpl extends AbstractBusinessModule imp
 
     private List<String> dbLockList;
 
-    public ClusterManagerBusinessModuleImpl() {
+    public ClusterServiceImpl() {
         lockList = new ReentrantLockFactoryMap<String>();
         dbLockList = new ArrayList<String>();
     }

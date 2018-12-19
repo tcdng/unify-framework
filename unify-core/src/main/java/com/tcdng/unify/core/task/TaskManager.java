@@ -262,8 +262,8 @@ public interface TaskManager extends UnifyComponent {
      * 
      * @param periodicType
      *            the periodic type
-     * @param businessModuleName
-     *            the business module name
+     * @param businessServiceName
+     *            the business service name
      * @param methodName
      *            the method name
      * @param taskStatusLoggerNameName
@@ -274,6 +274,6 @@ public interface TaskManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    TaskMonitor schedulePeriodicExecution(PeriodicType periodicType, String businessModuleName, String methodName,
+    TaskMonitor schedulePeriodicExecution(PeriodicType periodicType, String businessServiceName, String methodName,
             String taskStatusLoggerNameName, long inDelayInMillSec) throws UnifyException;
 }

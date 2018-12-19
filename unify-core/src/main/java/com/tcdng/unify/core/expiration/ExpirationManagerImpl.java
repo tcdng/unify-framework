@@ -31,7 +31,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Expirable;
 import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
-import com.tcdng.unify.core.business.internal.ProxyBusinessModuleMethodRelay;
+import com.tcdng.unify.core.business.internal.ProxyBusinessServiceMethodRelay;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.CalendarUtils;
@@ -46,8 +46,8 @@ import com.tcdng.unify.core.util.ReflectUtils;
 @Component(ApplicationComponents.APPLICATION_EXPIRATIONMANAGER)
 public class ExpirationManagerImpl extends AbstractUnifyComponent implements ExpirationManager {
 
-    @Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSMODULEGENERATOR)
-    private ProxyBusinessModuleMethodRelay proxyMethodRelay;
+    @Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR)
+    private ProxyBusinessServiceMethodRelay proxyMethodRelay;
 
     private List<ObservedExpirableInfo> expirablesList;
 

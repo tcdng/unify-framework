@@ -22,7 +22,7 @@ import java.util.Locale;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.business.GenericBusinessModule;
+import com.tcdng.unify.core.business.GenericService;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
@@ -36,8 +36,8 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractDBSearchProvider extends AbstractSearchProviderListCommand {
 
-    @Configurable(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)
-    private GenericBusinessModule genericBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_GENERICSERVICE)
+    private GenericService genericService;
 
     @Configurable("30")
     private int searchLimit;
@@ -68,12 +68,12 @@ public abstract class AbstractDBSearchProvider extends AbstractSearchProviderLis
     public List<? extends Listable> execute(Locale locale, SearchProviderParams params) throws UnifyException {
         String key = params.getKey();
         if (!StringUtils.isBlank(key)) {
-            return genericBusinessModule.listAll(new Query(recordType).equals(keyProperty, key).limit(searchLimit));
+            return genericService.listAll(new Query(recordType).equals(keyProperty, key).limit(searchLimit));
         }
 
         String filter = params.getFilter();
         if (!StringUtils.isBlank(filter)) {
-            return genericBusinessModule.listAll(new Query(recordType).like(descProperty, filter).limit(searchLimit));
+            return genericService.listAll(new Query(recordType).like(descProperty, filter).limit(searchLimit));
         }
 
         return Collections.emptyList();

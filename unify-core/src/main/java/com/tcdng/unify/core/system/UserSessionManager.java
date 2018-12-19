@@ -20,7 +20,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
-import com.tcdng.unify.core.business.BusinessModule;
+import com.tcdng.unify.core.business.BusinessService;
 import com.tcdng.unify.core.system.entities.UserSessionTracking;
 import com.tcdng.unify.core.system.entities.UserSessionTrackingQuery;
 
@@ -30,7 +30,7 @@ import com.tcdng.unify.core.system.entities.UserSessionTrackingQuery;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface UserSessionManager extends BusinessModule {
+public interface UserSessionManager extends BusinessService {
 
     /**
      * Finds user sessions that match supplied criteria.

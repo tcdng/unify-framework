@@ -15,26 +15,31 @@
  */
 package com.tcdng.unify.core.business;
 
-import com.tcdng.unify.core.UnifyComponent;
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.DatabaseTransactionManager;
 
 /**
- * Interface that must be implemented by any class that is to be considered a
- * business module by the framework. Business module components are treated
- * specially by the framework for transaction and synchronization management.
+ * Interface for business service used for tests.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface BusinessModule extends UnifyComponent {
+public interface MockService extends BusinessService {
 
-    /**
-     * Gets the business module application database transaction manager.
-     * 
-     * @return DatabaseTransactionManager the transaction manager
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    DatabaseTransactionManager tm() throws UnifyException;
+    String hello() throws UnifyException;
+
+    int add(int a, int b) throws UnifyException;
+
+    int multiply(int a, int b) throws UnifyException;
+
+    Long createAccount(Account account) throws UnifyException;
+
+    Account findAccount(Long accountId) throws UnifyException;
+
+    List<Account> find(AccountQuery query) throws UnifyException;
+
+    Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException;
+
+    LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
 }

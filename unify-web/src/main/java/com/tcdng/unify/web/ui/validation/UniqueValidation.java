@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.business.GenericBusinessModule;
+import com.tcdng.unify.core.business.GenericService;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.web.DataTransfer;
@@ -90,8 +90,8 @@ public class UniqueValidation extends AbstractPageValidation {
                 }
             }
 
-            if (sb.length() > 0 && ((GenericBusinessModule) this
-                    .getComponent(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)).countAll(criteria) > 0) {
+            if (sb.length() > 0 && ((GenericService) this
+                    .getComponent(ApplicationComponents.APPLICATION_GENERICSERVICE)).countAll(criteria) > 0) {
                 String message = getSessionMessage("validation.uniquerecordexists", sb.toString());
                 addValidationFail((Control) widgets.get(0), "unique", message);
                 return false;

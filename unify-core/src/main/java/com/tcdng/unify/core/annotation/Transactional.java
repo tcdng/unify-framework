@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Annotation for specifying the transactional nature of a business module
+ * Annotation for specifying the transactional nature of a business service
  * component and/or its methods.
  * 
  * @author Lateef Ojulari

@@ -21,12 +21,12 @@ import com.tcdng.unify.core.annotation.Expirable;
 import com.tcdng.unify.core.annotation.Taskable;
 
 /**
- * Proxy business module method information relay.
+ * Proxy business service method information relay.
  * 
  * @author Lateef
  * @since 1.0
  */
-public interface ProxyBusinessModuleMethodRelay extends UnifyComponent {
+public interface ProxyBusinessServiceMethodRelay extends UnifyComponent {
 
     /**
      * Returns taskable annotation for method with supplied signature if found.

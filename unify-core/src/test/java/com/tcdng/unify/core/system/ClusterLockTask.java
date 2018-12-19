@@ -37,8 +37,8 @@ public class ClusterLockTask extends AbstractTask {
     @Configurable("40")
     private int sharedTestCount;
 
-    @Configurable(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
-    private ClusterManagerBusinessModule clusterManager;
+    @Configurable(ApplicationComponents.APPLICATION_CLUSTERSERVICE)
+    private ClusterService clusterManager;
 
     private static double sharedValue;
 

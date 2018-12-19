@@ -15,31 +15,17 @@
  */
 package com.tcdng.unify.core.business;
 
-import java.util.List;
-
-import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Transactional;
 
 /**
- * Interface for business module used for tests.
+ * Sub class test service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface MockBusinessModule extends BusinessModule {
+@Transactional
+@Component("submockservice")
+public class SubMockServiceImpl extends MockServiceImpl implements SubMockService {
 
-    String hello() throws UnifyException;
-
-    int add(int a, int b) throws UnifyException;
-
-    int multiply(int a, int b) throws UnifyException;
-
-    Long createAccount(Account account) throws UnifyException;
-
-    Account findAccount(Long accountId) throws UnifyException;
-
-    List<Account> find(AccountQuery query) throws UnifyException;
-
-    Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException;
-
-    LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
 }

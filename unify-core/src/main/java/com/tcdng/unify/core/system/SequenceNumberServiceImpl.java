@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Synchronized;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
-import com.tcdng.unify.core.business.AbstractBusinessModule;
+import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumber;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumberQuery;
@@ -38,13 +38,13 @@ import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
- * Default implementation of a sequence number module.
+ * Default implementation of a sequence number service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-public class SequenceNumberBusinessModuleImpl extends AbstractBusinessModule implements SequenceNumberBusinessModule {
+@Component(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+public class SequenceNumberServiceImpl extends AbstractBusinessService implements SequenceNumberService {
 
     private Map<String, SequenceCounter> sequenceCounterMap;
 
@@ -58,7 +58,7 @@ public class SequenceNumberBusinessModuleImpl extends AbstractBusinessModule imp
     @Configurable("20")
     private int maxNextSequenceAttempts;
 
-    public SequenceNumberBusinessModuleImpl() {
+    public SequenceNumberServiceImpl() {
         sequenceCounterMap = new HashMap<String, SequenceCounter>();
     }
 

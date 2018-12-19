@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for synchronizing a business module component method. All access
+ * Annotation for synchronizing a business service component method. All access
  * to a method marked with this annotation is synchronized. Can also be used to
  * synchronized access to multiple methods by using the same lock value. For
  * instance, we want synchronized access to two methods, we mark them like this:

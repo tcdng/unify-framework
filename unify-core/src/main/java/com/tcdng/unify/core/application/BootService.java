@@ -13,21 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.business;
-
-import java.util.List;
+package com.tcdng.unify.core.application;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.business.BusinessService;
 
 /**
- * A loan disbursement module.
+ * Used to manage bootup and shutdown sequence.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface LoanDisbursementBusinessModule extends BusinessModule {
+public interface BootService extends BusinessService {
 
-    Long create(LoanDisbursement loanDisbursement) throws UnifyException;
+    /**
+     * Executes start sequence.
+     * 
+     * @throws UnifyException
+     *             if an error roccurs
+     */
+    void startup() throws UnifyException;
 
-    List<LoanDisbursement> find(LoanDisbursementQuery query) throws UnifyException;
+    /**
+     * Executes shutdown sequence.
+     * 
+     * @throws UnifyException
+     *             if an error roccurs
+     */
+    void shutdown() throws UnifyException;
 }

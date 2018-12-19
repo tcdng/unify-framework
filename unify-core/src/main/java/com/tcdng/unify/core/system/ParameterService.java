@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessModule;
+import com.tcdng.unify.core.business.BusinessService;
 import com.tcdng.unify.core.data.Input;
 import com.tcdng.unify.core.data.Inputs;
 import com.tcdng.unify.core.system.entities.ParameterDef;
@@ -30,7 +30,7 @@ import com.tcdng.unify.core.system.entities.ParameterDef;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ParameterBusinessModule extends BusinessModule {
+public interface ParameterService extends BusinessService {
 
     /**
      * Defines parameters for type

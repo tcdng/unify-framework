@@ -33,24 +33,24 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
- * Cluster manager test case.
+ * Cluster service test case.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ClusterManagerBusinessModuleTest extends AbstractUnifyComponentTest {
+public class ClusterServiceTest extends AbstractUnifyComponentTest {
 
-    public ClusterManagerBusinessModuleTest() {
+    public ClusterServiceTest() {
         super(true); // Cluster mode
     }
 
     @Test
     public void testSingleMemberSync() throws Exception {
-        ClusterManagerBusinessModule cmModule = (ClusterManagerBusinessModule) getComponent(
-                ApplicationComponents.APPLICATION_CLUSTERMANAGER);
-        String lockOwnerId = cmModule.getLockOwnerId(false);
-        cmModule.beginSynchronization("computeSalaryLock");
-        List<ClusterLock> clusterSyncList = cmModule
+        ClusterService clusterService = (ClusterService) getComponent(
+                ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+        String lockOwnerId = clusterService.getLockOwnerId(false);
+        clusterService.beginSynchronization("computeSalaryLock");
+        List<ClusterLock> clusterSyncList = clusterService
                 .findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
         assertEquals(1, clusterSyncList.size());
         ClusterLock clusterLock = clusterSyncList.get(0);
@@ -58,8 +58,8 @@ public class ClusterManagerBusinessModuleTest extends AbstractUnifyComponentTest
         assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
         assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
 
-        cmModule.endSynchronization("computeSalaryLock");
-        clusterSyncList = cmModule.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
+        clusterService.endSynchronization("computeSalaryLock");
+        clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
         assertEquals(1, clusterSyncList.size());
         clusterLock = clusterSyncList.get(0);
         assertNull(clusterLock.getCurrentOwner());
@@ -68,13 +68,13 @@ public class ClusterManagerBusinessModuleTest extends AbstractUnifyComponentTest
 
     @Test
     public void testSingleMemberWithRecursiveSync() throws Exception {
-        ClusterManagerBusinessModule cmModule = (ClusterManagerBusinessModule) getComponent(
-                ApplicationComponents.APPLICATION_CLUSTERMANAGER);
-        String lockOwnerId = cmModule.getLockOwnerId(false);
-        cmModule.beginSynchronization("generateResultLock");
-        cmModule.beginSynchronization("generateResultLock");
-        cmModule.beginSynchronization("generateResultLock");
-        List<ClusterLock> clusterSyncList = cmModule
+        ClusterService clusterService = (ClusterService) getComponent(
+                ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+        String lockOwnerId = clusterService.getLockOwnerId(false);
+        clusterService.beginSynchronization("generateResultLock");
+        clusterService.beginSynchronization("generateResultLock");
+        clusterService.beginSynchronization("generateResultLock");
+        List<ClusterLock> clusterSyncList = clusterService
                 .findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
         assertEquals(1, clusterSyncList.size());
         ClusterLock clusterLock = clusterSyncList.get(0);
@@ -82,10 +82,10 @@ public class ClusterManagerBusinessModuleTest extends AbstractUnifyComponentTest
         assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
         assertEquals(Integer.valueOf(3), clusterLock.getLockCount());
 
-        cmModule.endSynchronization("generateResultLock");
-        cmModule.endSynchronization("generateResultLock");
-        cmModule.endSynchronization("generateResultLock");
-        clusterSyncList = cmModule.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+        clusterService.endSynchronization("generateResultLock");
+        clusterService.endSynchronization("generateResultLock");
+        clusterService.endSynchronization("generateResultLock");
+        clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
         assertEquals(1, clusterSyncList.size());
         clusterLock = clusterSyncList.get(0);
         assertNull(clusterLock.getCurrentOwner());

@@ -36,8 +36,8 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("datesequencenumber-task")
 public class DateSequenceNumberTask extends AbstractTask {
 
-    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-    private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+    private SequenceNumberService sequenceNumberService;
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
@@ -47,7 +47,7 @@ public class DateSequenceNumberTask extends AbstractTask {
 
         Long prevSequenceNo = null;
         for (int i = 0; i < iterations; i++) {
-            Long sequenceNo = sequenceNumberBusinessModule.getNextSequenceNumber(testSequenceName, testDate);
+            Long sequenceNo = sequenceNumberService.getNextSequenceNumber(testSequenceName, testDate);
             if (prevSequenceNo != null && (prevSequenceNo + 1) != sequenceNo) {
                 throwOperationErrorException(null);
             }

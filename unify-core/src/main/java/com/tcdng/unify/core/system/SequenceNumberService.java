@@ -18,7 +18,7 @@ package com.tcdng.unify.core.system;
 import java.util.Date;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessModule;
+import com.tcdng.unify.core.business.BusinessService;
 
 /**
  * Used to generate sequence numbers for records. Expected to work in a
@@ -27,7 +27,7 @@ import com.tcdng.unify.core.business.BusinessModule;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SequenceNumberBusinessModule extends BusinessModule {
+public interface SequenceNumberService extends BusinessService {
 
     /**
      * Returns the next available sequence number for sequence with supplied name.
@@ -69,7 +69,7 @@ public interface SequenceNumberBusinessModule extends BusinessModule {
     Long getUniqueStringId(String uniqueString) throws UnifyException;
 
     /**
-     * Resets sequence number module.
+     * Resets sequence number service.
      * 
      * @throws UnifyException
      *             if an error occurs

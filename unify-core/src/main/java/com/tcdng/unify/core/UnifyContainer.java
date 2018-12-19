@@ -49,10 +49,10 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Plugin;
-import com.tcdng.unify.core.application.BootModule;
+import com.tcdng.unify.core.application.BootService;
 import com.tcdng.unify.core.business.BusinessLogicUnit;
-import com.tcdng.unify.core.business.BusinessModule;
-import com.tcdng.unify.core.business.internal.ProxyBusinessModuleGenerator;
+import com.tcdng.unify.core.business.BusinessService;
+import com.tcdng.unify.core.business.internal.ProxyBusinessServiceGenerator;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.LocaleFactoryMaps;
 import com.tcdng.unify.core.logging.AbstractLog4jLogger;
@@ -60,7 +60,7 @@ import com.tcdng.unify.core.logging.DummyEventLogger;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.logging.LoggingLevel;
 import com.tcdng.unify.core.message.ResourceBundles;
-import com.tcdng.unify.core.system.ClusterManagerBusinessModule;
+import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.system.Command;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.core.task.TaskManager;
@@ -121,9 +121,9 @@ public class UnifyContainer {
 
     private ApplicationContext applicationContext;
 
-    private BootModule applicationBootModule;
+    private BootService applicationBootService;
 
-    private ClusterManagerBusinessModule clusterManager;
+    private ClusterService clusterManager;
 
     private UplCompiler uplCompiler;
 
@@ -309,10 +309,10 @@ public class UnifyContainer {
                 customisationSuffixList);
 
         // Detect business components
-        logDebug("Detecting business module components...");
+        logDebug("Detecting business service components...");
         Map<String, Map<String, Periodic>> componentPeriodMethodMap = new HashMap<String, Map<String, Periodic>>();
         Map<String, Set<String>> componentPluginSocketsMap = new HashMap<String, Set<String>>();
-        List<UnifyComponentConfig> managedBusinessModuleConfigList = new ArrayList<UnifyComponentConfig>();
+        List<UnifyComponentConfig> managedBusinessServiceConfigList = new ArrayList<UnifyComponentConfig>();
         for (InternalUnifyComponentInfo iuci : internalUnifyComponentInfos.values()) {
             // Fetch periodic method information
             Map<String, Periodic> periodicMethodMap = new HashMap<String, Periodic>();
@@ -357,9 +357,9 @@ public class UnifyContainer {
                 componentPluginSocketsMap.put(iuci.getName(), pluginSockets);
             }
 
-            if (ReflectUtils.isInterface(iuci.getType(), BusinessModule.class)) {
+            if (ReflectUtils.isInterface(iuci.getType(), BusinessService.class)) {
                 logDebug("Business component '" + iuci.getName() + "' detected.");
-                managedBusinessModuleConfigList.add(iuci.getUnifyComponentConfig());
+                managedBusinessServiceConfigList.add(iuci.getUnifyComponentConfig());
             }
         }
 
@@ -376,7 +376,7 @@ public class UnifyContainer {
                                 iuci.getName(), pla.target());
                     }
 
-                    if (!BusinessModule.class.isAssignableFrom(busServInfo.getType())) {
+                    if (!BusinessService.class.isAssignableFrom(busServInfo.getType())) {
                         throw new UnifyException(UnifyCoreErrorConstants.BUSINESSLOGIC_PLUGIN_TARGET_NON_BUSINESSMODULE,
                                 iuci.getName(), pla.target());
                     }
@@ -421,14 +421,14 @@ public class UnifyContainer {
                 ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
         uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
 
-        // Generate and install proxy business module objects
-        logInfo("Generating and installing proxy business module objects...");
-        for (UnifyComponentConfig unifyComponentConfig : managedBusinessModuleConfigList) {
+        // Generate and install proxy business service objects
+        logInfo("Generating and installing proxy business service objects...");
+        for (UnifyComponentConfig unifyComponentConfig : managedBusinessServiceConfigList) {
             Map<String, List<UnifyPluginInfo>> pluginMap = allPluginsBySocketMap.get(unifyComponentConfig.getName());
             if (pluginMap == null) {
                 pluginMap = Collections.emptyMap();
             }
-            UnifyComponentConfig proxyUnifyComponentConfig = generateInstallBusinessModuleProxyObjects(
+            UnifyComponentConfig proxyUnifyComponentConfig = generateInstallBusinessServiceProxyObjects(
                     unifyComponentConfig, pluginMap);
             InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(proxyUnifyComponentConfig.getName());
             iuc.setUnifyComponentConfig(proxyUnifyComponentConfig);
@@ -445,19 +445,19 @@ public class UnifyContainer {
         logInfo("Generation and installation of proxy objects completed");
 
         // Cluster manager
-        clusterManager = (ClusterManagerBusinessModule) getComponent(ApplicationComponents.APPLICATION_CLUSTERMANAGER);
+        clusterManager = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
         userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
 
-        // Run application startup module
-        toConsole("Initializing application bootup module...");
+        // Run application startup service
+        toConsole("Initializing application bootup service...");
         String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
         if (bootComponentName == null) {
-            bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTMODULE;
+            bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTSERVICE;
         }
-        applicationBootModule = (BootModule) getComponent(bootComponentName);
-        applicationBootModule.startup();
+        applicationBootService = (BootService) getComponent(bootComponentName);
+        applicationBootService.startup();
 
-        toConsole("Application bootup module initialization completed.");
+        toConsole("Application bootup service initialization completed.");
 
         // Initialize interfaces
         logInfo("Initializing container interfaces...");
@@ -516,7 +516,7 @@ public class UnifyContainer {
             }
 
             try {
-                applicationBootModule.shutdown();
+                applicationBootService.shutdown();
             } catch (Exception e) {
             }
 
@@ -1116,12 +1116,12 @@ public class UnifyContainer {
     }
 
     @SuppressWarnings("unchecked")
-    private UnifyComponentConfig generateInstallBusinessModuleProxyObjects(UnifyComponentConfig businessLogicConfig,
+    private UnifyComponentConfig generateInstallBusinessServiceProxyObjects(UnifyComponentConfig businessLogicConfig,
             Map<String, List<UnifyPluginInfo>> pluginMap) throws UnifyException {
-        ProxyBusinessModuleGenerator bspg = (ProxyBusinessModuleGenerator) this
-                .getComponent(ApplicationComponents.APPLICATION_PROXYBUSINESSMODULEGENERATOR);
-        Class<? extends BusinessModule> proxyClazz = bspg.generateCompileLoadProxyBusinessModuleClass(
-                businessLogicConfig.getName(), (Class<? extends BusinessModule>) businessLogicConfig.getType(),
+        ProxyBusinessServiceGenerator bspg = (ProxyBusinessServiceGenerator) this
+                .getComponent(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR);
+        Class<? extends BusinessService> proxyClazz = bspg.generateCompileLoadProxyBusinessServiceClass(
+                businessLogicConfig.getName(), (Class<? extends BusinessService>) businessLogicConfig.getType(),
                 pluginMap);
         UnifyComponentConfig internalComponentConfig = new UnifyComponentConfig(businessLogicConfig.getSettings(),
                 businessLogicConfig.getName(), businessLogicConfig.getDescription(), proxyClazz,

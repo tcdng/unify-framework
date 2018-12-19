@@ -34,7 +34,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.LocaleFactoryMaps;
-import com.tcdng.unify.core.system.SequenceNumberBusinessModule;
+import com.tcdng.unify.core.system.SequenceNumberService;
 import com.tcdng.unify.core.upl.UplCompiler;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplDocumentAttributes;
@@ -63,8 +63,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
     @Configurable(ApplicationComponents.APPLICATION_UPLCOMPILER)
     private UplCompiler uplCompiler;
 
-    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-    private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+    private SequenceNumberService sequenceNumberService;
 
     private PageNameMap pageNameMap;
 
@@ -590,7 +590,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
         @Override
         protected String create(String longName, Object... params) throws Exception {
-            String pageName = pageNamePrefix + sequenceNumberBusinessModule.getUniqueStringId(longName);
+            String pageName = pageNamePrefix + sequenceNumberService.getUniqueStringId(longName);
             longNameByPageNameMap.put(pageName, longName);
             return pageName;
         }

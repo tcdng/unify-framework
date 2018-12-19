@@ -30,97 +30,95 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumber;
-import com.tcdng.unify.core.system.entities.ClusterSequenceNumber;
 import com.tcdng.unify.core.system.entities.ClusterUniqueString;
 import com.tcdng.unify.core.task.TaskManager;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
- * Sequence number module tests (cluster mode).
+ * Sequence number service tests (Standalone mode).
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyComponentTest {
-
-    public SequenceNumberBusinessModuleClusterModeTest() {
-        super(true); // Cluster mode
-    }
+public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetNextSequenceNumber() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
 
-        assertEquals(Long.valueOf(1L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(2L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(3L), snbm.getNextSequenceNumber("sequenceA"));
+        snService.reset();
+        assertEquals(Long.valueOf(1L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(2L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(3L), snService.getNextSequenceNumber("sequenceA"));
 
-        assertEquals(Long.valueOf(4L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(5L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(6L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(7L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(8L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(9L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(10L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(11L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(12L), snbm.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(4L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(5L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(6L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(7L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(8L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(9L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(10L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(11L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(12L), snService.getNextSequenceNumber("sequenceA"));
 
-        assertEquals(Long.valueOf(13L), snbm.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(13L), snService.getNextSequenceNumber("sequenceA"));
 
-        assertEquals(Long.valueOf(1L), snbm.getNextSequenceNumber("sequenceB"));
-        assertEquals(Long.valueOf(2L), snbm.getNextSequenceNumber("sequenceB"));
-        assertEquals(Long.valueOf(3L), snbm.getNextSequenceNumber("sequenceB"));
-        assertEquals(Long.valueOf(4L), snbm.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(1L), snService.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(2L), snService.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(3L), snService.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(4L), snService.getNextSequenceNumber("sequenceB"));
 
-        assertEquals(Long.valueOf(14L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(15L), snbm.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(16L), snbm.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(14L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(15L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(16L), snService.getNextSequenceNumber("sequenceA"));
     }
 
     @Test
     public void testMultiThreadGetNextSequenceNumber() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        snService.reset();
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         Map<String, Object> inputParameters1 = new HashMap<String, Object>();
         inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
-        inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 215);
+        inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 773);
         TaskMonitor taskMonitor1 = taskManager.startTask("sequencenumber-test", inputParameters1, false, null);
 
         Map<String, Object> inputParameters3 = new HashMap<String, Object>();
         inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceB");
-        inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 128);
+        inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 345);
         TaskMonitor taskMonitor3 = taskManager.startTask("sequencenumber-test", inputParameters3, false, null);
 
         Map<String, Object> inputParameters2 = new HashMap<String, Object>();
         inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
-        inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 186);
+        inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 411);
         TaskMonitor taskMonitor2 = taskManager.startTask("sequencenumber-test", inputParameters2, false, null);
 
         Map<String, Object> inputParameters4 = new HashMap<String, Object>();
         inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceC");
-        inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 74);
+        inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 206);
         TaskMonitor taskMonitor4 = taskManager.startTask("sequencenumber-test", inputParameters4, false, null);
 
         while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
             Thread.yield();
         }
 
-        Long sequenceNo = snbm.getNextSequenceNumber("sequenceA");
-        assertEquals(Long.valueOf(215L + 186L + 1L), sequenceNo);
+        Long sequenceNo = snService.getNextSequenceNumber("sequenceA");
+        assertEquals(Long.valueOf(773L + 411L + 1L), sequenceNo);
 
-        sequenceNo = snbm.getNextSequenceNumber("sequenceB");
-        assertEquals(Long.valueOf(128L + 1L), sequenceNo);
+        sequenceNo = snService.getNextSequenceNumber("sequenceB");
+        assertEquals(Long.valueOf(345L + 1L), sequenceNo);
 
-        sequenceNo = snbm.getNextSequenceNumber("sequenceC");
-        assertEquals(Long.valueOf(74L + 1L), sequenceNo);
+        sequenceNo = snService.getNextSequenceNumber("sequenceC");
+        assertEquals(Long.valueOf(206L + 1L), sequenceNo);
     }
 
     @Test
     public void testSameDayGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Date testDate = CalendarUtils.getMidnightDate(new Date());
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(testDate);
@@ -131,9 +129,9 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
         cal3.setTime(testDate);
         cal3.add(Calendar.HOUR, 2);
 
-        Long sequenceNo1 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
-        Long sequenceNo2 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", cal2.getTime());
-        Long sequenceNo3 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", cal3.getTime());
+        Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
+        Long sequenceNo2 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", cal2.getTime());
+        Long sequenceNo3 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", cal3.getTime());
         assertEquals(Long.valueOf(1), sequenceNo1);
         assertEquals(Long.valueOf(2), sequenceNo2);
         assertEquals(Long.valueOf(3), sequenceNo3);
@@ -141,12 +139,12 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testSameSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Date testDate = new Date();
-        Long sequenceNo1 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
-        Long sequenceNo2 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
-        Long sequenceNo3 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        Long sequenceNo2 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        Long sequenceNo3 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
         assertEquals(Long.valueOf(1), sequenceNo1);
         assertEquals(Long.valueOf(2), sequenceNo2);
         assertEquals(Long.valueOf(3), sequenceNo3);
@@ -154,12 +152,12 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testDifferentSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Date testDate = new Date();
-        Long sequenceNo1 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
-        Long sequenceNo2 = snbm.getNextSequenceNumber("day-rpt-batch-counter", testDate);
-        Long sequenceNo3 = snbm.getNextSequenceNumber("day-outward-posting-batch-counter", testDate);
+        Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
+        Long sequenceNo2 = snService.getNextSequenceNumber("day-rpt-batch-counter", testDate);
+        Long sequenceNo3 = snService.getNextSequenceNumber("day-outward-posting-batch-counter", testDate);
         assertEquals(Long.valueOf(1), sequenceNo1);
         assertEquals(Long.valueOf(1), sequenceNo2);
         assertEquals(Long.valueOf(1), sequenceNo3);
@@ -167,17 +165,17 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testSameSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal2.add(Calendar.DAY_OF_YEAR, 1);
         Calendar cal3 = Calendar.getInstance();
         cal3.add(Calendar.DAY_OF_YEAR, 2);
 
-        Long sequenceNo1 = snbm.getNextSequenceNumber("day-rpt-batch-counter", cal1.getTime());
-        Long sequenceNo2 = snbm.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
-        Long sequenceNo3 = snbm.getNextSequenceNumber("day-rpt-batch-counter", cal3.getTime());
+        Long sequenceNo1 = snService.getNextSequenceNumber("day-rpt-batch-counter", cal1.getTime());
+        Long sequenceNo2 = snService.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
+        Long sequenceNo3 = snService.getNextSequenceNumber("day-rpt-batch-counter", cal3.getTime());
         assertEquals(Long.valueOf(1), sequenceNo1);
         assertEquals(Long.valueOf(1), sequenceNo2);
         assertEquals(Long.valueOf(1), sequenceNo3);
@@ -185,17 +183,17 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testDifferentSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal2.add(Calendar.DAY_OF_YEAR, 1);
         Calendar cal3 = Calendar.getInstance();
         cal3.add(Calendar.DAY_OF_YEAR, 2);
 
-        Long sequenceNo1 = snbm.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
-        Long sequenceNo2 = snbm.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
-        Long sequenceNo3 = snbm.getNextSequenceNumber("day-outward-posting-batch-counter", cal3.getTime());
+        Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", cal1.getTime());
+        Long sequenceNo2 = snService.getNextSequenceNumber("day-rpt-batch-counter", cal2.getTime());
+        Long sequenceNo3 = snService.getNextSequenceNumber("day-outward-posting-batch-counter", cal3.getTime());
         assertEquals(Long.valueOf(1), sequenceNo1);
         assertEquals(Long.valueOf(1), sequenceNo2);
         assertEquals(Long.valueOf(1), sequenceNo3);
@@ -203,33 +201,31 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testMultiThreadGetNextDateSequenceNumber() throws Exception {
-        getSequenceNumberBusinessModule();
-
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         Date testDate = new Date();
         Map<String, Object> inputParameters1 = new HashMap<String, Object>();
         inputParameters1.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-cheque-upload-batch-counter");
         inputParameters1.put(DateSequenceNumberTaskConstants.DATE, testDate);
         inputParameters1.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-        TaskMonitor taskMonitor1 = taskManager.startTask("datesequencenumber-task", inputParameters1, false, null);
+        TaskMonitor taskMonitor1 = taskManager.startTask("datesequencenumber-task", inputParameters1, true, null);
 
         Map<String, Object> inputParameters2 = new HashMap<String, Object>();
         inputParameters2.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-rpt-batch-counter");
         inputParameters2.put(DateSequenceNumberTaskConstants.DATE, testDate);
         inputParameters2.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-        TaskMonitor taskMonitor2 = taskManager.startTask("datesequencenumber-task", inputParameters2, false, null);
+        TaskMonitor taskMonitor2 = taskManager.startTask("datesequencenumber-task", inputParameters2, true, null);
 
         Map<String, Object> inputParameters3 = new HashMap<String, Object>();
         inputParameters3.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-outward-posting-batch-counter");
         inputParameters3.put(DateSequenceNumberTaskConstants.DATE, testDate);
         inputParameters3.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-        TaskMonitor taskMonitor3 = taskManager.startTask("datesequencenumber-task", inputParameters3, false, null);
+        TaskMonitor taskMonitor3 = taskManager.startTask("datesequencenumber-task", inputParameters3, true, null);
 
         Map<String, Object> inputParameters4 = new HashMap<String, Object>();
         inputParameters4.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "I've got a feeling!");
         inputParameters4.put(DateSequenceNumberTaskConstants.DATE, testDate);
         inputParameters4.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-        TaskMonitor taskMonitor4 = taskManager.startTask("datesequencenumber-task", inputParameters4, false, null);
+        TaskMonitor taskMonitor4 = taskManager.startTask("datesequencenumber-task", inputParameters4, true, null);
 
         while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
             Thread.yield();
@@ -243,20 +239,20 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testSingleGetUniqueStringId() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
-        Long id = snbm.getUniqueStringId("this.is.a.unique.string");
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        Long id = snService.getUniqueStringId("this.is.a.unique.string");
         assertNotNull(id);
     }
 
     @Test
     public void testMultipleGetSameUniqueStringId() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
-        Long id1 = snbm.getUniqueStringId("this.is.a.unique.string");
-        Long id2 = snbm.getUniqueStringId("this.is.a.unique.string");
-        Long id3 = snbm.getUniqueStringId("this.is.a.unique.string");
-        Long id4 = snbm.getUniqueStringId("this.is.a.unique.string");
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        Long id1 = snService.getUniqueStringId("this.is.a.unique.string");
+        Long id2 = snService.getUniqueStringId("this.is.a.unique.string");
+        Long id3 = snService.getUniqueStringId("this.is.a.unique.string");
+        Long id4 = snService.getUniqueStringId("this.is.a.unique.string");
         assertNotNull(id1);
         assertNotNull(id2);
         assertNotNull(id3);
@@ -268,12 +264,12 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testSingleGetDifferentUniqueStringId() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
-        Long id1 = snbm.getUniqueStringId("this.is.a.unique.string");
-        Long id2 = snbm.getUniqueStringId("this.is.another.unique.string");
-        Long id3 = snbm.getUniqueStringId("this.is.some.unique.string");
-        Long id4 = snbm.getUniqueStringId("this.is.some.other.unique.string");
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        Long id1 = snService.getUniqueStringId("this.is.a.unique.string");
+        Long id2 = snService.getUniqueStringId("this.is.another.unique.string");
+        Long id3 = snService.getUniqueStringId("this.is.some.unique.string");
+        Long id4 = snService.getUniqueStringId("this.is.some.other.unique.string");
         assertNotNull(id1);
         assertNotNull(id2);
         assertNotNull(id3);
@@ -288,16 +284,16 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testMultipleGetDifferentUniqueStringId() throws Exception {
-        SequenceNumberBusinessModule snbm = getSequenceNumberBusinessModule();
-
-        Long id1 = snbm.getUniqueStringId("this.is.a.unique.string");
-        Long id2 = snbm.getUniqueStringId("this.is.another.unique.string");
-        Long id3 = snbm.getUniqueStringId("this.is.some.unique.string");
-        Long id4 = snbm.getUniqueStringId("this.is.some.other.unique.string");
-        Long id5 = snbm.getUniqueStringId("this.is.a.unique.string");
-        Long id6 = snbm.getUniqueStringId("this.is.another.unique.string");
-        Long id7 = snbm.getUniqueStringId("this.is.some.unique.string");
-        Long id8 = snbm.getUniqueStringId("this.is.some.other.unique.string");
+        SequenceNumberService snService = (SequenceNumberService) getComponent(
+                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        Long id1 = snService.getUniqueStringId("this.is.a.unique.string");
+        Long id2 = snService.getUniqueStringId("this.is.another.unique.string");
+        Long id3 = snService.getUniqueStringId("this.is.some.unique.string");
+        Long id4 = snService.getUniqueStringId("this.is.some.other.unique.string");
+        Long id5 = snService.getUniqueStringId("this.is.a.unique.string");
+        Long id6 = snService.getUniqueStringId("this.is.another.unique.string");
+        Long id7 = snService.getUniqueStringId("this.is.some.unique.string");
+        Long id8 = snService.getUniqueStringId("this.is.some.other.unique.string");
         assertNotNull(id1);
         assertNotNull(id2);
         assertNotNull(id3);
@@ -316,8 +312,6 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Test
     public void testMultiThreadGetUniqueStringId() throws Exception {
-        getSequenceNumberBusinessModule();
-
         String[] uniqueString = { "this.is.a.unique.string", "this.is.another.unique.string",
                 "this.is.some.other.unique.string" };
 
@@ -350,17 +344,14 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
             taskMonitor1.getExceptions()[0].printStackTrace();
         }
         assertEquals("Test task 1 failed", 0, taskMonitor1.getExceptions().length);
-
         if (taskMonitor2.getExceptions().length > 0) {
             taskMonitor2.getExceptions()[0].printStackTrace();
         }
         assertEquals("Test task 2 failed", 0, taskMonitor2.getExceptions().length);
-
         if (taskMonitor3.getExceptions().length > 0) {
             taskMonitor3.getExceptions()[0].printStackTrace();
         }
         assertEquals("Test task 3 failed", 0, taskMonitor3.getExceptions().length);
-
         if (taskMonitor4.getExceptions().length > 0) {
             taskMonitor4.getExceptions()[0].printStackTrace();
         }
@@ -369,8 +360,8 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
 
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
-        addDependency(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE,
-                SequenceNumberBusinessModuleImpl.class, true, true, new Setting("sequenceBlockSize", "11"));
+        addDependency(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE,
+                SequenceNumberServiceImpl.class, true, true, new Setting("sequenceBlockSize", "11"));
     }
 
     @Override
@@ -381,13 +372,6 @@ public class SequenceNumberBusinessModuleClusterModeTest extends AbstractUnifyCo
     @SuppressWarnings({ "unchecked" })
     @Override
     protected void onTearDown() throws Exception {
-        this.deleteAll(ClusterSequenceNumber.class, ClusterUniqueString.class, ClusterDateSequenceNumber.class);
-    }
-
-    private SequenceNumberBusinessModule getSequenceNumberBusinessModule() throws Exception {
-        SequenceNumberBusinessModule snbm = (SequenceNumberBusinessModule) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE);
-        snbm.reset();
-        return snbm;
+        this.deleteAll(ClusterUniqueString.class, ClusterDateSequenceNumber.class);
     }
 }

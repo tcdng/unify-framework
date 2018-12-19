@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates call to business module method be broadcast to other nodes in the
+ * Indicates call to business service method be broadcast to other nodes in the
  * same cluster.
  * 
  * @author Lateef Ojulari

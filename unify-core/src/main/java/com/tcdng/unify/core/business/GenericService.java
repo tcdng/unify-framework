@@ -23,12 +23,12 @@ import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.operation.Update;
 
 /**
- * Generic business module.
+ * Generic business service.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface GenericBusinessModule extends BusinessModule {
+public interface GenericService extends BusinessService {
 
     /**
      * Creates a record in database.

@@ -29,12 +29,12 @@ import com.tcdng.unify.core.task.TaskSetup;
 
 /**
  * An abstract base class that implements the basic requirements of a business
- * module. Any concrete subclass of this class is managed by the container.
+ * service. Any concrete subclass of this class is managed by the container.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractBusinessModule extends AbstractUnifyComponent implements BusinessModule {
+public abstract class AbstractBusinessService extends AbstractUnifyComponent implements BusinessService {
 
     @Configurable(ApplicationComponents.APPLICATION_DATABASE)
     private Database database;

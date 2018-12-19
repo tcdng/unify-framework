@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.AbstractEntityPolicy;
 import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.system.SequenceNumberBusinessModule;
+import com.tcdng.unify.core.system.SequenceNumberService;
 
 /**
  * Convenient base class for sequenced entity policies IDs.
@@ -34,8 +34,8 @@ import com.tcdng.unify.core.system.SequenceNumberBusinessModule;
 @Component("sequencedentity-policy")
 public class SequencedEntityPolicy extends AbstractEntityPolicy {
 
-    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-    private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+    private SequenceNumberService sequenceNumberService;
 
     private boolean setNow;
 
@@ -49,7 +49,7 @@ public class SequencedEntityPolicy extends AbstractEntityPolicy {
 
     @Override
     public Object preCreate(Entity record, Date now) throws UnifyException {
-        Long id = sequenceNumberBusinessModule.getNextSequenceNumber(record.getClass().getName());
+        Long id = sequenceNumberService.getNextSequenceNumber(record.getClass().getName());
         ((AbstractSequencedEntity) record).setId(id);
         return id;
     }

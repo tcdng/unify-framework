@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.annotation.UplBinding;
-import com.tcdng.unify.core.business.GenericBusinessModule;
+import com.tcdng.unify.core.business.GenericService;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.data.WrappedData;
 import com.tcdng.unify.core.database.Entity;
@@ -49,8 +49,8 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         CREATE, RETRIEVE, UPDATE, DELETE
     }
 
-    @Configurable(ApplicationComponents.APPLICATION_GENERICBUSINESSMODULE)
-    private GenericBusinessModule genericBusinessModule;
+    @Configurable(ApplicationComponents.APPLICATION_GENERICSERVICE)
+    private GenericService genericService;
 
     private FORMMODE formMode;
 
@@ -286,7 +286,7 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
 
     protected List<T> doFindRecords() throws UnifyException {
         doSetSearchFilter(crudData.getQuery());
-        return genericBusinessModule.listAll(crudData.getQuery());
+        return genericService.listAll(crudData.getQuery());
     }
 
     protected T doPrepareCreateRecord() throws UnifyException {
@@ -294,24 +294,24 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
     }
 
     protected void doCreateRecord() throws UnifyException {
-        genericBusinessModule.create(crudData.getRecord());
+        genericService.create(crudData.getRecord());
     }
 
     protected void doUpdateRecord() throws UnifyException {
-        genericBusinessModule.update(crudData.getRecord());
+        genericService.update(crudData.getRecord());
     }
 
     protected void doDeleteRecord() throws UnifyException {
         T record = crudData.getRecord();
-        genericBusinessModule.delete(record.getClass(), record.getId());
+        genericService.delete(record.getClass(), record.getId());
     }
 
     protected void doSetSearchFilter(Query<T> query) throws UnifyException {
         query.ignoreEmptyCriteria(true);
     }
 
-    protected GenericBusinessModule getGenericBusinessModule() {
-        return genericBusinessModule;
+    protected GenericService getGenericService() {
+        return genericService;
     }
 
     protected class CrudData {
