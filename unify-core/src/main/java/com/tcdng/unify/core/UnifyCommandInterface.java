@@ -31,7 +31,7 @@ public class UnifyCommandInterface extends AbstractUnifyContainerInterface {
 
     private static final String UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG = "unify-commandinterface-netconfig";
 
-    @Configurable(ApplicationComponents.APPLICATION_NETWORKINTERFACE)
+    @Configurable
     private NetworkInterface networkInterface;
 
     private int listeningPort;

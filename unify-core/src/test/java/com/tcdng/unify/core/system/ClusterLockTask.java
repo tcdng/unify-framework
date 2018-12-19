@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.system;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -37,7 +36,7 @@ public class ClusterLockTask extends AbstractTask {
     @Configurable("40")
     private int sharedTestCount;
 
-    @Configurable(ApplicationComponents.APPLICATION_CLUSTERSERVICE)
+    @Configurable
     private ClusterService clusterManager;
 
     private static double sharedValue;

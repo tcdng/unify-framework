@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -39,7 +38,7 @@ import com.tcdng.unify.core.list.AbstractListCommand;
 public class UplDocumentShortNamesListCommand
         extends AbstractListCommand<UplDocumentShortNamesListCommand.UplDocumentShortNamesParams> {
 
-    @Configurable(ApplicationComponents.APPLICATION_UPLCOMPILER)
+    @Configurable
     private UplCompiler uplCompiler;
 
     private FactoryMap<String, List<ListData>> listMap;

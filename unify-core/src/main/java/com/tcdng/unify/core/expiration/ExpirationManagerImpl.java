@@ -46,7 +46,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
 @Component(ApplicationComponents.APPLICATION_EXPIRATIONMANAGER)
 public class ExpirationManagerImpl extends AbstractUnifyComponent implements ExpirationManager {
 
-    @Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR)
+    @Configurable
     private ProxyBusinessServiceMethodRelay proxyMethodRelay;
 
     private List<ObservedExpirableInfo> expirablesList;

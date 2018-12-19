@@ -39,7 +39,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     @Configurable(ApplicationComponents.APPLICATION_DATABASE)
     private Database database;
 
-    @Configurable(ApplicationComponents.APPLICATION_TASKLAUNCHER)
+    @Configurable
     private TaskLauncher taskLauncher;
 
     @Override

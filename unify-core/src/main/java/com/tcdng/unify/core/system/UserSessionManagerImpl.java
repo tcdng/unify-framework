@@ -55,7 +55,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)
 public class UserSessionManagerImpl extends AbstractBusinessService implements UserSessionManager {
 
-    @Configurable(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER)
+    @Configurable
     private UplComponentWriterManager uplComponentWriterManager;
 
     private Map<String, UserSession> userSessions;

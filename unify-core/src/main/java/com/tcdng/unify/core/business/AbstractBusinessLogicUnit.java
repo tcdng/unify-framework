@@ -16,7 +16,6 @@
 package com.tcdng.unify.core.business;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStoreFactory;
@@ -30,7 +29,7 @@ import com.tcdng.unify.core.database.Database;
  */
 public abstract class AbstractBusinessLogicUnit extends AbstractUnifyComponent implements BusinessLogicUnit {
 
-    @Configurable(ApplicationComponents.APPLICATION_VALUESTOREFACTORY)
+    @Configurable
     private ValueStoreFactory valueStoreFactory;
 
     @Override

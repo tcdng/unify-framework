@@ -126,6 +126,14 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
         assertTrue(component2 == component1);
     }
 
+    @Test
+    public void testNamelessComponentSuggestion() throws Exception {
+        TestComponentD testComponentD = (TestComponentD) getComponent("component-d");
+        assertNotNull(testComponentD);
+        assertNotNull(testComponentD.getTestComponentC1());
+        assertEquals("Hello World!", testComponentD.getTestComponentC1().getMessage());
+    }
+
     public void testComponentCustomisationResolved() throws Exception {
     }
 
@@ -184,6 +192,30 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
     public static class TestComponentC extends AbstractUnifyComponent {
 
+        public String getMessage() {
+            return "Hello World!";
+        }
+        
+        @Override
+        protected void onInitialize() throws UnifyException {
+
+        }
+
+        @Override
+        protected void onTerminate() throws UnifyException {
+
+        }
+    }
+
+    public static class TestComponentD extends AbstractUnifyComponent {
+
+        @Configurable
+        private TestComponentC testComponentC1;
+        
+        public TestComponentC getTestComponentC1() {
+            return testComponentC1;
+        }
+
         @Override
         protected void onInitialize() throws UnifyException {
 
@@ -197,17 +229,15 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
-        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMISATION, "tiger"); // Customise
-        // for
-        // tiger
+        // Customise for tiger
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMIZATION, "tiger");
 
         addDependency("component-a1", TestComponentA1.class);// Singleton
         addDependency("component-a2", TestComponentA2.class, false);// Non-singleton
         addDependency("component-b", TestComponentB.class);// Singleton
-
-        addDependency("component-b3", TestComponentB.class);// For custom
-                                                            // override test
+        addDependency("component-b3", TestComponentB.class);// For custom override test
         addDependency("component-b3_tiger", TestComponentC.class);
+        addDependency("component-d", TestComponentD.class);
     }
 
     @Override

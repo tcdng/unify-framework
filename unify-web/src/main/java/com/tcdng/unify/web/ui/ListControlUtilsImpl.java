@@ -45,7 +45,7 @@ import com.tcdng.unify.web.util.HtmlUtils;
 @Component(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL)
 public class ListControlUtilsImpl extends AbstractUnifyComponent implements ListControlUtils {
 
-    @Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
+    @Configurable
     private PageManager pageManager;
 
     private FactoryMap<String, ListInfo> listInfoMap;

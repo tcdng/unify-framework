@@ -43,7 +43,7 @@ import com.tcdng.unify.web.util.WriterUtils;
  */
 public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
-    @Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
+    @Configurable
     private PageManager pageManager;
 
     /**

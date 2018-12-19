@@ -22,7 +22,6 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.DataTransfer;
 import com.tcdng.unify.web.DataTransferBlock;
-import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.ui.data.ValidationInfo;
 
 /**
@@ -35,7 +34,7 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
         @UplAttribute(name = "components", type = UplElementReferences.class) })
 public abstract class AbstractPageValidation extends AbstractBehavior implements PageValidation {
 
-    @Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
+    @Configurable
     private PageManager pageManager;
 
     private String id;

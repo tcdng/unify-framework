@@ -16,7 +16,6 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStore;
@@ -30,10 +29,10 @@ import com.tcdng.unify.core.data.ValueStoreFactory;
  */
 public abstract class AbstractController extends AbstractUnifyComponent implements Controller {
 
-    @Configurable(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
+    @Configurable
     private RequestContextUtil requestContextUtil;
 
-    @Configurable(ApplicationComponents.APPLICATION_VALUESTOREFACTORY)
+    @Configurable
     private ValueStoreFactory valueStoreFactory;
 
     private boolean secured;

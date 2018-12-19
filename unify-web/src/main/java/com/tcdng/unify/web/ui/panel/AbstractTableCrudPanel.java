@@ -18,7 +18,6 @@ package com.tcdng.unify.web.ui.panel;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.UplAttribute;
@@ -49,7 +48,7 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         CREATE, RETRIEVE, UPDATE, DELETE
     }
 
-    @Configurable(ApplicationComponents.APPLICATION_GENERICSERVICE)
+    @Configurable
     private GenericService genericService;
 
     private FORMMODE formMode;

@@ -17,7 +17,6 @@ package com.tcdng.unify.core.system;
 
 import java.util.Date;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -36,7 +35,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("datesequencenumber-task")
 public class DateSequenceNumberTask extends AbstractTask {
 
-    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+    @Configurable
     private SequenceNumberService sequenceNumberService;
 
     @Override

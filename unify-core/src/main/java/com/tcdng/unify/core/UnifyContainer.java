@@ -53,6 +53,7 @@ import com.tcdng.unify.core.application.BootService;
 import com.tcdng.unify.core.business.BusinessLogicUnit;
 import com.tcdng.unify.core.business.BusinessService;
 import com.tcdng.unify.core.business.internal.ProxyBusinessServiceGenerator;
+import com.tcdng.unify.core.constant.AnnotationConstants;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.LocaleFactoryMaps;
 import com.tcdng.unify.core.logging.AbstractLog4jLogger;
@@ -123,7 +124,7 @@ public class UnifyContainer {
 
     private BootService applicationBootService;
 
-    private ClusterService clusterManager;
+    private ClusterService clusterService;
 
     private UplCompiler uplCompiler;
 
@@ -148,6 +149,8 @@ public class UnifyContainer {
     private Queue<ContainerCommand> containerCommandQueue;
 
     private Map<String, BroadcastInfo> broadcastInfoMap;
+
+    private Map<Class<? extends UnifyComponent>, List<String>> namelessConfigurableSuggestions;
 
     private String nodeId;
 
@@ -182,6 +185,7 @@ public class UnifyContainer {
         interfaces = new HashSet<UnifyContainerInterface>();
         containerCommandQueue = new ConcurrentLinkedQueue<ContainerCommand>();
         broadcastInfoMap = new HashMap<String, BroadcastInfo>();
+        namelessConfigurableSuggestions = new HashMap<Class<? extends UnifyComponent>, List<String>>();
 
         componentContextMap = new FactoryMap<String, UnifyComponentContext>() {
             @Override
@@ -293,6 +297,15 @@ public class UnifyContainer {
                 if (!field.isAnnotationPresent(Configurable.class)) {
                     throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_PROPERTY_NOT_CONFIGURABLE,
                             unifyComponentConfig.getName(), type, property);
+                } else if (UnifyComponent.class.isAssignableFrom(field.getType())) {
+                    // Setup nameless references
+                    Configurable ca = field.getAnnotation(Configurable.class);
+                    if (ca.value() == AnnotationConstants.NONE || ca.values().length == 0) {
+                        if (!namelessConfigurableSuggestions.containsKey(field.getType())) {
+                            namelessConfigurableSuggestions.put((Class<? extends UnifyComponent>) field.getType(),
+                                    null);
+                        }
+                    }
                 }
             }
 
@@ -303,17 +316,18 @@ public class UnifyContainer {
 
         logDebug("Detecting and replacing customized components...");
         // Resolve customization
-        List<String> customisationSuffixList = DataUtils.convert(ArrayList.class, String.class,
-                getSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMISATION), null);
+        List<String> customizationSuffixList = DataUtils.convert(ArrayList.class, String.class,
+                getSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMIZATION), null);
         internalResolutionMap = UnifyConfigUtils.resolveConfigurationOverrides(internalUnifyComponentInfos,
-                customisationSuffixList);
+                customizationSuffixList);
 
         // Detect business components
         logDebug("Detecting business service components...");
         Map<String, Map<String, Periodic>> componentPeriodMethodMap = new HashMap<String, Map<String, Periodic>>();
         Map<String, Set<String>> componentPluginSocketsMap = new HashMap<String, Set<String>>();
         List<UnifyComponentConfig> managedBusinessServiceConfigList = new ArrayList<UnifyComponentConfig>();
-        for (InternalUnifyComponentInfo iuci : internalUnifyComponentInfos.values()) {
+        for (Map.Entry<String, InternalUnifyComponentInfo> entry : internalUnifyComponentInfos.entrySet()) {
+            InternalUnifyComponentInfo iuci = entry.getValue();
             // Fetch periodic method information
             Map<String, Periodic> periodicMethodMap = new HashMap<String, Periodic>();
             Set<String> pluginSockets = new HashSet<String>();
@@ -364,8 +378,10 @@ public class UnifyContainer {
         }
 
         // Detect business logic plug-ins
+        logDebug("Detecting business logic plugins...");
         Map<String, Map<String, List<UnifyPluginInfo>>> allPluginsBySocketMap = new HashMap<String, Map<String, List<UnifyPluginInfo>>>();
-        for (InternalUnifyComponentInfo iuci : internalUnifyComponentInfos.values()) {
+        for (Map.Entry<String, InternalUnifyComponentInfo> entry : internalUnifyComponentInfos.entrySet()) {
+            InternalUnifyComponentInfo iuci = entry.getValue();
             // Check if component is a BLU plug-in
             Plugin pla = iuci.getType().getAnnotation(Plugin.class);
             if (pla != null) {
@@ -415,6 +431,13 @@ public class UnifyContainer {
                     new InternalUnifyComponentInfo(internalComponentConfig));
         }
 
+        // Set nameless suggestions
+        logDebug("Setting nameless suggestions...");
+        for (Map.Entry<Class<? extends UnifyComponent>, List<String>> entry : namelessConfigurableSuggestions
+                .entrySet()) {
+            entry.setValue(getComponentNames(entry.getKey()));
+        }
+
         // Initialization
         started = true;
         requestContextManager = (RequestContextManager) getComponent(
@@ -445,7 +468,7 @@ public class UnifyContainer {
         logInfo("Generation and installation of proxy objects completed");
 
         // Cluster manager
-        clusterManager = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+        clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
         userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
 
         // Run application startup service
@@ -615,7 +638,7 @@ public class UnifyContainer {
      *             if container is not started.
      */
     public List<String> getComponentNames(Class<? extends UnifyComponent> componentType) throws UnifyException {
-        checkStarted();
+        // checkStarted();
         List<String> names = new ArrayList<String>();
         for (InternalUnifyComponentInfo iuc : internalUnifyComponentInfos.values()) {
             if (componentType.isAssignableFrom(iuc.getType())) {
@@ -844,7 +867,7 @@ public class UnifyContainer {
      *             if an error occurs
      */
     public boolean grabClusterMasterLock() throws UnifyException {
-        return clusterManager.grabMasterSynchronizationLock();
+        return clusterService.grabMasterSynchronizationLock();
     }
 
     /**
@@ -858,7 +881,7 @@ public class UnifyContainer {
      *             if an error occurs
      */
     public boolean grabClusterLock(String lockName) throws UnifyException {
-        return clusterManager.grabSynchronizationLock(lockName);
+        return clusterService.grabSynchronizationLock(lockName);
     }
 
     /**
@@ -871,7 +894,7 @@ public class UnifyContainer {
      *             if an error occurs
      */
     public boolean releaseClusterLock(String lockName) throws UnifyException {
-        return clusterManager.releaseSynchronizationLock(lockName);
+        return clusterService.releaseSynchronizationLock(lockName);
     }
 
     /**
@@ -885,7 +908,7 @@ public class UnifyContainer {
      *             if an error occurs
      */
     public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
-        clusterManager.broadcastToOtherNodes(command, params);
+        clusterService.broadcastToOtherNodes(command, params);
     }
 
     /**
@@ -999,8 +1022,17 @@ public class UnifyContainer {
                     value = settings.getSettingValue(property);
                 }
 
+                Field field = ReflectUtils.getField(clazz, property);
+                if (value == null) {
+                    if(UnifyComponent.class.isAssignableFrom(field.getType())) {
+                        List<String> names = namelessConfigurableSuggestions.get(field.getType());
+                        if (names.size() == 1) { // Check perfect suggestion
+                            value = names.get(0);
+                        }
+                    }
+                }
+
                 if (value != null) {
-                    Field field = ReflectUtils.getField(clazz, property);
                     String[] configValues = resolveConfigValue(value);
                     injectFieldValue(unifyComponent, field, configValues);
                 }
@@ -1361,7 +1393,7 @@ public class UnifyContainer {
                     if (clusterMode) {
                         requestContextManager.getRequestContext()
                                 .setAttribute(RequestAttributeConstants.SUPPRESS_BROADCAST, Boolean.TRUE);
-                        List<Command> clusterCommandList = clusterManager.getClusterCommands();
+                        List<Command> clusterCommandList = clusterService.getClusterCommands();
                         for (Command clusterCommand : clusterCommandList) {
                             BroadcastInfo broadcastInfo = broadcastInfoMap.get(clusterCommand.getCommand());
                             if (broadcastInfo != null) {

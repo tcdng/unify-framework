@@ -42,7 +42,7 @@ import com.tcdng.unify.web.ui.data.Hint.MODE;
  */
 public abstract class AbstractPageController extends AbstractUserInterfaceController implements PageController {
 
-    @Configurable(ApplicationComponents.APPLICATION_TASKLAUNCHER)
+    @Configurable
     private TaskLauncher taskLauncher;
 
     private Page page;

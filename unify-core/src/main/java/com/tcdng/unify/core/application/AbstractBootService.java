@@ -41,7 +41,7 @@ import com.tcdng.unify.core.util.VersionUtils;
 public abstract class AbstractBootService<T extends FeatureDefinition> extends AbstractBusinessService
         implements BootService {
 
-    @Configurable(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
+    @Configurable
     private DataSourceManager dataSourceManager;
 
     @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)

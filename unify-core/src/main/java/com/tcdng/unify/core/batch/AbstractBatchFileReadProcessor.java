@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.batch;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.business.AbstractBusinessLogicUnit;
@@ -31,7 +30,7 @@ import com.tcdng.unify.core.business.BusinessLogicOutput;
 public abstract class AbstractBatchFileReadProcessor extends AbstractBusinessLogicUnit
         implements BatchFileReadProcessor {
 
-    @Configurable(ApplicationComponents.APPLICATION_BATCHFILEREADERWRITERFACTORY)
+    @Configurable
     private BatchFileReaderWriterFactory batchFileRwFactory;
 
     @Override

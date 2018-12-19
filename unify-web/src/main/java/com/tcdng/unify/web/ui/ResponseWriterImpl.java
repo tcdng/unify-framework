@@ -66,7 +66,7 @@ import com.tcdng.unify.web.util.WebUtils;
 @Component(WebApplicationComponents.APPLICATION_RESPONSEWRITER)
 public class ResponseWriterImpl extends AbstractUnifyComponent implements ResponseWriter {
 
-    @Configurable(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
+    @Configurable
     private RequestContextUtil requestContextUtil;
 
     @Configurable("8192")

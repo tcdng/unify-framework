@@ -23,7 +23,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -45,10 +44,10 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 @Component(WebApplicationComponents.APPLICATION_REMOTECALLCLIENT)
 public class RemoteCallClientImpl extends AbstractUnifyComponent implements RemoteCallClient {
 
-    @Configurable(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER)
+    @Configurable
     private ObjectStreamer xmlObjectStreamer;
 
-    @Configurable(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER)
+    @Configurable
     private ObjectStreamer jsonObjectStreamer;
 
     private FactoryMaps<String, String, RemoteCallSetup> preferences;
