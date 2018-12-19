@@ -27,7 +27,9 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.FactoryMaps;
+import com.tcdng.unify.core.stream.JSONObjectStreamer;
 import com.tcdng.unify.core.stream.ObjectStreamer;
+import com.tcdng.unify.core.stream.XMLObjectStreamer;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.NetworkUtils;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryPathConstants;
@@ -45,10 +47,10 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 public class RemoteCallClientImpl extends AbstractUnifyComponent implements RemoteCallClient {
 
     @Configurable
-    private ObjectStreamer xmlObjectStreamer;
+    private XMLObjectStreamer xmlObjectStreamer;
 
     @Configurable
-    private ObjectStreamer jsonObjectStreamer;
+    private JSONObjectStreamer jsonObjectStreamer;
 
     private FactoryMaps<String, String, RemoteCallSetup> preferences;
 

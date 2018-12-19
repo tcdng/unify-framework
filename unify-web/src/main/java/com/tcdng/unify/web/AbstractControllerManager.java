@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -41,7 +40,9 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.ContentTypeConstants;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.stream.JSONObjectStreamer;
 import com.tcdng.unify.core.stream.ObjectStreamer;
+import com.tcdng.unify.core.stream.XMLObjectStreamer;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
@@ -82,11 +83,11 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     @Configurable
     private ResponseWriterPool responseWriterPool;
 
-    @Configurable(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER)
-    private ObjectStreamer xmlObjectStreamer;
+    @Configurable
+    private XMLObjectStreamer xmlObjectStreamer;
 
-    @Configurable(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER)
-    private ObjectStreamer jsonObjectStreamer;
+    @Configurable
+    private JSONObjectStreamer jsonObjectStreamer;
 
     private Map<String, String> actionToControllerNameMap;
 
