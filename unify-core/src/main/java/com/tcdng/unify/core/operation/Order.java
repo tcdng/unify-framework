@@ -52,6 +52,10 @@ public class Order {
         parts.clear();
     }
     
+    public boolean isParts() {
+        return !parts.isEmpty();
+    }
+    
     public class Part {
 
         private String field;

@@ -283,7 +283,7 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public boolean isOrder() {
-        return order != null;
+        return order != null && order.isParts();
     }
 
     public int getOffset() {
