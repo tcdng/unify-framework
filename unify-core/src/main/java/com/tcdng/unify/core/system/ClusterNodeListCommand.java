@@ -18,7 +18,6 @@ package com.tcdng.unify.core.system;
 import java.util.List;
 import java.util.Locale;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -36,7 +35,7 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
 @Component("clusternodelist")
 public class ClusterNodeListCommand extends AbstractZeroParamsListCommand {
 
-    @Configurable(ApplicationComponents.APPLICATION_CLUSTERSERVICE)
+    @Configurable
     private ClusterService clusterService;
 
     @Override

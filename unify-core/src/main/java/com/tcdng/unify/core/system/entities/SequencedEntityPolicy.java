@@ -17,7 +17,6 @@ package com.tcdng.unify.core.system.entities;
 
 import java.util.Date;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -34,7 +33,7 @@ import com.tcdng.unify.core.system.SequenceNumberService;
 @Component("sequencedentity-policy")
 public class SequencedEntityPolicy extends AbstractEntityPolicy {
 
-    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+    @Configurable
     private SequenceNumberService sequenceNumberService;
 
     private boolean setNow;

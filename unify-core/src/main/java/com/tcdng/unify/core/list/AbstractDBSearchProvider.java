@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.business.GenericService;
@@ -36,7 +35,7 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractDBSearchProvider extends AbstractSearchProviderListCommand {
 
-    @Configurable(ApplicationComponents.APPLICATION_GENERICSERVICE)
+    @Configurable
     private GenericService genericService;
 
     @Configurable("30")

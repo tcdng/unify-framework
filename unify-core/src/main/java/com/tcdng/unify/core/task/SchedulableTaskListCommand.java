@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -41,7 +40,7 @@ import com.tcdng.unify.core.util.DataUtils;
 @Component("schedulabletasklist")
 public class SchedulableTaskListCommand extends AbstractZeroParamsListCommand {
 
-    @Configurable(ApplicationComponents.APPLICATION_TASKMANAGER)
+    @Configurable
     private TaskManager taskManager;
 
     private FactoryMap<Locale, List<Listable>> schedulableListMap;

@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.format.FormatHelper;
@@ -32,13 +31,13 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public abstract class AbstractPageControllerResponse extends AbstractUplComponent implements PageControllerResponse {
 
-    @Configurable(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
+    @Configurable
     private RequestContextUtil requestContextUtil;
 
-    @Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
+    @Configurable
     private PageManager pageManager;
 
-    @Configurable(ApplicationComponents.APPLICATION_FORMATHELPER)
+    @Configurable
     private FormatHelper formatHelper;
 
     @Override

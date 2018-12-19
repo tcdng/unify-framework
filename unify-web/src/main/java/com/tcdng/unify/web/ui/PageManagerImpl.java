@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -60,10 +59,10 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     private static final String REMOTE_WEBVIEWER_PAGENAME_PREFIX = "rp";
 
-    @Configurable(ApplicationComponents.APPLICATION_UPLCOMPILER)
+    @Configurable
     private UplCompiler uplCompiler;
 
-    @Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
+    @Configurable
     private SequenceNumberService sequenceNumberService;
 
     private PageNameMap pageNameMap;

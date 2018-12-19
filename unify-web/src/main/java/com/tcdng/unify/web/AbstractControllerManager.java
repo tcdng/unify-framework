@@ -73,13 +73,13 @@ import com.tcdng.unify.web.ui.ResponseWriterPool;
  */
 public abstract class AbstractControllerManager extends AbstractUnifyComponent implements ControllerManager {
 
-    @Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
+    @Configurable
     private PageManager pageManager;
 
-    @Configurable(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
+    @Configurable
     private RequestContextUtil requestContextUtil;
 
-    @Configurable(WebApplicationComponents.APPLICATION_RESPONSEWRITERPOOL)
+    @Configurable
     private ResponseWriterPool responseWriterPool;
 
     @Configurable(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER)

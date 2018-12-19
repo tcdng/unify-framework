@@ -18,7 +18,6 @@ package com.tcdng.unify.web.controller;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -39,7 +38,7 @@ public class FileResourceController extends AbstractResourceController {
 
     private static final long MINIMUM_CACHE_EXPIRY_TIME = 1;
 
-    @Configurable(ApplicationComponents.APPLICATION_FILECACHE)
+    @Configurable
     private FileCache fileCache;
 
     @Configurable("300")

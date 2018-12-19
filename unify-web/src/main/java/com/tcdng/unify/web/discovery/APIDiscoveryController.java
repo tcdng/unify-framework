@@ -36,7 +36,7 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 @Component(WebApplicationComponents.APPLICATION_APIDISCOVERY_CONTROLLER)
 public class APIDiscoveryController extends AbstractRemoteCallController {
 
-    @Configurable(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER)
+    @Configurable
     private APIDiscoveryManager aPIDiscoveryManager;
 
     @GatewayAction(name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL,
