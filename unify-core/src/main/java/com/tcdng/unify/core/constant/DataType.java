@@ -31,13 +31,18 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("datatypelist")
 public enum DataType implements EnumConst {
 
-    CHAR("CH", Character.class, Character[].class), BOOLEAN("BL", Boolean.class, Boolean[].class), BYTE("BT",
-            Byte.class, Byte[].class), SHORT("SH", Short.class, Short[].class), INTEGER("IN", Integer.class,
-                    Integer[].class), LONG("LN", Long.class, Long[].class), FLOAT("FL", Float.class,
-                            Float[].class), DOUBLE("DB", Double.class, Double[].class), DECIMAL("DC", BigDecimal.class,
-                                    BigDecimal[].class), DATE("DT", Date.class, Date[].class), STRING("ST",
-                                            String.class,
-                                            String[].class), COMPLEX("CX", PackableDoc.class, PackableDoc[].class);
+    CHAR("CH", Character.class, Character[].class),
+    BOOLEAN("BL", Boolean.class, Boolean[].class),
+    BYTE("BT", Byte.class, Byte[].class),
+    SHORT("SH", Short.class, Short[].class),
+    INTEGER("IN", Integer.class, Integer[].class),
+    LONG("LN", Long.class, Long[].class),
+    FLOAT("FL", Float.class, Float[].class),
+    DOUBLE("DB", Double.class, Double[].class),
+    DECIMAL("DC", BigDecimal.class, BigDecimal[].class),
+    DATE("DT", Date.class, Date[].class),
+    STRING("ST", String.class, String[].class),
+    COMPLEX("CX", PackableDoc.class, PackableDoc[].class);
 
     private final String code;
 
@@ -54,6 +59,14 @@ public enum DataType implements EnumConst {
     @Override
     public String code() {
         return this.code;
+    }
+
+    public Class<?> javaClass(boolean isArray) {
+        if (isArray) {
+            return javaArrClass;
+        }
+        
+        return javaClass;
     }
 
     public Class<?> javaClass() {
