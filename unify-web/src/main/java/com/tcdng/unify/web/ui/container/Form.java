@@ -77,7 +77,6 @@ public class Form extends AbstractContainer {
         for (FormSection formSection : formSections) {
             if (formSection.isBinding()) {
                 Object newValue = null;
-                ;
                 if (valueStore != null) {
                     newValue = valueStore.retrieve(formSection.getBinding());
                 }
