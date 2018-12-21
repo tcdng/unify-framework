@@ -24,6 +24,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.DataType;
 
 /**
  * Packable document configuration.
@@ -77,17 +78,17 @@ public class PackableDocConfig {
     public int getFieldCount() {
         return fieldConfigs.size();
     }
-    
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("{name=\"").append(name).append("\", fieldConfigs=\n");
-        for(Map.Entry<String, FieldConfig> entry: fieldConfigs.entrySet()) {
+        for (Map.Entry<String, FieldConfig> entry : fieldConfigs.entrySet()) {
             sb.append(entry.getValue()).append("\n");
         }
         sb.append("}");
         return sb.toString();
     }
-   
+
     public static class FieldConfig {
 
         private String name;
@@ -96,42 +97,45 @@ public class PackableDocConfig {
 
         private PackableDocConfig packableDocConfig;
 
-        private int defaultLen;
+        private int repeat;
 
         public FieldConfig(String name, Class<?> type) throws UnifyException {
-            this(name, type, 0);
-        }
-
-        public FieldConfig(String name, Class<?> type, int defaultLen) throws UnifyException {
             this.name = name;
             this.type = type;
-            this.defaultLen = defaultLen;
-            if (this.defaultLen < 0) {
-                this.defaultLen = 0;
+            this.repeat = -1;
+        }
+
+        public FieldConfig(String name, DataType type) throws UnifyException {
+            this(name, type, -1);
+        }
+
+        public FieldConfig(String name, DataType type, int repeat) throws UnifyException {
+            this.name = name;
+            this.type = type.javaClass(repeat >= 0);
+            this.repeat = repeat;
+            if (this.repeat < 0) {
+                this.repeat = 0;
             }
         }
 
-        public FieldConfig(String name, Class<?> type, FieldConfig... fieldConfigs) {
-            this(name, type, 0, fieldConfigs);
+        public FieldConfig(String name, FieldConfig... fieldConfigs) {
+            this(name, -1, fieldConfigs);
         }
 
-        public FieldConfig(String name, Class<?> type, int defaultLen, FieldConfig... fieldConfigs) {
-            this(name, type, defaultLen, Arrays.asList(fieldConfigs));
+        public FieldConfig(String name, int repeat, FieldConfig... fieldConfigs) {
+            this(name, repeat, Arrays.asList(fieldConfigs));
         }
 
-        public FieldConfig(String name, Class<?> type, List<FieldConfig> fieldConfigList) {
-            this(name, type, 0, fieldConfigList);
+        public FieldConfig(String name, List<FieldConfig> fieldConfigList) {
+            this(name, -1, fieldConfigList);
         }
 
-        public FieldConfig(String name, Class<?> type, int defaultLen, List<FieldConfig> fieldConfigList) {
+        public FieldConfig(String name, int repeat, List<FieldConfig> fieldConfigList) {
             this.name = name;
-            this.type = type;
-            this.defaultLen = defaultLen;
+            this.type = DataType.COMPLEX.javaClass(repeat >= 0);
+            this.repeat = repeat;
             this.packableDocConfig = new PackableDocConfig(name, fieldConfigList);
-            if (this.defaultLen < 0) {
-                this.defaultLen = 0;
-            }
-       }
+        }
 
         public String getName() {
             return name;
@@ -141,8 +145,8 @@ public class PackableDocConfig {
             return type;
         }
 
-        public int getDefaultLen() {
-            return defaultLen;
+        public int getRepeat() {
+            return repeat;
         }
 
         public PackableDocConfig getPackableDocConfig() {
@@ -156,7 +160,7 @@ public class PackableDocConfig {
         public boolean isArray() {
             return type.isArray();
         }
-        
+
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append("{name=\"").append(name).append("\", type=\"").append(type).append("\"");
