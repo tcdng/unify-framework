@@ -31,6 +31,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.data.PackableDocConfig.FieldConfig;
 import com.tcdng.unify.core.data.PackableDocRWConfig.FieldMapping;
 import com.tcdng.unify.core.util.StringUtils;
@@ -229,15 +230,15 @@ public class PackableDocumentTest extends AbstractUnifyComponentTest {
         pDoc.writeFieldValue(xCustDocRwConfig, "address", new Address("24 Parklane", "Apapa Lagos"));
     }
 
-//    @Test
-//    public void testWriteComplexFieldValueWithPreset() throws Exception {
-//        PackableDoc pDoc = new PackableDoc(xCustDocConfig, false).preset();
-//        pDoc.writeFieldValue("name", "Elmer Fudd");
-//        pDoc.writeFieldValue("id", 12);
-//        pDoc.writeFieldValue("birthDt", new Date());
-//        pDoc.writeFieldValue(xCustDocRwConfig, "address.line1", "24 Parklane");
-//        pDoc.writeFieldValue(xCustDocRwConfig, "address.line2", "Apapa Lagos");
-//    }
+    // @Test
+    // public void testWriteComplexFieldValueWithPreset() throws Exception {
+    // PackableDoc pDoc = new PackableDoc(xCustDocConfig, false).preset();
+    // pDoc.writeFieldValue("name", "Elmer Fudd");
+    // pDoc.writeFieldValue("id", 12);
+    // pDoc.writeFieldValue("birthDt", new Date());
+    // pDoc.writeFieldValue(xCustDocRwConfig, "address.line1", "24 Parklane");
+    // pDoc.writeFieldValue(xCustDocRwConfig, "address.line2", "Apapa Lagos");
+    // }
 
     @Test
     public void testWriteFieldValueWithConversion() throws Exception {
@@ -478,9 +479,9 @@ public class PackableDocumentTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
-        custDocConfig = new PackableDocConfig("customerConfig", new FieldConfig("name", String.class),
-                new FieldConfig("birthDt", Date.class), new FieldConfig("balance", BigDecimal.class),
-                new FieldConfig("id", Long.class), new FieldConfig("address", Address.class),
+        custDocConfig = new PackableDocConfig("customerConfig", new FieldConfig("name", DataType.STRING),
+                new FieldConfig("birthDt", DataType.DATE), new FieldConfig("balance", DataType.DECIMAL),
+                new FieldConfig("id", DataType.LONG), new FieldConfig("address", Address.class),
                 new FieldConfig("modeList", List.class));
 
         custDocRwConfig = new PackableDocRWConfig(Customer.class, new FieldMapping("name", "name"),
@@ -488,13 +489,13 @@ public class PackableDocumentTest extends AbstractUnifyComponentTest {
                 new FieldMapping("id", "id"), new FieldMapping("address", "address"),
                 new FieldMapping("modeList", "modeList"));
 
-        ledgerDocConfig = new PackableDocConfig("ledgerConfig", new FieldConfig("id", Long.class),
+        ledgerDocConfig = new PackableDocConfig("ledgerConfig", new FieldConfig("id", DataType.LONG),
                 new FieldConfig("purchases", String[].class));
 
-        xCustDocConfig = new PackableDocConfig("customerConfig", new FieldConfig("name", String.class),
-                new FieldConfig("birthDt", Date.class), new FieldConfig("balance", BigDecimal.class),
-                new FieldConfig("id", Long.class), new FieldConfig("address", PackableDoc.class,
-                        new FieldConfig("line1", String.class), new FieldConfig("line2", String.class)),
+        xCustDocConfig = new PackableDocConfig("customerConfig", new FieldConfig("name", DataType.STRING),
+                new FieldConfig("birthDt", DataType.DATE), new FieldConfig("balance", DataType.DECIMAL),
+                new FieldConfig("id", DataType.LONG), new FieldConfig("address",
+                        new FieldConfig("line1", DataType.STRING), new FieldConfig("line2", DataType.STRING)),
                 new FieldConfig("modeList", List.class));
 
         xCustDocRwConfig = new PackableDocRWConfig(Customer.class, new FieldMapping("name", "name"),
