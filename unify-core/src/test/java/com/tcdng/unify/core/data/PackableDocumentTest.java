@@ -229,6 +229,16 @@ public class PackableDocumentTest extends AbstractUnifyComponentTest {
         pDoc.writeFieldValue(xCustDocRwConfig, "address", new Address("24 Parklane", "Apapa Lagos"));
     }
 
+//    @Test
+//    public void testWriteComplexFieldValueWithPreset() throws Exception {
+//        PackableDoc pDoc = new PackableDoc(xCustDocConfig, false).preset();
+//        pDoc.writeFieldValue("name", "Elmer Fudd");
+//        pDoc.writeFieldValue("id", 12);
+//        pDoc.writeFieldValue("birthDt", new Date());
+//        pDoc.writeFieldValue(xCustDocRwConfig, "address.line1", "24 Parklane");
+//        pDoc.writeFieldValue(xCustDocRwConfig, "address.line2", "Apapa Lagos");
+//    }
+
     @Test
     public void testWriteFieldValueWithConversion() throws Exception {
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);

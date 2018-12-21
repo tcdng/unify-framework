@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.data;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,37 +66,25 @@ public class PackableDoc implements Serializable {
         setup(config, auditable);
     }
 
-    private void setup(PackableDocConfig config, boolean auditable) {
-        this.config = config;
-        this.auditable = auditable;
-        changed = false;
-
+    public PackableDoc preset() throws UnifyException {
         for (FieldConfig fc : config.getFieldConfigs()) {
-            if (!values.containsKey(fc.getName())) {
-                values.put(fc.getName(), null);
-            } else {
+            if (fc.isArray()) {
+                Class<?> type = fc.getType().getComponentType();
+                int len = fc.getDefaultLen();
+                Object arr = Array.newInstance(type, len);
                 if (fc.isComplex()) {
-                    Object val = values.get(fc.getName());
-                    if (val != null) {
-                        if (fc.isArray()) {
-                            PackableDoc[] pd = (PackableDoc[]) val;
-                            for (int i = 0; i < pd.length; i++) {
-                                if (pd[i] != null) {
-                                    pd[i].setup(fc.getPackableDocConfig(), auditable);
-                                }
-                            }
-                        } else {
-                            PackableDoc pd = (PackableDoc) val;
-                            pd.setup(fc.getPackableDocConfig(), auditable);
-                        }
+                    for (int i = 0; i < len; i++) {
+                        Array.set(arr, i, new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
                     }
                 }
+
+                values.put(fc.getName(), arr);
+            } else if (fc.isComplex()) {
+                values.put(fc.getName(), new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
             }
         }
 
-        if (auditable) {
-            oldValues = new HashMap<String, Object>(values);
-        }
+        return this;
     }
 
     public static PackableDoc unpack(PackableDocConfig config, byte[] packedDoc) throws UnifyException {
@@ -262,6 +251,39 @@ public class PackableDoc implements Serializable {
 
     public int getFieldCount() {
         return config.getFieldCount();
+    }
+
+    private void setup(PackableDocConfig config, boolean auditable) {
+        this.config = config;
+        this.auditable = auditable;
+        changed = false;
+
+        for (FieldConfig fc : config.getFieldConfigs()) {
+            if (!values.containsKey(fc.getName())) {
+                values.put(fc.getName(), null);
+            } else {
+                if (fc.isComplex()) {
+                    Object val = values.get(fc.getName());
+                    if (val != null) {
+                        if (fc.isArray()) {
+                            PackableDoc[] pd = (PackableDoc[]) val;
+                            for (int i = 0; i < pd.length; i++) {
+                                if (pd[i] != null) {
+                                    pd[i].setup(fc.getPackableDocConfig(), auditable);
+                                }
+                            }
+                        } else {
+                            PackableDoc pd = (PackableDoc) val;
+                            pd.setup(fc.getPackableDocConfig(), auditable);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (auditable) {
+            oldValues = new HashMap<String, Object>(values);
+        }
     }
 
     private Object readObject(PackableDocRWConfig rwConfig, PackableDoc pd) throws UnifyException {
