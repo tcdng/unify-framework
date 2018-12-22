@@ -65,7 +65,7 @@ public enum DataType implements EnumConst {
         if (isArray) {
             return javaArrClass;
         }
-        
+
         return javaClass;
     }
 

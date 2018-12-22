@@ -43,7 +43,7 @@ public class Order {
         parts.add(new Part(field, type));
         return this;
     }
-    
+
     public List<Part> getParts() {
         return parts;
     }
@@ -51,11 +51,11 @@ public class Order {
     public void clear() {
         parts.clear();
     }
-    
+
     public boolean isParts() {
         return !parts.isEmpty();
     }
-    
+
     public class Part {
 
         private String field;
@@ -79,7 +79,7 @@ public class Order {
         public OrderType getType() {
             return type;
         }
-        
+
         public boolean isAscending() {
             return OrderType.ASCENDING.equals(type);
         }

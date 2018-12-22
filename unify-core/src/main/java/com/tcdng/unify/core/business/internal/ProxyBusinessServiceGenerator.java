@@ -39,7 +39,8 @@ public interface ProxyBusinessServiceGenerator extends ProxyBusinessServiceMetho
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateProxyBusinessServiceName(Class<? extends BusinessService> businessServiceClazz) throws UnifyException;
+    String generateProxyBusinessServiceName(Class<? extends BusinessService> businessServiceClazz)
+            throws UnifyException;
 
     /**
      * Generates a simple name for proxy version of a business service type.
@@ -85,8 +86,8 @@ public interface ProxyBusinessServiceGenerator extends ProxyBusinessServiceMetho
      *             if an error occurs
      */
     Class<? extends BusinessService> generateCompileLoadProxyBusinessServiceClass(String name,
-            Class<? extends BusinessService> businessServiceClazz, Map<String, List<UnifyPluginInfo>> pluginsBySocketMap)
-            throws UnifyException;
+            Class<? extends BusinessService> businessServiceClazz,
+            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap) throws UnifyException;
 
     /**
      * Returns relayed annotation information for supplied method signature.

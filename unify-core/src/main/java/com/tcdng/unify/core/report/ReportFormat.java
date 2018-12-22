@@ -28,12 +28,13 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 @StaticList("reportformatlist")
 public enum ReportFormat implements EnumConst {
-    CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV), DOC("DOC", ".doc", ContentTypeConstants.APPLICATION_DOC), DOCX(
-            "DOCX", ".docx",
-            ContentTypeConstants.APPLICATION_DOCX), PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF), XLS("XLS",
-                    ".xls", ContentTypeConstants.APPLICATION_XLS), XLSX("XLSX", ".xlsx",
-                            ContentTypeConstants.APPLICATION_XLSX), XML("XML", ".xml",
-                                    ContentTypeConstants.APPLICATION_XML);
+    CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV),
+    DOC("DOC", ".doc", ContentTypeConstants.APPLICATION_DOC),
+    DOCX("DOCX", ".docx", ContentTypeConstants.APPLICATION_DOCX),
+    PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF),
+    XLS("XLS", ".xls", ContentTypeConstants.APPLICATION_XLS),
+    XLSX("XLSX", ".xlsx", ContentTypeConstants.APPLICATION_XLSX),
+    XML("XML", ".xml", ContentTypeConstants.APPLICATION_XML);
 
     private final String code;
 

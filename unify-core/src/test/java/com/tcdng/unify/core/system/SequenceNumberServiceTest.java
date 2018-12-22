@@ -360,8 +360,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
-        addDependency(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE,
-                SequenceNumberServiceImpl.class, true, true, new Setting("sequenceBlockSize", "11"));
+        addDependency(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE, SequenceNumberServiceImpl.class, true,
+                true, new Setting("sequenceBlockSize", "11"));
     }
 
     @Override

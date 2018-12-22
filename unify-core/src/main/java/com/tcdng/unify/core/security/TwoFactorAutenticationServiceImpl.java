@@ -28,7 +28,8 @@ import com.tcdng.unify.core.business.AbstractBusinessService;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_TWOFACTORAUTHENTICATIONSERVICE)
-public class TwoFactorAutenticationServiceImpl extends AbstractBusinessService implements TwoFactorAutenticationService {
+public class TwoFactorAutenticationServiceImpl extends AbstractBusinessService
+        implements TwoFactorAutenticationService {
 
     @Override
     public boolean authenticate(String userName, String oneTimePassword) throws UnifyException {

@@ -28,17 +28,22 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("filterconditiontypelist")
 public enum FilterConditionType implements EnumConst {
 
-    EQUALS("EQ", Operator.EQUAL), NOT_EQUAL("NEQ", Operator.NOT_EQUAL), GREATER("GT",
-            Operator.GREATER), GREATER_OR_EQUAL("GTE", Operator.GREATER_OR_EQUAL), LESS("LT",
-                    Operator.LESS_THAN), LESS_OR_EQUAL("LTE", Operator.LESS_OR_EQUAL), BETWEEN("BT",
-                            Operator.BETWEEN), NOT_BETWEEN("NBT", Operator.NOT_BETWEEN), LIKE_BEGIN("BW",
-                                    Operator.LIKE_BEGIN), LIKE_END("EW", Operator.LIKE_END), LIKE("LK",
-                                            Operator.LIKE), NOT_LIKE_BEGIN("NBW",
-                                                    Operator.NOT_LIKE_BEGIN), NOT_LIKE_END("NEW",
-                                                            Operator.NOT_LIKE_END), NOT_LIKE("NLK",
-                                                                    Operator.NOT_LIKE), IS_NULL("IN",
-                                                                            Operator.IS_NULL), IS_NOT_NULL("NIN",
-                                                                                    Operator.IS_NOT_NULL);
+    EQUALS("EQ", Operator.EQUAL),
+    NOT_EQUAL("NEQ", Operator.NOT_EQUAL),
+    GREATER("GT", Operator.GREATER),
+    GREATER_OR_EQUAL("GTE", Operator.GREATER_OR_EQUAL),
+    LESS("LT", Operator.LESS_THAN),
+    LESS_OR_EQUAL("LTE", Operator.LESS_OR_EQUAL),
+    BETWEEN("BT", Operator.BETWEEN),
+    NOT_BETWEEN("NBT", Operator.NOT_BETWEEN),
+    LIKE_BEGIN("BW", Operator.LIKE_BEGIN),
+    LIKE_END("EW", Operator.LIKE_END),
+    LIKE("LK", Operator.LIKE),
+    NOT_LIKE_BEGIN("NBW", Operator.NOT_LIKE_BEGIN),
+    NOT_LIKE_END("NEW", Operator.NOT_LIKE_END),
+    NOT_LIKE("NLK", Operator.NOT_LIKE),
+    IS_NULL("IN", Operator.IS_NULL),
+    IS_NOT_NULL("NIN", Operator.IS_NOT_NULL);
 
     private final String code;
 

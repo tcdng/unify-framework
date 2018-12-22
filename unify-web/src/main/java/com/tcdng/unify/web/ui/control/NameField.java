@@ -21,8 +21,8 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 
 /**
- * An input text field that allows only alphanumeric characters, underscore,
- * dollar and period.
+ * An input text field that allows only alphanumeric characters with optional
+ * underscore, dollar and period.
  * 
  * @author Lateef Ojulari
  * @since 1.0

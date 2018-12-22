@@ -22,5 +22,18 @@ package com.tcdng.unify.core.database.sql;
  * @since 1.0
  */
 public enum SqlStatementType {
-    CREATE, FIND, FIND_BY_PK, FIND_BY_PK_VERSION, LIST, LIST_BY_PK, LIST_BY_PK_VERSION, UPDATE, UPDATE_BY_PK, UPDATE_BY_PK_VERSION, DELETE, DELETE_BY_PK, DELETE_BY_PK_VERSION, COUNT
+    CREATE,
+    FIND,
+    FIND_BY_PK,
+    FIND_BY_PK_VERSION,
+    LIST,
+    LIST_BY_PK,
+    LIST_BY_PK_VERSION,
+    UPDATE,
+    UPDATE_BY_PK,
+    UPDATE_BY_PK_VERSION,
+    DELETE,
+    DELETE_BY_PK,
+    DELETE_BY_PK_VERSION,
+    COUNT
 }

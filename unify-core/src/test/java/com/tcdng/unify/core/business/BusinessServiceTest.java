@@ -79,8 +79,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
             isException = true;
         }
         assertTrue(isException);
-        List<Account> accountList = mockService
-                .find((AccountQuery) new AccountQuery().ignoreEmptyCriteria(true));
+        List<Account> accountList = mockService.find((AccountQuery) new AccountQuery().ignoreEmptyCriteria(true));
         assertTrue(accountList.isEmpty());
     }
 
@@ -125,8 +124,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
             isException = true;
         }
         assertTrue(isException);
-        List<Account> accountList = mockService
-                .find((AccountQuery) new AccountQuery().ignoreEmptyCriteria(true));
+        List<Account> accountList = mockService.find((AccountQuery) new AccountQuery().ignoreEmptyCriteria(true));
         assertTrue(accountList.isEmpty());
     }
 

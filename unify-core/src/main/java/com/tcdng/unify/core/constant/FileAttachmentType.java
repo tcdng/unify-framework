@@ -27,14 +27,15 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("fileattachmenttypelist")
 public enum FileAttachmentType implements EnumConst {
 
-    AUDIO("AUD", "audio/*,audio/mp3", "audio/*,audio/mp3"), CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV), EXCEL(
-            "XLS", ".xls,.xlsx",
-            ContentTypeConstants.APPLICATION_XLS + ";" + ContentTypeConstants.APPLICATION_XLSX), IMAGE("IMG", "image/*",
-                    ContentTypeConstants.IMAGE), PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF), TEXT("TXT",
-                            "text/*", "text/*"), VIDEO("VID", "video/*,video/mp4", "video/*,video/mp4"), WILDCARD(
-                                    "WILD", "", ContentTypeConstants.APPLICATION_OCTETSTREAM), WORD("DOC", ".doc,.docx",
-                                            ContentTypeConstants.APPLICATION_DOC + ";"
-                                                    + ContentTypeConstants.APPLICATION_DOCX);
+    AUDIO("AUD", "audio/*,audio/mp3", "audio/*,audio/mp3"),
+    CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV),
+    EXCEL("XLS", ".xls,.xlsx", ContentTypeConstants.APPLICATION_XLS + ";" + ContentTypeConstants.APPLICATION_XLSX),
+    IMAGE("IMG", "image/*", ContentTypeConstants.IMAGE),
+    PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF),
+    TEXT("TXT", "text/*", "text/*"),
+    VIDEO("VID", "video/*,video/mp4", "video/*,video/mp4"),
+    WILDCARD("WILD", "", ContentTypeConstants.APPLICATION_OCTETSTREAM),
+    WORD("DOC", ".doc,.docx", ContentTypeConstants.APPLICATION_DOC + ";" + ContentTypeConstants.APPLICATION_DOCX);
 
     private final String code;
 
@@ -50,7 +51,7 @@ public enum FileAttachmentType implements EnumConst {
 
     @Override
     public String code() {
-        return this.code;
+        return code;
     }
 
     public String extensions() {

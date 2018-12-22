@@ -195,7 +195,7 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
         public String getMessage() {
             return "Hello World!";
         }
-        
+
         @Override
         protected void onInitialize() throws UnifyException {
 
@@ -211,7 +211,7 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
         @Configurable
         private TestComponentC testComponentC1;
-        
+
         public TestComponentC getTestComponentC1() {
             return testComponentC1;
         }

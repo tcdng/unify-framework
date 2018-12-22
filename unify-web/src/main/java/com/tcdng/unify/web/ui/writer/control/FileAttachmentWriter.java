@@ -75,7 +75,6 @@ public class FileAttachmentWriter extends AbstractControlWriter {
                 writer.write("<div style=\"display:table-cell;\">");
 
                 // Attachment
-                fileCtrl.setAccept(fileAttachmentInfo.getAccept());
                 writer.writeStructureAndContent(fileCtrl);
 
                 writer.write("<div style=\"display:table;width:100%;\"><div style=\"display:table-row;\">");

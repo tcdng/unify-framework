@@ -23,8 +23,18 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("staticmonthinyearlist")
 public enum MonthInYear implements EnumConst {
 
-    JANUARY("Jan"), FEBRUARY("Feb"), MARCH("Mar"), APRIL("Apr"), MAY("May"), JUNE("Jun"), JULY("Jul"), AUGUST(
-            "Aug"), SEPTEMBER("Sep"), OCTOBER("Oct"), NOVEMBER("Nov"), DECEMBER("Dec");
+    JANUARY("Jan"),
+    FEBRUARY("Feb"),
+    MARCH("Mar"),
+    APRIL("Apr"),
+    MAY("May"),
+    JUNE("Jun"),
+    JULY("Jul"),
+    AUGUST("Aug"),
+    SEPTEMBER("Sep"),
+    OCTOBER("Oct"),
+    NOVEMBER("Nov"),
+    DECEMBER("Dec");
 
     private static final MonthInYear[] BY_CALENDAR_INDEX = { JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST,
             SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER };

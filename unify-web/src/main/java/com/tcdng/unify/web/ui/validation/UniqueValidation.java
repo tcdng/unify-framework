@@ -90,8 +90,9 @@ public class UniqueValidation extends AbstractPageValidation {
                 }
             }
 
-            if (sb.length() > 0 && ((GenericService) this
-                    .getComponent(ApplicationComponents.APPLICATION_GENERICSERVICE)).countAll(criteria) > 0) {
+            if (sb.length() > 0
+                    && ((GenericService) this.getComponent(ApplicationComponents.APPLICATION_GENERICSERVICE))
+                            .countAll(criteria) > 0) {
                 String message = getSessionMessage("validation.uniquerecordexists", sb.toString());
                 addValidationFail((Control) widgets.get(0), "unique", message);
                 return false;

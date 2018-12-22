@@ -127,8 +127,7 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
         }
 
         if (isUseCsService) {
-            sb.append("\tprivate ").append(ClusterService.class.getCanonicalName())
-                    .append(" csService;\n");
+            sb.append("\tprivate ").append(ClusterService.class.getCanonicalName()).append(" csService;\n");
         }
 
         // Write methods
@@ -327,8 +326,8 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
     @SuppressWarnings("unchecked")
     @Override
     public Class<? extends BusinessService> generateCompileLoadProxyBusinessServiceClass(String name,
-            Class<? extends BusinessService> businessServiceClazz, Map<String, List<UnifyPluginInfo>> pluginsBySocketMap)
-            throws UnifyException {
+            Class<? extends BusinessService> businessServiceClazz,
+            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap) throws UnifyException {
         boolean isClusterMode = isClusterMode();
         try {
             String source = generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap,

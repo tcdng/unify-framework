@@ -30,8 +30,11 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("imageformatlist")
 public enum ImageFormat implements EnumConst {
 
-    BITMAP("BMP", ".bmp", "image/bmp"), JPEG("JPG", ".jpg", "image/jpg"), GIF("GIF", ".gif", "image/gif"), PNG("PNG",
-            ".png", "image/png"), WILDCARD("WLD", ".*", ContentTypeConstants.IMAGE);
+    BITMAP("BMP", ".bmp", "image/bmp"),
+    JPEG("JPG", ".jpg", "image/jpg"),
+    GIF("GIF", ".gif", "image/gif"),
+    PNG("PNG", ".png", "image/png"),
+    WILDCARD("WLD", ".*", ContentTypeConstants.IMAGE);
 
     private final String code;
 

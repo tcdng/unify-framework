@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 @Component("postresponse")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
-        @UplAttribute(name = "pathProperty", type = String.class),
+        @UplAttribute(name = "pathBinding", type = String.class),
         @UplAttribute(name = "pathRequestAttribute", type = String.class) })
 public class PostResponse extends AbstractJsonPageControllerResponse {
 
@@ -45,9 +45,9 @@ public class PostResponse extends AbstractJsonPageControllerResponse {
     protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
         String path = getUplAttribute(String.class, "path");
         if (StringUtils.isBlank(path)) {
-            String pathProperty = getUplAttribute(String.class, "pathProperty");
-            if (!StringUtils.isBlank(pathProperty)) {
-                path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathProperty);
+            String pathBinding = getUplAttribute(String.class, "pathBinding");
+            if (!StringUtils.isBlank(pathBinding)) {
+                path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathBinding);
             }
         }
 

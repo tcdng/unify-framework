@@ -1024,7 +1024,7 @@ public class UnifyContainer {
 
                 Field field = ReflectUtils.getField(clazz, property);
                 if (value == null) {
-                    if(UnifyComponent.class.isAssignableFrom(field.getType())) {
+                    if (UnifyComponent.class.isAssignableFrom(field.getType())) {
                         List<String> names = namelessConfigurableSuggestions.get(field.getType());
                         if (names.size() == 1) { // Check perfect suggestion
                             value = names.get(0);

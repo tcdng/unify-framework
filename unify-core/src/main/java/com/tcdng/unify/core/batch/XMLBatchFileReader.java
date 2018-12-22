@@ -52,12 +52,11 @@ import com.tcdng.unify.core.util.ThreadUtils;
 public class XMLBatchFileReader extends AbstractBatchFileReader {
 
     private static enum ErrorType {
-        START_BATCH_TAG_MISSING(
-                UnifyCoreErrorConstants.XMLBATCHFILEREADER_STARTTAG_MISSING), START_BATCHITEM_TAG_MULTIPLE(
-                        UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEMTAG_MULTIPLE), BATCHITEM_TAG_UNKNOWN(
-                                UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEMTAG_UNKNOWN), BATCHITEM_MULTIPLE(
-                                        UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEMTAG_UNKNOWN), BATCHITEM_EXCEPTION(
-                                                UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEM_EXCEPTION);
+        START_BATCH_TAG_MISSING(UnifyCoreErrorConstants.XMLBATCHFILEREADER_STARTTAG_MISSING),
+        START_BATCHITEM_TAG_MULTIPLE(UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEMTAG_MULTIPLE),
+        BATCHITEM_TAG_UNKNOWN(UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEMTAG_UNKNOWN),
+        BATCHITEM_MULTIPLE(UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEMTAG_UNKNOWN),
+        BATCHITEM_EXCEPTION(UnifyCoreErrorConstants.XMLBATCHFILEREADER_BATCHITEM_EXCEPTION);
 
         private final String errorCode;
 

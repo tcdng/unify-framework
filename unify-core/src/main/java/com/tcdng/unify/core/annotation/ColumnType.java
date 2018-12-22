@@ -26,10 +26,28 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum ColumnType implements EnumConst {
 
-    AUTO("AUT"), CHARACTER("CHR"), BLOB("BLB"), BOOLEAN("BLN"), BOOLEAN_ARRAY("BLA"), CLOB("CLB"), DATE("DTE"), DECIMAL(
-            "DEC"), DOUBLE("DBL"), DOUBLE_ARRAY("DBA"), FLOAT("FLT"), FLOAT_ARRAY("FLA"), SHORT("SHT"), SHORT_ARRAY(
-                    "SHA"), INTEGER("INT"), INTEGER_ARRAY("INA"), LONG("LNG"), LONG_ARRAY(
-                            "LNA"), STRING("STR"), STRING_ARRAY("STA"), TIMESTAMP("TSP"), ENUMCONST("ECT");
+    AUTO("AUT"),
+    CHARACTER("CHR"),
+    BLOB("BLB"),
+    BOOLEAN("BLN"),
+    BOOLEAN_ARRAY("BLA"),
+    CLOB("CLB"),
+    DATE("DTE"),
+    DECIMAL("DEC"),
+    DOUBLE("DBL"),
+    DOUBLE_ARRAY("DBA"),
+    FLOAT("FLT"),
+    FLOAT_ARRAY("FLA"),
+    SHORT("SHT"),
+    SHORT_ARRAY("SHA"),
+    INTEGER("INT"),
+    INTEGER_ARRAY("INA"),
+    LONG("LNG"),
+    LONG_ARRAY("LNA"),
+    STRING("STR"),
+    STRING_ARRAY("STA"),
+    TIMESTAMP("TSP"),
+    ENUMCONST("ECT");
 
     private final String code;
 

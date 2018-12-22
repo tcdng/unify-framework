@@ -24,8 +24,11 @@ import java.util.Date;
  * @since 1.0
  */
 public enum AggregateType {
-    COUNT(Number.class), SUM(Number.class), AVERAGE(Number.class), MAXIMUM(Number.class,
-            Date.class), MINIMUM(Number.class, Date.class);
+    COUNT(Number.class),
+    SUM(Number.class),
+    AVERAGE(Number.class),
+    MAXIMUM(Number.class, Date.class),
+    MINIMUM(Number.class, Date.class);
 
     private final Class<?>[] supports;
 

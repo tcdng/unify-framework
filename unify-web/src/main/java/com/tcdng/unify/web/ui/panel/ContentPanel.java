@@ -41,7 +41,7 @@ import com.tcdng.unify.web.ui.Page;
  */
 @Component("ui-contentpanel")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
-        @UplAttribute(name = "pathProperty", type = String.class), @UplAttribute(name = "tabbed", type = boolean.class),
+        @UplAttribute(name = "pathBinding", type = String.class), @UplAttribute(name = "tabbed", type = boolean.class),
         @UplAttribute(name = "titlebar", type = boolean.class) })
 public class ContentPanel extends AbstractPanel {
 
@@ -60,8 +60,8 @@ public class ContentPanel extends AbstractPanel {
         return getUplAttribute(String.class, "path");
     }
 
-    public String getPathProperty() throws UnifyException {
-        return getUplAttribute(String.class, "pathProperty");
+    public String getPathBinding() throws UnifyException {
+        return getUplAttribute(String.class, "pathBinding");
     }
 
     public boolean isTabbed() throws UnifyException {

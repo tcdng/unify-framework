@@ -21,8 +21,9 @@ import com.tcdng.unify.core.database.DatabaseTransactionManager;
 
 /**
  * Interface that must be implemented by any class that is to be considered a
- * business service component by the framework. Business service components are treated
- * specially by the framework for transaction and synchronization management.
+ * business service component by the framework. Business service components are
+ * treated specially by the framework for transaction and synchronization
+ * management.
  * 
  * @author Lateef Ojulari
  * @since 1.0
