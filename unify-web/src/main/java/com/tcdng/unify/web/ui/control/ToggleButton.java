@@ -28,13 +28,13 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-togglebutton")
-@UplAttributes({ @UplAttribute(name = "toggleProperty", type = String.class, mandatory = true),
+@UplAttributes({ @UplAttribute(name = "toggleBinding", type = String.class, mandatory = true),
         @UplAttribute(name = "onMessageKey", type = String.class, defaultValue = "button.on"),
         @UplAttribute(name = "offMessageKey", type = String.class, defaultValue = "button.off") })
 public class ToggleButton extends AbstractTargetControl {
 
-    public String getToggleAttribute() throws UnifyException {
-        return getUplAttribute(String.class, "toggleProperty");
+    public String getToggleBinding() throws UnifyException {
+        return getUplAttribute(String.class, "toggleBinding");
     }
 
     public String getOnMessageKey() throws UnifyException {

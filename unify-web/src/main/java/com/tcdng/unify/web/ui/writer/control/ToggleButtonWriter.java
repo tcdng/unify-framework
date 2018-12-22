@@ -39,7 +39,7 @@ public class ToggleButtonWriter extends AbstractTargetControlWriter {
         writer.write("<button type=\"button\"");
         writeTagAttributes(writer, toggleButton);
         writer.write(">");
-        if (toggleButton.getValue(boolean.class, toggleButton.getToggleAttribute())) {
+        if (toggleButton.getValue(boolean.class, toggleButton.getToggleBinding())) {
             writer.writeWithHtmlEscape(toggleButton.getOnMessageKey());
         } else {
             writer.writeWithHtmlEscape(toggleButton.getOffMessageKey());
