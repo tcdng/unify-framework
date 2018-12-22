@@ -35,7 +35,8 @@ import com.tcdng.unify.web.ui.Control;
  * @since 1.0
  */
 @Component("ui-tilegroup")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
+@UplAttributes({ @UplAttribute(name = "columns", type = int.class),
+        @UplAttribute(name = "showTitleSection", type = boolean.class, defaultValue = "false") })
 public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
 
     private Control imageCtrl;
@@ -47,11 +48,15 @@ public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
     @Override
     public void onPageInitialize() throws UnifyException {
         super.onPageInitialize();
-        imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image");
+        imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image hintBinding:caption");
     }
 
     public int getColumns() throws UnifyException {
         return getUplAttribute(int.class, "columns");
+    }
+
+    public boolean isShowTitleSection() throws UnifyException {
+        return getUplAttribute(boolean.class, "showTitleSection");
     }
 
     public Control getImageCtrl() {

@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerManager;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.WebApplicationComponents;
@@ -40,6 +41,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
         @UplAttribute(name = "style", type = String.class), @UplAttribute(name = "caption", type = String.class),
         @UplAttribute(name = "captionBinding", type = String.class),
         @UplAttribute(name = "columnStyle", type = String.class), @UplAttribute(name = "hint", type = String.class),
+        @UplAttribute(name = "hintBinding", type = String.class),
         @UplAttribute(name = "readOnly", type = boolean.class, defaultValue = "false"),
         @UplAttribute(name = "privilege", type = String.class),
         @UplAttribute(name = "fixedConforming", type = boolean.class, defaultValue = "false"),
@@ -156,7 +158,14 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public String getHint() throws UnifyException {
-        return getUplAttribute(String.class, "hint");
+        String hint = getUplAttribute(String.class, "hint");
+        if (StringUtils.isBlank(hint)) {
+            String hintBinding = getUplAttribute(String.class, "hintBinding");
+            if (!StringUtils.isBlank(hintBinding)) {
+                hint = getValue(String.class, hintBinding);
+            }
+        }
+        return hint;
     }
 
     @Override

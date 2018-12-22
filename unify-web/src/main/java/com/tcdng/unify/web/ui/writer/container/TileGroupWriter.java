@@ -71,6 +71,7 @@ public class TileGroupWriter extends AbstractContainerWriter {
             }
 
             Control imageCtrl = tileGroup.getImageCtrl();
+            boolean isShowTitleSection = tileGroup.isShowTitleSection();
             writer.write("<div style=\"display:table;\"><div style=\"display:table-row;\">");
             for (int i = 0; i < columns; i++) {
                 writer.write("<div style=\"display:table-cell;\">");
@@ -81,10 +82,11 @@ public class TileGroupWriter extends AbstractContainerWriter {
                         writer.write("<div class=\"tgtile\">");
                         imageCtrl.setValueStore(valueStore);
                         writer.writeStructureAndContent(imageCtrl);
-                        writer.write("<span id=\"").write(imageCtrl.getPrefixedId("spn_")).write("\">");
-                        writer.writeWithHtmlEscape(
-                                resolveSessionMessage(((Tile) valueStore.getValueObject()).getCaption()));
-                        writer.write("</span>");
+                        if (isShowTitleSection) {
+                            writer.write("<span id=\"").write(imageCtrl.getPrefixedId("spn_")).write("\">");
+                            writer.writeWithHtmlEscape(((Tile) valueStore.getValueObject()).getCaption());
+                            writer.write("</span>");
+                        }
                         writer.write("</div>");
                     }
                 }
