@@ -50,11 +50,9 @@ public class FileUploadWriter extends AbstractControlWriter {
         String accept = fileUpload.getAccept();
         if (!StringUtils.isBlank(accept)) {
             FileAttachmentType fileAttachmentType = FileAttachmentType.fromName(accept);
-            if (fileAttachmentType == null) {
-                fileAttachmentType = FileAttachmentType.WILDCARD;
+            if (fileAttachmentType != null && !FileAttachmentType.WILDCARD.equals(fileAttachmentType)) {
+                writer.write(" accept=\"").write(fileAttachmentType.contentType()).write('"');
             }
-
-            writer.write(" accept=\"").write(fileAttachmentType.extensions()).write('"');
         }
 
         if (fileUpload.getUplAttribute(boolean.class, "multiple")) {

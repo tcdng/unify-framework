@@ -57,8 +57,12 @@ public class FileAttachmentInfo {
         return type;
     }
 
+    public String getTypeName() {
+        return type.code();
+    }
+
     public String getAccept() {
-        return this.type.extensions();
+        return type.contentType();
     }
 
     public String getFilename() {

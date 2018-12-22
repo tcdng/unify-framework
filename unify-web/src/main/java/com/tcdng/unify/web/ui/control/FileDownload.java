@@ -35,7 +35,7 @@ import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
  */
 @Component("ui-filedownload")
 @UplAttributes({ @UplAttribute(name = "fileSrc", type = String.class),
-        @UplAttribute(name = "fileProperty", type = String.class), @UplAttribute(name = "handler", type = String.class),
+        @UplAttribute(name = "fileBinding", type = String.class), @UplAttribute(name = "handler", type = String.class),
         @UplAttribute(name = "imageSrc", type = String.class, defaultValue = "$t{images/download.png}"),
         @UplAttribute(name = "caption", type = String.class, defaultValue = "$m{button.download}") })
 public class FileDownload extends Button {
@@ -54,9 +54,9 @@ public class FileDownload extends Button {
 
             downloadFile = new DownloadFile(fileName, ContentTypeConstants.APPLICATION_OCTETSTREAM, data);
         } else {
-            String fileProperty = getUplAttribute(String.class, "fileProperty");
-            if (!StringUtils.isBlank(fileProperty)) {
-                downloadFile = (DownloadFile) getValue(fileProperty);
+            String fileBinding = getUplAttribute(String.class, "fileBinding");
+            if (!StringUtils.isBlank(fileBinding)) {
+                downloadFile = (DownloadFile) getValue(fileBinding);
             } else {
                 String handler = getUplAttribute(String.class, "handler");
                 if (!StringUtils.isBlank(handler)) {
