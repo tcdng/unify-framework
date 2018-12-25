@@ -31,7 +31,8 @@ import com.tcdng.unify.web.annotation.Action;
  */
 @UplAttributes({ @UplAttribute(name = "backImageSrc", type = String.class),
         @UplAttribute(name = "refreshPath", type = String.class),
-        @UplAttribute(name = "refreshEvery", type = int.class), @UplAttribute(name = "legend", type = String.class),
+        @UplAttribute(name = "refreshEvery", type = int.class),
+        @UplAttribute(name = "legend", type = String.class),
         @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "true") })
 public abstract class AbstractPanel extends AbstractContainer implements Panel {
 

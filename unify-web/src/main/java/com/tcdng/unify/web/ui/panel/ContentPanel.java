@@ -24,6 +24,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.ControllerResponseInfo;
 import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.PageControllerPathInfo;
@@ -31,6 +32,7 @@ import com.tcdng.unify.web.response.HintUserResponse;
 import com.tcdng.unify.web.response.LoadContentResponse;
 import com.tcdng.unify.web.ui.AbstractPanel;
 import com.tcdng.unify.web.ui.Page;
+import com.tcdng.unify.web.ui.Widget;
 
 /**
  * Panel used for holding document content. Designed to work with
@@ -42,7 +44,8 @@ import com.tcdng.unify.web.ui.Page;
 @Component("ui-contentpanel")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
         @UplAttribute(name = "pathBinding", type = String.class), @UplAttribute(name = "tabbed", type = boolean.class),
-        @UplAttribute(name = "titlebar", type = boolean.class) })
+        @UplAttribute(name = "titlebar", type = boolean.class),
+        @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanel extends AbstractPanel {
 
     private Map<String, ContentInfo> contentByBeanIdMap;
@@ -88,6 +91,14 @@ public class ContentPanel extends AbstractPanel {
         return getPrefixedId("tabimg_") + index;
     }
 
+    public boolean isSidebar() throws UnifyException {
+        return getUplAttribute(UplElementReferences.class, "sidebar") != null;
+    }
+
+    public Widget getSidebar() throws UnifyException {
+        return getWidgetByLongName(getShallowReferencedLongNames("sidebar").get(0));
+    }
+    
     public int getPageCount() {
         return contentList.size();
     }
