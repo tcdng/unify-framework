@@ -37,4 +37,16 @@ public interface SmsServer extends NotificationServer<SmsServerConfig> {
      */
     void sendSms(String configurationCode, Sms sms) throws UnifyException;
 
+    /**
+     * Sends bulk SMS.
+     * 
+     * @param configurationCode
+     *            the code of the configuration to use
+     * @param bulkSms
+     *            the bulk sms to send
+     * @throws UnifyException
+     *             if configuration with code is unknown. if an error occurs
+     */
+    void sendSms(String configurationCode, BulkSms bulkSms) throws UnifyException;
+
 }

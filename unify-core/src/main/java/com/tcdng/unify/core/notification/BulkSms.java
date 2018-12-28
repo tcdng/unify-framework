@@ -16,32 +16,36 @@
 
 package com.tcdng.unify.core.notification;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.ErrorUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * An SMS object.
+ * A bulk SMS object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Sms {
+public class BulkSms {
 
     private String id;
 
     private String sender;
 
-    private String recipient;
+    private Set<String> recipients;
 
     private String message;
 
     private boolean sent;
 
-    public Sms(String id, String sender, String recipient, String message) {
+    private BulkSms(String id, String sender, Set<String> recipients, String message) {
         this.id = id;
         this.sender = sender;
-        this.recipient = recipient;
+        this.recipients = recipients;
         this.message = message;
     }
 
@@ -53,8 +57,8 @@ public class Sms {
         return sender;
     }
 
-    public String getReciever() {
-        return recipient;
+    public Set<String> getRecipients() {
+        return recipients;
     }
 
     public String getMessage() {
@@ -79,12 +83,12 @@ public class Sms {
 
         private String sender;
 
-        private String recipient;
+        private Set<String> recipients;
 
         private String message;
 
         private Builder() {
-
+            recipients = new HashSet<String>();
         }
 
         public Builder withId(String id) {
@@ -98,7 +102,12 @@ public class Sms {
         }
 
         public Builder toRecipient(String recipient) {
-            this.recipient = recipient;
+            recipients.add(recipient);
+            return this;
+        }
+
+        public Builder toRecipients(Collection<String> recipients) {
+            this.recipients.addAll(recipients);
             return this;
         }
 
@@ -107,12 +116,12 @@ public class Sms {
             return this;
         }
 
-        public Sms build() throws UnifyException {
+        public BulkSms build() throws UnifyException {
             if (StringUtils.isBlank(sender)) {
                 ErrorUtils.throwBuildError("SMS sender is required");
             }
 
-            if (StringUtils.isBlank(recipient)) {
+            if (recipients.isEmpty()) {
                 ErrorUtils.throwBuildError("SMS recipient is required");
             }
 
@@ -120,7 +129,7 @@ public class Sms {
                 ErrorUtils.throwBuildError("SMS message is required");
             }
 
-            return new Sms(id, sender, recipient, message);
+            return new BulkSms(id, sender, recipients, message);
         }
     }
 }
