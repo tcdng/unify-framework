@@ -32,6 +32,7 @@ import com.tcdng.unify.web.annotation.Action;
 @UplAttributes({ @UplAttribute(name = "backImageSrc", type = String.class),
         @UplAttribute(name = "refreshPath", type = String.class),
         @UplAttribute(name = "refreshEvery", type = int.class),
+        @UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultValue = "true"),
         @UplAttribute(name = "legend", type = String.class),
         @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "true") })
 public abstract class AbstractPanel extends AbstractContainer implements Panel {
@@ -101,6 +102,11 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     @Override
     public int getRefreshEvery() throws UnifyException {
         return getUplAttribute(int.class, "refreshEvery");
+    }
+
+    @Override
+    public boolean isRefreshOnUserAct() throws UnifyException {
+        return getUplAttribute(boolean.class, "refreshOnUserAct");
     }
 
     @Override

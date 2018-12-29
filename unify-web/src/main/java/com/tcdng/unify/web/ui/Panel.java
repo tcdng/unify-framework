@@ -81,6 +81,12 @@ public interface Panel extends Container {
     int getRefreshEvery() throws UnifyException;
 
     /**
+     * Returns true if panel refresh is based on user activity on client device.
+     * @throws UnifyException if an error occurs
+     */
+    boolean isRefreshOnUserAct() throws UnifyException;
+    
+    /**
      * Returns the panel legend.
      * 
      * @throws UnifyException

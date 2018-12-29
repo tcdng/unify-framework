@@ -177,6 +177,11 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
     }
 
     @Override
+    public boolean isRefreshOnUserAct() throws UnifyException {
+        return false;
+    }
+
+    @Override
     public String getLegend() throws UnifyException {
         return null;
     }

@@ -63,6 +63,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
                     writer.writeContextURL(path);
                 }
                 writer.write('"');
+                writer.write(",\"pOnUserAct\":").write(panel.isRefreshOnUserAct());
                 writer.write(",\"pPeriodMilliSec\":").write(refreshEvery);
                 writer.write("});");
             }
