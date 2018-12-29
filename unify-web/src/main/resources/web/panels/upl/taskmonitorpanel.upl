@@ -1,7 +1,7 @@
 //Task monitor panel
 !ui-taskmonitorpanel layout:$d{!ui-vertical style:$s{width:100%;}}
     components:$c{titleBar taskMonitorContentPanel taskMonitorActionPanel}
-    refreshEvery:500
+    refreshEvery:500 refreshOnUserAct:false
     
 !ui-titlebar:titleBar captionBinding:caption draggable:true
 
