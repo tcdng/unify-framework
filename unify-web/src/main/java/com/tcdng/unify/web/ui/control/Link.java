@@ -17,7 +17,7 @@ package com.tcdng.unify.web.ui.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.web.ui.AbstractControl;
+import com.tcdng.unify.web.ui.AbstractTargetControl;
 
 /**
  * A link control.
@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.AbstractControl;
  * @since 1.0
  */
 @Component("ui-link")
-public class Link extends AbstractControl {
+public class Link extends AbstractTargetControl {
 
     @Override
     public boolean isContainerDisabled() throws UnifyException {
