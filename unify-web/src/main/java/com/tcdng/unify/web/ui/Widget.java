@@ -442,6 +442,13 @@ public interface Widget extends UplComponent {
     boolean isContainerVisible() throws UnifyException;
 
     /**
+     * Tests if the components behavior is always written irrespective of visibility.
+     * 
+     * @return true if component is visible and user role has component privilege
+     */
+    boolean isBehaviorAlways() throws UnifyException;
+
+    /**
      * Tests if component is validatable.
      * 
      * @throws UnifyException

@@ -46,6 +46,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
         @UplAttribute(name = "privilege", type = String.class),
         @UplAttribute(name = "fixedConforming", type = boolean.class, defaultValue = "false"),
         @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "behaviorAlways", type = boolean.class, defaultValue = "false"),
         @UplAttribute(name = "eventHandler", type = EventHandler[].class) })
 public abstract class AbstractWidget extends AbstractUplComponent implements Widget {
 
@@ -305,6 +306,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
             return container.isContainerVisible() && isVisible();
         }
         return isVisible();
+    }
+
+    @Override
+    public boolean isBehaviorAlways() throws UnifyException {
+        return getUplAttribute(boolean.class, "behaviorAlways");
     }
 
     @Override

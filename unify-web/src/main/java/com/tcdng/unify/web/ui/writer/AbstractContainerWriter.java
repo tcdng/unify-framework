@@ -70,7 +70,7 @@ public abstract class AbstractContainerWriter extends AbstractWidgetWriter imple
     protected void writeContainedWidgetsBehavior(ResponseWriter writer, Container container) throws UnifyException {
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
-            if (widget.isVisible() || widget.isHidden()) {
+            if (widget.isVisible() || widget.isHidden() || widget.isBehaviorAlways()) {
                 writer.writeBehaviour(widget);
             }
         }
