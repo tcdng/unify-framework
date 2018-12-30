@@ -19,9 +19,9 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.ResponseWriter;
-import com.tcdng.unify.web.ui.Widget;
+import com.tcdng.unify.web.ui.TargetControl;
 import com.tcdng.unify.web.ui.control.Link;
-import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
+import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 
 /**
  * Link writer.
@@ -31,11 +31,11 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
  */
 @Writes(Link.class)
 @Component("link-writer")
-public class LinkWriter extends AbstractControlWriter {
+public class LinkWriter extends AbstractTargetControlWriter {
 
     @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        Link link = (Link) widget;
+    protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+        Link link = (Link) targetControl;
         writer.write("<a");
         writeTagAttributes(writer, link);
         writer.write(">");
