@@ -33,9 +33,11 @@ public class UserToken {
 
     private Object userId;
 
-    private Object branchId;
+    private Object branchCode;
 
     private String ipAddress;
+
+    private boolean globalAccess;
 
     private boolean reservedUser;
 
@@ -43,13 +45,14 @@ public class UserToken {
 
     private boolean remote;
 
-    public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchId,
-            boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+    public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchCode,
+            boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
         this.userLoginId = userLoginId;
         this.userName = userName;
         this.userId = userId;
-        this.branchId = branchId;
+        this.branchCode = branchCode;
         this.ipAddress = ipAddress;
+        this.globalAccess = globalAccess;
         this.reservedUser = reservedUser;
         this.allowMultipleLogin = allowMultipleLogin;
         this.remote = remote;
@@ -83,12 +86,16 @@ public class UserToken {
         return userId;
     }
 
-    public Object getBranchId() {
-        return branchId;
+    public Object getBranchCode() {
+        return branchCode;
     }
 
     public String getIpAddress() {
         return ipAddress;
+    }
+
+    public boolean isGlobalAccess() {
+        return globalAccess;
     }
 
     public boolean isReservedUser() {

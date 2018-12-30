@@ -52,4 +52,8 @@ public interface RequestParameterConstants {
     String REMOTE_USERNAME = "req_unm";
 
     String REMOTE_ROLECD = "req_rcd";
+
+    String REMOTE_BRANCH_CODE = "req_bcd";
+
+    String REMOTE_GLOBAL_ACCESS = "req_gac";
 }

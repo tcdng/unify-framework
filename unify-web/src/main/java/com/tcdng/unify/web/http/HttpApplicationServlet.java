@@ -207,11 +207,13 @@ public class HttpApplicationServlet extends HttpServlet {
                     userSession = createHttpUserSession(request);
                     userSessionManager.addUserSession(userSession);
 
-                    String userLoginId = (String) request.getParameter(RequestParameterConstants.REMOTE_USERLOGINID);
-                    String userName = (String) request.getParameter(RequestParameterConstants.REMOTE_USERNAME);
-                    String roleCode = (String) request.getParameter(RequestParameterConstants.REMOTE_ROLECD);
+                    String userLoginId = request.getParameter(RequestParameterConstants.REMOTE_USERLOGINID);
+                    String userName = request.getParameter(RequestParameterConstants.REMOTE_USERNAME);
+                    String roleCode = request.getParameter(RequestParameterConstants.REMOTE_ROLECD);
+                    String branchCode = request.getParameter(RequestParameterConstants.REMOTE_BRANCH_CODE);
+                    boolean globalAccess = Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
                     UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(), null,
-                            null, true, true, true);
+                            branchCode, globalAccess, true, true, true);
                     userToken.setRoleCode(roleCode);
                     userSession.getSessionContext().setUserToken(userToken);
                 }

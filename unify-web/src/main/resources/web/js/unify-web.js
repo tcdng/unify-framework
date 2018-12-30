@@ -2863,11 +2863,23 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			if (evp.uRole) {
 				pb.append("req_rcd", evp.uRole);
 			}
+			if (evp.uBranch) {
+				pb.append("req_bcd", evp.uBranch);
+			}
+			if (evp.uGlobal) {
+				pb.append("req_gac", evp.uGlobal);
+			}
 		} else {
 			pb += ("&req_uid=" + _enc(evp.uLoginId));
 			pb += ("&req_unm=" + _enc(evp.uUserName));
 			if (evp.uRole) {
 				param.value += ("&req_rcd=" + _enc(evp.uRole));
+			}
+			if (evp.uBranch) {
+				param.value += ("&req_bcd=" + _enc(evp.uBranch));
+			}
+			if (evp.uGlobal) {
+				param.value += ("&req_gac=" + _enc(evp.uGlobal));
 			}
 		}
 	}
