@@ -786,6 +786,8 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 	evp.uLoginId = rgp.pRemoteLoginId;
 	evp.uUserName = rgp.pRemoteUserName;
 	evp.uRole = rgp.pRemoteRoleCode;
+	evp.uBranch = rgp.pRemoteBranchCode;
+	evp.uGlobal = rgp.pRemoteGlobalFlag;
 	ux.postCommit(evp);
 }
 

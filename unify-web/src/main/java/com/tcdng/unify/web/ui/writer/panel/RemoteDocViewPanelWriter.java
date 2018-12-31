@@ -50,7 +50,12 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
         if (userToken.getRoleCode() != null) {
             writer.write(",\"pRemoteRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
         }
-
+        
+        if (userToken.getBranchCode() != null) {
+            writer.write(",\"pRemoteBranchCode\":\"").write(userToken.getBranchCode()).write("\"");
+        }
+        
+        writer.write(",\"pRemoteGlobalFlag\":").write(userToken.isGlobalAccess());
         writer.write("});");
     }
 
