@@ -134,17 +134,21 @@ public class ApplicationContext extends Context {
     }
 
     /**
-     * Returns the application locale.
+     * Gets the application locale.
+     * 
+     * @return the application locale
      */
     public Locale getApplicationLocale() {
         return applicationLocale;
     }
 
     /**
-     * Returns application line separator.
+     * Gets the application line separator.
+     * 
+     * @return the application line separator
      */
     public String getLineSeparator() {
-        return this.lineSeparator;
+        return lineSeparator;
     }
 
     public UnifyContainer getContainer() {

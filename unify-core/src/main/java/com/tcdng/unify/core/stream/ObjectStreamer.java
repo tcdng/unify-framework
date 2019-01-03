@@ -129,8 +129,6 @@ public interface ObjectStreamer extends UnifyComponent {
      * 
      * @param object
      *            the object to write
-     * @param writer
-     *            the writer to write to
      * @throws UnifyException
      *             if an error occurs
      * @return String the string result

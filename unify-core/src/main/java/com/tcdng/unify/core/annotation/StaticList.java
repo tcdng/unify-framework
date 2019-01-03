@@ -35,7 +35,7 @@ public @interface StaticList {
 
     /**
      * The datasource that static reference belongs to. Defaults to
-     * {@link #ApplicationComponents.APPLICATION_DATASOURCE}
+     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
      */
     String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 

@@ -38,7 +38,6 @@ public interface JSONObjectStreamer extends ObjectStreamer {
      *            input stream to read from
      * @param charset
      *            optional character set
-     * @return read object
      * @throws UnifyException
      *             if an error occurs
      */
@@ -51,7 +50,6 @@ public interface JSONObjectStreamer extends ObjectStreamer {
      *            object to read to
      * @param reader
      *            reader to read from
-     * @return read object
      * @throws UnifyException
      *             if an error occurs
      */
@@ -64,7 +62,6 @@ public interface JSONObjectStreamer extends ObjectStreamer {
      *            object to read to
      * @param string
      *            string to read
-     * @return read object
      * @throws UnifyException
      *             if an error occurs
      */

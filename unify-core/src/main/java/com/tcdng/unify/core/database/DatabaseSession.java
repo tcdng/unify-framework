@@ -432,8 +432,9 @@ public interface DatabaseSession {
      * 
      * @param aggregateType
      *            the aggregate type
-     * @param list
-     *            aggregate result
+     * @param query
+     *            the query to use
+     * @return list of aggregate objects
      * @throws UnifyException
      *             if selected fields are not numeric. If no field is selected. If
      *             an error occurs

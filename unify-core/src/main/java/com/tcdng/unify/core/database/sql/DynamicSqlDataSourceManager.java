@@ -93,7 +93,7 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * 
      * @param dynamicSqlDataSourceConfig
      *            the datasource configuration.
-     * @param nativeSql
+     * @param updateSql
      *            the native update SQL
      * @return the update count
      * @throws UnifyException

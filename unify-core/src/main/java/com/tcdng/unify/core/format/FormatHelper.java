@@ -33,34 +33,37 @@ public interface FormatHelper extends UnifyComponent {
     String yyyyMMdd_HHmmss = "yyyyMMdd_HHmmss";
 
     /**
-     * Returns the number symbols for specified number type and locale.
+     * Gets the number symbols for specified number type and locale.
      * 
      * @param numberType
      *            the number type
      * @param locale
      *            the locale
+     * @return the number symbols
      * @throws UnifyException
      *             if an error occurs
      */
     NumberSymbols getNumberSymbols(NumberType numberType, Locale locale) throws UnifyException;
 
     /**
-     * Returns the date-time format object for supplied sub pattern and locale.
+     * Gets the date-time format object for supplied sub pattern and locale.
      * 
      * @param subPattern
      *            the date time sub pattern
      * @param locale
      *            the locale
+     * @return the date-time format object
      * @throws UnifyException
      *             if an error occurs
      */
     DateTimeFormat getSubPatternDateTimeFormat(String subPattern, Locale locale) throws UnifyException;
 
     /**
-     * Returns true if the supplied string is a supported date-time sub pattern.
+     * Checks if the supplied string is a supported date-time sub pattern.
      * 
      * @param subPattern
      *            the string to test
+     * @return a true value if supported otherwise false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -68,7 +71,7 @@ public interface FormatHelper extends UnifyComponent {
 
     /**
      * Returns the long year version of a date pattern. For instance an input
-     * pattern of <em>dd-MM-yy<em> would return <em>dd-MM-yyyy<em>.
+     * pattern of <em>dd-MM-yy</em> would return <em>dd-MM-yyyy</em>.
      * 
      * @param pattern
      *            the date pattern, which should contain at least a year element
@@ -79,7 +82,7 @@ public interface FormatHelper extends UnifyComponent {
 
     /**
      * Splits a date pattern into its sub-elements. For instance an input pattern of
-     * <em>dd-MM-yy<em> would be split to five sub-patterns; "dd" a date
+     * <em>dd-MM-yy</em> would be split to five sub-patterns; "dd" a date
      * sub-pattern, "-" a filler pattern, "MM" a date sub-pattern, "-" another
      * filler pattern and finally "yy" a date sub-pattern.
      * 

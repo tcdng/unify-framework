@@ -140,10 +140,8 @@ public final class UnifyConfigUtils {
     /**
      * Reads a component's configurable properties (settings).
      * 
-     * @param uccb
-     *            the container configuration
-     * @param componentName
-     *            the component name
+     * @param type
+     *            the component type
      * @return the component settings
      * @throws UnifyException
      *             if an error occurs

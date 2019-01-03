@@ -126,8 +126,8 @@ public final class SqlUtils {
      *            the name to convert
      * @param applySpacing
      *            indicates if spacing with undescore be applied at name
-     *            lowercase-uppercase boundaries. For example age -> AGE sQLName -
-     *            SQLNAME sortCode -> SORT_CODE., moduleActivityId ->
+     *            lowercase-uppercase boundaries. For example age -&gt; AGE sQLName -
+     *            SQLNAME sortCode -&gt; SORT_CODE., moduleActivityId -&gt;
      *            MODULE_ACTIVITY_ID
      * @return String the converted name
      */

@@ -35,7 +35,7 @@ public interface UserInterfaceController extends Controller {
 
     /**
      * Resets the controller. This method is called by the controller manager before
-     * a call to the {@link #populate(String, String, String, Object)} method.
+     * a call to the {@link #populate(DataTransferBlock)} method.
      */
     void reset();
 

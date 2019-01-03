@@ -293,8 +293,8 @@ public interface Widget extends UplComponent {
      * Returns the type converted collection value of this component value bean
      * attribute.
      * 
-     * @param attribute
-     *            the attribute to fetch
+     * @param clazz the collection type
+     * @param dataClass the collection data type
      * @throws UnifyException
      *             if an error occurs.
      */
@@ -343,7 +343,7 @@ public interface Widget extends UplComponent {
 
     /**
      * Sets the conforming flag. A conforming component's
-     * {@link #setValueBean(Object)} is always invoked during a cascade
+     * {@link #setValueStore(ValueStore)} is always invoked during a cascade
      * 
      * @param conforming
      *            the flag to set

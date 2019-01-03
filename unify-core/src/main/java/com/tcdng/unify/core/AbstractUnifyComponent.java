@@ -76,6 +76,13 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
         return null;
     }
 
+    /**
+     * Gets the component context.
+     *
+     * @return the component context
+     * @throws UnifyException
+     *             if an error occurs
+     */
     public UnifyComponentContext getUnifyComponentContext() throws UnifyException {
         return unifyComponentContext;
     }
@@ -107,8 +114,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns the context's container information.
+     * Returns the component context container information object.
      * 
+     * @return the container information object
      * @throws UnifyException
      *             if an error occurs
      */
@@ -123,6 +131,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      *            the setting value type
      * @param name
      *            the setting name
+     * @return the setting value
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected <T> T getContainerSetting(Class<T> clazz, String name) throws UnifyException {
         return getContainerSetting(clazz, name, null);
@@ -137,6 +148,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      *            the setting name
      * @param defaultValue
      *            an optional default value
+     * @return the resolved setting value
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected <T> T getContainerSetting(Class<T> clazz, String name, T defaultValue) throws UnifyException {
         Object value = unifyComponentContext.getContainerSetting(name);
@@ -148,6 +162,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 
     /**
      * Returns the container static settings.
+     * 
+     * @return list of static settings
      */
     protected List<UnifyStaticSettings> getStaticSettings() {
         return unifyComponentContext.getStaticSettings();
@@ -295,10 +311,11 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns true if component with name exists in this component's context.
+     * Checks if component with name exists in this component's context.
      * 
      * @param name
      *            the component name
+     * @return the true value if component with name exists otherwise false
      * @throws UnifyException
      *             If component an error occurs.
      */
@@ -348,6 +365,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @param componentType
      *            the component type
      * @return a list of component names.
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected List<String> getComponentNames(Class<? extends UnifyComponent> componentType) throws UnifyException {
         return unifyComponentContext.getComponentNames(componentType);
@@ -360,6 +379,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @param componentType
      *            the component type
      * @return a list of component configurations.
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected List<UnifyComponentConfig> getComponentConfigs(Class<? extends UnifyComponent> componentType)
             throws UnifyException {
@@ -432,34 +453,56 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns true if component context is in cluster mode.
+     * Checks if component context is in cluster mode.
+     * 
+     * @return a true if component context is in cluster mode otherwise false
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected boolean isClusterMode() throws UnifyException {
         return unifyComponentContext.isClusterMode();
     }
 
     /**
-     * Returns true if component context is in production mode.
+     * Checks if component context is in production mode.
+     * 
+     * @return a true if component context is in production mode otherwise false
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected boolean isProductionMode() throws UnifyException {
         return unifyComponentContext.isProductionMode();
     }
 
     /**
-     * Returns true if component context is in deployment mode.
+     * Checks if component context is in deployment mode.
+     * 
+     * @return a true if component context is in deploymeny mode otherwise false
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected boolean isDeploymentMode() throws UnifyException {
         return unifyComponentContext.isDeploymentMode();
     }
 
     /**
-     * Returns the current node ID. A null value is returned if container is not in
-     * cluster mode.
+     * Gets the component container node ID.
+     * 
+     * @return the node ID. A null value is returned if container is not in cluster
+     *         mode.
+     * @throws UnifyException if an error occurs
      */
     protected String getNodeId() throws UnifyException {
         return unifyComponentContext.getNodeId();
     }
 
+    /**
+     * Gets the component context line separator.
+     * 
+     * @return the line separator string
+     * @throws UnifyException
+     *             if an error occurs
+     */
     protected String getLineSeparator() throws UnifyException {
         return unifyComponentContext.getLineSeparator();
     }
@@ -488,8 +531,10 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     /**
      * Converts value to a specific collection type using an optional formatter.
      * 
-     * @param targetClazz
-     *            the target type to convert to
+     * @param collectionClazz
+     *            the target collection type to convert to
+     * @param dataClass
+     *            the collation data type
      * @param value
      *            the value to convert
      * @param formatterUpl
@@ -507,10 +552,32 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
         }
     }
 
+    /**
+     * Gets a formatter component instance for supplied UPL descriptor and using
+     * application locale.
+     * 
+     * @param formatterUpl
+     *            the formatter UPL descriptor
+     * @return the formatter component instance
+     * @throws UnifyException
+     *             if descriptor refers to unknown formatter type. If an error
+     *             occurs
+     */
     protected Formatter<?> getApplicationLocaleFormatter(String formatterUpl) throws UnifyException {
         return (Formatter<?>) getUplComponent(getApplicationLocale(), formatterUpl, true);
     }
 
+    /**
+     * Gets a formatter component instance for supplied UPL descriptor and using
+     * session locale.
+     * 
+     * @param formatterUpl
+     *            the formatter UPL descriptor
+     * @return the formatter component instance
+     * @throws UnifyException
+     *             if descriptor refers to unknown formatter type. If an error
+     *             occurs
+     */
     protected Formatter<?> getSessionLocaleFormatter(String formatterUpl) throws UnifyException {
         return (Formatter<?>) getUplComponent(getSessionLocale(), formatterUpl, true);
     }
@@ -578,10 +645,12 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns true if application has an attribute otherwise false.
+     * Checks if application context has an attribute.
      * 
      * @param name
      *            the attribute name
+     * @return a true value if attribute exists in application context otherwise
+     *         false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -649,10 +718,11 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns true if session has an attribute otherwise false.
+     * Checks if session context has an attribute.
      * 
      * @param name
      *            the attribute name
+     * @return a true value if attribute exists in session context otherwise false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -713,12 +783,24 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Return true if role has privilege.
+     * Checks if application context has an attribute.
+     * 
+     * @param name
+     *            the attribute name
+     * @return a true value if attribute exists in application context otherwise
+     *         false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+
+    /**
+     * Checks if current session role has privilege.
      * 
      * @param privilegeCategoryCode
      *            the privilege category code
      * @param privilegeCode
      *            the privilege code
+     * @return a true if current session role has privilege otherwise false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -761,8 +843,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns true if user in current session is logged in.
+     * Checks if user in current session is logged in.
      * 
+     * @return a true if current session user is logged in otherwise false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -771,8 +854,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns the session user token.
+     * Gets current session user token.
      * 
+     * @return the current session user token
      * @throws UnifyException
      *             if an error occurs
      */
@@ -821,10 +905,12 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns true if request has an attribute otherwise false.
+     * Checks if request context has an attribute.
      * 
      * @param name
      *            the attribute name
+     * @return a true value if attribute exists in request context otherwise
+     *         false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -883,10 +969,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     /**
      * Logs a exception at ERROR level.
      * 
-     * @param message
-     *            the message to log
-     * @param params
-     *            message parameters
+     * @param exception
+     *            the exception to log
      */
     protected void logError(Exception exception) {
         log(LoggingLevel.ERROR, exception);
@@ -907,10 +991,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     /**
      * Logs a exception at SEVERE level.
      * 
-     * @param message
-     *            the message to log
-     * @param params
-     *            message parameters
+     * @param exception
+     *            the exception to log
      */
     protected void logSevere(Exception exception) {
         log(LoggingLevel.SEVERE, exception);
@@ -1055,6 +1137,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * is then returned as the result. Otherwise, the exception
      * {@link Exception#getMessage()} is returned.
      * 
+     * @param localeType the locals type
      * @param exception
      *            the exception to get message from. Can not be null.
      * @return the exception message
@@ -1091,12 +1174,13 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns a list.
+     * Gets a list based on supplied parameters.
      * 
-     * @param localeType
-     * @param listName
+     * @param localeType the locale type
+     * @param listName the list name
      * @param params
      *            the list parameters
+     * @return a list object containing listable items
      * @throws UnifyException
      *             if an error occurs
      */
@@ -1106,7 +1190,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns a list map using application locale.
+     * Gets a list map using application locale.
      * 
      * @param localeType
      *            the locale type
@@ -1114,6 +1198,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      *            the list name
      * @param params
      *            the list parameters
+     * @return a list map
      * @throws UnifyException
      *             if an error occurs
      */
@@ -1123,8 +1208,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns application locale
+     * Gets the application locale
      * 
+     * @return the application locale
      * @throws UnifyException
      *             if an error occurs
      */
@@ -1133,17 +1219,20 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns the application banner ASCII text
+     * Gets the application banner ASCII text
      * 
-     * @return if an error occurs
+     * @return the application banner text as a list of strings
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected List<String> getApplicationBanner() throws UnifyException {
         return unifyComponentContext.getApplicationBanner();
     }
 
     /**
-     * Returns session locale
+     * Gets the session locale
      * 
+     * @return the session locale
      * @throws UnifyException
      *             if an error occurs
      */
@@ -1164,7 +1253,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 
     /**
      * Tries to grab a cluster synchronization lock. Lock must be released after use
-     * with {@link #releaseClusterSynchronizationLock(String)}
+     * with {@link #releaseClusterLock(String)}
      * 
      * @param lockName
      *            the lock name

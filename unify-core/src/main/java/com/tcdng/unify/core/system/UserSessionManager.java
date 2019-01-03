@@ -87,9 +87,9 @@ public interface UserSessionManager extends BusinessService {
     void addUserSession(UserSession userSession) throws UnifyException;
 
     /**
-     * Removes a user session..
+     * Removes a user session.
      * 
-     * @param sessionContext
+     * @param userSession
      *            the user session object
      * @throws UnifyException
      *             if an error occurs

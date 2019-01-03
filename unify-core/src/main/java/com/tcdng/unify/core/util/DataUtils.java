@@ -1058,7 +1058,6 @@ public final class DataUtils {
      *            the JSON input stream
      * @param charset
      *            optional character set
-     * @return instance of object
      * @throws UnifyException
      *             if an error occurs
      */
@@ -1078,7 +1077,6 @@ public final class DataUtils {
      *            bean to read to
      * @param reader
      *            the JSON reader
-     * @return instance of object
      * @throws UnifyException
      *             if an error occurs
      */

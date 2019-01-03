@@ -44,9 +44,6 @@ public interface TaskMonitor {
 
     /**
      * Returns the current task status.
-     * 
-     * @param taskIndex
-     *            the task index
      */
     TaskStatus getCurrentTaskStatus();
 

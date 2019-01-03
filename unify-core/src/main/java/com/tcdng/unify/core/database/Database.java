@@ -137,9 +137,9 @@ public interface Database extends UnifyComponent {
      * 
      * <pre>
      *     <code>
-     *     {@code Query<Author> criteria = ...}
+     *     {@code Query<Author> criteria = ...
      *     Database pm = ...
-     *     Map<String, Author> resultMap = pm.findRecord(String.class, "name", criteria);
+     *     Map<String, Author> resultMap = pm.findRecord(String.class, "name", criteria);}
      *     </code>
      * </pre>
      * 
@@ -148,7 +148,7 @@ public interface Database extends UnifyComponent {
      * @param keyName
      *            the key field
      * @param query
-     *            the query object with the {@link Query#key(String)} set.
+     *            the query object.
      * @return the resulting map. List-only properties (if any) of persistent data
      *         are not populated.
      * @throws UnifyException
@@ -228,7 +228,7 @@ public interface Database extends UnifyComponent {
 
     /**
      * Lists all records with fields that match criteria returning resulting record
-     * in a map. Similar to {@link #findAll(Class, Query)} but with view-only
+     * in a map. Similar to {@link #findAll(Query)} but with view-only
      * properties of returned record also populated.
      * 
      * @param keyClass
@@ -237,7 +237,7 @@ public interface Database extends UnifyComponent {
      * @param keyName
      *            the key field
      * @param query
-     *            the query object with the {@link Query#key(String)} set.
+     *            the query object.
      * @throws UnifyException
      *             if an error occurs
      */
@@ -275,18 +275,18 @@ public interface Database extends UnifyComponent {
      *     </code>
      * </pre>
      * 
-     * and we want a list of names for all fruits with price > 10.0. We create a
+     * and we want a list of names for all fruits with price &gt; 10.0. We create a
      * criteria object and set "price" greater that 10.0 and select the "name"
      * field. Then we invoke this method with the criteria and the fieldClass
      * parameter set to String.class (the type of <em>name</em> property)
      * 
      * <pre>
      *     <code>
-     *     {@code Query<Fruit> criteria = ...}
+     *     {@code Query&lt;Fruit&gt; criteria = ...}
      *     criteria.greater("price", 10.0);
      *     criteria.select("name");
      *     Database pm = ...
-     *     List<String> names = pm.listFieldValues(String.class, criteria);
+     *     List&lt;String&gt; names = pm.listFieldValues(String.class, criteria);
      *     </code>
      * </pre>
      * 
