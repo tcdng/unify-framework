@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.tcdng.unify</groupId>
 	<artifactId>unify</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Unify Framework</name>
@@ -35,6 +35,25 @@
 		<module>unify-web</module>
 		<module>unify-jetty</module>
 	</modules>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+    <scm>
+        <connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>
+        <developerConnection>scm:git:ssh://github.com:tcdng/unify-framework.git</developerConnection>
+        <url>http://github.com/tcdng/unify-framework/tree/master</url>
+    </scm>
 
 	<build>
 		<pluginManagement>
