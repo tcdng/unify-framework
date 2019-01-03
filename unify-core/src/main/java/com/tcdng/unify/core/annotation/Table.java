@@ -42,7 +42,7 @@ public @interface Table {
 
     /**
      * The datasource that table belongs to. Defaults to
-     * {@link #ApplicationComponents.APPLICATION_DATASOURCE}
+     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
      */
     String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 

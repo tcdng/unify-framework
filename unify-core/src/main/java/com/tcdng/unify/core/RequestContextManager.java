@@ -51,7 +51,7 @@ public interface RequestContextManager extends UnifyComponent {
      * @param requestContext
      *            the request context object to use.
      * @throws UnifyException
-     *             if an erro occurs
+     *             if an error occurs
      */
     void loadRequestContext(RequestContext requestContext) throws UnifyException;
 
@@ -62,6 +62,9 @@ public interface RequestContextManager extends UnifyComponent {
 
     /**
      * Resets application context.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
      */
     void reset() throws UnifyException;
 }

@@ -1565,8 +1565,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
      * Translate name to table name equivalent. Used for automatic generation of
      * table and column names. This implementation converts all lower-case
      * characters in name to upper-case and inserts an underscore at a mid lower to
-     * upper-case character boundary. For example age -> AGE sQLName - SQLNAME
-     * sortCode -> SORT_CODE. Override to change behavior.
+     * upper-case character boundary. For example age - AGE sQLName - SQLNAME
+     * sortCode - SORT_CODE. Override to change behavior.
      * 
      * @param name
      *            the name to convert
@@ -1625,7 +1625,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
      *            the supplied record criteria object
      * @return returns the recordCrityeria limit if set otherwise returns
      *         container's global criteria limit if
-     *         {@link Query#isIgnoreGlobalLimit()} is not set, otherwise returns
+     *         {@link Query#isApplyAppQueryLimit()} is not set, otherwise returns
      *         zero.
      * @throws UnifyException
      *             if an error occurs

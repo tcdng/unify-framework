@@ -79,7 +79,7 @@ public interface StandalonePanel extends Panel {
     /**
      * Gets widgets by long names.
      * 
-     * @param longName
+     * @param longNames
      *            - the component long names
      * @return array of components
      * @throws UnifyException

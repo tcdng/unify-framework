@@ -103,8 +103,6 @@ public interface ResponseWriter extends UnifyComponent {
     /**
      * Writes component behavior.
      * 
-     * @param sb
-     *            the buffer to write to
      * @param component
      *            the user interface component to write
      * @throws UnifyException
@@ -115,8 +113,6 @@ public interface ResponseWriter extends UnifyComponent {
     /**
      * Writes behavior for a specified behavior.
      * 
-     * @param writer
-     *            the response writer
      * @param behavior
      *            the behavior to write
      * @param id

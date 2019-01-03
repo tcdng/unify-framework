@@ -24,17 +24,17 @@ import java.util.List;
  * refer to one another like
  * 
  * <pre>
- * A -> B
- * B -> C
- * C -> D
- * D -> B
+ * A -&gt; B
+ * B -&gt; C
+ * C -&gt; D
+ * D -&gt; B
  * </pre>
  * 
  * We can detect a cycle by
  * 
  * <pre>
  * <code>{@code
- * CycleDetector<Object> cd = new CycleDetector<Object>();}
+ * CycleDetector&lt;Object&gt; cd = new CycleDetector&lt;Object&gt;();
  * cd.addReference(A, B)
  *   .addReference(B, C)
  *   .addReference(C, D)

@@ -65,8 +65,6 @@ public interface UplElementAttributes {
 
     /**
      * Returns the UPL type for this attibute set.
-     * 
-     * @see {@link UplTypeConstants}
      */
     int getUplType();
 

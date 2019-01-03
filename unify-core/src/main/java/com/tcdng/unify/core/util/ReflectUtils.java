@@ -557,7 +557,7 @@ public final class ReflectUtils {
     /**
      * Returns a list of all the bean compliant field names of a supplied type.
      * 
-     * @param type
+     * @param beanClass
      *            the type
      * @throws UnifyException
      *             if an error occurs
@@ -582,7 +582,7 @@ public final class ReflectUtils {
      * Returns a list of all the bean compliant nested field names of a supplied
      * type.
      * 
-     * @param type
+     * @param beanClass
      *            the type
      * @throws UnifyException
      *             if an error occurs

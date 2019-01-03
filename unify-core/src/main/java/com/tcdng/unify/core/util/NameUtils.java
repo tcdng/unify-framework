@@ -66,9 +66,9 @@ public final class NameUtils {
      * instance
      * 
      * <pre>
-     *     age -> Age
-     *     authorId -> Author Id
-     *     numberOfDays -> Number Of Days
+     *     age -&gt; Age
+     *     authorId -&gt; Author Id
+     *     numberOfDays -&gt; Number Of Days
      * </pre>
      * 
      * @param name

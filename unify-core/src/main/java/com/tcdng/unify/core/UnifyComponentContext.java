@@ -74,7 +74,11 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns the context's container information.
+     * Gets the context's container information.
+     * 
+     * @return the container information object
+     * @throws UnifyException
+     *             if an error occurs
      */
     public UnifyContainerInfo getContainerInfo() throws UnifyException {
         return applicationContext.getContainer().getInfo();
@@ -85,7 +89,7 @@ public class UnifyComponentContext {
      * 
      * @param name
      *            the component name
-     * @return UnifyComponent the component
+     * @return the component with name
      * @throws UnifyException
      *             If component is unknown. If an error occurs
      */
@@ -150,6 +154,8 @@ public class UnifyComponentContext {
      * @param attributesKey
      *            the UPL attributes ID
      * @return a UPL component
+     * @throws UnifyException
+     *             if an error occurs
      */
     public UplComponent getUplComponent(Locale locale, String attributesKey) throws UnifyException {
         return applicationContext.getContainer().getUplComponent(locale, attributesKey);
@@ -160,7 +166,9 @@ public class UnifyComponentContext {
      * 
      * @param name
      *            the component name
-     * @return UnifyComponentConfig the component configuration otherwise null
+     * @return the component configuration otherwise null
+     * @throws UnifyException
+     *             if an error occurs
      */
     public UnifyComponentConfig getComponentConfig(String name) throws UnifyException {
         return applicationContext.getContainer().getComponentConfig(name);
@@ -172,6 +180,8 @@ public class UnifyComponentContext {
      * @param type
      *            the component type
      * @return the list of names
+     * @throws UnifyException
+     *             if an error occurs
      */
     public List<String> getComponentNames(Class<? extends UnifyComponent> type) throws UnifyException {
         return applicationContext.getContainer().getComponentNames(type);
@@ -184,6 +194,8 @@ public class UnifyComponentContext {
      * @param type
      *            the component type
      * @return the component types
+     * @throws UnifyException
+     *             if an error occurs
      */
     public List<UnifyComponentConfig> getComponentConfigs(Class<? extends UnifyComponent> type) throws UnifyException {
         return applicationContext.getContainer().getComponentConfigs(type);
@@ -209,8 +221,9 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns current thread request context object.
+     * Gets current thread request context object.
      * 
+     * @return the request context
      * @throws UnifyException
      *             if an error occurs
      */
@@ -219,8 +232,9 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns session context object.
+     * Gets session context object.
      * 
+     * @return the session context
      * @throws UnifyException
      *             if an error occurs
      */
@@ -281,10 +295,12 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns true if application has an attribute otherwise false.
+     * Checks if application context has an attribute.
      * 
      * @param name
      *            the attribute name
+     * @return a true value if attribute exists in application context otherwise
+     *         false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -293,8 +309,9 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns application locale
+     * Gets application locale
      * 
+     * @return the application local
      * @throws UnifyException
      *             if an error occurs
      */
@@ -303,9 +320,11 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns the application banner ASCII text
+     * Gets the application banner ASCII text
      * 
-     * @return if an error occurs
+     * @return the application banner text as a list of strings
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected List<String> getApplicationBanner() throws UnifyException {
         return applicationContext.getApplicationBanner();
@@ -345,12 +364,13 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Return true if role has privilege.
+     * Checks if current session role has privilege.
      * 
      * @param privilegeCategoryCode
      *            the privilege category code
      * @param privilegeCode
      *            the privilege code
+     * @return a true value is current session role has privilege otherwise false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -367,7 +387,8 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Tests if context has role attributes loaded for the supplied role code.
+     * Checks if application context has role attributes loaded for the supplied
+     * role code.
      * 
      * @param roleCode
      *            the role code
@@ -381,6 +402,7 @@ public class UnifyComponentContext {
      * Returns workflow step codes that are associated with role of current user.
      * 
      * @return a set of workflow step codes
+     * @throws UnifyException if an error occurs
      */
     public Set<String> getCurrentUserRoleStepCodes() throws UnifyException {
         UserToken userToken = getSessionContext().getUserToken();

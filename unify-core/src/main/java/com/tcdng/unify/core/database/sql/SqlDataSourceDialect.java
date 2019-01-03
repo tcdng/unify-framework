@@ -89,7 +89,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param pk
      *            the primary key
      * @return the find by primary key statement. Should be restored after use by
-     *         invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -105,7 +105,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param versionNo
      *            the version number
      * @return the find by primary key and version statement. Should be restored
-     *         after use by invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         after use by invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -130,7 +130,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param pk
      *            the primary key
      * @return the list by primary key statement. Should be restored after use by
-     *         invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -146,7 +146,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param versionNo
      *            the version number
      * @return the list by primary key and version statement. Should be restored
-     *         after use by invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         after use by invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -169,7 +169,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param record
      *            the record to create
      * @return the create statement. Should be restored after use by invoking
-     *         {@link #restoreStatement(Class, SqlStatement)}
+     *         {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -181,7 +181,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param record
      *            the record to update
      * @return the update by primary key statement. Should be restored after use by
-     *         invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -195,7 +195,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param oldVersionNo
      *            the old version number
      * @return the update by primary key and version statement. Should be restored
-     *         after use by invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         after use by invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -237,7 +237,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param pk
      *            the primary key
      * @return the delete by primary key statement. Should be restored after use by
-     *         invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -253,7 +253,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @param versionNo
      *            the version number
      * @return the delete by primary key and version statement. Should be restored
-     *         after use by invoking {@link #restoreStatement(Class, SqlStatement)}
+     *         after use by invoking {@link #restoreStatement(SqlStatement)}
      * @throws UnifyException
      *             if an error occurs
      */
@@ -294,7 +294,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
             throws UnifyException;
 
     /**
-     * Returns the maximum number of values the data source would accept for
+     * Gets the maximum number of values the data source would accept for
      * multi-value conditions.
      * 
      * @return the maximum number. Zero or negative value if there is no limit
@@ -302,10 +302,11 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     int getMaxClauseValues();
 
     /**
-     * Returns true if there's a query limit or offset
+     * Checks if there's a query limit or offset
      * 
      * @param query
      *            the query to check
+     * @return a true value if there is a query limit or offset
      * @throws UnifyException
      *             if an error occurs
      */
@@ -323,8 +324,9 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     void restoreStatement(SqlStatement sqlStatement) throws UnifyException;
 
     /**
-     * Returns the data source shutdown hook.
+     * Gets the data source shutdown hook.
      * 
+     * @return the shutdown hook
      * @throws UnifyException
      *             if an error occurs
      */

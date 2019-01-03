@@ -60,8 +60,6 @@ public abstract class AbstractPageValidation extends AbstractBehavior implements
      *            the user interface component
      * @param validationCode
      *            the validation code
-     * @param message
-     *            the error message
      * @throws UnifyException
      *             if an error occurs
      */

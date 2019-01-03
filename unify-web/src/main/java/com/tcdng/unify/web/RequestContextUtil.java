@@ -176,8 +176,6 @@ public interface RequestContextUtil extends UnifyComponent {
      * Returns a converted value of the confirmation message from current request
      * context.
      * 
-     * @param targetClazz
-     *            the type to convert request value to
      * @throws UnifyException
      *             if an error occurs
      */
@@ -187,8 +185,6 @@ public interface RequestContextUtil extends UnifyComponent {
      * Returns a converted value of the request confirm message from current request
      * context.
      * 
-     * @param targetClazz
-     *            the type to convert request value to
      * @throws UnifyException
      *             if an error occurs
      */
@@ -374,7 +370,7 @@ public interface RequestContextUtil extends UnifyComponent {
     List<String> getOnSaveContentWidgets() throws UnifyException;
 
     /**
-     * Adds a user hint message to current request in {@link Hint.MODE.INFO} mode
+     * Adds a user hint message to current request in {@link Hint.MODE#INFO} mode
      * using supplied message key and optional parameters.
      * 
      * @param messageKey

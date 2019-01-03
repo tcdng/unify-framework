@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
 public interface DatabaseTransactionManager extends UnifyComponent {
     /**
      * Begins a transaction. The transaction started is of
-     * {@link #TransactionAttribute.REQUIRED} type.
+     * {@link TransactionAttribute#REQUIRED} type.
      * 
      * @throws UnifyException
      *             if an error occurs
@@ -46,7 +46,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
     void beginTransaction(TransactionAttribute txnAttribute) throws UnifyException;
 
     /**
-     * Ends current transaction. Commits current transaction if rollback has not
+     * Ends current transaction. Commits current transaction if roll-back has not
      * been set.
      * 
      * @throws UnifyException

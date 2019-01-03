@@ -257,8 +257,8 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
      * 
      * @param shortName
      *            the widget short name
-     * @param visible
-     *            the disabled flag to set
+     * @param editable
+     *            the editable flag to set
      * @throws UnifyException
      *             if an error occurs
      */
@@ -391,8 +391,6 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
      *            the attribute name
      * @param value
      *            the value to set
-     * @throws UnifyException
-     *             if an error occurs
      */
     protected void setPageAttribute(String name, Object value) {
         page.setAttribute(name, value);
@@ -403,8 +401,6 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
      * 
      * @param name
      *            the attribute name
-     * @throws UnifyException
-     *             if an error occurs
      */
     protected Object clearPageAttribute(String name) {
         return page.clearAttribute(name);
@@ -417,8 +413,6 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
      * @param name
      *            the attribute name
      * @return the attribute value if found, otherwise null.
-     * @throws UnifyException
-     *             if an error occurs
      */
     protected Object getPageAttribute(String name) {
         return page.getAttribute(name);
@@ -433,8 +427,6 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
      * @param name
      *            the attribute name
      * @return the attribute value if found, otherwise null.
-     * @throws UnifyException
-     *             if an error occurs
      */
     @SuppressWarnings("unchecked")
     protected <T> T getPageAttribute(Class<T> clazz, String name) {

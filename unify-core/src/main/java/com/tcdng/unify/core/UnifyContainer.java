@@ -560,14 +560,18 @@ public class UnifyContainer {
     }
 
     /**
-     * Returns the container's access key.
+     * Gets the container's access key.
+     * 
+     * @return the access key
      */
     public String getAccessKey() {
         return accessKey;
     }
 
     /**
-     * Returns current container information.
+     * Gets current container information.
+     * 
+     * @return the container information object
      */
     public UnifyContainerInfo getInfo() {
         List<UnifyComponentInfo> componentInfoList = new ArrayList<UnifyComponentInfo>();
@@ -847,10 +851,11 @@ public class UnifyContainer {
     }
 
     /**
-     * Returns true if component with name is defined in container.
+     * Checks if component with name is defined in container.
      * 
      * @param name
      *            the component name
+     * @return a true value if component with name exists otherwise false
      * @throws UnifyException
      *             If component an error occurs.
      */

@@ -18,9 +18,7 @@ package com.tcdng.unify.core.expiration;
 import com.tcdng.unify.core.UnifyComponent;
 
 /**
- * Component interface for managing expirable references. Implementations are
- * expected to fire the {@link ObservedExpirable#removeExpired()} method of
- * registered references at regular intervals.
+ * Component interface for managing expirable references.
  * 
  * @author Lateef Ojulari
  * @since 1.0
