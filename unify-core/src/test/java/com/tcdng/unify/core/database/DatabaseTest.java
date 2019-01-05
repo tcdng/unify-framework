@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,7 @@ import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.operation.Update;
+import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
  * Database component tests.
@@ -1639,7 +1641,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     public void testCreateRecordWithOnewayTransformation() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
-            User user = new User("tiger", "scott");
+            Date createDt = new Date();
+            User user = new User("tiger", "scott", createDt);
             Long id = (Long) db.create(user);
             assertNotNull(id);
             assertEquals(id, user.getId());
@@ -1649,6 +1652,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(user.getName(), createdUser.getName());
             assertNotNull(createdUser.getPassword());
             assertFalse(user.getPassword().equals(createdUser.getPassword()));
+            assertFalse(createDt.equals(createdUser.getCreateDt()));
+            assertTrue(CalendarUtils.getMidnightDate(createDt).equals(createdUser.getCreateDt()));
         } finally {
             db.getTransactionManager().endTransaction();
         }

@@ -37,7 +37,6 @@ import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.transform.Transformer;
-import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Default implementation of an SQL statement executor.

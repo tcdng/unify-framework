@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Integer data type SQL policy.
@@ -31,7 +32,7 @@ public class IntegerPolicy implements SqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("INTEGER");
+        sb.append("INT");
     }
 
     @Override
@@ -41,6 +42,13 @@ public class IntegerPolicy implements SqlDataTypePolicy {
         } else {
             ((PreparedStatement) pstmt).setInt(index, ((Integer) data).intValue());
         }
+    }
+
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if(StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT ").append(Integer.valueOf(defaultVal));
+        }        
     }
 
     @Override
@@ -59,6 +67,16 @@ public class IntegerPolicy implements SqlDataTypePolicy {
             return null;
         }
         return object;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.INTEGER;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 
 }

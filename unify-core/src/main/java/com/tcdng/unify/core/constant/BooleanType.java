@@ -39,7 +39,7 @@ public enum BooleanType implements EnumConst {
 
     @Override
     public String code() {
-        return this.code;
+        return code;
     }
 
     public static BooleanType fromCode(String code) {

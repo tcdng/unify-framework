@@ -22,6 +22,7 @@ import java.sql.Types;
 import java.util.Date;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Time data type SQL policy.
@@ -34,6 +35,13 @@ public class TimePolicy implements SqlDataTypePolicy {
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append("TIMESTAMP");
+    }
+
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (!StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT ").append(defaultVal);
+        }
     }
 
     @Override
@@ -61,5 +69,15 @@ public class TimePolicy implements SqlDataTypePolicy {
             return new Date(timestamp.getTime());
         }
         return null;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.TIMESTAMP;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 }

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.util;
+package com.tcdng.unify.core.database.sql;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -23,10 +23,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.StaticReference;
@@ -44,6 +48,19 @@ public final class SqlUtils {
 
     private static final Map<Integer, Class<?>> sqlToJavaTypeMap;
 
+    private static final int DEFAULT_CHARACTER_LEN = 1;
+    private static final int DEFAULT_DECIMAL_PRECISION = 18;
+    private static final int DEFAULT_DECIMAL_SCALE = 2;
+    private static final int DEFAULT_INTEGER_PRECISION = 10;
+    private static final int DEFAULT_LONG_PRECISION = 20;
+    private static final int DEFAULT_SHORT_PRECISION = 5;
+    private static final int DEFAULT_STRING_LEN = 32;
+    private static final int DEFAULT_STRINGARRAY_LEN = 256;
+    private static final int DEFAULT_ENUMCONST_LEN = StaticReference.CODE_LENGTH;
+
+    private static final Set<String> defaultConstants;
+    
+    
     static {
         versionNoTypes = new ArrayList<Class<? extends Number>>();
         versionNoTypes.add(Long.class);
@@ -56,6 +73,7 @@ public final class SqlUtils {
         sqlToJavaTypeMap = new HashMap<Integer, Class<?>>();
         sqlToJavaTypeMap.put(Types.BIGINT, Long.class);
         sqlToJavaTypeMap.put(Types.BIT, Boolean.class);
+        sqlToJavaTypeMap.put(Types.LONGVARBINARY, byte[].class);
         sqlToJavaTypeMap.put(Types.BLOB, byte[].class);
         sqlToJavaTypeMap.put(Types.BOOLEAN, Boolean.class);
         sqlToJavaTypeMap.put(Types.CHAR, String.class);
@@ -73,6 +91,8 @@ public final class SqlUtils {
         sqlToJavaTypeMap.put(Types.TIMESTAMP, java.util.Date.class);
         sqlToJavaTypeMap.put(Types.TINYINT, Integer.class);
         sqlToJavaTypeMap.put(Types.VARCHAR, String.class);
+        
+        defaultConstants = new HashSet<String>(Arrays.asList("0000-00-00 00:00:00"));
     };
 
     private SqlUtils() {
@@ -87,6 +107,10 @@ public final class SqlUtils {
         return sqlToJavaTypeMap.get(sqlType);
     }
 
+    public static boolean isDefaultConstant(String defaultVal) {
+        return defaultConstants.contains(defaultVal);
+    }
+    
     public static Class<?> getEntityClass(Entity record) {
         Class<?> entityClass = record.getClass();
         if (StaticReference.class.equals(entityClass)) {
@@ -126,8 +150,8 @@ public final class SqlUtils {
      *            the name to convert
      * @param applySpacing
      *            indicates if spacing with undescore be applied at name
-     *            lowercase-uppercase boundaries. For example age -&gt; AGE sQLName -
-     *            SQLNAME sortCode -&gt; SORT_CODE., moduleActivityId -&gt;
+     *            lowercase-uppercase boundaries. For example age -&gt; AGE sQLName
+     *            - SQLNAME sortCode -&gt; SORT_CODE., moduleActivityId -&gt;
      *            MODULE_ACTIVITY_ID
      * @return String the converted name
      */
@@ -283,5 +307,83 @@ public final class SqlUtils {
 
     public static String getQualifierColumnName(String tableName, String columnName) {
         return tableName + '.' + columnName;
+    }
+    
+    public static SqlFieldDimensions getNormalizedSqlFieldDimensions(ColumnType columnType, int length, int precision,
+            int scale) {
+        int nLength = 0, nPrecision = 0, nScale = 0;
+        switch (columnType) {
+            case BOOLEAN:
+            case CHARACTER:
+                nLength = DEFAULT_CHARACTER_LEN;
+                break;
+            case DECIMAL:
+                if (precision <= 0) {
+                    nPrecision = DEFAULT_DECIMAL_PRECISION;
+                } else {
+                    nPrecision = precision;
+                }
+                
+                if (scale < 0) {
+                    nScale = DEFAULT_DECIMAL_SCALE;
+                } else {
+                    nScale = scale;
+                }
+                break;
+            case ENUMCONST:
+                nLength = DEFAULT_ENUMCONST_LEN;
+                break;
+            case INTEGER:
+                if (precision <= 0) {
+                    nPrecision = DEFAULT_INTEGER_PRECISION;
+                } else {
+                    nPrecision = precision;
+                }
+                break;
+            case LONG:
+                if (precision <= 0) {
+                    nPrecision = DEFAULT_LONG_PRECISION;
+                } else {
+                    nPrecision = precision;
+                }
+                break;
+            case SHORT:
+                if (precision <= 0) {
+                    nPrecision = DEFAULT_SHORT_PRECISION;
+                } else {
+                    nPrecision = precision;
+                }
+                break;
+            case STRING:
+                if (length <= 0) {
+                    nLength = DEFAULT_STRING_LEN;
+                } else {
+                    nLength = length;
+                }
+                break;
+            case BOOLEAN_ARRAY:
+            case DOUBLE_ARRAY:
+            case FLOAT_ARRAY:
+            case INTEGER_ARRAY:
+            case LONG_ARRAY:
+            case SHORT_ARRAY:
+            case STRING_ARRAY:
+                if (length <= 0) {
+                    nLength = DEFAULT_STRINGARRAY_LEN;
+                } else {
+                    nLength = length;
+                }
+                break;
+            case AUTO:
+            case BLOB:
+            case CLOB:
+            case DATE:
+            case DOUBLE:
+            case FLOAT:
+            case TIMESTAMP:
+            default:
+                break;
+        }
+        return new SqlFieldDimensions(nLength, nPrecision, nScale);
     }
 }

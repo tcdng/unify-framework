@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Float data type SQL policy.
@@ -31,11 +32,7 @@ public class FloatPolicy implements SqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        if (precision <= 0) {
-            sb.append("FLOAT");
-        } else {
-            sb.append("FLOAT(").append(precision).append(')');
-        }
+        sb.append("FLOAT");
     }
 
     @Override
@@ -45,6 +42,13 @@ public class FloatPolicy implements SqlDataTypePolicy {
         } else {
             ((PreparedStatement) pstmt).setFloat(index, (Float) data);
         }
+    }
+
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if(StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT ").append(Double.valueOf(defaultVal));
+        }        
     }
 
     @Override
@@ -63,6 +67,16 @@ public class FloatPolicy implements SqlDataTypePolicy {
             return null;
         }
         return object;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.FLOAT;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 
 }

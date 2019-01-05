@@ -27,11 +27,15 @@ import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
+import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.policy.IntegerPolicy;
 import com.tcdng.unify.core.database.sql.policy.LongPolicy;
+import com.tcdng.unify.core.database.sql.policy.ShortPolicy;
 
 /**
  * Oracle SQL dialect.
@@ -72,6 +76,36 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("MODIFY ");
+        appendAlterTableColumnSQL(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
+        return sb.toString();
+    }
+
+    @Override
+    public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("MODIFY ").append(sqlColumnInfo.getColumnName()).append(" ").append(generateSqlType(sqlColumnInfo))
+                .append(" NULL");
+        return sb.toString();
+    }
+
+    @Override
     protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
         return false;
     }
@@ -107,6 +141,8 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
         setDataTypePolicy(ColumnType.BLOB, new OracleBlobPolicy());
         setDataTypePolicy(ColumnType.CLOB, new OracleClobPolicy());
         setDataTypePolicy(ColumnType.LONG, new OracleLongPolicy());
+        setDataTypePolicy(ColumnType.INTEGER, new OracleIntegerPolicy());
+        setDataTypePolicy(ColumnType.SHORT, new OracleShortPolicy());
 
         setTimestampFormat(
                 new SimpleDateFormat("('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))"));
@@ -117,7 +153,53 @@ class OracleLongPolicy extends LongPolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("NUMBER(19)");
+        sb.append("NUMBER(").append(precision).append(")");
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.DECIMAL;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
+    }
+}
+
+class OracleIntegerPolicy extends IntegerPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("NUMBER(").append(precision).append(")");
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.DECIMAL;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
+    }
+}
+
+class OracleShortPolicy extends ShortPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("NUMBER(").append(precision).append(")");
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.DECIMAL;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
     }
 }
 

@@ -20,7 +20,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -34,7 +33,6 @@ import com.tcdng.unify.core.data.AbstractPool;
 import com.tcdng.unify.core.database.AbstractDataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.security.Authentication;
-import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Abstract SQL data source.
@@ -52,6 +50,9 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     @Configurable
     private Authentication passwordAuthentication;
+
+    @Configurable
+    private String appSchema;
 
     @Configurable
     private String username;
@@ -72,6 +73,11 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     private boolean shutdownOnTerminate;
 
     private SqlConnectionPool sqlConnectionPool;
+
+    @Override
+    public String getApplicationSchema() throws UnifyException {
+        return appSchema;
+    }
 
     @Override
     public List<String> getSchemaList() throws UnifyException {
@@ -145,17 +151,11 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                     int sqlType = rs.getInt("DATA_TYPE");
                     if (SqlUtils.isSupportedSqlType(sqlType)) {
                         Class<?> type = SqlUtils.getJavaType(sqlType);
-                        String columnName = rs.getString("COLUMN_NAME");
-                        int size = rs.getInt("COLUMN_SIZE");
                         String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");
                         int decimalDigits = decimalDigitsStr == null ? 0 : Integer.valueOf(decimalDigitsStr);
-                        String nullable = rs.getString("IS_NULLABLE");
-
-                        if ((Types.NUMERIC == sqlType || Types.DECIMAL == sqlType) && decimalDigits == 0) {
-                            type = SqlUtils.getJavaType(Types.INTEGER);
-                        }
-                        columnInfoList.add(new SqlColumnInfo(type, columnName, sqlType, size, decimalDigits,
-                                "YES".equals(nullable)));
+                        columnInfoList.add(new SqlColumnInfo(type, rs.getString("TYPE_NAME"),
+                                rs.getString("COLUMN_NAME").toUpperCase(), rs.getString("COLUMN_DEF"), sqlType,
+                                rs.getInt("COLUMN_SIZE"), decimalDigits, "YES".equals(rs.getString("IS_NULLABLE"))));
                     }
                 }
                 return columnInfoList;
