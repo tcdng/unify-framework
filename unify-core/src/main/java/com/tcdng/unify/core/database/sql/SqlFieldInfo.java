@@ -58,11 +58,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
     private boolean nullable;
 
-    private int length;
-
-    private int precision;
-
-    private int scale;
+    private SqlFieldDimensions sqlFieldDimensions;
 
     private Field field;
 
@@ -75,18 +71,18 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     public SqlFieldInfo(int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
             SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String column,
             String constraintName, boolean primaryKey, boolean foreignKey, boolean ignoreFkConstraint,
-            Transformer<?, ?> transformer, boolean nullable, int length, int precision, int scale, Field field,
-            Method getter, Method setter) {
+            Transformer<?, ?> transformer, SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultValue,
+            Field field, Method getter, Method setter) {
         this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
-                column, constraintName, primaryKey, foreignKey, ignoreFkConstraint, transformer, nullable, length,
-                precision, scale, field, getter, setter);
+                column, constraintName, primaryKey, foreignKey, ignoreFkConstraint, transformer, sqlFieldDimensions,
+                nullable, defaultValue, field, getter, setter);
     }
 
     public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
             SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String column,
             String constraintName, boolean primaryKey, boolean foreignKey, boolean ignoreFkConstraint,
-            Transformer<?, ?> transformer, boolean nullable, int length, int precision, int scale, Field field,
-            Method getter, Method setter) {
+            Transformer<?, ?> transformer, SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultValue,
+            Field field, Method getter, Method setter) {
         this.marker = marker;
         this.columnType = columnType;
         this.foreignEntityInfo = foreignSqlEntityInfo;
@@ -100,9 +96,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         this.ignoreFkConstraint = ignoreFkConstraint;
         this.transformer = transformer;
         this.nullable = nullable;
-        this.length = length;
-        this.precision = precision;
-        this.scale = scale;
+        this.sqlFieldDimensions = sqlFieldDimensions;
+        this.defaultValue = defaultValue;
         this.field = field;
         this.getter = getter;
         this.setter = setter;
@@ -155,24 +150,33 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         return nullable;
     }
 
+    public SqlFieldDimensions getSqlFieldDimensions() {
+        return sqlFieldDimensions;
+    }
+
     @Override
     public int getLength() {
-        return length;
+        return sqlFieldDimensions.getLength();
     }
 
     @Override
     public int getPrecision() {
-        return precision;
+        return sqlFieldDimensions.getPrecision();
     }
 
     @Override
     public int getScale() {
-        return scale;
+        return sqlFieldDimensions.getScale();
     }
 
     @Override
     public ColumnType getColumnType() {
         return columnType;
+    }
+
+    @Override
+    public boolean isWithDefaultValue() {
+        return defaultValue != null;
     }
 
     @Override
@@ -201,7 +205,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         return setter;
     }
 
-    public Class<?> getFieldClass() {
+    @Override
+    public Class<?> getFieldType() {
         return field.getType();
     }
 
@@ -214,8 +219,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         }
 
         return columnType.equals(sqlFieldSchemaInfo.getColumnType()) && column.equals(sqlFieldSchemaInfo.getColumn())
-                && length == sqlFieldSchemaInfo.getLength() && precision == sqlFieldSchemaInfo.getPrecision()
-                && scale == sqlFieldSchemaInfo.getScale();
+                && getLength() == sqlFieldSchemaInfo.getLength() && getPrecision() == sqlFieldSchemaInfo.getPrecision()
+                && getScale() == sqlFieldSchemaInfo.getScale();
     }
 
     @Override
@@ -231,5 +236,16 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     @Override
     public SqlFieldInfo getForeignKeyFieldInfo() {
         return foreignKeyFieldInfo;
+    }
+    
+    public String toDimensionString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{columnName = ").append(column);
+        sb.append(", columnType = ").append(columnType);
+        sb.append(", length = ").append(getLength());
+        sb.append(", precision = ").append(getPrecision());
+        sb.append(", scale = ").append(getScale());
+        sb.append(", defaultVal = ").append(defaultValue).append("}");
+        return sb.toString();
     }
 }

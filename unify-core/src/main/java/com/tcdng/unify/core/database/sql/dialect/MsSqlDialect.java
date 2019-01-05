@@ -20,6 +20,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
+import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 
@@ -45,6 +47,20 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public int getMaxClauseValues() {
         return -1;
+    }
+
+    @Override
+    public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("ALTER COLUMN ").append(generateSqlType(sqlColumnInfo)).append(" NULL");
+        return sb.toString();
     }
 
     @Override
@@ -83,7 +99,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
         if (format) {
@@ -92,7 +108,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
             sb.append(' ');
         }
         sb.append("ALTER COLUMN ");
-        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+        appendAlterTableColumnSQL(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
         return sb.toString();
     }
 

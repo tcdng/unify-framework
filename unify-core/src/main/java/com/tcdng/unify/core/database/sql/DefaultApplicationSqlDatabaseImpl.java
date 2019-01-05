@@ -13,27 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
+package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.database.sql.SqlDataSource;
-import com.tcdng.unify.core.database.sql.SqlStatementExecutor;
+import com.tcdng.unify.core.annotation.Component;
 
 /**
- * Default SQL database implementation.
+ * Default application SQL database.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SqlDatabaseImpl extends AbstractDatabase {
+@Component(ApplicationComponents.APPLICATION_DATABASE)
+public class DefaultApplicationSqlDatabaseImpl extends SqlDatabaseImpl {
 
-    @Configurable(ApplicationComponents.APPLICATION_SQLSTATEMENTEXECUTOR)
-    private SqlStatementExecutor sqlStatementExecutor;
-
-    @Override
-    protected DatabaseSession createDatabaseSession() throws UnifyException {
-        return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
-    }
 }

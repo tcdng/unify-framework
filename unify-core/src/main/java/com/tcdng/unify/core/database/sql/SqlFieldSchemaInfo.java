@@ -72,10 +72,20 @@ public interface SqlFieldSchemaInfo {
     ColumnType getColumnType();
 
     /**
+     * Returns the field type.
+     */
+    Class<?> getFieldType();
+
+    /**
      * Returns the field default value.
      */
     String getDefaultValue();
 
+    /**
+     * Returns if field has default value.
+     */
+    boolean isWithDefaultValue();
+    
     /**
      * Returns true if the field is a primary key otherwise false;
      */
@@ -95,10 +105,13 @@ public interface SqlFieldSchemaInfo {
      */
     boolean isSameSchema(SqlFieldSchemaInfo sqlFieldSchemaInfo);
 
+    /**
+     * Returns the ignore foreign key constraint flag.
+     */
     boolean isIgnoreFkConstraint();
 
     /**
-     * Returns the foreign key record tye schema info.
+     * Returns the foreign key entity schema info.
      */
     SqlEntitySchemaInfo getForeignEntityInfo();
 

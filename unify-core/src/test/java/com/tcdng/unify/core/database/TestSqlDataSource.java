@@ -31,6 +31,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceImpl;
 @Component("test-sqldatasource")
 @Configuration({ @Configurable(property = "driver", value = "org.hsqldb.jdbcDriver"),
         @Configurable(property = "connectionUrl", value = "jdbc:hsqldb:mem:test"),
+        @Configurable(property = "appSchema", value = "PUBLIC"),
         @Configurable(property = "getConnectionTimeout", value = "1000"),
         @Configurable(property = "dialect", value = "hsqldb-dialect"),
         @Configurable(property = "shutdownOnTerminate", value = "true") })

@@ -210,10 +210,18 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return listFieldInfoByName.keySet();
     }
 
-    public Map<String, String> getFieldByColumnNames() {
+    public Map<String, String> getListColumnsByFieldNames() {
         Map<String, String> map = new HashMap<String, String>();
         for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoByName.entrySet()) {
             map.put(entry.getKey(), entry.getValue().getColumn());
+        }
+        return map;
+    }
+
+    public Map<String, SqlFieldInfo> getFieldInfoByColumnNames() {
+        Map<String, SqlFieldInfo> map = new HashMap<String, SqlFieldInfo>();
+        for (SqlFieldInfo entry : fieldInfoByName.values()) {
+            map.put(entry.getColumn(), entry);
         }
         return map;
     }

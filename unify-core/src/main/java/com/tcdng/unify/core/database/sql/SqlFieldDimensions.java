@@ -13,18 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
 
-import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.annotation.Component;
+package com.tcdng.unify.core.database.sql;
 
 /**
- * Default application SQL database.
+ * SQL field dimensions.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_DATABASE)
-public class DefaultApplicationSqlDatabaseImpl extends SqlDatabaseImpl {
+public class SqlFieldDimensions {
 
+    private int length;
+
+    private int precision;
+
+    private int scale;
+
+    public SqlFieldDimensions(int length, int precision, int scale) {
+        this.length = length;
+        this.precision = precision;
+        this.scale = scale;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getPrecision() {
+        return precision;
+    }
+
+    public int getScale() {
+        return scale;
+    }
 }

@@ -58,6 +58,9 @@ public @interface Column {
     /** Indicates the field is nullable. */
     boolean nullable() default false;
 
+    /** Specifies the column default value */
+    String defaultVal() default AnnotationConstants.NONE;
+    
     /** Column position */
     int position() default DefaultColumnPositionConstants.COLUMN_POSITION;
 }

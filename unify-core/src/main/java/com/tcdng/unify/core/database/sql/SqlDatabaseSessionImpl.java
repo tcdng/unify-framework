@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
+package com.tcdng.unify.core.database.sql;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -33,21 +33,14 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
-import com.tcdng.unify.core.database.sql.ChildFieldInfo;
-import com.tcdng.unify.core.database.sql.OnDeleteCascadeInfo;
-import com.tcdng.unify.core.database.sql.SqlDataSource;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
-import com.tcdng.unify.core.database.sql.SqlEntityInfo;
-import com.tcdng.unify.core.database.sql.SqlFieldInfo;
-import com.tcdng.unify.core.database.sql.SqlForeignKeyInfo;
-import com.tcdng.unify.core.database.sql.SqlStatement;
-import com.tcdng.unify.core.database.sql.SqlStatementExecutor;
-import com.tcdng.unify.core.database.sql.SqlUniqueConstraintInfo;
+import com.tcdng.unify.core.database.DatabaseSession;
+import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.EntityPolicy;
+import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.operation.Amongst;
 import com.tcdng.unify.core.operation.Select;
 import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.util.ReflectUtils;
-import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Implementation of an SQL database session.
@@ -190,7 +183,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         sqlDataSourceDialect.prepareFindStatement(query), false);
             } else {
                 SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-                List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+                List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
                 if (!idList.isEmpty()) {
                     Query<T> findQuery = query.copyNoCriteria();
                     findQuery.add(new Amongst(idFieldInfo.getName(), idList));
@@ -218,7 +211,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<T> findQuery = query.copyNoCriteria();
                 findQuery.add(new Amongst(idFieldInfo.getName(), idList));
@@ -244,7 +237,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<U> findQuery = query.copyNoCriteria();
                 findQuery.add(new Amongst(idFieldInfo.getName(), idList));
@@ -270,7 +263,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<U> findQuery = query.copyNoCriteria();
                 findQuery.add(new Amongst(idFieldInfo.getName(), idList));
@@ -575,7 +568,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<? extends Entity> updateQuery = query.copyNoAll();
                 updateQuery.add(new Amongst(idFieldInfo.getName(), idList));
@@ -723,7 +716,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 if (sqlEntityInfo.isOnDeleteCascadeList()) {
                     for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
@@ -758,7 +751,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<? extends Entity> countQuery = new Query(query.getEntityClass(), query.isApplyAppQueryLimit());
                 countQuery.add(new Amongst(idFieldInfo.getName(), idList));
@@ -786,7 +779,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
                 aggregateQuery.add(new Amongst(idFieldInfo.getName(), idList));

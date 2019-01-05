@@ -32,8 +32,17 @@ import com.tcdng.unify.core.database.NativeQuery;
 public interface SqlDataSource extends DataSource {
 
     /**
-     * Returns a list of schemas in this data source.
+     * Gets the data source primary application schema.
      * 
+     * @return the primary schema name
+     * @throws UnifyException if an error occurs
+     */
+    String getApplicationSchema() throws UnifyException;
+
+    /**
+     * Gets a list of schemas in this data source.
+     * 
+     * @return a list of schema names
      * @throws UnifyException
      *             if an error occurs
      */

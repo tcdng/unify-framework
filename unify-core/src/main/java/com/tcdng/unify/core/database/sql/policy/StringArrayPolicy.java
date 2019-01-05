@@ -50,6 +50,13 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
     }
 
     @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT '").append(defaultVal).append("'");
+        }
+    }
+
+    @Override
     public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
@@ -82,5 +89,15 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
 
     private Object getResult(String data) throws Exception {
         return DataUtils.convert(arrayClass, StringUtils.getCommaSeparatedValues(data), null);
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.VARCHAR;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
     }
 }

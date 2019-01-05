@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Short data type SQL policy.
@@ -44,6 +45,13 @@ public class ShortPolicy implements SqlDataTypePolicy {
     }
 
     @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if(StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT ").append(Short.valueOf(defaultVal));
+        }        
+    }
+
+    @Override
     public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
         Object object = ((ResultSet) rs).getShort(column);
         if (((ResultSet) rs).wasNull()) {
@@ -59,6 +67,16 @@ public class ShortPolicy implements SqlDataTypePolicy {
             return null;
         }
         return object;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.SMALLINT;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 
 }

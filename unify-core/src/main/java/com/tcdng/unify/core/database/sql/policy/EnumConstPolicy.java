@@ -23,6 +23,7 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.util.EnumUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * String data type SQL policy.
@@ -38,6 +39,18 @@ public class EnumConstPolicy implements SqlDataTypePolicy {
             length = StaticReference.CODE_LENGTH;
         }
         sb.append("VARCHAR(").append(length).append(')');
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (StringUtils.isBlank(defaultVal)) {
+            EnumConst val = EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) defaultVal);
+            if (val == null) {
+                val = EnumUtils.fromName((Class<? extends EnumConst>) type, (String) defaultVal);
+            }
+            sb.append(" DEFAULT '").append(val.code()).append("'");
+        }
     }
 
     @Override
@@ -67,6 +80,16 @@ public class EnumConstPolicy implements SqlDataTypePolicy {
             return null;
         }
         return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.VARCHAR;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
     }
 
 }

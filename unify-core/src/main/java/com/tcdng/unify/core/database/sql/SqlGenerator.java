@@ -32,7 +32,7 @@ public interface SqlGenerator extends UnifyComponent {
     /**
      * Generates all native create SQL for record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            the record schema information
      * @param foreignConstraints
      *            indicates foreign constraints be generated
@@ -48,15 +48,15 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateAllCreateSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, boolean foreignConstraints,
+    String generateAllCreateSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean foreignConstraints,
             boolean uniqueConstraints, boolean indexes, boolean views, boolean format) throws UnifyException;
 
     /**
      * Generates all native upgrade SQL for record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            the record schema information
-     * @param oldSqlRecordSchemaInfo
+     * @param oldSqlEntitySchemaInfo
      *            the old record schema information
      * @param foreignConstraints
      *            indicates foreign constraints be generated
@@ -72,14 +72,14 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateAllUpgradeSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlEntitySchemaInfo oldSqlRecordSchemaInfo,
+    String generateAllUpgradeSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlEntitySchemaInfo oldSqlEntitySchemaInfo,
             boolean foreignConstraints, boolean uniqueConstraints, boolean indexes, boolean views, boolean format)
             throws UnifyException;
 
     /**
      * Generates a native create table SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param format
      *            flag that indicates if SQL should be formatted
@@ -87,25 +87,25 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCreateTableSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, boolean format) throws UnifyException;
+    String generateCreateTableSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean format) throws UnifyException;
 
     /**
      * Generates native drop table SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated drop table SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDropTableSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateDropTableSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates rename table SQL.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            the new SQL record schema info
-     * @param oldSqlRecordSchemaInfo
+     * @param oldSqlEntitySchemaInfo
      *            the old SQL record schema info
      * @param format
      *            indicates if SQL should be formatted
@@ -113,13 +113,13 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      * @return generated SQL
      */
-    String generateRenameTable(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlEntitySchemaInfo oldSqlRecordSchemaInfo,
+    String generateRenameTable(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlEntitySchemaInfo oldSqlEntitySchemaInfo,
             boolean format) throws UnifyException;
 
     /**
      * Generates add column SQL.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            the old SQL record schema info
      * @param sqlFieldSchemaInfo
      *            the field schema information
@@ -129,29 +129,47 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      * @return generated SQL
      */
-    String generateAddColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+    String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException;
 
     /**
      * Generates alter column SQL.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            the SQL record schema info
      * @param sqlFieldSchemaInfo
      *            the new SQL field schema info
+     * @param sqlColumnAlterInfo
+     *            the alter information
      * @param format
      *            indicates if SQL should be formatted
      * @throws UnifyException
      *             if an error occurs
      * @return generated SQL
      */
-    String generateAlterColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException;
+    String generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException;
+
+    /**
+     * Generates alter column to nullable SQL.
+     * 
+     * @param sqlEntitySchemaInfo
+     *            the SQL record schema info
+     * @param sqlColumnInfo
+     *            the column information object
+     * @param format
+     *            indicates if SQL should be formatted
+     * @throws UnifyException
+     *             if an error occurs
+     * @return generated SQL
+     */
+    String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo, boolean format)
+            throws UnifyException;
 
     /**
      * Generates rename column SQL.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            the old SQL record schema info
      * @param sqlFieldSchemaInfo
      *            the new SQL field schema info
@@ -163,13 +181,13 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      * @return generated SQL
      */
-    String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+    String generateRenameColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException;
 
     /**
      * Generates drop column SQL.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            the old SQL record schema info
      * @param sqlFieldSchemaInfo
      *            the field schema information
@@ -179,13 +197,13 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      * @return generated SQL
      */
-    String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+    String generateDropColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException;
 
     /**
      * Generates native add foreign key constraint SQL for specified constraint.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param sqlForeignKeyInfo
      *            foreign key information
@@ -195,13 +213,13 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateAddForeignKeyConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
+    String generateAddForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlForeignKeySchemaInfo sqlForeignKeyInfo, boolean format) throws UnifyException;
 
     /**
      * Generates native drop foreign key constraint SQL for specified constraint.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param sqlForeignKeyInfo
      *            foreign key information
@@ -211,14 +229,14 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
+    String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlForeignKeySchemaInfo sqlForeignKeyInfo, boolean format) throws UnifyException;
 
     /**
      * Generates native add unique key constraint SQL for specified unique constaint
      * info.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param sqlUniqueConstraintInfo
      *            unique constraint schema information
@@ -228,14 +246,14 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateAddUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
+    String generateAddUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException;
 
     /**
      * Generates native drop unique key constraint SQL for specified unique
      * constaint info.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param sqlUniqueConstraintInfo
      *            unique constraint schema information
@@ -245,13 +263,13 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
+    String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException;
 
     /**
      * Generates native create index SQL for specified index.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param sqlIndexInfo
      *            the index schema information
@@ -261,13 +279,13 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCreateIndexSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
+    String generateCreateIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
             boolean format) throws UnifyException;
 
     /**
      * Generate native drop index SQL for specified index.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param sqlIndexInfo
      *            the index schema information
@@ -277,13 +295,13 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDropIndexSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
+    String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
             boolean format) throws UnifyException;
 
     /**
      * Generates native create view SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param format
      *            flag that specifies if SQL is formatted
@@ -291,109 +309,109 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCreateViewSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, boolean format) throws UnifyException;
+    String generateCreateViewSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean format) throws UnifyException;
 
     /**
      * Generates native drop view SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated drop view SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDropViewSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateDropViewSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native find record SQL for specified record type. Typically a
      * select all statement from a table.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated find SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateFindRecordSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native find record by primary key SQL for specified record type.
      * Typically a select all statement where primary key from a table.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated find by primary key SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateFindRecordByPkSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateFindRecordByPkSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native find record by primary key and version number SQL for
      * specified record type. Typically a select all statement where primary key and
      * version number from a table.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated find by primary key and version number SQL
      * @throws UnifyException
      *             if record type has no version number. If an error occurs
      */
-    String generateFindRecordByPkVersionSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateFindRecordByPkVersionSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native list record SQL for specified record type. Typically a
      * select all statement from a view.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated list SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateListRecordSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateListRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native list record by primary key SQL for specified record type.
      * Typically a select all statement where primary key from a view.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated list by primary key SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateListRecordByPkSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateListRecordByPkSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native list record by primary key and version number SQL for
      * specified record type. Typically a select all statement where primary key and
      * version number from a view.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the generated list by primary key and version number SQL
      * @throws UnifyException
      *             if record type has no version number. If an error occurs
      */
-    String generateListRecordByPkVersionSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateListRecordByPkVersionSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native insert record SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the create SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateInsertRecordSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateInsertRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native insert record SQL using supplied values for specified record
      * type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param params
      *            the parameter data of field name to value map
@@ -403,14 +421,14 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateInsertValuesSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, Map<String, Object> params,
+    String generateInsertValuesSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, Map<String, Object> params,
             boolean formatSql) throws UnifyException;
 
     /**
      * Generates native insert record SQL using supplied values for specified record
      * type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @param insertValueList
      * @param formatSql
@@ -419,87 +437,87 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateInsertValuesSql(SqlEntitySchemaInfo sqlRecordSchemaInfo, List<Map<String, Object>> insertValueList,
+    String generateInsertValuesSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, List<Map<String, Object>> insertValueList,
             boolean formatSql) throws UnifyException;
 
     /**
      * Generates native update record SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the update SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateUpdateRecordSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateUpdateRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native update record SQL by primary key for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the update by primary key SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateUpdateRecordByPkSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateUpdateRecordByPkSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native update record SQL by primary key and version number for
      * specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the update by primary key and version number SQL
      * @throws UnifyException
      *             if record type has no version number. If an error occurs
      */
-    String generateUpdateRecordByPkVersionSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateUpdateRecordByPkVersionSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native delete record SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the delete SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDeleteRecordSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateDeleteRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native delete record SQL by primary key for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the delete by primary key SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDeleteRecordByPkSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateDeleteRecordByPkSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native delete record SQL by primary key and version number for
      * specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the delete by primary key and version number SQL
      * @throws UnifyException
      *             if record type has no version number. If an error occurs
      */
-    String generateDeleteRecordByPkVersionSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateDeleteRecordByPkVersionSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates native count record SQL for specified record type.
      * 
-     * @param sqlRecordSchemaInfo
+     * @param sqlEntitySchemaInfo
      *            record schema information
      * @return the count SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCountRecordSql(SqlEntitySchemaInfo sqlRecordSchemaInfo) throws UnifyException;
+    String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
      * Generates connection test SQL.

@@ -27,7 +27,11 @@ public class SqlColumnInfo implements Listable {
 
     private Class<?> javaType;
 
+    private String typeName;
+
     private String columnName;
+
+    private String defaultVal;
 
     private int sqlType;
 
@@ -37,9 +41,12 @@ public class SqlColumnInfo implements Listable {
 
     private boolean nullable;
 
-    public SqlColumnInfo(Class<?> javaType, String name, int sqlType, int size, int decimalDigits, boolean nullable) {
+    public SqlColumnInfo(Class<?> javaType, String typeName, String columnName, String defaultVal, int sqlType,
+            int size, int decimalDigits, boolean nullable) {
         this.javaType = javaType;
-        this.columnName = name;
+        this.typeName = typeName;
+        this.columnName = columnName;
+        this.defaultVal = defaultVal;
         this.sqlType = sqlType;
         this.size = size;
         this.decimalDigits = decimalDigits;
@@ -60,8 +67,16 @@ public class SqlColumnInfo implements Listable {
         return javaType;
     }
 
+    public String getTypeName() {
+        return typeName;
+    }
+
     public String getColumnName() {
         return columnName;
+    }
+
+    public String getDefaultVal() {
+        return defaultVal;
     }
 
     public int getSqlType() {
@@ -78,5 +93,16 @@ public class SqlColumnInfo implements Listable {
 
     public boolean isNullable() {
         return nullable;
+    }
+    
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{columnName = ").append(columnName);
+        sb.append(", typeName = ").append(typeName);
+        sb.append(", sqlType = ").append(sqlType);
+        sb.append(", size = ").append(size);
+        sb.append(", decimalDigits = ").append(decimalDigits);
+        sb.append(", defaultVal = ").append(defaultVal).append("}");
+        return sb.toString();
     }
 }

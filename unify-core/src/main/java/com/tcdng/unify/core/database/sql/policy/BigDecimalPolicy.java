@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Big decimal data type SQL policy.
@@ -32,17 +33,14 @@ public class BigDecimalPolicy implements SqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        if (scale <= 0) {
-            scale = 2;
-        }
-        if (precision <= 0) {
-            precision = 14;
-        }
-        if (precision < scale) {
-            precision = scale;
-        }
-
         sb.append("DECIMAL(").append(precision).append(',').append(scale).append(')');
+    }
+
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if(StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT ").append(Double.valueOf(defaultVal));
+        }        
     }
 
     @Override
@@ -62,5 +60,15 @@ public class BigDecimalPolicy implements SqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
         return ((ResultSet) rs).getBigDecimal(index);
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.DECIMAL;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
     }
 }

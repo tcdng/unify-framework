@@ -15,13 +15,14 @@
  */
 package com.tcdng.unify.core.database.sql.policy;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.util.CalendarUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Date data type SQL policy.
@@ -37,12 +38,19 @@ public class DatePolicy implements SqlDataTypePolicy {
     }
 
     @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (!StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT ").append(defaultVal);
+        }
+    }
+
+    @Override
     public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
         if (data == null) {
-            ((PreparedStatement) pstmt).setNull(index, Types.DATE);
+            ((PreparedStatement) pstmt).setNull(index, Types.TIMESTAMP);
         } else {
-            ((PreparedStatement) pstmt).setDate(index,
-                    new Date((CalendarUtils.getMidnightDate((java.util.Date) data)).getTime()));
+            ((PreparedStatement) pstmt).setTimestamp(index,
+                    new Timestamp((CalendarUtils.getMidnightDate((java.util.Date) data)).getTime()));
         }
     }
 
@@ -54,6 +62,16 @@ public class DatePolicy implements SqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
         return CalendarUtils.getMidnightDate(((ResultSet) rs).getDate(index));
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.TIMESTAMP;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 
 }

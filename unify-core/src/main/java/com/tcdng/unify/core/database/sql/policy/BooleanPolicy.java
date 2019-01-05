@@ -20,7 +20,8 @@ import java.sql.ResultSet;
 import java.sql.Types;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.SqlUtils;
+import com.tcdng.unify.core.database.sql.SqlUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Boolean data type SQL policy.
@@ -32,7 +33,14 @@ public class BooleanPolicy implements SqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("CHAR(1)");
+        sb.append("CHAR(").append(length).append(")");
+    }
+
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT '").append(SqlUtils.getString(Boolean.valueOf(defaultVal))).append("'");
+        }
     }
 
     @Override
@@ -52,6 +60,16 @@ public class BooleanPolicy implements SqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
         return SqlUtils.getBoolean(((ResultSet) rs).getString(index));
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.CHAR;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 
 }
