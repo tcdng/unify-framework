@@ -86,7 +86,6 @@ import com.tcdng.unify.core.operation.Select;
 import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Abstract SQL dialect implementation.
@@ -294,12 +293,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
 
             // Test for alter
-            if (!sqlFieldSchemaInfo.getColumnType().equals(oldSqlFieldSchemaInfo.getColumnType())
-                    || sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
-                    || sqlFieldSchemaInfo.getPrecision() != oldSqlFieldSchemaInfo.getPrecision()
-                    || sqlFieldSchemaInfo.getScale() != oldSqlFieldSchemaInfo.getScale()
-                    || sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable()) {
-                asb.append(generateAlterColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, format));
+            SqlColumnAlterInfo sqlColumnAlterInfo = checkSqlColumnAltered(sqlFieldSchemaInfo, oldSqlFieldSchemaInfo);
+            if (sqlColumnAlterInfo.isAltered()) {
+                asb.append(generateAlterColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, sqlColumnAlterInfo, format));
             }
         }
         sb.append(rsb.toString());
@@ -388,16 +384,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public String generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
         if (format) {
-            sb.append(newLineSql);
+            sb.append(getLineSeparator());
         } else {
             sb.append(' ');
         }
-        sb.append("MODIFY ");
-        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+        sb.append("ALTER COLUMN ");
+        appendAlterTableColumnSQL(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
         return sb.toString();
     }
 
@@ -886,7 +882,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         returnFieldInfoList = new ArrayList<SqlFieldInfo>();
         for (String name : select.values()) {
             SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
-            if (!aggregateType.supports(DataUtils.getWrapperClass(sqlFieldInfo.getFieldClass()))) {
+            if (!aggregateType.supports(DataUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE, name,
                         sqlEntityInfo.getKeyClass());
             }
@@ -1184,7 +1180,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public Map<String, String> getFieldToNativeColumnMap(Class<? extends Entity> clazz) throws UnifyException {
-        return getSqlEntityInfo(clazz).getFieldByColumnNames();
+        return getSqlEntityInfo(clazz).getListColumnsByFieldNames();
     }
 
     @Override
@@ -1297,6 +1293,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
         sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
                 sqlFieldSchemaInfo.getScale());
+        if (sqlFieldSchemaInfo.isWithDefaultValue()) {
+            sqlDataTypePolicy.appendSpecifyDefaultValueSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                    sqlFieldSchemaInfo.getDefaultValue());
+        }
+
         if (sqlFieldSchemaInfo.isPrimaryKey()) {
             sb.append(" PRIMARY KEY NOT NULL");
         } else if (sqlFieldSchemaInfo.isNullable()) {
@@ -1306,6 +1307,32 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" NOT NULL");
         }
+    }
+
+    protected void appendAlterTableColumnSQL(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlColumnAlterInfo sqlColumnAlterInfo) {
+        sb.append(sqlFieldSchemaInfo.getColumn()).append(' ');
+        SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
+        sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                sqlFieldSchemaInfo.getScale());
+        if (sqlColumnAlterInfo.isDefaultChange() && sqlFieldSchemaInfo.isWithDefaultValue()) {
+            sqlDataTypePolicy.appendSpecifyDefaultValueSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                    sqlFieldSchemaInfo.getDefaultValue());
+        }
+
+        if (sqlFieldSchemaInfo.isPrimaryKey()) {
+            sb.append(" PRIMARY KEY");
+        }
+        
+        if (sqlColumnAlterInfo.isNullableChange()) {
+            if (sqlFieldSchemaInfo.isNullable()) {
+                if (appendNullOnTblCreate) {
+                    sb.append(" NULL");
+                }
+            } else {
+                sb.append(" NOT NULL");
+            }
+        }        
     }
 
     /**
@@ -1323,22 +1350,22 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected void appendAggregateFunctionSql(StringBuilder sb, AggregateType aggregateType, String funcParam)
             throws UnifyException {
         switch (aggregateType) {
-        case AVERAGE:
-            sb.append("AVG(");
-            break;
-        case MAXIMUM:
-            sb.append("MAX(");
-            break;
-        case MINIMUM:
-            sb.append("MIN(");
-            break;
-        case SUM:
-            sb.append("SUM(");
-            break;
-        case COUNT:
-        default:
-            sb.append("COUNT(");
-            break;
+            case AVERAGE:
+                sb.append("AVG(");
+                break;
+            case MAXIMUM:
+                sb.append("MAX(");
+                break;
+            case MINIMUM:
+                sb.append("MIN(");
+                break;
+            case SUM:
+                sb.append("SUM(");
+                break;
+            case COUNT:
+            default:
+                sb.append("COUNT(");
+                break;
         }
         sb.append(funcParam).append(')');
     }
@@ -1588,6 +1615,19 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return sb.toString().toUpperCase();
     }
 
+    protected String generateSqlType(SqlColumnInfo sqlColumnInfo) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(sqlColumnInfo.getTypeName());
+        if (sqlColumnInfo.getSize() > 0) {
+            sb.append('(').append(sqlColumnInfo.getSize());
+            if (sqlColumnInfo.getDecimalDigits() > 0) {
+                sb.append(',').append(sqlColumnInfo.getDecimalDigits());
+            }
+            sb.append(')');
+        }
+        return sb.toString();
+    }
+
     protected SqlEntityInfo getSqlEntityInfo(Query<? extends Entity> query) throws UnifyException {
         return (SqlEntityInfo) sqlEntityInfoFactory.getSqlEntityInfo(SqlUtils.getEntityClass(query));
     }
@@ -1641,6 +1681,18 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
 
         return 0;
+    }
+
+    private SqlColumnAlterInfo checkSqlColumnAltered(SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo) throws UnifyException {
+        boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
+        boolean defaultChange = false;
+        boolean typeChange = sqlFieldSchemaInfo.getColumnType().equals(oldSqlFieldSchemaInfo.getColumnType());
+        boolean lenChange = sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
+                || sqlFieldSchemaInfo.getPrecision() != oldSqlFieldSchemaInfo.getPrecision()
+                || sqlFieldSchemaInfo.getScale() != oldSqlFieldSchemaInfo.getScale();
+
+        return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
     }
 
     private boolean appendLimitOffsetInfixClause(StringBuilder sql, Query<? extends Entity> query)

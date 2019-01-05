@@ -23,6 +23,7 @@ import java.sql.Types;
 import javax.sql.rowset.serial.SerialClob;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * CLOB data type SQL policy.
@@ -35,6 +36,13 @@ public class ClobPolicy implements SqlDataTypePolicy {
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append("CLOB");
+    }
+
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT '").append(defaultVal).append("'");
+        }
     }
 
     @Override
@@ -62,6 +70,16 @@ public class ClobPolicy implements SqlDataTypePolicy {
             return clob.getSubString(1, (int) clob.length());
         }
         return null;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.CLOB;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 
 }

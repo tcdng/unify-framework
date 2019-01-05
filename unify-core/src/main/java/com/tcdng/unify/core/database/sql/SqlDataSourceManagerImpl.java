@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
@@ -31,7 +32,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.DataSourceManager;
-import com.tcdng.unify.core.util.SqlUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Default implementation of an SQL data source manager.
@@ -92,8 +93,8 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             logInfo("Scanning datasource {0} schema...", datasource);
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             for (Class<?> entityClass : datasourceEntityTypeMap.get(datasource)) {
-                logDebug("Managing schema for entity type {0}...", entityClass);
-                manageSchema(databaseMetaData, sqlDataSource, entityClass);
+                logDebug("Managing schema elements for entity type {0}...", entityClass);
+                manageEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass);
             }
         } catch (SQLException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, datasource);
@@ -112,8 +113,8 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
     }
 
-    private void manageSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass)
-            throws UnifyException {
+    private void manageEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
+            Class<?> entityClass) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
 
@@ -123,32 +124,32 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         try {
             connection = databaseMetaData.getConnection();
             // Manage table
-            List<String> tableUpdateSQL = new ArrayList<String>();
-            rs = databaseMetaData.getTables(null, null, sqlEntityInfo.getTable(), null);
+            String appSchema = sqlDataSource.getApplicationSchema();
+            List<String> tableUpdateSql = new ArrayList<String>();
+            rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getTable(), null);
             if (rs.next()) {
                 // Table exists. Check for updates
                 String tableType = rs.getString("TABLE_TYPE");
                 if ("TABLE".equalsIgnoreCase(tableType)) {
-                    SqlUtils.close(rs);
-                    rs = databaseMetaData.getColumns(null, null, sqlEntityInfo.getTable(), null);
-                    while (rs.next()) {
-                        // TODO
-                    }
+                    Map<String, SqlColumnInfo> columnMap =
+                            sqlDataSource.getColumnMap(appSchema, sqlEntityInfo.getTable());
+                    List<String> columnUpdateSql =
+                            generateColumnUpdateSql(sqlDataSourceDialect, sqlEntityInfo, columnMap);
+                    tableUpdateSql.addAll(columnUpdateSql);
                 } else {
                     throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
                             sqlDataSource.getName(), sqlEntityInfo.getTable(), tableType);
                 }
-
             } else {
                 logInfo("Creating datasource table {0}...", sqlEntityInfo.getTable());
 
                 // Create table with constraints and indexes
-                tableUpdateSQL.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, formatSql));
+                tableUpdateSql.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, formatSql));
 
                 if (forceForeignConstraints && sqlEntityInfo.isForeignKeys()) {
                     for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
                         if (!sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
-                            tableUpdateSQL.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
+                            tableUpdateSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
                                     sqlForeignKeyInfo, formatSql));
                         }
                     }
@@ -157,28 +158,28 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                 if (sqlEntityInfo.isUniqueConstraints()) {
                     for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
                             .values()) {
-                        tableUpdateSQL.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(sqlEntityInfo,
+                        tableUpdateSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(sqlEntityInfo,
                                 sqlUniqueConstraintInfo, formatSql));
                     }
                 }
 
                 if (sqlEntityInfo.isIndexes()) {
                     for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
-                        tableUpdateSQL.add(
+                        tableUpdateSql.add(
                                 sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo, sqlIndexInfo, formatSql));
                     }
                 }
             }
             SqlUtils.close(rs);
 
-            boolean isAltered = !tableUpdateSQL.isEmpty();
+            boolean isAltered = !tableUpdateSql.isEmpty();
 
             // Manage view
             List<String> viewUpdateSQL = new ArrayList<String>();
             if (sqlEntityInfo.isViewable()) {
                 if (isAltered) {
                     // Check if we have to drop view first
-                    rs = databaseMetaData.getTables(null, null, sqlEntityInfo.getView(), null);
+                    rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getView(), null);
                     if (rs.next()) {
                         String tableType = rs.getString("TABLE_TYPE");
                         if ("VIEW".equalsIgnoreCase(tableType)) {
@@ -196,8 +197,8 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             }
 
             // Apply updates
-            tableUpdateSQL.addAll(viewUpdateSQL);
-            for (String sql : tableUpdateSQL) {
+            tableUpdateSql.addAll(viewUpdateSQL);
+            for (String sql : tableUpdateSql) {
                 logDebug("Executing managed datasource script {0}...", sql);
                 pstmt = connection.prepareStatement(sql);
                 pstmt.executeUpdate();
@@ -215,6 +216,74 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(rs);
             SqlUtils.close(pstmt);
         }
+    }
+
+    private List<String> generateColumnUpdateSql(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
+            Map<String, SqlColumnInfo> columnInfos) throws UnifyException {
+        List<String> columnUpdateSqlList = new ArrayList<String>();
+        for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getFieldInfos()) {
+            SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumn());
+            if (sqlColumnInfo == null) {
+                // New column
+                columnUpdateSqlList.add(sqlDataSourceDialect.generateAddColumn(sqlEntityInfo, sqlfieldInfo, formatSql));
+            } else {
+                SqlColumnAlterInfo columnAlterInfo =
+                        checkSqlColumnAltered(sqlDataSourceDialect, sqlfieldInfo, sqlColumnInfo);
+                if (columnAlterInfo.isAltered()) {
+                    // Alter column
+                    columnUpdateSqlList.add(sqlDataSourceDialect.generateAlterColumn(sqlEntityInfo, sqlfieldInfo,
+                            columnAlterInfo, formatSql));
+                }
+            }
+        }
+
+        // Make abandoned columns nullable
+        for (SqlColumnInfo sqlColumnInfo : columnInfos.values()) {
+            if (!sqlColumnInfo.isNullable()) {
+                // Alter column nullable
+                columnUpdateSqlList
+                        .add(sqlDataSourceDialect.generateAlterColumnNull(sqlEntityInfo, sqlColumnInfo, formatSql));
+            }
+        }
+
+        return columnUpdateSqlList;
+    }
+
+    private SqlColumnAlterInfo checkSqlColumnAltered(SqlDataSourceDialect sqlDataSourceDialect,
+            SqlFieldInfo sqlfieldInfo, SqlColumnInfo columnInfo) throws UnifyException {
+        boolean nullableChange = columnInfo.isNullable() != sqlfieldInfo.isNullable();
+
+        boolean defaultChange = !(((StringUtils.isBlank(columnInfo.getDefaultVal())
+                || SqlUtils.isDefaultConstant(columnInfo.getDefaultVal()))
+                && StringUtils.isBlank(sqlfieldInfo.getDefaultValue()))
+                || (columnInfo.getDefaultVal() != null
+                        && columnInfo.getDefaultVal().equals(sqlfieldInfo.getDefaultValue())));
+
+        SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
+        boolean typeChange = columnInfo.getSqlType() != sqlDataTypePolicy.getSqlType();
+
+        boolean lenChange = false;
+        if (!sqlDataTypePolicy.isFixedLength()) {
+            if (sqlfieldInfo.getLength() > 0) {
+                if (sqlfieldInfo.getLength() != columnInfo.getSize()) {
+                    lenChange = true;
+                }
+            }
+
+            if (sqlfieldInfo.getPrecision() > 0) {
+                if (sqlfieldInfo.getPrecision() != columnInfo.getSize()) {
+                    lenChange = true;
+                }
+            }
+
+            if (sqlfieldInfo.getScale() > 0) {
+                if (sqlfieldInfo.getScale() != columnInfo.getDecimalDigits()) {
+                    lenChange = true;
+                }
+            }
+        }
+
+        return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
     }
 
     private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)

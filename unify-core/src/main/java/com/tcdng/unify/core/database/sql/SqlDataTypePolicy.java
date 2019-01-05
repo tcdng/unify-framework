@@ -24,6 +24,20 @@ package com.tcdng.unify.core.database.sql;
 public interface SqlDataTypePolicy {
 
     /**
+     * Gets the java SQL data type.
+     * 
+     * @return the java SQL type value
+     */
+    int getSqlType();
+
+    /**
+     * Checks if policy type is for fixed length type.
+     * 
+     * @return a true value if for fixed length otherwise false
+     */
+    boolean isFixedLength();
+
+    /**
      * Appends a type SQL to string buffer.
      * 
      * @param sb
@@ -36,6 +50,18 @@ public interface SqlDataTypePolicy {
      *            the number scale
      */
     void appendTypeSql(StringBuilder sb, int length, int precision, int scale);
+
+    /**
+     * Appends default value SQL
+     * 
+     * @param sb
+     *            the builder to append to
+     * @param type
+     *            the column type
+     * @param defaultVal
+     *            the default value
+     */
+    void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal);
 
     /**
      * Executes the setter of a prepared statement.

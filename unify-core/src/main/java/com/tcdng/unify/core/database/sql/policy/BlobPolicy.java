@@ -38,6 +38,11 @@ public class BlobPolicy implements SqlDataTypePolicy {
     }
 
     @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        
+    }
+
+    @Override
     public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
@@ -62,6 +67,16 @@ public class BlobPolicy implements SqlDataTypePolicy {
             return blob.getBytes(1, (int) blob.length());
         }
         return null;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.BLOB;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
     }
 
 }

@@ -21,6 +21,7 @@ import java.sql.Types;
 
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * String data type SQL policy.
@@ -38,6 +39,13 @@ public class StringPolicy implements SqlDataTypePolicy {
             length = DEFAULT_LENGTH;
         }
         sb.append("VARCHAR(").append(length).append(')');
+    }
+
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT '").append(defaultVal).append("'");
+        }
     }
 
     @Override
@@ -61,6 +69,16 @@ public class StringPolicy implements SqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
         return ((ResultSet) rs).getString(index);
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.VARCHAR;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
     }
 
 }

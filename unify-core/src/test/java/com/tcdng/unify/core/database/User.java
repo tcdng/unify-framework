@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.Date;
+
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
 
@@ -33,13 +35,21 @@ public class User extends AbstractTestEntity {
     @Column(length = 128, transformer = "oneway-stringcryptograph")
     private String password;
 
+    @Column
+    private Date createDt;
+
     public User() {
 
     }
 
     public User(String name, String password) {
+        this(name, password, new Date());
+    }
+
+    public User(String name, String password, Date createDt) {
         this.name = name;
         this.password = password;
+        this.createDt = createDt;
     }
 
     public String getName() {
@@ -56,5 +66,13 @@ public class User extends AbstractTestEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getCreateDt() {
+        return createDt;
+    }
+
+    public void setCreateDt(Date createDt) {
+        this.createDt = createDt;
     }
 }
