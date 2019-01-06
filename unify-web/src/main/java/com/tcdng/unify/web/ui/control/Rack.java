@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -104,24 +104,24 @@ public class Rack extends Table {
             int viewIndex = getViewIndex();
             int oldIndex = viewIndex;
             switch (shiftDirection) {
-            case ShiftDirectionConstants.TOP:
-                viewIndex = 0;
-                break;
-            case ShiftDirectionConstants.UP:
-                if (viewIndex > 0) {
-                    viewIndex--;
-                    swap = true;
-                }
-                break;
-            case ShiftDirectionConstants.DOWN:
-                if (viewIndex < (list.size() - 1)) {
-                    viewIndex++;
-                    swap = true;
-                }
-                break;
-            case ShiftDirectionConstants.BOTTOM:
-                viewIndex = list.size() - 1;
-                break;
+                case ShiftDirectionConstants.TOP:
+                    viewIndex = 0;
+                    break;
+                case ShiftDirectionConstants.UP:
+                    if (viewIndex > 0) {
+                        viewIndex--;
+                        swap = true;
+                    }
+                    break;
+                case ShiftDirectionConstants.DOWN:
+                    if (viewIndex < (list.size() - 1)) {
+                        viewIndex++;
+                        swap = true;
+                    }
+                    break;
+                case ShiftDirectionConstants.BOTTOM:
+                    viewIndex = list.size() - 1;
+                    break;
             }
 
             if (oldIndex != viewIndex) {

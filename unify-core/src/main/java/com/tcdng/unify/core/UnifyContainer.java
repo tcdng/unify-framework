@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -99,12 +99,13 @@ public class UnifyContainer {
 
     private static final long COMMAND_THREAD_RATE = 1000;
 
-    private static ThreadLocal<InitializationTrail> initializationTrailThreadLocal = new ThreadLocal<InitializationTrail>() {
-        @Override
-        protected InitializationTrail initialValue() {
-            return new InitializationTrail();
-        }
-    };
+    private static ThreadLocal<InitializationTrail> initializationTrailThreadLocal =
+            new ThreadLocal<InitializationTrail>() {
+                @Override
+                protected InitializationTrail initialValue() {
+                    return new InitializationTrail();
+                }
+            };
 
     private UnifyContainerEnvironment unifyContainerEnvironment;
 
@@ -281,8 +282,8 @@ public class UnifyContainer {
         }
 
         String lineSeparator = System.getProperty("line.separator");
-        applicationContext = new ApplicationContext(this, Locale.getDefault(),
-                lineSeparator != null ? lineSeparator : "\n");
+        applicationContext =
+                new ApplicationContext(this, Locale.getDefault(), lineSeparator != null ? lineSeparator : "\n");
         long startTimeMillis = System.currentTimeMillis();
         initializeContainerMessages();
         initializeContainerLogger();
@@ -318,8 +319,8 @@ public class UnifyContainer {
         // Resolve customization
         List<String> customizationSuffixList = DataUtils.convert(ArrayList.class, String.class,
                 getSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMIZATION), null);
-        internalResolutionMap = UnifyConfigUtils.resolveConfigurationOverrides(internalUnifyComponentInfos,
-                customizationSuffixList);
+        internalResolutionMap =
+                UnifyConfigUtils.resolveConfigurationOverrides(internalUnifyComponentInfos, customizationSuffixList);
 
         // Detect business components
         logDebug("Detecting business service components...");
@@ -379,7 +380,8 @@ public class UnifyContainer {
 
         // Detect business logic plug-ins
         logDebug("Detecting business logic plugins...");
-        Map<String, Map<String, List<UnifyPluginInfo>>> allPluginsBySocketMap = new HashMap<String, Map<String, List<UnifyPluginInfo>>>();
+        Map<String, Map<String, List<UnifyPluginInfo>>> allPluginsBySocketMap =
+                new HashMap<String, Map<String, List<UnifyPluginInfo>>>();
         for (Map.Entry<String, InternalUnifyComponentInfo> entry : internalUnifyComponentInfos.entrySet()) {
             InternalUnifyComponentInfo iuci = entry.getValue();
             // Check if component is a BLU plug-in
@@ -424,9 +426,9 @@ public class UnifyContainer {
 
         // Set some system defaults
         if (!internalUnifyComponentInfos.containsKey(ApplicationComponents.APPLICATION_EVENTSLOGGER)) {
-            UnifyComponentConfig internalComponentConfig = new UnifyComponentConfig(
-                    ApplicationComponents.APPLICATION_EVENTSLOGGER, "Application Event Logger", DummyEventLogger.class,
-                    true);
+            UnifyComponentConfig internalComponentConfig =
+                    new UnifyComponentConfig(ApplicationComponents.APPLICATION_EVENTSLOGGER, "Application Event Logger",
+                            DummyEventLogger.class, true);
             internalUnifyComponentInfos.put(internalComponentConfig.getName(),
                     new InternalUnifyComponentInfo(internalComponentConfig));
         }
@@ -440,8 +442,8 @@ public class UnifyContainer {
 
         // Initialization
         started = true;
-        requestContextManager = (RequestContextManager) getComponent(
-                ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+        requestContextManager =
+                (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
         uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
 
         // Generate and install proxy business service objects
@@ -451,8 +453,8 @@ public class UnifyContainer {
             if (pluginMap == null) {
                 pluginMap = Collections.emptyMap();
             }
-            UnifyComponentConfig proxyUnifyComponentConfig = generateInstallBusinessServiceProxyObjects(
-                    unifyComponentConfig, pluginMap);
+            UnifyComponentConfig proxyUnifyComponentConfig =
+                    generateInstallBusinessServiceProxyObjects(unifyComponentConfig, pluginMap);
             InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(proxyUnifyComponentConfig.getName());
             iuc.setUnifyComponentConfig(proxyUnifyComponentConfig);
         }
@@ -714,8 +716,8 @@ public class UnifyContainer {
 
         try {
             UplElementAttributes uplElementAttributes = uplCompiler.compileDescriptor(locale, descriptor);
-            UplComponent uplComponent = (UplComponent) getComponent(uplElementAttributes.getComponentName(), null,
-                    uplElementAttributes);
+            UplComponent uplComponent =
+                    (UplComponent) getComponent(uplElementAttributes.getComponentName(), null, uplElementAttributes);
             return uplComponent;
         } finally {
             initializationTrailThreadLocal.remove();
@@ -737,8 +739,8 @@ public class UnifyContainer {
     public UplComponent getUplComponent(Locale locale, String attributesKey) throws UnifyException {
         try {
             UplElementAttributes uplElementAttributes = uplCompiler.getUplElementAttributes(locale, attributesKey);
-            UplComponent uplComponent = (UplComponent) getComponent(uplElementAttributes.getComponentName(), null,
-                    uplElementAttributes);
+            UplComponent uplComponent =
+                    (UplComponent) getComponent(uplElementAttributes.getComponentName(), null, uplElementAttributes);
             return uplComponent;
         } finally {
             initializationTrailThreadLocal.remove();
@@ -1157,12 +1159,12 @@ public class UnifyContainer {
             Map<String, List<UnifyPluginInfo>> pluginMap) throws UnifyException {
         ProxyBusinessServiceGenerator bspg = (ProxyBusinessServiceGenerator) this
                 .getComponent(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR);
-        Class<? extends BusinessService> proxyClazz = bspg.generateCompileLoadProxyBusinessServiceClass(
-                businessLogicConfig.getName(), (Class<? extends BusinessService>) businessLogicConfig.getType(),
-                pluginMap);
-        UnifyComponentConfig internalComponentConfig = new UnifyComponentConfig(businessLogicConfig.getSettings(),
-                businessLogicConfig.getName(), businessLogicConfig.getDescription(), proxyClazz,
-                businessLogicConfig.isSingleton());
+        Class<? extends BusinessService> proxyClazz =
+                bspg.generateCompileLoadProxyBusinessServiceClass(businessLogicConfig.getName(),
+                        (Class<? extends BusinessService>) businessLogicConfig.getType(), pluginMap);
+        UnifyComponentConfig internalComponentConfig =
+                new UnifyComponentConfig(businessLogicConfig.getSettings(), businessLogicConfig.getName(),
+                        businessLogicConfig.getDescription(), proxyClazz, businessLogicConfig.isSingleton());
         return internalComponentConfig;
     }
 
@@ -1255,8 +1257,8 @@ public class UnifyContainer {
         org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
         if (!rootLogger.getAllAppenders().hasMoreElements()) {
             try {
-                String loggingPattern = (String) unifySettings
-                        .get(UnifyCorePropertyConstants.APPLICATION_LOGGER_PATTERN_SETTING);
+                String loggingPattern =
+                        (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOGGER_PATTERN_SETTING);
                 if (loggingPattern == null) {
                     loggingPattern = "%d{ISO8601} %-5p %c{1} %m%n";
                 }
@@ -1286,8 +1288,8 @@ public class UnifyContainer {
                     filename = IOUtils.buildFilename("logs", filename);
                     filename = IOUtils.buildFilename(getWorkingPath(), filename);
 
-                    String fileMaxSize = (String) unifySettings
-                            .get(UnifyCorePropertyConstants.APPLICATION_LOG_FILEMAXSIZE);
+                    String fileMaxSize =
+                            (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_FILEMAXSIZE);
                     if (fileMaxSize == null) {
                         fileMaxSize = "1MB";
                     }

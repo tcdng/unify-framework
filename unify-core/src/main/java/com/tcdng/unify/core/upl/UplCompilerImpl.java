@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -82,12 +82,12 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
             @Override
             protected UplElement createObject(Locale locale, String descriptor, Object... params) throws Exception {
                 ParserContext parserContext = new ParserContext();
-                UplElement uplElement = parseElementType(parserContext, UplTypeConstants.DESCRIPTOR, "", 0, descriptor,
-                        0, true);
+                UplElement uplElement =
+                        parseElementType(parserContext, UplTypeConstants.DESCRIPTOR, "", 0, descriptor, 0, true);
                 parseDescriptor(parserContext, uplElement, descriptor, uplElement.getElementType().length() + 2);
                 postParse(parserContext, uplElement);
-                CompilerContext compilerContext = new CompilerContext("", getUnifyComponentContext().getMessages(),
-                        locale);
+                CompilerContext compilerContext =
+                        new CompilerContext("", getUnifyComponentContext().getMessages(), locale);
                 compileAttributes(compilerContext, uplElement);
                 postCompile(uplElement, locale);
                 registerByAttributesKey(compilerContext, uplElement, descriptor);
@@ -138,8 +138,8 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
                     boolean isAppendSym = false;
                     for (Class<?> clazz : ReflectUtils.getClassHierachyList(type)) {
                         if (UnifyComponent.class.isAssignableFrom(clazz)) {
-                            String componentName = UnifyConfigUtils
-                                    .getComponentName((Class<? extends UnifyComponent>) clazz);
+                            String componentName =
+                                    UnifyConfigUtils.getComponentName((Class<? extends UnifyComponent>) clazz);
                             if (componentName != null) {
                                 if (isAppendSym) {
                                     qsb.append(' ');
@@ -260,8 +260,8 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
             throw new UnifyException(UnifyCoreErrorConstants.UPL_CYCLIC_REFERENCE_DETECTED, cycle.toString());
         }
 
-        CompilerContext compilerContext = new CompilerContext(componentName, getUnifyComponentContext().getMessages(),
-                locale);
+        CompilerContext compilerContext =
+                new CompilerContext(componentName, getUnifyComponentContext().getMessages(), locale);
         compile(compilerContext, uplDocument);
 
         // Register UPL attributes by attributes key
@@ -480,8 +480,8 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
         // Loop through class and all super classes
         Class<?> clazz = componentClass;
         while (clazz != null) {
-            com.tcdng.unify.core.annotation.UplBinding uba = clazz
-                    .getAnnotation(com.tcdng.unify.core.annotation.UplBinding.class);
+            com.tcdng.unify.core.annotation.UplBinding uba =
+                    clazz.getAnnotation(com.tcdng.unify.core.annotation.UplBinding.class);
             if (uba != null) {
                 logDebug("Parsing binded document for component type [{0}] [{1}]...", componentClass, uba.value());
                 uplElement.merge(parseUplSource(parserContext, uba));
@@ -734,18 +734,18 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
         String attributesKey = null;
         int uplType = uplElement.getUplType();
         switch (uplType) {
-        case UplTypeConstants.DOCUMENT:
-            attributesKey = UplUtils.generateUplAttributesKey(uplType, compilerContext.getComponentName(),
-                    uplElement.getLongName(), null);
-            break;
-        case UplTypeConstants.DOCUMENT_INLINE:
-            attributesKey = UplUtils.generateUplAttributesKey(uplType, compilerContext.getComponentName(),
-                    uplElement.getId(), null);
-            break;
-        case UplTypeConstants.DESCRIPTOR:
-        case UplTypeConstants.DESCRIPTOR_INLINE:
-            attributesKey = UplUtils.generateUplAttributesKey(uplType, null, null, descriptor);
-            break;
+            case UplTypeConstants.DOCUMENT:
+                attributesKey = UplUtils.generateUplAttributesKey(uplType, compilerContext.getComponentName(),
+                        uplElement.getLongName(), null);
+                break;
+            case UplTypeConstants.DOCUMENT_INLINE:
+                attributesKey = UplUtils.generateUplAttributesKey(uplType, compilerContext.getComponentName(),
+                        uplElement.getId(), null);
+                break;
+            case UplTypeConstants.DESCRIPTOR:
+            case UplTypeConstants.DESCRIPTOR_INLINE:
+                attributesKey = UplUtils.generateUplAttributesKey(uplType, null, null, descriptor);
+                break;
         }
 
         // if (!uplElementAttributesMap.containsKey(compilerContext.getLocale(),
@@ -774,12 +774,12 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
     private void forceCompile(Locale locale, String attributesKey) throws UnifyException {
         UplAttributesKeyFields uakf = UplUtils.extractUplAtributesKeyFields(attributesKey);
         switch (uakf.getUplType()) {
-        case UplTypeConstants.DOCUMENT:
-        case UplTypeConstants.DOCUMENT_INLINE:
-            compileComponentDocuments(locale, uakf.getComponentName());
-            break;
-        default: // Free form
-            compileDescriptor(locale, uakf.getDescriptor());
+            case UplTypeConstants.DOCUMENT:
+            case UplTypeConstants.DOCUMENT_INLINE:
+                compileComponentDocuments(locale, uakf.getComponentName());
+                break;
+            default: // Free form
+                compileDescriptor(locale, uakf.getDescriptor());
         }
     }
 

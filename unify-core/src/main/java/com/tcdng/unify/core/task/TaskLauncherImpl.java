@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,21 +41,21 @@ public class TaskLauncherImpl extends AbstractUnifyComponent implements TaskLaun
         }
 
         switch (taskSetup.getType()) {
-        case RUN_AFTER:
-            return taskManager.scheduleTasksToRunAfter(taskSetup.getTaskNames(), taskSetup.getParameters(),
-                    taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
-                    taskSetup.getLogger());
-        case RUN_PERIODIC:
-            return taskManager.scheduleTasksToRunPeriodically(taskSetup.getTaskNames(), taskSetup.getParameters(),
-                    taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
-                    taskSetup.getPeriodInMillSec(), taskSetup.getNumberOfTimes(), taskSetup.getLogger());
-        case RUN_IMMEDIATE_BLOCK:
-            return taskManager.executeTasks(taskSetup.getTaskNames(), taskSetup.getParameters(), taskSetup.isMessages(),
-                    taskSetup.isDependent(), taskSetup.getLogger());
-        case RUN_IMMEDIATE:
-        default:
-            return taskManager.startTasks(taskSetup.getTaskNames(), taskSetup.getParameters(), taskSetup.isMessages(),
-                    taskSetup.isDependent(), taskSetup.getLogger());
+            case RUN_AFTER:
+                return taskManager.scheduleTasksToRunAfter(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
+                        taskSetup.getLogger());
+            case RUN_PERIODIC:
+                return taskManager.scheduleTasksToRunPeriodically(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
+                        taskSetup.getPeriodInMillSec(), taskSetup.getNumberOfTimes(), taskSetup.getLogger());
+            case RUN_IMMEDIATE_BLOCK:
+                return taskManager.executeTasks(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getLogger());
+            case RUN_IMMEDIATE:
+            default:
+                return taskManager.startTasks(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getLogger());
         }
     }
 

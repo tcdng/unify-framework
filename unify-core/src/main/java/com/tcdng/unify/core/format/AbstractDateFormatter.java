@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -91,21 +91,21 @@ public abstract class AbstractDateFormatter extends AbstractFormatter<Date> impl
         DateFormat df = null;
 
         switch (type) {
-        case DATETIME:
-            Integer styleId = getStyleId();
-            df = DateFormat.getDateTimeInstance(styleId, styleId, getLocale());
-            break;
-        case TIME:
-            df = DateFormat.getTimeInstance(getStyleId(), getLocale());
-            break;
-        case DATE:
-            df = DateFormat.getDateInstance(getStyleId(), getLocale());
-            break;
-        case FIXED:
-        default:
-            String uplPattern = getUplAttribute(String.class, "pattern");
-            df = new SimpleDateFormat(uplPattern, getLocale());
-            break;
+            case DATETIME:
+                Integer styleId = getStyleId();
+                df = DateFormat.getDateTimeInstance(styleId, styleId, getLocale());
+                break;
+            case TIME:
+                df = DateFormat.getTimeInstance(getStyleId(), getLocale());
+                break;
+            case DATE:
+                df = DateFormat.getDateInstance(getStyleId(), getLocale());
+                break;
+            case FIXED:
+            default:
+                String uplPattern = getUplAttribute(String.class, "pattern");
+                df = new SimpleDateFormat(uplPattern, getLocale());
+                break;
         }
 
         String timeZoneId = getUplAttribute(String.class, "timeZoneId");

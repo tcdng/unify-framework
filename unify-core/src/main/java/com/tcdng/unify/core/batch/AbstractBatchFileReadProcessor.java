@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,8 +36,8 @@ public abstract class AbstractBatchFileReadProcessor extends AbstractBusinessLog
     @Override
     public void execute(BusinessLogicInput input, BusinessLogicOutput output) throws UnifyException {
         Object result = null;
-        BatchFileConfig batchFileConfig = input.getParameter(BatchFileConfig.class,
-                BatchFileReadProcessorInputConstants.BATCHFILECONFIG);
+        BatchFileConfig batchFileConfig =
+                input.getParameter(BatchFileConfig.class, BatchFileReadProcessorInputConstants.BATCHFILECONFIG);
         Object[] fileObject = input.getParameter(Object[].class, BatchFileReadProcessorInputConstants.FILEOBJECTS);
         BatchFileReader reader = batchFileRwFactory.getBatchFileReader(input, batchFileConfig, fileObject);
         try {

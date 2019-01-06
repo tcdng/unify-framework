@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -52,9 +52,9 @@ public class JcifsFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testGetRemoteFileList() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/filelist").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
+                        .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist").build();
         List<FileInfo> fileInfoList = fileTransferServer.getRemoteFileList(fileTransferInfo);
         assertNotNull(fileInfoList);
         assertEquals(2, fileInfoList.size());
@@ -137,9 +137,9 @@ public class JcifsFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testRemoteDirectoryExist() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/filelist").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
+                        .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist").build();
         assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
 
         fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
@@ -150,9 +150,9 @@ public class JcifsFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testRemoteDirectoryNotExist() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/filelistA").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
+                        .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelistA").build();
         assertFalse(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
 
         fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
@@ -163,9 +163,9 @@ public class JcifsFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testRemoteFileExist() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/filelist").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
+                        .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist").build();
         assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "Hello.txt"));
 
         fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
@@ -178,9 +178,9 @@ public class JcifsFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testCreateRemoteDirectory() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/newlist").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
+                        .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/newlist").build();
         fileTransferServer.createRemoteDirectory(fileTransferInfo);
         assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
     }
@@ -188,9 +188,9 @@ public class JcifsFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testCreateRemoteFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/newlist").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
+                        .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/newlist").build();
         fileTransferServer.createRemoteFile(fileTransferInfo, "Sample.txt");
         assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "Sample.txt"));
     }
@@ -207,9 +207,9 @@ public class JcifsFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testDeleteRemoteFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/newlist").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).useAuthenticationId(REMOTE_AUTH_ID)
+                        .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/newlist").build();
         fileTransferServer.createRemoteFile(fileTransferInfo, "Sample.txt");
         fileTransferServer.deleteRemoteFile(fileTransferInfo, "Sample.txt");
         assertFalse(fileTransferServer.remoteFileExists(fileTransferInfo, "Sample.txt"));

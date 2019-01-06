@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -133,8 +133,8 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
     public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
         if (isClusterMode()
                 && !Boolean.TRUE.equals(getRequestAttribute(RequestAttributeConstants.SUPPRESS_BROADCAST))) {
-            List<String> nodeIdList = db().valueList(String.class, "nodeId",
-                    new ClusterNodeQuery().nodeNotEqual(getNodeId()));
+            List<String> nodeIdList =
+                    db().valueList(String.class, "nodeId", new ClusterNodeQuery().nodeNotEqual(getNodeId()));
             if (!nodeIdList.isEmpty()) {
                 ClusterCommand clusterCommandData = new ClusterCommand();
                 clusterCommandData.setCommandCode(command);
@@ -265,8 +265,8 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
             clusterNodeData.setNodeId(nodeId);
             clusterNodeData.setLastHeartBeat(lastHeartBeat);
             clusterNodeData.setIpAddress(NetworkUtils.getLocalHostIpAddress());
-            UnifyContainerInterface unifyContainerInterface = (UnifyContainerInterface) this
-                    .getComponent("unify-commandinterface");
+            UnifyContainerInterface unifyContainerInterface =
+                    (UnifyContainerInterface) this.getComponent("unify-commandinterface");
             clusterNodeData.setCommandPort(Integer.valueOf(unifyContainerInterface.getPort()));
             db().create(clusterNodeData);
         }

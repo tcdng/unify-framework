@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -114,8 +114,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                 Map<String, PageAction> reusablePageActions = new LinkedHashMap<String, PageAction>();
                 for (String longName : uplDocumentAttributes.getLongNames()) {
                     UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName(longName);
-                    Class<? extends UplComponent> type = (Class<? extends UplComponent>) getComponentType(
-                            uea.getComponentName());
+                    Class<? extends UplComponent> type =
+                            (Class<? extends UplComponent>) getComponentType(uea.getComponentName());
 
                     // Only page action and page validation components are
                     // reusable
@@ -132,8 +132,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
                             if (pageAction.isUplAttribute("valueComponentList")) {
                                 if (!valueReferences.containsKey(pageName)) {
-                                    UplElementReferences uer = uea.getAttributeValue(UplElementReferences.class,
-                                            "valueComponentList");
+                                    UplElementReferences uer =
+                                            uea.getAttributeValue(UplElementReferences.class, "valueComponentList");
                                     if (uer != null) {
                                         valueReferences.put(pageName, Collections.unmodifiableList(
                                                 StringUtils.removeDuplicates(getPageNames(uer.getLongNames()))));
@@ -157,8 +157,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                 for (Map.Entry<String, PageAction> entry : reusablePageActions.entrySet()) {
                     PageAction pageAction = entry.getValue();
                     if (pageAction.isUplAttribute("validations")) {
-                        UplElementReferences uer = pageAction.getUplAttribute(UplElementReferences.class,
-                                "validations");
+                        UplElementReferences uer =
+                                pageAction.getUplAttribute(UplElementReferences.class, "validations");
                         if (uer != null) {
                             for (String validationLongName : uer.getLongNames()) {
                                 if (reusablePageValidations.get(validationLongName) == null) {
@@ -185,8 +185,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                         if (value instanceof EventHandler[]) {
                             EventHandler[] eventHandlers = (EventHandler[]) value;
                             for (EventHandler eventHandler : eventHandlers) {
-                                UplElementReferences uer = eventHandler.getUplAttribute(UplElementReferences.class,
-                                        "action");
+                                UplElementReferences uer =
+                                        eventHandler.getUplAttribute(UplElementReferences.class, "action");
                                 if (uer != null) {
                                     List<PageAction> pageActionList = new ArrayList<PageAction>();
                                     for (String actionLongName : uer.getLongNames()) {
@@ -209,10 +209,10 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
                 widgetNameInfos.put(uplDocumentAttributes.getLongName(),
                         createWidgetInfo(uplDocumentAttributes, nonreusableComponentLongNames));
-                StandalonePanelInfo standalonePanelInfo = new StandalonePanelInfo(
-                        Collections.unmodifiableMap(widgetNameInfos),
-                        Collections.unmodifiableMap(reusablePageValidations),
-                        Collections.unmodifiableMap(reusablePageActions));
+                StandalonePanelInfo standalonePanelInfo =
+                        new StandalonePanelInfo(Collections.unmodifiableMap(widgetNameInfos),
+                                Collections.unmodifiableMap(reusablePageValidations),
+                                Collections.unmodifiableMap(reusablePageActions));
                 return standalonePanelInfo;
             }
         };
@@ -294,8 +294,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         String spLongName = uplDocumentAttributes.getLongName();
         String id = getPageName(spLongName);
 
-        StandalonePanelContext ctx = new StandalonePanelContext(
-                standalonePanelInfoByNameMap.get(locale, name, uplDocumentAttributes));
+        StandalonePanelContext ctx =
+                new StandalonePanelContext(standalonePanelInfoByNameMap.get(locale, name, uplDocumentAttributes));
         StandalonePanelInfo standalonePanelInfo = ctx.getStandalonePanelInfo();
         StandalonePanel standalonePanel = (StandalonePanel) getUplComponent(locale, uplDocumentAttributes.getKey());
         standalonePanel.setId(id);
@@ -513,8 +513,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         }
 
         if (childElements.isEmpty() && !expandedList.contains(uea.getLongName())) {
-            Class<? extends UplComponent> type = (Class<? extends UplComponent>) getComponentType(
-                    uea.getComponentName());
+            Class<? extends UplComponent> type =
+                    (Class<? extends UplComponent>) getComponentType(uea.getComponentName());
             if (!PageAction.class.isAssignableFrom(type) && !PageValidation.class.isAssignableFrom(type)) {
                 expandedList.add(uea.getLongName());
             }

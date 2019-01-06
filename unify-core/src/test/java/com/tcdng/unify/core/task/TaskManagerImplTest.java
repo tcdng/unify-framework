@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -146,8 +146,8 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
     public void testExecuteTasks() throws Exception {
         parameters.put("paramA", "Lion");
         parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.executeTasks(Arrays.asList("test-taska", "test-taskb"), parameters, false,
-                true, null);
+        TaskMonitor taskMonitor =
+                taskManager.executeTasks(Arrays.asList("test-taska", "test-taskb"), parameters, false, true, null);
         assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
         assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(1));
@@ -195,8 +195,8 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
     public void testStartTasks() throws Exception {
         parameters.put("paramA", "Lion");
         parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.startTasks(Arrays.asList("test-taska", "test-taskb"), parameters, false,
-                true, null);
+        TaskMonitor taskMonitor =
+                taskManager.startTasks(Arrays.asList("test-taska", "test-taskb"), parameters, false, true, null);
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }

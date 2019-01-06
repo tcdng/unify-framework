@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,16 +40,16 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPageControllerInfo() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testauthor");
         assertNotNull(pbbi);
     }
 
     @Test
     public void testPageControllerInfoActions() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testauthor");
 
         Set<String> actionNames = pbbi.getActionNames();
@@ -78,23 +78,23 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test(expected = UnifyException.class)
     public void testGetPageControllerInfoInvalid() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         bbm.getPageControllerInfo("/resource/mock");
     }
 
     @Test
     public void testGetResourceControllerInfo() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         ResourceControllerInfo rbbi = bbm.getResourceControllerInfo("/resource/mock");
         assertNotNull(rbbi);
     }
 
     @Test
     public void testResourceControllerInfoActions() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         ResourceControllerInfo rbbi = bbm.getResourceControllerInfo("/resource/mock");
 
         Set<String> pageNames = rbbi.getPropertyIds();
@@ -117,23 +117,23 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test(expected = UnifyException.class)
     public void testGetResourceControllerInfoInvalid() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         bbm.getResourceControllerInfo("/testauthor");
     }
 
     @Test
     public void testGetRemoteCallControllerInfo() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         RemoteCallControllerInfo rcbbi = bbm.getRemoteCallControllerInfo("/remotecall/mock");
         assertNotNull(rcbbi);
     }
 
     @Test
     public void testRemoteCallControllerInfoHandlers() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         RemoteCallControllerInfo rcbbiXml = bbm.getRemoteCallControllerInfo("/remotecall/mock");
         RemoteCallHandler handler = rcbbiXml.getRemoteCallHandler("/remotecall/mock/getAccountDetails");
         assertNotNull(handler);
@@ -145,8 +145,8 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetController() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         Controller pbb = bbm.getController("/testauthor");
         assertNotNull(pbb);
 
@@ -156,15 +156,15 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test(expected = UnifyException.class)
     public void testGetControllerUnknown() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         bbm.getController("/snuffleupagus");
     }
 
     @Test
     public void testGetPageControllerSameSession() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         Controller bb1 = bbm.getController("/testauthor");
         Controller bb2 = bbm.getController("/testauthor");
         assertSame(bb1, bb2);
@@ -173,8 +173,8 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testPopulateControllerProperty() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
         Date birthDt = new Date();
         bbm.populateController("/testauthor", "fullName", "Adrian Skim");
@@ -189,8 +189,8 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testExecuteXMLRemoteCallController() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
         TestClientResponse response = new TestClientResponse();
         TestClientRequest request = new TestClientRequest("/remotecall/mock/getAccountDetails");
@@ -208,8 +208,8 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testExecuteJSONRemoteCallController() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
         TestClientResponse response = new TestClientResponse();
         TestClientRequest request = new TestClientRequest("/remotecall/mock/getAccountDetails");
@@ -222,8 +222,8 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testExecutePageController() throws Exception {
-        ControllerManager bbm = (ControllerManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        ControllerManager bbm =
+                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
         TestClientResponse response = new TestClientResponse();
         TestClientRequest request = new TestClientRequest("/testauthor/createAuthor");

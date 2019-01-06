@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,8 +54,8 @@ public abstract class AbstractRegexPageValidation extends AbstractPageValidation
                 if (dataTransferBlock != null) {
                     String value = getTransferValue(String.class, dataTransferBlock);
                     if (value != null) {
-                        Matcher matcher = ((RegexPatternStore) getComponent(
-                                ApplicationComponents.APPLICATION_REGEXPATTERNSTORE))
+                        Matcher matcher =
+                                ((RegexPatternStore) getComponent(ApplicationComponents.APPLICATION_REGEXPATTERNSTORE))
                                         .getPattern(getSessionLocale(), regexKey).matcher(value);
                         if (!matcher.matches()) {
                             String caption = widget.getUplAttribute(String.class, "caption");

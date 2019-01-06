@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,59 +31,59 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
     @Override
     public void log(LoggingLevel loggingLevel, String message) throws UnifyException {
         switch (loggingLevel) {
-        case DEBUG:
-            logger.debug(message);
-            break;
-        case ERROR:
-            logger.error(message);
-            break;
-        case SEVERE:
-            logger.fatal(message);
-            break;
-        case WARN:
-            logger.warn(message);
-            break;
-        case INFO:
-        default:
-            logger.info(message);
-            break;
+            case DEBUG:
+                logger.debug(message);
+                break;
+            case ERROR:
+                logger.error(message);
+                break;
+            case SEVERE:
+                logger.fatal(message);
+                break;
+            case WARN:
+                logger.warn(message);
+                break;
+            case INFO:
+            default:
+                logger.info(message);
+                break;
         }
     }
 
     @Override
     public void log(LoggingLevel loggingLevel, String message, Exception exception) throws UnifyException {
         switch (loggingLevel) {
-        case DEBUG:
-            logger.debug(message, exception);
-            break;
-        case ERROR:
-            logger.error(message, exception);
-            break;
-        case SEVERE:
-            logger.fatal(message, exception);
-            break;
-        case WARN:
-            logger.warn(message, exception);
-            break;
-        case INFO:
-        default:
-            logger.info(message, exception);
-            break;
+            case DEBUG:
+                logger.debug(message, exception);
+                break;
+            case ERROR:
+                logger.error(message, exception);
+                break;
+            case SEVERE:
+                logger.fatal(message, exception);
+                break;
+            case WARN:
+                logger.warn(message, exception);
+                break;
+            case INFO:
+            default:
+                logger.info(message, exception);
+                break;
         }
     }
 
     @Override
     public boolean isEnabled(LoggingLevel loggingLevel) throws UnifyException {
         switch (loggingLevel) {
-        case DEBUG:
-            return logger.isDebugEnabled();
-        case INFO:
-            return logger.isInfoEnabled();
-        case SEVERE:
-        case WARN:
-        case ERROR:
-        default:
-            break;
+            case DEBUG:
+                return logger.isDebugEnabled();
+            case INFO:
+                return logger.isInfoEnabled();
+            case SEVERE:
+            case WARN:
+            case ERROR:
+            default:
+                break;
         }
         return true;
     }

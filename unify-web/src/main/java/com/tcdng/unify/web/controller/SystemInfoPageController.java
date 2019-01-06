@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,11 +35,14 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
 @Component(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/systeminfo.upl")
 @ResultMappings({
-        @ResultMapping(name = SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING,
+        @ResultMapping(
+                name = SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING,
                 response = { "!showpopupresponse popup:$s{systemExceptionPopup} systemInfo:true" }),
-        @ResultMapping(name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,
+        @ResultMapping(
+                name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,
                 response = { "!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }),
-        @ResultMapping(name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING,
+        @ResultMapping(
+                name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING,
                 response = { "!hidepopupresponse systemInfo:true" }) })
 public class SystemInfoPageController extends AbstractPageController {
 

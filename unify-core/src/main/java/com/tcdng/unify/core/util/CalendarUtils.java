@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,14 +39,16 @@ public final class CalendarUtils {
 
     private static final String RFC822_DATEFORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
 
-    private static final LocaleFactoryMaps<String, SimpleDateFormatPool> simpleDateFormatPoolMap = new LocaleFactoryMaps<String, SimpleDateFormatPool>() {
+    private static final LocaleFactoryMaps<String, SimpleDateFormatPool> simpleDateFormatPoolMap =
+            new LocaleFactoryMaps<String, SimpleDateFormatPool>() {
 
-        @Override
-        protected SimpleDateFormatPool createObject(Locale locale, String format, Object... params) throws Exception {
-            return new SimpleDateFormatPool(format, locale);
-        }
+                @Override
+                protected SimpleDateFormatPool createObject(Locale locale, String format, Object... params)
+                        throws Exception {
+                    return new SimpleDateFormatPool(format, locale);
+                }
 
-    };
+            };
 
     private CalendarUtils() {
 

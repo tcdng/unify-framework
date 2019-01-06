@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -187,15 +187,15 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             synchronized (sessionContext) {
                 controller = (Controller) sessionContext.getAttribute(pathParts.getBeanId());
                 if (controller == null) {
-                    UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class,
-                            pathParts.getActBeanName());
+                    UnifyComponentConfig unifyComponentConfig =
+                            getComponentConfig(Controller.class, pathParts.getActBeanName());
 
                     if (unifyComponentConfig == null) {
                         // May be a real path request
                         File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
                         if (file.exists()) {
-                            ResourceController realPathResourceController = (ResourceController) this
-                                    .getComponent("/resource/realpath");
+                            ResourceController realPathResourceController =
+                                    (ResourceController) this.getComponent("/resource/realpath");
                             realPathResourceController.setResourceName(path);
                             return realPathResourceController;
                         }
@@ -251,10 +251,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             if (ControllerType.REMOTECALL_CONTROLLER.equals(controller.getType())) {
                 RemoteCallController remoteCallController = (RemoteCallController) controller;
                 String reqBody = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-                RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-                        .getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-                String responseString = executeRemoteCall(remoteCallController, remoteCallFormat, request.getPath(),
-                        reqBody);
+                RemoteCallFormat remoteCallFormat =
+                        (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+                String responseString =
+                        executeRemoteCall(remoteCallController, remoteCallFormat, request.getPath(), reqBody);
                 response.setContentType(remoteCallFormat.getContentType());
                 if (request.getCharset() != null) {
                     response.setCharacterEncoding(request.getCharset().name());
@@ -626,8 +626,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         Class<? extends PageController> typeClass = getComponentType(PageController.class, controllerName);
         Method[] methods = typeClass.getMethods();
         for (Method method : methods) {
-            com.tcdng.unify.web.annotation.Action aa = method
-                    .getAnnotation(com.tcdng.unify.web.annotation.Action.class);
+            com.tcdng.unify.web.annotation.Action aa =
+                    method.getAnnotation(com.tcdng.unify.web.annotation.Action.class);
             if (aa != null) {
                 if (String.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
                     actionMap.put(controllerName + '/' + method.getName(), new Action(method));
@@ -702,8 +702,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         Map<String, RemoteCallHandler> remoteCallHandlerMap = new HashMap<String, RemoteCallHandler>();
         Method[] methods = typeClass.getMethods();
         for (Method method : methods) {
-            com.tcdng.unify.web.annotation.GatewayAction goa = method
-                    .getAnnotation(com.tcdng.unify.web.annotation.GatewayAction.class);
+            com.tcdng.unify.web.annotation.GatewayAction goa =
+                    method.getAnnotation(com.tcdng.unify.web.annotation.GatewayAction.class);
             if (goa != null) {
                 if (RemoteCallResult.class.isAssignableFrom(method.getReturnType())
                         && method.getParameterTypes().length == 1
@@ -720,8 +720,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     }
 
     private ResourceControllerInfo createResourceControllerInfo(String controllerName) throws UnifyException {
-        Class<? extends ResourceController> resourceControllerClass = getComponentType(ResourceController.class,
-                controllerName);
+        Class<? extends ResourceController> resourceControllerClass =
+                getComponentType(ResourceController.class, controllerName);
         Map<String, BindingInfo> propertyBindingMap = new HashMap<String, BindingInfo>();
         setIdRequestParameterBindings(resourceControllerClass, propertyBindingMap);
         return new ResourceControllerInfo(controllerName, propertyBindingMap);
@@ -797,8 +797,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 }
 
                 String[] commandElements = ((String) values).split("->");
-                RequestCommand requestCommand = new RequestCommand(getPageManager().getLongName(commandElements[0]),
-                        commandElements[1]);
+                RequestCommand requestCommand =
+                        new RequestCommand(getPageManager().getLongName(commandElements[0]), commandElements[1]);
                 requestContextUtil.setRequestCommand(requestCommand);
                 continue;
             }

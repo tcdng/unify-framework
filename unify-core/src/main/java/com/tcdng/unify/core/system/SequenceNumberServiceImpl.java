@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -96,8 +96,8 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     public Long getNextSequenceNumber(String sequenceName, Date date) throws UnifyException {
         Long sequenceNumber = null;
         Date midnightDate = CalendarUtils.getMidnightDate(date);
-        ClusterDateSequenceNumber dateSequenceNumberData = db()
-                .find(new ClusterDateSequenceNumberQuery().sequenceDate(midnightDate).sequenceName(sequenceName));
+        ClusterDateSequenceNumber dateSequenceNumberData =
+                db().find(new ClusterDateSequenceNumberQuery().sequenceDate(midnightDate).sequenceName(sequenceName));
         if (dateSequenceNumberData != null) {
             sequenceNumber = dateSequenceNumberData.getSequenceCounter() + 1;
             dateSequenceNumberData.setSequenceCounter(sequenceNumber);

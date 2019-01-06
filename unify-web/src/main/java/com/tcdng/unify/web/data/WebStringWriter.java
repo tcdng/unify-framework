@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -68,23 +68,23 @@ public class WebStringWriter extends LargeStringWriter {
             for (int i = 0; i < len; i++) {
                 char ch = str.charAt(i);
                 switch (ch) {
-                case '<':
-                    append("&lt;");
-                    break;
-                case '>':
-                    append("&gt;");
-                    break;
-                case '&':
-                    append("&amp;");
-                    break;
-                case '"':
-                    append("&quot;");
-                    break;
-                case '\'':
-                    append("&apos;");
-                    break;
-                default:
-                    append(ch);
+                    case '<':
+                        append("&lt;");
+                        break;
+                    case '>':
+                        append("&gt;");
+                        break;
+                    case '&':
+                        append("&amp;");
+                        break;
+                    case '"':
+                        append("&quot;");
+                        break;
+                    case '\'':
+                        append("&apos;");
+                        break;
+                    default:
+                        append(ch);
                 }
             }
         }
@@ -101,23 +101,23 @@ public class WebStringWriter extends LargeStringWriter {
             for (int i = 0; i < len; i++) {
                 char ch = data[i];
                 switch (ch) {
-                case '<':
-                    append("&lt;");
-                    break;
-                case '>':
-                    append("&gt;");
-                    break;
-                case '&':
-                    append("&amp;");
-                    break;
-                case '"':
-                    append("&quot;");
-                    break;
-                case '\'':
-                    append("&apos;");
-                    break;
-                default:
-                    append(ch);
+                    case '<':
+                        append("&lt;");
+                        break;
+                    case '>':
+                        append("&gt;");
+                        break;
+                    case '&':
+                        append("&amp;");
+                        break;
+                    case '"':
+                        append("&quot;");
+                        break;
+                    case '\'':
+                        append("&apos;");
+                        break;
+                    default:
+                        append(ch);
                 }
             }
         }
@@ -134,38 +134,38 @@ public class WebStringWriter extends LargeStringWriter {
             for (int i = 0; i < len; i++) {
                 char ch = str.charAt(i);
                 switch (ch) {
-                case '"':
-                case '\\':
-                case '/':
-                    append('\\').append(ch);
-                    break;
-                case '\t':
-                    append("\\t");
-                    break;
-                case '\f':
-                    append("\\f");
-                    break;
-                case '\b':
-                    append("\\b");
-                    break;
-                case '\r':
-                    append("\\r");
-                    break;
-                case '\n':
-                    append("\\n");
-                    break;
-                default:
-                    if (ch < ' ' || ch > 127) {
-                        String hex = Integer.toHexString(ch);
-                        int padLen = 4 - hex.length();
-                        append("\\u");
-                        while (padLen-- > 0) {
-                            append('0');
+                    case '"':
+                    case '\\':
+                    case '/':
+                        append('\\').append(ch);
+                        break;
+                    case '\t':
+                        append("\\t");
+                        break;
+                    case '\f':
+                        append("\\f");
+                        break;
+                    case '\b':
+                        append("\\b");
+                        break;
+                    case '\r':
+                        append("\\r");
+                        break;
+                    case '\n':
+                        append("\\n");
+                        break;
+                    default:
+                        if (ch < ' ' || ch > 127) {
+                            String hex = Integer.toHexString(ch);
+                            int padLen = 4 - hex.length();
+                            append("\\u");
+                            while (padLen-- > 0) {
+                                append('0');
+                            }
+                            append(hex);
+                        } else {
+                            append(ch);
                         }
-                        append(hex);
-                    } else {
-                        append(ch);
-                    }
                 }
             }
             append('"');
@@ -184,38 +184,38 @@ public class WebStringWriter extends LargeStringWriter {
             for (int i = 0; i < len; i++) {
                 char ch = data[i];
                 switch (ch) {
-                case '"':
-                case '\\':
-                case '/':
-                    append('\\').append(ch);
-                    break;
-                case '\t':
-                    append("\\t");
-                    break;
-                case '\f':
-                    append("\\f");
-                    break;
-                case '\b':
-                    append("\\b");
-                    break;
-                case '\r':
-                    append("\\r");
-                    break;
-                case '\n':
-                    append("\\n");
-                    break;
-                default:
-                    if (ch < ' ' || ch > 127) {
-                        String hex = Integer.toHexString(ch);
-                        int padLen = 4 - hex.length();
-                        append("\\u");
-                        while (padLen-- > 0) {
-                            append('0');
+                    case '"':
+                    case '\\':
+                    case '/':
+                        append('\\').append(ch);
+                        break;
+                    case '\t':
+                        append("\\t");
+                        break;
+                    case '\f':
+                        append("\\f");
+                        break;
+                    case '\b':
+                        append("\\b");
+                        break;
+                    case '\r':
+                        append("\\r");
+                        break;
+                    case '\n':
+                        append("\\n");
+                        break;
+                    default:
+                        if (ch < ' ' || ch > 127) {
+                            String hex = Integer.toHexString(ch);
+                            int padLen = 4 - hex.length();
+                            append("\\u");
+                            while (padLen-- > 0) {
+                                append('0');
+                            }
+                            append(hex);
+                        } else {
+                            append(ch);
                         }
-                        append(hex);
-                    } else {
-                        append(ch);
-                    }
                 }
             }
             append('"');

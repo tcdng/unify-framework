@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -481,8 +481,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 int resultIndex = 0;
                 int count = ((Number) countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex)).intValue();
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
-                    Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
-                            ++resultIndex);
+                    Object value =
+                            sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(), ++resultIndex);
                     resultList.add(new Aggregate(sqlResult.getName(), count, value));
                 }
 
@@ -531,8 +531,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     @SuppressWarnings("unchecked")
     private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs) throws Exception {
-        Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
-                sqlResult.getColumn());
+        Object value =
+                sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(), sqlResult.getColumn());
         if (sqlResult.isTransformed()) {
             value = ((Transformer<Object, Object>) sqlResult.getTransformer()).reverseTransform(value);
         }
@@ -549,8 +549,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
             rs = pStmt.executeQuery();
 
-            Transformer<Object, Object> transformer = (Transformer<Object, Object>) sqlStatement.getResultInfoList()
-                    .get(0).getTransformer();
+            Transformer<Object, Object> transformer =
+                    (Transformer<Object, Object>) sqlStatement.getResultInfoList().get(0).getTransformer();
             if (transformer == null) {
                 while (rs.next()) {
                     result.add((T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -69,8 +69,8 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
                 if (reportColumn.isSum() && DataUtils.isNumberType(reportColumn.getTypeName())) {
                 }
 
-                JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn,
-                        isListFormat);
+                JRDesignElement jRDesignElement =
+                        newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
                 jRDesignElement.setX(titleWidth);
                 jRDesignElement.setY(calcDetailHeight + 2);
                 jRDesignElement.setWidth(actualDetailWidth);
@@ -142,8 +142,8 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
             grpJRDesignRectangle.getLinePen().setLineWidth(0);
             groupBand.addElement(grpJRDesignRectangle);
 
-            JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn,
-                    isListFormat);
+            JRDesignElement jRDesignElement =
+                    newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
             jRDesignElement.setX(groupHeaderX);
             jRDesignElement.setY(2);
             jRDesignElement.setWidth(actualColumnWidth - jRDesignElement.getX());

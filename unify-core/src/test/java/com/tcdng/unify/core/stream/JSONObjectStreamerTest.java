@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,8 +44,8 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testReadObjectFromInputStream() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Book book = josm.unmarshal(Book.class, new ByteArrayInputStream(BOOK_JSON.getBytes()), null);
         assertNotNull(book);
         assertEquals("Science", book.getGenre());
@@ -56,8 +56,8 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testReadObjectFromReader() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Book book = josm.unmarshal(Book.class, new StringReader(BOOK_JSON));
         assertNotNull(book);
         assertEquals("Science", book.getGenre());
@@ -68,8 +68,8 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testWriteObjectToOutputStream() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         josm.marshal(book, baos, null);
@@ -82,8 +82,8 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testWriteObjectToWriter() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         StringWriter writer = new StringWriter();
         josm.marshal(book, writer);
@@ -96,20 +96,20 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testWriteByteArrayObjectToOutputStream() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
-        Author author = new Author("Bramer & Bramer", null,
-                new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        Author author =
+                new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         josm.marshal(author, baos, null);
     }
 
     @Test
     public void testReadByteArrayObjectToOutputStream() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
-        Author author = new Author("Bramer & Bramer", null,
-                new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        Author author =
+                new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         josm.marshal(author, baos, null);
         Author unAuthor = josm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
@@ -124,10 +124,10 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testWriteListObjectToOutputStream() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
-        Author author = new Author("Bramer & Bramer", null,
-                new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        Author author =
+                new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         List<Book> books = Arrays.asList(new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10),
                 new Book("Programing in Pascal", "Science", BigDecimal.valueOf(15.20), 20));
         List<String> account = Arrays.asList("0123456789");
@@ -139,10 +139,10 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testReadListObjectToOutputStream() throws Exception {
-        JSONObjectStreamer josm = (JSONObjectStreamer) this
-                .getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
-        Author author = new Author("Bramer & Bramer", null,
-                new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
+        JSONObjectStreamer josm =
+                (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        Author author =
+                new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         List<Book> books = Arrays.asList(new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10),
                 new Book("Programing in Pascal", "Science", BigDecimal.valueOf(15.20), 20));
         List<String> account = Arrays.asList("0123456789");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -119,16 +119,16 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
             numberSymbols = getFormatHelper().getNumberSymbols(type, locale);
 
             switch (type) {
-            case INTEGER:
-                nf = NumberFormat.getIntegerInstance(locale);
-                break;
-            case PERCENT:
-                nf = NumberFormat.getPercentInstance(locale);
-                break;
-            case DECIMAL:
-            default:
-                nf = NumberFormat.getNumberInstance(locale);
-                break;
+                case INTEGER:
+                    nf = NumberFormat.getIntegerInstance(locale);
+                    break;
+                case PERCENT:
+                    nf = NumberFormat.getPercentInstance(locale);
+                    break;
+                case DECIMAL:
+                default:
+                    nf = NumberFormat.getNumberInstance(locale);
+                    break;
             }
 
             DecimalFormat df = (DecimalFormat) nf;

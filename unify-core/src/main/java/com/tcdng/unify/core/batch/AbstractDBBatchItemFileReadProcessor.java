@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -77,19 +77,19 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
             } else {
                 // Constraining record found. Take action.
                 switch (action) {
-                case FAIL:
-                    throw new UnifyException(UnifyCoreErrorConstants.BATCH_FILE_READER_RECORD_EXISTS, constraint,
-                            batchItem);
-                case UPDATE:
-                    ReflectUtils.shallowBeanCopy(constraint, batchItem, updateFields);
-                    pm.updateByIdVersion(constraint);
-                    updateCount++;
-                    break;
-                case SKIP:
-                default:
-                    // Skip. Do nothing with batch item
-                    skipCount++;
-                    break;
+                    case FAIL:
+                        throw new UnifyException(UnifyCoreErrorConstants.BATCH_FILE_READER_RECORD_EXISTS, constraint,
+                                batchItem);
+                    case UPDATE:
+                        ReflectUtils.shallowBeanCopy(constraint, batchItem, updateFields);
+                        pm.updateByIdVersion(constraint);
+                        updateCount++;
+                        break;
+                    case SKIP:
+                    default:
+                        // Skip. Do nothing with batch item
+                        skipCount++;
+                        break;
                 }
             }
         }

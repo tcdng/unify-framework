@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,8 +45,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetNextSequenceNumber() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
 
         snService.reset();
         assertEquals(Long.valueOf(1L), snService.getNextSequenceNumber("sequenceA"));
@@ -77,8 +77,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testMultiThreadGetNextSequenceNumber() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         snService.reset();
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         Map<String, Object> inputParameters1 = new HashMap<String, Object>();
@@ -117,8 +117,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testSameDayGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Date testDate = CalendarUtils.getMidnightDate(new Date());
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(testDate);
@@ -139,8 +139,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testSameSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Date testDate = new Date();
         Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
         Long sequenceNo2 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
@@ -152,8 +152,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testDifferentSequenceSameDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Date testDate = new Date();
         Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter", testDate);
         Long sequenceNo2 = snService.getNextSequenceNumber("day-rpt-batch-counter", testDate);
@@ -165,8 +165,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testSameSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal2.add(Calendar.DAY_OF_YEAR, 1);
@@ -183,8 +183,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testDifferentSequenceDifferentDateGetNextDateSequenceNumber() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal2.add(Calendar.DAY_OF_YEAR, 1);
@@ -239,16 +239,16 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testSingleGetUniqueStringId() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Long id = snService.getUniqueStringId("this.is.a.unique.string");
         assertNotNull(id);
     }
 
     @Test
     public void testMultipleGetSameUniqueStringId() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Long id1 = snService.getUniqueStringId("this.is.a.unique.string");
         Long id2 = snService.getUniqueStringId("this.is.a.unique.string");
         Long id3 = snService.getUniqueStringId("this.is.a.unique.string");
@@ -264,8 +264,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testSingleGetDifferentUniqueStringId() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Long id1 = snService.getUniqueStringId("this.is.a.unique.string");
         Long id2 = snService.getUniqueStringId("this.is.another.unique.string");
         Long id3 = snService.getUniqueStringId("this.is.some.unique.string");
@@ -284,8 +284,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testMultipleGetDifferentUniqueStringId() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         Long id1 = snService.getUniqueStringId("this.is.a.unique.string");
         Long id2 = snService.getUniqueStringId("this.is.another.unique.string");
         Long id3 = snService.getUniqueStringId("this.is.some.unique.string");
@@ -312,8 +312,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testMultiThreadGetUniqueStringId() throws Exception {
-        String[] uniqueString = { "this.is.a.unique.string", "this.is.another.unique.string",
-                "this.is.some.other.unique.string" };
+        String[] uniqueString =
+                { "this.is.a.unique.string", "this.is.another.unique.string", "this.is.some.other.unique.string" };
 
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         Map<String, Object> inputParameters1 = new HashMap<String, Object>();

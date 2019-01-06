@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -73,8 +73,8 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
             // Attach
             FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
             fileAttachmentsInfo.setSelectedIndex(nextBlock.getItemIndex());
-            FileAttachmentInfo fileAttachmentInfo = (FileAttachmentInfo) fileAttachmentsInfo
-                    .getSelectedAttachmentInfo();
+            FileAttachmentInfo fileAttachmentInfo =
+                    (FileAttachmentInfo) fileAttachmentsInfo.getSelectedAttachmentInfo();
             UploadedFile uploadedFile = ((UploadedFile[]) value)[0];
             fileAttachmentInfo.setFilename(uploadedFile.getFilename());
             fileAttachmentInfo.setAttachment(uploadedFile.getData());

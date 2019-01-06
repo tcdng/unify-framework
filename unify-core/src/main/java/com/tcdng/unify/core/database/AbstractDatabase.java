@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -75,46 +75,46 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
         Stack<TransactionalCall> transactions = transactionsThreadLocal.get();
         TransactionalCall transaction = null;
         switch (txnType) {
-        case REQUIRED:
-            if (!transactions.isEmpty() && transactions.peek().isTransaction()) {
-                transaction = transactions.peek();
-            } else {
+            case REQUIRED:
+                if (!transactions.isEmpty() && transactions.peek().isTransaction()) {
+                    transaction = transactions.peek();
+                } else {
+                    transaction = new TransactionalCall(true);
+                }
+                break;
+            case REQUIRES_NEW:
                 transaction = new TransactionalCall(true);
-            }
-            break;
-        case REQUIRES_NEW:
-            transaction = new TransactionalCall(true);
-            break;
-        case SUPPORTS:
-            if (!transactions.isEmpty()) {
-                transaction = transactions.peek();
-            } else {
-                transaction = new TransactionalCall(false);
-            }
-            break;
-        case MANDATORY:
-            if (!transactions.isEmpty()) {
-                transaction = transactions.peek();
-                if (!transaction.isTransaction()) {
+                break;
+            case SUPPORTS:
+                if (!transactions.isEmpty()) {
+                    transaction = transactions.peek();
+                } else {
+                    transaction = new TransactionalCall(false);
+                }
+                break;
+            case MANDATORY:
+                if (!transactions.isEmpty()) {
+                    transaction = transactions.peek();
+                    if (!transaction.isTransaction()) {
+                        throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_REQUIRED);
+                    }
+                } else {
                     throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_REQUIRED);
                 }
-            } else {
-                throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_REQUIRED);
-            }
-            break;
-        case NEVER:
-            if (!transactions.isEmpty()) {
-                transaction = transactions.peek();
-                if (transaction.isTransaction()) {
-                    throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_NEVER_REQUIRED);
+                break;
+            case NEVER:
+                if (!transactions.isEmpty()) {
+                    transaction = transactions.peek();
+                    if (transaction.isTransaction()) {
+                        throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_NEVER_REQUIRED);
+                    }
+                } else {
+                    transaction = new TransactionalCall(false);
                 }
-            } else {
+                break;
+            case NOT_SUPPORTED:
                 transaction = new TransactionalCall(false);
-            }
-            break;
-        case NOT_SUPPORTED:
-            transaction = new TransactionalCall(false);
-            break;
+                break;
         }
 
         transaction.join(this);

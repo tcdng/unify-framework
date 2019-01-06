@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,10 +44,16 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * @since 1.0
  */
 @Component(name = "xml-batchfilereader", description = "$m{batchfilereader.xml}")
-@Parameters({ @Parameter(name = XMLBatchFileReaderInputConstants.BATCH_TAG_NAME,
-        description = "$m{batchfilereader.xml.batchtagname}", editor = "!ui-name minLen:1 size:24", mandatory = true),
-        @Parameter(name = XMLBatchFileReaderInputConstants.BATCHITEM_TAG_NAME,
-                description = "$m{batchfilereader.xml.batchitemtagname}", editor = "!ui-name minLen:1 size:24",
+@Parameters({
+        @Parameter(
+                name = XMLBatchFileReaderInputConstants.BATCH_TAG_NAME,
+                description = "$m{batchfilereader.xml.batchtagname}",
+                editor = "!ui-name minLen:1 size:24",
+                mandatory = true),
+        @Parameter(
+                name = XMLBatchFileReaderInputConstants.BATCHITEM_TAG_NAME,
+                description = "$m{batchfilereader.xml.batchitemtagname}",
+                editor = "!ui-name minLen:1 size:24",
                 mandatory = true) })
 public class XMLBatchFileReader extends AbstractBatchFileReader {
 

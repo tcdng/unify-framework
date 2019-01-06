@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,27 +43,27 @@ public class MessageBoxPanel extends AbstractPanel {
 
         MessageBox mbi = getValue(MessageBox.class);
         switch (mbi.getMessageMode()) {
-        case OK_CANCEL:
-            setVisible("okBtn", true);
-            setVisible("cancelBtn", true);
-            break;
-        case RETRY_CANCEL:
-            setVisible("retryBtn", true);
-            setVisible("cancelBtn", true);
-            break;
-        case YES_NO:
-            setVisible("yesBtn", true);
-            setVisible("noBtn", true);
-            break;
-        case YES_NO_CANCEL:
-            setVisible("yesBtn", true);
-            setVisible("noBtn", true);
-            setVisible("cancelBtn", true);
-            break;
-        case OK:
-        default:
-            setVisible("okBtn", true);
-            break;
+            case OK_CANCEL:
+                setVisible("okBtn", true);
+                setVisible("cancelBtn", true);
+                break;
+            case RETRY_CANCEL:
+                setVisible("retryBtn", true);
+                setVisible("cancelBtn", true);
+                break;
+            case YES_NO:
+                setVisible("yesBtn", true);
+                setVisible("noBtn", true);
+                break;
+            case YES_NO_CANCEL:
+                setVisible("yesBtn", true);
+                setVisible("noBtn", true);
+                setVisible("cancelBtn", true);
+                break;
+            case OK:
+            default:
+                setVisible("okBtn", true);
+                break;
 
         }
     }

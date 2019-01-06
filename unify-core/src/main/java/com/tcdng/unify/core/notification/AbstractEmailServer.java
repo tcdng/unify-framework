@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -64,8 +64,8 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
                 }
 
                 if (!StringUtils.isBlank(emailServerConfig.getUsername())) {
-                    authenticator = new SessionAuthenticator(emailServerConfig.getUsername(),
-                            emailServerConfig.getPassword());
+                    authenticator =
+                            new SessionAuthenticator(emailServerConfig.getUsername(), emailServerConfig.getPassword());
                 }
 
                 if (authenticator != null || !StringUtils.isBlank(emailServerConfig.getAuthentication())) {
@@ -109,8 +109,8 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
         InternalConfig internalConfig = configurations.get(configurationCode);
         Authenticator authenthicator = internalConfig.getAuthenticator();
         if (authenthicator == null && !StringUtils.isBlank(internalConfig.getOrigConfig().getAuthentication())) {
-            Authentication passwordAuthentication = (Authentication) getComponent(
-                    internalConfig.getOrigConfig().getAuthentication());
+            Authentication passwordAuthentication =
+                    (Authentication) getComponent(internalConfig.getOrigConfig().getAuthentication());
             authenthicator = new SessionAuthenticator(passwordAuthentication.getUsername(),
                     passwordAuthentication.getPassword());
         }
@@ -141,26 +141,26 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
             List<InternetAddress> bccRecipientAddresses = null;
             for (EmailRecipient emailRecipient : recipents) {
                 switch (emailRecipient.getType()) {
-                case BCC:
-                    if (bccRecipientAddresses == null) {
-                        bccRecipientAddresses = new ArrayList<InternetAddress>();
-                    }
-                    bccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
-                    break;
-                case CC:
-                    if (ccRecipientAddresses == null) {
-                        ccRecipientAddresses = new ArrayList<InternetAddress>();
-                    }
-                    ccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
-                    break;
-                case TO:
-                    if (recipientAddresses == null) {
-                        recipientAddresses = new ArrayList<InternetAddress>();
-                    }
-                    recipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
-                    break;
-                default:
-                    break;
+                    case BCC:
+                        if (bccRecipientAddresses == null) {
+                            bccRecipientAddresses = new ArrayList<InternetAddress>();
+                        }
+                        bccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
+                        break;
+                    case CC:
+                        if (ccRecipientAddresses == null) {
+                            ccRecipientAddresses = new ArrayList<InternetAddress>();
+                        }
+                        ccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
+                        break;
+                    case TO:
+                        if (recipientAddresses == null) {
+                            recipientAddresses = new ArrayList<InternetAddress>();
+                        }
+                        recipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
+                        break;
+                    default:
+                        break;
 
                 }
             }

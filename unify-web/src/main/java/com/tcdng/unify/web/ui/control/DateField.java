@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -67,16 +67,16 @@ public class DateField extends AbstractTimeField {
         for (Pattern p : pattern) {
             if (!p.isFiller()) {
                 switch (p.getPattern().charAt(0)) {
-                case 'y':
-                    p.setTarget(getPrefixedId("year_"));
-                    break;
-                case 'd':
-                    p.setTarget(getPrefixedId("day_"));
-                    break;
-                case 'M':
-                    p.setTarget(getPrefixedId("mon_"));
-                    break;
-                default:
+                    case 'y':
+                        p.setTarget(getPrefixedId("year_"));
+                        break;
+                    case 'd':
+                        p.setTarget(getPrefixedId("day_"));
+                        break;
+                    case 'M':
+                        p.setTarget(getPrefixedId("mon_"));
+                        break;
+                    default:
                 }
             }
         }

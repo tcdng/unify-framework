@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,8 +46,8 @@ public class TimeField extends AbstractTimeField {
         for (int i = 0; i < pattern.length; i++) {
             Pattern fp = pattern[i];
             if (!fp.isFiller()) {
-                dateTimeFormat[i] = formatter.getFormatHelper().getSubPatternDateTimeFormat(fp.getPattern(),
-                        formatter.getLocale());
+                dateTimeFormat[i] =
+                        formatter.getFormatHelper().getSubPatternDateTimeFormat(fp.getPattern(), formatter.getLocale());
             }
         }
     }

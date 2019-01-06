@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -211,7 +211,8 @@ public class HttpApplicationServlet extends HttpServlet {
                     String userName = request.getParameter(RequestParameterConstants.REMOTE_USERNAME);
                     String roleCode = request.getParameter(RequestParameterConstants.REMOTE_ROLECD);
                     String branchCode = request.getParameter(RequestParameterConstants.REMOTE_BRANCH_CODE);
-                    boolean globalAccess = Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
+                    boolean globalAccess =
+                            Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
                     UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(), null,
                             branchCode, globalAccess, true, true, true);
                     userToken.setRoleCode(roleCode);

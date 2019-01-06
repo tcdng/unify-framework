@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -231,8 +231,8 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
             }
 
             // Pre-logic plug-ins
-            List<UnifyPluginInfo> pluginInfoList = pluginsBySocketMap
-                    .get(ReflectUtils.getMethodSignature(name, method));
+            List<UnifyPluginInfo> pluginInfoList =
+                    pluginsBySocketMap.get(ReflectUtils.getMethodSignature(name, method));
             boolean isPlugin = pluginInfoList != null && !pluginInfoList.isEmpty();
             if (isPlugin) {
                 sb.append("\t\t\t").append(BusinessLogicInput.class.getCanonicalName()).append(" blin = new ")
@@ -330,8 +330,8 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
             Map<String, List<UnifyPluginInfo>> pluginsBySocketMap) throws UnifyException {
         boolean isClusterMode = isClusterMode();
         try {
-            String source = generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap,
-                    isClusterMode);
+            String source =
+                    generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap, isClusterMode);
             if (logSource) {
                 logDebug("Generated source for [{0}]. Cluster mode: [{1}], Source:\n [{2}]", businessServiceClazz,
                         isClusterMode, source);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -82,10 +82,12 @@ public interface Panel extends Container {
 
     /**
      * Returns true if panel refresh is based on user activity on client device.
-     * @throws UnifyException if an error occurs
+     * 
+     * @throws UnifyException
+     *             if an error occurs
      */
     boolean isRefreshOnUserAct() throws UnifyException;
-    
+
     /**
      * Returns the panel legend.
      * 

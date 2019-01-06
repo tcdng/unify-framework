@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -144,8 +144,8 @@ public class JasperReportsServer extends AbstractReportServer {
         try {
             JasperReport jasperReport = jasperReportsCache.get(template);
             if (jasperReport == null) {
-                inputStream = IOUtils.openFileResourceInputStream(template,
-                        getUnifyComponentContext().getWorkingPath());
+                inputStream =
+                        IOUtils.openFileResourceInputStream(template, getUnifyComponentContext().getWorkingPath());
                 jasperReport = JasperCompileManager.compileReport(inputStream);
                 jasperReportsCache.put(template, jasperReport,
                         CalendarUtils.getMilliSecondsByFrequency(FrequencyUnit.MINUTE, reportExpirationPeriod));
@@ -211,41 +211,41 @@ public class JasperReportsServer extends AbstractReportServer {
     private Exporter<ExporterInput, ?, ?, ?> getExporter(ReportFormat reportFormatType, OutputStream outputStream)
             throws Exception {
         switch (reportFormatType) {
-        case CSV:
-            JRCsvExporter csvExporter = new JRCsvExporter();
-            csvExporter.setConfiguration(new SimpleCsvReportConfiguration());
-            csvExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
-            return csvExporter;
-        case DOC:
-            JRRtfExporter docExporter = new JRRtfExporter();
-            docExporter.setConfiguration(new SimpleRtfReportConfiguration());
-            docExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
-            return docExporter;
-        case DOCX:
-            JRDocxExporter docxExporter = new JRDocxExporter();
-            docxExporter.setConfiguration(new SimpleDocxReportConfiguration());
-            docxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-            return docxExporter;
-        case XLS:
-            JRXlsExporter xlsExporter = new JRXlsExporter();
-            xlsExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
-            xlsExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-            return xlsExporter;
-        case XLSX:
-            JRXlsExporter xlsxExporter = new JRXlsExporter();
-            xlsxExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
-            xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-            return xlsxExporter;
-        case XML:
-            JRXmlExporter xmlExporter = new JRXmlExporter();
-            xmlExporter.setExporterOutput(new SimpleXmlExporterOutput(outputStream));
-            return xmlExporter;
-        case PDF:
-        default:
-            JRPdfExporter pdfExporter = new JRPdfExporter();
-            pdfExporter.setConfiguration(new SimplePdfExporterConfiguration());
-            pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-            return pdfExporter;
+            case CSV:
+                JRCsvExporter csvExporter = new JRCsvExporter();
+                csvExporter.setConfiguration(new SimpleCsvReportConfiguration());
+                csvExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
+                return csvExporter;
+            case DOC:
+                JRRtfExporter docExporter = new JRRtfExporter();
+                docExporter.setConfiguration(new SimpleRtfReportConfiguration());
+                docExporter.setExporterOutput(new SimpleWriterExporterOutput(outputStream));
+                return docExporter;
+            case DOCX:
+                JRDocxExporter docxExporter = new JRDocxExporter();
+                docxExporter.setConfiguration(new SimpleDocxReportConfiguration());
+                docxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                return docxExporter;
+            case XLS:
+                JRXlsExporter xlsExporter = new JRXlsExporter();
+                xlsExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
+                xlsExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                return xlsExporter;
+            case XLSX:
+                JRXlsExporter xlsxExporter = new JRXlsExporter();
+                xlsxExporter.setConfiguration(getSimpleXlsMetadataReportConfiguration());
+                xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                return xlsxExporter;
+            case XML:
+                JRXmlExporter xmlExporter = new JRXmlExporter();
+                xmlExporter.setExporterOutput(new SimpleXmlExporterOutput(outputStream));
+                return xmlExporter;
+            case PDF:
+            default:
+                JRPdfExporter pdfExporter = new JRPdfExporter();
+                pdfExporter.setConfiguration(new SimplePdfExporterConfiguration());
+                pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                return pdfExporter;
         }
     }
 

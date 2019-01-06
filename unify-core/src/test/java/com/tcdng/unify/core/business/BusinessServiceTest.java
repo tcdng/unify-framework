@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -133,10 +133,10 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         MockService mockService = (MockService) getComponent("mockservice");
         Long loanAccountId = mockService.createLoanAccount("501", "William Whipper Snapper", 200000.00);
 
-        LoanDisbursementService loanDisbursementService = (LoanDisbursementService) getComponent(
-                "loandisbursementservice");
-        List<LoanDisbursement> disbursementList = loanDisbursementService
-                .find(new LoanDisbursementQuery().loanAccountId(loanAccountId));
+        LoanDisbursementService loanDisbursementService =
+                (LoanDisbursementService) getComponent("loandisbursementservice");
+        List<LoanDisbursement> disbursementList =
+                loanDisbursementService.find(new LoanDisbursementQuery().loanAccountId(loanAccountId));
         assertNotNull(disbursementList);
         assertFalse(disbursementList.isEmpty());
         LoanDisbursement loanDisbursement = disbursementList.get(0);

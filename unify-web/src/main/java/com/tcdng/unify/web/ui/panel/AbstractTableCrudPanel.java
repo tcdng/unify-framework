@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -115,27 +115,27 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         setVisible("doneFrmBtn", false);
 
         switch (formMode) {
-        case CREATE:
-            setEditable("formPanel", editable);
-            setVisible("createFrmBtn", editable);
-            setVisible("cancelFrmBtn", true);
-            setVisible("createNextFrmBtn", editable && getUplAttribute(boolean.class, "createNext"));
-            break;
-        case DELETE:
-            setEditable("formPanel", false);
-            setVisible("deleteFrmBtn", editable);
-            setVisible("cancelFrmBtn", true);
-            break;
-        case UPDATE:
-            setEditable("formPanel", editable);
-            setVisible("saveFrmBtn", editable);
-            setVisible("cancelFrmBtn", true);
-            break;
-        case RETRIEVE:
-        default:
-            setEditable("formPanel", false);
-            setVisible("doneFrmBtn", true);
-            break;
+            case CREATE:
+                setEditable("formPanel", editable);
+                setVisible("createFrmBtn", editable);
+                setVisible("cancelFrmBtn", true);
+                setVisible("createNextFrmBtn", editable && getUplAttribute(boolean.class, "createNext"));
+                break;
+            case DELETE:
+                setEditable("formPanel", false);
+                setVisible("deleteFrmBtn", editable);
+                setVisible("cancelFrmBtn", true);
+                break;
+            case UPDATE:
+                setEditable("formPanel", editable);
+                setVisible("saveFrmBtn", editable);
+                setVisible("cancelFrmBtn", true);
+                break;
+            case RETRIEVE:
+            default:
+                setEditable("formPanel", false);
+                setVisible("doneFrmBtn", true);
+                break;
         }
 
         if (searchOnSwitchState) {

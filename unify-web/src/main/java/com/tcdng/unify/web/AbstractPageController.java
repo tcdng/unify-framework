@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -152,8 +152,8 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
     public String command() throws UnifyException {
         RequestCommand requestCommand = getRequestContextUtil().getRequestCommand();
         if (requestCommand != null) {
-            WidgetCommandManager uiCommandManager = (WidgetCommandManager) getComponent(
-                    WebApplicationComponents.APPLICATION_UICOMMANDMANAGER);
+            WidgetCommandManager uiCommandManager =
+                    (WidgetCommandManager) getComponent(WebApplicationComponents.APPLICATION_UICOMMANDMANAGER);
             Widget widget = getPageWidgetByLongName(Widget.class, requestCommand.getTargetId());
             if (widget.isRelayCommand()) {
                 widget = widget.getRelayWidget();
@@ -176,8 +176,8 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
 
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        DataTransferWidget dataTransferWidget = (DataTransferWidget) page
-                .getWidgetByLongName(transferBlock.getLongName());
+        DataTransferWidget dataTransferWidget =
+                (DataTransferWidget) page.getWidgetByLongName(transferBlock.getLongName());
         dataTransferWidget.populate(transferBlock);
     }
 

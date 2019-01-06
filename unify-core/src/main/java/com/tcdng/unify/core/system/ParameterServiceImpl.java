@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -151,8 +151,8 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
     @Override
     public Map<String, Object> findParameterTypeValues(String paramTypeName, String instTypeName, Long instId)
             throws UnifyException {
-        ParameterValues parameterValuesData = db()
-                .list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
+        ParameterValues parameterValuesData =
+                db().list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
         if (parameterValuesData != null) {
             Map<String, Object> result = new HashMap<String, Object>();
             Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
@@ -179,8 +179,8 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
             throw new UnifyException(UnifyCoreErrorConstants.PARAMETER_DEFINITION_UNKNOWN, paramTypeName);
         }
 
-        ParameterValues parameterValuesData = db()
-                .list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
+        ParameterValues parameterValuesData =
+                db().list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
         Long parameterValuesId = null;
         if (parameterValuesData == null) {
             parameterValuesData = new ParameterValues();

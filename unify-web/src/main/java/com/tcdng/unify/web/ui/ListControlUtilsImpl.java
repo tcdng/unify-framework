@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -228,23 +228,23 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
 
         Object[] params = null;
         switch (listControl.getListParamType()) {
-        case IMMEDIATE:
-            params = listParams;
-            break;
-        case PANEL:
-            params = new Object[listParams.length];
-            Panel panel = listControl.getPanel();
-            for (int i = 0; i < params.length; i++) {
-                params[i] = panel.getValue(Object.class, listParams[i]);
-            }
-            break;
-        case CONTROL:
-        default:
-            params = new Object[listParams.length];
-            for (int i = 0; i < params.length; i++) {
-                params[i] = listControl.getValue(listParams[i]);
-            }
-            break;
+            case IMMEDIATE:
+                params = listParams;
+                break;
+            case PANEL:
+                params = new Object[listParams.length];
+                Panel panel = listControl.getPanel();
+                for (int i = 0; i < params.length; i++) {
+                    params[i] = panel.getValue(Object.class, listParams[i]);
+                }
+                break;
+            case CONTROL:
+            default:
+                params = new Object[listParams.length];
+                for (int i = 0; i < params.length; i++) {
+                    params[i] = listControl.getValue(listParams[i]);
+                }
+                break;
         }
 
         return params;

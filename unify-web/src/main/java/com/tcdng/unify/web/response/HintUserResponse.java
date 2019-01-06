@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,16 +51,16 @@ public class HintUserResponse extends AbstractJsonPageControllerResponse {
             for (Hint hint : hintList) {
                 hsb.append("<span class=\"");
                 switch (hint.getMode()) {
-                case ERROR:
-                    hsb.append("ui-user-hint-error");
-                    break;
-                case INFO:
-                    hsb.append("ui-user-hint-info");
-                    break;
-                case WARNING:
-                default:
-                    hsb.append("ui-user-hint-warning");
-                    break;
+                    case ERROR:
+                        hsb.append("ui-user-hint-error");
+                        break;
+                    case INFO:
+                        hsb.append("ui-user-hint-info");
+                        break;
+                    case WARNING:
+                    default:
+                        hsb.append("ui-user-hint-warning");
+                        break;
                 }
                 hsb.append("\">");
                 hsb.append(hint.getMessage());

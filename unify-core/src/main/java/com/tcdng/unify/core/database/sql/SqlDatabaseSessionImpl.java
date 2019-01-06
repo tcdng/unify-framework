@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -421,8 +421,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                     if (fkId != null) {
                         SqlEntityInfo fkSqlEntityInfo = fkSqlFieldInfo.getForeignEntityInfo();
                         Object fkRecord = null;
-                        SqlStatement sqlStatement = sqlDataSourceDialect
-                                .prepareListByPkStatement(fkSqlEntityInfo.getKeyClass(), fkId);
+                        SqlStatement sqlStatement =
+                                sqlDataSourceDialect.prepareListByPkStatement(fkSqlEntityInfo.getKeyClass(), fkId);
                         try {
                             fkRecord = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                                     sqlStatement, true);
@@ -907,8 +907,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                                 }
 
                                 childRecord = childList.get(0);
-                                SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
-                                        .getSqlEntityInfo(clfi.getChildEntityClass());
+                                SqlEntityInfo childSqlEntityInfo =
+                                        sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
                                 if (childSqlEntityInfo.isChildList()) {
                                     fetchChildRecords(childRecord, null, isListOnly);
                                 }
@@ -936,8 +936,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
                             // Check if child has child list and load if necessary
                             if (!childList.isEmpty()) {
-                                SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
-                                        .getSqlEntityInfo(clfi.getChildEntityClass());
+                                SqlEntityInfo childSqlEntityInfo =
+                                        sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
                                 if (childSqlEntityInfo.isChildList()) {
                                     for (Entity childRecord : childList) {
                                         fetchChildRecords(childRecord, null, isListOnly);

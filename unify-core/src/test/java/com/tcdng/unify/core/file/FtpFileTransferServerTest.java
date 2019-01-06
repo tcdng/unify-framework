@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -98,10 +98,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testGetRemoteFileListWithFilter() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
-                .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist")
-                .filterByExtension(".pdf").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+                        .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
+                        .remotePath("unify_test/filelist").filterByExtension(".pdf").build();
         List<FileInfo> fileInfoList = fileTransferServer.getRemoteFileList(fileTransferInfo);
         assertNotNull(fileInfoList);
         assertEquals(1, fileInfoList.size());
@@ -221,10 +221,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testUploadFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
-                .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/uploadlist")
-                .localPath(LOCAL_UPLOAD_PATH).build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+                        .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
+                        .remotePath("unify_test/uploadlist").localPath(LOCAL_UPLOAD_PATH).build();
         fileTransferServer.createRemoteDirectory(fileTransferInfo);
         fileTransferServer.uploadFile(fileTransferInfo, "MyTcdLogo.png", "TcdLogo.png");
         assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "MyTcdLogo.png"));
@@ -233,10 +233,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testUploadFiles() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
-                .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/uploadlist/myimages")
-                .localPath(LOCAL_UPLOAD_PATH + "\\images").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+                        .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
+                        .remotePath("unify_test/uploadlist/myimages").localPath(LOCAL_UPLOAD_PATH + "\\images").build();
         fileTransferServer.uploadFiles(fileTransferInfo);
         assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "users.png"));
 
@@ -257,10 +257,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testDownloadFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
-                .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist")
-                .localPath(LOCAL_DOWNLOAD_PATH).build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+                        .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
+                        .remotePath("unify_test/filelist").localPath(LOCAL_DOWNLOAD_PATH).build();
         fileTransferServer.downloadFile(fileTransferInfo, "Hello.txt", "MyHello.txt");
         assertTrue(new File(LOCAL_DOWNLOAD_PATH + "\\MyHello.txt").isFile());
     }
@@ -268,10 +268,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testDownloadFiles() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
-                .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
-                .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist/books")
-                .localPath(LOCAL_DOWNLOAD_PATH + "\\mybooks").build();
+        FileTransferInfo fileTransferInfo =
+                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+                        .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
+                        .remotePath("unify_test/filelist/books").localPath(LOCAL_DOWNLOAD_PATH + "\\mybooks").build();
         fileTransferServer.downloadFiles(fileTransferInfo);
         assertTrue(new File(LOCAL_DOWNLOAD_PATH + "\\mybooks\\Blue Sky.txt").isFile());
         assertTrue(new File(LOCAL_DOWNLOAD_PATH + "\\mybooks\\Core-Servlets-and-JSP.pdf").isFile());

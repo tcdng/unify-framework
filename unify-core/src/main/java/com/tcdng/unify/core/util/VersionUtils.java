@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,8 +37,8 @@ public final class VersionUtils {
             }
 
             for (int i = 0; i < length; i++) {
-                int compareResult = Integer.valueOf(oldVersionDigits[i])
-                        .compareTo(Integer.valueOf(newVersionDigits[i]));
+                int compareResult =
+                        Integer.valueOf(oldVersionDigits[i]).compareTo(Integer.valueOf(newVersionDigits[i]));
                 if (compareResult < 0) {
                     return true;
                 } else if (compareResult > 0) {

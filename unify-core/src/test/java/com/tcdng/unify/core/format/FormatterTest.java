@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -61,8 +61,8 @@ public class FormatterTest extends AbstractUnifyComponentTest {
         cal.set(Calendar.YEAR, 2014);
         Date testDate = cal.getTime();
 
-        DateTimeFormatter dateTimeFormatter = (DateTimeFormatter) getUplComponent(Locale.UK,
-                "!datetimeformat style:default");
+        DateTimeFormatter dateTimeFormatter =
+                (DateTimeFormatter) getUplComponent(Locale.UK, "!datetimeformat style:default");
         assertEquals("19-Oct-2014 18:14:27", dateTimeFormatter.format(testDate));
         assertEquals(testDate, dateTimeFormatter.parse("19-Oct-2014 18:14:27"));
 
@@ -78,8 +78,8 @@ public class FormatterTest extends AbstractUnifyComponentTest {
 
     @Test(expected = UnifyException.class)
     public void testDateTimeFormatterParsingWithInvalidDateTime() throws Exception {
-        DateTimeFormatter dateTimeFormatter = (DateTimeFormatter) getUplComponent(Locale.UK,
-                "!datetimeformat style:default");
+        DateTimeFormatter dateTimeFormatter =
+                (DateTimeFormatter) getUplComponent(Locale.UK, "!datetimeformat style:default");
         dateTimeFormatter.parse("October 19, 2014 44:14:27");
     }
 

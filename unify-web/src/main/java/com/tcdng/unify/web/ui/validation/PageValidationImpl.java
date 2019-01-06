@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -67,14 +67,14 @@ public class PageValidationImpl extends AbstractPageValidation {
                     if (multiDynamic.isContainerVisible() && multiDynamic.isContainerEditable()) {
                         List<ValueStore> list = multiDynamic.getValueList();
                         if (list != null) {
-                            DataTransferBlock dataTransferBlock = dataTransfer
-                                    .getDataTransferBlock(multiDynamic.getId());
+                            DataTransferBlock dataTransferBlock =
+                                    dataTransfer.getDataTransferBlock(multiDynamic.getId());
                             DynamicField valueCtrl = (DynamicField) multiDynamic.getValueCtrl();
                             while (dataTransferBlock != null) {
                                 boolean localPass = true;
                                 DataTransferBlock dynamicCtrlBlock = dataTransferBlock.getChildBlock();
-                                MultiDynamic.ValueStore store = list
-                                        .get(dynamicCtrlBlock.getChildBlock().getItemIndex());
+                                MultiDynamic.ValueStore store =
+                                        list.get(dynamicCtrlBlock.getChildBlock().getItemIndex());
                                 valueCtrl.setValueStore(store.getValueStore());
                                 Control control = valueCtrl.getControl();
 

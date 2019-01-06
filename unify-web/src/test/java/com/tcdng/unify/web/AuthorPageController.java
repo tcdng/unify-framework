@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -119,9 +119,9 @@ public class AuthorPageController extends AbstractPageController {
         bio.addValue("age", Integer.class);
         bio.addValue("gender", Gender.class);
 
-        PackableDocConfig docConfig = new PackableDocConfig("ledgerConfig",
-                new PackableDocConfig.FieldConfig("marker", String.class),
-                new PackableDocConfig.FieldConfig("height", Double.class));
+        PackableDocConfig docConfig =
+                new PackableDocConfig("ledgerConfig", new PackableDocConfig.FieldConfig("marker", String.class),
+                        new PackableDocConfig.FieldConfig("height", Double.class));
 
         PackableDoc pDoc = new PackableDoc(docConfig, false);
         bio.addValue("metric", pDoc);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -276,8 +276,8 @@ public abstract class AbstractUnifyComponentTest {
 
     protected Object createRecord(Entity record) throws Exception {
         Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
-                ApplicationComponents.APPLICATION_DATABASE);
+        DatabaseTransactionManager tm =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         tm.beginTransaction();
         try {
             return pm.create(record);
@@ -288,8 +288,8 @@ public abstract class AbstractUnifyComponentTest {
 
     protected <T extends Entity> T findRecord(Class<T> clazz, Object id) throws Exception {
         Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
-                ApplicationComponents.APPLICATION_DATABASE);
+        DatabaseTransactionManager tm =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         tm.beginTransaction();
         try {
             return pm.list(clazz, id);
@@ -301,8 +301,8 @@ public abstract class AbstractUnifyComponentTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void deleteAll(Class<? extends Entity>... typeList) throws Exception {
         Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
-                ApplicationComponents.APPLICATION_DATABASE);
+        DatabaseTransactionManager tm =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         tm.beginTransaction();
         try {
             for (Class<? extends Entity> type : typeList) {
@@ -320,8 +320,8 @@ public abstract class AbstractUnifyComponentTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected int countAll(Class<? extends Entity> typeClass) throws Exception {
         Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
-                ApplicationComponents.APPLICATION_DATABASE);
+        DatabaseTransactionManager tm =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         tm.beginTransaction();
         try {
             return pm.countAll(new Query(typeClass).greater("id", 0L).ignoreEmptyCriteria(true));

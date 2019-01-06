@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -151,12 +151,12 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
                     TESTUNICASTCLIENTCOMM, "localhost", 10010, 20);
             networkInterface.startLocalUnicastServer("test-unicastcfg10");
             String id = networkInterface.establishUnicast("test-unicastcfg10-client");
-            TestTextResponse response1 = (TestTextResponse) networkInterface.unicast(id,
-                    new TestTextRequest("Optimus", "Prime"));
-            TestTextResponse response2 = (TestTextResponse) networkInterface.unicast(id,
-                    new TestTextRequest("Albert", "Einstien"));
-            TestTextResponse response3 = (TestTextResponse) networkInterface.unicast(id,
-                    new TestTextRequest("Homer", "Simpson"));
+            TestTextResponse response1 =
+                    (TestTextResponse) networkInterface.unicast(id, new TestTextRequest("Optimus", "Prime"));
+            TestTextResponse response2 =
+                    (TestTextResponse) networkInterface.unicast(id, new TestTextRequest("Albert", "Einstien"));
+            TestTextResponse response3 =
+                    (TestTextResponse) networkInterface.unicast(id, new TestTextRequest("Homer", "Simpson"));
             assertEquals("Optimus Prime", response1.getFullname());
             assertEquals("Albert Einstien", response2.getFullname());
             assertEquals("Homer Simpson", response3.getFullname());
@@ -232,8 +232,8 @@ public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
                     TESTMULTICASTSERVERCOMM, "225.0.0.4", 20005, 20);
             networkInterface.startLocalMulticastClient("test-multicastcfg5-client");
 
-            TestMulticastClientDataCommunicator tmcdc = (TestMulticastClientDataCommunicator) this
-                    .getComponent(TESTMULTICASTCLIENTCOMM);
+            TestMulticastClientDataCommunicator tmcdc =
+                    (TestMulticastClientDataCommunicator) this.getComponent(TESTMULTICASTCLIENTCOMM);
             List<TestMulticastMessage> messages = tmcdc.getMessages();
             while (messages == null || messages.isEmpty()) {
                 String id = networkInterface.establishMulticast("test-multicastcfg5-server");

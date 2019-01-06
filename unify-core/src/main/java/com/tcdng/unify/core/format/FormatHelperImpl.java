@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -122,16 +122,16 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
                     throws Exception {
                 DecimalFormat df = null;
                 switch (numberType) {
-                case INTEGER:
-                    df = (DecimalFormat) DecimalFormat.getIntegerInstance(locale);
-                    break;
-                case PERCENT:
-                    df = (DecimalFormat) DecimalFormat.getPercentInstance(locale);
-                    break;
-                case DECIMAL:
-                default:
-                    df = (DecimalFormat) DecimalFormat.getNumberInstance(locale);
-                    break;
+                    case INTEGER:
+                        df = (DecimalFormat) DecimalFormat.getIntegerInstance(locale);
+                        break;
+                    case PERCENT:
+                        df = (DecimalFormat) DecimalFormat.getPercentInstance(locale);
+                        break;
+                    case DECIMAL:
+                    default:
+                        df = (DecimalFormat) DecimalFormat.getNumberInstance(locale);
+                        break;
 
                 }
                 DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();

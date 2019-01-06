@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,8 @@ public interface SqlDataSource extends DataSource {
      * Gets the data source primary application schema.
      * 
      * @return the primary schema name
-     * @throws UnifyException if an error occurs
+     * @throws UnifyException
+     *             if an error occurs
      */
     String getApplicationSchema() throws UnifyException;
 

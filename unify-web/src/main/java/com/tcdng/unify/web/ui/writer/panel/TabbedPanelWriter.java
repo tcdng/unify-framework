@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -71,57 +71,57 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
         writer.writeStructureAndContent(tabbedPanel.getSelectedTabIdCtrl());
 
         switch (tabbedPanel.getTabPosition()) {
-        case BOTTOM:
-            writer.write("<div class=\"tbottom\">");
-            writer.write("<div style=\"display:table-row;height:100%;\"><div style=\"display:table-cell;\">");
-            // Append content
-            writeContent(writer, tabbedPanel);
-            writer.write("</div></div>");
-            writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;\">");
-            // Append tabs
-            writeTabs(writer, tabbedPanel);
-            writer.write("</div></div>");
-            writer.write("</div>");
-            break;
-        case LEFT:
-            writer.write("<div class=\"tleft\">");
-            writer.write(
-                    "<div style=\"display:table-row;\"><div style=\"display:table-cell;height:100%;vertical-align:top;\">");
-            // Append tabs
-            writeTabs(writer, tabbedPanel);
-            writer.write("</div>");
-            writer.write("<div style=\"display:table-cell;width:100%;height:100%;\">");
-            // Append content
-            writeContent(writer, tabbedPanel);
-            writer.write("</div></div>");
-            writer.write("</div>");
-            break;
-        case RIGHT:
-            writer.write("<div class=\"tright\">");
-            writer.write(
-                    "<div style=\"display:table-row;\"><div style=\"display:table-cell;width:100%;height:100%;\">");
-            // Append content
-            writeContent(writer, tabbedPanel);
-            writer.write("</div>");
-            writer.write("<div style=\"display:table-cell;height:100%;vertical-align:top;\">");
-            // Append tabs
-            writeTabs(writer, tabbedPanel);
-            writer.write("</div></div>");
-            writer.write("</div>");
-            break;
-        case TOP:
-        default:
-            writer.write("<div class=\"ttop\">");
-            writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;\">");
-            // Append tabs
-            writeTabs(writer, tabbedPanel);
-            writer.write("</div></div>");
-            writer.write("<div style=\"display:table-row;height:100%;\"><div style=\"display:table-cell;\">");
-            // Append content
-            writeContent(writer, tabbedPanel);
-            writer.write("</div></div>");
-            writer.write("</div>");
-            break;
+            case BOTTOM:
+                writer.write("<div class=\"tbottom\">");
+                writer.write("<div style=\"display:table-row;height:100%;\"><div style=\"display:table-cell;\">");
+                // Append content
+                writeContent(writer, tabbedPanel);
+                writer.write("</div></div>");
+                writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;\">");
+                // Append tabs
+                writeTabs(writer, tabbedPanel);
+                writer.write("</div></div>");
+                writer.write("</div>");
+                break;
+            case LEFT:
+                writer.write("<div class=\"tleft\">");
+                writer.write(
+                        "<div style=\"display:table-row;\"><div style=\"display:table-cell;height:100%;vertical-align:top;\">");
+                // Append tabs
+                writeTabs(writer, tabbedPanel);
+                writer.write("</div>");
+                writer.write("<div style=\"display:table-cell;width:100%;height:100%;\">");
+                // Append content
+                writeContent(writer, tabbedPanel);
+                writer.write("</div></div>");
+                writer.write("</div>");
+                break;
+            case RIGHT:
+                writer.write("<div class=\"tright\">");
+                writer.write(
+                        "<div style=\"display:table-row;\"><div style=\"display:table-cell;width:100%;height:100%;\">");
+                // Append content
+                writeContent(writer, tabbedPanel);
+                writer.write("</div>");
+                writer.write("<div style=\"display:table-cell;height:100%;vertical-align:top;\">");
+                // Append tabs
+                writeTabs(writer, tabbedPanel);
+                writer.write("</div></div>");
+                writer.write("</div>");
+                break;
+            case TOP:
+            default:
+                writer.write("<div class=\"ttop\">");
+                writer.write("<div style=\"display:table-row;\"><div style=\"display:table-cell;\">");
+                // Append tabs
+                writeTabs(writer, tabbedPanel);
+                writer.write("</div></div>");
+                writer.write("<div style=\"display:table-row;height:100%;\"><div style=\"display:table-cell;\">");
+                // Append content
+                writeContent(writer, tabbedPanel);
+                writer.write("</div></div>");
+                writer.write("</div>");
+                break;
         }
     }
 

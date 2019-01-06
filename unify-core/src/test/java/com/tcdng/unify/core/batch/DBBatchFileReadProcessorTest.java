@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -69,8 +69,8 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
             tm.endTransaction();
         }
 
-        Map<String, TestBatchRecordB> result = output.getResult(Map.class,
-                BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        Map<String, TestBatchRecordB> result =
+                output.getResult(Map.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
         assertNotNull(result);
         assertEquals(1, result.size());
         TestBatchRecordB batchRecord = result.get("NGN");
@@ -145,8 +145,8 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
             tm.endTransaction();
         }
 
-        Map<String, TestBatchRecordB> result = output.getResult(Map.class,
-                BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        Map<String, TestBatchRecordB> result =
+                output.getResult(Map.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
         assertEquals(2, result.size());
         TestBatchRecordB batchRecord = result.get("NGN");
         assertNotNull(batchRecord);

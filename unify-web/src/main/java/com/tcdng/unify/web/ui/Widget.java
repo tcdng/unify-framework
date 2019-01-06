@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -293,8 +293,10 @@ public interface Widget extends UplComponent {
      * Returns the type converted collection value of this component value bean
      * attribute.
      * 
-     * @param clazz the collection type
-     * @param dataClass the collection data type
+     * @param clazz
+     *            the collection type
+     * @param dataClass
+     *            the collection data type
      * @throws UnifyException
      *             if an error occurs.
      */
@@ -442,7 +444,8 @@ public interface Widget extends UplComponent {
     boolean isContainerVisible() throws UnifyException;
 
     /**
-     * Tests if the components behavior is always written irrespective of visibility.
+     * Tests if the components behavior is always written irrespective of
+     * visibility.
      * 
      * @return true if component is visible and user role has component privilege
      */

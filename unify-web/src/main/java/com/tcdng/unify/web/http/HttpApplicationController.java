@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -89,8 +89,8 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
             charset = Charset.forName(request.getCharacterEncoding());
         }
 
-        ClientRequest clientRequest = new HttpClientRequest(resolvedPath, charset,
-                extractRequestParameters(request, charset));
+        ClientRequest clientRequest =
+                new HttpClientRequest(resolvedPath, charset, extractRequestParameters(request, charset));
         ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
         if (!remoteViewerList.isEmpty()) {
@@ -183,9 +183,9 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
 
                 ContentDisposition contentDisposition = getContentDisposition(part);
                 if (contentDisposition.isFileName()) {
-                    UploadedFile frmFile = new UploadedFile(contentDisposition.getFileName(),
-                            contentDisposition.getCreationDate(), contentDisposition.getModificationDate(),
-                            IOUtils.readAll(part.getInputStream()));
+                    UploadedFile frmFile =
+                            new UploadedFile(contentDisposition.getFileName(), contentDisposition.getCreationDate(),
+                                    contentDisposition.getModificationDate(), IOUtils.readAll(part.getInputStream()));
                     List<UploadedFile> list = uploadedFileMap.get(name);
                     if (list == null) {
                         list = new ArrayList<UploadedFile>();
@@ -243,14 +243,14 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
             }
 
             if (disposition.trim().startsWith(DISPOSITION_CREATIONDATE)) {
-                creationDate = CalendarUtils
-                        .parseRfc822Date(disposition.substring(disposition.indexOf('=') + 1).trim());
+                creationDate =
+                        CalendarUtils.parseRfc822Date(disposition.substring(disposition.indexOf('=') + 1).trim());
                 continue;
             }
 
             if (disposition.trim().startsWith(DISPOSITION_MODIFICATIONDATE)) {
-                modificationDate = CalendarUtils
-                        .parseRfc822Date(disposition.substring(disposition.indexOf('=') + 1).trim());
+                modificationDate =
+                        CalendarUtils.parseRfc822Date(disposition.substring(disposition.indexOf('=') + 1).trim());
                 continue;
             }
         }

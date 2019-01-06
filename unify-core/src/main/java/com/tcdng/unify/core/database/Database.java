@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -228,8 +228,8 @@ public interface Database extends UnifyComponent {
 
     /**
      * Lists all records with fields that match criteria returning resulting record
-     * in a map. Similar to {@link #findAll(Query)} but with view-only
-     * properties of returned record also populated.
+     * in a map. Similar to {@link #findAll(Query)} but with view-only properties of
+     * returned record also populated.
      * 
      * @param keyClass
      *            the map key class should be the same as the criteria key field

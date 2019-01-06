@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -199,8 +199,8 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
 
     private DynamicSqlDataSource newDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
             throws UnifyException {
-        DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
-                .getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        DynamicSqlDataSource dsds =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         dsds.configure(dynamicSqlDataSourceConfig);
         return dsds;
     }

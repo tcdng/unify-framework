@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -65,8 +65,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
 
-            List<Aggregate<?>> list = db.aggregate(AggregateType.SUM,
-                    new FruitQuery().select("price").ignoreEmptyCriteria(true));
+            List<Aggregate<?>> list =
+                    db.aggregate(AggregateType.SUM, new FruitQuery().select("price").ignoreEmptyCriteria(true));
             assertNotNull(list);
             assertEquals(1, list.size());
 
@@ -673,8 +673,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
-            List<Fruit> testFruitList = db
-                    .findAll(new FruitQuery().lessEqual("price", 20.00).order(OrderType.DESCENDING, "price"));
+            List<Fruit> testFruitList =
+                    db.findAll(new FruitQuery().lessEqual("price", 20.00).order(OrderType.DESCENDING, "price"));
             assertEquals(2, testFruitList.size());
             assertEquals(apple, testFruitList.get(0));
             assertEquals(orange, testFruitList.get(1));
@@ -693,8 +693,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
-            List<Fruit> testFruitList = db
-                    .findAll(new FruitQuery().lessEqual("price", 20.00).order("price").select("name", "quantity"));
+            List<Fruit> testFruitList =
+                    db.findAll(new FruitQuery().lessEqual("price", 20.00).order("price").select("name", "quantity"));
             assertEquals(2, testFruitList.size());
 
             Fruit foundFruit = testFruitList.get(0);
@@ -725,8 +725,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
-            Map<String, Fruit> testFruitMap = db.findAllMap(String.class, "name",
-                    new FruitQuery().lessEqual("price", 20.00).order("price"));
+            Map<String, Fruit> testFruitMap =
+                    db.findAllMap(String.class, "name", new FruitQuery().lessEqual("price", 20.00).order("price"));
             assertEquals(2, testFruitMap.size());
             assertEquals(orange, testFruitMap.get("orange"));
             assertEquals(apple, testFruitMap.get("apple"));
@@ -763,8 +763,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
-            List<Fruit> testFruitList = db
-                    .findAll(new FruitQuery().amongst("name", Arrays.asList("apple", "orange")).order("price"));
+            List<Fruit> testFruitList =
+                    db.findAll(new FruitQuery().amongst("name", Arrays.asList("apple", "orange")).order("price"));
             assertEquals(2, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
             assertEquals(apple, testFruitList.get(1));
@@ -832,8 +832,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("avocado", "purple", 99.20));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            List<Fruit> testFruitList = db
-                    .findAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).order("id"));
+            List<Fruit> testFruitList =
+                    db.findAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).order("id"));
             assertEquals(8, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -1130,8 +1130,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
 
             // Pick authors with age less or equals 50 and order by name
-            List<Author> testAuthorList = db
-                    .listAll(new AuthorQuery().lessEqual("age", 50).order(OrderType.DESCENDING, "name"));
+            List<Author> testAuthorList =
+                    db.listAll(new AuthorQuery().lessEqual("age", 50).order(OrderType.DESCENDING, "name"));
             assertEquals(2, testAuthorList.size());
 
             // Should pick the Bramers with different offices
@@ -1210,8 +1210,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, parklaneOfficeId));
 
             // Pick authors with age less or equals 50 and order by name
-            Map<String, Author> testAuthorMap = db.listAllMap(String.class, "name",
-                    new AuthorQuery().lessEqual("age", 50).order("name"));
+            Map<String, Author> testAuthorMap =
+                    db.listAllMap(String.class, "name", new AuthorQuery().lessEqual("age", 50).order("name"));
             assertNotNull(testAuthorMap);
             assertEquals(2, testAuthorMap.size());
 
@@ -1281,8 +1281,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("avocado", "purple", 99.20));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            List<Fruit> testFruitList = db
-                    .listAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).order("id"));
+            List<Fruit> testFruitList =
+                    db.listAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).order("id"));
             assertEquals(8, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -1341,8 +1341,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             // Pick authors with parklane telephone (view-only) and order by
             // name
-            List<Author> testAuthorList = db
-                    .listAll(new AuthorQuery().equals("officeTelephone", "+2348888888").order("name"));
+            List<Author> testAuthorList =
+                    db.listAll(new AuthorQuery().equals("officeTelephone", "+2348888888").order("name"));
             assertEquals(2, testAuthorList.size());
 
             // Should pick the Brian and Winfield with different offices
@@ -3098,8 +3098,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00, 45));
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
-            Set<String> nameSet = db.valueSet(String.class, "name",
-                    new FruitQuery().greater("price", Double.valueOf(15.00)));
+            Set<String> nameSet =
+                    db.valueSet(String.class, "name", new FruitQuery().greater("price", Double.valueOf(15.00)));
             assertEquals(3, nameSet.size());
             assertTrue(nameSet.contains("apple"));
             assertTrue(nameSet.contains("pineapple"));
@@ -3209,8 +3209,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
 
             // Pick authors with age less or equals 50 and order by name
-            List<Author> testAuthorList = db
-                    .listAll(new AuthorQuery().lessEqual("age", 50).min("officeSize").order("name"));
+            List<Author> testAuthorList =
+                    db.listAll(new AuthorQuery().lessEqual("age", 50).min("officeSize").order("name"));
             assertEquals(1, testAuthorList.size());
 
             // Should pick the Brian brammer because office has smaller size
@@ -3319,8 +3319,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
 
             // Pick authors with age less or equals 50 and order by name
-            List<Author> testAuthorList = db
-                    .listAll(new AuthorQuery().equals("gender", Gender.MALE).max("age").order("name"));
+            List<Author> testAuthorList =
+                    db.listAll(new AuthorQuery().equals("gender", Gender.MALE).max("age").order("name"));
             assertEquals(1, testAuthorList.size());
 
             // Should pick the Winfield Hill because is male with max age

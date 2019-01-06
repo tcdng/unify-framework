@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,8 +33,8 @@ public class FileAttachmentResponse extends AbstractOpenWindowPageControllerResp
 
     @Override
     protected WindowResourceInfo prepareWindowResource() throws UnifyException {
-        FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) this
-                .getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
+        FileAttachmentsInfo fileAttachmentsInfo =
+                (FileAttachmentsInfo) this.getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
         FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
         String resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
         return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", resourceName,

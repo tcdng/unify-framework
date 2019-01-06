@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -59,8 +59,7 @@ public final class SqlUtils {
     private static final int DEFAULT_ENUMCONST_LEN = StaticReference.CODE_LENGTH;
 
     private static final Set<String> defaultConstants;
-    
-    
+
     static {
         versionNoTypes = new ArrayList<Class<? extends Number>>();
         versionNoTypes.add(Long.class);
@@ -91,7 +90,7 @@ public final class SqlUtils {
         sqlToJavaTypeMap.put(Types.TIMESTAMP, java.util.Date.class);
         sqlToJavaTypeMap.put(Types.TINYINT, Integer.class);
         sqlToJavaTypeMap.put(Types.VARCHAR, String.class);
-        
+
         defaultConstants = new HashSet<String>(Arrays.asList("0000-00-00 00:00:00"));
     };
 
@@ -110,7 +109,7 @@ public final class SqlUtils {
     public static boolean isDefaultConstant(String defaultVal) {
         return defaultConstants.contains(defaultVal);
     }
-    
+
     public static Class<?> getEntityClass(Entity record) {
         Class<?> entityClass = record.getClass();
         if (StaticReference.class.equals(entityClass)) {
@@ -308,7 +307,7 @@ public final class SqlUtils {
     public static String getQualifierColumnName(String tableName, String columnName) {
         return tableName + '.' + columnName;
     }
-    
+
     public static SqlFieldDimensions getNormalizedSqlFieldDimensions(ColumnType columnType, int length, int precision,
             int scale) {
         int nLength = 0, nPrecision = 0, nScale = 0;
@@ -323,7 +322,7 @@ public final class SqlUtils {
                 } else {
                     nPrecision = precision;
                 }
-                
+
                 if (scale < 0) {
                     nScale = DEFAULT_DECIMAL_SCALE;
                 } else {

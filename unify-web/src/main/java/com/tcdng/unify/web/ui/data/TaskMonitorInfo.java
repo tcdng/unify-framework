@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -79,18 +79,18 @@ public class TaskMonitorInfo {
 
     public int getTaskState() {
         switch (taskMonitor.getCurrentTaskStatus()) {
-        case ABORTED:
-        case CANCELED:
-        case FAILED:
-            return FAIL;
-        case COMPLETED:
-            if (taskMonitor.isExceptions()) {
-                return ERROR;
-            }
-            return PASS;
-        case INITIALISED:
-        default:
-            return BUSY;
+            case ABORTED:
+            case CANCELED:
+            case FAILED:
+                return FAIL;
+            case COMPLETED:
+                if (taskMonitor.isExceptions()) {
+                    return ERROR;
+                }
+                return PASS;
+            case INITIALISED:
+            default:
+                return BUSY;
         }
     }
 

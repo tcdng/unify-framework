@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,11 +50,11 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
         if (userToken.getRoleCode() != null) {
             writer.write(",\"pRemoteRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
         }
-        
+
         if (userToken.getBranchCode() != null) {
             writer.write(",\"pRemoteBranchCode\":\"").write(userToken.getBranchCode()).write("\"");
         }
-        
+
         writer.write(",\"pRemoteGlobalFlag\":").write(userToken.isGlobalAccess());
         writer.write("});");
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -232,7 +232,8 @@ public final class DataUtils {
         collectionInterfaceToClassMap.put(Deque.class, LinkedList.class);
     }
 
-    private static final Map<Class<?>, JsonValueConverter> jsonConverrerMap = new HashMap<Class<?>, JsonValueConverter>();
+    private static final Map<Class<?>, JsonValueConverter> jsonConverrerMap =
+            new HashMap<Class<?>, JsonValueConverter>();
 
     static {
         jsonConverrerMap.put(Boolean.class, new JsonBooleanConverter());
@@ -619,8 +620,8 @@ public final class DataUtils {
                 }
             } else {
                 if (EnumConst.class.isAssignableFrom(dataClass)) {
-                    Object resultItem = EnumUtils.fromCode((Class<? extends EnumConst>) dataClass,
-                            String.valueOf(value));
+                    Object resultItem =
+                            EnumUtils.fromCode((Class<? extends EnumConst>) dataClass, String.valueOf(value));
                     if (resultItem == null) {
                         resultItem = EnumUtils.fromName((Class<? extends EnumConst>) dataClass, String.valueOf(value));
                     }
@@ -1285,8 +1286,8 @@ public final class DataUtils {
                         Object[] valueArray = (Object[]) Array.newInstance(componentType, array.size());
                         if (converter == null) {
                             for (int i = 0; i < valueArray.length; i++) {
-                                valueArray[i] = DataUtils.readJsonObject(componentType.newInstance(),
-                                        array.get(i).asObject());
+                                valueArray[i] =
+                                        DataUtils.readJsonObject(componentType.newInstance(), array.get(i).asObject());
                             }
                         } else {
                             for (int i = 0; i < valueArray.length; i++) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -114,15 +114,15 @@ public final class UnifyConfigUtils {
     public static void readConfigFromTypeRepository(UnifyContainerConfig.Builder uccb, TypeRepository typeRepository,
             String... packages) throws UnifyException {
         // Static settings
-        List<Class<? extends UnifyStaticSettings>> settingsList = typeRepository
-                .getAnnotatedClasses(UnifyStaticSettings.class, AutoDetect.class, packages);
+        List<Class<? extends UnifyStaticSettings>> settingsList =
+                typeRepository.getAnnotatedClasses(UnifyStaticSettings.class, AutoDetect.class, packages);
         for (Class<? extends UnifyStaticSettings> type : settingsList) {
             uccb.addStaticSettings(ReflectUtils.newInstance(type));
         }
 
         // Components
-        List<Class<? extends UnifyComponent>> list = typeRepository.getAnnotatedClasses(UnifyComponent.class,
-                Component.class, packages);
+        List<Class<? extends UnifyComponent>> list =
+                typeRepository.getAnnotatedClasses(UnifyComponent.class, Component.class, packages);
         for (Class<? extends UnifyComponent> type : list) {
             String componentName = UnifyConfigUtils.getComponentName(type);
             String description = UnifyConfigUtils.getDescription(type);

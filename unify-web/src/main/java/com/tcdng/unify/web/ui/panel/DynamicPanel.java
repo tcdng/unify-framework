@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -68,8 +68,8 @@ public class DynamicPanel extends AbstractPanel {
 
     public StandalonePanel getStandalonePanel() throws UnifyException {
         String panelName = (String) getValue(getUplAttribute(String.class, "panelNameBinding"));
-        String uniqueName = UplUtils.generateUplComponentCloneName(panelName,
-                getPageManager().getPageName(getLongName()));
+        String uniqueName =
+                UplUtils.generateUplComponentCloneName(panelName, getPageManager().getPageName(getLongName()));
         Page page = getRequestContextUtil().getRequestPage();
         getPageManager().invalidateStaleDocument(uniqueName);
         StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);

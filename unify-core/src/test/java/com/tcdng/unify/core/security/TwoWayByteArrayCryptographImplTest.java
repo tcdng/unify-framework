@@ -1,5 +1,5 @@
 /*
-* Copyright 2018 The Code Department
+* Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,15 +38,15 @@ public class TwoWayByteArrayCryptographImplTest extends AbstractUnifyComponentTe
 
     @Test
     public void testEncryptNull() throws Exception {
-        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographA =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographA");
         assertNull(byteArrayCryptographA.encrypt(null));
     }
 
     @Test
     public void testEncryptByteArray() throws Exception {
-        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographA =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographA");
         byte[] array = { 1, 2, 3, 4 };
         byte[] encryptedArray = byteArrayCryptographA.encrypt(array);
         assertNotNull(encryptedArray);
@@ -55,8 +55,8 @@ public class TwoWayByteArrayCryptographImplTest extends AbstractUnifyComponentTe
 
     @Test
     public void testEncryptByteArrayConsistent() throws Exception {
-        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographA =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographA");
         byte[] array = { 1, 2, 3, 4, 5 };
         byte[] encryptedA = byteArrayCryptographA.encrypt(array);
         byte[] encryptedB = byteArrayCryptographA.encrypt(array);
@@ -67,10 +67,10 @@ public class TwoWayByteArrayCryptographImplTest extends AbstractUnifyComponentTe
 
     @Test
     public void testEncryptByteArrayWithDifferentCryptographs() throws Exception {
-        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographA");
-        TwoWayByteArrayCryptograph byteArrayCryptographB = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographB");
+        TwoWayByteArrayCryptograph byteArrayCryptographA =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographB =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographB");
         byte[] array = { 1, 2, 3, 4, 5 };
         byte[] encryptedA = byteArrayCryptographA.encrypt(array);
         byte[] encryptedB = byteArrayCryptographB.encrypt(array);
@@ -79,23 +79,23 @@ public class TwoWayByteArrayCryptographImplTest extends AbstractUnifyComponentTe
 
     @Test
     public void testDecryptNull() throws Exception {
-        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographA =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographA");
         assertNull(byteArrayCryptographA.decrypt(null));
     }
 
     @Test(expected = UnifyException.class)
     public void testDecryptArray() throws Exception {
-        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographA =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographA");
         byte[] array = { 1, 2, 3, 4, 5 };
         byteArrayCryptographA.decrypt(array);
     }
 
     @Test
     public void testDecryptEncryptedByteArray() throws Exception {
-        TwoWayByteArrayCryptograph byteArrayCryptographA = (TwoWayByteArrayCryptograph) this
-                .getComponent("cryptographA");
+        TwoWayByteArrayCryptograph byteArrayCryptographA =
+                (TwoWayByteArrayCryptograph) this.getComponent("cryptographA");
         byte[] array = { 1, 2, 3, 4, 5 };
         byte[] encrypted = byteArrayCryptographA.encrypt(array);
         byte[] decrypted = byteArrayCryptographA.decrypt(encrypted);

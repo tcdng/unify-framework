@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -90,7 +90,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
         writer.write("});");
 
-        if(contentPanel.isSidebar()) {
+        if (contentPanel.isSidebar()) {
             writer.writeBehaviour(contentPanel.getSidebar());
         }
 
@@ -144,7 +144,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
     private void writeContentPanel(ResponseWriter writer, ContentPanel contentPanel) throws UnifyException {
         RequestContextUtil rcUtil = getRequestContextUtil();
         ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
-        
+
         // Tabs
         if (contentPanel.isTabbed()) {
             writer.write("<div style=\"display:table-row;width:100%;\">");
@@ -208,7 +208,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
             writer.write("</div>");
         }
         // End title bar
- 
+
         // Body
         writer.write("<div style=\"display:table-row;width:100%;height:100%;\">");
         writer.write("<div style=\"display:table-cell;\">");

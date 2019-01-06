@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -150,8 +150,8 @@ public final class ReflectUtils {
                             boolean isField = fieldNames.contains(fieldName);
                             if (gsInfo == null) {
                                 if ("getData".equals(name) && WrappedData.class.isAssignableFrom(beanClass)) {
-                                    WrappedData<?> wrappedBean = ReflectUtils
-                                            .newInstance((Class<? extends WrappedData>) beanClass);
+                                    WrappedData<?> wrappedBean =
+                                            ReflectUtils.newInstance((Class<? extends WrappedData>) beanClass);
                                     map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
                                             wrappedBean.getDataType(), null, false));
                                 } else {
@@ -178,8 +178,8 @@ public final class ReflectUtils {
                             String fieldName = sb.toString();
                             boolean isField = fieldNames.contains(fieldName);
                             GetterSetterInfo gsInfo = map.get(fieldName);
-                            Class<?> argumentType = ReflectUtils.getArgumentType(method.getGenericParameterTypes()[0],
-                                    0);
+                            Class<?> argumentType =
+                                    ReflectUtils.getArgumentType(method.getGenericParameterTypes()[0], 0);
                             if (gsInfo == null) {
                                 map.put(fieldName, new GetterSetterInfo(fieldName, null, method,
                                         method.getParameterTypes()[0], argumentType, isField));
@@ -372,8 +372,8 @@ public final class ReflectUtils {
         try {
             String[] properties = longPropertyName.split("\\.");
             for (int i = 0; i < properties.length && bean != null; i++) {
-                GetterSetterInfo getterSetterInfo = caseSensitiveGetterSetterMap.get(bean.getClass())
-                        .get(properties[i]);
+                GetterSetterInfo getterSetterInfo =
+                        caseSensitiveGetterSetterMap.get(bean.getClass()).get(properties[i]);
                 if (getterSetterInfo == null || !getterSetterInfo.isGetter()) {
                     return null;
                 }

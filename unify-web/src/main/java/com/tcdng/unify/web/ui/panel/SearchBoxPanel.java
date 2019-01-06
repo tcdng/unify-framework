@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -57,8 +57,8 @@ public class SearchBoxPanel extends AbstractPanel {
     @Action
     public void switchState() throws UnifyException {
         if (QueryUtils.isValidStringCriteria(filter)) {
-            SearchProvider searchProvider = (SearchProvider) this
-                    .getComponent(getUplAttribute(String.class, "searchProvider"));
+            SearchProvider searchProvider =
+                    (SearchProvider) this.getComponent(getUplAttribute(String.class, "searchProvider"));
             resultList = searchProvider.search(filter);
         } else {
             resultList = Collections.emptyList();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -98,7 +98,7 @@ public class ContentPanel extends AbstractPanel {
     public Widget getSidebar() throws UnifyException {
         return getWidgetByLongName(getShallowReferencedLongNames("sidebar").get(0));
     }
-    
+
     public int getPageCount() {
         return contentList.size();
     }

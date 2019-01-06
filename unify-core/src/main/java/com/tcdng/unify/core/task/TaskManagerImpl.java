@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -109,8 +109,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
     @Override
     public TaskMonitor executeTask(String taskName, Map<String, Object> parameters, boolean logMessages,
             String taskStatusLoggerName) throws UnifyException {
-        TaskMonitor taskMonitor = setExecution(Arrays.asList(taskName), parameters, logMessages, false, 0, 0, 0,
-                taskStatusLoggerName);
+        TaskMonitor taskMonitor =
+                setExecution(Arrays.asList(taskName), parameters, logMessages, false, 0, 0, 0, taskStatusLoggerName);
         while (taskMonitor.isPending()) {
             Thread.yield();
         }
@@ -120,8 +120,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
     @Override
     public TaskMonitor executeTasks(List<String> taskNames, Map<String, Object> parameters, boolean logMessages,
             boolean dependent, String taskStatusLoggerName) throws UnifyException {
-        TaskMonitor taskMonitor = setExecution(taskNames, parameters, logMessages, dependent, 0, 0, 0,
-                taskStatusLoggerName);
+        TaskMonitor taskMonitor =
+                setExecution(taskNames, parameters, logMessages, dependent, 0, 0, 0, taskStatusLoggerName);
         while (taskMonitor.isPending()) {
             Thread.yield();
         }
@@ -228,7 +228,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                     }
 
                     // Get parameter configuration
-                    List<TaskableMethodConfig.ParamConfig> paramConfigList = new ArrayList<TaskableMethodConfig.ParamConfig>();
+                    List<TaskableMethodConfig.ParamConfig> paramConfigList =
+                            new ArrayList<TaskableMethodConfig.ParamConfig>();
                     for (int i = 1; i < paramTypes.length; i++) {
                         Class<?> paramType = paramTypes[i];
                         Parameter pa = ta.parameters()[i - 1];
@@ -308,8 +309,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
             }
         }
 
-        Runnable runnable = new TaskThread(getRequestContext(), taskMonitor, tasks, parameters, periodic, dependent,
-                numberOfTimes);
+        Runnable runnable =
+                new TaskThread(getRequestContext(), taskMonitor, tasks, parameters, periodic, dependent, numberOfTimes);
         Future<?> future = null;
         if (periodic) {
             if (inDelayMillSec <= 0) {
@@ -401,8 +402,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
             } finally {
                 if (!StringUtils.isBlank(lockToRelease)) {
                     try {
-                        ClusterService clusterManager = (ClusterService) getComponent(
-                                ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+                        ClusterService clusterManager =
+                                (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
                         clusterManager.releaseSynchronizationLock(lockToRelease);
                     } catch (Exception e) {
                     }

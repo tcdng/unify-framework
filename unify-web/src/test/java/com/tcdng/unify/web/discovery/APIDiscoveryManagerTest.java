@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,10 +36,10 @@ public class APIDiscoveryManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetRemoteCallInfo() throws Exception {
-        APIDiscoveryManager aPIDiscoveryManager = (APIDiscoveryManager) this
-                .getComponent(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER);
-        APIDiscoveryRemoteCallInfo adrci = aPIDiscoveryManager
-                .getRemoteCallInfo(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
+        APIDiscoveryManager aPIDiscoveryManager =
+                (APIDiscoveryManager) this.getComponent(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER);
+        APIDiscoveryRemoteCallInfo adrci =
+                aPIDiscoveryManager.getRemoteCallInfo(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL);
         assertNotNull(adrci);
         assertEquals(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, adrci.getCode());
         assertEquals("Discover Remote Call", adrci.getDescription());

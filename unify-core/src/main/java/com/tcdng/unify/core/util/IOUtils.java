@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -149,8 +149,8 @@ public final class IOUtils {
      *             if an error occurs
      */
     public static InputStream openClassLoaderResourceInputStream(String resourceName) throws UnifyException {
-        InputStream inputStream = IOUtils.class.getClassLoader()
-                .getResourceAsStream(IOUtils.conformJarSeparator(resourceName));
+        InputStream inputStream =
+                IOUtils.class.getClassLoader().getResourceAsStream(IOUtils.conformJarSeparator(resourceName));
         if (inputStream != null) {
             return inputStream;
         }

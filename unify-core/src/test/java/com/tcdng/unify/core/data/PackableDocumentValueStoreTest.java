@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -105,9 +105,9 @@ public class PackableDocumentValueStoreTest extends AbstractUnifyComponentTest {
                 new PackableDocConfig.FieldConfig("address.line2", String.class),
                 new PackableDocConfig.FieldConfig("modeList", List.class));
 
-        addressDocConfig = new PackableDocConfig("addressConfig",
-                new PackableDocConfig.FieldConfig("line1", String.class),
-                new PackableDocConfig.FieldConfig("line2", String.class));
+        addressDocConfig =
+                new PackableDocConfig("addressConfig", new PackableDocConfig.FieldConfig("line1", String.class),
+                        new PackableDocConfig.FieldConfig("line2", String.class));
     }
 
     @Override

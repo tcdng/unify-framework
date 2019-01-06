@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -79,8 +79,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileDescriptorWithDefaultAttributes() throws Exception {
-        UplElementAttributes uplElementAttributes = uplCompiler.compileDescriptor(Locale.getDefault(),
-                "!test-uplelementa");
+        UplElementAttributes uplElementAttributes =
+                uplCompiler.compileDescriptor(Locale.getDefault(), "!test-uplelementa");
         assertNull(uplElementAttributes.getAttributeValue(String.class, "name"));
         assertEquals("Application User", uplElementAttributes.getAttributeValue(String.class, "description"));
         assertNull(uplElementAttributes.getAttributeValue(String[].class, "friendList"));
@@ -192,13 +192,13 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
         Date testDate = cal.getTime();
 
         UplElementAttributes uplElementAttributes = uplCompiler.compileDescriptor(Locale.UK, "!test-uplelementc");
-        DateFormatter dateFormatter = (DateFormatter) uplElementAttributes.getAttributeValue(DateFormatter.class,
-                "formatter");
+        DateFormatter dateFormatter =
+                (DateFormatter) uplElementAttributes.getAttributeValue(DateFormatter.class, "formatter");
         assertNotNull(dateFormatter);
         assertEquals("19 October 2014", dateFormatter.format(testDate));
 
-        uplElementAttributes = uplCompiler.compileDescriptor(Locale.UK,
-                "!test-uplelementc formatter:$d{!dateformat style:$s{short}}");
+        uplElementAttributes =
+                uplCompiler.compileDescriptor(Locale.UK, "!test-uplelementc formatter:$d{!dateformat style:$s{short}}");
         dateFormatter = (DateFormatter) uplElementAttributes.getAttributeValue(DateFormatter.class, "formatter");
         assertNotNull(dateFormatter);
         assertEquals("19/10/14", dateFormatter.format(testDate));
@@ -206,8 +206,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileDocument() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumenta");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumenta");
 
         // Assert document attributes
         UplElementReferences uer = uplDocumentAttributes.getAttributeValue(UplElementReferences.class, "rootList");
@@ -277,16 +277,16 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileDocumentLongNameReference() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumenta");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumenta");
         assertEquals("test-upldocumenta.fourthId",
                 uplDocumentAttributes.getAttributeValue(String.class, "longNameRef"));
     }
 
     @Test
     public void testCompileDocumentWithInheritanceAndNoOverride() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-document-b");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-document-b");
 
         // Assert document attributes
         UplElementReferences uer = uplDocumentAttributes.getAttributeValue(UplElementReferences.class, "rootList");
@@ -356,8 +356,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileDocumentWithInheritanceAndOverride() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumentc");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumentc");
 
         // Assert document attributes
         UplElementReferences uer = uplDocumentAttributes.getAttributeValue(UplElementReferences.class, "rootList");
@@ -455,8 +455,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileAttributeWithMultipleInline() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumentc");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumentc");
 
         UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName("test-upldocumentc.fifthId");
 
@@ -493,8 +493,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileAttributeWithMultipleInlineMultiline() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumentc-m");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumentc-m");
 
         UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName("test-upldocumentc-m.fifthId");
 
@@ -532,8 +532,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
     @Test
     public void testCompileDeepDocument() throws Exception {
         // Deep documents contain child documents
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumentd");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumentd");
 
         // Assert document attributes
         UplElementReferences uer = uplDocumentAttributes.getAttributeValue(UplElementReferences.class, "rootList");
@@ -646,8 +646,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
     @Test
     public void testCompileDeeperDocument() throws Exception {
         // Deep documents contain grand child documents
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumente");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumente");
 
         // Assert document attributes
         UplElementReferences uer = uplDocumentAttributes.getAttributeValue(UplElementReferences.class, "rootList");
@@ -778,20 +778,20 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCompileGeneratedDocument() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes1 = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-uplgenerator>g>type1");
+        UplDocumentAttributes uplDocumentAttributes1 =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-uplgenerator>g>type1");
         assertNotNull(uplDocumentAttributes1);
         assertEquals("test-generateddoc", uplDocumentAttributes1.getComponentName());
-        String[] names = ((List<String>) (uplDocumentAttributes1.getAttributeValue(List.class, "names")))
-                .toArray(new String[0]);
+        String[] names =
+                ((List<String>) (uplDocumentAttributes1.getAttributeValue(List.class, "names"))).toArray(new String[0]);
         assertNotNull(names);
         assertEquals(3, names.length);
         assertEquals("Tweak", names[0]);
         assertEquals("Peak", names[1]);
         assertEquals("Leak", names[2]);
 
-        UplElementAttributes uea = uplDocumentAttributes1
-                .getChildElementByLongName("test-uplgenerator>g>type1.namesDocumentId");
+        UplElementAttributes uea =
+                uplDocumentAttributes1.getChildElementByLongName("test-uplgenerator>g>type1.namesDocumentId");
         assertNotNull(uea);
         names = ((List<String>) (uea.getAttributeValue(List.class, "names"))).toArray(new String[0]);
         assertNotNull(names);
@@ -800,8 +800,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
         assertEquals("Peak", names[1]);
         assertEquals("Leak", names[2]);
 
-        UplDocumentAttributes uplDocumentAttributes2 = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-uplgenerator>g>type2");
+        UplDocumentAttributes uplDocumentAttributes2 =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-uplgenerator>g>type2");
         assertNotNull(uplDocumentAttributes2);
         assertEquals("test-generateddoc", uplDocumentAttributes2.getComponentName());
         names = ((List<String>) (uplDocumentAttributes2.getAttributeValue(List.class, "names"))).toArray(new String[0]);
@@ -823,22 +823,22 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileGeneratedDocumentWithNewVersion() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes1 = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-uplgenerator>g>type1");
+        UplDocumentAttributes uplDocumentAttributes1 =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-uplgenerator>g>type1");
         assertNotNull(uplDocumentAttributes1);
 
-        UplDocumentAttributes uplDocumentAttributes2 = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-uplgenerator>g>type2");
+        UplDocumentAttributes uplDocumentAttributes2 =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-uplgenerator>g>type2");
         assertNotNull(uplDocumentAttributes2);
         assertFalse(uplDocumentAttributes1 == uplDocumentAttributes2);
 
-        UplDocumentAttributes uplDocumentAttributes3 = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-uplgenerator>g>type1");
+        UplDocumentAttributes uplDocumentAttributes3 =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-uplgenerator>g>type1");
         assertNotNull(uplDocumentAttributes3);
         assertFalse(uplDocumentAttributes1 == uplDocumentAttributes3);
 
-        UplDocumentAttributes uplDocumentAttributes4 = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-uplgenerator>g>type2");
+        UplDocumentAttributes uplDocumentAttributes4 =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-uplgenerator>g>type2");
         assertNotNull(uplDocumentAttributes4);
         assertTrue(uplDocumentAttributes2 == uplDocumentAttributes4);
     }
@@ -846,11 +846,11 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testFarForeignAttributeContainerDefault() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumenti");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumenti");
         assertNotNull(uplDocumentAttributes);
-        String[] name = ((List<String>) (uplDocumentAttributes.getAttributeValue(List.class, "names")))
-                .toArray(new String[0]);
+        String[] name =
+                ((List<String>) (uplDocumentAttributes.getAttributeValue(List.class, "names"))).toArray(new String[0]);
         assertNotNull(name);
         assertEquals(3, name.length);
         assertEquals("Bling", name[0]);
@@ -878,8 +878,8 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testDeepFarForeignAttributeContainerDefault() throws Exception {
-        UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(Locale.getDefault(),
-                "test-upldocumentj");
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumentj");
 
         UplElementAttributes uea = uplDocumentAttributes
                 .getChildElementByLongName("test-upldocumentj.iDocument.namesDocumentId.namesElementId");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -69,8 +69,8 @@ public class APIDiscoveryManagerImpl extends AbstractUnifyComponent implements A
 
             this.logDebug("Detecting API methods for [{0}]...", name);
             for (Method method : methods) {
-                com.tcdng.unify.web.annotation.GatewayAction goa = method
-                        .getAnnotation(com.tcdng.unify.web.annotation.GatewayAction.class);
+                com.tcdng.unify.web.annotation.GatewayAction goa =
+                        method.getAnnotation(com.tcdng.unify.web.annotation.GatewayAction.class);
                 if (goa != null && goa.discoverable()) {
                     if (RemoteCallResult.class.isAssignableFrom(method.getReturnType())
                             && method.getParameterTypes().length == 1

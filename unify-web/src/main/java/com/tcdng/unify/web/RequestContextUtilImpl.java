@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -198,8 +198,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     @Override
     public void setDynamicPanelPageName(String pageName, String parentPageName) throws UnifyException {
-        List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-                DYNAMICPANEL_PAGENAME);
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
         if (dynamicPanelNameList == null) {
             dynamicPanelNameList = new ArrayList<DynamicPanelNames>();
             setRequestAttribute(DYNAMICPANEL_PAGENAME, dynamicPanelNameList);
@@ -210,8 +210,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     @Override
     public String getDynamicPanelPageName() throws UnifyException {
-        List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-                DYNAMICPANEL_PAGENAME);
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
         if (!DataUtils.isBlank(dynamicPanelNameList)) {
             return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getPageName();
         }
@@ -221,8 +221,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     @Override
     public String getDynamicPanelParentPageName() throws UnifyException {
-        List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-                DYNAMICPANEL_PAGENAME);
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
         if (!DataUtils.isBlank(dynamicPanelNameList)) {
             return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getParentPageName();
         }
@@ -232,8 +232,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     @Override
     public void clearDynamicPanelPageName() throws UnifyException {
-        List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-                DYNAMICPANEL_PAGENAME);
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
         if (!DataUtils.isBlank(dynamicPanelNameList)) {
             dynamicPanelNameList.remove(0);
         }
@@ -300,8 +300,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     @Override
     public void addRequestValidationInfo(String pageName, ValidationInfo validationInfo) throws UnifyException {
-        Map<String, ValidationInfo> validationInfos = (Map<String, ValidationInfo>) this
-                .getRequestAttribute(VALIDATION_INFO_LIST);
+        Map<String, ValidationInfo> validationInfos =
+                (Map<String, ValidationInfo>) this.getRequestAttribute(VALIDATION_INFO_LIST);
         if (validationInfos == null) {
             validationInfos = new LinkedHashMap<String, ValidationInfo>();
             setRequestAttribute(VALIDATION_INFO_LIST, validationInfos);

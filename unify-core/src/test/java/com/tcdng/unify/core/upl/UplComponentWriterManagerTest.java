@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -143,15 +143,15 @@ public class UplComponentWriterManagerTest extends AbstractUnifyComponentTest {
     @Test
     public void testGetUnknownPlatformWriters() throws Exception {
         Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
-        Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters = ucwManager
-                .getWriters(UserPlatform.DEFAULT);
+        Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters =
+                ucwManager.getWriters(UserPlatform.DEFAULT);
         assertSame(defaultWriters, writers);
     }
 
     @Override
     protected void onSetup() throws Exception {
-        ucwManager = (UplComponentWriterManager) getComponent(
-                ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
+        ucwManager =
+                (UplComponentWriterManager) getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
     }
 
     @Override

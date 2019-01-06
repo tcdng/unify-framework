@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -376,8 +376,8 @@ public class NetworkInterfaceImpl extends AbstractUnifyComponent implements Netw
             while (running) {
                 try {
                     Socket socket = serverSocket.accept();
-                    UnicastServerCommunicator serverCommunicator = (UnicastServerCommunicator) getComponent(
-                            communicator);
+                    UnicastServerCommunicator serverCommunicator =
+                            (UnicastServerCommunicator) getComponent(communicator);
                     serverCommunicator.open(socket.getInputStream(), socket.getOutputStream());
                     executor.execute(new UnicastServerCommunicationThread(socket, serverCommunicator));
                 } catch (Exception e) {

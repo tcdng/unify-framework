@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -490,7 +490,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * 
      * @return the node ID. A null value is returned if container is not in cluster
      *         mode.
-     * @throws UnifyException if an error occurs
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected String getNodeId() throws UnifyException {
         return unifyComponentContext.getNodeId();
@@ -909,8 +910,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * 
      * @param name
      *            the attribute name
-     * @return a true value if attribute exists in request context otherwise
-     *         false
+     * @return a true value if attribute exists in request context otherwise false
      * @throws UnifyException
      *             if an error occurs
      */
@@ -1137,7 +1137,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * is then returned as the result. Otherwise, the exception
      * {@link Exception#getMessage()} is returned.
      * 
-     * @param localeType the locals type
+     * @param localeType
+     *            the locals type
      * @param exception
      *            the exception to get message from. Can not be null.
      * @return the exception message
@@ -1176,8 +1177,10 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     /**
      * Gets a list based on supplied parameters.
      * 
-     * @param localeType the locale type
-     * @param listName the list name
+     * @param localeType
+     *            the locale type
+     * @param listName
+     *            the list name
      * @param params
      *            the list parameters
      * @return a list object containing listable items

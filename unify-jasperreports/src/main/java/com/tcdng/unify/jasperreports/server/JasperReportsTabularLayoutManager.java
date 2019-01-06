@@ -74,8 +74,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                     summationColumnList.add(reportColumn);
                 }
 
-                JRDesignElement jRDesignElement = this.newColumnJRDesignElement(jasperDesign, columnStyles,
-                        reportColumn, isListFormat);
+                JRDesignElement jRDesignElement =
+                        this.newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
                 jRDesignElement.setX(reportWidth);
                 jRDesignElement.setY(2);
                 reportWidth += jRDesignElement.getWidth();
@@ -193,8 +193,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             // jRDesignElement.setHeight(columnHeaderHeight - (4));
             // groupBand.addElement(jRDesignElement);
 
-            JRDesignElement jRDesignElement = this.newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn,
-                    isListFormat);
+            JRDesignElement jRDesignElement =
+                    this.newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
             // jRDesignElement.setX(groupHeaderX + groupHeaderLegendWidth);
             jRDesignElement.setX(groupHeaderX);
             jRDesignElement.setY(2);
@@ -213,8 +213,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 groupBand.addElement(grpJRDesignRectangle);
 
                 for (ReportColumn sumReportColumn : summationColumnList) {
-                    JRDesignVariable sumJRDesignVariable = this.newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup,
-                            sumReportColumn);
+                    JRDesignVariable sumJRDesignVariable =
+                            this.newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup, sumReportColumn);
                     jRDesignElement = detailJRElementMap.get(sumReportColumn);
 
                     JRDesignTextField sumJRDesignElement = (JRDesignTextField) this

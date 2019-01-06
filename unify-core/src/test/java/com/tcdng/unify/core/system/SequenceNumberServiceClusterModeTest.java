@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -318,8 +318,8 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
     public void testMultiThreadGetUniqueStringId() throws Exception {
         getSequenceNumberService();
 
-        String[] uniqueString = { "this.is.a.unique.string", "this.is.another.unique.string",
-                "this.is.some.other.unique.string" };
+        String[] uniqueString =
+                { "this.is.a.unique.string", "this.is.another.unique.string", "this.is.some.other.unique.string" };
 
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         Map<String, Object> inputParameters1 = new HashMap<String, Object>();
@@ -385,8 +385,8 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
     }
 
     private SequenceNumberService getSequenceNumberService() throws Exception {
-        SequenceNumberService snService = (SequenceNumberService) getComponent(
-                ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
         snService.reset();
         return snService;
     }

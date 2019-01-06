@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,16 +29,14 @@ import com.tcdng.unify.web.ui.AbstractControl;
  * @since 1.0
  */
 @Component("ui-fileupload")
-@UplAttributes({
-    @UplAttribute(name = "accept", type = String.class),
-    @UplAttribute(name = "acceptBinding", type = String.class),
-    @UplAttribute(name = "multiple", type = boolean.class),
-    @UplAttribute(name = "selectOnly", type = boolean.class),
-    @UplAttribute(name = "maxSize", type = int.class),
-    @UplAttribute(name = "maxSizeBinding", type = String.class),
-    @UplAttribute(name = "uploadPath", type = String.class),
-    @UplAttribute(name = "browseCaption", type = String.class, defaultValue = "$m{button.browse}"),
-    @UplAttribute(name = "uploadCaption", type = String.class, defaultValue = "$m{button.upload}") })
+@UplAttributes({ @UplAttribute(name = "accept", type = String.class),
+        @UplAttribute(name = "acceptBinding", type = String.class),
+        @UplAttribute(name = "multiple", type = boolean.class),
+        @UplAttribute(name = "selectOnly", type = boolean.class), @UplAttribute(name = "maxSize", type = int.class),
+        @UplAttribute(name = "maxSizeBinding", type = String.class),
+        @UplAttribute(name = "uploadPath", type = String.class),
+        @UplAttribute(name = "browseCaption", type = String.class, defaultValue = "$m{button.browse}"),
+        @UplAttribute(name = "uploadCaption", type = String.class, defaultValue = "$m{button.upload}") })
 public class FileUpload extends AbstractControl {
 
     public String getAccept() throws UnifyException {

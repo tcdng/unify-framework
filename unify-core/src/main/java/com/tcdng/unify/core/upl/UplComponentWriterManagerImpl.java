@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,7 +43,8 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
     private Map<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>> writersByPlatform;
 
     public UplComponentWriterManagerImpl() {
-        writersByPlatform = new ConcurrentHashMap<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
+        writersByPlatform =
+                new ConcurrentHashMap<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
     }
 
     @Override
@@ -84,14 +85,14 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
 
         // Expand to concrete UPL component types
         for (UserPlatform platform : writersByPlatform.keySet()) {
-            Map<Class<? extends UplComponent>, UplComponentWriter> writers = this
-                    .expandToConcreteUplTypes(writersByPlatform.get(platform));
+            Map<Class<? extends UplComponent>, UplComponentWriter> writers =
+                    this.expandToConcreteUplTypes(writersByPlatform.get(platform));
             writersByPlatform.put(platform, writers);
         }
 
         // Set defaults for other platforms
-        Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters = writersByPlatform
-                .get(UserPlatform.DEFAULT);
+        Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters =
+                writersByPlatform.get(UserPlatform.DEFAULT);
         for (Map<Class<? extends UplComponent>, UplComponentWriter> writers : writersByPlatform.values()) {
             if (writers != defaultWriters) {
                 for (Class<? extends UplComponent> uplType : defaultWriters.keySet()) {
@@ -116,7 +117,8 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
     @SuppressWarnings("unchecked")
     private Map<Class<? extends UplComponent>, UplComponentWriter> expandToConcreteUplTypes(
             Map<Class<? extends UplComponent>, UplComponentWriter> writers) throws UnifyException {
-        Map<Class<? extends UplComponent>, UplComponentWriter> newWriters = new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
+        Map<Class<? extends UplComponent>, UplComponentWriter> newWriters =
+                new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
         for (Class<? extends UplComponent> uplType : writers.keySet()) {
             UplComponentWriter writer = writers.get(uplType);
             List<UnifyComponentConfig> uplTypeConfigList = getComponentConfigs(uplType);

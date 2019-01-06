@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,8 +49,8 @@ public class ClusterServiceTest extends AbstractUnifyComponentTest {
         ClusterService clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
         String lockOwnerId = clusterService.getLockOwnerId(false);
         clusterService.beginSynchronization("computeSalaryLock");
-        List<ClusterLock> clusterSyncList = clusterService
-                .findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
+        List<ClusterLock> clusterSyncList =
+                clusterService.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
         assertEquals(1, clusterSyncList.size());
         ClusterLock clusterLock = clusterSyncList.get(0);
         assertEquals("computeSalaryLock", clusterLock.getLockName());
@@ -72,8 +72,8 @@ public class ClusterServiceTest extends AbstractUnifyComponentTest {
         clusterService.beginSynchronization("generateResultLock");
         clusterService.beginSynchronization("generateResultLock");
         clusterService.beginSynchronization("generateResultLock");
-        List<ClusterLock> clusterSyncList = clusterService
-                .findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+        List<ClusterLock> clusterSyncList =
+                clusterService.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
         assertEquals(1, clusterSyncList.size());
         ClusterLock clusterLock = clusterSyncList.get(0);
         assertEquals("generateResultLock", clusterLock.getLockName());

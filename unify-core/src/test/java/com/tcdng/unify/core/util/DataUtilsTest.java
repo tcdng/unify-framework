@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -237,7 +237,8 @@ public class DataUtilsTest {
 
     @Test
     public void testReadJsonObject() throws Exception {
-        String json = "{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
+        String json =
+                "{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
         Book book = DataUtils.readJsonObject(Book.class, json);
         assertNotNull(book);
         assertEquals("Bramer & Bramer", book.getAuthor());
@@ -253,7 +254,8 @@ public class DataUtilsTest {
 
     @Test
     public void testReadComplexJsonObject() throws Exception {
-        String json = "{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}}";
+        String json =
+                "{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}}";
         InventoryEntry entry = DataUtils.readJsonObject(InventoryEntry.class, json);
         assertNotNull(entry);
         assertEquals(1025, entry.getId());
@@ -273,8 +275,9 @@ public class DataUtilsTest {
 
     @Test
     public void testReadMoreComplexJsonObject() throws Exception {
-        String json = "{\"entries\":[{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}},"
-                + "{\"id\":1025,\"book\":{\"author\":\"Tom Clancy\", \"price\":4.71, \"priceHistory\":[3.86], \"copies\":82, \"censored\":false}}]}";
+        String json =
+                "{\"entries\":[{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}},"
+                        + "{\"id\":1025,\"book\":{\"author\":\"Tom Clancy\", \"price\":4.71, \"priceHistory\":[3.86], \"copies\":82, \"censored\":false}}]}";
         Inventory inventory = DataUtils.readJsonObject(Inventory.class, json);
         assertNotNull(inventory);
         InventoryEntry[] entries = inventory.getEntries();
@@ -328,7 +331,8 @@ public class DataUtilsTest {
 
     @Test(expected = UnifyException.class)
     public void testReadJsonObjectUnknownMember() throws Exception {
-        String json = "{\"author\":\"Bramer & Bramer\", \"tax\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
+        String json =
+                "{\"author\":\"Bramer & Bramer\", \"tax\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
         DataUtils.readJsonObject(Book.class, json);
     }
 

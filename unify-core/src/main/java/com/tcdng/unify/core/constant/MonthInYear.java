@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,8 +36,8 @@ public enum MonthInYear implements EnumConst {
     NOVEMBER("Nov"),
     DECEMBER("Dec");
 
-    private static final MonthInYear[] BY_CALENDAR_INDEX = { JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST,
-            SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER };
+    private static final MonthInYear[] BY_CALENDAR_INDEX =
+            { JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER };
 
     private final String code;
 

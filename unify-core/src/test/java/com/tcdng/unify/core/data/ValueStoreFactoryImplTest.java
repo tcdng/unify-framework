@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,8 +41,8 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetValueStore() throws Exception {
-        ValueStoreFactory vsFactory = (ValueStoreFactory) getComponent(
-                ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
+        ValueStoreFactory vsFactory =
+                (ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
 
         ValueStore vs1 = vsFactory.getValueStore(new PackableDoc(custDocConfig, false), 0);
         ValueStore vs2 = vsFactory.getValueStore(new Customer(), 0);
@@ -56,8 +56,8 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetValueStoreWithNullSource() throws Exception {
-        ValueStoreFactory vsFactory = (ValueStoreFactory) getComponent(
-                ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
+        ValueStoreFactory vsFactory =
+                (ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
         ValueStore vs1 = vsFactory.getValueStore(null, 0);
         assertNull(vs1);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,9 +28,11 @@ import com.tcdng.unify.core.business.BusinessLogicInput;
  * @since 1.0
  */
 @Component(name = "delimited-batchfilereader", description = "$m{batchfilereader.delimited}")
-@Parameters({ @Parameter(name = DelimitedBatchFileReaderInputConstants.FIELDDELIMITER,
+@Parameters({ @Parameter(
+        name = DelimitedBatchFileReaderInputConstants.FIELDDELIMITER,
         description = "$m{batchfilereader.delimited.fielddelimiter}",
-        editor = "!ui-select list:$s{fielddelimiterlist} blankOption:$s{}", mandatory = true) })
+        editor = "!ui-select list:$s{fielddelimiterlist} blankOption:$s{}",
+        mandatory = true) })
 public class DelimitedBatchFileReader extends AbstractMultiLineTextFileRecordReader {
 
     private FieldDelimiterType fieldDelimiterType;
@@ -38,8 +40,8 @@ public class DelimitedBatchFileReader extends AbstractMultiLineTextFileRecordRea
     @Override
     public void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException {
         super.open(input, configuration, file);
-        fieldDelimiterType = input.getParameter(FieldDelimiterType.class,
-                DelimitedBatchFileReaderInputConstants.FIELDDELIMITER);
+        fieldDelimiterType =
+                input.getParameter(FieldDelimiterType.class, DelimitedBatchFileReaderInputConstants.FIELDDELIMITER);
     }
 
     @Override

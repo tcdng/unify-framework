@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,16 +29,17 @@ import com.tcdng.unify.core.data.FactoryMap;
  */
 public final class EnumUtils {
 
-    private static FactoryMap<Class<? extends EnumConst>, EnumConstMap> enumConstMap = new FactoryMap<Class<? extends EnumConst>, EnumConstMap>() {
-        @Override
-        protected EnumConstMap create(Class<? extends EnumConst> key, Object... params) throws Exception {
-            Map<String, EnumConst> map = new HashMap<String, EnumConst>();
-            for (EnumConst enumConst : key.getEnumConstants()) {
-                map.put(enumConst.code(), enumConst);
-            }
-            return new EnumConstMap(key);
-        }
-    };
+    private static FactoryMap<Class<? extends EnumConst>, EnumConstMap> enumConstMap =
+            new FactoryMap<Class<? extends EnumConst>, EnumConstMap>() {
+                @Override
+                protected EnumConstMap create(Class<? extends EnumConst> key, Object... params) throws Exception {
+                    Map<String, EnumConst> map = new HashMap<String, EnumConst>();
+                    for (EnumConst enumConst : key.getEnumConstants()) {
+                        map.put(enumConst.code(), enumConst);
+                    }
+                    return new EnumConstMap(key);
+                }
+            };
 
     private EnumUtils() {
 

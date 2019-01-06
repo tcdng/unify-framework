@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,8 +40,8 @@ public class RefreshSectionResponse extends AbstractJsonPageControllerResponse {
 
     @Override
     protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-        RefreshSection refreshSection = (RefreshSection) this
-                .getRequestAttribute(UnifyWebRequestAttributeConstants.REFRESH_SECTION);
+        RefreshSection refreshSection =
+                (RefreshSection) this.getRequestAttribute(UnifyWebRequestAttributeConstants.REFRESH_SECTION);
         if (refreshSection != null) {
             Widget widget = refreshSection.getWidget();
             String sectionPageName = refreshSection.getSectionPageName();
