@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,38 +33,38 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER)
 public class SmtpEmailServer extends AbstractEmailServer implements EmailServer {
 
-	@Override
-	public void sendEmail(String configurationCode, Email email) throws UnifyException {
-		try {
-			MimeMessage message = createMimeMessage(configurationCode, email);
-			Transport.send(message);
-			email.setSent(true);
-		} catch (MessagingException e) {
-			logError(e);
-			email.setSent(false);
-			throwOperationErrorException(e);
-		}
-	}
+    @Override
+    public void sendEmail(String configurationCode, Email email) throws UnifyException {
+        try {
+            MimeMessage message = createMimeMessage(configurationCode, email);
+            Transport.send(message);
+            email.setSent(true);
+        } catch (MessagingException e) {
+            logError(e);
+            email.setSent(false);
+            throwOperationErrorException(e);
+        }
+    }
 
-	@Override
-	public void sendEmail(String configurationCode, Email[] emailList) throws UnifyException {
-		try {
-			Session session = getSession(configurationCode);
-			Transport transport = session.getTransport("smtp");
-			transport.connect();
-			for (Email email : emailList) {
-				try {
-					MimeMessage mimeMessage = createMimeMessage(session, email);
-					transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
-					email.setSent(true);
-				} catch (MessagingException e) {
-					email.setSent(false);
-				}
-			}
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-	}
+    @Override
+    public void sendEmail(String configurationCode, Email[] emailList) throws UnifyException {
+        try {
+            Session session = getSession(configurationCode);
+            Transport transport = session.getTransport("smtp");
+            transport.connect();
+            for (Email email : emailList) {
+                try {
+                    MimeMessage mimeMessage = createMimeMessage(session, email);
+                    transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
+                    email.setSent(true);
+                } catch (MessagingException e) {
+                    email.setSent(false);
+                }
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+    }
 }

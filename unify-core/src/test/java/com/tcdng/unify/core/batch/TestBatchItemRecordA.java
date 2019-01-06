@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,57 +29,57 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
 @Table(name = "TESTBATCHITEMA", uniqueConstraints = { @UniqueConstraint({ "accountNo" }) })
 public class TestBatchItemRecordA extends AbstractTestEntity implements BatchItemRecord {
 
-	@Column
-	private String accountNo;
+    @Column
+    private String accountNo;
 
-	@Column
-	private String beneficiary;
+    @Column
+    private String beneficiary;
 
-	@Column
-	private String currency;
+    @Column
+    private String currency;
 
-	@Column
-	private Double amount;
+    @Column
+    private Double amount;
 
-	@Override
-	public Object getBatchId() {
-		return null;
-	}
+    @Override
+    public Object getBatchId() {
+        return null;
+    }
 
-	@Override
-	public void setBatchId(Object id) {
+    @Override
+    public void setBatchId(Object id) {
 
-	}
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public String getAccountNo() {
+        return accountNo;
+    }
 
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 
-	public String getBeneficiary() {
-		return beneficiary;
-	}
+    public String getBeneficiary() {
+        return beneficiary;
+    }
 
-	public void setBeneficiary(String beneficiary) {
-		this.beneficiary = beneficiary;
-	}
+    public void setBeneficiary(String beneficiary) {
+        this.beneficiary = beneficiary;
+    }
 
-	public String getCurrency() {
-		return currency;
-	}
+    public String getCurrency() {
+        return currency;
+    }
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
-	public Double getAmount() {
-		return amount;
-	}
+    public Double getAmount() {
+        return amount;
+    }
 
-	public void setAmount(Double amount) {
-		this.amount = amount;
-	}
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 }

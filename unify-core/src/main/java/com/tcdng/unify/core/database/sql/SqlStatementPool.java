@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,12 +25,12 @@ import com.tcdng.unify.core.data.AbstractPool;
  */
 public abstract class SqlStatementPool extends AbstractPool<SqlStatement> {
 
-	public SqlStatementPool(long getTimeout, int minObjects, int maxObjects) {
-		super(getTimeout, minObjects, maxObjects, true);
-	}
+    public SqlStatementPool(long getTimeout, int minObjects, int maxObjects) {
+        super(getTimeout, minObjects, maxObjects, true);
+    }
 
-	@Override
-	protected void destroyObject(SqlStatement object) {
+    @Override
+    protected void destroyObject(SqlStatement object) {
 
-	}
+    }
 }

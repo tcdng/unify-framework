@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,191 +39,191 @@ import com.tcdng.unify.web.ui.data.TreeItemInfo;
  */
 @Component("ui-tree")
 @UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultValue = "$t{images/collapsed.png}"),
-		@UplAttribute(name = "expandedIcon", type = String.class, defaultValue = "$t{images/expanded.png}"),
-		@UplAttribute(name = "treeEventPath", type = String.class) })
+        @UplAttribute(name = "expandedIcon", type = String.class, defaultValue = "$t{images/expanded.png}"),
+        @UplAttribute(name = "treeEventPath", type = String.class) })
 public class Tree<T> extends AbstractMultiControl {
 
-	private Control eventTypeCtrl;
+    private Control eventTypeCtrl;
 
-	private Control menuCodeCtrl;
+    private Control menuCodeCtrl;
 
-	private Control selectedItemIndexCtrl;
+    private Control selectedItemIndexCtrl;
 
-	private Control selectedCtrlIndexCtrl;
+    private Control selectedCtrlIndexCtrl;
 
-	private EventType eventType;
+    private EventType eventType;
 
-	private String menuCode;
+    private String menuCode;
 
-	private List<Integer> selectedItemIndexes;
+    private List<Integer> selectedItemIndexes;
 
-	private int selectedCtrlIndex;
+    private int selectedCtrlIndex;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		eventTypeCtrl = (Control) addInternalChildControl("!ui-hidden binding:eventType");
-		menuCodeCtrl = (Control) addInternalChildControl("!ui-hidden binding:menuCode");
-		selectedItemIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedItemIndexes");
-		selectedCtrlIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedCtrlIndex");
-		selectedItemIndexes = Collections.emptyList();
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        eventTypeCtrl = (Control) addInternalChildControl("!ui-hidden binding:eventType");
+        menuCodeCtrl = (Control) addInternalChildControl("!ui-hidden binding:menuCode");
+        selectedItemIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedItemIndexes");
+        selectedCtrlIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedCtrlIndex");
+        selectedItemIndexes = Collections.emptyList();
+    }
 
-	public String getCollapsedIcon() throws UnifyException {
-		return getUplAttribute(String.class, "collapsedIcon");
-	}
+    public String getCollapsedIcon() throws UnifyException {
+        return getUplAttribute(String.class, "collapsedIcon");
+    }
 
-	public String getExpandedIcon() throws UnifyException {
-		return getUplAttribute(String.class, "expandedIcon");
-	}
+    public String getExpandedIcon() throws UnifyException {
+        return getUplAttribute(String.class, "expandedIcon");
+    }
 
-	public String getTreeEventPath() throws UnifyException {
-		return getUplAttribute(String.class, "treeEventPath");
-	}
+    public String getTreeEventPath() throws UnifyException {
+        return getUplAttribute(String.class, "treeEventPath");
+    }
 
-	public Control getEventTypeCtrl() {
-		return eventTypeCtrl;
-	}
+    public Control getEventTypeCtrl() {
+        return eventTypeCtrl;
+    }
 
-	public Control getMenuCodeCtrl() {
-		return menuCodeCtrl;
-	}
+    public Control getMenuCodeCtrl() {
+        return menuCodeCtrl;
+    }
 
-	public Control getSelectedItemIndexCtrl() {
-		return selectedItemIndexCtrl;
-	}
+    public Control getSelectedItemIndexCtrl() {
+        return selectedItemIndexCtrl;
+    }
 
-	public Control getSelectedCtrlIndexCtrl() {
-		return selectedCtrlIndexCtrl;
-	}
+    public Control getSelectedCtrlIndexCtrl() {
+        return selectedCtrlIndexCtrl;
+    }
 
-	public EventType getEventType() {
-		return eventType;
-	}
+    public EventType getEventType() {
+        return eventType;
+    }
 
-	public void setEventType(EventType eventType) {
-		this.eventType = eventType;
-	}
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
 
-	public String getMenuCode() {
-		return menuCode;
-	}
+    public String getMenuCode() {
+        return menuCode;
+    }
 
-	public void setMenuCode(String menuCode) {
-		this.menuCode = menuCode;
-	}
+    public void setMenuCode(String menuCode) {
+        this.menuCode = menuCode;
+    }
 
-	public List<Integer> getSelectedItemIndexes() {
-		return selectedItemIndexes;
-	}
+    public List<Integer> getSelectedItemIndexes() {
+        return selectedItemIndexes;
+    }
 
-	@SuppressWarnings("unchecked")
-	public void setSelectedItemIndexes(List<Integer> selectedItemIndexes) {
-		this.selectedItemIndexes = selectedItemIndexes;
-		try {
-			TreeInfo<T> treeInfo = (TreeInfo<T>) getValue();
-			if (treeInfo != null) {
-				treeInfo.setSelectedItems(selectedItemIndexes);
-			}
-		} catch (UnifyException e) {
-			logError(e);
-		}
-	}
+    @SuppressWarnings("unchecked")
+    public void setSelectedItemIndexes(List<Integer> selectedItemIndexes) {
+        this.selectedItemIndexes = selectedItemIndexes;
+        try {
+            TreeInfo<T> treeInfo = (TreeInfo<T>) getValue();
+            if (treeInfo != null) {
+                treeInfo.setSelectedItems(selectedItemIndexes);
+            }
+        } catch (UnifyException e) {
+            logError(e);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	public void setSelectedItem(Object id) {
-		try {
-			TreeInfo<T> treeInfo = (TreeInfo<T>) getValue();
-			if (treeInfo != null) {
-				int index = treeInfo.setSelectedItem(id);
-				if (index >= 0) {
-					selectedItemIndexes = Arrays.asList(index);
-				}
-			}
-		} catch (UnifyException e) {
-			logError(e);
-		}
-	}
+    @SuppressWarnings("unchecked")
+    public void setSelectedItem(Object id) {
+        try {
+            TreeInfo<T> treeInfo = (TreeInfo<T>) getValue();
+            if (treeInfo != null) {
+                int index = treeInfo.setSelectedItem(id);
+                if (index >= 0) {
+                    selectedItemIndexes = Arrays.asList(index);
+                }
+            }
+        } catch (UnifyException e) {
+            logError(e);
+        }
+    }
 
-	public String getControlImgIdBase() throws UnifyException {
-		return getPrefixedId("ctrl_");
-	}
+    public String getControlImgIdBase() throws UnifyException {
+        return getPrefixedId("ctrl_");
+    }
 
-	public String getCaptionIdBase() throws UnifyException {
-		return getPrefixedId("cap_");
-	}
+    public String getCaptionIdBase() throws UnifyException {
+        return getPrefixedId("cap_");
+    }
 
-	public int getItemCount() throws UnifyException {
-		TreeInfo<T> treeInfo = getTreeInfo();
-		if (treeInfo != null) {
-			return treeInfo.itemCount();
-		}
-		return 0;
-	}
+    public int getItemCount() throws UnifyException {
+        TreeInfo<T> treeInfo = getTreeInfo();
+        if (treeInfo != null) {
+            return treeInfo.itemCount();
+        }
+        return 0;
+    }
 
-	public TreeItemInfo<T> getTreeItemInfo(int index) throws UnifyException {
-		TreeInfo<T> treeInfo = getTreeInfo();
-		if (treeInfo != null && index >= 0 && index < treeInfo.itemCount()) {
-			return treeInfo.getTreeItemInfo(index);
-		}
-		return null;
-	}
+    public TreeItemInfo<T> getTreeItemInfo(int index) throws UnifyException {
+        TreeInfo<T> treeInfo = getTreeInfo();
+        if (treeInfo != null && index >= 0 && index < treeInfo.itemCount()) {
+            return treeInfo.getTreeItemInfo(index);
+        }
+        return null;
+    }
 
-	public List<TreeItemInfo<T>> getSelectedItems() throws UnifyException {
-		TreeInfo<T> treeInfo = getTreeInfo();
-		if (treeInfo != null) {
-			return treeInfo.getSelectedItems();
-		}
+    public List<TreeItemInfo<T>> getSelectedItems() throws UnifyException {
+        TreeInfo<T> treeInfo = getTreeInfo();
+        if (treeInfo != null) {
+            return treeInfo.getSelectedItems();
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
-	@Action
-	public void collapse() throws UnifyException {
-		TreeInfo<T> treeInfo = getTreeInfo();
-		if (treeInfo != null) {
-			treeInfo.collapse(selectedCtrlIndex);
-		}
-	}
+    @Action
+    public void collapse() throws UnifyException {
+        TreeInfo<T> treeInfo = getTreeInfo();
+        if (treeInfo != null) {
+            treeInfo.collapse(selectedCtrlIndex);
+        }
+    }
 
-	@Action
-	public void expand() throws UnifyException {
-		TreeInfo<T> treeInfo = getTreeInfo();
-		if (treeInfo != null) {
-			treeInfo.expand(selectedCtrlIndex);
-		}
-	}
+    @Action
+    public void expand() throws UnifyException {
+        TreeInfo<T> treeInfo = getTreeInfo();
+        if (treeInfo != null) {
+            treeInfo.expand(selectedCtrlIndex);
+        }
+    }
 
-	@Action
-	public void executeEventPath() throws UnifyException {
-		String treeEventPath = getTreeEventPath();
-		if (!StringUtils.isBlank(treeEventPath)) {
-			TreeInfo<T> treeInfo = getTreeInfo();
-			if (treeInfo != null) {
-				treeInfo.registerEvent(eventType, menuCode);
-				getRequestContextUtil().setCommandResponsePath(treeEventPath);
-				menuCode = null;
-			}
-		}
-	}
+    @Action
+    public void executeEventPath() throws UnifyException {
+        String treeEventPath = getTreeEventPath();
+        if (!StringUtils.isBlank(treeEventPath)) {
+            TreeInfo<T> treeInfo = getTreeInfo();
+            if (treeInfo != null) {
+                treeInfo.registerEvent(eventType, menuCode);
+                getRequestContextUtil().setCommandResponsePath(treeEventPath);
+                menuCode = null;
+            }
+        }
+    }
 
-	public void addPageAliases() throws UnifyException {
-		addPageAlias(menuCodeCtrl);
-		addPageAlias(selectedItemIndexCtrl);
-		addPageAlias(selectedCtrlIndexCtrl);
-		addPageAlias(eventTypeCtrl);
-	}
+    public void addPageAliases() throws UnifyException {
+        addPageAlias(menuCodeCtrl);
+        addPageAlias(selectedItemIndexCtrl);
+        addPageAlias(selectedCtrlIndexCtrl);
+        addPageAlias(eventTypeCtrl);
+    }
 
-	public int getSelectedCtrlIndex() {
-		return selectedCtrlIndex;
-	}
+    public int getSelectedCtrlIndex() {
+        return selectedCtrlIndex;
+    }
 
-	public void setSelectedCtrlIndex(int selectedCtrlIndex) {
-		this.selectedCtrlIndex = selectedCtrlIndex;
-	}
+    public void setSelectedCtrlIndex(int selectedCtrlIndex) {
+        this.selectedCtrlIndex = selectedCtrlIndex;
+    }
 
-	@SuppressWarnings("unchecked")
-	private TreeInfo<T> getTreeInfo() throws UnifyException {
-		return (TreeInfo<T>) getValue();
-	}
+    @SuppressWarnings("unchecked")
+    private TreeInfo<T> getTreeInfo() throws UnifyException {
+        return (TreeInfo<T>) getValue();
+    }
 
 }

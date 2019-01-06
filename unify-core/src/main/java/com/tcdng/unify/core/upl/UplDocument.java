@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,64 +32,64 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class UplDocument extends UplElement implements UplDocumentAttributes {
 
-	private Map<String, UplElement> uplElementByLongNameMap;
+    private Map<String, UplElement> uplElementByLongNameMap;
 
-	public UplDocument() {
-		uplElementByLongNameMap = new HashMap<String, UplElement>();
-	}
+    public UplDocument() {
+        uplElementByLongNameMap = new HashMap<String, UplElement>();
+    }
 
-	@Override
-	public boolean isElementWithLongName(String longName) {
-		return uplElementByLongNameMap.containsKey(longName);
-	}
+    @Override
+    public boolean isElementWithLongName(String longName) {
+        return uplElementByLongNameMap.containsKey(longName);
+    }
 
-	@Override
-	public Set<String> getLongNames() {
-		return uplElementByLongNameMap.keySet();
-	}
+    @Override
+    public Set<String> getLongNames() {
+        return uplElementByLongNameMap.keySet();
+    }
 
-	@Override
-	public Set<String> getShortNames() {
-		Set<String> shortNames = new HashSet<String>();
-		for (UplElement uplElement : uplElementByLongNameMap.values()) {
-			shortNames.add(uplElement.getShortName());
-		}
-		return shortNames;
-	}
+    @Override
+    public Set<String> getShortNames() {
+        Set<String> shortNames = new HashSet<String>();
+        for (UplElement uplElement : uplElementByLongNameMap.values()) {
+            shortNames.add(uplElement.getShortName());
+        }
+        return shortNames;
+    }
 
-	@Override
-	public UplElement getChildElementByLongName(String longName) throws UnifyException {
-		UplElement uplElement = uplElementByLongNameMap.get(longName);
-		if (uplElement == null) {
-			throw new UnifyException(UnifyCoreErrorConstants.PAGEUTIL_MISSING_ELEMENT, longName);
-		}
-		return uplElement;
-	}
+    @Override
+    public UplElement getChildElementByLongName(String longName) throws UnifyException {
+        UplElement uplElement = uplElementByLongNameMap.get(longName);
+        if (uplElement == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.PAGEUTIL_MISSING_ELEMENT, longName);
+        }
+        return uplElement;
+    }
 
-	public void generateLongNames(String documentName) throws UnifyException {
-		setShortName(documentName);
-		setLongName(documentName);
-		generateLongNames(this);
-	}
+    public void generateLongNames(String documentName) throws UnifyException {
+        setShortName(documentName);
+        setLongName(documentName);
+        generateLongNames(this);
+    }
 
-	private void generateLongNames(UplElement parentUplElement) throws UnifyException {
-		for (String id : parentUplElement.getChildIds()) {
-			String longName = StringUtils.dotify(parentUplElement.getLongName(), id);
-			UplElement childUplElement = parentUplElement.getChildElement(id);
-			childUplElement.setShortName(id);
-			childUplElement.setLongName(longName);
-			uplElementByLongNameMap.put(longName, childUplElement);
-			generateLongNames(childUplElement);
-		}
-	}
+    private void generateLongNames(UplElement parentUplElement) throws UnifyException {
+        for (String id : parentUplElement.getChildIds()) {
+            String longName = StringUtils.dotify(parentUplElement.getLongName(), id);
+            UplElement childUplElement = parentUplElement.getChildElement(id);
+            childUplElement.setShortName(id);
+            childUplElement.setLongName(longName);
+            uplElementByLongNameMap.put(longName, childUplElement);
+            generateLongNames(childUplElement);
+        }
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append('(').append(super.toString());
-		sb.append("longNames: ").append("\n");
-		for (String longName : uplElementByLongNameMap.keySet()) {
-			sb.append(longName).append("\n");
-		}
-		return sb.toString();
-	}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append('(').append(super.toString());
+        sb.append("longNames: ").append("\n");
+        for (String longName : uplElementByLongNameMap.keySet()) {
+            sb.append(longName).append("\n");
+        }
+        return sb.toString();
+    }
 }

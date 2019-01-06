@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,39 +28,39 @@ import com.tcdng.unify.core.database.Query;
  */
 public class UserSessionTrackingQuery extends Query<UserSessionTracking> {
 
-	public UserSessionTrackingQuery() {
-		super(UserSessionTracking.class);
-	}
+    public UserSessionTrackingQuery() {
+        super(UserSessionTracking.class);
+    }
 
-	public UserSessionTrackingQuery id(String id) {
-		return (UserSessionTrackingQuery) equals("sessionId", id);
-	}
+    public UserSessionTrackingQuery id(String id) {
+        return (UserSessionTrackingQuery) equals("sessionId", id);
+    }
 
-	public UserSessionTrackingQuery idNot(String id) {
-		return (UserSessionTrackingQuery) notEqual("sessionId", id);
-	}
+    public UserSessionTrackingQuery idNot(String id) {
+        return (UserSessionTrackingQuery) notEqual("sessionId", id);
+    }
 
-	public UserSessionTrackingQuery idAmongst(Collection<String> ids) {
-		return (UserSessionTrackingQuery) amongst("sessionId", ids);
-	}
+    public UserSessionTrackingQuery idAmongst(Collection<String> ids) {
+        return (UserSessionTrackingQuery) amongst("sessionId", ids);
+    }
 
-	public UserSessionTrackingQuery userLoginId(String userLoginId) {
-		return (UserSessionTrackingQuery) equals("userLoginId", userLoginId);
-	}
+    public UserSessionTrackingQuery userLoginId(String userLoginId) {
+        return (UserSessionTrackingQuery) equals("userLoginId", userLoginId);
+    }
 
-	public UserSessionTrackingQuery node(String node) {
-		return (UserSessionTrackingQuery) equals("node", node);
-	}
+    public UserSessionTrackingQuery node(String node) {
+        return (UserSessionTrackingQuery) equals("node", node);
+    }
 
-	public UserSessionTrackingQuery loggedIn() {
-		return (UserSessionTrackingQuery) isNotNull("userId");
-	}
+    public UserSessionTrackingQuery loggedIn() {
+        return (UserSessionTrackingQuery) isNotNull("userId");
+    }
 
-	public UserSessionTrackingQuery notLoggedIn() {
-		return (UserSessionTrackingQuery) isNull("userId");
-	}
+    public UserSessionTrackingQuery notLoggedIn() {
+        return (UserSessionTrackingQuery) isNull("userId");
+    }
 
-	public UserSessionTrackingQuery expired(Date expirationDt) {
-		return (UserSessionTrackingQuery) less("lastAccessTime", expirationDt);
-	}
+    public UserSessionTrackingQuery expired(Date expirationDt) {
+        return (UserSessionTrackingQuery) less("lastAccessTime", expirationDt);
+    }
 }

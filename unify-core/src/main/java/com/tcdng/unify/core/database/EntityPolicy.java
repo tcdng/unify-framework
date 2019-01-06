@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,71 +27,71 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface EntityPolicy extends UnifyComponent {
-	/**
-	 * Entity pre-create method. Called before creation of record.
-	 * 
-	 * @param record
-	 *            the record to be created
-	 * @param now
-	 *            the now time stamp
-	 * @return Object the record primary key
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Object preCreate(Entity record, Date now) throws UnifyException;
+    /**
+     * Entity pre-create method. Called before creation of record.
+     * 
+     * @param record
+     *            the record to be created
+     * @param now
+     *            the now time stamp
+     * @return Object the record primary key
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Object preCreate(Entity record, Date now) throws UnifyException;
 
-	/**
-	 * Entity pre-update method. Called before update of record.
-	 * 
-	 * @param record
-	 *            the record to be updated
-	 * @param now
-	 *            the now time stamp
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void preUpdate(Entity record, Date now) throws UnifyException;
+    /**
+     * Entity pre-update method. Called before update of record.
+     * 
+     * @param record
+     *            the record to be updated
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void preUpdate(Entity record, Date now) throws UnifyException;
 
-	/**
-	 * Entity pre-delete method. Called before delete of record.
-	 * 
-	 * @param record
-	 *            the record to be deleted
-	 * @param now
-	 *            the now time stamp
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void preDelete(Entity record, Date now) throws UnifyException;
+    /**
+     * Entity pre-delete method. Called before delete of record.
+     * 
+     * @param record
+     *            the record to be deleted
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void preDelete(Entity record, Date now) throws UnifyException;
 
-	/**
-	 * Called on creation of record error.
-	 * 
-	 * @param record
-	 *            the record to be created
-	 */
-	void onCreateError(Entity record);
+    /**
+     * Called on creation of record error.
+     * 
+     * @param record
+     *            the record to be created
+     */
+    void onCreateError(Entity record);
 
-	/**
-	 * Called on update of record error.
-	 * 
-	 * @param record
-	 *            the record to be updated
-	 */
-	void onUpdateError(Entity record);
+    /**
+     * Called on update of record error.
+     * 
+     * @param record
+     *            the record to be updated
+     */
+    void onUpdateError(Entity record);
 
-	/**
-	 * Called on delete of record error.
-	 * 
-	 * @param record
-	 *            the record to be deleted
-	 */
-	void onDeleteError(Entity record);
+    /**
+     * Called on delete of record error.
+     * 
+     * @param record
+     *            the record to be deleted
+     */
+    void onDeleteError(Entity record);
 
-	/**
-	 * Indicates if now should be set in alter methods
-	 * 
-	 * @return if an error occurs
-	 */
-	boolean isSetNow();
+    /**
+     * Indicates if now should be set in alter methods
+     * 
+     * @return if an error occurs
+     */
+    boolean isSetNow();
 }

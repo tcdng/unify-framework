@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,25 +27,25 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("colorlist")
 public enum TestColorType implements EnumConst {
 
-	RED("red"), BLUE("blue"), PURPLE("purple");
+    RED("red"), BLUE("blue"), PURPLE("purple");
 
-	private final String code;
+    private final String code;
 
-	private TestColorType(String code) {
-		this.code = code;
-	}
+    private TestColorType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static TestColorType fromCode(String code) {
-		return EnumUtils.fromCode(TestColorType.class, code);
-	}
+    public static TestColorType fromCode(String code) {
+        return EnumUtils.fromCode(TestColorType.class, code);
+    }
 
-	public static TestColorType fromName(String name) {
-		return EnumUtils.fromName(TestColorType.class, name);
-	}
+    public static TestColorType fromName(String name) {
+        return EnumUtils.fromName(TestColorType.class, name);
+    }
 
 }

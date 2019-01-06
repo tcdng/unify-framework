@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,15 +36,17 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 @Component(WebApplicationComponents.APPLICATION_APIDISCOVERY_CONTROLLER)
 public class APIDiscoveryController extends AbstractRemoteCallController {
 
-	@Configurable(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER)
-	private APIDiscoveryManager aPIDiscoveryManager;
+    @Configurable
+    private APIDiscoveryManager aPIDiscoveryManager;
 
-	@GatewayAction(name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, description = "Discover Remote Call", restricted = false)
-	public DiscoverRemoteCallResult discoverRemoteCall(DiscoverRemoteCallParams params) throws UnifyException {
-		DiscoverRemoteCallResult result = new DiscoverRemoteCallResult();
-		APIDiscoveryRemoteCallInfo remoteCallInfo = aPIDiscoveryManager
-				.getRemoteCallInfo(params.getRemoteCallCode());
-		result.setRemoteCallInfo(remoteCallInfo);
-		return result;
-	}
+    @GatewayAction(
+            name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL,
+            description = "Discover Remote Call",
+            restricted = false)
+    public DiscoverRemoteCallResult discoverRemoteCall(DiscoverRemoteCallParams params) throws UnifyException {
+        DiscoverRemoteCallResult result = new DiscoverRemoteCallResult();
+        APIDiscoveryRemoteCallInfo remoteCallInfo = aPIDiscoveryManager.getRemoteCallInfo(params.getRemoteCallCode());
+        result.setRemoteCallInfo(remoteCallInfo);
+        return result;
+    }
 }

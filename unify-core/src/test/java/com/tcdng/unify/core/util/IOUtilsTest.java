@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,23 +27,23 @@ import org.junit.Test;
  */
 public class IOUtilsTest {
 
-	@Test
-	public void testBuildFilename() throws Exception {
-		String fileSeparator = System.getProperty("file.separator");
+    @Test
+    public void testBuildFilename() throws Exception {
+        String fileSeparator = System.getProperty("file.separator");
 
-		assertEquals(fileSeparator, IOUtils.buildFilename(null, null));
+        assertEquals(fileSeparator, IOUtils.buildFilename(null, null));
 
-		assertEquals("c:" + fileSeparator + "home" + fileSeparator, IOUtils.buildFilename("c:\\home", null));
-		assertEquals(IOUtils.buildFilename("c:/home", null), IOUtils.buildFilename("c:\\home", null));
-		assertEquals(IOUtils.buildFilename("c:/home\\", null), IOUtils.buildFilename("c:\\home", null));
+        assertEquals("c:" + fileSeparator + "home" + fileSeparator, IOUtils.buildFilename("c:\\home", null));
+        assertEquals(IOUtils.buildFilename("c:/home", null), IOUtils.buildFilename("c:\\home", null));
+        assertEquals(IOUtils.buildFilename("c:/home\\", null), IOUtils.buildFilename("c:\\home", null));
 
-		assertEquals(fileSeparator + "accounts.txt", IOUtils.buildFilename(null, "accounts.txt"));
-		assertEquals(fileSeparator + "accounts.txt", IOUtils.buildFilename(null, "\\accounts.txt"));
-		assertEquals(fileSeparator + "accounts.txt", IOUtils.buildFilename(null, "/accounts.txt"));
+        assertEquals(fileSeparator + "accounts.txt", IOUtils.buildFilename(null, "accounts.txt"));
+        assertEquals(fileSeparator + "accounts.txt", IOUtils.buildFilename(null, "\\accounts.txt"));
+        assertEquals(fileSeparator + "accounts.txt", IOUtils.buildFilename(null, "/accounts.txt"));
 
-		String expectedFilename = "c:" + fileSeparator + "home" + fileSeparator + "accounts.txt";
-		assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home", "accounts.txt"));
-		assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home", "/accounts.txt"));
-		assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home/", "\\accounts.txt"));
-	}
+        String expectedFilename = "c:" + fileSeparator + "home" + fileSeparator + "accounts.txt";
+        assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home", "accounts.txt"));
+        assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home", "/accounts.txt"));
+        assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home/", "\\accounts.txt"));
+    }
 }

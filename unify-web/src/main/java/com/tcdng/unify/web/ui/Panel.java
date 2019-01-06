@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,66 +25,74 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface Panel extends Container {
 
-	/**
-	 * Switches panel state.
-	 */
-	void switchState() throws UnifyException;
+    /**
+     * Switches panel state.
+     */
+    void switchState() throws UnifyException;
 
-	/**
-	 * Resets panel state.
-	 */
-	void resetState() throws UnifyException;
+    /**
+     * Resets panel state.
+     */
+    void resetState() throws UnifyException;
 
-	/**
-	 * Returns true if panel allows automatic refresh.
-	 */
-	boolean isAllowRefresh();
+    /**
+     * Returns true if panel allows automatic refresh.
+     */
+    boolean isAllowRefresh();
 
-	/**
-	 * Adds an event listener to this panel.
-	 * 
-	 * @param listener
-	 *            the listener to add
-	 */
-	void addEventListener(PanelEventListener listener);
+    /**
+     * Adds an event listener to this panel.
+     * 
+     * @param listener
+     *            the listener to add
+     */
+    void addEventListener(PanelEventListener listener);
 
-	/**
-	 * Removes an event listener from this panel.
-	 * 
-	 * @param listener
-	 *            the listener to remove
-	 */
-	void removeEventListener(PanelEventListener listener);
+    /**
+     * Removes an event listener from this panel.
+     * 
+     * @param listener
+     *            the listener to remove
+     */
+    void removeEventListener(PanelEventListener listener);
 
-	/**
-	 * Returns the panel background image.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getBackImageSrc() throws UnifyException;
+    /**
+     * Returns the panel background image.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getBackImageSrc() throws UnifyException;
 
-	/**
-	 * Returns the panel refresh path.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getRefreshPath() throws UnifyException;
+    /**
+     * Returns the panel refresh path.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getRefreshPath() throws UnifyException;
 
-	/**
-	 * Returns the panel refresh period.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	int getRefreshEvery() throws UnifyException;
+    /**
+     * Returns the panel refresh period.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int getRefreshEvery() throws UnifyException;
 
-	/**
-	 * Returns the panel legend.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getLegend() throws UnifyException;
+    /**
+     * Returns true if panel refresh is based on user activity on client device.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isRefreshOnUserAct() throws UnifyException;
+
+    /**
+     * Returns the panel legend.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getLegend() throws UnifyException;
 }

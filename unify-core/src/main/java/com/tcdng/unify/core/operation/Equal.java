@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class Equal extends Criteria {
 
-	public Equal(String field, Object value) {
-		super(Operator.EQUAL, field, value);
-	}
+    public Equal(String field, Object value) {
+        super(Operator.EQUAL, field, value);
+    }
 }

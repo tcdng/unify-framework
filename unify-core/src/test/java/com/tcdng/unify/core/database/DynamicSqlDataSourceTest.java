@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,87 +34,87 @@ import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceConfig;
  */
 public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testDataSourceNotSingleton() throws Exception {
-		DynamicSqlDataSource dsds1 = (DynamicSqlDataSource) this
-				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		DynamicSqlDataSource dsds2 = (DynamicSqlDataSource) this
-				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		assertFalse(dsds1 == dsds2);
-	}
+    @Test
+    public void testDataSourceNotSingleton() throws Exception {
+        DynamicSqlDataSource dsds1 =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        DynamicSqlDataSource dsds2 =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        assertFalse(dsds1 == dsds2);
+    }
 
-	@Test
-	public void testNotConfiguredOnCreate() throws Exception {
-		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
-				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		assertFalse(dsds.isConfigured());
-	}
+    @Test
+    public void testNotConfiguredOnCreate() throws Exception {
+        DynamicSqlDataSource dsds =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        assertFalse(dsds.isConfigured());
+    }
 
-	@Test
-	public void testConfigure() throws Exception {
-		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
-				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		try {
-			DynamicSqlDataSourceConfig config = getConfig(0);
-			dsds.configure(config);
-			assertTrue(dsds.isConfigured());
-		} finally {
-			dsds.terminate();
-		}
-	}
+    @Test
+    public void testConfigure() throws Exception {
+        DynamicSqlDataSource dsds =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        try {
+            DynamicSqlDataSourceConfig config = getConfig(0);
+            dsds.configure(config);
+            assertTrue(dsds.isConfigured());
+        } finally {
+            dsds.terminate();
+        }
+    }
 
-	@Test(expected = UnifyException.class)
-	public void testMultipleConfigure() throws Exception {
-		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
-				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		try {
-			DynamicSqlDataSourceConfig config = getConfig(0);
-			dsds.configure(config);
-			dsds.configure(config);
-		} finally {
-			dsds.terminate();
-		}
-	}
+    @Test(expected = UnifyException.class)
+    public void testMultipleConfigure() throws Exception {
+        DynamicSqlDataSource dsds =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        try {
+            DynamicSqlDataSourceConfig config = getConfig(0);
+            dsds.configure(config);
+            dsds.configure(config);
+        } finally {
+            dsds.terminate();
+        }
+    }
 
-	@Test
-	public void testReconfigure() throws Exception {
-		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
-				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		try {
-			DynamicSqlDataSourceConfig config = getConfig(0);
-			dsds.configure(config);
-			boolean result = dsds.reconfigure(config);
-			assertTrue(result);
-		} finally {
-			dsds.terminate();
-		}
-	}
+    @Test
+    public void testReconfigure() throws Exception {
+        DynamicSqlDataSource dsds =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        try {
+            DynamicSqlDataSourceConfig config = getConfig(0);
+            dsds.configure(config);
+            boolean result = dsds.reconfigure(config);
+            assertTrue(result);
+        } finally {
+            dsds.terminate();
+        }
+    }
 
-	@Test
-	public void testReconfigureNotConfigured() throws Exception {
-		DynamicSqlDataSource dsds = (DynamicSqlDataSource) this
-				.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		try {
-			DynamicSqlDataSourceConfig config = getConfig(0);
-			boolean result = dsds.reconfigure(config);
-			assertFalse(result);
-		} finally {
-			dsds.terminate();
-		}
-	}
+    @Test
+    public void testReconfigureNotConfigured() throws Exception {
+        DynamicSqlDataSource dsds =
+                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        try {
+            DynamicSqlDataSourceConfig config = getConfig(0);
+            boolean result = dsds.reconfigure(config);
+            assertFalse(result);
+        } finally {
+            dsds.terminate();
+        }
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 
-	private DynamicSqlDataSourceConfig getConfig(int schemaIndex) {
-		return new DynamicSqlDataSourceConfig("test-config", "hsqldb-dialect", "org.hsqldb.jdbcDriver",
-				"jdbc:hsqldb:mem:dyntest" + schemaIndex, null, null, 2, true);
-	}
+    private DynamicSqlDataSourceConfig getConfig(int schemaIndex) {
+        return new DynamicSqlDataSourceConfig("test-config", "hsqldb-dialect", "org.hsqldb.jdbcDriver",
+                "jdbc:hsqldb:mem:dyntest" + schemaIndex, null, null, 2, true);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,34 +34,34 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 @Component("dynamicpanel-writer")
 public class DynamicPanelWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		DynamicPanel dynamicPanel = (DynamicPanel) widget;
-		writer.write("<input type=\"hidden\"");
-		writeTagId(writer, dynamicPanel.getHiddenId());
-		writer.write("/>");
-		writeLayoutContent(writer, dynamicPanel);
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        DynamicPanel dynamicPanel = (DynamicPanel) widget;
+        writer.write("<input type=\"hidden\"");
+        writeTagId(writer, dynamicPanel.getHiddenId());
+        writer.write("/>");
+        writeLayoutContent(writer, dynamicPanel);
+    }
 
-	@Override
-	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-		DynamicPanel dynamicPanel = (DynamicPanel) container;
-		getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
-		try {
-			writer.writeInnerStructureAndContent(dynamicPanel.getStandalonePanel());
-		} finally {
-			getRequestContextUtil().clearDynamicPanelPageName();
-		}
-	}
+    @Override
+    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+        DynamicPanel dynamicPanel = (DynamicPanel) container;
+        getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
+        try {
+            writer.writeInnerStructureAndContent(dynamicPanel.getStandalonePanel());
+        } finally {
+            getRequestContextUtil().clearDynamicPanelPageName();
+        }
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		DynamicPanel dynamicPanel = (DynamicPanel) widget;
-		getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
-		try {
-			writer.writeBehaviour(dynamicPanel.getStandalonePanel());
-		} finally {
-			getRequestContextUtil().clearDynamicPanelPageName();
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        DynamicPanel dynamicPanel = (DynamicPanel) widget;
+        getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
+        try {
+            writer.writeBehaviour(dynamicPanel.getStandalonePanel());
+        } finally {
+            getRequestContextUtil().clearDynamicPanelPageName();
+        }
+    }
 }

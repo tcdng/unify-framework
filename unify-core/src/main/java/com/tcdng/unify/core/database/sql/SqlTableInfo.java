@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,30 +25,30 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class SqlTableInfo implements Listable {
 
-	private SqlTableType type;
+    private SqlTableType type;
 
-	private String tableName;
+    private String tableName;
 
-	public SqlTableInfo(SqlTableType type, String tableName) {
-		this.type = type;
-		this.tableName = tableName;
-	}
+    public SqlTableInfo(SqlTableType type, String tableName) {
+        this.type = type;
+        this.tableName = tableName;
+    }
 
-	@Override
-	public String getListKey() {
-		return tableName;
-	}
+    @Override
+    public String getListKey() {
+        return tableName;
+    }
 
-	@Override
-	public String getListDescription() {
-		return tableName;
-	}
+    @Override
+    public String getListDescription() {
+        return tableName;
+    }
 
-	public SqlTableType getType() {
-		return type;
-	}
+    public SqlTableType getType() {
+        return type;
+    }
 
-	public String getTableName() {
-		return tableName;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 }

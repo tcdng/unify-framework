@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,14 +24,14 @@ package com.tcdng.unify.web.data;
  */
 public class FilterParams {
 
-	private Long filterId;
+    private Long filterId;
 
-	public FilterParams(Long filterId) {
-		this.filterId = filterId;
-	}
+    public FilterParams(Long filterId) {
+        this.filterId = filterId;
+    }
 
-	public Long getFilterId() {
-		return filterId;
-	}
+    public Long getFilterId() {
+        return filterId;
+    }
 
 }

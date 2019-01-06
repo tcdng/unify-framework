@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,14 +27,14 @@ import com.tcdng.unify.core.data.DownloadFile;
  */
 public interface FileDownloadHandler extends UnifyComponent {
 
-	/**
-	 * Handles a file download request.
-	 * 
-	 * @param id
-	 *            the request ID
-	 * @return download file object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	DownloadFile handleFileDownload(String id) throws UnifyException;
+    /**
+     * Handles a file download request.
+     * 
+     * @param id
+     *            the request ID
+     * @return download file object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    DownloadFile handleFileDownload(String id) throws UnifyException;
 }

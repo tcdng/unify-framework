@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,15 +27,15 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface PageControllerResponse extends UplComponent {
 
-	/**
-	 * Generates response.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param pageController
-	 *            the page controller
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void generate(ResponseWriter writer, PageController pageController) throws UnifyException;
+    /**
+     * Generates response.
+     * 
+     * @param writer
+     *            the response writer
+     * @param pageController
+     *            the page controller
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void generate(ResponseWriter writer, PageController pageController) throws UnifyException;
 }

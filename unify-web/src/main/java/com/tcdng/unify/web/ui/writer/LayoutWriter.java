@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,17 +29,17 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface LayoutWriter extends UplComponentWriter {
 
-	/**
-	 * Writes structure and content of components using supplied layout.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param layout
-	 *            the layout component.
-	 * @param container
-	 *            the container
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container) throws UnifyException;
+    /**
+     * Writes structure and content of components using supplied layout.
+     * 
+     * @param writer
+     *            the response writer
+     * @param layout
+     *            the layout component.
+     * @param container
+     *            the container
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container) throws UnifyException;
 }

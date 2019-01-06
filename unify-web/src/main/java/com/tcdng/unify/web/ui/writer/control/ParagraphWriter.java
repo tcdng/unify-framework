@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,23 +34,23 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("paragraph-writer")
 public class ParagraphWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Paragraph paragraph = (Paragraph) widget;
-		writer.write("<p ");
-		writeTagAttributes(writer, paragraph);
-		writer.write(">");
-		String value = paragraph.getStringValue();
-		if (value == null) {
-			if (!StringUtils.isBlank(paragraph.getBinding())) {
-				writer.writeHtmlFixedSpace();
-			} else {
-				writeCaption(writer, paragraph);
-			}
-		} else {
-			writer.writeWithHtmlEscape(value);
-		}
-		writer.write("</p>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        Paragraph paragraph = (Paragraph) widget;
+        writer.write("<p ");
+        writeTagAttributes(writer, paragraph);
+        writer.write(">");
+        String value = paragraph.getStringValue();
+        if (value == null) {
+            if (!StringUtils.isBlank(paragraph.getBinding())) {
+                writer.writeHtmlFixedSpace();
+            } else {
+                writeCaption(writer, paragraph);
+            }
+        } else {
+            writer.writeWithHtmlEscape(value);
+        }
+        writer.write("</p>");
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,27 +33,27 @@ import com.tcdng.unify.core.database.Entity;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ForeignKeyOverride {
 
-	/** The name of foreign key */
-	String key();
+    /** The name of foreign key */
+    String key();
 
-	/** The foreign record type that key references. */
-	Class<? extends Entity> foreignType();
+    /** The foreign record type that key references. */
+    Class<? extends Entity> foreignType();
 
-	/**
-	 * The field column name. If not set, the system generates a column name using
-	 * the field name.
-	 */
-	String name() default AnnotationConstants.NONE;
+    /**
+     * The field column name. If not set, the system generates a column name using
+     * the field name.
+     */
+    String name() default AnnotationConstants.NONE;
 
-	/** Indicates the field is nullable. */
-	boolean nullable() default false;
+    /** Indicates the field is nullable. */
+    boolean nullable() default false;
 
-	/**
-	 * Indicates child records are deleted on parent delete. Ignore for child lists
-	 * since always true
-	 */
-	boolean onDeleteCascade() default false;
+    /**
+     * Indicates child records are deleted on parent delete. Ignore for child lists
+     * since always true
+     */
+    boolean onDeleteCascade() default false;
 
-	/** Column position */
-	int position() default DefaultColumnPositionConstants.FK_POSITION;
+    /** Column position */
+    int position() default DefaultColumnPositionConstants.FK_POSITION;
 }

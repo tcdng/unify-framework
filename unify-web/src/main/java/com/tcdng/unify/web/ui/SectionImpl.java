@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,45 +32,45 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 @Component("ui-section")
 @UplAttributes({ @UplAttribute(name = "tag", type = String.class), @UplAttribute(name = "caption", type = String.class),
-		@UplAttribute(name = "binding", type = String.class),
-		@UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true),
-		@UplAttribute(name = "privilege", type = String.class),
-		@UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "binding", type = String.class),
+        @UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true),
+        @UplAttribute(name = "privilege", type = String.class),
+        @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false") })
 public class SectionImpl extends AbstractUplComponent implements Section {
 
-	@Override
-	public String getTag() throws UnifyException {
-		return getUplAttribute(String.class, "tag");
-	}
+    @Override
+    public String getTag() throws UnifyException {
+        return getUplAttribute(String.class, "tag");
+    }
 
-	@Override
-	public String getCaption() throws UnifyException {
-		return getUplAttribute(String.class, "caption");
-	}
+    @Override
+    public String getCaption() throws UnifyException {
+        return getUplAttribute(String.class, "caption");
+    }
 
-	@Override
-	public String getPrivilege() throws UnifyException {
-		return getUplAttribute(String.class, "privilege");
-	}
+    @Override
+    public String getPrivilege() throws UnifyException {
+        return getUplAttribute(String.class, "privilege");
+    }
 
-	@Override
-	public String getBinding() throws UnifyException {
-		return getUplAttribute(String.class, "binding");
-	}
+    @Override
+    public String getBinding() throws UnifyException {
+        return getUplAttribute(String.class, "binding");
+    }
 
-	@Override
-	public boolean isBinding() throws UnifyException {
-		return getUplAttribute(String.class, "binding") != null;
-	}
+    @Override
+    public boolean isBinding() throws UnifyException {
+        return getUplAttribute(String.class, "binding") != null;
+    }
 
-	@Override
-	public List<String> getReferences() throws UnifyException {
-		return getUplAttribute(UplElementReferences.class, "components").getLongNames();
-	}
+    @Override
+    public List<String> getReferences() throws UnifyException {
+        return getUplAttribute(UplElementReferences.class, "components").getLongNames();
+    }
 
-	@Override
-	public boolean isHidden() throws UnifyException {
-		return getUplAttribute(boolean.class, "hidden");
-	}
+    @Override
+    public boolean isHidden() throws UnifyException {
+        return getUplAttribute(boolean.class, "hidden");
+    }
 
 }

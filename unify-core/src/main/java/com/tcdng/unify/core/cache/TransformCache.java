@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,31 +26,31 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TransformCache<T, U, V> extends Cache<T, U> {
 
-	/**
-	 * Puts an object in cache with specified key and expiration period and returns
-	 * a transformed version of the cached object.
-	 * 
-	 * @param key
-	 *            the key to cache object with
-	 * @param object
-	 *            the object to cache
-	 * @param expiryPeriod
-	 *            the expiration period in seconds
-	 * @return the transformed version of the cached object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	V transformPut(T key, U object, long expiryPeriod) throws UnifyException;
+    /**
+     * Puts an object in cache with specified key and expiration period and returns
+     * a transformed version of the cached object.
+     * 
+     * @param key
+     *            the key to cache object with
+     * @param object
+     *            the object to cache
+     * @param expiryPeriod
+     *            the expiration period in seconds
+     * @return the transformed version of the cached object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    V transformPut(T key, U object, long expiryPeriod) throws UnifyException;
 
-	/**
-	 * Gets a transformed cached object with specified key. If cached object with
-	 * key is found, the object is transformed from U to V and returned.
-	 * 
-	 * @param key
-	 *            The object key
-	 * @return the transformed cached object
-	 * @throws UnifyException
-	 *             If an error occurs
-	 */
-	V getTransformed(T key) throws UnifyException;
+    /**
+     * Gets a transformed cached object with specified key. If cached object with
+     * key is found, the object is transformed from U to V and returned.
+     * 
+     * @param key
+     *            The object key
+     * @return the transformed cached object
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    V getTransformed(T key) throws UnifyException;
 }

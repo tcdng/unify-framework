@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,17 +26,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonLongArrayConverter extends AbstractJsonArrayConverter<Long> {
 
-	public JsonLongArrayConverter() {
-		super(Long.class);
-	}
+    public JsonLongArrayConverter() {
+        super(Long.class);
+    }
 
-	@Override
-	protected Long getValue(JsonValue jsonValue) throws Exception {
-		return jsonValue.asLong();
-	}
+    @Override
+    protected Long getValue(JsonValue jsonValue) throws Exception {
+        return jsonValue.asLong();
+    }
 
-	@Override
-	protected JsonValue setValue(Long value) throws Exception {
-		return Json.value(value);
-	}
+    @Override
+    protected JsonValue setValue(Long value) throws Exception {
+        return Json.value(value);
+    }
 }

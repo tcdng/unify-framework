@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,18 +30,18 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 @Component("test-uplelementb")
 @UplAttributes({ @UplAttribute(name = "title", type = String.class),
-		@UplAttribute(name = "user", type = TestElementA.class),
-		@UplAttribute(name = "manyUser", type = TestElementA[].class), @UplAttribute(name = "count", type = long.class),
-		@UplAttribute(name = "components", type = UplElementReferences.class) })
+        @UplAttribute(name = "user", type = TestElementA.class),
+        @UplAttribute(name = "manyUser", type = TestElementA[].class), @UplAttribute(name = "count", type = long.class),
+        @UplAttribute(name = "components", type = UplElementReferences.class) })
 public class TestElementB extends AbstractUplComponent {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

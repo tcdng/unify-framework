@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.util.EnumUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * String data type SQL policy.
@@ -32,41 +33,63 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public class EnumConstPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		if (length <= 0) {
-			length = StaticReference.CODE_LENGTH;
-		}
-		sb.append("VARCHAR(").append(length).append(')');
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        if (length <= 0) {
+            length = StaticReference.CODE_LENGTH;
+        }
+        sb.append("VARCHAR(").append(length).append(')');
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
-		} else {
-			((PreparedStatement) pstmt).setString(index, ((EnumConst) data).code());
-		}
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (StringUtils.isBlank(defaultVal)) {
+            EnumConst val = EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) defaultVal);
+            if (val == null) {
+                val = EnumUtils.fromName((Class<? extends EnumConst>) type, (String) defaultVal);
+            }
+            sb.append(" DEFAULT '").append(val.code()).append("'");
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Object object = ((ResultSet) rs).getString(column);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
+        } else {
+            ((PreparedStatement) pstmt).setString(index, ((EnumConst) data).code());
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Object object = ((ResultSet) rs).getString(index);
-		if (((ResultSet) rs).wasNull()) {
-			return null;
-		}
-		return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Object object = ((ResultSet) rs).getString(column);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Object object = ((ResultSet) rs).getString(index);
+        if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.VARCHAR;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return false;
+    }
 
 }

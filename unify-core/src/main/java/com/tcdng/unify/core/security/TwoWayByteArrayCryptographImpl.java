@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,24 +28,24 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_BYTEARRAYCRYPTOGRAPH)
 public class TwoWayByteArrayCryptographImpl extends AbstractTwoWayCryptograph implements TwoWayByteArrayCryptograph {
 
-	@Override
-	public byte[] forwardTransform(byte[] value) throws UnifyException {
-		return encrypt(value);
-	}
+    @Override
+    public byte[] forwardTransform(byte[] value) throws UnifyException {
+        return encrypt(value);
+    }
 
-	@Override
-	public byte[] reverseTransform(byte[] value) throws UnifyException {
-		return decrypt(value);
-	}
+    @Override
+    public byte[] reverseTransform(byte[] value) throws UnifyException {
+        return decrypt(value);
+    }
 
-	@Override
-	public byte[] encrypt(byte[] array) throws UnifyException {
-		return doEncrypt(array);
-	}
+    @Override
+    public byte[] encrypt(byte[] array) throws UnifyException {
+        return doEncrypt(array);
+    }
 
-	@Override
-	public byte[] decrypt(byte[] array) throws UnifyException {
-		return doDecrypt(array);
-	}
+    @Override
+    public byte[] decrypt(byte[] array) throws UnifyException {
+        return doDecrypt(array);
+    }
 
 }

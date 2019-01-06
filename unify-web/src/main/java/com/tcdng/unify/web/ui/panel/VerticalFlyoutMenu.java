@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,11 +27,11 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  */
 @Component("ui-verticalflyoutmenu")
 @UplAttributes({ @UplAttribute(name = "backImgSrc", type = String.class, defaultValue = "$t{images/up.png}"),
-		@UplAttribute(name = "forwardImgSrc", type = String.class, defaultValue = "$t{images/down.png}") })
+        @UplAttribute(name = "forwardImgSrc", type = String.class, defaultValue = "$t{images/down.png}") })
 public class VerticalFlyoutMenu extends AbstractFlyoutMenu {
 
-	@Override
-	public boolean isVertical() {
-		return true;
-	}
+    @Override
+    public boolean isVertical() {
+        return true;
+    }
 }

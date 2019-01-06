@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,62 +29,62 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class Context {
 
-	private Map<String, Object> attributes;
+    private Map<String, Object> attributes;
 
-	public Context() {
-		this.attributes = new HashMap<String, Object>();
-	}
+    public Context() {
+        this.attributes = new HashMap<String, Object>();
+    }
 
-	public boolean hasAttributes() {
-		return !this.attributes.isEmpty();
-	}
+    public boolean hasAttributes() {
+        return !this.attributes.isEmpty();
+    }
 
-	public void setAttribute(String name, Object value) throws UnifyException {
-		this.attributes.put(name, value);
-	}
+    public void setAttribute(String name, Object value) throws UnifyException {
+        this.attributes.put(name, value);
+    }
 
-	public Object getAttribute(String name) throws UnifyException {
-		return this.attributes.get(name);
-	}
+    public Object getAttribute(String name) throws UnifyException {
+        return this.attributes.get(name);
+    }
 
-	public Object removeAttribute(String name) throws UnifyException {
-		if (this.attributes != null) {
-			return this.attributes.remove(name);
-		}
-		return null;
-	}
+    public Object removeAttribute(String name) throws UnifyException {
+        if (this.attributes != null) {
+            return this.attributes.remove(name);
+        }
+        return null;
+    }
 
-	public void removeAttributes(String... names) throws UnifyException {
-		if (this.attributes != null) {
-			for (String name : names) {
-				this.attributes.remove(name);
-			}
-		}
-	}
+    public void removeAttributes(String... names) throws UnifyException {
+        if (this.attributes != null) {
+            for (String name : names) {
+                this.attributes.remove(name);
+            }
+        }
+    }
 
-	public void clearAttributes() {
-		if (this.attributes != null) {
-			this.attributes.clear();
-		}
-	}
+    public void clearAttributes() {
+        if (this.attributes != null) {
+            this.attributes.clear();
+        }
+    }
 
-	public boolean isAttribute(String name) {
-		return attributes.containsKey(name);
-	}
+    public boolean isAttribute(String name) {
+        return attributes.containsKey(name);
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<context>\n");
-		sb.append("id = ").append(super.toString()).append("\n");
-		for (Map.Entry<String, Object> entry : this.attributes.entrySet()) {
-			sb.append("<attribute name=\"").append(entry.getKey()).append("\" value=\"").append(entry.getValue())
-					.append("\"/>\n");
-		}
-		sb.append("</context>");
-		return sb.toString();
-	}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<context>\n");
+        sb.append("id = ").append(super.toString()).append("\n");
+        for (Map.Entry<String, Object> entry : this.attributes.entrySet()) {
+            sb.append("<attribute name=\"").append(entry.getKey()).append("\" value=\"").append(entry.getValue())
+                    .append("\"/>\n");
+        }
+        sb.append("</context>");
+        return sb.toString();
+    }
 
-	protected Map<String, Object> getAttributes() {
-		return attributes;
-	}
+    protected Map<String, Object> getAttributes() {
+        return attributes;
+    }
 }

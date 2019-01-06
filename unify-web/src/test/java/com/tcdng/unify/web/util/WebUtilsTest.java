@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,16 +27,16 @@ import org.junit.Test;
  */
 public class WebUtilsTest {
 
-	@Test
-	public void testGetBeanIndexedPathFromPath() throws Exception {
-		assertEquals("/calculator:10/performAddition",
-				WebUtils.generateBeanIndexedPathFromPath("/calculator/performAddition", 10));
-	}
+    @Test
+    public void testGetBeanIndexedPathFromPath() throws Exception {
+        assertEquals("/calculator:10/performAddition",
+                WebUtils.generateBeanIndexedPathFromPath("/calculator/performAddition", 10));
+    }
 
-	@Test
-	public void testGetPathFromBeanIndexedPath() throws Exception {
-		assertEquals("/calculator/performAddition",
-				WebUtils.extractPathFromBeanIndexedPath("/calculator:10/performAddition"));
-		assertEquals("/calculator", WebUtils.extractPathFromBeanIndexedPath("/calculator:10"));
-	}
+    @Test
+    public void testGetPathFromBeanIndexedPath() throws Exception {
+        assertEquals("/calculator/performAddition",
+                WebUtils.extractPathFromBeanIndexedPath("/calculator:10/performAddition"));
+        assertEquals("/calculator", WebUtils.extractPathFromBeanIndexedPath("/calculator:10"));
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -37,51 +36,51 @@ import com.tcdng.unify.core.list.AbstractListCommand;
  */
 @Component("upldocumentshortnameslist")
 public class UplDocumentShortNamesListCommand
-		extends AbstractListCommand<UplDocumentShortNamesListCommand.UplDocumentShortNamesParams> {
+        extends AbstractListCommand<UplDocumentShortNamesListCommand.UplDocumentShortNamesParams> {
 
-	@Configurable(ApplicationComponents.APPLICATION_UPLCOMPILER)
-	private UplCompiler uplCompiler;
+    @Configurable
+    private UplCompiler uplCompiler;
 
-	private FactoryMap<String, List<ListData>> listMap;
+    private FactoryMap<String, List<ListData>> listMap;
 
-	public UplDocumentShortNamesListCommand() {
-		super(UplDocumentShortNamesParams.class);
-		this.listMap = new FactoryMap<String, List<ListData>>() {
+    public UplDocumentShortNamesListCommand() {
+        super(UplDocumentShortNamesParams.class);
+        this.listMap = new FactoryMap<String, List<ListData>>() {
 
-			@Override
-			protected List<ListData> create(String documentName, Object... params) throws Exception {
-				List<ListData> list = new ArrayList<ListData>();
-				UplDocumentAttributes uda = uplCompiler.compileComponentDocuments(getApplicationLocale(), documentName);
-				for (String shortName : uda.getShortNames()) {
-					list.add(new ListData(shortName, shortName));
-				}
+            @Override
+            protected List<ListData> create(String documentName, Object... params) throws Exception {
+                List<ListData> list = new ArrayList<ListData>();
+                UplDocumentAttributes uda = uplCompiler.compileComponentDocuments(getApplicationLocale(), documentName);
+                for (String shortName : uda.getShortNames()) {
+                    list.add(new ListData(shortName, shortName));
+                }
 
-				return list;
-			}
+                return list;
+            }
 
-		};
-	}
+        };
+    }
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, UplDocumentShortNamesParams params) throws UnifyException {
-		if (params.getDocumentName() != null) {
-			return this.listMap.get(params.getDocumentName());
-		}
+    @Override
+    public List<? extends Listable> execute(Locale locale, UplDocumentShortNamesParams params) throws UnifyException {
+        if (params.getDocumentName() != null) {
+            return this.listMap.get(params.getDocumentName());
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
-	public static class UplDocumentShortNamesParams {
+    public static class UplDocumentShortNamesParams {
 
-		private String documentName;
+        private String documentName;
 
-		public UplDocumentShortNamesParams(String documentName) {
-			this.documentName = documentName;
-		}
+        public UplDocumentShortNamesParams(String documentName) {
+            this.documentName = documentName;
+        }
 
-		public String getDocumentName() {
-			return documentName;
-		}
+        public String getDocumentName() {
+            return documentName;
+        }
 
-	}
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,12 +27,12 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("test-datamulticastservercomm")
 public class TestMulticastServerDataCommunicator extends AbstractMulticastServerDataCommunicator {
 
-	@Override
-	public void send(NetworkMessage message) throws UnifyException {
-		TestMulticastMessage msg = (TestMulticastMessage) message;
-		writeChar(msg.getCode());
-		writeInt(msg.getWidth());
-		writeInt(msg.getHeight());
-	}
+    @Override
+    public void send(NetworkMessage message) throws UnifyException {
+        TestMulticastMessage msg = (TestMulticastMessage) message;
+        writeChar(msg.getCode());
+        writeInt(msg.getWidth());
+        writeInt(msg.getHeight());
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,25 +25,25 @@ import com.tcdng.unify.core.transform.Transformer;
  * @since 1.0
  */
 public interface TwoWayStringCryptograph extends Transformer<String, String> {
-	/**
-	 * Encrypts a string.
-	 * 
-	 * @param string
-	 *            the string to encrypt
-	 * @return the encrypted string
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String encrypt(String string) throws UnifyException;
+    /**
+     * Encrypts a string.
+     * 
+     * @param string
+     *            the string to encrypt
+     * @return the encrypted string
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String encrypt(String string) throws UnifyException;
 
-	/**
-	 * Decrypts a string.
-	 * 
-	 * @param string
-	 *            the string to decrypt
-	 * @return the decrypted string
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String decrypt(String string) throws UnifyException;
+    /**
+     * Decrypts a string.
+     * 
+     * @param string
+     *            the string to decrypt
+     * @return the decrypted string
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String decrypt(String string) throws UnifyException;
 }

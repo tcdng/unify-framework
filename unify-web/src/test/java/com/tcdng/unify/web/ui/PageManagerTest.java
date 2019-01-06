@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,148 +35,148 @@ import com.tcdng.unify.web.WebApplicationComponents;
  */
 public class PageManagerTest extends AbstractUnifyWebTest {
 
-	@Test
-	public void testCreatePage() throws Exception {
-		PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
-		Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
-		assertNotNull(page);
-	}
+    @Test
+    public void testCreatePage() throws Exception {
+        PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
+        Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
+        assertNotNull(page);
+    }
 
-	@Test
-	public void testPageAttributes() throws Exception {
-		PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
-		Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
-		DocumentLayout documentLayout = page.getUplAttribute(DocumentLayout.class, "layout");
-		assertNotNull(documentLayout);
-		assertEquals("ui-desktoptype0", documentLayout.getName());
-	}
+    @Test
+    public void testPageAttributes() throws Exception {
+        PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
+        Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
+        DocumentLayout documentLayout = page.getUplAttribute(DocumentLayout.class, "layout");
+        assertNotNull(documentLayout);
+        assertEquals("ui-desktoptype0", documentLayout.getName());
+    }
 
-	@Test
-	public void testPageReferencesByLongName() throws Exception {
-		PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
-		Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
+    @Test
+    public void testPageReferencesByLongName() throws Exception {
+        PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
+        Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
 
-		// Page level
-		assertEquals(11, page.getWidgetLongNames().size());
+        // Page level
+        assertEquals(11, page.getWidgetLongNames().size());
 
-		Widget uici = page.getWidgetByLongName("/testauthor.mainPanel");
-		assertEquals("/testauthor.mainPanel", uici.getLongName());
-		assertEquals(page.getLongName(), uici.getParentLongName());
-		assertTrue(uici.isConforming());
-		assertTrue(uici.isValueConforming(page));
-		assertFalse(uici.isFixedConforming());
+        Widget uici = page.getWidgetByLongName("/testauthor.mainPanel");
+        assertEquals("/testauthor.mainPanel", uici.getLongName());
+        assertEquals(page.getLongName(), uici.getParentLongName());
+        assertTrue(uici.isConforming());
+        assertTrue(uici.isValueConforming(page));
+        assertFalse(uici.isFixedConforming());
 
-		uici = page.getWidgetByLongName("/testauthor.fullName");
-		assertEquals("/testauthor.fullName", uici.getLongName());
-		assertEquals(page.getLongName(), uici.getParentLongName());
-		assertTrue(uici.isConforming());
-		assertFalse(uici.isValueConforming(page));
-		assertFalse(uici.isFixedConforming());
+        uici = page.getWidgetByLongName("/testauthor.fullName");
+        assertEquals("/testauthor.fullName", uici.getLongName());
+        assertEquals(page.getLongName(), uici.getParentLongName());
+        assertTrue(uici.isConforming());
+        assertFalse(uici.isValueConforming(page));
+        assertFalse(uici.isFixedConforming());
 
-		uici = page.getWidgetByLongName("/testauthor.birthDt");
-		assertNotNull(uici);
-		assertEquals("/testauthor.birthDt", uici.getLongName());
-		assertEquals(page.getLongName(), uici.getParentLongName());
-		assertTrue(uici.isConforming());
-		assertFalse(uici.isValueConforming(page));
-		assertFalse(uici.isFixedConforming());
+        uici = page.getWidgetByLongName("/testauthor.birthDt");
+        assertNotNull(uici);
+        assertEquals("/testauthor.birthDt", uici.getLongName());
+        assertEquals(page.getLongName(), uici.getParentLongName());
+        assertTrue(uici.isConforming());
+        assertFalse(uici.isValueConforming(page));
+        assertFalse(uici.isFixedConforming());
 
-		uici = page.getWidgetByLongName("/testauthor.height");
-		assertNotNull(uici);
-		assertEquals("/testauthor.height", uici.getLongName());
-		assertEquals(page.getLongName(), uici.getParentLongName());
-		assertTrue(uici.isConforming());
-		assertFalse(uici.isValueConforming(page));
-		assertFalse(uici.isFixedConforming());
+        uici = page.getWidgetByLongName("/testauthor.height");
+        assertNotNull(uici);
+        assertEquals("/testauthor.height", uici.getLongName());
+        assertEquals(page.getLongName(), uici.getParentLongName());
+        assertTrue(uici.isConforming());
+        assertFalse(uici.isValueConforming(page));
+        assertFalse(uici.isFixedConforming());
 
-		// Panel level
-		Panel panel = (Panel) page.getWidgetByLongName("/testauthor.mainPanel");
-		assertEquals(3, panel.getWidgetLongNames().size());
+        // Panel level
+        Panel panel = (Panel) page.getWidgetByLongName("/testauthor.mainPanel");
+        assertEquals(3, panel.getWidgetLongNames().size());
 
-		uici = panel.getWidgetByLongName("/testauthor.fullName");
-		assertNotNull(uici);
-		assertEquals("/testauthor.fullName", uici.getLongName());
-		assertEquals(page.getLongName(), uici.getParentLongName());
-		assertTrue(uici.isConforming());
-		assertTrue(uici.isValueConforming(panel));
-		assertFalse(uici.isFixedConforming());
+        uici = panel.getWidgetByLongName("/testauthor.fullName");
+        assertNotNull(uici);
+        assertEquals("/testauthor.fullName", uici.getLongName());
+        assertEquals(page.getLongName(), uici.getParentLongName());
+        assertTrue(uici.isConforming());
+        assertTrue(uici.isValueConforming(panel));
+        assertFalse(uici.isFixedConforming());
 
-		uici = panel.getWidgetByLongName("/testauthor.birthDt");
-		assertNotNull(uici);
-		assertEquals("/testauthor.birthDt", uici.getLongName());
-		assertEquals(page.getLongName(), uici.getParentLongName());
-		assertTrue(uici.isConforming());
-		assertTrue(uici.isValueConforming(panel));
-		assertFalse(uici.isFixedConforming());
+        uici = panel.getWidgetByLongName("/testauthor.birthDt");
+        assertNotNull(uici);
+        assertEquals("/testauthor.birthDt", uici.getLongName());
+        assertEquals(page.getLongName(), uici.getParentLongName());
+        assertTrue(uici.isConforming());
+        assertTrue(uici.isValueConforming(panel));
+        assertFalse(uici.isFixedConforming());
 
-		uici = panel.getWidgetByLongName("/testauthor.height");
-		assertNotNull(uici);
-		assertEquals("/testauthor.height", uici.getLongName());
-		assertEquals(page.getLongName(), uici.getParentLongName());
-		assertTrue(uici.isConforming());
-		assertTrue(uici.isValueConforming(panel));
-		assertFalse(uici.isFixedConforming());
-	}
+        uici = panel.getWidgetByLongName("/testauthor.height");
+        assertNotNull(uici);
+        assertEquals("/testauthor.height", uici.getLongName());
+        assertEquals(page.getLongName(), uici.getParentLongName());
+        assertTrue(uici.isConforming());
+        assertTrue(uici.isValueConforming(panel));
+        assertFalse(uici.isFixedConforming());
+    }
 
-	@Test
-	public void testPageReferencesByShortName() throws Exception {
-		PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
-		Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
+    @Test
+    public void testPageReferencesByShortName() throws Exception {
+        PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
+        Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
 
-		// Page level
-		Widget uic = page.getWidgetByShortName("mainPanel");
-		assertNotNull(uic);
-		assertEquals("/testauthor.mainPanel", uic.getLongName());
+        // Page level
+        Widget uic = page.getWidgetByShortName("mainPanel");
+        assertNotNull(uic);
+        assertEquals("/testauthor.mainPanel", uic.getLongName());
 
-		uic = page.getWidgetByShortName("fullName");
-		assertNotNull(uic);
-		assertEquals("/testauthor.fullName", uic.getLongName());
+        uic = page.getWidgetByShortName("fullName");
+        assertNotNull(uic);
+        assertEquals("/testauthor.fullName", uic.getLongName());
 
-		uic = page.getWidgetByShortName("birthDt");
-		assertNotNull(uic);
-		assertEquals("/testauthor.birthDt", uic.getLongName());
+        uic = page.getWidgetByShortName("birthDt");
+        assertNotNull(uic);
+        assertEquals("/testauthor.birthDt", uic.getLongName());
 
-		uic = page.getWidgetByShortName("height");
-		assertNotNull(uic);
-		assertEquals("/testauthor.height", uic.getLongName());
+        uic = page.getWidgetByShortName("height");
+        assertNotNull(uic);
+        assertEquals("/testauthor.height", uic.getLongName());
 
-		// Panel level
-		Panel panel = (Panel) page.getWidgetByShortName("mainPanel");
+        // Panel level
+        Panel panel = (Panel) page.getWidgetByShortName("mainPanel");
 
-		uic = panel.getWidgetByShortName("fullName");
-		assertNotNull(uic);
-		assertEquals("/testauthor.fullName", uic.getLongName());
+        uic = panel.getWidgetByShortName("fullName");
+        assertNotNull(uic);
+        assertEquals("/testauthor.fullName", uic.getLongName());
 
-		uic = panel.getWidgetByShortName("birthDt");
-		assertNotNull(uic);
-		assertEquals("/testauthor.birthDt", uic.getLongName());
+        uic = panel.getWidgetByShortName("birthDt");
+        assertNotNull(uic);
+        assertEquals("/testauthor.birthDt", uic.getLongName());
 
-		uic = panel.getWidgetByShortName("height");
-		assertNotNull(uic);
-		assertEquals("/testauthor.height", uic.getLongName());
-	}
+        uic = panel.getWidgetByShortName("height");
+        assertNotNull(uic);
+        assertEquals("/testauthor.height", uic.getLongName());
+    }
 
-	@Test
-	public void testPageGetPanel() throws Exception {
-		PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
-		Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
+    @Test
+    public void testPageGetPanel() throws Exception {
+        PageManager pageManager = (PageManager) this.getComponent(WebApplicationComponents.APPLICATION_PAGEMANAGER);
+        Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
 
-		Panel panel1 = page.getPanelByLongName("/testauthor.mainPanel");
-		assertEquals("/testauthor.mainPanel", panel1.getLongName());
+        Panel panel1 = page.getPanelByLongName("/testauthor.mainPanel");
+        assertEquals("/testauthor.mainPanel", panel1.getLongName());
 
-		Panel panel2 = page.getPanelByShortName("mainPanel");
-		assertEquals("/testauthor.mainPanel", panel2.getLongName());
+        Panel panel2 = page.getPanelByShortName("mainPanel");
+        assertEquals("/testauthor.mainPanel", panel2.getLongName());
 
-		assertEquals(panel1, panel2);
-	}
+        assertEquals(panel1, panel2);
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

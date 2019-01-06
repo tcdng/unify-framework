@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,112 +40,113 @@ import com.tcdng.unify.core.constant.UserPlatform;
 @Component(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER)
 public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implements UplComponentWriterManager {
 
-	private Map<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>> writersByPlatform;
+    private Map<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>> writersByPlatform;
 
-	public UplComponentWriterManagerImpl() {
-		writersByPlatform = new ConcurrentHashMap<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
-	}
+    public UplComponentWriterManagerImpl() {
+        writersByPlatform =
+                new ConcurrentHashMap<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
+    }
 
-	@Override
-	public Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform)
-			throws UnifyException {
-		Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
-		if (writers == null) {
-			return writersByPlatform.get(UserPlatform.DEFAULT);
-		}
-		return writers;
-	}
+    @Override
+    public Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform)
+            throws UnifyException {
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
+        if (writers == null) {
+            return writersByPlatform.get(UserPlatform.DEFAULT);
+        }
+        return writers;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		writersByPlatform.put(UserPlatform.DEFAULT,
-				new HashMap<Class<? extends UplComponent>, UplComponentWriter>());
-		List<UnifyComponentConfig> writerConfigList = getComponentConfigs(UplComponentWriter.class);
-		for (UnifyComponentConfig config : writerConfigList) {
-			Class<? extends UnifyComponent> writerType = config.getType();
-			Writes wa = writerType.getAnnotation(Writes.class);
-			if (wa != null) {
-				UserPlatform platform = wa.target();
-				UplComponentWriter writer = (UplComponentWriter) getComponent(config.getName());
-				Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
-				if (writers == null) {
-					writers = new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
-					writersByPlatform.put(platform, writers);
-				}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        writersByPlatform.put(UserPlatform.DEFAULT, new HashMap<Class<? extends UplComponent>, UplComponentWriter>());
+        List<UnifyComponentConfig> writerConfigList = getComponentConfigs(UplComponentWriter.class);
+        for (UnifyComponentConfig config : writerConfigList) {
+            Class<? extends UnifyComponent> writerType = config.getType();
+            Writes wa = writerType.getAnnotation(Writes.class);
+            if (wa != null) {
+                UserPlatform platform = wa.target();
+                UplComponentWriter writer = (UplComponentWriter) getComponent(config.getName());
+                Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
+                if (writers == null) {
+                    writers = new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
+                    writersByPlatform.put(platform, writers);
+                }
 
-				Class<? extends UplComponent> uplType = wa.value();
-				if (writers.containsKey(uplType)) {
-					throw new UnifyException(UnifyCoreErrorConstants.CONFLICTING_UPLCOMPONENT_WRITERS, uplType,
-							platform, writer.getClass(), writers.get(uplType).getClass());
-				}
+                Class<? extends UplComponent> uplType = wa.value();
+                if (writers.containsKey(uplType)) {
+                    throw new UnifyException(UnifyCoreErrorConstants.CONFLICTING_UPLCOMPONENT_WRITERS, uplType,
+                            platform, writer.getClass(), writers.get(uplType).getClass());
+                }
 
-				writers.put(uplType, writer);
-			}
-		}
+                writers.put(uplType, writer);
+            }
+        }
 
-		// Expand to concrete UPL component types
-		for (UserPlatform platform : writersByPlatform.keySet()) {
-			Map<Class<? extends UplComponent>, UplComponentWriter> writers = this
-					.expandToConcreteUplTypes(writersByPlatform.get(platform));
-			writersByPlatform.put(platform, writers);
-		}
+        // Expand to concrete UPL component types
+        for (UserPlatform platform : writersByPlatform.keySet()) {
+            Map<Class<? extends UplComponent>, UplComponentWriter> writers =
+                    this.expandToConcreteUplTypes(writersByPlatform.get(platform));
+            writersByPlatform.put(platform, writers);
+        }
 
-		// Set defaults for other platforms
-		Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters = writersByPlatform
-				.get(UserPlatform.DEFAULT);
-		for (Map<Class<? extends UplComponent>, UplComponentWriter> writers : writersByPlatform.values()) {
-			if (writers != defaultWriters) {
-				for (Class<? extends UplComponent> uplType : defaultWriters.keySet()) {
-					if (!writers.containsKey(uplType)) {
-						writers.put(uplType, defaultWriters.get(uplType));
-					}
-				}
-			}
-		}
+        // Set defaults for other platforms
+        Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters =
+                writersByPlatform.get(UserPlatform.DEFAULT);
+        for (Map<Class<? extends UplComponent>, UplComponentWriter> writers : writersByPlatform.values()) {
+            if (writers != defaultWriters) {
+                for (Class<? extends UplComponent> uplType : defaultWriters.keySet()) {
+                    if (!writers.containsKey(uplType)) {
+                        writers.put(uplType, defaultWriters.get(uplType));
+                    }
+                }
+            }
+        }
 
-		// Calcify
-		for (UserPlatform platform : writersByPlatform.keySet()) {
-			writersByPlatform.put(platform, Collections.unmodifiableMap(writersByPlatform.get(platform)));
-		}
-	}
+        // Calcify
+        for (UserPlatform platform : writersByPlatform.keySet()) {
+            writersByPlatform.put(platform, Collections.unmodifiableMap(writersByPlatform.get(platform)));
+        }
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	private Map<Class<? extends UplComponent>, UplComponentWriter> expandToConcreteUplTypes(
-			Map<Class<? extends UplComponent>, UplComponentWriter> writers) throws UnifyException {
-		Map<Class<? extends UplComponent>, UplComponentWriter> newWriters = new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
-		for (Class<? extends UplComponent> uplType : writers.keySet()) {
-			UplComponentWriter writer = writers.get(uplType);
-			List<UnifyComponentConfig> uplTypeConfigList = getComponentConfigs(uplType);
-			if (uplTypeConfigList.size() == 1) {
-				newWriters.put((Class<? extends UplComponent>) uplTypeConfigList.get(0).getType(), writer);
-			} else {
-				for (UnifyComponentConfig eUplTypeConfig : uplTypeConfigList) {
-					Class<? extends UplComponent> exUplType = (Class<? extends UplComponent>) eUplTypeConfig.getType();
-					if (!newWriters.containsKey(exUplType)) {
-						boolean isQualified = true;
-						for (Class<? extends UplComponent> refUplType : writers.keySet()) {
-							if (uplType != refUplType && refUplType.isAssignableFrom(exUplType)) {
-								if (uplType.isAssignableFrom(refUplType)) {
-									isQualified = false;
-									break;
-								}
-							}
-						}
+    @SuppressWarnings("unchecked")
+    private Map<Class<? extends UplComponent>, UplComponentWriter> expandToConcreteUplTypes(
+            Map<Class<? extends UplComponent>, UplComponentWriter> writers) throws UnifyException {
+        Map<Class<? extends UplComponent>, UplComponentWriter> newWriters =
+                new HashMap<Class<? extends UplComponent>, UplComponentWriter>();
+        for (Class<? extends UplComponent> uplType : writers.keySet()) {
+            UplComponentWriter writer = writers.get(uplType);
+            List<UnifyComponentConfig> uplTypeConfigList = getComponentConfigs(uplType);
+            if (uplTypeConfigList.size() == 1) {
+                newWriters.put((Class<? extends UplComponent>) uplTypeConfigList.get(0).getType(), writer);
+            } else {
+                for (UnifyComponentConfig eUplTypeConfig : uplTypeConfigList) {
+                    Class<? extends UplComponent> exUplType = (Class<? extends UplComponent>) eUplTypeConfig.getType();
+                    if (!newWriters.containsKey(exUplType)) {
+                        boolean isQualified = true;
+                        for (Class<? extends UplComponent> refUplType : writers.keySet()) {
+                            if (uplType != refUplType && refUplType.isAssignableFrom(exUplType)) {
+                                if (uplType.isAssignableFrom(refUplType)) {
+                                    isQualified = false;
+                                    break;
+                                }
+                            }
+                        }
 
-						if (isQualified) {
-							newWriters.put(exUplType, writer);
-						}
-					}
-				}
-			}
+                        if (isQualified) {
+                            newWriters.put(exUplType, writer);
+                        }
+                    }
+                }
+            }
 
-		}
-		return newWriters;
-	}
+        }
+        return newWriters;
+    }
 
 }

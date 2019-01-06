@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,65 +31,65 @@ import com.tcdng.unify.web.ClientResponse;
  */
 public class HttpClientResponse implements ClientResponse {
 
-	private HttpServletResponse response;
+    private HttpServletResponse response;
 
-	private OutputStream outputStream;
+    private OutputStream outputStream;
 
-	private Writer writer;
+    private Writer writer;
 
-	private boolean outUsed;
+    private boolean outUsed;
 
-	public HttpClientResponse(HttpServletResponse response) {
-		this.response = response;
-	}
+    public HttpClientResponse(HttpServletResponse response) {
+        this.response = response;
+    }
 
-	@Override
-	public void setMetaData(String key, String value) {
-		response.setHeader(key, value);
-	}
+    @Override
+    public void setMetaData(String key, String value) {
+        response.setHeader(key, value);
+    }
 
-	@Override
-	public void setContentType(String contentType) {
-		response.setContentType(contentType);
-	}
+    @Override
+    public void setContentType(String contentType) {
+        response.setContentType(contentType);
+    }
 
-	@Override
-	public void setCharacterEncoding(String charset) {
-		response.setCharacterEncoding(charset);
-	}
+    @Override
+    public void setCharacterEncoding(String charset) {
+        response.setCharacterEncoding(charset);
+    }
 
-	@Override
-	public OutputStream getOutputStream() throws Exception {
-		if (outputStream == null) {
-			outputStream = response.getOutputStream();
-			outUsed = true;
-		}
-		return outputStream;
-	}
+    @Override
+    public OutputStream getOutputStream() throws Exception {
+        if (outputStream == null) {
+            outputStream = response.getOutputStream();
+            outUsed = true;
+        }
+        return outputStream;
+    }
 
-	@Override
-	public Writer getWriter() throws Exception {
-		if (writer == null) {
-			writer = response.getWriter();
-			outUsed = true;
-		}
-		return writer;
-	}
+    @Override
+    public Writer getWriter() throws Exception {
+        if (writer == null) {
+            writer = response.getWriter();
+            outUsed = true;
+        }
+        return writer;
+    }
 
-	@Override
-	public void setStatus(int status) {
-		response.setStatus(status);
-	}
+    @Override
+    public void setStatus(int status) {
+        response.setStatus(status);
+    }
 
-	@Override
-	public void close() {
-		response.setStatus(HttpServletResponse.SC_OK);
-		IOUtils.close(outputStream);
-		IOUtils.close(writer);
-	}
+    @Override
+    public void close() {
+        response.setStatus(HttpServletResponse.SC_OK);
+        IOUtils.close(outputStream);
+        IOUtils.close(writer);
+    }
 
-	public boolean isOutUsed() {
-		return outUsed;
-	}
+    public boolean isOutUsed() {
+        return outUsed;
+    }
 
 }

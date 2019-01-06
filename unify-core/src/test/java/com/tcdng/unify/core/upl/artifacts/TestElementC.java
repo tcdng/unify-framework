@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,17 +30,17 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  */
 @Component("test-uplelementc")
 @UplAttributes({
-		@UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!dateformat style:$s{long}}") })
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!dateformat style:$s{long}}") })
 public class TestElementC extends AbstractUplComponent {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
 }

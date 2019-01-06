@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,15 +30,15 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UplAttribute {
-	/** The attribute name */
-	String name();
+    /** The attribute name */
+    String name();
 
-	/** The attribute type */
-	Class<?> type();
+    /** The attribute type */
+    Class<?> type();
 
-	/** The attribute default value */
-	String defaultValue() default AnnotationConstants.NONE;
+    /** The attribute default value */
+    String defaultValue() default AnnotationConstants.NONE;
 
-	/** Used to indicate that attribute is mandatory */
-	boolean mandatory() default false;
+    /** Used to indicate that attribute is mandatory */
+    boolean mandatory() default false;
 }

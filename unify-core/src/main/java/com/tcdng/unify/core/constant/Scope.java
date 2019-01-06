@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,24 +25,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum Scope implements EnumConst {
 
-	APPLICATION("APPLICATION"), SESSION("SESSION"), REQUEST("REQUEST");
+    APPLICATION("APPLICATION"), SESSION("SESSION"), REQUEST("REQUEST");
 
-	private final String code;
+    private final String code;
 
-	private Scope(String code) {
-		this.code = code;
-	}
+    private Scope(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static Scope fromCode(String code) {
-		return EnumUtils.fromCode(Scope.class, code);
-	}
+    public static Scope fromCode(String code) {
+        return EnumUtils.fromCode(Scope.class, code);
+    }
 
-	public static Scope fromName(String name) {
-		return EnumUtils.fromName(Scope.class, name);
-	}
+    public static Scope fromName(String name) {
+        return EnumUtils.fromName(Scope.class, name);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,23 +27,23 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface MulticastServerCommunicator extends NetworkMulticastCommunicator {
 
-	/**
-	 * Opens communicator for communication.
-	 * 
-	 * @param out
-	 *            the output stream
-	 * @throws UnifyException
-	 *             if communication is already open. If an error occurs
-	 */
-	void open(OutputStream out) throws UnifyException;
+    /**
+     * Opens communicator for communication.
+     * 
+     * @param out
+     *            the output stream
+     * @throws UnifyException
+     *             if communication is already open. If an error occurs
+     */
+    void open(OutputStream out) throws UnifyException;
 
-	/**
-	 * Sends a multicast message.
-	 * 
-	 * @param message
-	 *            the message to send
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void send(NetworkMessage message) throws UnifyException;
+    /**
+     * Sends a multicast message.
+     * 
+     * @param message
+     *            the message to send
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void send(NetworkMessage message) throws UnifyException;
 }

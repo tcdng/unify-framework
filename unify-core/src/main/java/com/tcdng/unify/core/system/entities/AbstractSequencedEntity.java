@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,20 +28,20 @@ import com.tcdng.unify.core.database.AbstractEntity;
 @Policy("sequencedentity-policy")
 public abstract class AbstractSequencedEntity extends AbstractEntity implements SequencedEntity {
 
-	@Id
-	private Long id;
+    @Id
+    private Long id;
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Override
-	public boolean isReserved() {
-		return id != null && id.compareTo(Long.valueOf(0L)) < 0;
-	}
+    @Override
+    public boolean isReserved() {
+        return id != null && id.compareTo(Long.valueOf(0L)) < 0;
+    }
 }

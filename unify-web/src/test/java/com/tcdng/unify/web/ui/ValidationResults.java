@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,26 +22,26 @@ package com.tcdng.unify.web.ui;
  * @since 1.0
  */
 public class ValidationResults {
-	private ValidationResult[] validationResult;
+    private ValidationResult[] validationResult;
 
-	private boolean pass;
+    private boolean pass;
 
-	public ValidationResults(ValidationResult[] validationResult, boolean pass) {
-		this.validationResult = validationResult;
-		this.pass = pass;
-	}
+    public ValidationResults(ValidationResult[] validationResult, boolean pass) {
+        this.validationResult = validationResult;
+        this.pass = pass;
+    }
 
-	public boolean isPass() {
-		return pass;
-	}
+    public boolean isPass() {
+        return pass;
+    }
 
-	/**
-	 * Returns the validation part result.
-	 * 
-	 * @param index
-	 *            the validation part index
-	 */
-	public ValidationResult validationPart(int index) {
-		return validationResult[index];
-	}
+    /**
+     * Returns the validation part result.
+     * 
+     * @param index
+     *            the validation part index
+     */
+    public ValidationResult validationPart(int index) {
+        return validationResult[index];
+    }
 }

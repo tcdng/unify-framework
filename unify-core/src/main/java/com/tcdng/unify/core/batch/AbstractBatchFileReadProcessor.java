@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.batch;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.business.AbstractBusinessLogicUnit;
@@ -29,27 +28,27 @@ import com.tcdng.unify.core.business.BusinessLogicOutput;
  * @since 1.0
  */
 public abstract class AbstractBatchFileReadProcessor extends AbstractBusinessLogicUnit
-		implements BatchFileReadProcessor {
+        implements BatchFileReadProcessor {
 
-	@Configurable(ApplicationComponents.APPLICATION_BATCHFILEREADERWRITERFACTORY)
-	private BatchFileReaderWriterFactory batchFileRwFactory;
+    @Configurable
+    private BatchFileReaderWriterFactory batchFileRwFactory;
 
-	@Override
-	public void execute(BusinessLogicInput input, BusinessLogicOutput output) throws UnifyException {
-		Object result = null;
-		BatchFileConfig batchFileConfig = input.getParameter(BatchFileConfig.class,
-				BatchFileReadProcessorInputConstants.BATCHFILECONFIG);
-		Object[] fileObject = input.getParameter(Object[].class, BatchFileReadProcessorInputConstants.FILEOBJECTS);
-		BatchFileReader reader = batchFileRwFactory.getBatchFileReader(input, batchFileConfig, fileObject);
-		try {
-			result = doProcessBatchFile(input, batchFileConfig, reader);
-		} finally {
-			batchFileRwFactory.disposeBatchRecordReader(reader);
-		}
+    @Override
+    public void execute(BusinessLogicInput input, BusinessLogicOutput output) throws UnifyException {
+        Object result = null;
+        BatchFileConfig batchFileConfig =
+                input.getParameter(BatchFileConfig.class, BatchFileReadProcessorInputConstants.BATCHFILECONFIG);
+        Object[] fileObject = input.getParameter(Object[].class, BatchFileReadProcessorInputConstants.FILEOBJECTS);
+        BatchFileReader reader = batchFileRwFactory.getBatchFileReader(input, batchFileConfig, fileObject);
+        try {
+            result = doProcessBatchFile(input, batchFileConfig, reader);
+        } finally {
+            batchFileRwFactory.disposeBatchRecordReader(reader);
+        }
 
-		output.setResult(BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT, result);
-	}
+        output.setResult(BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT, result);
+    }
 
-	protected abstract Object doProcessBatchFile(BusinessLogicInput input, BatchFileConfig batchFileConfig,
-			BatchFileReader reader) throws UnifyException;
+    protected abstract Object doProcessBatchFile(BusinessLogicInput input, BatchFileConfig batchFileConfig,
+            BatchFileReader reader) throws UnifyException;
 }

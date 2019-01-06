@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,24 +35,24 @@ import com.tcdng.unify.web.ui.writer.AbstractLayoutWriter;
 @Component("unorderedlistlayout-writer")
 public class UnorderedListLayoutWriter extends AbstractLayoutWriter {
 
-	@Override
-	public void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container)
-			throws UnifyException {
-		writer.write("<ul");
-		writeTagStyleClass(writer, layout.getStyleClass());
-		writeTagStyle(writer, layout.getStyle());
-		writer.write(">");
-		for (String longName : container.getLayoutWidgetLongNames()) {
-			Widget widget = container.getWidgetByLongName(longName);
-			if (widget.isVisible()) {
-				writer.write("<li>");
-				writer.writeStructureAndContent(widget);
-				writer.write("</li>");
-			} else if (widget.isHidden()) {
-				writer.writeStructureAndContent(widget);
-			}
-		}
-		writer.write("</ul>");
-	}
+    @Override
+    public void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container)
+            throws UnifyException {
+        writer.write("<ul");
+        writeTagStyleClass(writer, layout.getStyleClass());
+        writeTagStyle(writer, layout.getStyle());
+        writer.write(">");
+        for (String longName : container.getLayoutWidgetLongNames()) {
+            Widget widget = container.getWidgetByLongName(longName);
+            if (widget.isVisible()) {
+                writer.write("<li>");
+                writer.writeStructureAndContent(widget);
+                writer.write("</li>");
+            } else if (widget.isHidden()) {
+                writer.writeStructureAndContent(widget);
+            }
+        }
+        writer.write("</ul>");
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,37 +34,37 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class ListManagerImplTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testGetStaticList() throws Exception {
-		ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+    @Test
+    public void testGetStaticList() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
 
-		List<? extends Listable> list = listManager.getList(Locale.GERMAN, "colorlist");
-		assertEquals(3, list.size());
-		assertEquals("red", list.get(0).getListKey());
-		assertEquals("blue", list.get(1).getListKey());
-		assertEquals("purple", list.get(2).getListKey());
-		assertEquals("Rot", list.get(0).getListDescription());
-		assertEquals("Blau", list.get(1).getListDescription());
-		assertEquals("Lila", list.get(2).getListDescription());
+        List<? extends Listable> list = listManager.getList(Locale.GERMAN, "colorlist");
+        assertEquals(3, list.size());
+        assertEquals("red", list.get(0).getListKey());
+        assertEquals("blue", list.get(1).getListKey());
+        assertEquals("purple", list.get(2).getListKey());
+        assertEquals("Rot", list.get(0).getListDescription());
+        assertEquals("Blau", list.get(1).getListDescription());
+        assertEquals("Lila", list.get(2).getListDescription());
 
-		list = listManager.getList(Locale.ENGLISH, "colorlist");
+        list = listManager.getList(Locale.ENGLISH, "colorlist");
 
-		assertEquals(3, list.size());
-		assertEquals("red", list.get(0).getListKey());
-		assertEquals("blue", list.get(1).getListKey());
-		assertEquals("purple", list.get(2).getListKey());
-		assertEquals("Red", list.get(0).getListDescription());
-		assertEquals("Blue", list.get(1).getListDescription());
-		assertEquals("Purple", list.get(2).getListDescription());
-	}
+        assertEquals(3, list.size());
+        assertEquals("red", list.get(0).getListKey());
+        assertEquals("blue", list.get(1).getListKey());
+        assertEquals("purple", list.get(2).getListKey());
+        assertEquals("Red", list.get(0).getListDescription());
+        assertEquals("Blue", list.get(1).getListDescription());
+        assertEquals("Purple", list.get(2).getListDescription());
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

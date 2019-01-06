@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,27 +24,27 @@ package com.tcdng.unify.core;
  */
 public abstract class AbstractUnifyStaticSettings implements UnifyStaticSettings {
 
-	private String messageBase;
+    private String messageBase;
 
-	private int level;
+    private int level;
 
-	public AbstractUnifyStaticSettings(String messageBase, int level) {
-		this.messageBase = messageBase;
-		this.level = level;
-	}
+    public AbstractUnifyStaticSettings(String messageBase, int level) {
+        this.messageBase = messageBase;
+        this.level = level;
+    }
 
-	public AbstractUnifyStaticSettings(String messageBase) {
-		this.messageBase = messageBase;
-	}
+    public AbstractUnifyStaticSettings(String messageBase) {
+        this.messageBase = messageBase;
+    }
 
-	@Override
-	public String getMessageBase() {
-		return messageBase;
-	}
+    @Override
+    public String getMessageBase() {
+        return messageBase;
+    }
 
-	@Override
-	public int getLevel() {
-		return level;
-	}
+    @Override
+    public int getLevel() {
+        return level;
+    }
 
 }

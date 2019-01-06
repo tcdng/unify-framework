@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,22 +29,22 @@ import org.junit.Test;
  */
 public class ApplicationContextTest {
 
-	private ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
-	@Before
-	public void setup() throws Exception {
-		applicationContext = new ApplicationContext(null, null, "\n");
-	}
+    @Before
+    public void setup() throws Exception {
+        applicationContext = new ApplicationContext(null, null, "\n");
+    }
 
-	@Test
-	public void testContextHasNoPrivilegesForRole() {
-		assertFalse(applicationContext.isRoleAttributes(""));
-	}
+    @Test
+    public void testContextHasNoPrivilegesForRole() {
+        assertFalse(applicationContext.isRoleAttributes(""));
+    }
 
-	@Test
-	public void testContextHasPrivilegesForRole() {
-		String roleCode = String.valueOf(1L);
-		applicationContext.setRoleAttributes(roleCode, new RoleAttributes());
-		assertTrue(applicationContext.isRoleAttributes(roleCode));
-	}
+    @Test
+    public void testContextHasPrivilegesForRole() {
+        String roleCode = String.valueOf(1L);
+        applicationContext.setRoleAttributes(roleCode, new RoleAttributes());
+        assertTrue(applicationContext.isRoleAttributes(roleCode));
+    }
 }

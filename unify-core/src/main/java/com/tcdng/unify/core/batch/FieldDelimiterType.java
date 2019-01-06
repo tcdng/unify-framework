@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,31 +28,31 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("fielddelimiterlist")
 public enum FieldDelimiterType implements EnumConst {
 
-	COMMA("C", ','), TAB("T", '\t');
+    COMMA("C", ','), TAB("T", '\t');
 
-	private final String code;
+    private final String code;
 
-	private final char ch;
+    private final char ch;
 
-	private FieldDelimiterType(String code, char ch) {
-		this.code = code;
-		this.ch = ch;
-	}
+    private FieldDelimiterType(String code, char ch) {
+        this.code = code;
+        this.ch = ch;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public char getCharacter() {
-		return ch;
-	}
+    public char getCharacter() {
+        return ch;
+    }
 
-	public static FieldDelimiterType fromCode(String code) {
-		return EnumUtils.fromCode(FieldDelimiterType.class, code);
-	}
+    public static FieldDelimiterType fromCode(String code) {
+        return EnumUtils.fromCode(FieldDelimiterType.class, code);
+    }
 
-	public static FieldDelimiterType fromName(String name) {
-		return EnumUtils.fromName(FieldDelimiterType.class, name);
-	}
+    public static FieldDelimiterType fromName(String name) {
+        return EnumUtils.fromName(FieldDelimiterType.class, name);
+    }
 }

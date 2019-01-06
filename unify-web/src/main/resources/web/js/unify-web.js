@@ -37,6 +37,7 @@ var UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
 var UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
 var UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
 var UNIFY_TREEDOUBLECLICK_DELAY = 200; // .2 seconds.
+var UNIFY_LASTUSERACT_EFFECT_PERIOD = 180000; // 3 minutes.
 
 var UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 
@@ -67,6 +68,8 @@ ux.resizefunctions = {};
 ux.remoteviewsessions = [];
 
 ux.confirmStore = {};
+
+ux.lastUserActTime=0;
 
 /** Utilities */
 function _id(id) {
@@ -468,6 +471,10 @@ ux.ajaxCall = function(ajaxPrms) {
 }
 
 ux.ajaxCallWithJSONResp = function(trgObj, evp) {
+	if(!evp.uAutoCall) {
+		ux.lastUserActTime = new Date().getTime();
+	}
+
 	if (evp.uURL) {
 		var uEncoded = true;
 		var uPrm;
@@ -779,6 +786,8 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 	evp.uLoginId = rgp.pRemoteLoginId;
 	evp.uUserName = rgp.pRemoteUserName;
 	evp.uRole = rgp.pRemoteRoleCode;
+	evp.uBranch = rgp.pRemoteBranchCode;
+	evp.uGlobal = rgp.pRemoteGlobalFlag;
 	ux.postCommit(evp);
 }
 
@@ -2856,11 +2865,23 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			if (evp.uRole) {
 				pb.append("req_rcd", evp.uRole);
 			}
+			if (evp.uBranch) {
+				pb.append("req_bcd", evp.uBranch);
+			}
+			if (evp.uGlobal) {
+				pb.append("req_gac", evp.uGlobal);
+			}
 		} else {
 			pb += ("&req_uid=" + _enc(evp.uLoginId));
 			pb += ("&req_unm=" + _enc(evp.uUserName));
 			if (evp.uRole) {
 				param.value += ("&req_rcd=" + _enc(evp.uRole));
+			}
+			if (evp.uBranch) {
+				param.value += ("&req_bcd=" + _enc(evp.uBranch));
+			}
+			if (evp.uGlobal) {
+				param.value += ("&req_gac=" + _enc(evp.uGlobal));
 			}
 		}
 	}
@@ -3277,18 +3298,40 @@ ux.setDelayedPanelPost = function(delayedPostPrm) {
 	evp.uURL = delayedPostPrm.pURL;
 	evp.uCmd = pgNm + "->switchState";
 	evp.uPanels = [ pgNm ];
+	evp.uAutoCall = true;
+	evp.uOnUserAct = delayedPostPrm.pOnUserAct;
 
-	ux.delayedpanelposting[pgNm] = evp;
 	var delayPrd = delayedPostPrm.pPeriodMilliSec;
 	if (delayPrd < UNIFY_DELAYEDPOSTING_MIN_DELAY) {
 		delayPrd = UNIFY_DELAYEDPOSTING_MIN_DELAY;
 	}
-	window.setTimeout("ux.fireDelayedPost(\"" + pgNm + "\");", delayPrd);
+	evp.uDelayMillSec = delayPrd;
+	ux.delayedpanelposting[pgNm] = evp;
+	
+	window.setTimeout("ux.fireDelayedPost(\"" + pgNm + "\");", evp.uDelayMillSec);
 }
 
 ux.fireDelayedPost = function(pgNm) {
 	var evp = ux.delayedpanelposting[pgNm];
 	if (evp) {
+		if (evp.uOnUserAct) {
+			if (ux.lastUserActTime > 0) {
+				// Check if delayed post depends on last user activity
+				var fromLastActTime = new Date().getTime() - ux.lastUserActTime;
+				if (fromLastActTime >= UNIFY_LASTUSERACT_EFFECT_PERIOD) {
+					if (_id(pgNm)) {
+						// Postpone by delaying post again
+						window.setTimeout("ux.fireDelayedPost(\"" + pgNm + "\");", evp.uDelayMillSec);
+					} else {
+						ux.delayedpanelposting[pgNm] = null;
+					}
+					return;
+				}
+			} else {
+				ux.lastUserActTime = new Date().getTime()
+			}
+		}
+
 		ux.delayedpanelposting[pgNm] = null;
 		if (_id(pgNm)) {
 			ux.ajaxCallWithJSONResp(null, evp);

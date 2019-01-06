@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,34 +28,34 @@ import com.tcdng.unify.core.business.BusinessLogicInput;
 @Component("test-batchfileprocessor-b")
 public class TestBatchFileProcessorB extends AbstractDBBatchFileReadProcessor<TestBatchRecordB, TestBatchItemRecordB> {
 
-	public TestBatchFileProcessorB() {
-		super(TestBatchRecordB.class, TestBatchItemRecordB.class);
-	}
+    public TestBatchFileProcessorB() {
+        super(TestBatchRecordB.class, TestBatchItemRecordB.class);
+    }
 
-	@Override
-	public String getBatchCategory(TestBatchItemRecordB batchItem) throws UnifyException {
-		return ((TestBatchItemRecordB) batchItem).getCurrency();
-	}
+    @Override
+    public String getBatchCategory(TestBatchItemRecordB batchItem) throws UnifyException {
+        return ((TestBatchItemRecordB) batchItem).getCurrency();
+    }
 
-	@Override
-	public void preBatchCreate(BusinessLogicInput input, TestBatchRecordB batch, TestBatchItemRecordB batchItem)
-			throws UnifyException {
-		TestBatchRecordB testBatchRecordB = (TestBatchRecordB) batch;
-		testBatchRecordB.setItemCount(Integer.valueOf(1));
-		testBatchRecordB.setTotalAmount(((TestBatchItemRecordB) batchItem).getAmount());
-	}
+    @Override
+    public void preBatchCreate(BusinessLogicInput input, TestBatchRecordB batch, TestBatchItemRecordB batchItem)
+            throws UnifyException {
+        TestBatchRecordB testBatchRecordB = (TestBatchRecordB) batch;
+        testBatchRecordB.setItemCount(Integer.valueOf(1));
+        testBatchRecordB.setTotalAmount(((TestBatchItemRecordB) batchItem).getAmount());
+    }
 
-	@Override
-	public void preBatchUpdate(BusinessLogicInput input, TestBatchRecordB batch, TestBatchItemRecordB batchItem)
-			throws UnifyException {
-		TestBatchRecordB testBatchRecordB = (TestBatchRecordB) batch;
-		testBatchRecordB.setItemCount(Integer.valueOf(testBatchRecordB.getItemCount().intValue() + 1));
-		testBatchRecordB.setTotalAmount(Double.valueOf(testBatchRecordB.getTotalAmount().doubleValue()
-				+ ((TestBatchItemRecordB) batchItem).getAmount().doubleValue()));
-	}
+    @Override
+    public void preBatchUpdate(BusinessLogicInput input, TestBatchRecordB batch, TestBatchItemRecordB batchItem)
+            throws UnifyException {
+        TestBatchRecordB testBatchRecordB = (TestBatchRecordB) batch;
+        testBatchRecordB.setItemCount(Integer.valueOf(testBatchRecordB.getItemCount().intValue() + 1));
+        testBatchRecordB.setTotalAmount(Double.valueOf(testBatchRecordB.getTotalAmount().doubleValue()
+                + ((TestBatchItemRecordB) batchItem).getAmount().doubleValue()));
+    }
 
-	@Override
-	protected void postBatchCreate(BusinessLogicInput input, TestBatchRecordB batch) throws UnifyException {
+    @Override
+    protected void postBatchCreate(BusinessLogicInput input, TestBatchRecordB batch) throws UnifyException {
 
-	}
+    }
 }

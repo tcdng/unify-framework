@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,31 +29,31 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class PropertiesConfig {
 
-	private List<PropertyConfig> propertyConfigList;
+    private List<PropertyConfig> propertyConfigList;
 
-	private Map<String, PropertyConfig> propertyConfigMap;
+    private Map<String, PropertyConfig> propertyConfigMap;
 
-	public List<PropertyConfig> getPropertyConfigList() {
-		return propertyConfigList;
-	}
+    public List<PropertyConfig> getPropertyConfigList() {
+        return propertyConfigList;
+    }
 
-	@XmlElement(name = "property")
-	public void setPropertyConfigList(List<PropertyConfig> propertyConfigList) {
-		this.propertyConfigList = propertyConfigList;
-		if (this.propertyConfigList != null) {
-			this.propertyConfigMap = new HashMap<String, PropertyConfig>();
-			for (PropertyConfig propertyConfig : propertyConfigList) {
-				this.propertyConfigMap.put(propertyConfig.getName(), propertyConfig);
-			}
-		} else {
-			this.propertyConfigMap = null;
-		}
-	}
+    @XmlElement(name = "property")
+    public void setPropertyConfigList(List<PropertyConfig> propertyConfigList) {
+        this.propertyConfigList = propertyConfigList;
+        if (this.propertyConfigList != null) {
+            this.propertyConfigMap = new HashMap<String, PropertyConfig>();
+            for (PropertyConfig propertyConfig : propertyConfigList) {
+                this.propertyConfigMap.put(propertyConfig.getName(), propertyConfig);
+            }
+        } else {
+            this.propertyConfigMap = null;
+        }
+    }
 
-	public PropertyConfig getPropertyConfig(String name) {
-		if (propertyConfigMap != null) {
-			propertyConfigMap.get(name);
-		}
-		return null;
-	}
+    public PropertyConfig getPropertyConfig(String name) {
+        if (propertyConfigMap != null) {
+            propertyConfigMap.get(name);
+        }
+        return null;
+    }
 }

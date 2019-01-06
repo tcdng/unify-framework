@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,37 +39,37 @@ import com.tcdng.unify.core.UnifyException;
  */
 public final class XMLConfigUtils {
 
-	private XMLConfigUtils() {
+    private XMLConfigUtils() {
 
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	public static <T> T readXmlConfig(Class<T> xmlDataClazz, Object xmlSrcObject) throws UnifyException {
-		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(xmlDataClazz);
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			jaxbUnmarshaller.setEventHandler(new ValidationEventHandler() {
-				@Override
-				public boolean handleEvent(ValidationEvent event) {
-					return false;
-				}
-			});
+    @SuppressWarnings("unchecked")
+    public static <T> T readXmlConfig(Class<T> xmlDataClazz, Object xmlSrcObject) throws UnifyException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(xmlDataClazz);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            jaxbUnmarshaller.setEventHandler(new ValidationEventHandler() {
+                @Override
+                public boolean handleEvent(ValidationEvent event) {
+                    return false;
+                }
+            });
 
-			if (xmlSrcObject instanceof String) {
-				Reader reader = new CharArrayReader(((String) xmlSrcObject).toCharArray());
-				return (T) jaxbUnmarshaller.unmarshal(reader);
-			} else if (xmlSrcObject instanceof Reader) {
-				return (T) jaxbUnmarshaller.unmarshal((Reader) xmlSrcObject);
-			} else if (xmlSrcObject instanceof InputStream) {
-				return (T) jaxbUnmarshaller.unmarshal((InputStream) xmlSrcObject);
-			} else if (xmlSrcObject instanceof InputSource) {
-				return (T) jaxbUnmarshaller.unmarshal((InputSource) xmlSrcObject);
-			}
+            if (xmlSrcObject instanceof String) {
+                Reader reader = new CharArrayReader(((String) xmlSrcObject).toCharArray());
+                return (T) jaxbUnmarshaller.unmarshal(reader);
+            } else if (xmlSrcObject instanceof Reader) {
+                return (T) jaxbUnmarshaller.unmarshal((Reader) xmlSrcObject);
+            } else if (xmlSrcObject instanceof InputStream) {
+                return (T) jaxbUnmarshaller.unmarshal((InputStream) xmlSrcObject);
+            } else if (xmlSrcObject instanceof InputSource) {
+                return (T) jaxbUnmarshaller.unmarshal((InputSource) xmlSrcObject);
+            }
 
-			return (T) jaxbUnmarshaller.unmarshal((File) xmlSrcObject);
-		} catch (JAXBException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-					UnifyConfigUtils.class.getName());
-		}
-	}
+            return (T) jaxbUnmarshaller.unmarshal((File) xmlSrcObject);
+        } catch (JAXBException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                    UnifyConfigUtils.class.getName());
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,14 +29,14 @@ import com.tcdng.unify.core.constant.UserPlatform;
  */
 public interface UplComponentWriterManager extends UnifyComponent {
 
-	/**
-	 * Gets UPL writers for specific platform. Returns default writers of no writers
-	 * were found for supplied platform.
-	 * 
-	 * @param platform
-	 *            the platform to get writers for
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform) throws UnifyException;
+    /**
+     * Gets UPL writers for specific platform. Returns default writers of no writers
+     * were found for supplied platform.
+     * 
+     * @param platform
+     *            the platform to get writers for
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform) throws UnifyException;
 }

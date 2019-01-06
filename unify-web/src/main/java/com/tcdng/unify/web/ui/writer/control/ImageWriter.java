@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,59 +38,59 @@ import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 @Component("image-writer")
 public class ImageWriter extends AbstractTargetControlWriter {
 
-	@Override
-	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
-		Image imageCtrl = (Image) targetControl;
-		writer.write("<img");
-		writeTagAttributes(writer, imageCtrl);
-		writer.write(" src=\"");
-		Object image = imageCtrl.getValue();
-		if (image instanceof ImageGenerator) {
-			if (!((ImageGenerator) image).isReady()) {
-				image = null;
-			}
-		}
+    @Override
+    protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+        Image imageCtrl = (Image) targetControl;
+        writer.write("<img");
+        writeTagAttributes(writer, imageCtrl);
+        writer.write(" src=\"");
+        Object image = imageCtrl.getValue();
+        if (image instanceof ImageGenerator) {
+            if (!((ImageGenerator) image).isReady()) {
+                image = null;
+            }
+        }
 
-		if (image != null) {
-			String imageName = "Img_" + imageCtrl.getId() + '_' + (new Date().getTime());
-			setSessionAttribute(imageName, image);
-			writer.writeScopeImageContextURL(imageName);
-			writer.writeURLParameter("clearOnRead", "true");
-		} else {
-			String src = imageCtrl.getSrc();
-			if (StringUtils.isBlank(src)) {
-				String srcBinding = imageCtrl.getSrcBinding();
-				if (!StringUtils.isBlank(srcBinding)) {
-					src = imageCtrl.getStringValue(srcBinding);
-				}
-			}
+        if (image != null) {
+            String imageName = "Img_" + imageCtrl.getId() + '_' + (new Date().getTime());
+            setSessionAttribute(imageName, image);
+            writer.writeScopeImageContextURL(imageName);
+            writer.writeURLParameter("clearOnRead", "true");
+        } else {
+            String src = imageCtrl.getSrc();
+            if (StringUtils.isBlank(src)) {
+                String srcBinding = imageCtrl.getSrcBinding();
+                if (!StringUtils.isBlank(srcBinding)) {
+                    src = imageCtrl.getStringValue(srcBinding);
+                }
+            }
 
-			if (!StringUtils.isBlank(src)) {
-				boolean alwaysFetch = imageCtrl.isAlwaysFetch();
-				if (TokenUtils.isContextScopeTag(src)) {
-					String imageName = TokenUtils.extractTokenValue(src);
-					writer.writeScopeImageContextURL(imageName);
-					String scope = imageCtrl.getScope();
-					if (!StringUtils.isBlank(scope)) {
-						writer.writeURLParameter("scope", scope);
-					}
+            if (!StringUtils.isBlank(src)) {
+                boolean alwaysFetch = imageCtrl.isAlwaysFetch();
+                if (TokenUtils.isContextScopeTag(src)) {
+                    String imageName = TokenUtils.extractTokenValue(src);
+                    writer.writeScopeImageContextURL(imageName);
+                    String scope = imageCtrl.getScope();
+                    if (!StringUtils.isBlank(scope)) {
+                        writer.writeURLParameter("scope", scope);
+                    }
 
-					if (imageCtrl.isClearOnRead()) {
-						writer.writeURLParameter("clearOnRead", "true");
-					}
+                    if (imageCtrl.isClearOnRead()) {
+                        writer.writeURLParameter("clearOnRead", "true");
+                    }
 
-					if (alwaysFetch) {
-						writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));
-					}
-				} else {
-					writer.writeFileImageContextURL(src);
-					if (alwaysFetch) {
-						writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));
-					}
-				}
-			}
-		}
-		writer.write("\">");
-	}
+                    if (alwaysFetch) {
+                        writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));
+                    }
+                } else {
+                    writer.writeFileImageContextURL(src);
+                    if (alwaysFetch) {
+                        writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));
+                    }
+                }
+            }
+        }
+        writer.write("\">");
+    }
 
 }

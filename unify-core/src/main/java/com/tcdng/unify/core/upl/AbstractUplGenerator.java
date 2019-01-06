@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,43 +27,43 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractUplGenerator extends AbstractUnifyComponent implements UplGenerator {
 
-	private String uplComponentName;
+    private String uplComponentName;
 
-	public AbstractUplGenerator(String uplComponentName) {
-		this.uplComponentName = uplComponentName;
-	}
+    public AbstractUplGenerator(String uplComponentName) {
+        this.uplComponentName = uplComponentName;
+    }
 
-	@Override
-	public String getUplComponentName() throws UnifyException {
-		return uplComponentName;
-	}
+    @Override
+    public String getUplComponentName() throws UnifyException {
+        return uplComponentName;
+    }
 
-	@Override
-	public String generateUplSource(String target) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		// Write header
-		sb.append('!').append(uplComponentName);
-		appendNewline(sb);
+    @Override
+    public String generateUplSource(String target) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        // Write header
+        sb.append('!').append(uplComponentName);
+        appendNewline(sb);
 
-		// Write body
-		generateBody(sb, target);
+        // Write body
+        generateBody(sb, target);
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected void appendNewline(StringBuilder sb) throws UnifyException {
-		sb.append(getLineSeparator());
-	}
+    protected void appendNewline(StringBuilder sb) throws UnifyException {
+        sb.append(getLineSeparator());
+    }
 
-	protected abstract void generateBody(StringBuilder sb, String target) throws UnifyException;
+    protected abstract void generateBody(StringBuilder sb, String target) throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,27 +25,27 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface EmailServer extends NotificationServer<EmailServerConfig> {
 
-	/**
-	 * Sends an email.
-	 * 
-	 * @param configurationCode
-	 *            the code of the configuration to use
-	 * @param email
-	 *            the email to send
-	 * @throws UnifyException
-	 *             if configuration with code is unknown. if an error occurs
-	 */
-	void sendEmail(String configurationCode, Email email) throws UnifyException;
+    /**
+     * Sends an email.
+     * 
+     * @param configurationCode
+     *            the code of the configuration to use
+     * @param email
+     *            the email to send
+     * @throws UnifyException
+     *             if configuration with code is unknown. if an error occurs
+     */
+    void sendEmail(String configurationCode, Email email) throws UnifyException;
 
-	/**
-	 * Sends multiple e-mails.
-	 * 
-	 * @param configurationCode
-	 *            the code of the configuration to use
-	 * @param emails
-	 *            the e-mails to send
-	 * @throws UnifyException
-	 *             if configuration with code is unknown. If an error occurs
-	 */
-	void sendEmail(String configurationCode, Email[] emails) throws UnifyException;
+    /**
+     * Sends multiple e-mails.
+     * 
+     * @param configurationCode
+     *            the code of the configuration to use
+     * @param emails
+     *            the e-mails to send
+     * @throws UnifyException
+     *             if configuration with code is unknown. If an error occurs
+     */
+    void sendEmail(String configurationCode, Email[] emails) throws UnifyException;
 }

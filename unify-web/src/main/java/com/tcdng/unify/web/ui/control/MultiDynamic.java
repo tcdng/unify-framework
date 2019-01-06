@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,78 +35,78 @@ import com.tcdng.unify.web.ui.Control;
  */
 @Component("ui-multidynamic")
 @UplAttributes({ @UplAttribute(name = "isRequiredSymbol", type = String.class, defaultValue = "*"),
-		@UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
+        @UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
 public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.ValueStore, Input> {
 
-	private DynamicField valueCtrl;
+    private DynamicField valueCtrl;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		valueCtrl = (DynamicField) addInternalChildControl("!ui-dynamic binding:value descriptorBinding:editor");
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        valueCtrl = (DynamicField) addInternalChildControl("!ui-dynamic binding:value descriptorBinding:editor");
+    }
 
-	@Override
-	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		if (transferBlock != null) {
-			DataTransferBlock dynamicCtrlBlock = transferBlock.getChildBlock();
-			Control control = (Control) getChildControlInfo(dynamicCtrlBlock.getId()).getControl();
-			control.setValueStore(getValueList().get(dynamicCtrlBlock.getChildBlock().getItemIndex()).getValueStore());
-			control.populate(dynamicCtrlBlock);
-		}
-	}
+    @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        if (transferBlock != null) {
+            DataTransferBlock dynamicCtrlBlock = transferBlock.getChildBlock();
+            Control control = (Control) getChildControlInfo(dynamicCtrlBlock.getId()).getControl();
+            control.setValueStore(getValueList().get(dynamicCtrlBlock.getChildBlock().getItemIndex()).getValueStore());
+            control.populate(dynamicCtrlBlock);
+        }
+    }
 
-	public String getCaptionSuffix() throws UnifyException {
-		return getUplAttribute(String.class, "captionSuffix");
-	}
+    public String getCaptionSuffix() throws UnifyException {
+        return getUplAttribute(String.class, "captionSuffix");
+    }
 
-	public String getIsRequiredSymbol() throws UnifyException {
-		return getUplAttribute(String.class, "isRequiredSymbol");
-	}
+    public String getIsRequiredSymbol() throws UnifyException {
+        return getUplAttribute(String.class, "isRequiredSymbol");
+    }
 
-	public DynamicField getValueCtrl() {
-		return valueCtrl;
-	}
+    public DynamicField getValueCtrl() {
+        return valueCtrl;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected List<Input> getItemList() throws UnifyException {
-		return (List<Input>) getValue();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected List<Input> getItemList() throws UnifyException {
+        return (List<Input>) getValue();
+    }
 
-	@Override
-	protected ValueStore newValue(Input item, int index) throws UnifyException {
-		return new ValueStore(createValueStore(item, index), item.getDescription(), item.isMandatory());
-	}
+    @Override
+    protected ValueStore newValue(Input item, int index) throws UnifyException {
+        return new ValueStore(createValueStore(item, index), item.getDescription(), item.isMandatory());
+    }
 
-	@Override
-	protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
+    @Override
+    protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
 
-	}
+    }
 
-	public static class ValueStore {
+    public static class ValueStore {
 
-		private com.tcdng.unify.core.data.ValueStore valueStore;
+        private com.tcdng.unify.core.data.ValueStore valueStore;
 
-		private String caption;
+        private String caption;
 
-		private boolean required;
+        private boolean required;
 
-		public ValueStore(com.tcdng.unify.core.data.ValueStore valueStore, String caption, boolean required) {
-			this.valueStore = valueStore;
-			this.caption = caption;
-			this.required = required;
-		}
+        public ValueStore(com.tcdng.unify.core.data.ValueStore valueStore, String caption, boolean required) {
+            this.valueStore = valueStore;
+            this.caption = caption;
+            this.required = required;
+        }
 
-		public com.tcdng.unify.core.data.ValueStore getValueStore() {
-			return valueStore;
-		}
+        public com.tcdng.unify.core.data.ValueStore getValueStore() {
+            return valueStore;
+        }
 
-		public String getCaption() {
-			return caption;
-		}
+        public String getCaption() {
+            return caption;
+        }
 
-		public boolean isRequired() {
-			return required;
-		}
-	}
+        public boolean isRequired() {
+            return required;
+        }
+    }
 }

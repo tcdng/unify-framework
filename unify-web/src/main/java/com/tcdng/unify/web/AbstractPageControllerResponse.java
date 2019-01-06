@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.format.FormatHelper;
@@ -32,40 +31,40 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public abstract class AbstractPageControllerResponse extends AbstractUplComponent implements PageControllerResponse {
 
-	@Configurable(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
-	private RequestContextUtil requestContextUtil;
+    @Configurable
+    private RequestContextUtil requestContextUtil;
 
-	@Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
-	private PageManager pageManager;
+    @Configurable
+    private PageManager pageManager;
 
-	@Configurable(ApplicationComponents.APPLICATION_FORMATHELPER)
-	private FormatHelper formatHelper;
+    @Configurable
+    private FormatHelper formatHelper;
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected PageManager getPageManager() throws UnifyException {
-		return pageManager;
-	}
+    protected PageManager getPageManager() throws UnifyException {
+        return pageManager;
+    }
 
-	protected RequestContextUtil getRequestContextUtil() throws UnifyException {
-		return requestContextUtil;
-	}
+    protected RequestContextUtil getRequestContextUtil() throws UnifyException {
+        return requestContextUtil;
+    }
 
-	protected FormatHelper getFormatHelper() throws UnifyException {
-		return formatHelper;
-	}
+    protected FormatHelper getFormatHelper() throws UnifyException {
+        return formatHelper;
+    }
 
-	protected void appendRefreshAttributesJson(ResponseWriter writer, boolean clearShortcuts) throws UnifyException {
-		writer.write("\"clearShortcuts\":").write(clearShortcuts);
-		writer.write(",\"pageNameAliases\":");
-		writer.writeJsonPageNameAliasesArray();
-	}
+    protected void appendRefreshAttributesJson(ResponseWriter writer, boolean clearShortcuts) throws UnifyException {
+        writer.write("\"clearShortcuts\":").write(clearShortcuts);
+        writer.write(",\"pageNameAliases\":");
+        writer.writeJsonPageNameAliasesArray();
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,39 +30,42 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("imageformatlist")
 public enum ImageFormat implements EnumConst {
 
-	BITMAP("BMP", ".bmp", "image/bmp"), JPEG("JPG", ".jpg", "image/jpg"), GIF("GIF", ".gif", "image/gif"), PNG("PNG",
-			".png", "image/png"), WILDCARD("WLD", ".*", ContentTypeConstants.IMAGE);
+    BITMAP("BMP", ".bmp", "image/bmp"),
+    JPEG("JPG", ".jpg", "image/jpg"),
+    GIF("GIF", ".gif", "image/gif"),
+    PNG("PNG", ".png", "image/png"),
+    WILDCARD("WLD", ".*", ContentTypeConstants.IMAGE);
 
-	private final String code;
+    private final String code;
 
-	private final String fileExtension;
+    private final String fileExtension;
 
-	private final String contentType;
+    private final String contentType;
 
-	private ImageFormat(String code, String fileExtension, String contentType) {
-		this.code = code;
-		this.fileExtension = fileExtension;
-		this.contentType = contentType;
-	}
+    private ImageFormat(String code, String fileExtension, String contentType) {
+        this.code = code;
+        this.fileExtension = fileExtension;
+        this.contentType = contentType;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static ImageFormat fromCode(String code) {
-		return EnumUtils.fromCode(ImageFormat.class, code);
-	}
+    public static ImageFormat fromCode(String code) {
+        return EnumUtils.fromCode(ImageFormat.class, code);
+    }
 
-	public static ImageFormat fromName(String name) {
-		return EnumUtils.fromName(ImageFormat.class, name);
-	}
+    public static ImageFormat fromName(String name) {
+        return EnumUtils.fromName(ImageFormat.class, name);
+    }
 
-	public String fileExt() {
-		return this.fileExtension;
-	}
+    public String fileExt() {
+        return this.fileExtension;
+    }
 
-	public String contentType() {
-		return this.contentType;
-	}
+    public String contentType() {
+        return this.contentType;
+    }
 }

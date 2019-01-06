@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,21 +29,21 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "decimalformat", description = "$m{format.decimal}")
 public class DecimalFormatterImpl extends AbstractNumberFormatter<Number> implements DecimalFormatter {
 
-	public DecimalFormatterImpl() {
-		super(Number.class, NumberType.DECIMAL);
-	}
+    public DecimalFormatterImpl() {
+        super(Number.class, NumberType.DECIMAL);
+    }
 
-	@Override
-	public Number parse(String string) throws UnifyException {
-		try {
-			return getNumberFormat().parse(string);
-		} catch (ParseException e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public Number parse(String string) throws UnifyException {
+        try {
+            return getNumberFormat().parse(string);
+        } catch (ParseException e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 
-	protected DecimalFormatterImpl(NumberType type) {
-		super(Number.class, type);
-	}
+    protected DecimalFormatterImpl(NumberType type) {
+        super(Number.class, type);
+    }
 }

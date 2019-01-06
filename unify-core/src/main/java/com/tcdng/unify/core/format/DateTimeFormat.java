@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,57 +33,57 @@ import com.tcdng.unify.core.data.SimpleDateFormatPool;
  */
 public class DateTimeFormat {
 
-	private SimpleDateFormatPool sdfPool;
+    private SimpleDateFormatPool sdfPool;
 
-	private String subPattern;
+    private String subPattern;
 
-	private List<? extends Listable> list;
+    private List<? extends Listable> list;
 
-	private int[] range;
+    private int[] range;
 
-	public DateTimeFormat(String subPattern, Locale locale, List<? extends Listable> list, int[] range) {
-		sdfPool = new SimpleDateFormatPool(subPattern, locale);
-		this.subPattern = subPattern;
-		if (list != null) {
-			this.list = Collections.unmodifiableList(list);
-		}
-		this.range = range;
-	}
+    public DateTimeFormat(String subPattern, Locale locale, List<? extends Listable> list, int[] range) {
+        sdfPool = new SimpleDateFormatPool(subPattern, locale);
+        this.subPattern = subPattern;
+        if (list != null) {
+            this.list = Collections.unmodifiableList(list);
+        }
+        this.range = range;
+    }
 
-	public String getSubPattern() {
-		return subPattern;
-	}
+    public String getSubPattern() {
+        return subPattern;
+    }
 
-	public List<? extends Listable> getList() {
-		return list;
-	}
+    public List<? extends Listable> getList() {
+        return list;
+    }
 
-	public int[] getRange() {
-		return range;
-	}
+    public int[] getRange() {
+        return range;
+    }
 
-	public String[] getSubPatternKeys() {
-		String[] values = new String[list.size()];
-		for (int i = 0; i < values.length; i++) {
-			values[i] = list.get(i).getListKey();
-		}
-		return values;
-	}
+    public String[] getSubPatternKeys() {
+        String[] values = new String[list.size()];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = list.get(i).getListKey();
+        }
+        return values;
+    }
 
-	public String[] getSubPatternDescriptions() {
-		String[] values = new String[list.size()];
-		for (int i = 0; i < values.length; i++) {
-			values[i] = list.get(i).getListDescription();
-		}
-		return values;
-	}
+    public String[] getSubPatternDescriptions() {
+        String[] values = new String[list.size()];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = list.get(i).getListDescription();
+        }
+        return values;
+    }
 
-	public String format(Date date) throws UnifyException {
-		SimpleDateFormat sdf = sdfPool.borrowObject();
-		try {
-			return sdf.format(date);
-		} finally {
-			sdfPool.returnObject(sdf);
-		}
-	}
+    public String format(Date date) throws UnifyException {
+        SimpleDateFormat sdf = sdfPool.borrowObject();
+        try {
+            return sdf.format(date);
+        } finally {
+            sdfPool.returnObject(sdf);
+        }
+    }
 }

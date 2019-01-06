@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,19 +34,19 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("listarea-writer")
 public class ListAreaWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		ListArea listArea = (ListArea) widget;
-		String styleClass = listArea.getUplAttribute(String.class, "styleClass");
-		writer.write("<div ");
-		writeTagAttributes(writer, listArea);
-		writer.write("><ul class=\"").write(styleClass).write("-body\">");
-		for (Listable listable : listArea.getListables()) {
-			writer.write("<li class=\"").write(styleClass).write("-item\">");
-			writer.writeWithHtmlEscape(listable.getListDescription());
-			writer.write("</li>");
-		}
-		writer.write("</ul></div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        ListArea listArea = (ListArea) widget;
+        String styleClass = listArea.getUplAttribute(String.class, "styleClass");
+        writer.write("<div ");
+        writeTagAttributes(writer, listArea);
+        writer.write("><ul class=\"").write(styleClass).write("-body\">");
+        for (Listable listable : listArea.getListables()) {
+            writer.write("<li class=\"").write(styleClass).write("-item\">");
+            writer.writeWithHtmlEscape(listable.getListDescription());
+            writer.write("</li>");
+        }
+        writer.write("</ul></div>");
+    }
 
 }

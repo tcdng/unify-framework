@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,18 +34,18 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("dynamicfield-writer")
 public class DynamicFieldWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		DynamicField dynamicField = (DynamicField) widget;
-		writer.writeStructureAndContent(dynamicField.getControl());
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        DynamicField dynamicField = (DynamicField) widget;
+        writer.writeStructureAndContent(dynamicField.getControl());
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		DynamicField dynamicField = (DynamicField) widget;
-		Control control = dynamicField.getControl();
-		if (control != null) {
-			writer.writeBehaviour(control);
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        DynamicField dynamicField = (DynamicField) widget;
+        Control control = dynamicField.getControl();
+        if (control != null) {
+            writer.writeBehaviour(control);
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,27 +23,27 @@ package com.tcdng.unify.core;
  */
 public class UnifyInterfaceInfo {
 
-	private String name;
+    private String name;
 
-	private int portNumber;
+    private int portNumber;
 
-	private boolean open;
+    private boolean open;
 
-	public UnifyInterfaceInfo(String name, int portNumber, boolean open) {
-		this.name = name;
-		this.portNumber = portNumber;
-		this.open = open;
-	}
+    public UnifyInterfaceInfo(String name, int portNumber, boolean open) {
+        this.name = name;
+        this.portNumber = portNumber;
+        this.open = open;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getPortNumber() {
-		return portNumber;
-	}
+    public int getPortNumber() {
+        return portNumber;
+    }
 
-	public boolean isOpen() {
-		return open;
-	}
+    public boolean isOpen() {
+        return open;
+    }
 }

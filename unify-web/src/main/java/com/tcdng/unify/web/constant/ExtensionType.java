@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,23 +23,23 @@ package com.tcdng.unify.web.constant;
  */
 public enum ExtensionType {
 
-	NONE(false, false), EXTENDED(true, false), FACADE(true, true), FACADE_HIDDEN(true, true);
+    NONE(false, false), EXTENDED(true, false), FACADE(true, true), FACADE_HIDDEN(true, true);
 
-	private final boolean extended;
+    private final boolean extended;
 
-	private final boolean facade;
+    private final boolean facade;
 
-	private ExtensionType(boolean extended, boolean facade) {
-		this.extended = extended;
-		this.facade = facade;
-	}
+    private ExtensionType(boolean extended, boolean facade) {
+        this.extended = extended;
+        this.facade = facade;
+    }
 
-	public boolean isExtended() {
-		return extended;
-	}
+    public boolean isExtended() {
+        return extended;
+    }
 
-	public boolean isFacade() {
-		return facade;
-	}
+    public boolean isFacade() {
+        return facade;
+    }
 
 }

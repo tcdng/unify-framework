@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,16 +34,16 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component("sqldatasourcecolumnlist")
 public class SqlDataSourceColumnListCommand extends AbstractDynamicSqlDataSourceListCommand {
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-		if (!StringUtils.isBlank(params.getConfigName()) && !StringUtils.isBlank(params.getSchemaName())
-				&& !StringUtils.isBlank(params.getTableName())) {
-			List<SqlColumnInfo> columnList = getDsManager().getColumns(params.getConfigName(), params.getSchemaName(),
-					params.getTableName());
-			DataUtils.sort(columnList, SqlColumnInfo.class, "listDescription", true);
-			return columnList;
-		}
+    @Override
+    public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
+        if (!StringUtils.isBlank(params.getConfigName()) && !StringUtils.isBlank(params.getSchemaName())
+                && !StringUtils.isBlank(params.getTableName())) {
+            List<SqlColumnInfo> columnList =
+                    getDsManager().getColumns(params.getConfigName(), params.getSchemaName(), params.getTableName());
+            DataUtils.sort(columnList, SqlColumnInfo.class, "listDescription", true);
+            return columnList;
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 }

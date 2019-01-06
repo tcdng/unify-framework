@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,48 +35,48 @@ import com.tcdng.unify.core.util.DataUtils;
 @Component(name = ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER, description = "JSON Object Streamer")
 public class JSONObjectStreamerImpl extends AbstractObjectStreamer implements JSONObjectStreamer {
 
-	@Override
-	public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
-		return DataUtils.readJsonObject(type, inputStream, charset);
-	}
+    @Override
+    public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
+        return DataUtils.readJsonObject(type, inputStream, charset);
+    }
 
-	@Override
-	public <T> T unmarshal(Class<T> type, Reader reader) throws UnifyException {
-		return DataUtils.readJsonObject(type, reader);
-	}
+    @Override
+    public <T> T unmarshal(Class<T> type, Reader reader) throws UnifyException {
+        return DataUtils.readJsonObject(type, reader);
+    }
 
-	@Override
-	public <T> T unmarshal(Class<T> type, String string) throws UnifyException {
-		return DataUtils.readJsonObject(type, string);
-	}
+    @Override
+    public <T> T unmarshal(Class<T> type, String string) throws UnifyException {
+        return DataUtils.readJsonObject(type, string);
+    }
 
-	@Override
-	public void unmarshal(Object object, InputStream inputStream, Charset charset) throws UnifyException {
-		DataUtils.readJsonObject(object, inputStream, charset);
-	}
+    @Override
+    public void unmarshal(Object object, InputStream inputStream, Charset charset) throws UnifyException {
+        DataUtils.readJsonObject(object, inputStream, charset);
+    }
 
-	@Override
-	public void unmarshal(Object object, Reader reader) throws UnifyException {
-		DataUtils.readJsonObject(object, reader);
-	}
+    @Override
+    public void unmarshal(Object object, Reader reader) throws UnifyException {
+        DataUtils.readJsonObject(object, reader);
+    }
 
-	@Override
-	public void unmarshal(Object object, String string) throws UnifyException {
-		DataUtils.readJsonObject(object, string);
-	}
+    @Override
+    public void unmarshal(Object object, String string) throws UnifyException {
+        DataUtils.readJsonObject(object, string);
+    }
 
-	@Override
-	public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
-		DataUtils.writeJsonObject(object, outputStream, charset);
-	}
+    @Override
+    public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
+        DataUtils.writeJsonObject(object, outputStream, charset);
+    }
 
-	@Override
-	public void marshal(Object object, Writer writer) throws UnifyException {
-		DataUtils.writeJsonObject(object, writer);
-	}
+    @Override
+    public void marshal(Object object, Writer writer) throws UnifyException {
+        DataUtils.writeJsonObject(object, writer);
+    }
 
-	@Override
-	public String marshal(Object object) throws UnifyException {
-		return DataUtils.writeJsonObject(object);
-	}
+    @Override
+    public String marshal(Object object) throws UnifyException {
+        return DataUtils.writeJsonObject(object);
+    }
 }

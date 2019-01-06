@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,45 +25,45 @@ import com.tcdng.unify.core.database.sql.SqlJoinType;
  */
 public class ReportTableJoin {
 
-	private SqlJoinType type;
+    private SqlJoinType type;
 
-	private String tableA;
+    private String tableA;
 
-	private String columnA;
+    private String columnA;
 
-	private String tableB;
+    private String tableB;
 
-	private String columnB;
+    private String columnB;
 
-	public ReportTableJoin(String tableA, String columnA, String tableB, String columnB) {
-		this(SqlJoinType.LEFT, tableA, columnA, tableB, columnB);
-	}
+    public ReportTableJoin(String tableA, String columnA, String tableB, String columnB) {
+        this(SqlJoinType.LEFT, tableA, columnA, tableB, columnB);
+    }
 
-	public ReportTableJoin(SqlJoinType type, String tableA, String columnA, String tableB, String columnB) {
-		this.type = type;
-		this.tableA = tableA;
-		this.columnA = columnA;
-		this.tableB = tableB;
-		this.columnB = columnB;
-	}
+    public ReportTableJoin(SqlJoinType type, String tableA, String columnA, String tableB, String columnB) {
+        this.type = type;
+        this.tableA = tableA;
+        this.columnA = columnA;
+        this.tableB = tableB;
+        this.columnB = columnB;
+    }
 
-	public SqlJoinType getType() {
-		return type;
-	}
+    public SqlJoinType getType() {
+        return type;
+    }
 
-	public String getTableA() {
-		return tableA;
-	}
+    public String getTableA() {
+        return tableA;
+    }
 
-	public String getColumnA() {
-		return columnA;
-	}
+    public String getColumnA() {
+        return columnA;
+    }
 
-	public String getTableB() {
-		return tableB;
-	}
+    public String getTableB() {
+        return tableB;
+    }
 
-	public String getColumnB() {
-		return columnB;
-	}
+    public String getColumnB() {
+        return columnB;
+    }
 }

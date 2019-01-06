@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,27 +28,27 @@ import com.tcdng.unify.web.ui.AbstractListControl;
 @Component("ui-multiselect")
 public class MultiSelect extends AbstractListControl {
 
-	@Override
-	public boolean isContainerDisabled() throws UnifyException {
-		return super.isContainerDisabled() || !isContainerEditable();
-	}
+    @Override
+    public boolean isContainerDisabled() throws UnifyException {
+        return super.isContainerDisabled() || !isContainerEditable();
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return true;
-	}
+    @Override
+    public boolean isMultiple() {
+        return true;
+    }
 
-	@Override
-	public boolean isSupportReadOnly() {
-		return false;
-	}
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
 
-	public String getFramePanelId() throws UnifyException {
-		return getPrefixedId("frm_");
-	}
+    public String getFramePanelId() throws UnifyException {
+        return getPrefixedId("frm_");
+    }
 
-	public String getListPanelId() throws UnifyException {
-		return getPrefixedId("lst_");
-	}
+    public String getListPanelId() throws UnifyException {
+        return getPrefixedId("lst_");
+    }
 
 }

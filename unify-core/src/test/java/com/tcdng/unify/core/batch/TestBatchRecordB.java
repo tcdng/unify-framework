@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,47 +28,47 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
 @Table(name = "TESTBATCHB")
 public class TestBatchRecordB extends AbstractTestEntity implements BatchRecord {
 
-	@Column
-	private String currency;
+    @Column
+    private String currency;
 
-	@Column
-	private Integer itemCount;
+    @Column
+    private Integer itemCount;
 
-	@Column
-	private Double totalAmount;
+    @Column
+    private Double totalAmount;
 
-	@Override
-	public String getCategory() {
-		return this.currency;
-	}
+    @Override
+    public String getCategory() {
+        return this.currency;
+    }
 
-	@Override
-	public void setCategory(String category) {
-		this.currency = category;
-	}
+    @Override
+    public void setCategory(String category) {
+        this.currency = category;
+    }
 
-	public String getCurrency() {
-		return currency;
-	}
+    public String getCurrency() {
+        return currency;
+    }
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
-	public Integer getItemCount() {
-		return itemCount;
-	}
+    public Integer getItemCount() {
+        return itemCount;
+    }
 
-	public void setItemCount(Integer itemCount) {
-		this.itemCount = itemCount;
-	}
+    public void setItemCount(Integer itemCount) {
+        this.itemCount = itemCount;
+    }
 
-	public Double getTotalAmount() {
-		return totalAmount;
-	}
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
 
-	public void setTotalAmount(Double totalAmount) {
-		this.totalAmount = totalAmount;
-	}
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
 }

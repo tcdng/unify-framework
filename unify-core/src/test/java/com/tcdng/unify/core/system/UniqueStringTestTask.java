@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,6 @@ package com.tcdng.unify.core.system;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -37,25 +36,25 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("uniquestringtest-task")
 public class UniqueStringTestTask extends AbstractTask {
 
-	@Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-	private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable
+    private SequenceNumberService sequenceNumberService;
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput taskInput, TaskOutput taskOutput) throws UnifyException {
-		Map<String, Long> resultMap = new HashMap<String, Long>();
-		int iterations = taskInput.getParam(int.class, UniqueStringTestTaskConstants.ITERATIONS);
-		for (int i = 0; i < iterations; i++) {
-			for (String string : taskInput.getParam(String[].class, UniqueStringTestTaskConstants.UNIQUESTRINGLIST)) {
-				Long id = sequenceNumberBusinessModule.getUniqueStringId(string);
-				if (resultMap.containsKey(string)) {
-					if (!id.equals(resultMap.get(string))) {
-						throwOperationErrorException(null);
-					}
-				} else {
-					resultMap.put(string, id);
-				}
-				ThreadUtils.yield();
-			}
-		}
-	}
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput taskInput, TaskOutput taskOutput) throws UnifyException {
+        Map<String, Long> resultMap = new HashMap<String, Long>();
+        int iterations = taskInput.getParam(int.class, UniqueStringTestTaskConstants.ITERATIONS);
+        for (int i = 0; i < iterations; i++) {
+            for (String string : taskInput.getParam(String[].class, UniqueStringTestTaskConstants.UNIQUESTRINGLIST)) {
+                Long id = sequenceNumberService.getUniqueStringId(string);
+                if (resultMap.containsKey(string)) {
+                    if (!id.equals(resultMap.get(string))) {
+                        throwOperationErrorException(null);
+                    }
+                } else {
+                    resultMap.put(string, id);
+                }
+                ThreadUtils.yield();
+            }
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,72 +23,72 @@ package com.tcdng.unify.web.ui.data;
  */
 public class TreeItemInfo<T> {
 
-	private TreeItemCategoryInfo categoryInfo;
+    private TreeItemCategoryInfo categoryInfo;
 
-	private T item;
+    private T item;
 
-	private String caption;
+    private String caption;
 
-	private int index;
+    private int index;
 
-	private int depth;
+    private int depth;
 
-	private boolean parent;
+    private boolean parent;
 
-	private boolean expanded;
+    private boolean expanded;
 
-	private boolean hidden;
+    private boolean hidden;
 
-	public TreeItemInfo(TreeItemCategoryInfo categoryInfo, T item, String caption, int index, int depth) {
-		this.categoryInfo = categoryInfo;
-		this.item = item;
-		this.caption = caption;
-		this.index = index;
-		this.depth = depth;
-	}
+    public TreeItemInfo(TreeItemCategoryInfo categoryInfo, T item, String caption, int index, int depth) {
+        this.categoryInfo = categoryInfo;
+        this.item = item;
+        this.caption = caption;
+        this.index = index;
+        this.depth = depth;
+    }
 
-	public TreeItemCategoryInfo getCategoryInfo() {
-		return categoryInfo;
-	}
+    public TreeItemCategoryInfo getCategoryInfo() {
+        return categoryInfo;
+    }
 
-	public T getItem() {
-		return item;
-	}
+    public T getItem() {
+        return item;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public int getIndex() {
-		return index;
-	}
+    public int getIndex() {
+        return index;
+    }
 
-	public int getDepth() {
-		return depth;
-	}
+    public int getDepth() {
+        return depth;
+    }
 
-	public boolean isParent() {
-		return parent;
-	}
+    public boolean isParent() {
+        return parent;
+    }
 
-	public void setParent(boolean parent) {
-		this.parent = parent;
-	}
+    public void setParent(boolean parent) {
+        this.parent = parent;
+    }
 
-	public boolean isExpanded() {
-		return expanded;
-	}
+    public boolean isExpanded() {
+        return expanded;
+    }
 
-	public void setExpanded(boolean expanded) {
-		this.expanded = expanded;
-	}
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
 
-	public boolean isHidden() {
-		return hidden;
-	}
+    public boolean isHidden() {
+        return hidden;
+    }
 
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
-	}
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
 
 }

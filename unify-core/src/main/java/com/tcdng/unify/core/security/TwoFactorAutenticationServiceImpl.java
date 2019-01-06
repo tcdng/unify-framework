@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.business.AbstractBusinessModule;
+import com.tcdng.unify.core.business.AbstractBusinessService;
 
 /**
  * Default implementation of a two-factor authentication service.
@@ -28,21 +28,22 @@ import com.tcdng.unify.core.business.AbstractBusinessModule;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_TWOFACTORAUTHENTICATIONSERVICE)
-public class TwoFactorAutenticationServiceImpl extends AbstractBusinessModule implements TwoFactorAutenticationService {
+public class TwoFactorAutenticationServiceImpl extends AbstractBusinessService
+        implements TwoFactorAutenticationService {
 
-	@Override
-	public boolean authenticate(String userName, String oneTimePassword) throws UnifyException {
-		throw new UnifyException(UnifyCoreErrorConstants.NO_TWOFACTOR_AUTH_SERVICE_COMP);
-	}
+    @Override
+    public boolean authenticate(String userName, String oneTimePassword) throws UnifyException {
+        throw new UnifyException(UnifyCoreErrorConstants.NO_TWOFACTOR_AUTH_SERVICE_COMP);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
 }

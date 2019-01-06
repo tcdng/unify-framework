@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,24 +25,24 @@ import com.tcdng.unify.core.util.TypeRepository;
  */
 public class UnifyContainerEnvironment {
 
-	private TypeRepository typeRepository;
+    private TypeRepository typeRepository;
 
-	private String workingPath;
+    private String workingPath;
 
-	public UnifyContainerEnvironment(TypeRepository typeRepository) {
-		this.typeRepository = typeRepository;
-	}
+    public UnifyContainerEnvironment(TypeRepository typeRepository) {
+        this.typeRepository = typeRepository;
+    }
 
-	public UnifyContainerEnvironment(TypeRepository typeRepository, String workingPath) {
-		this.typeRepository = typeRepository;
-		this.workingPath = workingPath;
-	}
+    public UnifyContainerEnvironment(TypeRepository typeRepository, String workingPath) {
+        this.typeRepository = typeRepository;
+        this.workingPath = workingPath;
+    }
 
-	public TypeRepository getTypeRepository() {
-		return typeRepository;
-	}
+    public TypeRepository getTypeRepository() {
+        return typeRepository;
+    }
 
-	public String getWorkingPath() {
-		return workingPath;
-	}
+    public String getWorkingPath() {
+        return workingPath;
+    }
 }

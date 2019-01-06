@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,62 +32,62 @@ import com.tcdng.unify.core.data.Listable;
 @Table("CLUSTERNODE")
 public class ClusterNode extends AbstractSystemEntity implements Listable {
 
-	@Id(length = 40)
-	private String nodeId;
+    @Id(length = 40)
+    private String nodeId;
 
-	@Column(type = ColumnType.TIMESTAMP)
-	private Date lastHeartBeat;
+    @Column(type = ColumnType.TIMESTAMP)
+    private Date lastHeartBeat;
 
-	@Column(length = 64)
-	private String ipAddress;
+    @Column(length = 64)
+    private String ipAddress;
 
-	@Column(nullable = true)
-	private Integer commandPort;
+    @Column(nullable = true)
+    private Integer commandPort;
 
-	@Override
-	public Object getId() {
-		return nodeId;
-	}
+    @Override
+    public Object getId() {
+        return nodeId;
+    }
 
-	@Override
-	public String getListKey() {
-		return nodeId;
-	}
+    @Override
+    public String getListKey() {
+        return nodeId;
+    }
 
-	@Override
-	public String getListDescription() {
-		return nodeId;
-	}
+    @Override
+    public String getListDescription() {
+        return nodeId;
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public Date getLastHeartBeat() {
-		return lastHeartBeat;
-	}
+    public Date getLastHeartBeat() {
+        return lastHeartBeat;
+    }
 
-	public void setLastHeartBeat(Date lastHeartBeat) {
-		this.lastHeartBeat = lastHeartBeat;
-	}
+    public void setLastHeartBeat(Date lastHeartBeat) {
+        this.lastHeartBeat = lastHeartBeat;
+    }
 
-	public String getIpAddress() {
-		return ipAddress;
-	}
+    public String getIpAddress() {
+        return ipAddress;
+    }
 
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
 
-	public Integer getCommandPort() {
-		return commandPort;
-	}
+    public Integer getCommandPort() {
+        return commandPort;
+    }
 
-	public void setCommandPort(Integer commandPort) {
-		this.commandPort = commandPort;
-	}
+    public void setCommandPort(Integer commandPort) {
+        this.commandPort = commandPort;
+    }
 }

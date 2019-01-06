@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,54 +31,54 @@ import com.tcdng.unify.web.WebApplicationComponents;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "list", type = String.class, mandatory = true),
-		@UplAttribute(name = "listParams", type = String[].class), @UplAttribute(name = "listKey", type = String.class),
-		@UplAttribute(name = "listDescription", type = String.class),
-		@UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "control"),
-		@UplAttribute(name = "flow", type = boolean.class) })
+        @UplAttribute(name = "listParams", type = String[].class), @UplAttribute(name = "listKey", type = String.class),
+        @UplAttribute(name = "listDescription", type = String.class),
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "control"),
+        @UplAttribute(name = "flow", type = boolean.class) })
 public abstract class AbstractListControl extends AbstractControl implements ListControl {
 
-	@Override
-	public ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels)
-			throws UnifyException {
-		return getListControlUtils().getListControlJsonData(this, indexes, keys, labels);
-	}
+    @Override
+    public ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels)
+            throws UnifyException {
+        return getListControlUtils().getListControlJsonData(this, indexes, keys, labels);
+    }
 
-	@Override
-	public List<? extends Listable> getListables() throws UnifyException {
-		return getListControlUtils().getListables(this);
-	}
+    @Override
+    public List<? extends Listable> getListables() throws UnifyException {
+        return getListControlUtils().getListables(this);
+    }
 
-	@Override
-	public Map<String, String> getListMap() throws UnifyException {
-		return getListControlUtils().getListMap(this);
-	}
+    @Override
+    public Map<String, String> getListMap() throws UnifyException {
+        return getListControlUtils().getListMap(this);
+    }
 
-	@Override
-	public String getList() throws UnifyException {
-		return getUplAttribute(String.class, "list");
-	}
+    @Override
+    public String getList() throws UnifyException {
+        return getUplAttribute(String.class, "list");
+    }
 
-	@Override
-	public String[] getListParams() throws UnifyException {
-		return getUplAttribute(String[].class, "listParams");
-	}
+    @Override
+    public String[] getListParams() throws UnifyException {
+        return getUplAttribute(String[].class, "listParams");
+    }
 
-	@Override
-	public ListParamType getListParamType() throws UnifyException {
-		return getUplAttribute(ListParamType.class, "listParamType");
-	}
+    @Override
+    public ListParamType getListParamType() throws UnifyException {
+        return getUplAttribute(ListParamType.class, "listParamType");
+    }
 
-	@Override
-	public String getListKey() throws UnifyException {
-		return getUplAttribute(String.class, "listKey");
-	}
+    @Override
+    public String getListKey() throws UnifyException {
+        return getUplAttribute(String.class, "listKey");
+    }
 
-	@Override
-	public String getListDescription() throws UnifyException {
-		return getUplAttribute(String.class, "listDescription");
-	}
+    @Override
+    public String getListDescription() throws UnifyException {
+        return getUplAttribute(String.class, "listDescription");
+    }
 
-	private ListControlUtils getListControlUtils() throws UnifyException {
-		return (ListControlUtils) getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
-	}
+    private ListControlUtils getListControlUtils() throws UnifyException {
+        return (ListControlUtils) getComponent(WebApplicationComponents.APPLICATION_LISTCONTROLUTIL);
+    }
 }

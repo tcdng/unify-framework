@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,16 +31,16 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 @UplBinding("web/reserved/upl/defaulthome.upl")
 public class DefaultApplicationHomeController extends AbstractPageController {
 
-	private String[] banner;
+    private String[] banner;
 
-	@Override
-	protected void onIndexPage() throws UnifyException {
-		super.onIndexPage();
-		banner = getApplicationBanner().toArray(new String[0]);
-	}
+    @Override
+    protected void onIndexPage() throws UnifyException {
+        super.onIndexPage();
+        banner = getApplicationBanner().toArray(new String[0]);
+    }
 
-	public String[] getBanner() {
-		return banner;
-	}
-		
+    public String[] getBanner() {
+        return banner;
+    }
+
 }

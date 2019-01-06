@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,30 +26,30 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class SAXParserPool extends AbstractPool<SAXParser> {
 
-	private SAXParserFactory saxParserFctry;
+    private SAXParserFactory saxParserFctry;
 
-	public SAXParserPool() {
-		this(8 * 1000, 4, 32);
-	}
+    public SAXParserPool() {
+        this(8 * 1000, 4, 32);
+    }
 
-	public SAXParserPool(long getTimeout, int minSize, int maxSize) {
-		super(getTimeout, minSize, maxSize, true);
-		this.saxParserFctry = SAXParserFactory.newInstance();
-	}
+    public SAXParserPool(long getTimeout, int minSize, int maxSize) {
+        super(getTimeout, minSize, maxSize, true);
+        this.saxParserFctry = SAXParserFactory.newInstance();
+    }
 
-	@Override
-	protected SAXParser createObject(Object... params) throws Exception {
-		return this.saxParserFctry.newSAXParser();
-	}
+    @Override
+    protected SAXParser createObject(Object... params) throws Exception {
+        return this.saxParserFctry.newSAXParser();
+    }
 
-	@Override
-	protected void onGetObject(SAXParser saxParser, Object... params) throws Exception {
-		saxParser.reset();
-	}
+    @Override
+    protected void onGetObject(SAXParser saxParser, Object... params) throws Exception {
+        saxParser.reset();
+    }
 
-	@Override
-	protected void destroyObject(SAXParser saxParser) {
+    @Override
+    protected void destroyObject(SAXParser saxParser) {
 
-	}
+    }
 
 }

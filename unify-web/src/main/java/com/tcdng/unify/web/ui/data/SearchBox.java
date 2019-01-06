@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,55 +26,55 @@ import java.util.List;
  */
 public class SearchBox {
 
-	private Object resultBean;
+    private Object resultBean;
 
-	private String resultPath;
+    private String resultPath;
 
-	private List<Mapping> mappings;
+    private List<Mapping> mappings;
 
-	public SearchBox(Object resultBean, String resultPath) {
-		this.resultBean = resultBean;
-		this.resultPath = resultPath;
-		this.mappings = new ArrayList<Mapping>();
-	}
+    public SearchBox(Object resultBean, String resultPath) {
+        this.resultBean = resultBean;
+        this.resultPath = resultPath;
+        this.mappings = new ArrayList<Mapping>();
+    }
 
-	public Object getResultBean() {
-		return resultBean;
-	}
+    public Object getResultBean() {
+        return resultBean;
+    }
 
-	public String getResultPath() {
-		return resultPath;
-	}
+    public String getResultPath() {
+        return resultPath;
+    }
 
-	public void addMapping(String resultFieldName, String selectFieldName) {
-		this.mappings.add(new Mapping(resultFieldName, selectFieldName));
-	}
+    public void addMapping(String resultFieldName, String selectFieldName) {
+        this.mappings.add(new Mapping(resultFieldName, selectFieldName));
+    }
 
-	public void addMapping(Mapping mapping) {
-		this.mappings.add(mapping);
-	}
+    public void addMapping(Mapping mapping) {
+        this.mappings.add(mapping);
+    }
 
-	public Mapping[] getMappings() {
-		return this.mappings.toArray(new Mapping[this.mappings.size()]);
-	}
+    public Mapping[] getMappings() {
+        return this.mappings.toArray(new Mapping[this.mappings.size()]);
+    }
 
-	public static class Mapping {
+    public static class Mapping {
 
-		private String resultFieldName;
+        private String resultFieldName;
 
-		private String selectFieldName;
+        private String selectFieldName;
 
-		public Mapping(String resultFieldName, String selectFieldName) {
-			this.resultFieldName = resultFieldName;
-			this.selectFieldName = selectFieldName;
-		}
+        public Mapping(String resultFieldName, String selectFieldName) {
+            this.resultFieldName = resultFieldName;
+            this.selectFieldName = selectFieldName;
+        }
 
-		public String getResultFieldName() {
-			return resultFieldName;
-		}
+        public String getResultFieldName() {
+            return resultFieldName;
+        }
 
-		public String getSelectFieldName() {
-			return selectFieldName;
-		}
-	}
+        public String getSelectFieldName() {
+            return selectFieldName;
+        }
+    }
 }

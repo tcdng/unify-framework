@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,11 +23,11 @@ package com.tcdng.unify.core.upl;
  */
 public interface UplTypeConstants {
 
-	int DOCUMENT = 0;
+    int DOCUMENT = 0;
 
-	int DOCUMENT_INLINE = 1;
+    int DOCUMENT_INLINE = 1;
 
-	int DESCRIPTOR = 2;
+    int DESCRIPTOR = 2;
 
-	int DESCRIPTOR_INLINE = 3;
+    int DESCRIPTOR_INLINE = 3;
 }

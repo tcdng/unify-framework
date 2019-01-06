@@ -1,36 +1,36 @@
 //MessageBox panel
 !ui-messageboxpanel layout:$d{!ui-vertical style:$s{width:100%;}}
-	components:$c{titleBar messageBoxContentPanel messageBoxActionPanel}
-	messageResultPath:$q{resultPath}
+    components:$c{titleBar messageBoxContentPanel messageBoxActionPanel}
+    messageResultPath:$q{resultPath}
 
 // Title bar
 !ui-titlebar:titleBar captionBinding:caption components:$c{closeBtn} draggable:true
 !ui-image:closeBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton} binding:cancelCode
      eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
-	
+    
 //Message panel
 !ui-panel:messageBoxContentPanel layout:$d{!ui-horizontal style:$s{width:100%;}}
-	components:$c{messageImage message}
+    components:$c{messageImage message}
 !ui-swappableimage:messageImage styleClass:$e{mpimage} binding:iconIndex
-	src:$t{images/info.png}
-	src:$t{images/warning.png}
-	src:$t{images/error.png}
-	src:$t{images/question.png}
+    src:$t{images/info.png}
+    src:$t{images/warning.png}
+    src:$t{images/error.png}
+    src:$t{images/question.png}
 !ui-label:message styleClass:$e{mpmsg} binding:message
 
 //Action button panel
 !ui-panel:messageBoxActionPanel style:$s{width:100%; text-align:center;}
-	components:$c{okBtn yesBtn noBtn retryBtn cancelBtn}
+    components:$c{okBtn yesBtn noBtn retryBtn cancelBtn}
 !ui-button:okBtn caption:$m{button.ok} binding:okCode
-	eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
+    eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:yesBtn caption:$m{button.yes} binding:yesCode
-	eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
+    eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:noBtn caption:$m{button.no} binding:noCode
-	eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
+    eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:retryBtn caption:$m{button.retry} binding:retryCode
-	eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
+    eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:cancelBtn caption:$m{button.cancel} binding:cancelCode
-	eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
-	 
+    eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
+     
 //Actions
 !ui-post:resultAct path:$f{messageResultPath}

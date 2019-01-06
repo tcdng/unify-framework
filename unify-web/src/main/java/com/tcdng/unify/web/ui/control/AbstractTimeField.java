@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,25 +27,25 @@ import com.tcdng.unify.web.constant.ExtensionType;
  */
 public abstract class AbstractTimeField extends AbstractPopupTextField {
 
-	private Pattern[] pattern;
+    private Pattern[] pattern;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		pattern = getFormatter().getFormatHelper().splitDatePattern(getFormatter().getPattern());
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        pattern = getFormatter().getFormatHelper().splitDatePattern(getFormatter().getPattern());
+    }
 
-	@Override
-	public ExtensionType getExtensionType() {
-		return ExtensionType.EXTENDED;
-	}
+    @Override
+    public ExtensionType getExtensionType() {
+        return ExtensionType.EXTENDED;
+    }
 
-	@Override
-	public boolean isPopupOnEditableOnly() {
-		return true;
-	}
+    @Override
+    public boolean isPopupOnEditableOnly() {
+        return true;
+    }
 
-	public Pattern[] getPattern() throws UnifyException {
-		return pattern;
-	}
+    public Pattern[] getPattern() throws UnifyException {
+        return pattern;
+    }
 }

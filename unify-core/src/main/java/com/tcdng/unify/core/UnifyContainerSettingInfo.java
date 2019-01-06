@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,20 +23,20 @@ package com.tcdng.unify.core;
  */
 public class UnifyContainerSettingInfo {
 
-	private String name;
+    private String name;
 
-	private Object value;
+    private Object value;
 
-	public UnifyContainerSettingInfo(String name, Object value) {
-		this.name = name;
-		this.value = value;
-	}
+    public UnifyContainerSettingInfo(String name, Object value) {
+        this.name = name;
+        this.value = value;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Object getValue() {
-		return value;
-	}
+    public Object getValue() {
+        return value;
+    }
 }

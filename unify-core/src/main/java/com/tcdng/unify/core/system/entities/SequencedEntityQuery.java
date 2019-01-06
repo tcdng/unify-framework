@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,43 +27,43 @@ import com.tcdng.unify.core.database.Query;
  */
 public class SequencedEntityQuery<T extends SequencedEntity> extends Query<T> {
 
-	public SequencedEntityQuery(Class<T> entityClass) {
-		super(entityClass);
-	}
+    public SequencedEntityQuery(Class<T> entityClass) {
+        super(entityClass);
+    }
 
-	public SequencedEntityQuery(Class<T> entityClass, boolean applyAppQueryLimit) {
-		super(entityClass, applyAppQueryLimit);
-	}
+    public SequencedEntityQuery(Class<T> entityClass, boolean applyAppQueryLimit) {
+        super(entityClass, applyAppQueryLimit);
+    }
 
-	public SequencedEntityQuery<T> id(Long id) {
-		return (SequencedEntityQuery<T>) equals("id", id);
-	}
+    public SequencedEntityQuery<T> id(Long id) {
+        return (SequencedEntityQuery<T>) equals("id", id);
+    }
 
-	public SequencedEntityQuery<T> idNot(Long id) {
-		return (SequencedEntityQuery<T>) notEqual("id", id);
-	}
+    public SequencedEntityQuery<T> idNot(Long id) {
+        return (SequencedEntityQuery<T>) notEqual("id", id);
+    }
 
-	public SequencedEntityQuery<T> idIn(Collection<Long> ids) {
-		return (SequencedEntityQuery<T>) amongst("id", ids);
-	}
+    public SequencedEntityQuery<T> idIn(Collection<Long> ids) {
+        return (SequencedEntityQuery<T>) amongst("id", ids);
+    }
 
-	public SequencedEntityQuery<T> idNotIn(Collection<Long> ids) {
-		return (SequencedEntityQuery<T>) notAmongst("id", ids);
-	}
+    public SequencedEntityQuery<T> idNotIn(Collection<Long> ids) {
+        return (SequencedEntityQuery<T>) notAmongst("id", ids);
+    }
 
-	public SequencedEntityQuery<T> reserved() {
-		return (SequencedEntityQuery<T>) less("id", 0L);
-	}
+    public SequencedEntityQuery<T> reserved() {
+        return (SequencedEntityQuery<T>) less("id", 0L);
+    }
 
-	public SequencedEntityQuery<T> notReserved() {
-		return (SequencedEntityQuery<T>) greater("id", 0L);
-	}
+    public SequencedEntityQuery<T> notReserved() {
+        return (SequencedEntityQuery<T>) greater("id", 0L);
+    }
 
-	public SequencedEntityQuery<T> orderById() {
-		return (SequencedEntityQuery<T>) order("id");
-	}
+    public SequencedEntityQuery<T> orderById() {
+        return (SequencedEntityQuery<T>) order("id");
+    }
 
-	public SequencedEntityQuery<T> selectId() {
-		return (SequencedEntityQuery<T>) select("id");
-	}
+    public SequencedEntityQuery<T> selectId() {
+        return (SequencedEntityQuery<T>) select("id");
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,23 +34,23 @@ import com.tcdng.unify.web.ui.data.RefreshSection;
 @Component("refreshsectionresponse")
 public class RefreshSectionResponse extends AbstractJsonPageControllerResponse {
 
-	public RefreshSectionResponse() {
-		super("refreshSectionHdl");
-	}
+    public RefreshSectionResponse() {
+        super("refreshSectionHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		RefreshSection refreshSection = (RefreshSection) this
-				.getRequestAttribute(UnifyWebRequestAttributeConstants.REFRESH_SECTION);
-		if (refreshSection != null) {
-			Widget widget = refreshSection.getWidget();
-			String sectionPageName = refreshSection.getSectionPageName();
-			logDebug("Preparing refresh section response: controller = [{0}], component = [{1}], section= [{2}]",
-					pageController.getName(), widget.getLongName(), sectionPageName);
-			writer.write(",\"section\":").writeJsonSection(widget, sectionPageName);
-		} else {
-			logDebug("Preparing refresh section response: Can not get section information from request context");
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        RefreshSection refreshSection =
+                (RefreshSection) this.getRequestAttribute(UnifyWebRequestAttributeConstants.REFRESH_SECTION);
+        if (refreshSection != null) {
+            Widget widget = refreshSection.getWidget();
+            String sectionPageName = refreshSection.getSectionPageName();
+            logDebug("Preparing refresh section response: controller = [{0}], component = [{1}], section= [{2}]",
+                    pageController.getName(), widget.getLongName(), sectionPageName);
+            writer.write(",\"section\":").writeJsonSection(widget, sectionPageName);
+        } else {
+            logDebug("Preparing refresh section response: Can not get section information from request context");
+        }
+    }
 
 }

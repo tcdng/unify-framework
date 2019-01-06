@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,13 +31,13 @@ import com.tcdng.unify.web.WebApplicationComponents;
 @Component(WebApplicationComponents.APPLICATION_HTTPCLIENT)
 public class HttpClientImpl extends AbstractHttpClient {
 
-	@Override
-	protected HttpURLConnection getHttpURLConnection(String url) throws UnifyException {
-		try {
-			return (HttpURLConnection) new URL(url).openConnection();
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    protected HttpURLConnection getHttpURLConnection(String url) throws UnifyException {
+        try {
+            return (HttpURLConnection) new URL(url).openConnection();
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 }

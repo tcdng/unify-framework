@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,32 +29,32 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface DocumentLayoutWriter extends UplComponentWriter {
 
-	/**
-	 * Writes structure and content of a document using this layout.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param layout
-	 *            the layout object
-	 * @param document
-	 *            the document
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
-			throws UnifyException;
+    /**
+     * Writes structure and content of a document using this layout.
+     * 
+     * @param writer
+     *            the response writer
+     * @param layout
+     *            the layout object
+     * @param document
+     *            the document
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
+            throws UnifyException;
 
-	/**
-	 * Writes behaviour of this layout.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param layout
-	 *            the layout object
-	 * @param document
-	 *            the document
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException;
+    /**
+     * Writes behaviour of this layout.
+     * 
+     * @param writer
+     *            the response writer
+     * @param layout
+     *            the layout object
+     * @param document
+     *            the document
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeBehaviour(ResponseWriter writer, DocumentLayout layout, Document document) throws UnifyException;
 }

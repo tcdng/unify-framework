@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,24 +23,24 @@ package com.tcdng.unify.core.task;
  */
 public class TaskInstanceInfo {
 
-	private TaskExecLimit limit;
+    private TaskExecLimit limit;
 
-	private String executionId;
+    private String executionId;
 
-	public TaskInstanceInfo(String executionId) {
-		this(TaskExecLimit.ALLOW_MULTIPLE, executionId);
-	}
+    public TaskInstanceInfo(String executionId) {
+        this(TaskExecLimit.ALLOW_MULTIPLE, executionId);
+    }
 
-	public TaskInstanceInfo(TaskExecLimit limit, String executionId) {
-		this.limit = limit;
-		this.executionId = executionId;
-	}
+    public TaskInstanceInfo(TaskExecLimit limit, String executionId) {
+        this.limit = limit;
+        this.executionId = executionId;
+    }
 
-	public TaskExecLimit getLimit() {
-		return limit;
-	}
+    public TaskExecLimit getLimit() {
+        return limit;
+    }
 
-	public String getExecutionId() {
-		return executionId;
-	}
+    public String getExecutionId() {
+        return executionId;
+    }
 }

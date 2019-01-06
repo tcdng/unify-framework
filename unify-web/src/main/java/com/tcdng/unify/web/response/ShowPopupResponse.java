@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,34 +32,34 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 @Component("showpopupresponse")
 @UplAttributes({ @UplAttribute(name = "popup", type = String.class),
-		@UplAttribute(name = "systemInfo", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "systemInfo", type = boolean.class, defaultValue = "false") })
 public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
 
-	public ShowPopupResponse() {
-		super("showPopupHdl");
-	}
+    public ShowPopupResponse() {
+        super("showPopupHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing show popup response: controller = [{0}]", pageController.getName());
-		appendPopupPanelsJSON(writer, pageController);
-		writer.write(",");
-		appendRefreshAttributesJson(writer, false);
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing show popup response: controller = [{0}]", pageController.getName());
+        appendPopupPanelsJSON(writer, pageController);
+        writer.write(",");
+        appendRefreshAttributesJson(writer, false);
+    }
 
-	protected void appendPopupPanelsJSON(ResponseWriter writer, PageController pageController) throws UnifyException {
-		if (getUplAttribute(boolean.class, "systemInfo")) {
-			writer.write(",\"showSysInfoPopup\":");
-		} else {
-			writer.write(",\"showPopup\":");
-		}
-		Panel panel = null;
-		String popupShortName = getUplAttribute(String.class, "popup");
-		if (popupShortName != null) {
-			panel = pageController.getPanelByShortName(popupShortName);
-		} else {
-			panel = pageController.getPanelByLongName(getRequestContextUtil().getRequestPopupName());
-		}
-		writer.writeJsonPanel(panel, false);
-	}
+    protected void appendPopupPanelsJSON(ResponseWriter writer, PageController pageController) throws UnifyException {
+        if (getUplAttribute(boolean.class, "systemInfo")) {
+            writer.write(",\"showSysInfoPopup\":");
+        } else {
+            writer.write(",\"showPopup\":");
+        }
+        Panel panel = null;
+        String popupShortName = getUplAttribute(String.class, "popup");
+        if (popupShortName != null) {
+            panel = pageController.getPanelByShortName(popupShortName);
+        } else {
+            panel = pageController.getPanelByLongName(getRequestContextUtil().getRequestPopupName());
+        }
+        writer.writeJsonPanel(panel, false);
+    }
 }

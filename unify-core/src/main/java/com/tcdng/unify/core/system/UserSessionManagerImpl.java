@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
-import com.tcdng.unify.core.business.AbstractBusinessModule;
+import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.system.entities.UserSessionTracking;
 import com.tcdng.unify.core.system.entities.UserSessionTrackingQuery;
@@ -53,227 +53,227 @@ import com.tcdng.unify.core.util.CalendarUtils;
  */
 @Transactional
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)
-public class UserSessionManagerImpl extends AbstractBusinessModule implements UserSessionManager {
+public class UserSessionManagerImpl extends AbstractBusinessService implements UserSessionManager {
 
-	@Configurable(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER)
-	private UplComponentWriterManager uplComponentWriterManager;
+    @Configurable
+    private UplComponentWriterManager uplComponentWriterManager;
 
-	private Map<String, UserSession> userSessions;
+    private Map<String, UserSession> userSessions;
 
-	public UserSessionManagerImpl() {
-		userSessions = new ConcurrentHashMap<String, UserSession>();
-	}
+    public UserSessionManagerImpl() {
+        userSessions = new ConcurrentHashMap<String, UserSession>();
+    }
 
-	@Override
-	public List<UserSessionTracking> findUserSessions(UserSessionTrackingQuery userSessionQuery) throws UnifyException {
-		return db().listAll(userSessionQuery);
-	}
+    @Override
+    public List<UserSessionTracking> findUserSessions(UserSessionTrackingQuery userSessionQuery) throws UnifyException {
+        return db().listAll(userSessionQuery);
+    }
 
-	@Override
-	public UserSessionTracking findUserSession(String sessionId) throws UnifyException {
-		return db().list(UserSessionTracking.class, sessionId);
-	}
+    @Override
+    public UserSessionTracking findUserSession(String sessionId) throws UnifyException {
+        return db().list(UserSessionTracking.class, sessionId);
+    }
 
-	@Override
-	public int countUserSessions(UserSessionTrackingQuery userSessionQuery) throws UnifyException {
-		return db().countAll(userSessionQuery);
-	}
+    @Override
+    public int countUserSessions(UserSessionTrackingQuery userSessionQuery) throws UnifyException {
+        return db().countAll(userSessionQuery);
+    }
 
-	@Override
-	public UserSession getUserSession(String sessionId) throws UnifyException {
-		if (sessionId != null) {
-			return userSessions.get(sessionId);
-		}
-		return null;
-	}
+    @Override
+    public UserSession getUserSession(String sessionId) throws UnifyException {
+        if (sessionId != null) {
+            return userSessions.get(sessionId);
+        }
+        return null;
+    }
 
-	@Override
-	public void addUserSession(UserSession userSession) throws UnifyException {
-		SessionContext sessionContext = userSession.getSessionContext();
-		UserSessionTracking userSessionData = new UserSessionTracking();
-		userSessionData.setSessionId(sessionContext.getId());
-		userSessionData.setRemoteHost(sessionContext.getRemoteHost());
-		userSessionData.setRemoteAddress(sessionContext.getRemoteAddress());
-		userSessionData.setRemoteUser(sessionContext.getRemoteUser());
-		userSessionData.setNode(getNodeId());
-		Date createTime = new Date();
-		userSessionData.setCreateTime(createTime);
-		userSessionData.setLastAccessTime(createTime);
-		db().create(userSessionData);
-		setRequiredAttributes(sessionContext);
-		userSessions.put(sessionContext.getId(), userSession);
-	}
+    @Override
+    public void addUserSession(UserSession userSession) throws UnifyException {
+        SessionContext sessionContext = userSession.getSessionContext();
+        UserSessionTracking userSessionData = new UserSessionTracking();
+        userSessionData.setSessionId(sessionContext.getId());
+        userSessionData.setRemoteHost(sessionContext.getRemoteHost());
+        userSessionData.setRemoteAddress(sessionContext.getRemoteAddress());
+        userSessionData.setRemoteUser(sessionContext.getRemoteUser());
+        userSessionData.setNode(getNodeId());
+        Date createTime = new Date();
+        userSessionData.setCreateTime(createTime);
+        userSessionData.setLastAccessTime(createTime);
+        db().create(userSessionData);
+        setRequiredAttributes(sessionContext);
+        userSessions.put(sessionContext.getId(), userSession);
+    }
 
-	@Override
-	public void removeUserSession(UserSession userSession) throws UnifyException {
-		SessionContext sessionContext = userSession.getSessionContext();
-		db().delete(UserSessionTracking.class, sessionContext.getId());
-		userSessions.remove(sessionContext.getId());
-	}
+    @Override
+    public void removeUserSession(UserSession userSession) throws UnifyException {
+        SessionContext sessionContext = userSession.getSessionContext();
+        db().delete(UserSessionTracking.class, sessionContext.getId());
+        userSessions.remove(sessionContext.getId());
+    }
 
-	@Override
-	public void updateCurrentSessionLastAccessTime() throws UnifyException {
-		getSessionContext().accessed();
-	}
+    @Override
+    public void updateCurrentSessionLastAccessTime() throws UnifyException {
+        getSessionContext().accessed();
+    }
 
-	@Override
-	public void broadcast(String sessionId, String attribute, Object value) throws UnifyException {
-		broadcast(userSessions.get(sessionId), attribute, value);
-	}
+    @Override
+    public void broadcast(String sessionId, String attribute, Object value) throws UnifyException {
+        broadcast(userSessions.get(sessionId), attribute, value);
+    }
 
-	@Override
-	public void broadcast(String attribute, Object value) throws UnifyException {
-		for (UserSession session : userSessions.values()) {
-			broadcast(session, attribute, value);
-		}
-	}
+    @Override
+    public void broadcast(String attribute, Object value) throws UnifyException {
+        for (UserSession session : userSessions.values()) {
+            broadcast(session, attribute, value);
+        }
+    }
 
-	@Override
-	public void logIn(UserToken userToken) throws UnifyException {
-		SessionContext sessionContext = getRequestContext().getSessionContext();
+    @Override
+    public void logIn(UserToken userToken) throws UnifyException {
+        SessionContext sessionContext = getRequestContext().getSessionContext();
 
-		// Add user session if not existing
-		if (getUserSession(sessionContext.getId()) == null) {
-			addUserSession(new LocalUserSession(sessionContext));
-		}
+        // Add user session if not existing
+        if (getUserSession(sessionContext.getId()) == null) {
+            addUserSession(new LocalUserSession(sessionContext));
+        }
 
-		// Update user session database record
-		String userLoginId = userToken.getUserLoginId();
-		String sessionId = sessionContext.getId();
-		db().updateAll(new UserSessionTrackingQuery().id(sessionId), new Update().add("userLoginId", userLoginId)
-				.add("userLoginId", userToken.getUserLoginId()).add("userName", userToken.getUserName()));
+        // Update user session database record
+        String userLoginId = userToken.getUserLoginId();
+        String sessionId = sessionContext.getId();
+        db().updateAll(new UserSessionTrackingQuery().id(sessionId), new Update().add("userLoginId", userLoginId)
+                .add("userLoginId", userToken.getUserLoginId()).add("userName", userToken.getUserName()));
 
-		if (!userToken.isAllowMultipleLogin()) {
-			List<String> sessionIdList = db().valueList(String.class, "sessionId",
-					new UserSessionTrackingQuery().userLoginId(userLoginId).idNot(sessionId));
+        if (!userToken.isAllowMultipleLogin()) {
+            List<String> sessionIdList = db().valueList(String.class, "sessionId",
+                    new UserSessionTrackingQuery().userLoginId(userLoginId).idNot(sessionId));
 
-			if (!sessionIdList.isEmpty()) {
-				// Log other user sessions out
-				db().updateAll(new UserSessionTrackingQuery().idAmongst(sessionIdList),
-						new Update().add("userLoginId", null).add("userLoginId", null).add("userName", null));
+            if (!sessionIdList.isEmpty()) {
+                // Log other user sessions out
+                db().updateAll(new UserSessionTrackingQuery().idAmongst(sessionIdList),
+                        new Update().add("userLoginId", null).add("userLoginId", null).add("userName", null));
 
-				forceLogOut(sessionIdList.toArray(new String[sessionIdList.size()]));
-			}
-		}
+                forceLogOut(sessionIdList.toArray(new String[sessionIdList.size()]));
+            }
+        }
 
-		// Update session context
-		sessionContext.setUserToken(userToken);
-	}
+        // Update session context
+        sessionContext.setUserToken(userToken);
+    }
 
-	@Override
-	public void logOut(boolean clearCompleteSession) throws UnifyException {
-		if (clearCompleteSession) {
-			logOut(userSessions.get(getRequestContext().getSessionContext().getId()));
-		} else {
-			getRequestContext().getSessionContext().setUserToken(null);
-		}
-	}
+    @Override
+    public void logOut(boolean clearCompleteSession) throws UnifyException {
+        if (clearCompleteSession) {
+            logOut(userSessions.get(getRequestContext().getSessionContext().getId()));
+        } else {
+            getRequestContext().getSessionContext().setUserToken(null);
+        }
+    }
 
-	@Override
-	public void logOut(String sessionId) throws UnifyException {
-		logOut(userSessions.get(sessionId));
-	}
+    @Override
+    public void logOut(String sessionId) throws UnifyException {
+        logOut(userSessions.get(sessionId));
+    }
 
-	@Broadcast
-	@Override
-	public void forceLogOut(String... sessionIds) throws UnifyException {
-		// Force logout specific sessions in this node
-		for (String otherSessionId : sessionIds) {
-			logOut(otherSessionId);
-			UserSession userSession = userSessions.get(otherSessionId);
-			if (userSession != null) {
-				userSession.getSessionContext().setAttribute(SessionAttributeConstants.FORCE_LOGOUT,
-						SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN);
-			}
-		}
-	}
+    @Broadcast
+    @Override
+    public void forceLogOut(String... sessionIds) throws UnifyException {
+        // Force logout specific sessions in this node
+        for (String otherSessionId : sessionIds) {
+            logOut(otherSessionId);
+            UserSession userSession = userSessions.get(otherSessionId);
+            if (userSession != null) {
+                userSession.getSessionContext().setAttribute(SessionAttributeConstants.FORCE_LOGOUT,
+                        SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN);
+            }
+        }
+    }
 
-	@Periodic(PeriodicType.SLOWEST)
-	@Transactional(TransactionAttribute.REQUIRES_NEW)
-	public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
-		// Update active session records and remove inactive ones
-		Date workingDt = new Date();
-		List<String> activeSessionList = new ArrayList<String>();
-		int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-				UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT);
-		expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
-		Date expiryTime = CalendarUtils.getDateWithOffset(workingDt, -(expirationInSeconds * 1000));
-		for (UserSession userSession : userSessions.values()) {
-			SessionContext sessionContext = userSession.getSessionContext();
-			if (expiryTime.before(sessionContext.getLastAccessTime())) {
-				activeSessionList.add(sessionContext.getId());
-			} else {
-				userSessions.remove(sessionContext.getId());
-			}
-		}
+    @Periodic(PeriodicType.SLOWEST)
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
+        // Update active session records and remove inactive ones
+        Date workingDt = new Date();
+        List<String> activeSessionList = new ArrayList<String>();
+        int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
+                UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT);
+        expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
+        Date expiryTime = CalendarUtils.getDateWithOffset(workingDt, -(expirationInSeconds * 1000));
+        for (UserSession userSession : userSessions.values()) {
+            SessionContext sessionContext = userSession.getSessionContext();
+            if (expiryTime.before(sessionContext.getLastAccessTime())) {
+                activeSessionList.add(sessionContext.getId());
+            } else {
+                userSessions.remove(sessionContext.getId());
+            }
+        }
 
-		if (!activeSessionList.isEmpty()) {
-			db().updateAll(new UserSessionTrackingQuery().idAmongst(activeSessionList),
-					new Update().add("node", getNodeId()).add("lastAccessTime", workingDt));
-		}
+        if (!activeSessionList.isEmpty()) {
+            db().updateAll(new UserSessionTrackingQuery().idAmongst(activeSessionList),
+                    new Update().add("node", getNodeId()).add("lastAccessTime", workingDt));
+        }
 
-		if (grabClusterMasterLock()) {
-			// Delete inactive session
-			db().deleteAll(new UserSessionTrackingQuery().expired(expiryTime));
-		}
-	}
+        if (grabClusterMasterLock()) {
+            // Delete inactive session
+            db().deleteAll(new UserSessionTrackingQuery().expired(expiryTime));
+        }
+    }
 
-	private void broadcast(UserSession userSession, String attribute, Object value) throws UnifyException {
-		if (userSession != null) {
-			if (SessionAttributeConstants.FORCE_LOGOUT.equals(attribute)) {
-				logOut(userSession);
-			}
-			userSession.getSessionContext().setAttribute(attribute, value);
-		}
-	}
+    private void broadcast(UserSession userSession, String attribute, Object value) throws UnifyException {
+        if (userSession != null) {
+            if (SessionAttributeConstants.FORCE_LOGOUT.equals(attribute)) {
+                logOut(userSession);
+            }
+            userSession.getSessionContext().setAttribute(attribute, value);
+        }
+    }
 
-	private void logOut(UserSession userSession) throws UnifyException {
-		if (userSession != null) {
-			SessionContext sessionContext = userSession.getSessionContext();
-			db().updateAll(new UserSessionTrackingQuery().id(sessionContext.getId()),
-					new Update().add("userLoginId", null).add("userName", null));
-			sessionContext.setUserToken(null);
-			sessionContext.clearAttributes();
-			setRequiredAttributes(sessionContext);
-		}
-	}
+    private void logOut(UserSession userSession) throws UnifyException {
+        if (userSession != null) {
+            SessionContext sessionContext = userSession.getSessionContext();
+            db().updateAll(new UserSessionTrackingQuery().id(sessionContext.getId()),
+                    new Update().add("userLoginId", null).add("userName", null));
+            sessionContext.setUserToken(null);
+            sessionContext.clearAttributes();
+            setRequiredAttributes(sessionContext);
+        }
+    }
 
-	private void setRequiredAttributes(SessionContext sessionContext) throws UnifyException {
-		sessionContext.setAttribute(SessionAttributeConstants.UPLCOMPONENT_WRITERS,
-				uplComponentWriterManager.getWriters(sessionContext.getPlatform()));
-	}
+    private void setRequiredAttributes(SessionContext sessionContext) throws UnifyException {
+        sessionContext.setAttribute(SessionAttributeConstants.UPLCOMPONENT_WRITERS,
+                uplComponentWriterManager.getWriters(sessionContext.getPlatform()));
+    }
 
-	private class LocalUserSession implements UserSession {
+    private class LocalUserSession implements UserSession {
 
-		private SessionContext sessionContext;
+        private SessionContext sessionContext;
 
-		public LocalUserSession(SessionContext sessionContext) {
-			this.sessionContext = sessionContext;
-		}
+        public LocalUserSession(SessionContext sessionContext) {
+            this.sessionContext = sessionContext;
+        }
 
-		@Override
-		public String getRemoteAddress() {
-			return sessionContext.getRemoteAddress();
-		}
+        @Override
+        public String getRemoteAddress() {
+            return sessionContext.getRemoteAddress();
+        }
 
-		@Override
-		public String getRemoteHost() {
-			return sessionContext.getRemoteHost();
-		}
+        @Override
+        public String getRemoteHost() {
+            return sessionContext.getRemoteHost();
+        }
 
-		@Override
-		public String getRemoteUser() {
-			return sessionContext.getRemoteUser();
-		}
+        @Override
+        public String getRemoteUser() {
+            return sessionContext.getRemoteUser();
+        }
 
-		@Override
-		public String getRemoteViewer() {
-			return sessionContext.getRemoteViewer();
-		}
+        @Override
+        public String getRemoteViewer() {
+            return sessionContext.getRemoteViewer();
+        }
 
-		@Override
-		public SessionContext getSessionContext() {
-			return sessionContext;
-		}
-	}
+        @Override
+        public SessionContext getSessionContext() {
+            return sessionContext;
+        }
+    }
 }

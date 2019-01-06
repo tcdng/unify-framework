@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 @Component("toggleimage-writer")
 public class ToggleImageWriter extends AbstractTargetControlWriter {
 
-	@Override
-	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
-		ToggleImage toggleImage = (ToggleImage) targetControl;
-		writer.write("<img");
-		writeTagAttributes(writer, toggleImage);
-		writer.write(" src=\"");
-		if (toggleImage.getValue(boolean.class)) {
-			writer.writeFileImageContextURL(toggleImage.getUplAttribute(String.class, "onImgSrc"));
-		} else {
-			writer.writeFileImageContextURL(toggleImage.getUplAttribute(String.class, "offImgSrc"));
-		}
-		writer.write("\">");
-	}
+    @Override
+    protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+        ToggleImage toggleImage = (ToggleImage) targetControl;
+        writer.write("<img");
+        writeTagAttributes(writer, toggleImage);
+        writer.write(" src=\"");
+        if (toggleImage.getValue(boolean.class)) {
+            writer.writeFileImageContextURL(toggleImage.getUplAttribute(String.class, "onImgSrc"));
+        } else {
+            writer.writeFileImageContextURL(toggleImage.getUplAttribute(String.class, "offImgSrc"));
+        }
+        writer.write("\">");
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,49 +31,49 @@ import com.tcdng.unify.core.data.Listable;
  */
 public interface ListManager extends UnifyComponent {
 
-	/**
-	 * Returns a list of listables from specified list command for a locale.
-	 * 
-	 * @param locale
-	 *            the locale
-	 * @param listName
-	 *            the list command name
-	 * @param params
-	 *            optional parameters
-	 * @throws UnifyException
-	 *             if list is unknown. If an error occurs
-	 */
-	List<? extends Listable> getList(Locale locale, String listName, Object... params) throws UnifyException;
+    /**
+     * Returns a list of listables from specified list command for a locale.
+     * 
+     * @param locale
+     *            the locale
+     * @param listName
+     *            the list command name
+     * @param params
+     *            optional parameters
+     * @throws UnifyException
+     *             if list is unknown. If an error occurs
+     */
+    List<? extends Listable> getList(Locale locale, String listName, Object... params) throws UnifyException;
 
-	/**
-	 * Returns a map of key to description values from specified list command for a
-	 * locale.
-	 * 
-	 * @param locale
-	 *            the request locale
-	 * @param listName
-	 *            the list command name
-	 * @param params
-	 *            optional parameters
-	 * @throws UnifyException
-	 *             if list is unknown. If an error occurs
-	 */
-	Map<String, String> getListMap(Locale locale, String listName, Object... params) throws UnifyException;
+    /**
+     * Returns a map of key to description values from specified list command for a
+     * locale.
+     * 
+     * @param locale
+     *            the request locale
+     * @param listName
+     *            the list command name
+     * @param params
+     *            optional parameters
+     * @throws UnifyException
+     *             if list is unknown. If an error occurs
+     */
+    Map<String, String> getListMap(Locale locale, String listName, Object... params) throws UnifyException;
 
-	/**
-	 * Returns the description of a list item of a list.
-	 * 
-	 * @param locale
-	 *            the request locale
-	 * @param listKey
-	 *            the list key of the item to fetch description for
-	 * @param listName
-	 *            the name of the list command
-	 * @param params
-	 *            optional request parameters
-	 * @throws UnifyException
-	 *             if list is unknown. If an error occurs
-	 */
-	String getListKeyDescription(Locale locale, String listKey, String listName, Object... params)
-			throws UnifyException;
+    /**
+     * Returns the description of a list item of a list.
+     * 
+     * @param locale
+     *            the request locale
+     * @param listKey
+     *            the list key of the item to fetch description for
+     * @param listName
+     *            the name of the list command
+     * @param params
+     *            optional request parameters
+     * @throws UnifyException
+     *             if list is unknown. If an error occurs
+     */
+    String getListKeyDescription(Locale locale, String listKey, String listName, Object... params)
+            throws UnifyException;
 }

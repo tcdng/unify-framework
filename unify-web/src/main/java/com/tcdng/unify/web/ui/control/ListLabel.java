@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,23 +27,23 @@ import com.tcdng.unify.web.ui.AbstractListControl;
 @Component("ui-listlabel")
 public class ListLabel extends AbstractListControl {
 
-	public ListLabel() {
-		setEditable(false);
-	}
+    public ListLabel() {
+        setEditable(false);
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return false;
-	}
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 
-	@Override
-	public void setEditable(boolean editable) {
-		super.setEditable(false);
-	}
+    @Override
+    public void setEditable(boolean editable) {
+        super.setEditable(false);
+    }
 
-	@Override
-	public boolean isLayoutCaption() {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
 
 }

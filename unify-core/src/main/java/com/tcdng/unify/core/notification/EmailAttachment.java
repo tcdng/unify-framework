@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,55 +27,55 @@ import com.tcdng.unify.core.constant.FileAttachmentType;
  */
 public class EmailAttachment {
 
-	private FileAttachmentType type;
+    private FileAttachmentType type;
 
-	private String name;
+    private String name;
 
-	private File file;
+    private File file;
 
-	private byte[] blob;
+    private byte[] blob;
 
-	private boolean inline;
+    private boolean inline;
 
-	public EmailAttachment(FileAttachmentType type, String name, File file) {
-		this(type, name, file, false);
-	}
+    public EmailAttachment(FileAttachmentType type, String name, File file) {
+        this(type, name, file, false);
+    }
 
-	public EmailAttachment(FileAttachmentType type, String name, File file, boolean inline) {
-		this.type = type;
-		this.name = name;
-		this.file = file;
-		this.inline = inline;
-	}
+    public EmailAttachment(FileAttachmentType type, String name, File file, boolean inline) {
+        this.type = type;
+        this.name = name;
+        this.file = file;
+        this.inline = inline;
+    }
 
-	public EmailAttachment(FileAttachmentType type, String name, byte[] blob) {
-		this(type, name, blob, false);
-	}
+    public EmailAttachment(FileAttachmentType type, String name, byte[] blob) {
+        this(type, name, blob, false);
+    }
 
-	public EmailAttachment(FileAttachmentType type, String name, byte[] blob, boolean inline) {
-		this.type = type;
-		this.name = name;
-		this.blob = blob;
-		this.inline = inline;
-	}
+    public EmailAttachment(FileAttachmentType type, String name, byte[] blob, boolean inline) {
+        this.type = type;
+        this.name = name;
+        this.blob = blob;
+        this.inline = inline;
+    }
 
-	public FileAttachmentType getType() {
-		return type;
-	}
+    public FileAttachmentType getType() {
+        return type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public File getFile() {
-		return file;
-	}
+    public File getFile() {
+        return file;
+    }
 
-	public byte[] getBlob() {
-		return blob;
-	}
+    public byte[] getBlob() {
+        return blob;
+    }
 
-	public boolean isInline() {
-		return inline;
-	}
+    public boolean isInline() {
+        return inline;
+    }
 }

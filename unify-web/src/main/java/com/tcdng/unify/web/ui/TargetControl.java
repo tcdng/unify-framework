@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,20 +26,20 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TargetControl extends Control {
 
-	/**
-	 * Returns target control's static binding value.
-	 * 
-	 * @return the value if set otherwise null
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getStaticBindingValue() throws UnifyException;
+    /**
+     * Returns target control's static binding value.
+     * 
+     * @return the value if set otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getStaticBindingValue() throws UnifyException;
 
-	/**
-	 * Returns the target element Id.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getTargetId() throws UnifyException;
+    /**
+     * Returns the target element Id.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getTargetId() throws UnifyException;
 }

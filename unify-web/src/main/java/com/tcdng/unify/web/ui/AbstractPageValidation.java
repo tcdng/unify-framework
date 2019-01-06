@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,6 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.DataTransfer;
 import com.tcdng.unify.web.DataTransferBlock;
-import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.ui.data.ValidationInfo;
 
 /**
@@ -32,102 +31,99 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "borderErrStyle", type = String.class, defaultValue = "2px solid #F0C0C0"),
-		@UplAttribute(name = "components", type = UplElementReferences.class) })
+        @UplAttribute(name = "components", type = UplElementReferences.class) })
 public abstract class AbstractPageValidation extends AbstractBehavior implements PageValidation {
 
-	@Configurable(WebApplicationComponents.APPLICATION_PAGEMANAGER)
-	private PageManager pageManager;
+    @Configurable
+    private PageManager pageManager;
 
-	private String id;
+    private String id;
 
-	@Override
-	public String getId() {
-		return id;
-	}
+    @Override
+    public String getId() {
+        return id;
+    }
 
-	@Override
-	public void setId(String id) {
-		this.id = id;
-	}
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getBorderErrStyle() throws UnifyException {
-		return getUplAttribute(String.class, "borderErrStyle");
-	}
+    public String getBorderErrStyle() throws UnifyException {
+        return getUplAttribute(String.class, "borderErrStyle");
+    }
 
-	/**
-	 * Adds validation pass information to request scope.
-	 * 
-	 * @param control
-	 *            the user interface component
-	 * @param validationCode
-	 *            the validation code
-	 * @param message
-	 *            the error message
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void addValidationPass(Control control, String validationCode) throws UnifyException {
-		getRequestContextUtil().addRequestValidationInfo(control.getId(),
-				new ValidationInfo(control, validationCode));
-	}
+    /**
+     * Adds validation pass information to request scope.
+     * 
+     * @param control
+     *            the user interface component
+     * @param validationCode
+     *            the validation code
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void addValidationPass(Control control, String validationCode) throws UnifyException {
+        getRequestContextUtil().addRequestValidationInfo(control.getId(), new ValidationInfo(control, validationCode));
+    }
 
-	/**
-	 * Adds validation fail information to request scope.
-	 * 
-	 * @param control
-	 *            the user interface component
-	 * @param validationCode
-	 *            the validation code
-	 * @param message
-	 *            the error message
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected void addValidationFail(Control control, String validationCode, String message) throws UnifyException {
-		getRequestContextUtil().addRequestValidationInfo(control.getId(),
-				new ValidationInfo(control, validationCode, message, getBorderErrStyle()));
-	}
+    /**
+     * Adds validation fail information to request scope.
+     * 
+     * @param control
+     *            the user interface component
+     * @param validationCode
+     *            the validation code
+     * @param message
+     *            the error message
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void addValidationFail(Control control, String validationCode, String message) throws UnifyException {
+        getRequestContextUtil().addRequestValidationInfo(control.getId(),
+                new ValidationInfo(control, validationCode, message, getBorderErrStyle()));
+    }
 
-	/**
-	 * Returns a converted binding value
-	 * 
-	 * @param clazz
-	 *            the type to convert to
-	 * @param transferBlock
-	 *            the data transfer block
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected <T> T getTransferValue(Class<T> clazz, DataTransferBlock transferBlock) throws UnifyException {
-		return convert(clazz, transferBlock.getValue(), null);
-	}
+    /**
+     * Returns a converted binding value
+     * 
+     * @param clazz
+     *            the type to convert to
+     * @param transferBlock
+     *            the data transfer block
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T> T getTransferValue(Class<T> clazz, DataTransferBlock transferBlock) throws UnifyException {
+        return convert(clazz, transferBlock.getValue(), null);
+    }
 
-	/**
-	 * Returns a converted binding value
-	 * 
-	 * @param clazz
-	 *            the type to convert to
-	 * @param property
-	 *            the property
-	 * @param transfer
-	 *            the data transfer object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected <T> T getTransferValue(Class<T> clazz, String property, DataTransfer transfer) throws UnifyException {
-		for (DataTransferBlock transferBlock : transfer.getDataTransferBlocks()) {
-			if (property.equals(transferBlock.getLongProperty()) || property.equals(transferBlock.getShortProperty())) {
-				return convert(clazz, transferBlock.getValue(), null);
-			}
-		}
+    /**
+     * Returns a converted binding value
+     * 
+     * @param clazz
+     *            the type to convert to
+     * @param property
+     *            the property
+     * @param transfer
+     *            the data transfer object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T> T getTransferValue(Class<T> clazz, String property, DataTransfer transfer) throws UnifyException {
+        for (DataTransferBlock transferBlock : transfer.getDataTransferBlocks()) {
+            if (property.equals(transferBlock.getLongProperty()) || property.equals(transferBlock.getShortProperty())) {
+                return convert(clazz, transferBlock.getValue(), null);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Returns application page manager.
-	 */
-	protected PageManager getPageManager() {
-		return pageManager;
-	}
+    /**
+     * Returns application page manager.
+     */
+    protected PageManager getPageManager() {
+        return pageManager;
+    }
 }

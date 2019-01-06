@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,61 +26,61 @@ import com.tcdng.unify.core.constant.TriState;
  */
 public interface Control extends DataTransferWidget {
 
-	/**
-	 * Tests if the component is required and privilege exists in the current user
-	 * role.
-	 * 
-	 * @return true if component is required and user role has component privilege
-	 */
-	TriState getRequired() throws UnifyException;
+    /**
+     * Tests if the component is required and privilege exists in the current user
+     * role.
+     * 
+     * @return true if component is required and user role has component privilege
+     */
+    TriState getRequired() throws UnifyException;
 
-	/**
-	 * Sets control's required state
-	 * 
-	 * @param required
-	 *            the state to set
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setRequired(TriState required) throws UnifyException;
+    /**
+     * Sets control's required state
+     * 
+     * @param required
+     *            the state to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setRequired(TriState required) throws UnifyException;
 
-	/**
-	 * Returns the control non-indexed Id
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getBaseId() throws UnifyException;
+    /**
+     * Returns the control non-indexed Id
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getBaseId() throws UnifyException;
 
-	/**
-	 * Returns the control border Id
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getBorderId() throws UnifyException;
+    /**
+     * Returns the control border Id
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getBorderId() throws UnifyException;
 
-	/**
-	 * Returns the control notification Id
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getNotificationId() throws UnifyException;
+    /**
+     * Returns the control notification Id
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getNotificationId() throws UnifyException;
 
-	/**
-	 * Updates control state.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void updateState() throws UnifyException;
+    /**
+     * Updates control state.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void updateState() throws UnifyException;
 
-	/**
-	 * Tests if control requires focus
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isFocus() throws UnifyException;
+    /**
+     * Tests if control requires focus
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isFocus() throws UnifyException;
 }

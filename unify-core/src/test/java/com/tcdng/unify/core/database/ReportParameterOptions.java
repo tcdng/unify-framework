@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,33 +28,33 @@ import com.tcdng.unify.core.annotation.Table;
 @Table(name = "REPORT_PARAMETEROPT")
 public class ReportParameterOptions extends AbstractTestEntity {
 
-	@ForeignKey(ReportParameter.class)
-	private Long reportParameterId;
+    @ForeignKey(ReportParameter.class)
+    private Long reportParameterId;
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	public ReportParameterOptions(String name) {
-		this.name = name;
-	}
+    public ReportParameterOptions(String name) {
+        this.name = name;
+    }
 
-	public ReportParameterOptions() {
+    public ReportParameterOptions() {
 
-	}
+    }
 
-	public Long getReportParameterId() {
-		return reportParameterId;
-	}
+    public Long getReportParameterId() {
+        return reportParameterId;
+    }
 
-	public void setReportParameterId(Long reportParameterId) {
-		this.reportParameterId = reportParameterId;
-	}
+    public void setReportParameterId(Long reportParameterId) {
+        this.reportParameterId = reportParameterId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 }

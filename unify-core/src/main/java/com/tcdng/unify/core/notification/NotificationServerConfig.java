@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,61 +26,61 @@ import com.tcdng.unify.core.constant.NetworkSecurityType;
  */
 public class NotificationServerConfig {
 
-	private String hostAddress;
+    private String hostAddress;
 
-	private Integer hostPort;
+    private Integer hostPort;
 
-	private NetworkSecurityType securityType;
+    private NetworkSecurityType securityType;
 
-	private String authentication;
+    private String authentication;
 
-	private String username;
+    private String username;
 
-	private String password;
+    private String password;
 
-	public NotificationServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
-			String username, String password) {
-		this.hostAddress = hostAddress;
-		this.hostPort = hostPort;
-		this.securityType = securityType;
-		this.username = username;
-		this.password = password;
-	}
+    public NotificationServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
+            String username, String password) {
+        this.hostAddress = hostAddress;
+        this.hostPort = hostPort;
+        this.securityType = securityType;
+        this.username = username;
+        this.password = password;
+    }
 
-	public NotificationServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
-			String authentication) {
-		this.hostAddress = hostAddress;
-		this.hostPort = hostPort;
-		this.securityType = securityType;
-		this.authentication = authentication;
-	}
+    public NotificationServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
+            String authentication) {
+        this.hostAddress = hostAddress;
+        this.hostPort = hostPort;
+        this.securityType = securityType;
+        this.authentication = authentication;
+    }
 
-	public NotificationServerConfig(String hostAddress, Integer hostPort) {
-		this.hostAddress = hostAddress;
-		this.hostPort = hostPort;
-	}
+    public NotificationServerConfig(String hostAddress, Integer hostPort) {
+        this.hostAddress = hostAddress;
+        this.hostPort = hostPort;
+    }
 
-	public String getHostAddress() {
-		return hostAddress;
-	}
+    public String getHostAddress() {
+        return hostAddress;
+    }
 
-	public Integer getHostPort() {
-		return hostPort;
-	}
+    public Integer getHostPort() {
+        return hostPort;
+    }
 
-	public NetworkSecurityType getSecurityType() {
-		return securityType;
-	}
+    public NetworkSecurityType getSecurityType() {
+        return securityType;
+    }
 
-	public String getAuthentication() {
-		return authentication;
-	}
+    public String getAuthentication() {
+        return authentication;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 }

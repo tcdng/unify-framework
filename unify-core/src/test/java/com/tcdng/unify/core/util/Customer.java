@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,63 +25,63 @@ import java.util.Collection;
  */
 public class Customer {
 
-	private Long id;
+    private Long id;
 
-	private String firstName;
+    private String firstName;
 
-	private String lastName;
+    private String lastName;
 
-	private Address address;
+    private Address address;
 
-	private Integer[] orders;
+    private Integer[] orders;
 
-	private Collection<Address> officeAddresses;
+    private Collection<Address> officeAddresses;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public Address getAddress() {
+        return address;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	public Integer[] getOrders() {
-		return orders;
-	}
+    public Integer[] getOrders() {
+        return orders;
+    }
 
-	public void setOrders(Integer[] orders) {
-		this.orders = orders;
-	}
+    public void setOrders(Integer[] orders) {
+        this.orders = orders;
+    }
 
-	public Collection<Address> getOfficeAddresses() {
-		return officeAddresses;
-	}
+    public Collection<Address> getOfficeAddresses() {
+        return officeAddresses;
+    }
 
-	public void setOfficeAddresses(Collection<Address> officeAddresses) {
-		this.officeAddresses = officeAddresses;
-	}
+    public void setOfficeAddresses(Collection<Address> officeAddresses) {
+        this.officeAddresses = officeAddresses;
+    }
 }

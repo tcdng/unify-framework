@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,134 +30,134 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
-		@UplAttribute(name = "useGrouping", type = boolean.class) })
+        @UplAttribute(name = "useGrouping", type = boolean.class) })
 public abstract class AbstractNumberFormatter<T extends Number> extends AbstractFormatter<T>
-		implements NumberFormatter<T> {
+        implements NumberFormatter<T> {
 
-	private NumberType type;
+    private NumberType type;
 
-	private NumberFormat nf;
+    private NumberFormat nf;
 
-	private NumberSymbols numberSymbols;
+    private NumberSymbols numberSymbols;
 
-	private int precision;
+    private int precision;
 
-	private int scale;
+    private int scale;
 
-	private boolean groupingUsed;
+    private boolean groupingUsed;
 
-	private String pattern;
+    private String pattern;
 
-	public AbstractNumberFormatter(Class<T> dataType, NumberType type) {
-		super(dataType);
-		this.type = type;
-	}
+    public AbstractNumberFormatter(Class<T> dataType, NumberType type) {
+        super(dataType);
+        this.type = type;
+    }
 
-	@Override
-	public String format(T value) throws UnifyException {
-		return getNumberFormat().format(value);
-	}
+    @Override
+    public String format(T value) throws UnifyException {
+        return getNumberFormat().format(value);
+    }
 
-	@Override
-	public String getPattern() throws UnifyException {
-		getNumberFormat();
-		return pattern;
-	}
+    @Override
+    public String getPattern() throws UnifyException {
+        getNumberFormat();
+        return pattern;
+    }
 
-	@Override
-	public int getPrecision() throws UnifyException {
-		if (precision > 0) {
-			return precision;
-		}
-		return getUplAttribute(int.class, "precision");
-	}
+    @Override
+    public int getPrecision() throws UnifyException {
+        if (precision > 0) {
+            return precision;
+        }
+        return getUplAttribute(int.class, "precision");
+    }
 
-	@Override
-	public void setPrecision(int precision) {
-		this.precision = precision;
-		nf = null;
-	}
+    @Override
+    public void setPrecision(int precision) {
+        this.precision = precision;
+        nf = null;
+    }
 
-	@Override
-	public int getScale() throws UnifyException {
-		if (scale > 0) {
-			return scale;
-		}
-		return getUplAttribute(int.class, "scale");
-	}
+    @Override
+    public int getScale() throws UnifyException {
+        if (scale > 0) {
+            return scale;
+        }
+        return getUplAttribute(int.class, "scale");
+    }
 
-	@Override
-	public void setScale(int scale) {
-		this.scale = scale;
-		nf = null;
-	}
+    @Override
+    public void setScale(int scale) {
+        this.scale = scale;
+        nf = null;
+    }
 
-	@Override
-	public boolean isGroupingUsed() throws UnifyException {
-		if (groupingUsed) {
-			return groupingUsed;
-		}
-		return getUplAttribute(boolean.class, "useGrouping");
-	}
+    @Override
+    public boolean isGroupingUsed() throws UnifyException {
+        if (groupingUsed) {
+            return groupingUsed;
+        }
+        return getUplAttribute(boolean.class, "useGrouping");
+    }
 
-	@Override
-	public void setGroupingUsed(boolean groupingUsed) {
-		this.groupingUsed = groupingUsed;
-		nf = null;
-	}
+    @Override
+    public void setGroupingUsed(boolean groupingUsed) {
+        this.groupingUsed = groupingUsed;
+        nf = null;
+    }
 
-	@Override
-	public NumberSymbols getNumberSymbols() throws UnifyException {
-		getNumberFormat();
-		return numberSymbols;
-	}
+    @Override
+    public NumberSymbols getNumberSymbols() throws UnifyException {
+        getNumberFormat();
+        return numberSymbols;
+    }
 
-	protected NumberFormat getNumberFormat() throws UnifyException {
-		if (nf == null) {
-			pattern = null;
-			Locale locale = getLocale();
-			numberSymbols = getFormatHelper().getNumberSymbols(type, locale);
+    protected NumberFormat getNumberFormat() throws UnifyException {
+        if (nf == null) {
+            pattern = null;
+            Locale locale = getLocale();
+            numberSymbols = getFormatHelper().getNumberSymbols(type, locale);
 
-			switch (type) {
-			case INTEGER:
-				nf = NumberFormat.getIntegerInstance(locale);
-				break;
-			case PERCENT:
-				nf = NumberFormat.getPercentInstance(locale);
-				break;
-			case DECIMAL:
-			default:
-				nf = NumberFormat.getNumberInstance(locale);
-				break;
-			}
+            switch (type) {
+                case INTEGER:
+                    nf = NumberFormat.getIntegerInstance(locale);
+                    break;
+                case PERCENT:
+                    nf = NumberFormat.getPercentInstance(locale);
+                    break;
+                case DECIMAL:
+                default:
+                    nf = NumberFormat.getNumberInstance(locale);
+                    break;
+            }
 
-			DecimalFormat df = (DecimalFormat) nf;
-			nf.setGroupingUsed(isGroupingUsed());
-			if (NumberType.INTEGER.equals(type)) {
-				df.setParseBigDecimal(false);
-				if (getPrecision() > 0) {
-					nf.setMaximumIntegerDigits(getPrecision());
-				}
-			} else {
-				df.setParseBigDecimal(true);
-				int precision = getPrecision();
-				int scale = getScale();
-				if (precision > 0) {
-					if (scale > 0) {
-						precision -= scale;
-					}
-					if (precision > 0) {
-						df.setMaximumIntegerDigits(precision);
-					}
-				}
-				if (scale > 0) {
-					df.setMaximumFractionDigits(scale);
-					df.setMinimumFractionDigits(scale);
-				}
-			}
+            DecimalFormat df = (DecimalFormat) nf;
+            nf.setGroupingUsed(isGroupingUsed());
+            if (NumberType.INTEGER.equals(type)) {
+                df.setParseBigDecimal(false);
+                if (getPrecision() > 0) {
+                    nf.setMaximumIntegerDigits(getPrecision());
+                }
+            } else {
+                df.setParseBigDecimal(true);
+                int precision = getPrecision();
+                int scale = getScale();
+                if (precision > 0) {
+                    if (scale > 0) {
+                        precision -= scale;
+                    }
+                    if (precision > 0) {
+                        df.setMaximumIntegerDigits(precision);
+                    }
+                }
+                if (scale > 0) {
+                    df.setMaximumFractionDigits(scale);
+                    df.setMinimumFractionDigits(scale);
+                }
+            }
 
-			pattern = df.toPattern();
-		}
-		return nf;
-	}
+            pattern = df.toPattern();
+        }
+        return nf;
+    }
 }

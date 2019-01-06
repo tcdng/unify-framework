@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,23 +27,23 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "messageformat", description = "$m{format.message}")
 public class MessageFormatterImpl extends AbstractFormatter<String> implements MessageFormatter {
 
-	public MessageFormatterImpl() {
-		super(String.class);
-	}
+    public MessageFormatterImpl() {
+        super(String.class);
+    }
 
-	@Override
-	public String format(String value) throws UnifyException {
-		return resolveSessionMessage(value);
-	}
+    @Override
+    public String format(String value) throws UnifyException {
+        return resolveSessionMessage(value);
+    }
 
-	@Override
-	public String parse(String string) throws UnifyException {
-		return string;
-	}
+    @Override
+    public String parse(String string) throws UnifyException {
+        return string;
+    }
 
-	@Override
-	public String getPattern() throws UnifyException {
-		return null;
-	}
+    @Override
+    public String getPattern() throws UnifyException {
+        return null;
+    }
 
 }

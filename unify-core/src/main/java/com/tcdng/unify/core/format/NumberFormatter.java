@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,38 +24,38 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface NumberFormatter<T extends Number> extends Formatter<T> {
-	/**
-	 * Gets the formatter number precision.
-	 */
-	int getPrecision() throws UnifyException;
+    /**
+     * Gets the formatter number precision.
+     */
+    int getPrecision() throws UnifyException;
 
-	/**
-	 * Sets the formatter number precision.
-	 */
-	void setPrecision(int precision);
+    /**
+     * Sets the formatter number precision.
+     */
+    void setPrecision(int precision);
 
-	/**
-	 * Gets the formatter number scale.
-	 */
-	int getScale() throws UnifyException;
+    /**
+     * Gets the formatter number scale.
+     */
+    int getScale() throws UnifyException;
 
-	/**
-	 * Sets the formatter number scale.
-	 */
-	void setScale(int scale);
+    /**
+     * Sets the formatter number scale.
+     */
+    void setScale(int scale);
 
-	/**
-	 * Sets the grouping used flag.
-	 */
-	void setGroupingUsed(boolean groupingUsed);
+    /**
+     * Sets the grouping used flag.
+     */
+    void setGroupingUsed(boolean groupingUsed);
 
-	/**
-	 * Gets the grouping used flag.
-	 */
-	boolean isGroupingUsed() throws UnifyException;
+    /**
+     * Gets the grouping used flag.
+     */
+    boolean isGroupingUsed() throws UnifyException;
 
-	/**
-	 * Gets the formatter number symbols.
-	 */
-	NumberSymbols getNumberSymbols() throws UnifyException;
+    /**
+     * Gets the formatter number symbols.
+     */
+    NumberSymbols getNumberSymbols() throws UnifyException;
 }

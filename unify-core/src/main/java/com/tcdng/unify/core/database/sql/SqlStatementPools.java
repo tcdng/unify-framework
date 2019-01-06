@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,337 +32,337 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public class SqlStatementPools {
 
-	private FactoryMap<SqlStatementType, SqlStatementPool> poolMap;
+    private FactoryMap<SqlStatementType, SqlStatementPool> poolMap;
 
-	private SqlEntityInfo sqlEntityInfo;
+    private SqlEntityInfo sqlEntityInfo;
 
-	private Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies;
+    private Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies;
 
-	private SqlCache sqlCache;
+    private SqlCache sqlCache;
 
-	private long getTimeout;
+    private long getTimeout;
 
-	private int minObjects;
+    private int minObjects;
 
-	private int maxObjects;
+    private int maxObjects;
 
-	public SqlStatementPools(SqlEntityInfo sqlEntityInfo, Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies,
-			SqlCache sqlCache, long getTimeout, int minObjects, int maxObjects) {
-		this.sqlEntityInfo = sqlEntityInfo;
-		this.sqlDataTypePolicies = sqlDataTypePolicies;
-		this.sqlCache = sqlCache;
-		this.getTimeout = getTimeout;
-		this.minObjects = minObjects;
-		this.maxObjects = maxObjects;
+    public SqlStatementPools(SqlEntityInfo sqlEntityInfo, Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies,
+            SqlCache sqlCache, long getTimeout, int minObjects, int maxObjects) {
+        this.sqlEntityInfo = sqlEntityInfo;
+        this.sqlDataTypePolicies = sqlDataTypePolicies;
+        this.sqlCache = sqlCache;
+        this.getTimeout = getTimeout;
+        this.minObjects = minObjects;
+        this.maxObjects = maxObjects;
 
-		this.poolMap = new FactoryMap<SqlStatementType, SqlStatementPool>() {
-			@Override
-			protected SqlStatementPool create(SqlStatementType type, Object... params) throws Exception {
-				switch (type) {
-				case CREATE:
-					return new CreateSqlStatementInfoPool();
-				case COUNT:
-					break;
-				case DELETE:
-					break;
-				case DELETE_BY_PK:
-					return new DeleteByPkSqlStatementInfoPool();
-				case DELETE_BY_PK_VERSION:
-					return new DeleteByPkVersionSqlStatementInfoPool();
-				case FIND:
-					break;
-				case FIND_BY_PK:
-					return new FindByPkSqlStatementInfoPool();
-				case FIND_BY_PK_VERSION:
-					return new FindByPkVersionSqlStatementInfoPool();
-				case LIST:
-					break;
-				case LIST_BY_PK:
-					return new ListByPkSqlStatementInfoPool();
-				case LIST_BY_PK_VERSION:
-					return new ListByPkVersionSqlStatementInfoPool();
-				case UPDATE:
-					break;
-				case UPDATE_BY_PK:
-					return new UpdateByPkSqlStatementInfoPool();
-				case UPDATE_BY_PK_VERSION:
-					return new UpdateByPkVersionSqlStatementInfoPool();
-				default:
-					break;
-				}
-				return null;
-			}
-		};
-	}
+        this.poolMap = new FactoryMap<SqlStatementType, SqlStatementPool>() {
+            @Override
+            protected SqlStatementPool create(SqlStatementType type, Object... params) throws Exception {
+                switch (type) {
+                    case CREATE:
+                        return new CreateSqlStatementInfoPool();
+                    case COUNT:
+                        break;
+                    case DELETE:
+                        break;
+                    case DELETE_BY_PK:
+                        return new DeleteByPkSqlStatementInfoPool();
+                    case DELETE_BY_PK_VERSION:
+                        return new DeleteByPkVersionSqlStatementInfoPool();
+                    case FIND:
+                        break;
+                    case FIND_BY_PK:
+                        return new FindByPkSqlStatementInfoPool();
+                    case FIND_BY_PK_VERSION:
+                        return new FindByPkVersionSqlStatementInfoPool();
+                    case LIST:
+                        break;
+                    case LIST_BY_PK:
+                        return new ListByPkSqlStatementInfoPool();
+                    case LIST_BY_PK_VERSION:
+                        return new ListByPkVersionSqlStatementInfoPool();
+                    case UPDATE:
+                        break;
+                    case UPDATE_BY_PK:
+                        return new UpdateByPkSqlStatementInfoPool();
+                    case UPDATE_BY_PK_VERSION:
+                        return new UpdateByPkVersionSqlStatementInfoPool();
+                    default:
+                        break;
+                }
+                return null;
+            }
+        };
+    }
 
-	public SqlStatement getSqlStatement(SqlStatementType type, Object... params) throws UnifyException {
-		return poolMap.get(type).borrowObject(params);
-	}
+    public SqlStatement getSqlStatement(SqlStatementType type, Object... params) throws UnifyException {
+        return poolMap.get(type).borrowObject(params);
+    }
 
-	public void restore(SqlStatement sqlStatement) throws UnifyException {
-		poolMap.get(sqlStatement.getType()).returnObject(sqlStatement);
-	}
+    public void restore(SqlStatement sqlStatement) throws UnifyException {
+        poolMap.get(sqlStatement.getType()).returnObject(sqlStatement);
+    }
 
-	private class CreateSqlStatementInfoPool extends SqlStatementPool {
+    private class CreateSqlStatementInfoPool extends SqlStatementPool {
 
-		public CreateSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public CreateSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-				parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType())));
-			}
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.CREATE, sqlCache.getCreateSql(), parameterInfoList);
-		}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType())));
+            }
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.CREATE, sqlCache.getCreateSql(), parameterInfoList);
+        }
 
-		@SuppressWarnings("unchecked")
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = sqlStatement.getParameterInfoList();
-			int i = 0;
-			for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-				if (sqlFieldInfo.isTransformed()) {
-					parameterInfoList.get(i++).setValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
-							.forwardTransform(sqlFieldInfo.getGetter().invoke(params[0])));
-				} else {
-					parameterInfoList.get(i++).setValue(sqlFieldInfo.getGetter().invoke(params[0]));
-				}
-			}
-		}
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = sqlStatement.getParameterInfoList();
+            int i = 0;
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                if (sqlFieldInfo.isTransformed()) {
+                    parameterInfoList.get(i++).setValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
+                            .forwardTransform(sqlFieldInfo.getGetter().invoke(params[0])));
+                } else {
+                    parameterInfoList.get(i++).setValue(sqlFieldInfo.getGetter().invoke(params[0]));
+                }
+            }
+        }
 
-	}
+    }
 
-	private class DeleteByPkSqlStatementInfoPool extends SqlStatementPool {
+    private class DeleteByPkSqlStatementInfoPool extends SqlStatementPool {
 
-		public DeleteByPkSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public DeleteByPkSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.DELETE_BY_PK, sqlCache.getDeleteByPkSql(),
-					parameterInfoList);
-		}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.DELETE_BY_PK, sqlCache.getDeleteByPkSql(),
+                    parameterInfoList);
+        }
 
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
-		}
-	}
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
+        }
+    }
 
-	private class DeleteByPkVersionSqlStatementInfoPool extends SqlStatementPool {
+    private class DeleteByPkVersionSqlStatementInfoPool extends SqlStatementPool {
 
-		public DeleteByPkVersionSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public DeleteByPkVersionSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-			parameterInfoList.add(
-					new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.DELETE_BY_PK_VERSION,
-					sqlCache.getDeleteByPkVersionSql(), parameterInfoList);
-		}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            parameterInfoList.add(
+                    new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.DELETE_BY_PK_VERSION,
+                    sqlCache.getDeleteByPkVersionSql(), parameterInfoList);
+        }
 
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
-			sqlStatement.getParameterInfoList().get(1).setValue(params[1]);
-		}
-	}
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
+            sqlStatement.getParameterInfoList().get(1).setValue(params[1]);
+        }
+    }
 
-	private class FindByPkSqlStatementInfoPool extends SqlStatementPool {
+    private class FindByPkSqlStatementInfoPool extends SqlStatementPool {
 
-		public FindByPkSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public FindByPkSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
 
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
-					parameterInfoList, getSqlResultList(sqlEntityInfo.getFieldInfos()));
-		}
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
+                    parameterInfoList, getSqlResultList(sqlEntityInfo.getFieldInfos()));
+        }
 
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
-		}
-	}
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
+        }
+    }
 
-	private class FindByPkVersionSqlStatementInfoPool extends SqlStatementPool {
+    private class FindByPkVersionSqlStatementInfoPool extends SqlStatementPool {
 
-		public FindByPkVersionSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public FindByPkVersionSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-			parameterInfoList.add(
-					new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
-					sqlCache.getFindByPkVersionSql(), parameterInfoList,
-					getSqlResultList(sqlEntityInfo.getFieldInfos()));
-		}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            parameterInfoList.add(
+                    new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
+                    sqlCache.getFindByPkVersionSql(), parameterInfoList,
+                    getSqlResultList(sqlEntityInfo.getFieldInfos()));
+        }
 
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
-			sqlStatement.getParameterInfoList().get(1).setValue(params[1]);
-		}
-	}
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
+            sqlStatement.getParameterInfoList().get(1).setValue(params[1]);
+        }
+    }
 
-	private class ListByPkSqlStatementInfoPool extends SqlStatementPool {
+    private class ListByPkSqlStatementInfoPool extends SqlStatementPool {
 
-		public ListByPkSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public ListByPkSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK, sqlCache.getListByPkSql(),
-					parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
-		}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK, sqlCache.getListByPkSql(),
+                    parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+        }
 
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
-		}
-	}
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
+        }
+    }
 
-	private class ListByPkVersionSqlStatementInfoPool extends SqlStatementPool {
+    private class ListByPkVersionSqlStatementInfoPool extends SqlStatementPool {
 
-		public ListByPkVersionSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public ListByPkVersionSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-			parameterInfoList.add(
-					new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK_VERSION,
-					sqlCache.getListByPkVersionSql(), parameterInfoList,
-					getSqlResultList(sqlEntityInfo.getListFieldInfos()));
-		}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            parameterInfoList.add(
+                    new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK_VERSION,
+                    sqlCache.getListByPkVersionSql(), parameterInfoList,
+                    getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+        }
 
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
-			sqlStatement.getParameterInfoList().get(1).setValue(params[1]);
-		}
-	}
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            sqlStatement.getParameterInfoList().get(0).setValue(params[0]);
+            sqlStatement.getParameterInfoList().get(1).setValue(params[1]);
+        }
+    }
 
-	private class UpdateByPkSqlStatementInfoPool extends SqlStatementPool {
+    private class UpdateByPkSqlStatementInfoPool extends SqlStatementPool {
 
-		public UpdateByPkSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public UpdateByPkSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-				if (!sqlFieldInfo.isPrimaryKey()) {
-					parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType())));
-				}
-			}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                if (!sqlFieldInfo.isPrimaryKey()) {
+                    parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType())));
+                }
+            }
 
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.UPDATE_BY_PK, sqlCache.getUpdateByPkSql(),
-					parameterInfoList);
-		}
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.UPDATE_BY_PK, sqlCache.getUpdateByPkSql(),
+                    parameterInfoList);
+        }
 
-		@SuppressWarnings("unchecked")
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = sqlStatement.getParameterInfoList();
-			int i = 0;
-			for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-				if (!sqlFieldInfo.isPrimaryKey()) {
-					if (sqlFieldInfo.isTransformed()) {
-						parameterInfoList.get(i++)
-								.setValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
-										.forwardTransform(sqlFieldInfo.getGetter().invoke(params[0])));
-					} else {
-						parameterInfoList.get(i++).setValue(sqlFieldInfo.getGetter().invoke(params[0]));
-					}
-				}
-			}
-			parameterInfoList.get(i).setValue(sqlEntityInfo.getIdFieldInfo().getGetter().invoke(params[0]));
-		}
-	}
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = sqlStatement.getParameterInfoList();
+            int i = 0;
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                if (!sqlFieldInfo.isPrimaryKey()) {
+                    if (sqlFieldInfo.isTransformed()) {
+                        parameterInfoList.get(i++)
+                                .setValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
+                                        .forwardTransform(sqlFieldInfo.getGetter().invoke(params[0])));
+                    } else {
+                        parameterInfoList.get(i++).setValue(sqlFieldInfo.getGetter().invoke(params[0]));
+                    }
+                }
+            }
+            parameterInfoList.get(i).setValue(sqlEntityInfo.getIdFieldInfo().getGetter().invoke(params[0]));
+        }
+    }
 
-	private class UpdateByPkVersionSqlStatementInfoPool extends SqlStatementPool {
+    private class UpdateByPkVersionSqlStatementInfoPool extends SqlStatementPool {
 
-		public UpdateByPkVersionSqlStatementInfoPool() {
-			super(getTimeout, minObjects, maxObjects);
-		}
+        public UpdateByPkVersionSqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
 
-		@Override
-		protected SqlStatement createObject(Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-			for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-				if (!sqlFieldInfo.isPrimaryKey()) {
-					parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType())));
-				}
-			}
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                if (!sqlFieldInfo.isPrimaryKey()) {
+                    parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType())));
+                }
+            }
 
-			parameterInfoList
-					.add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-			parameterInfoList.add(
-					new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
-			return new SqlStatement(sqlEntityInfo, SqlStatementType.UPDATE_BY_PK_VERSION,
-					sqlCache.getUpdateByPkVersionSql(), parameterInfoList);
-		}
+            parameterInfoList
+                    .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            parameterInfoList.add(
+                    new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.UPDATE_BY_PK_VERSION,
+                    sqlCache.getUpdateByPkVersionSql(), parameterInfoList);
+        }
 
-		@SuppressWarnings("unchecked")
-		@Override
-		protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
-			List<SqlParameter> parameterInfoList = sqlStatement.getParameterInfoList();
-			int i = 0;
-			for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-				if (!sqlFieldInfo.isPrimaryKey()) {
-					if (sqlFieldInfo.isTransformed()) {
-						parameterInfoList.get(i++)
-								.setValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
-										.forwardTransform(sqlFieldInfo.getGetter().invoke(params[0])));
-					} else {
-						parameterInfoList.get(i++).setValue(sqlFieldInfo.getGetter().invoke(params[0]));
-					}
-				}
-			}
-			parameterInfoList.get(i++).setValue(sqlEntityInfo.getIdFieldInfo().getGetter().invoke(params[0]));
-			parameterInfoList.get(i).setValue(params[1]);
-		}
-	}
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = sqlStatement.getParameterInfoList();
+            int i = 0;
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                if (!sqlFieldInfo.isPrimaryKey()) {
+                    if (sqlFieldInfo.isTransformed()) {
+                        parameterInfoList.get(i++)
+                                .setValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
+                                        .forwardTransform(sqlFieldInfo.getGetter().invoke(params[0])));
+                    } else {
+                        parameterInfoList.get(i++).setValue(sqlFieldInfo.getGetter().invoke(params[0]));
+                    }
+                }
+            }
+            parameterInfoList.get(i++).setValue(sqlEntityInfo.getIdFieldInfo().getGetter().invoke(params[0]));
+            parameterInfoList.get(i).setValue(params[1]);
+        }
+    }
 
-	private List<SqlResult> getSqlResultList(List<SqlFieldInfo> sqlFieldInfoList) {
-		List<SqlResult> resultInfoList = new ArrayList<SqlResult>();
-		for (SqlFieldInfo sqlFieldInfo : sqlFieldInfoList) {
-			resultInfoList.add(new SqlResult(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), sqlFieldInfo));
-		}
-		return resultInfoList;
-	}
+    private List<SqlResult> getSqlResultList(List<SqlFieldInfo> sqlFieldInfoList) {
+        List<SqlResult> resultInfoList = new ArrayList<SqlResult>();
+        for (SqlFieldInfo sqlFieldInfo : sqlFieldInfoList) {
+            resultInfoList.add(new SqlResult(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), sqlFieldInfo));
+        }
+        return resultInfoList;
+    }
 }

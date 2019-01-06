@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,11 +23,11 @@ package com.tcdng.unify.core.system;
  */
 public interface ClusterCommandConstants {
 
-	String BROADCAST_PARAMETERS = "broadcastParameters";
+    String BROADCAST_PARAMETERS = "broadcastParameters";
 
-	String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogOutNoMultipleLogin";
+    String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogOutNoMultipleLogin";
 
-	String FORCE_LOGOUT_SYSTEM = "forceLogOutSystem";
+    String FORCE_LOGOUT_SYSTEM = "forceLogOutSystem";
 
-	String FORCE_LOGOUT_ADMINISTRATOR = "forceLogOutAdministrator";
+    String FORCE_LOGOUT_ADMINISTRATOR = "forceLogOutAdministrator";
 }

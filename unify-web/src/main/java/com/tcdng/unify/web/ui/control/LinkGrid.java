@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,13 +31,13 @@ import com.tcdng.unify.web.ui.AbstractMultiControl;
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
 public class LinkGrid extends AbstractMultiControl {
 
-	public int getColumns() throws UnifyException {
-		return getUplAttribute(int.class, "columns");
-	}
+    public int getColumns() throws UnifyException {
+        return getUplAttribute(int.class, "columns");
+    }
 
-	@Override
-	public boolean isLayoutCaption() throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() throws UnifyException {
+        return false;
+    }
 
 }

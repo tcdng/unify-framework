@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,28 +30,28 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  */
 @Component(name = "centformat", description = "$m{format.cent}")
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class),
-		@UplAttribute(name = "scale", type = int.class, defaultValue = "0"),
-		@UplAttribute(name = "useGrouping", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "scale", type = int.class, defaultValue = "0"),
+        @UplAttribute(name = "useGrouping", type = boolean.class, defaultValue = "false") })
 public class CentFormatterImpl extends AbstractNumberFormatter<Number> implements CentFormatter {
 
-	public CentFormatterImpl() {
-		super(Number.class, NumberType.INTEGER);
-	}
+    public CentFormatterImpl() {
+        super(Number.class, NumberType.INTEGER);
+    }
 
-	@Override
-	public String format(Number value) throws UnifyException {
-		return super.format(Double.valueOf(value.doubleValue() * 100));
-	}
+    @Override
+    public String format(Number value) throws UnifyException {
+        return super.format(Double.valueOf(value.doubleValue() * 100));
+    }
 
-	@Override
-	public Number parse(String string) throws UnifyException {
-		try {
-			Number value = getNumberFormat().parse(string);
-			return Double.valueOf(value.doubleValue() / 100);
-		} catch (ParseException e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public Number parse(String string) throws UnifyException {
+        try {
+            Number value = getNumberFormat().parse(string);
+            return Double.valueOf(value.doubleValue() / 100);
+        } catch (ParseException e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 
 }

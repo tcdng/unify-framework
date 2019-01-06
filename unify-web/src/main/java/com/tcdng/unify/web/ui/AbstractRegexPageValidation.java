@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,46 +32,46 @@ import com.tcdng.unify.web.DataTransferBlock;
  */
 public abstract class AbstractRegexPageValidation extends AbstractPageValidation {
 
-	private String validationCode;
+    private String validationCode;
 
-	private String regexKey;
+    private String regexKey;
 
-	private String errorKey;
+    private String errorKey;
 
-	public AbstractRegexPageValidation(String validationCode, String regexKey, String errorKey) {
-		this.validationCode = validationCode;
-		this.regexKey = regexKey;
-		this.errorKey = errorKey;
-	}
+    public AbstractRegexPageValidation(String validationCode, String regexKey, String errorKey) {
+        this.validationCode = validationCode;
+        this.regexKey = regexKey;
+        this.errorKey = errorKey;
+    }
 
-	@Override
-	public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
-		boolean pass = true;
-		for (Widget widget : widgets) {
-			if (widget.isVisible()) {
-				boolean localPass = true;
-				DataTransferBlock dataTransferBlock = dataTransfer.getDataTransferBlock(widget.getId());
-				if (dataTransferBlock != null) {
-					String value = getTransferValue(String.class, dataTransferBlock);
-					if (value != null) {
-						Matcher matcher = ((RegexPatternStore) getComponent(
-								ApplicationComponents.APPLICATION_REGEXPATTERNSTORE))
-										.getPattern(getSessionLocale(), regexKey).matcher(value);
-						if (!matcher.matches()) {
-							String caption = widget.getUplAttribute(String.class, "caption");
-							String message = getSessionMessage(errorKey, caption);
-							addValidationFail((Control) widget, validationCode, message);
-							pass = localPass = false;
-						}
-					}
-				}
+    @Override
+    public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
+        boolean pass = true;
+        for (Widget widget : widgets) {
+            if (widget.isVisible()) {
+                boolean localPass = true;
+                DataTransferBlock dataTransferBlock = dataTransfer.getDataTransferBlock(widget.getId());
+                if (dataTransferBlock != null) {
+                    String value = getTransferValue(String.class, dataTransferBlock);
+                    if (value != null) {
+                        Matcher matcher =
+                                ((RegexPatternStore) getComponent(ApplicationComponents.APPLICATION_REGEXPATTERNSTORE))
+                                        .getPattern(getSessionLocale(), regexKey).matcher(value);
+                        if (!matcher.matches()) {
+                            String caption = widget.getUplAttribute(String.class, "caption");
+                            String message = getSessionMessage(errorKey, caption);
+                            addValidationFail((Control) widget, validationCode, message);
+                            pass = localPass = false;
+                        }
+                    }
+                }
 
-				if (localPass) {
-					addValidationPass((Control) widget, validationCode);
-				}
-			}
-		}
+                if (localPass) {
+                    addValidationPass((Control) widget, validationCode);
+                }
+            }
+        }
 
-		return pass;
-	}
+        return pass;
+    }
 }

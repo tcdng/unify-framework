@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,12 +34,13 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
 @Singleton
 @Component(SystemInfoConstants.UNAUTHORISED_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/unauthorised.upl")
-@ResultMappings({ @ResultMapping(name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING, response = {
-		"!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }) })
+@ResultMappings({ @ResultMapping(
+        name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,
+        response = { "!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }) })
 public class UnauthorisedPageController extends AbstractPageController {
 
-	@Action
-	public String closeBackdoor() throws UnifyException {
-		return SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING;
-	}
+    @Action
+    public String closeBackdoor() throws UnifyException {
+        return SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING;
+    }
 }

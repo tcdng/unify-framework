@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,109 +30,109 @@ import com.tcdng.unify.web.ui.Panel;
  */
 public interface FlyoutMenu extends Panel {
 
-	/**
-	 * Returns a list of menu item ids.
-	 */
-	Set<String> getMenuItemIds();
+    /**
+     * Returns a list of menu item ids.
+     */
+    Set<String> getMenuItemIds();
 
-	/**
-	 * Returns a menu item by id.
-	 * 
-	 * @param id
-	 *            the id
-	 */
-	MenuItem getMenuItem(String id);
+    /**
+     * Returns a menu item by id.
+     * 
+     * @param id
+     *            the id
+     */
+    MenuItem getMenuItem(String id);
 
-	/**
-	 * Returns current selection control.
-	 */
-	Control getCurrentSelCtrl();
+    /**
+     * Returns current selection control.
+     */
+    Control getCurrentSelCtrl();
 
-	/**
-	 * Returns current selection index.
-	 */
-	int getCurrentSel();
+    /**
+     * Returns current selection index.
+     */
+    int getCurrentSel();
 
-	/**
-	 * Returns the selectID
-	 */
-	String getSelectId() throws UnifyException;
+    /**
+     * Returns the selectID
+     */
+    String getSelectId() throws UnifyException;
 
-	/**
-	 * Returns the menu slider window ID
-	 */
-	String getSliderWinId() throws UnifyException;
+    /**
+     * Returns the menu slider window ID
+     */
+    String getSliderWinId() throws UnifyException;
 
-	/**
-	 * Returns the menu slider ID
-	 */
-	String getSliderId() throws UnifyException;
+    /**
+     * Returns the menu slider ID
+     */
+    String getSliderId() throws UnifyException;
 
-	/**
-	 * Returns the menu navigation ID
-	 */
-	String getNavId() throws UnifyException;
+    /**
+     * Returns the menu navigation ID
+     */
+    String getNavId() throws UnifyException;
 
-	/**
-	 * Returns the menu back button ID
-	 */
-	String getBackButtonId() throws UnifyException;
+    /**
+     * Returns the menu back button ID
+     */
+    String getBackButtonId() throws UnifyException;
 
-	/**
-	 * Returns the menu forward button ID
-	 */
-	String getForwardButtonId() throws UnifyException;
+    /**
+     * Returns the menu forward button ID
+     */
+    String getForwardButtonId() throws UnifyException;
 
-	/**
-	 * Returns popup ID
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPopupId() throws UnifyException;
+    /**
+     * Returns popup ID
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPopupId() throws UnifyException;
 
-	/**
-	 * Returns popup window ID
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPopupWinId() throws UnifyException;
+    /**
+     * Returns popup window ID
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPopupWinId() throws UnifyException;
 
-	/**
-	 * Returns popup content ID
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPopupContentId() throws UnifyException;
+    /**
+     * Returns popup content ID
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPopupContentId() throws UnifyException;
 
-	/**
-	 * Returns the slider menu gap in pixels.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	int getSliderGap() throws UnifyException;
+    /**
+     * Returns the slider menu gap in pixels.
+     * 
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    int getSliderGap() throws UnifyException;
 
-	/**
-	 * Returns the menu scroll rate.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	int getScrollRate() throws UnifyException;
+    /**
+     * Returns the menu scroll rate.
+     * 
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    int getScrollRate() throws UnifyException;
 
-	/**
-	 * Returns the menu scroll step rate.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	int getScrollStepRate() throws UnifyException;
+    /**
+     * Returns the menu scroll step rate.
+     * 
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    int getScrollStepRate() throws UnifyException;
 
-	/**
-	 * Indicates if menu is vertical.
-	 */
-	boolean isVertical();
+    /**
+     * Indicates if menu is vertical.
+     */
+    boolean isVertical();
 }

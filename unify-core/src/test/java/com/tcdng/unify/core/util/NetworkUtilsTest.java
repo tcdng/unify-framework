@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,11 +27,11 @@ import org.junit.Test;
  */
 public class NetworkUtilsTest {
 
-	@Test
-	public void testConstructURL() throws Exception {
-		String urlA = NetworkUtils.constructURL("https", "localhost", (short) 0, "/unify", "/open");
-		String urlB = NetworkUtils.constructURL("http", "localhost", (short) 7000, "/unifyweb", "/open");
-		assertEquals("https://localhost/unify/open", urlA);
-		assertEquals("http://localhost:7000/unifyweb/open", urlB);
-	}
+    @Test
+    public void testConstructURL() throws Exception {
+        String urlA = NetworkUtils.constructURL("https", "localhost", (short) 0, "/unify", "/open");
+        String urlB = NetworkUtils.constructURL("http", "localhost", (short) 7000, "/unifyweb", "/open");
+        assertEquals("https://localhost/unify/open", urlA);
+        assertEquals("http://localhost:7000/unifyweb/open", urlB);
+    }
 }

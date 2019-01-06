@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,20 +25,20 @@ import java.lang.reflect.Method;
  */
 public class PeriodicExecutionInfo {
 
-	private String componentName;
+    private String componentName;
 
-	private Method method;
+    private Method method;
 
-	public PeriodicExecutionInfo(String componentName, Method method) {
-		this.componentName = componentName;
-		this.method = method;
-	}
+    public PeriodicExecutionInfo(String componentName, Method method) {
+        this.componentName = componentName;
+        this.method = method;
+    }
 
-	public String getComponentName() {
-		return componentName;
-	}
+    public String getComponentName() {
+        return componentName;
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public Method getMethod() {
+        return method;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,25 +28,25 @@ import com.tcdng.unify.core.annotation.Table;
 @Table("CLUSTERCOMMAND")
 public class ClusterCommand extends AbstractSystemSequencedEntity {
 
-	@ForeignKey(ClusterNode.class)
-	private String nodeId;
+    @ForeignKey(ClusterNode.class)
+    private String nodeId;
 
-	@Column(length = 64)
-	String commandCode;
+    @Column(length = 64)
+    String commandCode;
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public String getCommandCode() {
-		return commandCode;
-	}
+    public String getCommandCode() {
+        return commandCode;
+    }
 
-	public void setCommandCode(String commandCode) {
-		this.commandCode = commandCode;
-	}
+    public void setCommandCode(String commandCode) {
+        this.commandCode = commandCode;
+    }
 }

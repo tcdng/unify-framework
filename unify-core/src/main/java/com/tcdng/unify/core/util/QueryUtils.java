@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,69 +25,69 @@ import java.util.List;
  */
 public final class QueryUtils {
 
-	private QueryUtils() {
+    private QueryUtils() {
 
-	}
+    }
 
-	/**
-	 * Tests if supplied string is not null and is not blank.
-	 * 
-	 * @param value
-	 *            the value to test
-	 */
-	public static boolean isValidStringCriteria(String value) {
-		return value != null && !value.trim().isEmpty();
-	}
+    /**
+     * Tests if supplied string is not null and is not blank.
+     * 
+     * @param value
+     *            the value to test
+     */
+    public static boolean isValidStringCriteria(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
 
-	/**
-	 * Tests if supplied string array is not null and has at least one element
-	 * (element can be null).
-	 * 
-	 * @param value
-	 *            the array to test
-	 */
-	public static boolean isValidStringArrayCriteria(String[] value) {
-		return value != null && value.length > 0;
-	}
+    /**
+     * Tests if supplied string array is not null and has at least one element
+     * (element can be null).
+     * 
+     * @param value
+     *            the array to test
+     */
+    public static boolean isValidStringArrayCriteria(String[] value) {
+        return value != null && value.length > 0;
+    }
 
-	/**
-	 * Tests if supplied long value is not null and is not zero.
-	 * 
-	 * @param value
-	 *            the value to test
-	 */
-	public static boolean isValidLongCriteria(Long value) {
-		return value != null && !value.equals(Long.valueOf(0L));
-	}
+    /**
+     * Tests if supplied long value is not null and is not zero.
+     * 
+     * @param value
+     *            the value to test
+     */
+    public static boolean isValidLongCriteria(Long value) {
+        return value != null && !value.equals(Long.valueOf(0L));
+    }
 
-	/**
-	 * Tests if supplied long array is not null and has at least one element
-	 * (element can be null).
-	 * 
-	 * @param value
-	 *            the array to test
-	 */
-	public static boolean isValidLongArrayCriteria(Long[] value) {
-		return value != null && value.length > 0;
-	}
+    /**
+     * Tests if supplied long array is not null and has at least one element
+     * (element can be null).
+     * 
+     * @param value
+     *            the array to test
+     */
+    public static boolean isValidLongArrayCriteria(Long[] value) {
+        return value != null && value.length > 0;
+    }
 
-	/**
-	 * Tests if supplied list is not null and has at least one element
-	 * 
-	 * @param value
-	 *            the array to test
-	 */
-	public static boolean isValidListCriteria(List<?> value) {
-		return value != null && !value.isEmpty();
-	}
+    /**
+     * Tests if supplied list is not null and has at least one element
+     * 
+     * @param value
+     *            the array to test
+     */
+    public static boolean isValidListCriteria(List<?> value) {
+        return value != null && !value.isEmpty();
+    }
 
-	/**
-	 * Returns true if supplied value is reserved.
-	 * 
-	 * @param value
-	 *            the value to testr
-	 */
-	public static boolean isReserved(Long value) {
-		return value <= 0L;
-	}
+    /**
+     * Returns true if supplied value is reserved.
+     * 
+     * @param value
+     *            the value to testr
+     */
+    public static boolean isReserved(Long value) {
+        return value <= 0L;
+    }
 }

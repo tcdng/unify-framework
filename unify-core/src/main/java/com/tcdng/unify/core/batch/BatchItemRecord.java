@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,16 +25,16 @@ import com.tcdng.unify.core.database.Entity;
  */
 public interface BatchItemRecord extends Entity {
 
-	/**
-	 * Returns item's batch ID.
-	 */
-	Object getBatchId();
+    /**
+     * Returns item's batch ID.
+     */
+    Object getBatchId();
 
-	/**
-	 * Sets item's batch ID.
-	 * 
-	 * @param id
-	 *            the batch ID to set
-	 */
-	void setBatchId(Object id);
+    /**
+     * Sets item's batch ID.
+     * 
+     * @param id
+     *            the batch ID to set
+     */
+    void setBatchId(Object id);
 }

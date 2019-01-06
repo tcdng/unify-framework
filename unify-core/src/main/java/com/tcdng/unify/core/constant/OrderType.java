@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,24 +26,25 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 @StaticList("orderlist")
 public enum OrderType implements EnumConst {
-	ASCENDING("A"), DESCENDING("D");
 
-	private final String code;
+    ASCENDING("ASC"), DESCENDING("DESC");
 
-	private OrderType(String code) {
-		this.code = code;
-	}
+    private final String code;
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    private OrderType(String code) {
+        this.code = code;
+    }
 
-	public static OrderType fromCode(String code) {
-		return EnumUtils.fromCode(OrderType.class, code);
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static OrderType fromName(String name) {
-		return EnumUtils.fromName(OrderType.class, name);
-	}
+    public static OrderType fromCode(String code) {
+        return EnumUtils.fromCode(OrderType.class, code);
+    }
+
+    public static OrderType fromName(String name) {
+        return EnumUtils.fromName(OrderType.class, name);
+    }
 }

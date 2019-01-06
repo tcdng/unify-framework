@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,13 +31,13 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("/resource/downloadpath")
 public class DownloadPathResourceController extends RealPathResourceController {
 
-	@Override
-	public void prepareExecution() throws UnifyException {
-		super.prepareExecution();
-		file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(),
-				"download/" + getResourceName()));
-		if (file.exists()) {
-			setContentLength(file.length());
-		}
-	}
+    @Override
+    public void prepareExecution() throws UnifyException {
+        super.prepareExecution();
+        file = new File(
+                IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), "download/" + getResourceName()));
+        if (file.exists()) {
+            setContentLength(file.length());
+        }
+    }
 }

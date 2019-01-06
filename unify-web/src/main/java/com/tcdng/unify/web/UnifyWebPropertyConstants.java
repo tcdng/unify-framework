@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,13 +23,13 @@ package com.tcdng.unify.web;
  */
 public interface UnifyWebPropertyConstants {
 
-	String APPLICATION_HOME = "application.web.home";
+    String APPLICATION_HOME = "application.web.home";
 
-	String APPLICATION_DOCUMENT_STYLESHEET = "application.web.document.stylesheet";
+    String APPLICATION_DOCUMENT_STYLESHEET = "application.web.document.stylesheet";
 
-	String APPLICATION_DOCUMENT_SCRIPT = "application.web.document.script";
+    String APPLICATION_DOCUMENT_SCRIPT = "application.web.document.script";
 
-	String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing.enabled";
+    String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing.enabled";
 
-	String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
+    String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
 }

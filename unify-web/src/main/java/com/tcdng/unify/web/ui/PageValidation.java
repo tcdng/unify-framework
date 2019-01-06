@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,32 +28,32 @@ import com.tcdng.unify.web.DataTransfer;
  */
 public interface PageValidation extends Behavior {
 
-	/**
-	 * Returns the page validation ID
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getId() throws UnifyException;
+    /**
+     * Returns the page validation ID
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getId() throws UnifyException;
 
-	/**
-	 * Sets the page validation ID.
-	 * 
-	 * @param id
-	 *            the id to set
-	 */
-	void setId(String id);
+    /**
+     * Sets the page validation ID.
+     * 
+     * @param id
+     *            the id to set
+     */
+    void setId(String id);
 
-	/**
-	 * Performs a user interface validation.
-	 * 
-	 * @param targetWidgets
-	 *            the target widgets
-	 * @param dataTransfer
-	 *            the data transfer object
-	 * @return true if validation was successful
-	 * @throws UnifyException
-	 *             if an error occurred
-	 */
-	boolean validate(List<Widget> targetWidgets, DataTransfer dataTransfer) throws UnifyException;
+    /**
+     * Performs a user interface validation.
+     * 
+     * @param targetWidgets
+     *            the target widgets
+     * @param dataTransfer
+     *            the data transfer object
+     * @return true if validation was successful
+     * @throws UnifyException
+     *             if an error occurred
+     */
+    boolean validate(List<Widget> targetWidgets, DataTransfer dataTransfer) throws UnifyException;
 }

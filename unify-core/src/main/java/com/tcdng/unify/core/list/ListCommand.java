@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,24 +33,24 @@ import com.tcdng.unify.core.data.Listable;
  */
 public interface ListCommand<T> extends UnifyComponent {
 
-	/**
-	 * Executes list command for specified locale and parameters.
-	 * 
-	 * @param locale
-	 *            the locale
-	 * @param param
-	 *            the command parameter
-	 * @return the list of listables
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<? extends Listable> execute(Locale locale, T param) throws UnifyException;
+    /**
+     * Executes list command for specified locale and parameters.
+     * 
+     * @param locale
+     *            the locale
+     * @param param
+     *            the command parameter
+     * @return the list of listables
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<? extends Listable> execute(Locale locale, T param) throws UnifyException;
 
-	/**
-	 * Returns the command parameter type
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Class<T> getParamType() throws UnifyException;
+    /**
+     * Returns the command parameter type
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Class<T> getParamType() throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
-<? extends Entity> * Copyright 2018 The Code Department
+<? extends Entity> * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 
 /**
  * Java DB SQL dialect.
@@ -29,52 +31,66 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 @Component(name = SqlDialectConstants.JAVADB, description = "$m{sqldialect.javadb}")
 public class JavaDbDialect extends AbstractSqlDataSourceDialect {
 
-	@Override
-	public String generateTestSql() throws UnifyException {
-		return "SELECT 1 FROM SYSIBM.SYSDUMMY1";
-	}
+    @Override
+    public String generateTestSql() throws UnifyException {
+        return "SELECT 1 FROM SYSIBM.SYSDUMMY1";
+    }
 
-	@Override
-	public String generateNowSql() throws UnifyException {
-		return "VALUES CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateNowSql() throws UnifyException {
+        return "VALUES CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public int getMaxClauseValues() {
-		return -1;
-	}
+    @Override
+    public int getMaxClauseValues() {
+        return -1;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("ALTER COLUMN ").append(sqlColumnInfo.getColumnName()).append(" NULL");
+        return sb.toString();
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		boolean isAppend = false;
-		if (offset > 0) {
-			sql.append(" OFFSET ").append(offset).append(" ROWS");
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-		if (limit > 0) {
-			if (isAppend) {
-				sql.append(" FETCH NEXT ");
-			} else {
-				sql.append(" FETCH FIRST ");
-			}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        boolean isAppend = false;
+        if (offset > 0) {
+            sql.append(" OFFSET ").append(offset).append(" ROWS");
+            isAppend = true;
+        }
 
-			sql.append(limit).append(" ROWS ONLY");
-			isAppend = true;
-		}
+        if (limit > 0) {
+            if (isAppend) {
+                sql.append(" FETCH NEXT ");
+            } else {
+                sql.append(" FETCH FIRST ");
+            }
 
-		return isAppend;
-	}
+            sql.append(limit).append(" ROWS ONLY");
+            isAppend = true;
+        }
+
+        return isAppend;
+    }
 }

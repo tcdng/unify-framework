@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,36 +29,36 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
 @Table
 public class LoanDisbursement extends AbstractTestEntity {
 
-	@ForeignKey(LoanAccount.class)
-	private Long loanAccountId;
+    @ForeignKey(LoanAccount.class)
+    private Long loanAccountId;
 
-	@Column
-	private int disbursementCount;
+    @Column
+    private int disbursementCount;
 
-	@Column
-	private Double disbursementAmount;
+    @Column
+    private Double disbursementAmount;
 
-	public Long getLoanAccountId() {
-		return loanAccountId;
-	}
+    public Long getLoanAccountId() {
+        return loanAccountId;
+    }
 
-	public void setLoanAccountId(Long loanAccountId) {
-		this.loanAccountId = loanAccountId;
-	}
+    public void setLoanAccountId(Long loanAccountId) {
+        this.loanAccountId = loanAccountId;
+    }
 
-	public int getDisbursementCount() {
-		return disbursementCount;
-	}
+    public int getDisbursementCount() {
+        return disbursementCount;
+    }
 
-	public void setDisbursementCount(int disbursementCount) {
-		this.disbursementCount = disbursementCount;
-	}
+    public void setDisbursementCount(int disbursementCount) {
+        this.disbursementCount = disbursementCount;
+    }
 
-	public Double getDisbursementAmount() {
-		return disbursementAmount;
-	}
+    public Double getDisbursementAmount() {
+        return disbursementAmount;
+    }
 
-	public void setDisbursementAmount(Double disbursementAmount) {
-		this.disbursementAmount = disbursementAmount;
-	}
+    public void setDisbursementAmount(Double disbursementAmount) {
+        this.disbursementAmount = disbursementAmount;
+    }
 }

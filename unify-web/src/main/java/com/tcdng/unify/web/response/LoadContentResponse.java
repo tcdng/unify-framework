@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,27 +32,27 @@ import com.tcdng.unify.web.ui.panel.ContentPanel;
 @Component("loadcontentresponse")
 public class LoadContentResponse extends AbstractJsonPageControllerResponse {
 
-	public LoadContentResponse() {
-		super("loadContentHdl");
-	}
+    public LoadContentResponse() {
+        super("loadContentHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing load content response: controller = [{0}]", pageController.getName());
-		Document document = getRequestContextUtil().getRequestDocument();
-		ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
-		appendRefreshPageJSON(writer, contentPanel, pageController);
-		writer.write(",");
-		appendRefreshAttributesJson(writer, true);
-		writer.write(",\"busyIndicator\":\"").write(contentPanel.getBusyIndicatorId()).write("\"");
-		writer.write(",\"scrollToTop\":true");
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing load content response: controller = [{0}]", pageController.getName());
+        Document document = getRequestContextUtil().getRequestDocument();
+        ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
+        appendRefreshPageJSON(writer, contentPanel, pageController);
+        writer.write(",");
+        appendRefreshAttributesJson(writer, true);
+        writer.write(",\"busyIndicator\":\"").write(contentPanel.getBusyIndicatorId()).write("\"");
+        writer.write(",\"scrollToTop\":true");
+    }
 
-	private void appendRefreshPageJSON(ResponseWriter writer, ContentPanel contentPanel, PageController pageController)
-			throws UnifyException {
-		writer.write(",\"refreshPanels\":[");
-		contentPanel.addContent(pageController);
-		writer.writeJsonPanel(contentPanel, true);
-		writer.write("]");
-	}
+    private void appendRefreshPageJSON(ResponseWriter writer, ContentPanel contentPanel, PageController pageController)
+            throws UnifyException {
+        writer.write(",\"refreshPanels\":[");
+        contentPanel.addContent(pageController);
+        writer.writeJsonPanel(contentPanel, true);
+        writer.write("]");
+    }
 }

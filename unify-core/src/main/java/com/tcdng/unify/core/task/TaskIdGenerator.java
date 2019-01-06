@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,14 +27,14 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TaskIdGenerator extends UnifyComponent {
 
-	/**
-	 * Generates a task ID based on task input.
-	 * 
-	 * @param taskInput
-	 *            the task input to use
-	 * @return the generated ID
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String generateID(TaskInput taskInput) throws UnifyException;
+    /**
+     * Generates a task ID based on task input.
+     * 
+     * @param taskInput
+     *            the task input to use
+     * @return the generated ID
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateID(TaskInput taskInput) throws UnifyException;
 }

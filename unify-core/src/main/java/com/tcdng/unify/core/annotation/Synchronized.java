@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for synchronizing a business module component method. All access
+ * Annotation for synchronizing a business service component method. All access
  * to a method marked with this annotation is synchronized. Can also be used to
  * synchronized access to multiple methods by using the same lock value. For
  * instance, we want synchronized access to two methods, we mark them like this:
@@ -47,5 +47,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Synchronized {
 
-	String value();
+    String value();
 }

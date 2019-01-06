@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,21 +25,21 @@ import com.tcdng.unify.core.UnifyComponent;
  */
 public interface Controller extends UnifyComponent {
 
-	/**
-	 * Returns the controller type.
-	 */
-	ControllerType getType();
+    /**
+     * Returns the controller type.
+     */
+    ControllerType getType();
 
-	/**
-	 * Returns true if user interface controller
-	 */
-	boolean isUserInterface();
+    /**
+     * Returns true if user interface controller
+     */
+    boolean isUserInterface();
 
-	/**
-	 * Tests if controller requires secured access.
-	 * 
-	 * @return a true value means that access to this controller must have been
-	 *         authenticated
-	 */
-	boolean isSecured();
+    /**
+     * Tests if controller requires secured access.
+     * 
+     * @return a true value means that access to this controller must have been
+     *         authenticated
+     */
+    boolean isSecured();
 }

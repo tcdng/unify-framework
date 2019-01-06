@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,20 +36,20 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Component {
 
-	/**
-	 * Used to set the component name if no other element is supplied. Can not be
-	 * used in conjunction with name element.
-	 */
-	String value() default AnnotationConstants.NONE;
+    /**
+     * Used to set the component name if no other element is supplied. Can not be
+     * used in conjunction with name element.
+     */
+    String value() default AnnotationConstants.NONE;
 
-	/**
-	 * Used to set the component name. Can not be used in conjunction with value
-	 * element.
-	 */
-	String name() default AnnotationConstants.NONE;
+    /**
+     * Used to set the component name. Can not be used in conjunction with value
+     * element.
+     */
+    String name() default AnnotationConstants.NONE;
 
-	/**
-	 * Used for specifying description of a component. This element is optional.
-	 */
-	String description() default AnnotationConstants.NONE;
+    /**
+     * Used for specifying description of a component. This element is optional.
+     */
+    String description() default AnnotationConstants.NONE;
 }

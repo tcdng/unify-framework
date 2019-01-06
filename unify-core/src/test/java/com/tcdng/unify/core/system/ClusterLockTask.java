@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.system;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -34,28 +33,28 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("clustershareddata-test")
 public class ClusterLockTask extends AbstractTask {
 
-	@Configurable("40")
-	private int sharedTestCount;
+    @Configurable("40")
+    private int sharedTestCount;
 
-	@Configurable(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
-	private ClusterManagerBusinessModule clusterManager;
+    @Configurable
+    private ClusterService clusterManager;
 
-	private static double sharedValue;
+    private static double sharedValue;
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		for (int i = 0; i < sharedTestCount; i++) {
-			double testValue = Math.random();
-			clusterManager.beginSynchronization("sharedSync");
-			try {
-				sharedValue = testValue;
-				ThreadUtils.yield();
-				if (sharedValue != testValue) {
-					throwOperationErrorException(new Exception("Shared value corrupted!"));
-				}
-			} finally {
-				clusterManager.endSynchronization("sharedSync");
-			}
-		}
-	}
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        for (int i = 0; i < sharedTestCount; i++) {
+            double testValue = Math.random();
+            clusterManager.beginSynchronization("sharedSync");
+            try {
+                sharedValue = testValue;
+                ThreadUtils.yield();
+                if (sharedValue != testValue) {
+                    throwOperationErrorException(new Exception("Shared value corrupted!"));
+                }
+            } finally {
+                clusterManager.endSynchronization("sharedSync");
+            }
+        }
+    }
 }

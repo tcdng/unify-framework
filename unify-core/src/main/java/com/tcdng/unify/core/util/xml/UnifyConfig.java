@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,69 +27,69 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "unify")
 public class UnifyConfig {
 
-	private String version;
+    private String version;
 
-	private String nodeId;
+    private String nodeId;
 
-	private boolean cluster;
+    private boolean cluster;
 
-	private boolean production;
+    private boolean production;
 
-	private PropertiesConfig propertiesConfig;
+    private PropertiesConfig propertiesConfig;
 
-	private ComponentsConfig componentsConfig;
+    private ComponentsConfig componentsConfig;
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	@XmlAttribute(required = true)
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    @XmlAttribute(required = true)
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	@XmlAttribute(required = true)
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    @XmlAttribute(required = true)
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public boolean isProduction() {
-		return production;
-	}
+    public boolean isProduction() {
+        return production;
+    }
 
-	@XmlAttribute(required = true)
-	public void setProduction(boolean production) {
-		this.production = production;
-	}
+    @XmlAttribute(required = true)
+    public void setProduction(boolean production) {
+        this.production = production;
+    }
 
-	public boolean isCluster() {
-		return cluster;
-	}
+    public boolean isCluster() {
+        return cluster;
+    }
 
-	@XmlAttribute(required = true)
-	public void setCluster(boolean cluster) {
-		this.cluster = cluster;
-	}
+    @XmlAttribute(required = true)
+    public void setCluster(boolean cluster) {
+        this.cluster = cluster;
+    }
 
-	public PropertiesConfig getPropertiesConfig() {
-		return propertiesConfig;
-	}
+    public PropertiesConfig getPropertiesConfig() {
+        return propertiesConfig;
+    }
 
-	@XmlElement(name = "properties")
-	public void setPropertiesConfig(PropertiesConfig propertiesConfig) {
-		this.propertiesConfig = propertiesConfig;
-	}
+    @XmlElement(name = "properties")
+    public void setPropertiesConfig(PropertiesConfig propertiesConfig) {
+        this.propertiesConfig = propertiesConfig;
+    }
 
-	public ComponentsConfig getComponentsConfig() {
-		return componentsConfig;
-	}
+    public ComponentsConfig getComponentsConfig() {
+        return componentsConfig;
+    }
 
-	@XmlElement(name = "components")
-	public void setComponentsConfig(ComponentsConfig componentsConfig) {
-		this.componentsConfig = componentsConfig;
-	}
+    @XmlElement(name = "components")
+    public void setComponentsConfig(ComponentsConfig componentsConfig) {
+        this.componentsConfig = componentsConfig;
+    }
 }

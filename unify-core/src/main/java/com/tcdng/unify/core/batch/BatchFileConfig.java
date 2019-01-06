@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,70 +29,70 @@ import com.tcdng.unify.core.constant.PadDirection;
  */
 public class BatchFileConfig {
 
-	private String reader;
+    private String reader;
 
-	private String writer;
+    private String writer;
 
-	private Map<String, BatchFileFieldConfig> fieldConfigList;
+    private Map<String, BatchFileFieldConfig> fieldConfigList;
 
-	private ConstraintAction onConstraint;
+    private ConstraintAction onConstraint;
 
-	private boolean skipFirstRecord;
+    private boolean skipFirstRecord;
 
-	public BatchFileConfig() {
-		this(false);
-	}
+    public BatchFileConfig() {
+        this(false);
+    }
 
-	public BatchFileConfig(boolean skipFirstRecord) {
-		fieldConfigList = new LinkedHashMap<String, BatchFileFieldConfig>();
-		skipFirstRecord = false;
-		onConstraint = ConstraintAction.SKIP;
-		this.skipFirstRecord = skipFirstRecord;
-	}
+    public BatchFileConfig(boolean skipFirstRecord) {
+        fieldConfigList = new LinkedHashMap<String, BatchFileFieldConfig>();
+        skipFirstRecord = false;
+        onConstraint = ConstraintAction.SKIP;
+        this.skipFirstRecord = skipFirstRecord;
+    }
 
-	public BatchFileConfig addFieldConfig(String fieldName, String readerFieldName, String formatter,
-			PadDirection padDirection, int length, boolean trim, boolean pad, boolean updateOnConstraint,
-			Character padChar) {
-		fieldConfigList.put(fieldName, new BatchFileFieldConfig(fieldName, readerFieldName, formatter,
-				padDirection, length, trim, pad, updateOnConstraint, padChar));
-		return this;
-	}
+    public BatchFileConfig addFieldConfig(String fieldName, String readerFieldName, String formatter,
+            PadDirection padDirection, int length, boolean trim, boolean pad, boolean updateOnConstraint,
+            Character padChar) {
+        fieldConfigList.put(fieldName, new BatchFileFieldConfig(fieldName, readerFieldName, formatter, padDirection,
+                length, trim, pad, updateOnConstraint, padChar));
+        return this;
+    }
 
-	public BatchFileConfig addFieldConfig(String fieldName, int length, boolean trim) {
-		fieldConfigList.put(fieldName,
-				new BatchFileFieldConfig(fieldName, null, null, null, length, trim, false, true, ' '));
-		return this;
-	}
+    public BatchFileConfig addFieldConfig(String fieldName, int length, boolean trim) {
+        fieldConfigList.put(fieldName,
+                new BatchFileFieldConfig(fieldName, null, null, null, length, trim, false, true, ' '));
+        return this;
+    }
 
-	public ConstraintAction getOnConstraint() {
-		return onConstraint;
-	}
+    public ConstraintAction getOnConstraint() {
+        return onConstraint;
+    }
 
-	public void setOnConstraint(ConstraintAction onConstraint) {
-		this.onConstraint = onConstraint;
-	}
+    public void setOnConstraint(ConstraintAction onConstraint) {
+        this.onConstraint = onConstraint;
+    }
 
-	public String getReader() {
-		return reader;
-	}
+    public String getReader() {
+        return reader;
+    }
 
-	public void setReader(String reader) {
-		this.reader = reader;
-	}
+    public void setReader(String reader) {
+        this.reader = reader;
+    }
 
-	public String getWriter() {
-		return writer;
-	}
+    public String getWriter() {
+        return writer;
+    }
 
-	public void setWriter(String writer) {
-		this.writer = writer;
-	}
+    public void setWriter(String writer) {
+        this.writer = writer;
+    }
 
-	public Collection<BatchFileFieldConfig> getFieldConfigs() {
-		return fieldConfigList.values();
-	}
+    public Collection<BatchFileFieldConfig> getFieldConfigs() {
+        return fieldConfigList.values();
+    }
 
-	public boolean isSkipFirstRecord() {
-		return skipFirstRecord;
-	}
+    public boolean isSkipFirstRecord() {
+        return skipFirstRecord;
+    }
 }

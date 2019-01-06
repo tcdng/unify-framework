@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,30 +34,33 @@ import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
 
-	/** The field {@link ColumnType}. */
-	ColumnType type() default ColumnType.AUTO;
+    /** The field {@link ColumnType}. */
+    ColumnType type() default ColumnType.AUTO;
 
-	/**
-	 * The field column name. If not set, the system generates a column name using
-	 * the field name.
-	 */
-	String name() default AnnotationConstants.NONE;
+    /**
+     * The field column name. If not set, the system generates a column name using
+     * the field name.
+     */
+    String name() default AnnotationConstants.NONE;
 
-	/** The name of the field transformer. */
-	String transformer() default AnnotationConstants.NONE;
+    /** The name of the field transformer. */
+    String transformer() default AnnotationConstants.NONE;
 
-	/** The length of the field. Applied for character columns. */
-	int length() default -1;
+    /** The length of the field. Applied for character columns. */
+    int length() default -1;
 
-	/** The precision of the field. Applied to numeric columns. */
-	int precision() default -1;
+    /** The precision of the field. Applied to numeric columns. */
+    int precision() default -1;
 
-	/** The scale of the field. Applied to numeric columns */
-	int scale() default -1;
+    /** The scale of the field. Applied to numeric columns */
+    int scale() default -1;
 
-	/** Indicates the field is nullable. */
-	boolean nullable() default false;
+    /** Indicates the field is nullable. */
+    boolean nullable() default false;
 
-	/** Column position */
-	int position() default DefaultColumnPositionConstants.COLUMN_POSITION;
+    /** Specifies the column default value */
+    String defaultVal() default AnnotationConstants.NONE;
+
+    /** Column position */
+    int position() default DefaultColumnPositionConstants.COLUMN_POSITION;
 }

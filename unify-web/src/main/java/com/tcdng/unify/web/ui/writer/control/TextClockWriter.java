@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,49 +33,49 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("textclock-writer")
 public class TextClockWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		TextClock textClock = (TextClock) widget;
-		writer.write("<div");
-		writeTagAttributes(writer, textClock);
-		writer.write(">");
-		writer.write("<span");
-		writeTagStyleClass(writer, "tctitle");
-		writer.write(">");
-		writer.write(textClock.getDateTitle());
-		writer.write("</span>");
-		writer.writeHtmlFixedSpace();
-		writer.write("<span");
-		writeTagId(writer, textClock.getDateId());
-		writeTagStyleClass(writer, "tccontent");
-		writer.write(">");
-		writer.write("</span>");
-		writer.writeHtmlFixedSpace();
-		writer.write("<span");
-		writeTagStyleClass(writer, "tctitle");
-		writer.write(">");
-		writer.write(textClock.getTimeTitle());
-		writer.write("</span>");
-		writer.writeHtmlFixedSpace();
-		writer.write("<span");
-		writeTagId(writer, textClock.getTimeId());
-		writeTagStyleClass(writer, "tccontent");
-		writer.write(">");
-		writer.write("</span>");
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        TextClock textClock = (TextClock) widget;
+        writer.write("<div");
+        writeTagAttributes(writer, textClock);
+        writer.write(">");
+        writer.write("<span");
+        writeTagStyleClass(writer, "tctitle");
+        writer.write(">");
+        writer.write(textClock.getDateTitle());
+        writer.write("</span>");
+        writer.writeHtmlFixedSpace();
+        writer.write("<span");
+        writeTagId(writer, textClock.getDateId());
+        writeTagStyleClass(writer, "tccontent");
+        writer.write(">");
+        writer.write("</span>");
+        writer.writeHtmlFixedSpace();
+        writer.write("<span");
+        writeTagStyleClass(writer, "tctitle");
+        writer.write(">");
+        writer.write(textClock.getTimeTitle());
+        writer.write("</span>");
+        writer.writeHtmlFixedSpace();
+        writer.write("<span");
+        writeTagId(writer, textClock.getTimeId());
+        writeTagStyleClass(writer, "tccontent");
+        writer.write(">");
+        writer.write("</span>");
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
 
-		// Append rigging
-		TextClock textClock = (TextClock) widget;
-		writer.write("ux.rigTextClock({");
-		writer.write("\"pId\":\"").write(textClock.getId()).write('"');
-		writer.write(",\"pDateId\":\"").write(textClock.getDateId()).write('"');
-		writer.write(",\"pTimeId\":\"").write(textClock.getTimeId()).write('"');
-		writer.write("});");
-	}
+        // Append rigging
+        TextClock textClock = (TextClock) widget;
+        writer.write("ux.rigTextClock({");
+        writer.write("\"pId\":\"").write(textClock.getId()).write('"');
+        writer.write(",\"pDateId\":\"").write(textClock.getDateId()).write('"');
+        writer.write(",\"pTimeId\":\"").write(textClock.getTimeId()).write('"');
+        writer.write("});");
+    }
 
 }

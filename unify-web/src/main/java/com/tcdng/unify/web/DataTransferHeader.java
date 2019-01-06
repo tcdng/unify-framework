@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,67 +26,67 @@ import com.tcdng.unify.web.ui.BindingInfo;
  */
 public class DataTransferHeader {
 
-	private DataTransferBlock siblingBlock;
+    private DataTransferBlock siblingBlock;
 
-	private Object value;
+    private Object value;
 
-	private String longName;
+    private String longName;
 
-	private BindingInfo bindingInfo;
+    private BindingInfo bindingInfo;
 
-	public DataTransferHeader(Object value) {
-		this.value = value;
-	}
+    public DataTransferHeader(Object value) {
+        this.value = value;
+    }
 
-	public Object getValue() {
-		return value;
-	}
+    public Object getValue() {
+        return value;
+    }
 
-	public Object getDebugValue() {
-		if (bindingInfo != null && bindingInfo.isMasked()) {
-			return "********";
-		}
+    public Object getDebugValue() {
+        if (bindingInfo != null && bindingInfo.isMasked()) {
+            return "********";
+        }
 
-		return value;
-	}
+        return value;
+    }
 
-	public String getLongName() {
-		return longName;
-	}
+    public String getLongName() {
+        return longName;
+    }
 
-	public void setLongName(String longName) {
-		this.longName = longName;
-	}
+    public void setLongName(String longName) {
+        this.longName = longName;
+    }
 
-	public BindingInfo getBindingInfo() {
-		return bindingInfo;
-	}
+    public BindingInfo getBindingInfo() {
+        return bindingInfo;
+    }
 
-	public void setBindingInfo(BindingInfo bindingInfo) {
-		this.bindingInfo = bindingInfo;
-	}
+    public void setBindingInfo(BindingInfo bindingInfo) {
+        this.bindingInfo = bindingInfo;
+    }
 
-	public String getLongProperty() {
-		if (bindingInfo != null) {
-			return bindingInfo.getLongProperty();
-		}
+    public String getLongProperty() {
+        if (bindingInfo != null) {
+            return bindingInfo.getLongProperty();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public String getShortProperty() {
-		if (bindingInfo != null) {
-			return bindingInfo.getShortProperty();
-		}
+    public String getShortProperty() {
+        if (bindingInfo != null) {
+            return bindingInfo.getShortProperty();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public DataTransferBlock getSiblingBlock() {
-		return siblingBlock;
-	}
+    public DataTransferBlock getSiblingBlock() {
+        return siblingBlock;
+    }
 
-	public void setSiblingBlock(DataTransferBlock siblingBlock) {
-		this.siblingBlock = siblingBlock;
-	}
+    public void setSiblingBlock(DataTransferBlock siblingBlock) {
+        this.siblingBlock = siblingBlock;
+    }
 }

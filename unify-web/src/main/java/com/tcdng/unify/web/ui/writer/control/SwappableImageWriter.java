@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,21 +33,21 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("swappableimage-writer")
 public class SwappableImageWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		SwappableImage swappableImage = (SwappableImage) widget;
-		String[] src = swappableImage.getSrc();
-		int index = swappableImage.getValue(int.class);
-		if (index < 0 || index >= src.length) {
-			index = 0;
-		}
-		writer.write("<img");
-		writeTagAttributes(writer, swappableImage);
-		writer.write(" src=\"");
-		writer.writeFileImageContextURL(src[index]);
-		if (swappableImage.isAlwaysFetch()) {
-			writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));
-		}
-		writer.write("\">");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        SwappableImage swappableImage = (SwappableImage) widget;
+        String[] src = swappableImage.getSrc();
+        int index = swappableImage.getValue(int.class);
+        if (index < 0 || index >= src.length) {
+            index = 0;
+        }
+        writer.write("<img");
+        writeTagAttributes(writer, swappableImage);
+        writer.write(" src=\"");
+        writer.writeFileImageContextURL(src[index]);
+        if (swappableImage.isAlwaysFetch()) {
+            writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));
+        }
+        writer.write("\">");
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,13 +29,13 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_TASKSTATUSLOGGER)
 public class TaskStatusLoggerImpl extends AbstractTaskStatusLogger {
 
-	@Override
-	public void logTaskStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) {
+    @Override
+    public void logTaskStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) {
 
-	}
+    }
 
-	@Override
-	public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
-		logError(exception);
-	}
+    @Override
+    public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
+        logError(exception);
+    }
 }

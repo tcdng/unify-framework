@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,25 +25,25 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface Transformer<U, V> extends UnifyComponent {
-	/**
-	 * Forward transform a value.
-	 * 
-	 * @param value
-	 *            the value to transform
-	 * @return the transformed value
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	V forwardTransform(U value) throws UnifyException;
+    /**
+     * Forward transform a value.
+     * 
+     * @param value
+     *            the value to transform
+     * @return the transformed value
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    V forwardTransform(U value) throws UnifyException;
 
-	/**
-	 * Reverse transform a value.
-	 * 
-	 * @param value
-	 *            the value to reverse transform
-	 * @return the reversed value
-	 * @throws UnifyException
-	 *             - If an error occurs
-	 */
-	U reverseTransform(V value) throws UnifyException;
+    /**
+     * Reverse transform a value.
+     * 
+     * @param value
+     *            the value to reverse transform
+     * @return the reversed value
+     * @throws UnifyException
+     *             - If an error occurs
+     */
+    U reverseTransform(V value) throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,44 +27,44 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public class SqlResult {
 
-	private SqlDataTypePolicy sqlDataTypePolicy;
+    private SqlDataTypePolicy sqlDataTypePolicy;
 
-	private SqlFieldInfo sqlFieldInfo;
+    private SqlFieldInfo sqlFieldInfo;
 
-	public SqlResult(SqlDataTypePolicy sqlDataTypePolicy, SqlFieldInfo sqlFieldInfo) {
-		this.sqlDataTypePolicy = sqlDataTypePolicy;
-		this.sqlFieldInfo = sqlFieldInfo;
-	}
+    public SqlResult(SqlDataTypePolicy sqlDataTypePolicy, SqlFieldInfo sqlFieldInfo) {
+        this.sqlDataTypePolicy = sqlDataTypePolicy;
+        this.sqlFieldInfo = sqlFieldInfo;
+    }
 
-	public SqlDataTypePolicy getSqlDataTypePolicy() {
-		return sqlDataTypePolicy;
-	}
+    public SqlDataTypePolicy getSqlDataTypePolicy() {
+        return sqlDataTypePolicy;
+    }
 
-	public Class<?> getType() {
-		return sqlFieldInfo.getFieldClass();
-	}
+    public Class<?> getType() {
+        return sqlFieldInfo.getFieldType();
+    }
 
-	public String getColumn() {
-		return sqlFieldInfo.getColumn();
-	}
+    public String getColumn() {
+        return sqlFieldInfo.getColumn();
+    }
 
-	public String getName() {
-		return sqlFieldInfo.getName();
-	}
+    public String getName() {
+        return sqlFieldInfo.getName();
+    }
 
-	public Transformer<?, ?> getTransformer() {
-		return sqlFieldInfo.getTransformer();
-	}
+    public Transformer<?, ?> getTransformer() {
+        return sqlFieldInfo.getTransformer();
+    }
 
-	public boolean isTransformed() {
-		return sqlFieldInfo.isTransformed();
-	}
+    public boolean isTransformed() {
+        return sqlFieldInfo.isTransformed();
+    }
 
-	public Method getGetter() {
-		return sqlFieldInfo.getGetter();
-	}
+    public Method getGetter() {
+        return sqlFieldInfo.getGetter();
+    }
 
-	public Method getSetter() {
-		return sqlFieldInfo.getSetter();
-	}
+    public Method getSetter() {
+        return sqlFieldInfo.getSetter();
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,22 +29,22 @@ import com.tcdng.unify.web.ui.panel.SwitchPanel;
  */
 public abstract class AbstractSwitchPanelWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		SwitchPanel switchPanel = (SwitchPanel) widget;
-		Widget currentComponent = switchPanel.getCurrentWidget();
-		if (currentComponent != null && currentComponent.isVisible()) {
-			writer.writeBehaviour(currentComponent);
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        SwitchPanel switchPanel = (SwitchPanel) widget;
+        Widget currentComponent = switchPanel.getCurrentWidget();
+        if (currentComponent != null && currentComponent.isVisible()) {
+            writer.writeBehaviour(currentComponent);
+        }
+    }
 
-	@Override
-	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-		SwitchPanel switchPanel = (SwitchPanel) container;
-		Widget currentComponent = switchPanel.getCurrentWidget();
-		if (currentComponent != null && currentComponent.isVisible()) {
-			writer.writeStructureAndContent(currentComponent);
-		}
-	}
+    @Override
+    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+        SwitchPanel switchPanel = (SwitchPanel) container;
+        Widget currentComponent = switchPanel.getCurrentWidget();
+        if (currentComponent != null && currentComponent.isVisible()) {
+            writer.writeStructureAndContent(currentComponent);
+        }
+    }
 
 }

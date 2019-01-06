@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,15 +27,15 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface PanelWriter extends ContainerWriter {
 
-	/**
-	 * Writes inner panel structure and content
-	 * 
-	 * @param writer
-	 *            - the response writer
-	 * @param panel
-	 *            the panel to write
-	 * @throws UnifyException
-	 *             - If an error occurs
-	 */
-	void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException;
+    /**
+     * Writes inner panel structure and content
+     * 
+     * @param writer
+     *            - the response writer
+     * @param panel
+     *            the panel to write
+     * @throws UnifyException
+     *             - If an error occurs
+     */
+    void writeInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException;
 }

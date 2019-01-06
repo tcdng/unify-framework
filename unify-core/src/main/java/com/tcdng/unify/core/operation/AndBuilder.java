@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,22 +23,22 @@ package com.tcdng.unify.core.operation;
  */
 public class AndBuilder extends CriteriaBuilder {
 
-	public AndBuilder and(CriteriaBuilder criteriaBuilder) {
-		add(criteriaBuilder.getCriteria());
-		return this;
-	}
+    public AndBuilder and(CriteriaBuilder criteriaBuilder) {
+        add(criteriaBuilder.getCriteria());
+        return this;
+    }
 
-	public AndBuilder and(Criteria criteria) {
-		add(criteria);
-		return this;
-	}
+    public AndBuilder and(Criteria criteria) {
+        add(criteria);
+        return this;
+    }
 
-	protected CriteriaBuilder add(Criteria criteria) {
-		if (this.criteria == null) {
-			this.criteria = criteria;
-		} else {
-			this.criteria = new And(this.criteria, criteria);
-		}
-		return this;
-	}
+    protected CriteriaBuilder add(Criteria criteria) {
+        if (this.criteria == null) {
+            this.criteria = criteria;
+        } else {
+            this.criteria = new And(this.criteria, criteria);
+        }
+        return this;
+    }
 }

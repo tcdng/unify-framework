@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,22 +30,22 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ResourceGenerator<T> extends UnifyComponent {
 
-	/**
-	 * Generates resource and writes to supplied output stream.
-	 * 
-	 * @param outputStream
-	 *            the stream to write to
-	 * @return the generate resource category
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	T generate(OutputStream outputStream) throws UnifyException;
+    /**
+     * Generates resource and writes to supplied output stream.
+     * 
+     * @param outputStream
+     *            the stream to write to
+     * @return the generate resource category
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    T generate(OutputStream outputStream) throws UnifyException;
 
-	/**
-	 * Returns true resource generator is ready for generation.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isReady() throws UnifyException;
+    /**
+     * Returns true resource generator is ready for generation.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isReady() throws UnifyException;
 }

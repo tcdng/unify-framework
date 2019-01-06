@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -34,7 +33,6 @@ import com.tcdng.unify.core.data.AbstractPool;
 import com.tcdng.unify.core.database.AbstractDataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.security.Authentication;
-import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Abstract SQL data source.
@@ -44,443 +42,445 @@ import com.tcdng.unify.core.util.SqlUtils;
  */
 public abstract class AbstractSqlDataSource extends AbstractDataSource implements SqlDataSource {
 
-	@Configurable
-	private String driver;
+    @Configurable
+    private String driver;
 
-	@Configurable
-	private String connectionUrl;
+    @Configurable
+    private String connectionUrl;
 
-	@Configurable
-	private Authentication passwordAuthentication;
+    @Configurable
+    private Authentication passwordAuthentication;
 
-	@Configurable
-	private String username;
+    @Configurable
+    private String appSchema;
 
-	@Configurable(hidden = true)
-	private String password;
+    @Configurable
+    private String username;
 
-	@Configurable("2000")
-	private long getConnectionTimeout;
+    @Configurable(hidden = true)
+    private String password;
 
-	@Configurable("32")
-	private int maxConnections;
+    @Configurable("2000")
+    private long getConnectionTimeout;
 
-	@Configurable("1")
-	private int minConnections;
+    @Configurable("32")
+    private int maxConnections;
 
-	@Configurable("false")
-	private boolean shutdownOnTerminate;
+    @Configurable("1")
+    private int minConnections;
 
-	private SqlConnectionPool sqlConnectionPool;
+    @Configurable("false")
+    private boolean shutdownOnTerminate;
 
-	@Override
-	public List<String> getSchemaList() throws UnifyException {
-		Connection connection = getConnection();
-		ResultSet rs = null;
-		try {
-			List<String> schemaList = new ArrayList<String>();
-			rs = connection.getMetaData().getSchemas();
-			while (rs.next()) {
-				schemaList.add(rs.getString("TABLE_SCHEM"));
-			}
-			return schemaList;
-		} catch (SQLException e) {
-			throwOperationErrorException(e);
-		} finally {
-			SqlUtils.close(rs);
-			restoreConnection(connection);
-		}
-		return Collections.emptyList();
-	}
+    private SqlConnectionPool sqlConnectionPool;
 
-	@Override
-	public Map<String, SqlTableInfo> getTableMap(String schemaName, SqlTableType sqlTableType) throws UnifyException {
-		if (schemaName != null) {
-			Map<String, SqlTableInfo> map = new LinkedHashMap<String, SqlTableInfo>();
-			for (SqlTableInfo sqlTableInfo : getTableList(schemaName, sqlTableType)) {
-				map.put(sqlTableInfo.getTableName(), sqlTableInfo);
-			}
-			return map;
-		}
-		return Collections.emptyMap();
-	}
+    @Override
+    public String getApplicationSchema() throws UnifyException {
+        return appSchema;
+    }
 
-	@Override
-	public List<SqlTableInfo> getTableList(String schemaName, SqlTableType sqlTableType) throws UnifyException {
-		if (schemaName != null) {
-			Connection connection = getConnection();
-			ResultSet rs = null;
-			try {
-				List<SqlTableInfo> tableInfoList = new ArrayList<SqlTableInfo>();
-				String[] tableType = new String[] { SqlTableType.TABLE.code(), SqlTableType.VIEW.code() };
-				if (sqlTableType != null) {
-					tableType = new String[] { sqlTableType.code() };
-				}
-				rs = connection.getMetaData().getTables(null, schemaName, null, tableType);
-				while (rs.next()) {
-					String type = rs.getString("TABLE_TYPE");
-					String tableName = rs.getString("TABLE_NAME");
-					tableInfoList.add(new SqlTableInfo(SqlTableType.fromCode(type), tableName));
-				}
-				return tableInfoList;
-			} catch (SQLException e) {
-				throwOperationErrorException(e);
-			} finally {
-				SqlUtils.close(rs);
-				restoreConnection(connection);
-			}
-		}
-		return Collections.emptyList();
-	}
+    @Override
+    public List<String> getSchemaList() throws UnifyException {
+        Connection connection = getConnection();
+        ResultSet rs = null;
+        try {
+            List<String> schemaList = new ArrayList<String>();
+            rs = connection.getMetaData().getSchemas();
+            while (rs.next()) {
+                schemaList.add(rs.getString("TABLE_SCHEM"));
+            }
+            return schemaList;
+        } catch (SQLException e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            restoreConnection(connection);
+        }
+        return Collections.emptyList();
+    }
 
-	@Override
-	public List<SqlColumnInfo> getColumnList(String schemaName, String tableName) throws UnifyException {
-		if (schemaName != null && tableName != null) {
-			Connection connection = getConnection();
-			ResultSet rs = null;
-			try {
-				List<SqlColumnInfo> columnInfoList = new ArrayList<SqlColumnInfo>();
-				rs = connection.getMetaData().getColumns(null, schemaName, tableName, null);
-				while (rs.next()) {
-					int sqlType = rs.getInt("DATA_TYPE");
-					if (SqlUtils.isSupportedSqlType(sqlType)) {
-						Class<?> type = SqlUtils.getJavaType(sqlType);
-						String columnName = rs.getString("COLUMN_NAME");
-						int size = rs.getInt("COLUMN_SIZE");
-						String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");
-						int decimalDigits = decimalDigitsStr == null ? 0 : Integer.valueOf(decimalDigitsStr);
-						String nullable = rs.getString("IS_NULLABLE");
+    @Override
+    public Map<String, SqlTableInfo> getTableMap(String schemaName, SqlTableType sqlTableType) throws UnifyException {
+        if (schemaName != null) {
+            Map<String, SqlTableInfo> map = new LinkedHashMap<String, SqlTableInfo>();
+            for (SqlTableInfo sqlTableInfo : getTableList(schemaName, sqlTableType)) {
+                map.put(sqlTableInfo.getTableName(), sqlTableInfo);
+            }
+            return map;
+        }
+        return Collections.emptyMap();
+    }
 
-						if ((Types.NUMERIC == sqlType || Types.DECIMAL == sqlType) && decimalDigits == 0) {
-							type = SqlUtils.getJavaType(Types.INTEGER);
-						}
-						columnInfoList.add(new SqlColumnInfo(type, columnName, sqlType, size, decimalDigits,
-								"YES".equals(nullable)));
-					}
-				}
-				return columnInfoList;
-			} catch (SQLException e) {
-				throwOperationErrorException(e);
-			} finally {
-				SqlUtils.close(rs);
-				restoreConnection(connection);
-			}
-		}
-		return Collections.emptyList();
-	}
+    @Override
+    public List<SqlTableInfo> getTableList(String schemaName, SqlTableType sqlTableType) throws UnifyException {
+        if (schemaName != null) {
+            Connection connection = getConnection();
+            ResultSet rs = null;
+            try {
+                List<SqlTableInfo> tableInfoList = new ArrayList<SqlTableInfo>();
+                String[] tableType = new String[] { SqlTableType.TABLE.code(), SqlTableType.VIEW.code() };
+                if (sqlTableType != null) {
+                    tableType = new String[] { sqlTableType.code() };
+                }
+                rs = connection.getMetaData().getTables(null, schemaName, null, tableType);
+                while (rs.next()) {
+                    String type = rs.getString("TABLE_TYPE");
+                    String tableName = rs.getString("TABLE_NAME");
+                    tableInfoList.add(new SqlTableInfo(SqlTableType.fromCode(type), tableName));
+                }
+                return tableInfoList;
+            } catch (SQLException e) {
+                throwOperationErrorException(e);
+            } finally {
+                SqlUtils.close(rs);
+                restoreConnection(connection);
+            }
+        }
+        return Collections.emptyList();
+    }
 
-	@Override
-	public int testNativeQuery(NativeQuery query) throws UnifyException {
-		String nativeSql = getDialect().generateNativeQuery(query);
-		return testNativeQuery(nativeSql);
-	}
+    @Override
+    public List<SqlColumnInfo> getColumnList(String schemaName, String tableName) throws UnifyException {
+        if (schemaName != null && tableName != null) {
+            Connection connection = getConnection();
+            ResultSet rs = null;
+            try {
+                List<SqlColumnInfo> columnInfoList = new ArrayList<SqlColumnInfo>();
+                rs = connection.getMetaData().getColumns(null, schemaName, tableName, null);
+                while (rs.next()) {
+                    int sqlType = rs.getInt("DATA_TYPE");
+                    if (SqlUtils.isSupportedSqlType(sqlType)) {
+                        Class<?> type = SqlUtils.getJavaType(sqlType);
+                        String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");
+                        int decimalDigits = decimalDigitsStr == null ? 0 : Integer.valueOf(decimalDigitsStr);
+                        columnInfoList.add(new SqlColumnInfo(type, rs.getString("TYPE_NAME"),
+                                rs.getString("COLUMN_NAME").toUpperCase(), rs.getString("COLUMN_DEF"), sqlType,
+                                rs.getInt("COLUMN_SIZE"), decimalDigits, "YES".equals(rs.getString("IS_NULLABLE"))));
+                    }
+                }
+                return columnInfoList;
+            } catch (SQLException e) {
+                throwOperationErrorException(e);
+            } finally {
+                SqlUtils.close(rs);
+                restoreConnection(connection);
+            }
+        }
+        return Collections.emptyList();
+    }
 
-	@Override
-	public int testNativeQuery(String nativeSql) throws UnifyException {
-		logDebug("Testing native query [{0}]...", nativeSql);
-		Connection connection = getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = connection.prepareStatement(nativeSql);
-			rs = pstmt.executeQuery();
-			while (rs.next())
-				;
-			return rs.getRow();
-		} catch (SQLException e) {
-			throwOperationErrorException(e);
-		} finally {
-			SqlUtils.close(rs);
-			SqlUtils.close(pstmt);
-			restoreConnection(connection);
-		}
-		logDebug("Native query [{0}] successfully tested.", nativeSql);
-		return 0;
-	}
+    @Override
+    public int testNativeQuery(NativeQuery query) throws UnifyException {
+        String nativeSql = getDialect().generateNativeQuery(query);
+        return testNativeQuery(nativeSql);
+    }
 
-	@Override
-	public int testNativeUpdate(String nativeSql) throws UnifyException {
-		logDebug("Testing upteda query [{0}]...", nativeSql);
-		Connection connection = getConnection();
-		PreparedStatement pstmt = null;
-		try {
-			pstmt = connection.prepareStatement(nativeSql);
-			return pstmt.executeUpdate();
-		} catch (SQLException e) {
-			throwOperationErrorException(e);
-		} finally {
-			SqlUtils.close(pstmt);
-			restoreConnection(connection);
-		}
-		logDebug("Native update [{0}] successfully tested.", nativeSql);
-		return 0;
-	}
+    @Override
+    public int testNativeQuery(String nativeSql) throws UnifyException {
+        logDebug("Testing native query [{0}]...", nativeSql);
+        Connection connection = getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            pstmt = connection.prepareStatement(nativeSql);
+            rs = pstmt.executeQuery();
+            while (rs.next())
+                ;
+            return rs.getRow();
+        } catch (SQLException e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pstmt);
+            restoreConnection(connection);
+        }
+        logDebug("Native query [{0}] successfully tested.", nativeSql);
+        return 0;
+    }
 
-	@Override
-	public Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException {
-		if (schemaName != null && tableName != null) {
-			Map<String, SqlColumnInfo> map = new LinkedHashMap<String, SqlColumnInfo>();
-			for (SqlColumnInfo sqlColumnInfo : getColumnList(schemaName, tableName)) {
-				map.put(sqlColumnInfo.getColumnName(), sqlColumnInfo);
-			}
-			return map;
-		}
-		return Collections.emptyMap();
-	}
+    @Override
+    public int testNativeUpdate(String nativeSql) throws UnifyException {
+        logDebug("Testing upteda query [{0}]...", nativeSql);
+        Connection connection = getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement(nativeSql);
+            return pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(pstmt);
+            restoreConnection(connection);
+        }
+        logDebug("Native update [{0}] successfully tested.", nativeSql);
+        return 0;
+    }
 
-	@Override
-	public List<Object[]> getRows(NativeQuery query) throws UnifyException {
-		String nativeSql = getDialect().generateNativeQuery(query);
-		List<Object[]> resultList = new ArrayList<Object[]>();
-		Connection connection = getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = connection.prepareStatement(nativeSql);
-			rs = pstmt.executeQuery();
+    @Override
+    public Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException {
+        if (schemaName != null && tableName != null) {
+            Map<String, SqlColumnInfo> map = new LinkedHashMap<String, SqlColumnInfo>();
+            for (SqlColumnInfo sqlColumnInfo : getColumnList(schemaName, tableName)) {
+                map.put(sqlColumnInfo.getColumnName(), sqlColumnInfo);
+            }
+            return map;
+        }
+        return Collections.emptyMap();
+    }
 
-			int columns = query.columns();
-			while (rs.next()) {
-				Object[] item = new Object[columns];
-				for (int i = 0; i < columns; i++) {
-					item[i] = rs.getObject(i + 1);
-				}
+    @Override
+    public List<Object[]> getRows(NativeQuery query) throws UnifyException {
+        String nativeSql = getDialect().generateNativeQuery(query);
+        List<Object[]> resultList = new ArrayList<Object[]>();
+        Connection connection = getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            pstmt = connection.prepareStatement(nativeSql);
+            rs = pstmt.executeQuery();
 
-				resultList.add(item);
-			}
-		} catch (SQLException e) {
-			throwOperationErrorException(e);
-		} finally {
-			SqlUtils.close(rs);
-			SqlUtils.close(pstmt);
-			restoreConnection(connection);
-		}
-		return resultList;
-	}
+            int columns = query.columns();
+            while (rs.next()) {
+                Object[] item = new Object[columns];
+                for (int i = 0; i < columns; i++) {
+                    item[i] = rs.getObject(i + 1);
+                }
 
-	@Override
-	public SqlDataSourceDialect getDialect() throws UnifyException {
-		return (SqlDataSourceDialect) super.getDialect();
-	}
+                resultList.add(item);
+            }
+        } catch (SQLException e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pstmt);
+            restoreConnection(connection);
+        }
+        return resultList;
+    }
 
-	@Override
-	public boolean testConnection() throws UnifyException {
-		sqlConnectionPool.returnObject(sqlConnectionPool.borrowObject());
-		return true;
-	}
+    @Override
+    public SqlDataSourceDialect getDialect() throws UnifyException {
+        return (SqlDataSourceDialect) super.getDialect();
+    }
 
-	@Override
-	public Connection getConnection() throws UnifyException {
-		return sqlConnectionPool.borrowObject();
-	}
+    @Override
+    public boolean testConnection() throws UnifyException {
+        sqlConnectionPool.returnObject(sqlConnectionPool.borrowObject());
+        return true;
+    }
 
-	@Override
-	public boolean restoreConnection(Connection connection) throws UnifyException {
-		return sqlConnectionPool.returnObject(connection);
-	}
+    @Override
+    public Connection getConnection() throws UnifyException {
+        return sqlConnectionPool.borrowObject();
+    }
 
-	@Override
-	public boolean restoreConnection(Object connection) throws UnifyException {
-		return sqlConnectionPool.returnObject((Connection) connection);
-	}
+    @Override
+    public boolean restoreConnection(Connection connection) throws UnifyException {
+        return sqlConnectionPool.returnObject(connection);
+    }
 
-	@Override
-	public int getAvailableConnections() throws UnifyException {
-		return sqlConnectionPool.available();
-	}
+    @Override
+    public boolean restoreConnection(Object connection) throws UnifyException {
+        return sqlConnectionPool.returnObject((Connection) connection);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		logInfo("Initializing datasource [{0}]...", getName());
-		super.onInitialize();
-		if (driver != null) {
-			doInitConnectionPool();
-		}
-		logInfo("Initialization of datasource [{0}] completed.", getName());
-	}
+    @Override
+    public int getAvailableConnections() throws UnifyException {
+        return sqlConnectionPool.available();
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-		logInfo("Terminating datasource [{0}]...", getName());
-		if (shutdownOnTerminate) {
-			SqlShutdownHook sqlShutdownHook = getDialect().getShutdownHook();
-			if (sqlShutdownHook != null) {
-				Connection connection = getConnection();
-				try {
-					sqlShutdownHook.commandShutdown(connection);
-				} finally {
-					restoreConnection(connection);
-				}
-			}
-		}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        logInfo("Initializing datasource [{0}]...", getName());
+        super.onInitialize();
+        if (driver != null) {
+            doInitConnectionPool();
+        }
+        logInfo("Initialization of datasource [{0}] completed.", getName());
+    }
 
-		if (sqlConnectionPool != null) {
-			sqlConnectionPool.terminate();
-		}
-		logInfo("Datasource [{0}] terminated.", getName());
-	}
+    @Override
+    protected void onTerminate() throws UnifyException {
+        logInfo("Terminating datasource [{0}]...", getName());
+        if (shutdownOnTerminate) {
+            SqlShutdownHook sqlShutdownHook = getDialect().getShutdownHook();
+            if (sqlShutdownHook != null) {
+                Connection connection = getConnection();
+                try {
+                    sqlShutdownHook.commandShutdown(connection);
+                } finally {
+                    restoreConnection(connection);
+                }
+            }
+        }
 
-	protected void doInitConnectionPool() throws UnifyException {
-		try {
-			logInfo("Setting up connection pool for [{0}]...", getName());
-			Class.forName(driver);
-			sqlConnectionPool = createSqlConnectionPool();
-			sqlConnectionPool.initialize();
-		} catch (ClassNotFoundException e) {
-			throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_MISSING_DRIVER, getName(), driver);
-		}
-	}
+        if (sqlConnectionPool != null) {
+            sqlConnectionPool.terminate();
+        }
+        logInfo("Datasource [{0}] terminated.", getName());
+    }
 
-	protected SqlConnectionPool getSqlConnectionPool() {
-		return sqlConnectionPool;
-	}
+    protected void doInitConnectionPool() throws UnifyException {
+        try {
+            logInfo("Setting up connection pool for [{0}]...", getName());
+            Class.forName(driver);
+            sqlConnectionPool = createSqlConnectionPool();
+            sqlConnectionPool.initialize();
+        } catch (ClassNotFoundException e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_MISSING_DRIVER, getName(), driver);
+        }
+    }
 
-	protected void setDriver(String driver) {
-		this.driver = driver;
-	}
+    protected SqlConnectionPool getSqlConnectionPool() {
+        return sqlConnectionPool;
+    }
 
-	protected void setConnectionUrl(String connectionUrl) {
-		this.connectionUrl = connectionUrl;
-	}
+    protected void setDriver(String driver) {
+        this.driver = driver;
+    }
 
-	protected void setUsername(String username) {
-		this.username = username;
-	}
+    protected void setConnectionUrl(String connectionUrl) {
+        this.connectionUrl = connectionUrl;
+    }
 
-	protected void setPassword(String password) {
-		this.password = password;
-	}
+    protected void setUsername(String username) {
+        this.username = username;
+    }
 
-	protected void setGetConnectionTimeout(long getConnectionTimeout) {
-		this.getConnectionTimeout = getConnectionTimeout;
-	}
+    protected void setPassword(String password) {
+        this.password = password;
+    }
 
-	protected void setMaxConnections(int maxConnections) {
-		this.maxConnections = maxConnections;
-	}
+    protected void setGetConnectionTimeout(long getConnectionTimeout) {
+        this.getConnectionTimeout = getConnectionTimeout;
+    }
 
-	protected void setMinConnections(int minConnections) {
-		this.minConnections = minConnections;
-	}
+    protected void setMaxConnections(int maxConnections) {
+        this.maxConnections = maxConnections;
+    }
 
-	protected String getDriver() {
-		return driver;
-	}
+    protected void setMinConnections(int minConnections) {
+        this.minConnections = minConnections;
+    }
 
-	protected String getConnectionUrl() {
-		return connectionUrl;
-	}
+    protected String getDriver() {
+        return driver;
+    }
 
-	protected Authentication getPasswordAuthentication() {
-		return passwordAuthentication;
-	}
+    protected String getConnectionUrl() {
+        return connectionUrl;
+    }
 
-	protected String getUsername() {
-		return username;
-	}
+    protected Authentication getPasswordAuthentication() {
+        return passwordAuthentication;
+    }
 
-	protected String getPassword() {
-		return password;
-	}
+    protected String getUsername() {
+        return username;
+    }
 
-	protected long getGetConnectionTimeout() {
-		return getConnectionTimeout;
-	}
+    protected String getPassword() {
+        return password;
+    }
 
-	protected int getMaxConnections() {
-		return maxConnections;
-	}
+    protected long getGetConnectionTimeout() {
+        return getConnectionTimeout;
+    }
 
-	protected int getMinConnections() {
-		return minConnections;
-	}
+    protected int getMaxConnections() {
+        return maxConnections;
+    }
 
-	protected boolean isShutdownOnTerminate() {
-		return shutdownOnTerminate;
-	}
+    protected int getMinConnections() {
+        return minConnections;
+    }
 
-	protected void setShutdownOnTerminate(boolean shutdownOnTerminate) {
-		this.shutdownOnTerminate = shutdownOnTerminate;
-	}
+    protected boolean isShutdownOnTerminate() {
+        return shutdownOnTerminate;
+    }
 
-	private SqlConnectionPool createSqlConnectionPool() throws UnifyException {
-		String xUsername = null;
-		String xPassword = null;
-		if (passwordAuthentication != null) {
-			xUsername = passwordAuthentication.getUsername();
-			xPassword = passwordAuthentication.getPassword();
-		} else if (username != null && password != null) {
-			xUsername = username;
-			xPassword = password;
-		}
+    protected void setShutdownOnTerminate(boolean shutdownOnTerminate) {
+        this.shutdownOnTerminate = shutdownOnTerminate;
+    }
 
-		return new SqlConnectionPool(connectionUrl, xUsername, xPassword, getConnectionTimeout, minConnections,
-				maxConnections);
-	}
+    private SqlConnectionPool createSqlConnectionPool() throws UnifyException {
+        String xUsername = null;
+        String xPassword = null;
+        if (passwordAuthentication != null) {
+            xUsername = passwordAuthentication.getUsername();
+            xPassword = passwordAuthentication.getPassword();
+        } else if (username != null && password != null) {
+            xUsername = username;
+            xPassword = password;
+        }
 
-	protected class SqlConnectionPool extends AbstractPool<Connection> {
+        return new SqlConnectionPool(connectionUrl, xUsername, xPassword, getConnectionTimeout, minConnections,
+                maxConnections);
+    }
 
-		private String connectionURL;
+    protected class SqlConnectionPool extends AbstractPool<Connection> {
 
-		private String username;
+        private String connectionURL;
 
-		private String password;
+        private String username;
 
-		private String testSql;
+        private String password;
 
-		public SqlConnectionPool(String connectionURL, String username, String password, long getTimeout,
-				int minObjects, int maxObjects) {
-			super(getTimeout, minObjects, maxObjects, true);
-			this.connectionURL = connectionURL;
-			this.username = username;
-			this.password = password;
-		}
+        private String testSql;
 
-		@Override
-		public void initialize() throws UnifyException {
-			testSql = getDialect().generateTestSql();
-			super.initialize();
-		}
+        public SqlConnectionPool(String connectionURL, String username, String password, long getTimeout,
+                int minObjects, int maxObjects) {
+            super(getTimeout, minObjects, maxObjects, true);
+            this.connectionURL = connectionURL;
+            this.username = username;
+            this.password = password;
+        }
 
-		@Override
-		protected Connection createObject(Object... params) throws Exception {
-			Connection connection = null;
-			if (username != null) {
-				connection = DriverManager.getConnection(connectionURL, username, password);
-			} else {
-				connection = DriverManager.getConnection(connectionURL);
-			}
-			connection.setAutoCommit(false);
-			return connection;
-		}
+        @Override
+        public void initialize() throws UnifyException {
+            testSql = getDialect().generateTestSql();
+            super.initialize();
+        }
 
-		@Override
-		protected void onGetObject(Connection connection, Object... params) throws Exception {
-			if (connection.isClosed()) {
-				throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_BAD_CONNECTION, getName());
-			}
+        @Override
+        protected Connection createObject(Object... params) throws Exception {
+            Connection connection = null;
+            if (username != null) {
+                connection = DriverManager.getConnection(connectionURL, username, password);
+            } else {
+                connection = DriverManager.getConnection(connectionURL);
+            }
+            connection.setAutoCommit(false);
+            return connection;
+        }
 
-			// Full connection test
-			PreparedStatement pStmt = null;
-			ResultSet rs = null;
-			try {
-				pStmt = connection.prepareStatement(testSql);
-				rs = pStmt.executeQuery();
-			} finally {
-				SqlUtils.close(rs);
-				SqlUtils.close(pStmt);
-			}
-		}
+        @Override
+        protected void onGetObject(Connection connection, Object... params) throws Exception {
+            if (connection.isClosed()) {
+                throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_BAD_CONNECTION, getName());
+            }
 
-		@Override
-		protected void destroyObject(Connection connection) {
-			try {
-				connection.rollback();
-				logDebug("Destroyed connection...");
-			} catch (Exception e) {
-			} finally {
-				SqlUtils.close(connection);
-			}
-		}
-	}
+            // Full connection test
+            PreparedStatement pStmt = null;
+            ResultSet rs = null;
+            try {
+                pStmt = connection.prepareStatement(testSql);
+                rs = pStmt.executeQuery();
+            } finally {
+                SqlUtils.close(rs);
+                SqlUtils.close(pStmt);
+            }
+        }
+
+        @Override
+        protected void destroyObject(Connection connection) {
+            try {
+                connection.rollback();
+                logDebug("Destroyed connection...");
+            } catch (Exception e) {
+            } finally {
+                SqlUtils.close(connection);
+            }
+        }
+    }
 }

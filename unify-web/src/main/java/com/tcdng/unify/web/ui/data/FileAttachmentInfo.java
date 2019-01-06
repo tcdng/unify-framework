@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,67 +25,71 @@ import com.tcdng.unify.core.constant.FileAttachmentType;
  */
 public class FileAttachmentInfo {
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private String filename;
+    private String filename;
 
-	private FileAttachmentType type;
+    private FileAttachmentType type;
 
-	private byte[] attachment;
+    private byte[] attachment;
 
-	public FileAttachmentInfo(String name, String description, FileAttachmentType type) {
-		this.name = name;
-		this.description = description;
-		this.type = type;
-	}
+    public FileAttachmentInfo(String name, String description, FileAttachmentType type) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+    }
 
-	public FileAttachmentInfo(FileAttachmentType type) {
-		this.type = type;
-	}
+    public FileAttachmentInfo(FileAttachmentType type) {
+        this.type = type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public FileAttachmentType getType() {
-		return type;
-	}
+    public FileAttachmentType getType() {
+        return type;
+    }
 
-	public String getAccept() {
-		return this.type.extensions();
-	}
+    public String getTypeName() {
+        return type.code();
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getAccept() {
+        return type.contentType();
+    }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public byte[] getAttachment() {
-		return attachment;
-	}
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
-	public void setAttachment(byte[] attachment) {
-		this.attachment = attachment;
-	}
+    public byte[] getAttachment() {
+        return attachment;
+    }
 
-	public boolean isEmpty() {
-		return this.filename == null;
-	}
+    public void setAttachment(byte[] attachment) {
+        this.attachment = attachment;
+    }
 
-	public int size() {
-		if (this.attachment != null) {
-			return this.attachment.length;
-		}
+    public boolean isEmpty() {
+        return this.filename == null;
+    }
 
-		return 0;
-	}
+    public int size() {
+        if (this.attachment != null) {
+            return this.attachment.length;
+        }
+
+        return 0;
+    }
 }

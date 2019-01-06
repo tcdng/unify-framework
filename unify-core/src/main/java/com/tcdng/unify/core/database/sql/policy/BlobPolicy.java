@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,36 +32,51 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class BlobPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("BLOB");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("BLOB");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null) {
-			((PreparedStatement) pstmt).setNull(index, Types.BLOB);
-		} else {
-			((PreparedStatement) pstmt).setBlob(index, new SerialBlob((byte[]) data));
-		}
-	}
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Blob blob = ((ResultSet) rs).getBlob(column);
-		if (blob != null) {
-			return blob.getBytes(1, (int) blob.length());
-		}
-		return null;
-	}
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Blob blob = ((ResultSet) rs).getBlob(index);
-		if (blob != null) {
-			return blob.getBytes(1, (int) blob.length());
-		}
-		return null;
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
+        } else {
+            ((PreparedStatement) pstmt).setBlob(index, new SerialBlob((byte[]) data));
+        }
+    }
+
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Blob blob = ((ResultSet) rs).getBlob(column);
+        if (blob != null) {
+            return blob.getBytes(1, (int) blob.length());
+        }
+        return null;
+    }
+
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Blob blob = ((ResultSet) rs).getBlob(index);
+        if (blob != null) {
+            return blob.getBytes(1, (int) blob.length());
+        }
+        return null;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.BLOB;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,15 +32,15 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("docviewresponse")
 public class DocViewResponse extends AbstractJsonPageControllerResponse {
 
-	public DocViewResponse() {
-		super("docViewHdl");
-	}
+    public DocViewResponse() {
+        super("docViewHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		Panel docViewPanel = ((DocViewController) pageController).getDocViewPanel();
-		writer.write(",\"remoteTarget\":\"").write(getRequestContextUtil().getRemoteViewer());
-		writer.write("\",\"docView\":");
-		writer.writeJsonPanel(docViewPanel, false);
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        Panel docViewPanel = ((DocViewController) pageController).getDocViewPanel();
+        writer.write(",\"remoteTarget\":\"").write(getRequestContextUtil().getRemoteViewer());
+        writer.write("\",\"docView\":");
+        writer.writeJsonPanel(docViewPanel, false);
+    }
 }

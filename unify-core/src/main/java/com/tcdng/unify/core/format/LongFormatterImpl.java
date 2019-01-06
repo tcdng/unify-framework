@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,22 +29,22 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "longformat", description = "$m{format.long}")
 public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements LongFormatter {
 
-	public LongFormatterImpl() {
-		super(Long.class, NumberType.INTEGER);
-	}
+    public LongFormatterImpl() {
+        super(Long.class, NumberType.INTEGER);
+    }
 
-	@Override
-	public Long parse(String string) throws UnifyException {
-		try {
-			return Long.valueOf(getNumberFormat().parse(string).intValue());
-		} catch (ParseException e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public Long parse(String string) throws UnifyException {
+        try {
+            return Long.valueOf(getNumberFormat().parse(string).intValue());
+        } catch (ParseException e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 
-	@Override
-	public void setScale(int scale) {
+    @Override
+    public void setScale(int scale) {
 
-	}
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,38 +27,38 @@ import com.tcdng.unify.core.data.Context;
  */
 public class RequestContext extends Context {
 
-	private String requestPath;
+    private String requestPath;
 
-	private SessionContext sessionContext;
+    private SessionContext sessionContext;
 
-	private Object quickReference;
+    private Object quickReference;
 
-	public RequestContext(String requestPath, SessionContext sessionContext) {
-		this.requestPath = requestPath;
-		this.sessionContext = sessionContext;
-	}
+    public RequestContext(String requestPath, SessionContext sessionContext) {
+        this.requestPath = requestPath;
+        this.sessionContext = sessionContext;
+    }
 
-	public String getContextPath() {
-		return this.sessionContext.getContextPath();
-	}
+    public String getContextPath() {
+        return this.sessionContext.getContextPath();
+    }
 
-	public String getRequestPath() {
-		return requestPath;
-	}
+    public String getRequestPath() {
+        return requestPath;
+    }
 
-	public SessionContext getSessionContext() {
-		return sessionContext;
-	}
+    public SessionContext getSessionContext() {
+        return sessionContext;
+    }
 
-	public Locale getLocale() {
-		return this.sessionContext.getLocale();
-	}
+    public Locale getLocale() {
+        return this.sessionContext.getLocale();
+    }
 
-	public Object getQuickReference() {
-		return quickReference;
-	}
+    public Object getQuickReference() {
+        return quickReference;
+    }
 
-	public void setQuickReference(Object quickReference) {
-		this.quickReference = quickReference;
-	}
+    public void setQuickReference(Object quickReference) {
+        this.quickReference = quickReference;
+    }
 }

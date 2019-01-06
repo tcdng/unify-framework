@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,59 +28,59 @@ import com.tcdng.unify.core.upl.UplComponent;
  */
 public interface Section extends UplComponent {
 
-	/**
-	 * Returns the section shortName
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getTag() throws UnifyException;
+    /**
+     * Returns the section shortName
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getTag() throws UnifyException;
 
-	/**
-	 * Returns the section caption
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getCaption() throws UnifyException;
+    /**
+     * Returns the section caption
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getCaption() throws UnifyException;
 
-	/**
-	 * Returns the section privilege
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getPrivilege() throws UnifyException;
+    /**
+     * Returns the section privilege
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getPrivilege() throws UnifyException;
 
-	/**
-	 * Returns the section binding
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getBinding() throws UnifyException;
+    /**
+     * Returns the section binding
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getBinding() throws UnifyException;
 
-	/**
-	 * Returns the section component reference list
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	List<String> getReferences() throws UnifyException;
+    /**
+     * Returns the section component reference list
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> getReferences() throws UnifyException;
 
-	/**
-	 * Returns true if section has binding
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isBinding() throws UnifyException;
+    /**
+     * Returns true if section has binding
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isBinding() throws UnifyException;
 
-	/**
-	 * Returns the section hidden attribute
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isHidden() throws UnifyException;
+    /**
+     * Returns the section hidden attribute
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isHidden() throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,16 +26,16 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface PasswordGenerator extends UnifyComponent {
 
-	/**
-	 * Generates a password for supplied principal.
-	 * 
-	 * @param principal
-	 *            the principal to generate password for
-	 * @param length
-	 *            the password length
-	 * @return the generated password
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String generatePassword(String principal, int length) throws UnifyException;
+    /**
+     * Generates a password for supplied principal.
+     * 
+     * @param principal
+     *            the principal to generate password for
+     * @param length
+     *            the password length
+     * @return the generated password
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generatePassword(String principal, int length) throws UnifyException;
 }

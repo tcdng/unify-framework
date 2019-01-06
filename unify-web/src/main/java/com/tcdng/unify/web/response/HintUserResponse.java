@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,38 +36,38 @@ import com.tcdng.unify.web.ui.data.Hint;
 @Component("hintuserresponse")
 public class HintUserResponse extends AbstractJsonPageControllerResponse {
 
-	public HintUserResponse() {
-		super("hintUserHdl");
-	}
+    public HintUserResponse() {
+        super("hintUserHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing hint user response: controller = [{0}]", pageController.getName());
-		List<Hint> hintList = getRequestContextUtil().getUserHints();
-		if (hintList != null && !hintList.isEmpty()) {
-			writer.write(",\"hintUserHtml\":");
-			StringBuilder hsb = new StringBuilder();
-			hsb.append("<div class=\"ui-user-hint\">");
-			for (Hint hint : hintList) {
-				hsb.append("<span class=\"");
-				switch (hint.getMode()) {
-				case ERROR:
-					hsb.append("ui-user-hint-error");
-					break;
-				case INFO:
-					hsb.append("ui-user-hint-info");
-					break;
-				case WARNING:
-				default:
-					hsb.append("ui-user-hint-warning");
-					break;
-				}
-				hsb.append("\">");
-				hsb.append(hint.getMessage());
-				hsb.append("</span>");
-			}
-			hsb.append("</div>");
-			writer.writeJsonQuote(hsb.toString());
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing hint user response: controller = [{0}]", pageController.getName());
+        List<Hint> hintList = getRequestContextUtil().getUserHints();
+        if (hintList != null && !hintList.isEmpty()) {
+            writer.write(",\"hintUserHtml\":");
+            StringBuilder hsb = new StringBuilder();
+            hsb.append("<div class=\"ui-user-hint\">");
+            for (Hint hint : hintList) {
+                hsb.append("<span class=\"");
+                switch (hint.getMode()) {
+                    case ERROR:
+                        hsb.append("ui-user-hint-error");
+                        break;
+                    case INFO:
+                        hsb.append("ui-user-hint-info");
+                        break;
+                    case WARNING:
+                    default:
+                        hsb.append("ui-user-hint-warning");
+                        break;
+                }
+                hsb.append("\">");
+                hsb.append(hint.getMessage());
+                hsb.append("</span>");
+            }
+            hsb.append("</div>");
+            writer.writeJsonQuote(hsb.toString());
+        }
+    }
 }

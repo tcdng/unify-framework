@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,9 +19,9 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.ResponseWriter;
-import com.tcdng.unify.web.ui.Widget;
+import com.tcdng.unify.web.ui.TargetControl;
 import com.tcdng.unify.web.ui.control.Link;
-import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
+import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 
 /**
  * Link writer.
@@ -31,15 +31,15 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
  */
 @Writes(Link.class)
 @Component("link-writer")
-public class LinkWriter extends AbstractControlWriter {
+public class LinkWriter extends AbstractTargetControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Link link = (Link) widget;
-		writer.write("<a");
-		writeTagAttributes(writer, link);
-		writer.write(">");
-		writeCaption(writer, link);
-		writer.write("</a>");
-	}
+    @Override
+    protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+        Link link = (Link) targetControl;
+        writer.write("<a");
+        writeTagAttributes(writer, link);
+        writer.write(">");
+        writeCaption(writer, link);
+        writer.write("</a>");
+    }
 }

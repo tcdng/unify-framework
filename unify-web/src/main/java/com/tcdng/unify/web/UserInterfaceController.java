@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,28 +25,28 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface UserInterfaceController extends Controller {
 
-	/**
-	 * Tests if bean is read-only.
-	 * 
-	 * @return a true value means that this controller is not populated with request
-	 *         parameter values
-	 */
-	boolean isReadOnly();
+    /**
+     * Tests if bean is read-only.
+     * 
+     * @return a true value means that this controller is not populated with request
+     *         parameter values
+     */
+    boolean isReadOnly();
 
-	/**
-	 * Resets the controller. This method is called by the controller manager before
-	 * a call to the {@link #populate(String, String, String, Object)} method.
-	 */
-	void reset();
+    /**
+     * Resets the controller. This method is called by the controller manager before
+     * a call to the {@link #populate(DataTransferBlock)} method.
+     */
+    void reset();
 
-	/**
-	 * Populates a controller property. This method is called by the framework for
-	 * processing request parameters.
-	 * 
-	 * @param transferBlock
-	 *            the transfer sequence
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void populate(DataTransferBlock transferBlock) throws UnifyException;
+    /**
+     * Populates a controller property. This method is called by the framework for
+     * processing request parameters.
+     * 
+     * @param transferBlock
+     *            the transfer sequence
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void populate(DataTransferBlock transferBlock) throws UnifyException;
 }

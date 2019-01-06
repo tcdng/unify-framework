@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,7 @@ import com.tcdng.unify.core.task.TaskMonitor;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Periodic {
 
-	PeriodicType value() default PeriodicType.NORMAL;
+    PeriodicType value() default PeriodicType.NORMAL;
 
-	String taskStatusLogger() default AnnotationConstants.NONE;
+    String taskStatusLogger() default AnnotationConstants.NONE;
 }

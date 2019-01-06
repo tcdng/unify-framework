@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,13 +23,13 @@ package com.tcdng.unify.core.constant;
  */
 public interface DefaultColumnPositionConstants {
 
-	int ID_POSITION = 0;
+    int ID_POSITION = 0;
 
-	int FK_POSITION = 2;
+    int FK_POSITION = 2;
 
-	int COLUMN_POSITION = 4;
+    int COLUMN_POSITION = 4;
 
-	int LIST_POSITION = 4;
+    int LIST_POSITION = 4;
 
-	int VERSION_POSITION = 8;
+    int VERSION_POSITION = 8;
 }

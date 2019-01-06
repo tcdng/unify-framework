@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,74 +38,74 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("multiselect-writer")
 public class MultiSelectWriter extends AbstractControlWriter {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		MultiSelect multiSelect = (MultiSelect) widget;
-		writer.write("<div ");
-		writeTagStyleClass(writer, multiSelect);
-		writeTagStyle(writer, multiSelect);
-		writeTagTitle(writer, multiSelect);
-		writer.write("><div id=\"").write(multiSelect.getFramePanelId())
-				.write("\" style=\"width:100%;height:100%;overflow-y:scroll;overflow-x:hidden;\" tabindex=\"0\">");
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        MultiSelect multiSelect = (MultiSelect) widget;
+        writer.write("<div ");
+        writeTagStyleClass(writer, multiSelect);
+        writeTagStyle(writer, multiSelect);
+        writeTagTitle(writer, multiSelect);
+        writer.write("><div id=\"").write(multiSelect.getFramePanelId())
+                .write("\" style=\"width:100%;height:100%;overflow-y:scroll;overflow-x:hidden;\" tabindex=\"0\">");
 
-		List<String> values = multiSelect.getValue(ArrayList.class, String.class);
-		List<? extends Listable> listableList = multiSelect.getListables();
-		int length = listableList.size();
-		writer.write("<div id=\"").write(multiSelect.getListPanelId()).write("\" class=\"mslist\">");
-		for (int i = 0; i < length; i++) {
-			Listable listable = listableList.get(i);
-			String key = listable.getListKey();
-			writer.write("<a");
-			writeTagId(writer, multiSelect.getNamingIndexedId(i));
-			if (values != null && values.contains(key)) {
-				writeTagStyleClass(writer, "sel");
-			} else {
-				writeTagStyleClass(writer, "norm");
-			}
-			writer.write("\">");
-			writer.writeWithHtmlEscape(listable.getListDescription());
-			writer.write("</a>");
-		}
-		writer.write("</div>");
+        List<String> values = multiSelect.getValue(ArrayList.class, String.class);
+        List<? extends Listable> listableList = multiSelect.getListables();
+        int length = listableList.size();
+        writer.write("<div id=\"").write(multiSelect.getListPanelId()).write("\" class=\"mslist\">");
+        for (int i = 0; i < length; i++) {
+            Listable listable = listableList.get(i);
+            String key = listable.getListKey();
+            writer.write("<a");
+            writeTagId(writer, multiSelect.getNamingIndexedId(i));
+            if (values != null && values.contains(key)) {
+                writeTagStyleClass(writer, "sel");
+            } else {
+                writeTagStyleClass(writer, "norm");
+            }
+            writer.write("\">");
+            writer.writeWithHtmlEscape(listable.getListDescription());
+            writer.write("</a>");
+        }
+        writer.write("</div>");
 
-		writer.write("<select ");
-		writeTagId(writer, multiSelect);
-		writeTagStyle(writer, "display:none;");
-		writer.write(" multiple=\"multiple\">");
+        writer.write("<select ");
+        writeTagId(writer, multiSelect);
+        writeTagStyle(writer, "display:none;");
+        writer.write(" multiple=\"multiple\">");
 
-		for (Listable listable : multiSelect.getListables()) {
-			String key = listable.getListKey();
-			writer.write("<option value=\"").write(key).write("\"");
-			if (values != null && values.contains(key)) {
-				writer.write(" selected");
-			}
-			writer.write("></option>");
-		}
-		writer.write("</select>");
+        for (Listable listable : multiSelect.getListables()) {
+            String key = listable.getListKey();
+            writer.write("<option value=\"").write(key).write("\"");
+            if (values != null && values.contains(key)) {
+                writer.write(" selected");
+            }
+            writer.write("></option>");
+        }
+        writer.write("</select>");
 
-		writer.write("</div>");
-		writer.write("</div>");
-	}
+        writer.write("</div>");
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
 
-		MultiSelect multiSelect = (MultiSelect) widget;
-		String pageName = multiSelect.getId();
-		ListControlJsonData listControlJsonData = multiSelect.getListControlJsonData(true, false, false);
+        MultiSelect multiSelect = (MultiSelect) widget;
+        String pageName = multiSelect.getId();
+        ListControlJsonData listControlJsonData = multiSelect.getListControlJsonData(true, false, false);
 
-		// Append rigging
-		writer.write("ux.rigMultiSelect({");
-		writer.write("\"pId\":\"").write(pageName).write('"');
-		writer.write(",\"pFrmId\":\"").write(multiSelect.getFramePanelId()).write('"');
-		writer.write(",\"pLstId\":\"").write(multiSelect.getListPanelId()).write('"');
-		writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-		writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-		writer.write(",\"pNormCls\":\"norm\"");
-		writer.write(",\"pSelCls\":\"sel\"");
-		writer.write("});");
-	}
+        // Append rigging
+        writer.write("ux.rigMultiSelect({");
+        writer.write("\"pId\":\"").write(pageName).write('"');
+        writer.write(",\"pFrmId\":\"").write(multiSelect.getFramePanelId()).write('"');
+        writer.write(",\"pLstId\":\"").write(multiSelect.getListPanelId()).write('"');
+        writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
+        writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
+        writer.write(",\"pNormCls\":\"norm\"");
+        writer.write(",\"pSelCls\":\"sel\"");
+        writer.write("});");
+    }
 
 }

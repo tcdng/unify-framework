@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 @UplAttributes({ @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
 public class RemoteDocViewPanel extends AbstractPanel {
 
-	public RemoteDocViewInfo getRemoteDocViewInfo() throws UnifyException {
-		return (RemoteDocViewInfo) getValue();
-	}
+    public RemoteDocViewInfo getRemoteDocViewInfo() throws UnifyException {
+        return (RemoteDocViewInfo) getValue();
+    }
 }

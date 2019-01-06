@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,31 +38,31 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("checkboxlist-writer")
 public class CheckBoxListWriter extends AbstractControlWriter {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		CheckBoxList checkBoxList = (CheckBoxList) widget;
-		writeHiddenPush(writer, checkBoxList, PushType.CHECKBOX);
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        CheckBoxList checkBoxList = (CheckBoxList) widget;
+        writeHiddenPush(writer, checkBoxList, PushType.CHECKBOX);
 
-		List<String> values = checkBoxList.getValue(ArrayList.class, String.class);
-		List<? extends Listable> listableList = checkBoxList.getListables();
-		int breaks = listableList.size();
-		boolean appendSym = !checkBoxList.getUplAttribute(boolean.class, "flow");
-		for (Listable listable : listableList) {
-			writer.write("<input type=\"checkbox\"");
-			writeTagName(writer, checkBoxList);
-			writeTagStyleClass(writer, checkBoxList);
-			writeTagStyle(writer, checkBoxList);
+        List<String> values = checkBoxList.getValue(ArrayList.class, String.class);
+        List<? extends Listable> listableList = checkBoxList.getListables();
+        int breaks = listableList.size();
+        boolean appendSym = !checkBoxList.getUplAttribute(boolean.class, "flow");
+        for (Listable listable : listableList) {
+            writer.write("<input type=\"checkbox\"");
+            writeTagName(writer, checkBoxList);
+            writeTagStyleClass(writer, checkBoxList);
+            writeTagStyle(writer, checkBoxList);
 
-			String key = listable.getListKey();
-			if (values != null && values.contains(key)) {
-				writer.write(" checked=\"checked\"");
-			}
-			writer.write(" value=\"").write(key).write("\"/>");
-			writer.writeWithHtmlEscape(listable.getListDescription());
-			if (appendSym && ((--breaks) > 0)) {
-				writer.write("<br />");
-			}
-		}
-	}
+            String key = listable.getListKey();
+            if (values != null && values.contains(key)) {
+                writer.write(" checked=\"checked\"");
+            }
+            writer.write(" value=\"").write(key).write("\"/>");
+            writer.writeWithHtmlEscape(listable.getListDescription());
+            if (appendSym && ((--breaks) > 0)) {
+                writer.write("<br />");
+            }
+        }
+    }
 }

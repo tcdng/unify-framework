@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,76 +26,76 @@ import com.tcdng.unify.core.task.TaskOutput;
  */
 public class TaskMonitorInfo {
 
-	public static final int BUSY = 0;
+    public static final int BUSY = 0;
 
-	public static final int PASS = 1;
+    public static final int PASS = 1;
 
-	public static final int FAIL = 2;
+    public static final int FAIL = 2;
 
-	public static final int ERROR = 3;
+    public static final int ERROR = 3;
 
-	private TaskMonitor taskMonitor;
+    private TaskMonitor taskMonitor;
 
-	private String caption;
+    private String caption;
 
-	private String onSuccessPath;
+    private String onSuccessPath;
 
-	private String onFailurePath;
+    private String onFailurePath;
 
-	public TaskMonitorInfo(TaskMonitor taskMonitor, String caption) {
-		this(taskMonitor, caption, null, null);
-	}
+    public TaskMonitorInfo(TaskMonitor taskMonitor, String caption) {
+        this(taskMonitor, caption, null, null);
+    }
 
-	public TaskMonitorInfo(TaskMonitor taskMonitor, String caption, String onSuccessPath, String onFailurePath) {
-		this.taskMonitor = taskMonitor;
-		this.caption = caption;
-		this.onSuccessPath = onFailurePath;
-		this.onFailurePath = onFailurePath;
-	}
+    public TaskMonitorInfo(TaskMonitor taskMonitor, String caption, String onSuccessPath, String onFailurePath) {
+        this.taskMonitor = taskMonitor;
+        this.caption = caption;
+        this.onSuccessPath = onFailurePath;
+        this.onFailurePath = onFailurePath;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public String getOnSuccessPath() {
-		return onSuccessPath;
-	}
+    public String getOnSuccessPath() {
+        return onSuccessPath;
+    }
 
-	public String getOnFailurePath() {
-		return onFailurePath;
-	}
+    public String getOnFailurePath() {
+        return onFailurePath;
+    }
 
-	public String[] getMessages() {
-		return taskMonitor.getMessages();
-	}
+    public String[] getMessages() {
+        return taskMonitor.getMessages();
+    }
 
-	public String getLastMessage() {
-		return taskMonitor.getLastMessage();
-	}
+    public String getLastMessage() {
+        return taskMonitor.getLastMessage();
+    }
 
-	public TaskOutput getTaskOutput(int taskIndex) {
-		return taskMonitor.getTaskOutput(taskIndex);
-	}
+    public TaskOutput getTaskOutput(int taskIndex) {
+        return taskMonitor.getTaskOutput(taskIndex);
+    }
 
-	public int getTaskState() {
-		switch (taskMonitor.getCurrentTaskStatus()) {
-		case ABORTED:
-		case CANCELED:
-		case FAILED:
-			return FAIL;
-		case COMPLETED:
-			if (taskMonitor.isExceptions()) {
-				return ERROR;
-			}
-			return PASS;
-		case INITIALISED:
-		default:
-			return BUSY;
-		}
-	}
+    public int getTaskState() {
+        switch (taskMonitor.getCurrentTaskStatus()) {
+            case ABORTED:
+            case CANCELED:
+            case FAILED:
+                return FAIL;
+            case COMPLETED:
+                if (taskMonitor.isExceptions()) {
+                    return ERROR;
+                }
+                return PASS;
+            case INITIALISED:
+            default:
+                return BUSY;
+        }
+    }
 
-	public void cancelTask() {
-		this.taskMonitor.cancel();
-	}
+    public void cancelTask() {
+        this.taskMonitor.cancel();
+    }
 
 }

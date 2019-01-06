@@ -1,5 +1,5 @@
 // System information UPL
-// Copyright 2014 The Code Department
+// Copyright 2018-2019 The Code Department.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 
@@ -13,9 +13,9 @@
      eventHandler:$d{!ui-event event:onclick action:$c{closeExceptionAct}}
      
 !ui-label:message styleClass:$e{ui-system-exception-msg}
-	binding:$j{com.tcdng.unify.web.constant.SystemInfoConstants.EXCEPTION_MESSAGE_KEY}
+    binding:$j{com.tcdng.unify.web.constant.SystemInfoConstants.EXCEPTION_MESSAGE_KEY}
 !ui-textarea:stackTrace styleClass:$e{ui-system-exception-trace}
-	binding:$j{com.tcdng.unify.web.constant.SystemInfoConstants.EXCEPTION_STACKTRACE_KEY}
+    binding:$j{com.tcdng.unify.web.constant.SystemInfoConstants.EXCEPTION_STACKTRACE_KEY}
 
 !ui-panel:actionPanel layout:$d{!ui-horizontal} components:$c{closeBtn}
 !ui-button:closeBtn caption:$m{button.close} eventHandler:$d{!ui-event event:onclick action:$c{closeExceptionAct}}

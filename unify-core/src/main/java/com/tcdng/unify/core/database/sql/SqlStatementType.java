@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,5 +22,18 @@ package com.tcdng.unify.core.database.sql;
  * @since 1.0
  */
 public enum SqlStatementType {
-	CREATE, FIND, FIND_BY_PK, FIND_BY_PK_VERSION, LIST, LIST_BY_PK, LIST_BY_PK_VERSION, UPDATE, UPDATE_BY_PK, UPDATE_BY_PK_VERSION, DELETE, DELETE_BY_PK, DELETE_BY_PK_VERSION, COUNT
+    CREATE,
+    FIND,
+    FIND_BY_PK,
+    FIND_BY_PK_VERSION,
+    LIST,
+    LIST_BY_PK,
+    LIST_BY_PK_VERSION,
+    UPDATE,
+    UPDATE_BY_PK,
+    UPDATE_BY_PK_VERSION,
+    DELETE,
+    DELETE_BY_PK,
+    DELETE_BY_PK_VERSION,
+    COUNT
 }

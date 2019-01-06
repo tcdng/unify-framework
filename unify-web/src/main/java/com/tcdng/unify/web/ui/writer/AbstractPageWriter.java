@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,21 +29,21 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public abstract class AbstractPageWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		AbstractPage abstractPage = (AbstractPage) widget;
-		writer.write("<div");
-		writePanelTagAttributes(writer, abstractPage);
-		writer.write(">");
-		abstractPage.cascadeValueStore();
-		writeInnerStructureAndContent(writer, abstractPage);
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        AbstractPage abstractPage = (AbstractPage) widget;
+        writer.write("<div");
+        writePanelTagAttributes(writer, abstractPage);
+        writer.write(">");
+        abstractPage.cascadeValueStore();
+        writeInnerStructureAndContent(writer, abstractPage);
+        writer.write("</div>");
+    }
 
-	@Override
-	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-		AbstractPage abstractPage = (AbstractPage) panel;
-		writeLayoutContent(writer, abstractPage);
-	}
+    @Override
+    protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+        AbstractPage abstractPage = (AbstractPage) panel;
+        writeLayoutContent(writer, abstractPage);
+    }
 
 }

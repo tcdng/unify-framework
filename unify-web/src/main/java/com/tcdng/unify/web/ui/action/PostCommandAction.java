@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,12 +29,12 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
  */
 @Component("ui-postcommand")
 @UplAttributes({ @UplAttribute(name = "command", type = String.class, defaultValue = "switchState"),
-		@UplAttribute(name = "target", type = String.class),
-		@UplAttribute(name = "validations", type = UplElementReferences.class),
-		@UplAttribute(name = "refresh", type = UplElementReferences.class) })
+        @UplAttribute(name = "target", type = String.class),
+        @UplAttribute(name = "validations", type = UplElementReferences.class),
+        @UplAttribute(name = "refresh", type = UplElementReferences.class) })
 public class PostCommandAction extends AbstractPageAction {
 
-	public PostCommandAction() {
-		super("postcommand");
-	}
+    public PostCommandAction() {
+        super("postcommand");
+    }
 }

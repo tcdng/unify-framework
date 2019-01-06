@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,9 +23,9 @@ package com.tcdng.unify.core;
  */
 public interface SessionAttributeValueConstants {
 
-	String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogoutNoMultipleLogin";
+    String FORCE_LOGOUT_NO_MULTIPLE_LOGIN = "forceLogoutNoMultipleLogin";
 
-	String FORCE_LOGOUT_SYSTEM = "forceLogoutSystem";
+    String FORCE_LOGOUT_SYSTEM = "forceLogoutSystem";
 
-	String FORCE_LOGOUT_ADMINISTRATOR = "forceLogoutAdministrator";
+    String FORCE_LOGOUT_ADMINISTRATOR = "forceLogoutAdministrator";
 }

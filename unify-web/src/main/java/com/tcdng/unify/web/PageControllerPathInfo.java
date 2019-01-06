@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,43 +24,43 @@ package com.tcdng.unify.web;
  */
 public class PageControllerPathInfo {
 
-	private String id;
+    private String id;
 
-	private String openPagePath;
+    private String openPagePath;
 
-	private String savePagePath;
+    private String savePagePath;
 
-	private String closePagePath;
+    private String closePagePath;
 
-	private boolean remoteSave;
+    private boolean remoteSave;
 
-	public PageControllerPathInfo(String id, String openPagePath, String savePagePath, String closePagePath,
-			boolean remoteSave) {
-		this.id = id;
-		this.openPagePath = openPagePath;
-		this.savePagePath = savePagePath;
-		this.closePagePath = closePagePath;
-		this.remoteSave = remoteSave;
-	}
+    public PageControllerPathInfo(String id, String openPagePath, String savePagePath, String closePagePath,
+            boolean remoteSave) {
+        this.id = id;
+        this.openPagePath = openPagePath;
+        this.savePagePath = savePagePath;
+        this.closePagePath = closePagePath;
+        this.remoteSave = remoteSave;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getOpenPagePath() {
-		return openPagePath;
-	}
+    public String getOpenPagePath() {
+        return openPagePath;
+    }
 
-	public String getSavePagePath() {
-		return savePagePath;
-	}
+    public String getSavePagePath() {
+        return savePagePath;
+    }
 
-	public String getClosePagePath() {
-		return closePagePath;
-	}
+    public String getClosePagePath() {
+        return closePagePath;
+    }
 
-	public boolean isRemoteSave() {
-		return remoteSave;
-	}
+    public boolean isRemoteSave() {
+        return remoteSave;
+    }
 
 }

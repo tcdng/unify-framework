@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,44 +26,44 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/droparrow.png}"),
-		@UplAttribute(name = "timeout", type = long.class, defaultValue = "-1"),
-		@UplAttribute(name = "clearable", type = boolean.class),
-		@UplAttribute(name = "popupAlways", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "timeout", type = long.class, defaultValue = "-1"),
+        @UplAttribute(name = "clearable", type = boolean.class),
+        @UplAttribute(name = "popupAlways", type = boolean.class, defaultValue = "false") })
 public abstract class AbstractPopupTextField extends TextField {
 
-	@Override
-	public String getBorderId() throws UnifyException {
-		return getPrefixedId("brd_");
-	}
+    @Override
+    public String getBorderId() throws UnifyException {
+        return getPrefixedId("brd_");
+    }
 
-	@Override
-	public String getStyleClass() throws UnifyException {
-		return super.getStyleClass() + " ui-text-popup";
-	}
+    @Override
+    public String getStyleClass() throws UnifyException {
+        return super.getStyleClass() + " ui-text-popup";
+    }
 
-	public String getPopupButtonId() throws UnifyException {
-		return getPrefixedId("popb_");
-	}
+    public String getPopupButtonId() throws UnifyException {
+        return getPrefixedId("popb_");
+    }
 
-	public String getPopupId() throws UnifyException {
-		return getPrefixedId("pop_");
-	}
+    public String getPopupId() throws UnifyException {
+        return getPrefixedId("pop_");
+    }
 
-	public String getButtonImageSrc() throws UnifyException {
-		return getUplAttribute(String.class, "buttonImgSrc");
-	}
+    public String getButtonImageSrc() throws UnifyException {
+        return getUplAttribute(String.class, "buttonImgSrc");
+    }
 
-	public long getDisplayTimeOut() throws UnifyException {
-		return getUplAttribute(long.class, "timeout");
-	}
+    public long getDisplayTimeOut() throws UnifyException {
+        return getUplAttribute(long.class, "timeout");
+    }
 
-	public boolean isClearable() throws UnifyException {
-		return getUplAttribute(boolean.class, "clearable");
-	}
+    public boolean isClearable() throws UnifyException {
+        return getUplAttribute(boolean.class, "clearable");
+    }
 
-	public boolean isPopupAlways() throws UnifyException {
-		return getUplAttribute(boolean.class, "popupAlways");
-	}
+    public boolean isPopupAlways() throws UnifyException {
+        return getUplAttribute(boolean.class, "popupAlways");
+    }
 
-	public abstract boolean isPopupOnEditableOnly();
+    public abstract boolean isPopupOnEditableOnly();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,10 +30,11 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceImpl;
 @Singleton(true)
 @Component("test-sqldatasource")
 @Configuration({ @Configurable(property = "driver", value = "org.hsqldb.jdbcDriver"),
-		@Configurable(property = "connectionUrl", value = "jdbc:hsqldb:mem:test"),
-		@Configurable(property = "getConnectionTimeout", value = "1000"),
-		@Configurable(property = "dialect", value = "hsqldb-dialect"),
-		@Configurable(property = "shutdownOnTerminate", value = "true") })
+        @Configurable(property = "connectionUrl", value = "jdbc:hsqldb:mem:test"),
+        @Configurable(property = "appSchema", value = "PUBLIC"),
+        @Configurable(property = "getConnectionTimeout", value = "1000"),
+        @Configurable(property = "dialect", value = "hsqldb-dialect"),
+        @Configurable(property = "shutdownOnTerminate", value = "true") })
 public class TestSqlDataSource extends SqlDataSourceImpl {
 
 }

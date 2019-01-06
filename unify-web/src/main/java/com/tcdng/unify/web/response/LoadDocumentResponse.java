@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,11 +31,11 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("loaddocumentresponse")
 public class LoadDocumentResponse extends AbstractPageControllerResponse {
 
-	@Override
-	public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing load document response: controller = [{0}]", pageController.getName());
-		Document document = (Document) pageController.getPage();
-		writer.writeStructureAndContent(document);
-		writer.writeBehaviour(document);
-	}
+    @Override
+    public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing load document response: controller = [{0}]", pageController.getName());
+        Document document = (Document) pageController.getPage();
+        writer.writeStructureAndContent(document);
+        writer.writeBehaviour(document);
+    }
 }

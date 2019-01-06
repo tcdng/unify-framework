@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,22 +28,22 @@ import com.tcdng.unify.web.ui.BindingInfo;
  */
 public class UserInterfaceControllerInfo extends ControllerInfo {
 
-	private Map<String, BindingInfo> idPropertyBindingMap;
+    private Map<String, BindingInfo> idPropertyBindingMap;
 
-	public UserInterfaceControllerInfo(String controllerName, Map<String, BindingInfo> idPropertyBindingMap) {
-		super(controllerName);
-		this.idPropertyBindingMap = idPropertyBindingMap;
-	}
+    public UserInterfaceControllerInfo(String controllerName, Map<String, BindingInfo> idPropertyBindingMap) {
+        super(controllerName);
+        this.idPropertyBindingMap = idPropertyBindingMap;
+    }
 
-	public Set<String> getPropertyIds() {
-		return idPropertyBindingMap.keySet();
-	}
+    public Set<String> getPropertyIds() {
+        return idPropertyBindingMap.keySet();
+    }
 
-	public BindingInfo getBindingInfo(String id) {
-		return idPropertyBindingMap.get(id);
-	}
+    public BindingInfo getBindingInfo(String id) {
+        return idPropertyBindingMap.get(id);
+    }
 
-	public void addBindings(Map<String, BindingInfo> pageNamePropertyBindingMap) {
-		idPropertyBindingMap.putAll(pageNamePropertyBindingMap);
-	}
+    public void addBindings(Map<String, BindingInfo> pageNamePropertyBindingMap) {
+        idPropertyBindingMap.putAll(pageNamePropertyBindingMap);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,49 +33,49 @@ import com.tcdng.unify.web.constant.ExtensionType;
  */
 @Component("ui-dropdowncheckboxlist")
 @UplAttributes({ @UplAttribute(name = "selectAllOption", type = String.class),
-		@UplAttribute(name = "columns", type = int.class),
-		@UplAttribute(name = "popupAlways", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "columns", type = int.class),
+        @UplAttribute(name = "popupAlways", type = boolean.class, defaultValue = "true") })
 public class DropdownCheckBoxList extends AbstractListPopupTextField {
 
-	@Override
-	public boolean isMultiple() {
-		return true;
-	}
+    @Override
+    public boolean isMultiple() {
+        return true;
+    }
 
-	@Override
-	public ExtensionType getExtensionType() {
-		return ExtensionType.FACADE;
-	}
+    @Override
+    public ExtensionType getExtensionType() {
+        return ExtensionType.FACADE;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public String getFacadeStringValue() throws UnifyException {
-		List<String> values = getValue(ArrayList.class, String.class);
-		StringBuilder sb = new StringBuilder();
-		if (values != null) {
-			Map<String, String> listMap = getListMap();
-			boolean appendSym = false;
-			for (String value : values) {
-				if (appendSym) {
-					sb.append(",");
-				} else {
-					appendSym = true;
-				}
-				sb.append(listMap.get(value));
-			}
-		}
-		return sb.toString();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public String getFacadeStringValue() throws UnifyException {
+        List<String> values = getValue(ArrayList.class, String.class);
+        StringBuilder sb = new StringBuilder();
+        if (values != null) {
+            Map<String, String> listMap = getListMap();
+            boolean appendSym = false;
+            for (String value : values) {
+                if (appendSym) {
+                    sb.append(",");
+                } else {
+                    appendSym = true;
+                }
+                sb.append(listMap.get(value));
+            }
+        }
+        return sb.toString();
+    }
 
-	public String getSelectAllId() throws UnifyException {
-		return getPrefixedId("sela_");
-	}
+    public String getSelectAllId() throws UnifyException {
+        return getPrefixedId("sela_");
+    }
 
-	public String getSelectAllOption() throws UnifyException {
-		return getUplAttribute(String.class, "selectAllOption");
-	}
+    public String getSelectAllOption() throws UnifyException {
+        return getUplAttribute(String.class, "selectAllOption");
+    }
 
-	public int getColumns() throws UnifyException {
-		return getUplAttribute(int.class, "columns");
-	}
+    public int getColumns() throws UnifyException {
+        return getUplAttribute(int.class, "columns");
+    }
 }

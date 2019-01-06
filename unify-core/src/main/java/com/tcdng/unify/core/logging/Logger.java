@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,39 +25,39 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface Logger extends UnifyComponent {
-	/**
-	 * Logs a message.
-	 * 
-	 * @param loggingLevel
-	 *            the logging level
-	 * @param message
-	 *            the message to log
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void log(LoggingLevel loggingLevel, String message) throws UnifyException;
+    /**
+     * Logs a message.
+     * 
+     * @param loggingLevel
+     *            the logging level
+     * @param message
+     *            the message to log
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void log(LoggingLevel loggingLevel, String message) throws UnifyException;
 
-	/**
-	 * Logs a message with accompanying exception.
-	 * 
-	 * @param loggingLevel
-	 *            the logging level
-	 * @param message
-	 *            the message to log
-	 * @param exception
-	 *            exception to log
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void log(LoggingLevel loggingLevel, String message, Exception exception) throws UnifyException;
+    /**
+     * Logs a message with accompanying exception.
+     * 
+     * @param loggingLevel
+     *            the logging level
+     * @param message
+     *            the message to log
+     * @param exception
+     *            exception to log
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void log(LoggingLevel loggingLevel, String message, Exception exception) throws UnifyException;
 
-	/**
-	 * Returns true value if supplied logging level is enabled.
-	 * 
-	 * @param loggingLevel
-	 *            the logging level
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isEnabled(LoggingLevel loggingLevel) throws UnifyException;
+    /**
+     * Returns true value if supplied logging level is enabled.
+     * 
+     * @param loggingLevel
+     *            the logging level
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isEnabled(LoggingLevel loggingLevel) throws UnifyException;
 }

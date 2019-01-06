@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,23 +27,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AccountDetailParams extends RemoteCallParams {
 
-	private String accountNo;
+    private String accountNo;
 
-	public AccountDetailParams(String accountNo) {
-		super("mock-001");
-		this.accountNo = accountNo;
-	}
+    public AccountDetailParams(String accountNo) {
+        super("mock-001");
+        this.accountNo = accountNo;
+    }
 
-	public AccountDetailParams() {
-		super("mock-001");
-	}
+    public AccountDetailParams() {
+        super("mock-001");
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public String getAccountNo() {
+        return accountNo;
+    }
 
-	@XmlElement
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
+    @XmlElement
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 }

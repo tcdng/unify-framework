@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,57 +26,57 @@ import com.tcdng.unify.web.ui.Control;
  */
 public class ValidationInfo {
 
-	private String id;
+    private String id;
 
-	private String borderId;
+    private String borderId;
 
-	private String notificationId;
+    private String notificationId;
 
-	private String validationCode;
+    private String validationCode;
 
-	private String message;
+    private String message;
 
-	private String borderStyle;
+    private String borderStyle;
 
-	public ValidationInfo(Control control, String validationCode) throws UnifyException {
-		this(control, validationCode, null, "");
-	}
+    public ValidationInfo(Control control, String validationCode) throws UnifyException {
+        this(control, validationCode, null, "");
+    }
 
-	public ValidationInfo(Control control, String validationCode, String message, String borderStyle)
-			throws UnifyException {
-		this.id = control.getId();
-		this.borderId = control.getBorderId();
-		this.notificationId = control.getNotificationId();
-		this.validationCode = validationCode;
-		this.message = message;
-		this.borderStyle = borderStyle;
-	}
+    public ValidationInfo(Control control, String validationCode, String message, String borderStyle)
+            throws UnifyException {
+        this.id = control.getId();
+        this.borderId = control.getBorderId();
+        this.notificationId = control.getNotificationId();
+        this.validationCode = validationCode;
+        this.message = message;
+        this.borderStyle = borderStyle;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getBorderId() {
-		return borderId;
-	}
+    public String getBorderId() {
+        return borderId;
+    }
 
-	public String getNotificationId() {
-		return notificationId;
-	}
+    public String getNotificationId() {
+        return notificationId;
+    }
 
-	public String getValidationCode() {
-		return validationCode;
-	}
+    public String getValidationCode() {
+        return validationCode;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public String getBorderStyle() {
-		return borderStyle;
-	}
+    public String getBorderStyle() {
+        return borderStyle;
+    }
 
-	public boolean isPass() {
-		return message == null;
-	}
+    public boolean isPass() {
+        return message == null;
+    }
 }

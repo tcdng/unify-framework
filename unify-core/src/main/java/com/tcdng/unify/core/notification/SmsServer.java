@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,16 +25,28 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SmsServer extends NotificationServer<SmsServerConfig> {
 
-	/**
-	 * Sends an SMS.
-	 * 
-	 * @param configurationCode
-	 *            the code of the configuration to use
-	 * @param sms
-	 *            the sms to send
-	 * @throws UnifyException
-	 *             if configuration with code is unknown. if an error occurs
-	 */
-	void sendSms(String configurationCode, Sms sms) throws UnifyException;
+    /**
+     * Sends an SMS.
+     * 
+     * @param configurationCode
+     *            the code of the configuration to use
+     * @param sms
+     *            the sms to send
+     * @throws UnifyException
+     *             if configuration with code is unknown. if an error occurs
+     */
+    void sendSms(String configurationCode, Sms sms) throws UnifyException;
+
+    /**
+     * Sends bulk SMS.
+     * 
+     * @param configurationCode
+     *            the code of the configuration to use
+     * @param bulkSms
+     *            the bulk sms to send
+     * @throws UnifyException
+     *             if configuration with code is unknown. if an error occurs
+     */
+    void sendSms(String configurationCode, BulkSms bulkSms) throws UnifyException;
 
 }

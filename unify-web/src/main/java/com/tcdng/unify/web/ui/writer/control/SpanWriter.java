@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,16 +33,16 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("span-writer")
 public class SpanWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Span span = (Span) widget;
-		writer.write("<span ");
-		writeTagAttributes(writer, span);
-		writer.write(">");
-		String value = span.getStringValue();
-		if (value != null) {
-			writer.writeWithHtmlEscape(value);
-		}
-		writer.write("</span>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        Span span = (Span) widget;
+        writer.write("<span ");
+        writeTagAttributes(writer, span);
+        writer.write(">");
+        String value = span.getStringValue();
+        if (value != null) {
+            writer.writeWithHtmlEscape(value);
+        }
+        writer.write("</span>");
+    }
 }

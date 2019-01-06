@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,16 +26,16 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class BooleanConverter extends AbstractConverter<Boolean> {
 
-	@Override
-	protected Boolean doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Boolean) {
-			return Boolean.valueOf((Boolean) value);
-		}
-		if (value instanceof String) {
-			String string = ((String) value);
-			return Boolean.valueOf("y".equalsIgnoreCase(string) || "on".equalsIgnoreCase(string)
-					|| "true".equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string));
-		}
-		return null;
-	}
+    @Override
+    protected Boolean doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Boolean) {
+            return Boolean.valueOf((Boolean) value);
+        }
+        if (value instanceof String) {
+            String string = ((String) value);
+            return Boolean.valueOf("y".equalsIgnoreCase(string) || "on".equalsIgnoreCase(string)
+                    || "true".equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string));
+        }
+        return null;
+    }
 }

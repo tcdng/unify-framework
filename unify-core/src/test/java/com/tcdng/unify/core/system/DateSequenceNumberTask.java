@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@ package com.tcdng.unify.core.system;
 
 import java.util.Date;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -36,23 +35,23 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component("datesequencenumber-task")
 public class DateSequenceNumberTask extends AbstractTask {
 
-	@Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-	private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable
+    private SequenceNumberService sequenceNumberService;
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		int iterations = input.getParam(int.class, DateSequenceNumberTaskConstants.ITERATIONS);
-		Date testDate = input.getParam(Date.class, DateSequenceNumberTaskConstants.DATE);
-		String testSequenceName = input.getParam(String.class, DateSequenceNumberTaskConstants.SEQUENCENAME);
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        int iterations = input.getParam(int.class, DateSequenceNumberTaskConstants.ITERATIONS);
+        Date testDate = input.getParam(Date.class, DateSequenceNumberTaskConstants.DATE);
+        String testSequenceName = input.getParam(String.class, DateSequenceNumberTaskConstants.SEQUENCENAME);
 
-		Long prevSequenceNo = null;
-		for (int i = 0; i < iterations; i++) {
-			Long sequenceNo = sequenceNumberBusinessModule.getNextSequenceNumber(testSequenceName, testDate);
-			if (prevSequenceNo != null && (prevSequenceNo + 1) != sequenceNo) {
-				throwOperationErrorException(null);
-			}
-			prevSequenceNo = sequenceNo;
-			ThreadUtils.yield();
-		}
-	}
+        Long prevSequenceNo = null;
+        for (int i = 0; i < iterations; i++) {
+            Long sequenceNo = sequenceNumberService.getNextSequenceNumber(testSequenceName, testDate);
+            if (prevSequenceNo != null && (prevSequenceNo + 1) != sequenceNo) {
+                throwOperationErrorException(null);
+            }
+            prevSequenceNo = sequenceNo;
+            ThreadUtils.yield();
+        }
+    }
 }

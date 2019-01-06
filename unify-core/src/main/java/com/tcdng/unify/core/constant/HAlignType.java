@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,24 +24,24 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @since 1.0
  */
 public enum HAlignType implements EnumConst {
-	LEFT("L"), CENTER("C"), RIGHT("R"), JUSTIFIED("J");
+    LEFT("L"), CENTER("C"), RIGHT("R"), JUSTIFIED("J");
 
-	private final String code;
+    private final String code;
 
-	private HAlignType(String code) {
-		this.code = code;
-	}
+    private HAlignType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static HAlignType fromCode(String code) {
-		return EnumUtils.fromCode(HAlignType.class, code);
-	}
+    public static HAlignType fromCode(String code) {
+        return EnumUtils.fromCode(HAlignType.class, code);
+    }
 
-	public static HAlignType fromName(String name) {
-		return EnumUtils.fromName(HAlignType.class, name);
-	}
+    public static HAlignType fromName(String name) {
+        return EnumUtils.fromName(HAlignType.class, name);
+    }
 }

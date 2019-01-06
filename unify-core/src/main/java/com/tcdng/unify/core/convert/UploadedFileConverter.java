@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,13 +26,13 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class UploadedFileConverter extends AbstractConverter<UploadedFile> {
 
-	@Override
-	protected UploadedFile doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof UploadedFile) {
-			return (UploadedFile) value;
-		}
+    @Override
+    protected UploadedFile doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof UploadedFile) {
+            return (UploadedFile) value;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

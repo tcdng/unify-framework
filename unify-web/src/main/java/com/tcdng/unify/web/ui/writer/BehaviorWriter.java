@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,17 +28,17 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public interface BehaviorWriter extends UplComponentWriter {
 
-	/**
-	 * Writes behavior for a specified component.
-	 * 
-	 * @param writer
-	 *            the response writer
-	 * @param behavior
-	 *            the behavior to write
-	 * @param id
-	 *            the component id
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void writeBehavior(ResponseWriter writer, Behavior behavior, String id) throws UnifyException;
+    /**
+     * Writes behavior for a specified component.
+     * 
+     * @param writer
+     *            the response writer
+     * @param behavior
+     *            the behavior to write
+     * @param id
+     *            the component id
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeBehavior(ResponseWriter writer, Behavior behavior, String id) throws UnifyException;
 }

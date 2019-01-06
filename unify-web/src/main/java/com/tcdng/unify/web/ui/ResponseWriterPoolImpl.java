@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,63 +33,63 @@ import com.tcdng.unify.web.WebApplicationComponents;
 @Component(WebApplicationComponents.APPLICATION_RESPONSEWRITERPOOL)
 public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements ResponseWriterPool {
 
-	@Configurable("2000") // 2 seconds
-	private long getTimeout;
+    @Configurable("2000") // 2 seconds
+    private long getTimeout;
 
-	@Configurable("128")
-	private int maxSize;
+    @Configurable("128")
+    private int maxSize;
 
-	@Configurable("8")
-	private int minSize;
+    @Configurable("8")
+    private int minSize;
 
-	private FactoryMap<UserPlatform, InternalPool> internalPools = new FactoryMap<UserPlatform, InternalPool>() {
+    private FactoryMap<UserPlatform, InternalPool> internalPools = new FactoryMap<UserPlatform, InternalPool>() {
 
-		@Override
-		protected InternalPool create(UserPlatform key, Object... params) throws Exception {
-			return new InternalPool();
-		}
+        @Override
+        protected InternalPool create(UserPlatform key, Object... params) throws Exception {
+            return new InternalPool();
+        }
 
-	};
+    };
 
-	@Override
-	public ResponseWriter getResponseWriter() throws UnifyException {
-		return internalPools.get(getSessionContext().getPlatform()).borrowObject();
-	}
+    @Override
+    public ResponseWriter getResponseWriter() throws UnifyException {
+        return internalPools.get(getSessionContext().getPlatform()).borrowObject();
+    }
 
-	@Override
-	public boolean restore(ResponseWriter writer) throws UnifyException {
-		return internalPools.get(getSessionContext().getPlatform()).returnObject(writer);
-	}
+    @Override
+    public boolean restore(ResponseWriter writer) throws UnifyException {
+        return internalPools.get(getSessionContext().getPlatform()).returnObject(writer);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	private class InternalPool extends AbstractPool<ResponseWriter> {
+    private class InternalPool extends AbstractPool<ResponseWriter> {
 
-		public InternalPool() {
-			super(getTimeout, minSize, maxSize, true);
-		}
+        public InternalPool() {
+            super(getTimeout, minSize, maxSize, true);
+        }
 
-		@Override
-		protected ResponseWriter createObject(Object... params) throws Exception {
-			return (ResponseWriter) getComponent(WebApplicationComponents.APPLICATION_RESPONSEWRITER);
-		}
+        @Override
+        protected ResponseWriter createObject(Object... params) throws Exception {
+            return (ResponseWriter) getComponent(WebApplicationComponents.APPLICATION_RESPONSEWRITER);
+        }
 
-		@Override
-		protected void onGetObject(ResponseWriter writer, Object... params) throws Exception {
-			writer.reset();
-		}
+        @Override
+        protected void onGetObject(ResponseWriter writer, Object... params) throws Exception {
+            writer.reset();
+        }
 
-		@Override
-		protected void destroyObject(ResponseWriter object) {
+        @Override
+        protected void destroyObject(ResponseWriter object) {
 
-		}
-	}
+        }
+    }
 }

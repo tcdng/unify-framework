@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,9 +26,9 @@ import com.tcdng.unify.core.format.Formatter;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class),
-		@UplAttribute(name = "acceptNegative", type = boolean.class),
-		@UplAttribute(name = "useGrouping", type = boolean.class),
-		@UplAttribute(name = "formatter", type = Formatter.class) })
+        @UplAttribute(name = "acceptNegative", type = boolean.class),
+        @UplAttribute(name = "useGrouping", type = boolean.class),
+        @UplAttribute(name = "formatter", type = Formatter.class) })
 public abstract class AbstractNumberField extends TextField {
 
 }

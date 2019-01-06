@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,29 +30,29 @@ import com.tcdng.unify.web.ui.AbstractFormattedControl;
  */
 @Component("ui-text")
 @UplAttributes({ @UplAttribute(name = "size", type = int.class), @UplAttribute(name = "minLen", type = int.class),
-		@UplAttribute(name = "maxLen", type = int.class), @UplAttribute(name = "case", type = String.class),
-		@UplAttribute(name = "extStyleClass", type = String.class, defaultValue = "tread"),
-		@UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "maxLen", type = int.class), @UplAttribute(name = "case", type = String.class),
+        @UplAttribute(name = "extStyleClass", type = String.class, defaultValue = "tread"),
+        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "true") })
 public class TextField extends AbstractFormattedControl {
 
-	public String getCase() throws UnifyException {
-		return getUplAttribute(String.class, "case");
-	}
+    public String getCase() throws UnifyException {
+        return getUplAttribute(String.class, "case");
+    }
 
-	public String getFacadeStringValue() throws UnifyException {
-		return getStringValue();
-	}
+    public String getFacadeStringValue() throws UnifyException {
+        return getStringValue();
+    }
 
-	public String getExtStyleClass() throws UnifyException {
-		return getUplAttribute(String.class, "extStyleClass");
-	}
+    public String getExtStyleClass() throws UnifyException {
+        return getUplAttribute(String.class, "extStyleClass");
+    }
 
-	public boolean getExtReadOnly() throws UnifyException {
-		return getUplAttribute(boolean.class, "extReadOnly");
-	}
+    public boolean getExtReadOnly() throws UnifyException {
+        return getUplAttribute(boolean.class, "extReadOnly");
+    }
 
-	public ExtensionType getExtensionType() {
-		return ExtensionType.NONE;
-	}
+    public ExtensionType getExtensionType() {
+        return ExtensionType.NONE;
+    }
 
 }

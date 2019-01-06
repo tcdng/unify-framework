@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,15 +22,15 @@ package com.tcdng.unify.core.constant;
  * @since 1.0
  */
 public interface DateStyleConstants {
-	String DEFAULT_STYLE = "default";
+    String DEFAULT_STYLE = "default";
 
-	String SHORT_STYLE = "short";
+    String SHORT_STYLE = "short";
 
-	String CUSTOMSHORT_STYLE = "customshort";
+    String CUSTOMSHORT_STYLE = "customshort";
 
-	String MEDIUM_STYLE = "medium";
+    String MEDIUM_STYLE = "medium";
 
-	String LONG_STYLE = "long";
+    String LONG_STYLE = "long";
 
-	String FULL_STYLE = "full";
+    String FULL_STYLE = "full";
 }

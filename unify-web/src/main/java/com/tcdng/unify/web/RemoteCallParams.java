@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,24 +25,24 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public abstract class RemoteCallParams {
 
-	private String methodCode;
+    private String methodCode;
 
-	private String clientAppCode;
+    private String clientAppCode;
 
-	public RemoteCallParams(String methodCode) {
-		this.methodCode = methodCode;
-	}
+    public RemoteCallParams(String methodCode) {
+        this.methodCode = methodCode;
+    }
 
-	public String getClientAppCode() {
-		return clientAppCode;
-	}
+    public String getClientAppCode() {
+        return clientAppCode;
+    }
 
-	@XmlElement(required = true)
-	public void setClientAppCode(String clientAppCode) {
-		this.clientAppCode = clientAppCode;
-	}
+    @XmlElement(required = true)
+    public void setClientAppCode(String clientAppCode) {
+        this.clientAppCode = clientAppCode;
+    }
 
-	public String methodCode() {
-		return methodCode;
-	}
+    public String methodCode() {
+        return methodCode;
+    }
 }

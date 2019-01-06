@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,29 +23,29 @@ package com.tcdng.unify.core;
  */
 public interface UnifyContainerInterface extends UnifyComponent {
 
-	/**
-	 * Starts servicing web requests.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void startServicingRequests() throws UnifyException;
+    /**
+     * Starts servicing web requests.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void startServicingRequests() throws UnifyException;
 
-	/**
-	 * Stops servicing web requests.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void stopServicingRequests() throws UnifyException;
+    /**
+     * Stops servicing web requests.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void stopServicingRequests() throws UnifyException;
 
-	/**
-	 * Returns true if interface is servicing web requests, otherwise false.
-	 */
-	boolean isServicingRequests();
+    /**
+     * Returns true if interface is servicing web requests, otherwise false.
+     */
+    boolean isServicingRequests();
 
-	/**
-	 * Returns the interface port number.
-	 */
-	int getPort();
+    /**
+     * Returns the interface port number.
+     */
+    int getPort();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,39 +29,39 @@ import com.tcdng.unify.core.database.Entity;
  */
 public class DummyEventLogger extends AbstractUnifyComponent implements EventLogger {
 
-	@Override
-	public boolean logUserEvent(String eventCode, String... detail) throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean logUserEvent(String eventCode, String... detail) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	public boolean logUserEvent(String eventCode, List<String> details) throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean logUserEvent(String eventCode, List<String> details) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	public boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass) throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	public boolean logUserEvent(EventType eventType, Entity record, boolean isNewRecord) throws UnifyException {
-		return false;
-	}
+    @Override
+    public boolean logUserEvent(EventType eventType, Entity record, boolean isNewRecord) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	public <T extends Entity> boolean logUserEvent(EventType eventType, T oldRecord, T newRecord)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    public <T extends Entity> boolean logUserEvent(EventType eventType, T oldRecord, T newRecord)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

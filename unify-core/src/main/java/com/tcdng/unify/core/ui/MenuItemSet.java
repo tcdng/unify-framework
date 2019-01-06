@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,12 +25,12 @@ import java.util.List;
  */
 public class MenuItemSet extends MenuItem {
 
-	public MenuItemSet(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
-		super(caption, privilege, actionPath, menuItemList);
-	}
+    public MenuItemSet(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
+        super(caption, privilege, actionPath, menuItemList);
+    }
 
-	@Override
-	public boolean isMain() {
-		return true;
-	}
+    @Override
+    public boolean isMain() {
+        return true;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,29 +29,29 @@ import com.tcdng.unify.web.ui.PanelEventListener;
  */
 public abstract class AbstractMenuPanel extends AbstractContainer implements Panel {
 
-	public AbstractMenuPanel() {
-		super(false);
-	}
+    public AbstractMenuPanel() {
+        super(false);
+    }
 
-	@Override
-	@Action
-	public void switchState() throws UnifyException {
+    @Override
+    @Action
+    public void switchState() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void resetState() throws UnifyException {
+    @Override
+    public void resetState() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void addEventListener(PanelEventListener listener) {
+    @Override
+    public void addEventListener(PanelEventListener listener) {
 
-	}
+    }
 
-	@Override
-	public void removeEventListener(PanelEventListener listener) {
+    @Override
+    public void removeEventListener(PanelEventListener listener) {
 
-	}
+    }
 
 }

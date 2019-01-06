@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,12 +32,12 @@ import com.tcdng.unify.web.ui.AbstractControl;
 @UplAttributes({ @UplAttribute(name = "item", type = String[].class) })
 public class UnorderedList extends AbstractControl {
 
-	@Override
-	public boolean isLayoutCaption() {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
 
-	public String[] getItems() throws UnifyException {
-		return getUplAttribute(String[].class, "item");
-	}
+    public String[] getItems() throws UnifyException {
+        return getUplAttribute(String[].class, "item");
+    }
 }

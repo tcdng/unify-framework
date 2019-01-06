@@ -5,7 +5,7 @@
 
 // Title bar
 !ui-titlebar:titleBar styleClass:$e{cptitlebar} caption:$g{panelCaption}
-	components:$c{openBtn closeBtn}
+    components:$c{openBtn closeBtn}
 !ui-image:openBtn src:$t{images/down_gray.png} styleClass:$e{tbbutton}
      eventHandler:$d{!ui-event event:onclick action:$c{expandContentAct}}
 !ui-image:closeBtn src:$t{images/up_gray.png} styleClass:$e{tbbutton}

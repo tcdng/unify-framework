@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,43 +28,43 @@ import java.util.Map;
  */
 public class DataTransfer {
 
-	private Class<?> validationClass;
+    private Class<?> validationClass;
 
-	private Class<?> validationIdClass;
+    private Class<?> validationIdClass;
 
-	private String actionId;
+    private String actionId;
 
-	private Map<String, DataTransferBlock> transferBlocks;
+    private Map<String, DataTransferBlock> transferBlocks;
 
-	public DataTransfer(Class<?> validationClass, Class<?> validationIdClass, String actionId,
-			Map<String, DataTransferBlock> transferBlocks) {
-		this.validationClass = validationClass;
-		this.validationIdClass = validationIdClass;
-		this.actionId = actionId;
-		if (transferBlocks != null) {
-			this.transferBlocks = transferBlocks;
-		} else {
-			this.transferBlocks = Collections.emptyMap();
-		}
-	}
+    public DataTransfer(Class<?> validationClass, Class<?> validationIdClass, String actionId,
+            Map<String, DataTransferBlock> transferBlocks) {
+        this.validationClass = validationClass;
+        this.validationIdClass = validationIdClass;
+        this.actionId = actionId;
+        if (transferBlocks != null) {
+            this.transferBlocks = transferBlocks;
+        } else {
+            this.transferBlocks = Collections.emptyMap();
+        }
+    }
 
-	public Class<?> getValidationClass() {
-		return validationClass;
-	}
+    public Class<?> getValidationClass() {
+        return validationClass;
+    }
 
-	public Class<?> getValidationIdClass() {
-		return validationIdClass;
-	}
+    public Class<?> getValidationIdClass() {
+        return validationIdClass;
+    }
 
-	public String getActionId() {
-		return actionId;
-	}
+    public String getActionId() {
+        return actionId;
+    }
 
-	public DataTransferBlock getDataTransferBlock(String id) {
-		return transferBlocks.get(id);
-	}
+    public DataTransferBlock getDataTransferBlock(String id) {
+        return transferBlocks.get(id);
+    }
 
-	public Collection<DataTransferBlock> getDataTransferBlocks() {
-		return transferBlocks.values();
-	}
+    public Collection<DataTransferBlock> getDataTransferBlocks() {
+        return transferBlocks.values();
+    }
 }

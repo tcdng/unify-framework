@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,18 +25,18 @@ import java.util.List;
  */
 public interface SqlIndexSchemaInfo {
 
-	/**
-	 * Returns the index name.
-	 */
-	String getName();
+    /**
+     * Returns the index name.
+     */
+    String getName();
 
-	/**
-	 * Returns the index field list.
-	 */
-	List<String> getFieldNameList();
+    /**
+     * Returns the index field list.
+     */
+    List<String> getFieldNameList();
 
-	/**
-	 * Returns true if index is unique.
-	 */
-	boolean isUnique();
+    /**
+     * Returns true if index is unique.
+     */
+    boolean isUnique();
 }

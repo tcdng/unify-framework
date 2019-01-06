@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,21 +23,21 @@ package com.tcdng.unify.web.ui;
  */
 public interface PageAction extends Behavior {
 
-	/**
-	 * Returns the page action code.
-	 */
-	String getAction();
+    /**
+     * Returns the page action code.
+     */
+    String getAction();
 
-	/**
-	 * Returns the page action id.
-	 */
-	String getId();
+    /**
+     * Returns the page action id.
+     */
+    String getId();
 
-	/**
-	 * Sets the page action id.
-	 * 
-	 * @param id
-	 *            the id to set
-	 */
-	void setId(String id);
+    /**
+     * Sets the page action id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    void setId(String id);
 }

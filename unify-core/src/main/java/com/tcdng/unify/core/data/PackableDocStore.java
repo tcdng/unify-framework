@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,32 +26,32 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class PackableDocStore extends AbstractValueStore<PackableDoc> {
 
-	public PackableDocStore(PackableDoc packableDoc) {
-		this(packableDoc, -1);
-	}
+    public PackableDocStore(PackableDoc packableDoc) {
+        this(packableDoc, -1);
+    }
 
-	public PackableDocStore(PackableDoc packableDoc, int dataIndex) {
-		super(packableDoc, dataIndex);
-	}
+    public PackableDocStore(PackableDoc packableDoc, int dataIndex) {
+        super(packableDoc, dataIndex);
+    }
 
-	@Override
-	public boolean isGettable(String name) throws UnifyException {
-		return storage != null && storage.isField(name);
-	}
+    @Override
+    public boolean isGettable(String name) throws UnifyException {
+        return storage != null && storage.isField(name);
+    }
 
-	@Override
-	public boolean isSettable(String name) throws UnifyException {
-		return storage != null && storage.isField(name);
-	}
+    @Override
+    public boolean isSettable(String name) throws UnifyException {
+        return storage != null && storage.isField(name);
+    }
 
-	@Override
-	protected Object doRetrieve(String property) throws UnifyException {
-		return storage.readFieldValue(property);
-	}
+    @Override
+    protected Object doRetrieve(String property) throws UnifyException {
+        return storage.readFieldValue(property);
+    }
 
-	@Override
-	protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
-		storage.writeFieldValue(property, value, formatter);
-	}
+    @Override
+    protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
+        storage.writeFieldValue(property, value, formatter);
+    }
 
 }

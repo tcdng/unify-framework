@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,33 +28,33 @@ import com.tcdng.unify.core.util.DataUtils;
 @Singleton(false)
 public abstract class AbstractUserInterfaceController extends AbstractController implements UserInterfaceController {
 
-	private boolean readOnly;
+    private boolean readOnly;
 
-	public AbstractUserInterfaceController(boolean secured, boolean readOnly) {
-		super(secured);
-		this.readOnly = readOnly;
-	}
+    public AbstractUserInterfaceController(boolean secured, boolean readOnly) {
+        super(secured);
+        this.readOnly = readOnly;
+    }
 
-	@Override
-	public boolean isReadOnly() {
-		return this.readOnly;
-	}
+    @Override
+    public boolean isReadOnly() {
+        return this.readOnly;
+    }
 
-	@Override
-	public boolean isUserInterface() {
-		return true;
-	}
+    @Override
+    public boolean isUserInterface() {
+        return true;
+    }
 
-	@Override
-	public void reset() {
+    @Override
+    public void reset() {
 
-	}
+    }
 
-	@Override
-	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		if (!readOnly) {
-			DataUtils.setNestedBeanProperty(this, transferBlock.getLongProperty(), transferBlock.getValue(), null);
-		}
-	}
+    @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        if (!readOnly) {
+            DataUtils.setNestedBeanProperty(this, transferBlock.getLongProperty(), transferBlock.getValue(), null);
+        }
+    }
 
 }

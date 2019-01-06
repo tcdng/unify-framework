@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,72 +23,72 @@ package com.tcdng.unify.web;
  */
 public class DataTransferBlock {
 
-	private DataTransferHeader header;
+    private DataTransferHeader header;
 
-	private String id;
+    private String id;
 
-	private int itemIndex;
+    private int itemIndex;
 
-	private DataTransferBlock childBlock;
+    private DataTransferBlock childBlock;
 
-	public DataTransferBlock(DataTransferHeader header, String id, int itemIndex) {
-		this(header, id, itemIndex, null);
-	}
+    public DataTransferBlock(DataTransferHeader header, String id, int itemIndex) {
+        this(header, id, itemIndex, null);
+    }
 
-	public DataTransferBlock(DataTransferHeader header, String id, int itemIndex, DataTransferBlock childBlock) {
-		this.id = id;
-		this.itemIndex = itemIndex;
-		this.header = header;
-		this.childBlock = childBlock;
-	}
+    public DataTransferBlock(DataTransferHeader header, String id, int itemIndex, DataTransferBlock childBlock) {
+        this.id = id;
+        this.itemIndex = itemIndex;
+        this.header = header;
+        this.childBlock = childBlock;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public int getItemIndex() {
-		return itemIndex;
-	}
+    public int getItemIndex() {
+        return itemIndex;
+    }
 
-	public Object getValue() {
-		return header.getValue();
-	}
+    public Object getValue() {
+        return header.getValue();
+    }
 
-	public Object getDebugValue() {
-		return header.getDebugValue();
-	}
+    public Object getDebugValue() {
+        return header.getDebugValue();
+    }
 
-	public DataTransferBlock getChildBlock() {
-		return childBlock;
-	}
+    public DataTransferBlock getChildBlock() {
+        return childBlock;
+    }
 
-	public String getLongName() {
-		return header.getLongName();
-	}
+    public String getLongName() {
+        return header.getLongName();
+    }
 
-	public String getLongProperty() {
-		return header.getLongProperty();
-	}
+    public String getLongProperty() {
+        return header.getLongProperty();
+    }
 
-	public String getShortProperty() {
-		return header.getShortProperty();
-	}
+    public String getShortProperty() {
+        return header.getShortProperty();
+    }
 
-	public DataTransferBlock getSiblingBlock() {
-		return header.getSiblingBlock();
-	}
+    public DataTransferBlock getSiblingBlock() {
+        return header.getSiblingBlock();
+    }
 
-	public void setSiblingBlock(DataTransferBlock siblingBlock) {
-		header.setSiblingBlock(siblingBlock);
-	}
+    public void setSiblingBlock(DataTransferBlock siblingBlock) {
+        header.setSiblingBlock(siblingBlock);
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{id=").append(id).append(", itemIndex = ").append(itemIndex).append('}');
-		if (childBlock != null) {
-			sb.append("->").append(childBlock);
-		}
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{id=").append(id).append(", itemIndex = ").append(itemIndex).append('}');
+        if (childBlock != null) {
+            sb.append("->").append(childBlock);
+        }
+        return sb.toString();
+    }
 }

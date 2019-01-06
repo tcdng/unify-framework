@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,41 +31,41 @@ import com.tcdng.unify.core.annotation.Configurable;
 @Component(ApplicationComponents.APPLICATION_TASKLAUNCHER)
 public class TaskLauncherImpl extends AbstractUnifyComponent implements TaskLauncher {
 
-	@Configurable(ApplicationComponents.APPLICATION_TASKMANAGER)
-	private TaskManager taskManager;
+    @Configurable(ApplicationComponents.APPLICATION_TASKMANAGER)
+    private TaskManager taskManager;
 
-	@Override
-	public TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
-		if (taskSetup.getTaskNames().isEmpty()) {
-			throw new UnifyException(UnifyCoreErrorConstants.TASKSETUP_NO_TASK);
-		}
+    @Override
+    public TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
+        if (taskSetup.getTaskNames().isEmpty()) {
+            throw new UnifyException(UnifyCoreErrorConstants.TASKSETUP_NO_TASK);
+        }
 
-		switch (taskSetup.getType()) {
-		case RUN_AFTER:
-			return taskManager.scheduleTasksToRunAfter(taskSetup.getTaskNames(), taskSetup.getParameters(),
-					taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
-					taskSetup.getLogger());
-		case RUN_PERIODIC:
-			return taskManager.scheduleTasksToRunPeriodically(taskSetup.getTaskNames(), taskSetup.getParameters(),
-					taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
-					taskSetup.getPeriodInMillSec(), taskSetup.getNumberOfTimes(), taskSetup.getLogger());
-		case RUN_IMMEDIATE_BLOCK:
-			return taskManager.executeTasks(taskSetup.getTaskNames(), taskSetup.getParameters(), taskSetup.isMessages(),
-					taskSetup.isDependent(), taskSetup.getLogger());
-		case RUN_IMMEDIATE:
-		default:
-			return taskManager.startTasks(taskSetup.getTaskNames(), taskSetup.getParameters(), taskSetup.isMessages(),
-					taskSetup.isDependent(), taskSetup.getLogger());
-		}
-	}
+        switch (taskSetup.getType()) {
+            case RUN_AFTER:
+                return taskManager.scheduleTasksToRunAfter(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
+                        taskSetup.getLogger());
+            case RUN_PERIODIC:
+                return taskManager.scheduleTasksToRunPeriodically(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
+                        taskSetup.getPeriodInMillSec(), taskSetup.getNumberOfTimes(), taskSetup.getLogger());
+            case RUN_IMMEDIATE_BLOCK:
+                return taskManager.executeTasks(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getLogger());
+            case RUN_IMMEDIATE:
+            default:
+                return taskManager.startTasks(taskSetup.getTaskNames(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getLogger());
+        }
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

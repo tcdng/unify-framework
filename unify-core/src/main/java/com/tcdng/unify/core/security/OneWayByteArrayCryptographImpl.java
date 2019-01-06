@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,18 +27,18 @@ import com.tcdng.unify.core.annotation.Component;
 @Component("oneway-bytearraycryptograph")
 public class OneWayByteArrayCryptographImpl extends AbstractOneWayCryptograph implements OneWayByteArrayCryptograph {
 
-	@Override
-	public byte[] forwardTransform(byte[] value) throws UnifyException {
-		return encrypt(value);
-	}
+    @Override
+    public byte[] forwardTransform(byte[] value) throws UnifyException {
+        return encrypt(value);
+    }
 
-	@Override
-	public byte[] reverseTransform(byte[] value) throws UnifyException {
-		return value;
-	}
+    @Override
+    public byte[] reverseTransform(byte[] value) throws UnifyException {
+        return value;
+    }
 
-	@Override
-	public byte[] encrypt(byte[] toEncrypt) throws UnifyException {
-		return doEncrypt(toEncrypt);
-	}
+    @Override
+    public byte[] encrypt(byte[] toEncrypt) throws UnifyException {
+        return doEncrypt(toEncrypt);
+    }
 }

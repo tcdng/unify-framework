@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,10 @@
  */
 package com.tcdng.unify.core.operation;
 
-import com.tcdng.unify.core.data.FluentSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.tcdng.unify.core.constant.OrderType;
 
 /**
  * Used to order the results of a criteria.
@@ -23,37 +26,62 @@ import com.tcdng.unify.core.data.FluentSet;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Order extends FluentSet<String> {
+public class Order {
 
-	private boolean ascending;
+    private List<Part> parts;
 
-	public Order() {
-		this(true);
-	}
+    public Order() {
+        parts = new ArrayList<Part>();
+    }
 
-	public Order(boolean ascending) {
-		this.ascending = ascending;
-	}
+    public Order add(String field) {
+        parts.add(new Part(field));
+        return this;
+    }
 
-	public Order(Order order) {
-		super(order);
-		this.ascending = order.ascending;
-	}
+    public Order add(String field, OrderType type) {
+        parts.add(new Part(field, type));
+        return this;
+    }
 
-	@Override
-	public Order add(String field) {
-		return (Order) super.add(field);
-	}
+    public List<Part> getParts() {
+        return parts;
+    }
 
-	public void setAscending(boolean ascending) {
-		this.ascending = ascending;
-	}
+    public void clear() {
+        parts.clear();
+    }
 
-	public boolean isAscending() {
-		return ascending;
-	}
+    public boolean isParts() {
+        return !parts.isEmpty();
+    }
 
-	public boolean isDescending() {
-		return !ascending;
-	}
+    public class Part {
+
+        private String field;
+
+        private OrderType type;
+
+        public Part(String field) {
+            this.field = field;
+            type = OrderType.ASCENDING;
+        }
+
+        public Part(String field, OrderType type) {
+            this.field = field;
+            this.type = type;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public OrderType getType() {
+            return type;
+        }
+
+        public boolean isAscending() {
+            return OrderType.ASCENDING.equals(type);
+        }
+    }
 }

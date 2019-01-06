@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,90 +25,103 @@ import com.tcdng.unify.core.annotation.ColumnType;
  */
 public interface SqlFieldSchemaInfo {
 
-	/**
-	 * Returns field name.
-	 */
-	String getName();
+    /**
+     * Returns field name.
+     */
+    String getName();
 
-	/**
-	 * Returns the field information unique marker. Markers are used to track field
-	 * information over a lifetime.
-	 */
-	Long getMarker();
+    /**
+     * Returns the field information unique marker. Markers are used to track field
+     * information over a lifetime.
+     */
+    Long getMarker();
 
-	/**
-	 * Returns the field column name.
-	 */
-	String getColumn();
+    /**
+     * Returns the field column name.
+     */
+    String getColumn();
 
-	/**
-	 * Returns the constraint name.
-	 */
-	String getConstraint();
+    /**
+     * Returns the constraint name.
+     */
+    String getConstraint();
 
-	/**
-	 * Returns the field nullable attribute
-	 */
-	boolean isNullable();
+    /**
+     * Returns the field nullable attribute
+     */
+    boolean isNullable();
 
-	/**
-	 * Returns the field length.
-	 */
-	int getLength();
+    /**
+     * Returns the field length.
+     */
+    int getLength();
 
-	/**
-	 * Returns the field precision.
-	 */
-	int getPrecision();
+    /**
+     * Returns the field precision.
+     */
+    int getPrecision();
 
-	/**
-	 * Returns the field scale.
-	 */
-	int getScale();
+    /**
+     * Returns the field scale.
+     */
+    int getScale();
 
-	/**
-	 * Returns the field data column type.
-	 */
-	ColumnType getColumnType();
+    /**
+     * Returns the field data column type.
+     */
+    ColumnType getColumnType();
 
-	/**
-	 * Returns the field default value.
-	 */
-	String getDefaultValue();
+    /**
+     * Returns the field type.
+     */
+    Class<?> getFieldType();
 
-	/**
-	 * Returns true if the field is a primary key otherwise false;
-	 */
-	boolean isPrimaryKey();
+    /**
+     * Returns the field default value.
+     */
+    String getDefaultValue();
 
-	/**
-	 * Returns true if field is list-only.
-	 */
-	boolean isListOnly();
+    /**
+     * Returns if field has default value.
+     */
+    boolean isWithDefaultValue();
 
-	/**
-	 * Returns true if this schema info is the same with supplied info, otherwise
-	 * false.
-	 * 
-	 * @param sqlFieldSchemaInfo
-	 *            the supplied info
-	 */
-	boolean isSameSchema(SqlFieldSchemaInfo sqlFieldSchemaInfo);
+    /**
+     * Returns true if the field is a primary key otherwise false;
+     */
+    boolean isPrimaryKey();
 
-	boolean isIgnoreFkConstraint();
+    /**
+     * Returns true if field is list-only.
+     */
+    boolean isListOnly();
 
-	/**
-	 * Returns the foreign key record tye schema info.
-	 */
-	SqlEntitySchemaInfo getForeignEntityInfo();
+    /**
+     * Returns true if this schema info is the same with supplied info, otherwise
+     * false.
+     * 
+     * @param sqlFieldSchemaInfo
+     *            the supplied info
+     */
+    boolean isSameSchema(SqlFieldSchemaInfo sqlFieldSchemaInfo);
 
-	/**
-	 * Returns the foreign field schema information.
-	 */
-	SqlFieldSchemaInfo getForeignFieldInfo();
+    /**
+     * Returns the ignore foreign key constraint flag.
+     */
+    boolean isIgnoreFkConstraint();
 
-	/**
-	 * Returns the foreign key field schema information.
-	 */
-	SqlFieldSchemaInfo getForeignKeyFieldInfo();
+    /**
+     * Returns the foreign key entity schema info.
+     */
+    SqlEntitySchemaInfo getForeignEntityInfo();
+
+    /**
+     * Returns the foreign field schema information.
+     */
+    SqlFieldSchemaInfo getForeignFieldInfo();
+
+    /**
+     * Returns the foreign key field schema information.
+     */
+    SqlFieldSchemaInfo getForeignKeyFieldInfo();
 }

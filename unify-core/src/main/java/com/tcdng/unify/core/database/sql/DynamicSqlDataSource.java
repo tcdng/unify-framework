@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,32 +25,32 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface DynamicSqlDataSource extends SqlDataSource {
 
-	/**
-	 * Configures data source using supplied configuration.
-	 * 
-	 * @param dynamicSqlDataSourceConfig
-	 *            the configuration to use
-	 * @throws UnifyException
-	 *             if data source is already configured. If an error occurs
-	 */
-	void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
+    /**
+     * Configures data source using supplied configuration.
+     * 
+     * @param dynamicSqlDataSourceConfig
+     *            the configuration to use
+     * @throws UnifyException
+     *             if data source is already configured. If an error occurs
+     */
+    void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
 
-	/**
-	 * Reconfigures data source using supplied configuration.
-	 * 
-	 * @param dynamicSqlDataSourceConfig
-	 *            the configuration to use
-	 * @return true if reconfigured otherwise false
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
+    /**
+     * Reconfigures data source using supplied configuration.
+     * 
+     * @param dynamicSqlDataSourceConfig
+     *            the configuration to use
+     * @return true if reconfigured otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
 
-	/**
-	 * Returns true if data source is configured.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isConfigured() throws UnifyException;
+    /**
+     * Returns true if data source is configured.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isConfigured() throws UnifyException;
 }

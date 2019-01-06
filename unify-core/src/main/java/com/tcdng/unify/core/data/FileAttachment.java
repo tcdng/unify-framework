@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,28 +26,28 @@ import com.tcdng.unify.core.constant.FileAttachmentType;
  */
 public class FileAttachment {
 
-	private FileAttachmentType type;
+    private FileAttachmentType type;
 
-	private String fileName;
+    private String fileName;
 
-	private byte[] data;
+    private byte[] data;
 
-	public FileAttachment(FileAttachmentType type, String fileName, byte[] data) {
-		this.type = type;
-		this.fileName = fileName;
-		this.data = data;
-	}
+    public FileAttachment(FileAttachmentType type, String fileName, byte[] data) {
+        this.type = type;
+        this.fileName = fileName;
+        this.data = data;
+    }
 
-	public FileAttachmentType getType() {
-		return type;
-	}
+    public FileAttachmentType getType() {
+        return type;
+    }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public byte[] getData() {
+        return data;
+    }
 
 }

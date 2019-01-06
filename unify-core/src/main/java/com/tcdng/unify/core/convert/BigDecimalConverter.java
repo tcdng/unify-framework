@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,23 +27,23 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class BigDecimalConverter extends AbstractConverter<BigDecimal> {
 
-	@Override
-	protected BigDecimal doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Number) {
-			return new BigDecimal(((Number) value).toString());
-		}
+    @Override
+    protected BigDecimal doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Number) {
+            return new BigDecimal(((Number) value).toString());
+        }
 
-		if (value instanceof String) {
-			String string = ((String) value).trim();
-			if (!string.isEmpty()) {
-				if (formatter == null) {
-					return new BigDecimal(string);
-				}
+        if (value instanceof String) {
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                if (formatter == null) {
+                    return new BigDecimal(string);
+                }
 
-				return doConvert(formatter.parse(string), null);
-			}
-		}
+                return doConvert(formatter.parse(string), null);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

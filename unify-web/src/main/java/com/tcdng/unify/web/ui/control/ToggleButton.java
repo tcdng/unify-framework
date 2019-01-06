@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,20 +28,20 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-togglebutton")
-@UplAttributes({ @UplAttribute(name = "toggleProperty", type = String.class, mandatory = true),
-		@UplAttribute(name = "onMessageKey", type = String.class, defaultValue = "button.on"),
-		@UplAttribute(name = "offMessageKey", type = String.class, defaultValue = "button.off") })
+@UplAttributes({ @UplAttribute(name = "toggleBinding", type = String.class, mandatory = true),
+        @UplAttribute(name = "onMessageKey", type = String.class, defaultValue = "button.on"),
+        @UplAttribute(name = "offMessageKey", type = String.class, defaultValue = "button.off") })
 public class ToggleButton extends AbstractTargetControl {
 
-	public String getToggleAttribute() throws UnifyException {
-		return getUplAttribute(String.class, "toggleProperty");
-	}
+    public String getToggleBinding() throws UnifyException {
+        return getUplAttribute(String.class, "toggleBinding");
+    }
 
-	public String getOnMessageKey() throws UnifyException {
-		return getUplAttribute(String.class, "onMessageKey");
-	}
+    public String getOnMessageKey() throws UnifyException {
+        return getUplAttribute(String.class, "onMessageKey");
+    }
 
-	public String getOffMessageKey() throws UnifyException {
-		return getUplAttribute(String.class, "offMessageKey");
-	}
+    public String getOffMessageKey() throws UnifyException {
+        return getUplAttribute(String.class, "offMessageKey");
+    }
 }

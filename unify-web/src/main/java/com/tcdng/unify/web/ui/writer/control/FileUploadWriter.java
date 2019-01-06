@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,90 +35,88 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("fileupload-writer")
 public class FileUploadWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		FileUpload fileUpload = (FileUpload) widget;
-		writer.write("<div ");
-		writeTagStyleClass(writer, fileUpload);
-		writeTagStyle(writer, fileUpload);
-		writer.write(">");
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        FileUpload fileUpload = (FileUpload) widget;
+        writer.write("<div ");
+        writeTagStyleClass(writer, fileUpload);
+        writeTagStyle(writer, fileUpload);
+        writer.write(">");
 
-		// Actual HTML file control
-		writer.write("<input type=\"file\"");
-		writeTagId(writer, fileUpload);
-		writeTagStyle(writer, "display:none;");
-		String accept = fileUpload.getAccept();
-		if (!StringUtils.isBlank(accept)) {
-			FileAttachmentType fileAttachmentType = FileAttachmentType.fromName(accept);
-			if (fileAttachmentType == null) {
-				fileAttachmentType = FileAttachmentType.WILDCARD;
-			}
+        // Actual HTML file control
+        writer.write("<input type=\"file\"");
+        writeTagId(writer, fileUpload);
+        writeTagStyle(writer, "display:none;");
+        String accept = fileUpload.getAccept();
+        if (!StringUtils.isBlank(accept)) {
+            FileAttachmentType fileAttachmentType = FileAttachmentType.fromName(accept);
+            if (fileAttachmentType != null && !FileAttachmentType.WILDCARD.equals(fileAttachmentType)) {
+                writer.write(" accept=\"").write(fileAttachmentType.contentType()).write('"');
+            }
+        }
 
-			writer.write(" accept=\"").write(fileAttachmentType.extensions()).write('"');
-		}
+        if (fileUpload.getUplAttribute(boolean.class, "multiple")) {
+            writer.write(" multiple");
+        }
 
-		if (fileUpload.getUplAttribute(boolean.class, "multiple")) {
-			writer.write(" multiple");
-		}
+        writer.write("/>");
 
-		writer.write("/>");
+        // Facade
+        if (!fileUpload.isHidden()) {
+            writer.write("<div style=\"display:flex;width:100%;\">");
 
-		// Facade
-		if (!fileUpload.isHidden()) {
-			writer.write("<div style=\"display:flex;width:100%;\">");
+            if (!fileUpload.isSelectOnly()) {
+                // Display upload button
+                writer.write("<button type=\"button\" class=\"fubutton\" id=\"").write(fileUpload.getUploadButtonId());
+                writer.write("\" style=\"background: url('");
+                writer.writeFileImageContextURL("$t{images/upload.png}");
+                writer.write("') no-repeat left 8px center/14px 14px;\">");
+                writer.write("<span>");
+                writer.writeWithHtmlEscape(fileUpload.getUploadCaption());
+                writer.write("</span></button>");
+            }
 
-			if (!fileUpload.isSelectOnly()) {
-				// Display upload button
-				writer.write("<button type=\"button\" class=\"fubutton\" id=\"").write(fileUpload.getUploadButtonId());
-				writer.write("\" style=\"background: url('");
-				writer.writeFileImageContextURL("$t{images/upload.png}");
-				writer.write("') no-repeat left 8px center/14px 14px;\">");
-				writer.write("<span>");
-				writer.writeWithHtmlEscape(fileUpload.getUploadCaption());
-				writer.write("</span></button>");
-			}
+            writer.write("<button type=\"button\" class=\"fsbutton\" id=\"").write(fileUpload.getButtonId())
+                    .write("\">");
+            writer.writeWithHtmlEscape(fileUpload.getBrowseCaption());
+            writer.write("</button>");
 
-			writer.write("<button type=\"button\" class=\"fsbutton\" id=\"").write(fileUpload.getButtonId())
-					.write("\">");
-			writer.writeWithHtmlEscape(fileUpload.getBrowseCaption());
-			writer.write("</button>");
+            writer.write("<input type=\"text\" class=\"fsspan\" id=\"").write(fileUpload.getSpanId())
+                    .write("\" readonly/>");
 
-			writer.write("<input type=\"text\" class=\"fsspan\" id=\"").write(fileUpload.getSpanId())
-					.write("\" readonly/>");
+            writer.write("</div>");
+        }
 
-			writer.write("</div>");
-		}
+        writer.write("</div>");
+    }
 
-		writer.write("</div>");
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
+        FileUpload fileUpload = (FileUpload) widget;
+        if (!fileUpload.isHidden()) {
+            // Append rigging
+            writer.write("ux.rigFileUpload({");
+            writer.write("\"pId\":\"").write(fileUpload.getId()).write('"');
+            writer.write(",\"pContId\":\"").write(fileUpload.getContainerId()).write('"');
+            writer.write(",\"pBtnId\":\"").write(fileUpload.getButtonId()).write('"');
+            writer.write(",\"pSpanId\":\"").write(fileUpload.getSpanId()).write('"');
+            writer.write(",\"pUpBtnId\":\"").write(fileUpload.getUploadButtonId()).write('"');
+            writer.write(",\"pDisabled\":").write(fileUpload.isContainerDisabled());
+            writer.write(",\"pSelect\":").write(fileUpload.isSelectOnly());
+            String uploadPath = fileUpload.getUploadURL();
+            if (uploadPath != null) {
+                writer.write(",\"pUploadURL\":\"").writeContextURL(uploadPath).write('"');
+            }
 
-		FileUpload fileUpload = (FileUpload) widget;
-		if (!fileUpload.isHidden()) {
-			// Append rigging
-			writer.write("ux.rigFileUpload({");
-			writer.write("\"pId\":\"").write(fileUpload.getId()).write('"');
-			writer.write(",\"pContId\":\"").write(fileUpload.getContainerId()).write('"');
-			writer.write(",\"pBtnId\":\"").write(fileUpload.getButtonId()).write('"');
-			writer.write(",\"pSpanId\":\"").write(fileUpload.getSpanId()).write('"');
-			writer.write(",\"pUpBtnId\":\"").write(fileUpload.getUploadButtonId()).write('"');
-			writer.write(",\"pDisabled\":").write(fileUpload.isContainerDisabled());
-			writer.write(",\"pSelect\":").write(fileUpload.isSelectOnly());
-			String uploadPath = fileUpload.getUploadURL();
-			if (uploadPath != null) {
-				writer.write(",\"pUploadURL\":\"").writeContextURL(uploadPath).write('"');
-			}
-
-			int maxSize = fileUpload.getMaxSize();
-			if (maxSize > 0) {
-				writer.write(",\"pMaxSize\":").write(maxSize);
-				writer.write(",\"pMaxMsg\":\"").write(getSessionMessage("fileupload.maxsize", maxSize)).write('"');
-			}
-			writer.write("});");
-		}
-	}
+            int maxSize = fileUpload.getMaxSize();
+            if (maxSize > 0) {
+                writer.write(",\"pMaxSize\":").write(maxSize);
+                writer.write(",\"pMaxMsg\":\"").write(getSessionMessage("fileupload.maxsize", maxSize)).write('"');
+            }
+            writer.write("});");
+        }
+    }
 
 }

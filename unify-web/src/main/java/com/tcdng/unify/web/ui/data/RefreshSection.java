@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,20 +25,20 @@ import com.tcdng.unify.web.ui.Widget;
  */
 public class RefreshSection {
 
-	private Widget widget;
+    private Widget widget;
 
-	private String sectionPageName;
+    private String sectionPageName;
 
-	public RefreshSection(Widget widget, String sectionPageName) {
-		this.widget = widget;
-		this.sectionPageName = sectionPageName;
-	}
+    public RefreshSection(Widget widget, String sectionPageName) {
+        this.widget = widget;
+        this.sectionPageName = sectionPageName;
+    }
 
-	public Widget getWidget() {
-		return widget;
-	}
+    public Widget getWidget() {
+        return widget;
+    }
 
-	public String getSectionPageName() {
-		return sectionPageName;
-	}
+    public String getSectionPageName() {
+        return sectionPageName;
+    }
 }

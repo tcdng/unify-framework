@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,17 +26,17 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "event", type = String.class, mandatory = true),
-		@UplAttribute(name = "action", type = UplElementReferences.class) })
+        @UplAttribute(name = "action", type = UplElementReferences.class) })
 public abstract class AbstractEventHandler extends AbstractBehavior implements EventHandler {
 
-	private PageAction[] pageAction;
+    private PageAction[] pageAction;
 
-	@Override
-	public void setPageAction(PageAction[] pageAction) {
-		this.pageAction = pageAction;
-	}
+    @Override
+    public void setPageAction(PageAction[] pageAction) {
+        this.pageAction = pageAction;
+    }
 
-	public PageAction[] getPageAction() {
-		return pageAction;
-	}
+    public PageAction[] getPageAction() {
+        return pageAction;
+    }
 }

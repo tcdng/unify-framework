@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,96 +29,96 @@ import com.tcdng.unify.core.database.Entity;
  */
 @UplBinding("web/panels/upl/wrappeddatatablecrudpanel.upl")
 public abstract class AbstractWrappedDataTableCrudPanel<T extends Entity, U extends WrappedData<T>>
-		extends AbstractTableCrudPanel<T> {
+        extends AbstractTableCrudPanel<T> {
 
-	public AbstractWrappedDataTableCrudPanel(Class<T> entityClass, String titleKey) {
-		super(entityClass, titleKey);
-	}
+    public AbstractWrappedDataTableCrudPanel(Class<T> entityClass, String titleKey) {
+        super(entityClass, titleKey);
+    }
 
-	public AbstractWrappedDataTableCrudPanel(Class<T> entityClass, String titleKey, boolean searchOnSwitchState) {
-		super(entityClass, titleKey, searchOnSwitchState);
-	}
+    public AbstractWrappedDataTableCrudPanel(Class<T> entityClass, String titleKey, boolean searchOnSwitchState) {
+        super(entityClass, titleKey, searchOnSwitchState);
+    }
 
-	@Override
-	protected T doPrepareCreateRecord() throws UnifyException {
-		U wrappedRecord = doPrepareCreateWrappedRecord();
-		getCrudData().setWrappedRecord(wrappedRecord);
-		return wrappedRecord.getData();
-	}
+    @Override
+    protected T doPrepareCreateRecord() throws UnifyException {
+        U wrappedRecord = doPrepareCreateWrappedRecord();
+        getCrudData().setWrappedRecord(wrappedRecord);
+        return wrappedRecord.getData();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doCreateRecord() throws UnifyException {
-		doCreateRecord((U) getCrudData().getWrappedRecord());
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void doCreateRecord() throws UnifyException {
+        doCreateRecord((U) getCrudData().getWrappedRecord());
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doUpdateRecord() throws UnifyException {
-		doUpdateRecord((U) getCrudData().getWrappedRecord());
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void doUpdateRecord() throws UnifyException {
+        doUpdateRecord((U) getCrudData().getWrappedRecord());
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doDeleteRecord() throws UnifyException {
-		doDeleteRecord((U) getCrudData().getWrappedRecord());
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void doDeleteRecord() throws UnifyException {
+        doDeleteRecord((U) getCrudData().getWrappedRecord());
+    }
 
-	@Override
-	protected T loadSelectedRecordForView() throws UnifyException {
-		T record = super.loadSelectedRecordForView();
-		getCrudData().setWrappedRecord(doFindWrappedRecord(record.getId()));
-		return record;
-	}
+    @Override
+    protected T loadSelectedRecordForView() throws UnifyException {
+        T record = super.loadSelectedRecordForView();
+        getCrudData().setWrappedRecord(doFindWrappedRecord(record.getId()));
+        return record;
+    }
 
-	/**
-	 * Finds a wrapped record using supplied record ID.
-	 * 
-	 * @param id
-	 *            the ID to use
-	 * @return the wrapped record
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract U doFindWrappedRecord(Object id) throws UnifyException;
+    /**
+     * Finds a wrapped record using supplied record ID.
+     * 
+     * @param id
+     *            the ID to use
+     * @return the wrapped record
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract U doFindWrappedRecord(Object id) throws UnifyException;
 
-	/**
-	 * Prepares a new wrapped record.
-	 * 
-	 * @return the prepared wrapped record
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract U doPrepareCreateWrappedRecord() throws UnifyException;
+    /**
+     * Prepares a new wrapped record.
+     * 
+     * @return the prepared wrapped record
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract U doPrepareCreateWrappedRecord() throws UnifyException;
 
-	/**
-	 * Creates a record using wrapped record.
-	 * 
-	 * @param wrappedRecord
-	 *            the record to use
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void doCreateRecord(U wrappedRecord) throws UnifyException;
+    /**
+     * Creates a record using wrapped record.
+     * 
+     * @param wrappedRecord
+     *            the record to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void doCreateRecord(U wrappedRecord) throws UnifyException;
 
-	/**
-	 * Updates a record using wrapped record.
-	 * 
-	 * @param wrappedRecord
-	 *            the record to use
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void doUpdateRecord(U wrappedRecord) throws UnifyException;
+    /**
+     * Updates a record using wrapped record.
+     * 
+     * @param wrappedRecord
+     *            the record to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void doUpdateRecord(U wrappedRecord) throws UnifyException;
 
-	/**
-	 * Deletes a record using wrapped record.
-	 * 
-	 * @param wrappedRecord
-	 *            the record to use
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void doDeleteRecord(U wrappedRecord) throws UnifyException;
+    /**
+     * Deletes a record using wrapped record.
+     * 
+     * @param wrappedRecord
+     *            the record to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void doDeleteRecord(U wrappedRecord) throws UnifyException;
 
 }

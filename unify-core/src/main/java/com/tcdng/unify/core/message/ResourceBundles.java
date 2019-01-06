@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,46 +34,46 @@ import com.tcdng.unify.core.data.FactoryMap;
  */
 public class ResourceBundles {
 
-	private FactoryMap<Locale, Map<String, String>> resourceBundles;
+    private FactoryMap<Locale, Map<String, String>> resourceBundles;
 
-	private List<String> messagesBase;
+    private List<String> messagesBase;
 
-	public ResourceBundles(List<String> messagesBaseIn) {
-		messagesBase = messagesBaseIn;
-		resourceBundles = new FactoryMap<Locale, Map<String, String>>() {
-			@Override
-			protected Map<String, String> create(Locale locale, Object... params) throws Exception {
-				Map<String, String> map = new HashMap<String, String>();
-				if (messagesBase != null) {
-					for (String baseName : messagesBase) {
-						ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale);
-						for (String key : bundle.keySet()) {
-							map.put(key, bundle.getString(key));
-						}
-					}
-					ResourceBundle.clearCache();
-				}
-				return map;
-			}
-		};
-	}
+    public ResourceBundles(List<String> messagesBaseIn) {
+        messagesBase = messagesBaseIn;
+        resourceBundles = new FactoryMap<Locale, Map<String, String>>() {
+            @Override
+            protected Map<String, String> create(Locale locale, Object... params) throws Exception {
+                Map<String, String> map = new HashMap<String, String>();
+                if (messagesBase != null) {
+                    for (String baseName : messagesBase) {
+                        ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale);
+                        for (String key : bundle.keySet()) {
+                            map.put(key, bundle.getString(key));
+                        }
+                    }
+                    ResourceBundle.clearCache();
+                }
+                return map;
+            }
+        };
+    }
 
-	public String getMessage(Locale locale, String messageKey) throws UnifyException {
-		String message = resourceBundles.get(locale).get(messageKey);
-		if (message == null) {
-			throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_MISSING_RESOURCE, messageKey);
-		}
-		return message;
-	}
+    public String getMessage(Locale locale, String messageKey) throws UnifyException {
+        String message = resourceBundles.get(locale).get(messageKey);
+        if (message == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_MISSING_RESOURCE, messageKey);
+        }
+        return message;
+    }
 
-	public String getMessage(Locale locale, String messageKey, Object... params) throws UnifyException {
-		if (params == null || params.length == 0) {
-			return getMessage(locale, messageKey);
-		}
+    public String getMessage(Locale locale, String messageKey, Object... params) throws UnifyException {
+        if (params == null || params.length == 0) {
+            return getMessage(locale, messageKey);
+        }
 
-		MessageFormat mf = new MessageFormat("");
-		mf.setLocale(locale);
-		mf.applyPattern(getMessage(locale, messageKey));
-		return mf.format(params);
-	}
+        MessageFormat mf = new MessageFormat("");
+        mf.setLocale(locale);
+        mf.applyPattern(getMessage(locale, messageKey));
+        return mf.format(params);
+    }
 }

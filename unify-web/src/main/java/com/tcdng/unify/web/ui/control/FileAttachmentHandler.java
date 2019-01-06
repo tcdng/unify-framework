@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,40 +27,40 @@ import com.tcdng.unify.web.ui.data.FileAttachmentInfo;
  */
 public interface FileAttachmentHandler extends UnifyComponent {
 
-	/**
-	 * Handles an attachment request.
-	 * 
-	 * @param parentId
-	 *            the parent ID
-	 * @param fileAttachmentInfo
-	 *            the attachment information
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void handleAttach(Object parentId, FileAttachmentInfo fileAttachmentInfo) throws UnifyException;
+    /**
+     * Handles an attachment request.
+     * 
+     * @param parentId
+     *            the parent ID
+     * @param fileAttachmentInfo
+     *            the attachment information
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void handleAttach(Object parentId, FileAttachmentInfo fileAttachmentInfo) throws UnifyException;
 
-	/**
-	 * Handles a file attachment view request.
-	 * 
-	 * @param parentId
-	 *            the parent ID
-	 * @param fileAttachmentInfo
-	 *            the attachment information
-	 * @return the attachment result
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	FileAttachmentInfo handleView(Object parentId, FileAttachmentInfo fileAttachmentInfo) throws UnifyException;
+    /**
+     * Handles a file attachment view request.
+     * 
+     * @param parentId
+     *            the parent ID
+     * @param fileAttachmentInfo
+     *            the attachment information
+     * @return the attachment result
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    FileAttachmentInfo handleView(Object parentId, FileAttachmentInfo fileAttachmentInfo) throws UnifyException;
 
-	/**
-	 * Handles a file detachment.
-	 * 
-	 * @param parentId
-	 *            the parent ID
-	 * @param fileAttachmentInfo
-	 *            the attachment information
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void handleDetach(Object parentId, FileAttachmentInfo fileAttachmentInfo) throws UnifyException;
+    /**
+     * Handles a file detachment.
+     * 
+     * @param parentId
+     *            the parent ID
+     * @param fileAttachmentInfo
+     *            the attachment information
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void handleDetach(Object parentId, FileAttachmentInfo fileAttachmentInfo) throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,16 +25,16 @@ import com.tcdng.unify.core.database.Entity;
  */
 public interface BatchRecord extends Entity {
 
-	/**
-	 * Returns batch category.
-	 */
-	String getCategory();
+    /**
+     * Returns batch category.
+     */
+    String getCategory();
 
-	/**
-	 * Sets the batch record category.
-	 * 
-	 * @param category
-	 *            the category to set
-	 */
-	void setCategory(String category);
+    /**
+     * Sets the batch record category.
+     * 
+     * @param category
+     *            the category to set
+     */
+    void setCategory(String category);
 }

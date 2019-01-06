@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,33 +31,33 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 @UplBinding("web/panels/upl/collapsiblepanel.upl")
 public class CollapsiblePanel extends AbstractPanel {
 
-	private boolean collapsed;
+    private boolean collapsed;
 
-	@Action
-	@Override
-	public void switchState() throws UnifyException {
-		super.switchState();
+    @Action
+    @Override
+    public void switchState() throws UnifyException {
+        super.switchState();
 
-		setVisible("openBtn", collapsed);
-		setVisible("closeBtn", !collapsed);
-		setVisible("contentPanel", !collapsed);
-	}
+        setVisible("openBtn", collapsed);
+        setVisible("closeBtn", !collapsed);
+        setVisible("contentPanel", !collapsed);
+    }
 
-	@Action
-	public void expandContent() throws UnifyException {
-		collapsed = false;
-	}
+    @Action
+    public void expandContent() throws UnifyException {
+        collapsed = false;
+    }
 
-	@Action
-	public void collapseContent() throws UnifyException {
-		collapsed = true;
-	}
+    @Action
+    public void collapseContent() throws UnifyException {
+        collapsed = true;
+    }
 
-	public boolean isCollapsed() {
-		return collapsed;
-	}
+    public boolean isCollapsed() {
+        return collapsed;
+    }
 
-	public void setCollapsed(boolean collapsed) {
-		this.collapsed = collapsed;
-	}
+    public void setCollapsed(boolean collapsed) {
+        this.collapsed = collapsed;
+    }
 }

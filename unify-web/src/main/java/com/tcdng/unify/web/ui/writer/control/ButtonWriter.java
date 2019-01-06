@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,28 +34,28 @@ import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 @Component("button-writer")
 public class ButtonWriter extends AbstractTargetControlWriter {
 
-	@Override
-	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
-		Button button = (Button) targetControl;
-		String imageSrc = button.getUplAttribute(String.class, "imageSrc");
-		writer.write("<button type=\"button\"");
-		writeTagAttributes(writer, button);
-		boolean isImage = !StringUtils.isBlank(imageSrc);
-		if (isImage) {
-			writer.write(" style=\"background: url('");
-			writer.writeFileImageContextURL(imageSrc);
-			writer.write("') no-repeat left 8px center/14px 14px;\"");
-		}
-		writer.write(">");
+    @Override
+    protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+        Button button = (Button) targetControl;
+        String imageSrc = button.getUplAttribute(String.class, "imageSrc");
+        writer.write("<button type=\"button\"");
+        writeTagAttributes(writer, button);
+        boolean isImage = !StringUtils.isBlank(imageSrc);
+        if (isImage) {
+            writer.write(" style=\"background: url('");
+            writer.writeFileImageContextURL(imageSrc);
+            writer.write("') no-repeat left 8px center/14px 14px;\"");
+        }
+        writer.write(">");
 
-		if (isImage) {
-			writer.write("<span>");
-			writeCaption(writer, button);
-			writer.write("</span>");
-		} else {
-			writeCaption(writer, button);
-		}
+        if (isImage) {
+            writer.write("<span>");
+            writeCaption(writer, button);
+            writer.write("</span>");
+        } else {
+            writeCaption(writer, button);
+        }
 
-		writer.write("</button>");
-	}
+        writer.write("</button>");
+    }
 }

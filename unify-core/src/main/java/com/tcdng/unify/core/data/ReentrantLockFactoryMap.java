@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,9 +25,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ReentrantLockFactoryMap<T> extends FactoryMap<T, ReentrantLock> {
 
-	@Override
-	protected ReentrantLock create(T key, Object... params) throws Exception {
-		return new ReentrantLock();
-	}
+    @Override
+    protected ReentrantLock create(T key, Object... params) throws Exception {
+        return new ReentrantLock();
+    }
 
 }

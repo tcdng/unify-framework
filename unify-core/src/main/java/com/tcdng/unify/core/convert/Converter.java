@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,16 +26,16 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public interface Converter<T> {
 
-	/**
-	 * Convert supplied value to type. Returns a null if value is inconvertible.
-	 * 
-	 * @param value
-	 *            the value to convert
-	 * @param formatter
-	 *            for conversions that need formatting information. Can be null.
-	 * @return the converted value
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	T convert(Object value, Formatter<?> formatter) throws UnifyException;
+    /**
+     * Convert supplied value to type. Returns a null if value is inconvertible.
+     * 
+     * @param value
+     *            the value to convert
+     * @param formatter
+     *            for conversions that need formatting information. Can be null.
+     * @return the converted value
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    T convert(Object value, Formatter<?> formatter) throws UnifyException;
 }

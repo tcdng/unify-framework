@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,34 +25,34 @@ import com.tcdng.unify.core.constant.TriState;
  */
 public class PrivilegeSettings {
 
-	private boolean visible;
+    private boolean visible;
 
-	private boolean editable;
+    private boolean editable;
 
-	private boolean disabled;
+    private boolean disabled;
 
-	private TriState required;
+    private TriState required;
 
-	public PrivilegeSettings(boolean visible, boolean editable, boolean disabled, TriState required) {
-		this.visible = visible;
-		this.editable = editable;
-		this.disabled = disabled;
-		this.required = required;
-	}
+    public PrivilegeSettings(boolean visible, boolean editable, boolean disabled, TriState required) {
+        this.visible = visible;
+        this.editable = editable;
+        this.disabled = disabled;
+        this.required = required;
+    }
 
-	public boolean isVisible() {
-		return visible;
-	}
+    public boolean isVisible() {
+        return visible;
+    }
 
-	public boolean isEditable() {
-		return editable;
-	}
+    public boolean isEditable() {
+        return editable;
+    }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+    public boolean isDisabled() {
+        return disabled;
+    }
 
-	public TriState getRequired() {
-		return required;
-	}
+    public TriState getRequired() {
+        return required;
+    }
 }

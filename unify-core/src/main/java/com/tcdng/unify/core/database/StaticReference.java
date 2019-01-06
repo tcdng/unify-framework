@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,43 +25,43 @@ import com.tcdng.unify.core.constant.EnumConst;
  */
 public class StaticReference extends AbstractEntity {
 
-	public static final int CODE_LENGTH = 10;
+    public static final int CODE_LENGTH = 10;
 
-	public static final int DESCRIPTION_LENGTH = 48;
+    public static final int DESCRIPTION_LENGTH = 48;
 
-	private Class<? extends EnumConst> enumConstType;
+    private Class<? extends EnumConst> enumConstType;
 
-	private String code;
+    private String code;
 
-	private String description;
+    private String description;
 
-	public StaticReference(Class<? extends EnumConst> enumConstType) {
-		this.enumConstType = enumConstType;
-	}
+    public StaticReference(Class<? extends EnumConst> enumConstType) {
+        this.enumConstType = enumConstType;
+    }
 
-	@Override
-	public Object getId() {
-		return code;
-	}
+    @Override
+    public Object getId() {
+        return code;
+    }
 
-	public Class<? extends EnumConst> getEnumConstType() {
-		return enumConstType;
-	}
+    public Class<? extends EnumConst> getEnumConstType() {
+        return enumConstType;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }

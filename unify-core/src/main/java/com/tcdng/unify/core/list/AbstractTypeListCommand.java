@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,29 +37,29 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends AbstractZeroParamsListCommand {
 
-	private Class<T> typeClass;
+    private Class<T> typeClass;
 
-	private FactoryMap<Locale, List<Listable>> typeListMap;
+    private FactoryMap<Locale, List<Listable>> typeListMap;
 
-	public AbstractTypeListCommand(Class<T> typeClazz) {
-		this.typeClass = typeClazz;
-		typeListMap = new FactoryMap<Locale, List<Listable>>() {
+    public AbstractTypeListCommand(Class<T> typeClazz) {
+        this.typeClass = typeClazz;
+        typeListMap = new FactoryMap<Locale, List<Listable>>() {
 
-			@Override
-			protected List<Listable> create(Locale key, Object... params) throws Exception {
-				List<Listable> list = new ArrayList<Listable>();
-				for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(typeClass)) {
-					list.add(new ListData(unifyComponentConfig.getName(),
-							resolveSessionMessage(unifyComponentConfig.getDescription())));
-				}
-				DataUtils.sort(list, Listable.class, "listDescription", true);
-				return list;
-			}
-		};
-	}
+            @Override
+            protected List<Listable> create(Locale key, Object... params) throws Exception {
+                List<Listable> list = new ArrayList<Listable>();
+                for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(typeClass)) {
+                    list.add(new ListData(unifyComponentConfig.getName(),
+                            resolveSessionMessage(unifyComponentConfig.getDescription())));
+                }
+                DataUtils.sort(list, Listable.class, "listDescription", true);
+                return list;
+            }
+        };
+    }
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return typeListMap.get(locale);
-	}
+    @Override
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        return typeListMap.get(locale);
+    }
 }

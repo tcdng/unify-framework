@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,23 +36,23 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("refreshmenuresponse")
 public class RefreshMenuResponse extends AbstractJsonPageControllerResponse {
 
-	public RefreshMenuResponse() {
-		super("refreshMenuHdl");
-	}
+    public RefreshMenuResponse() {
+        super("refreshMenuHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing refresh menu response: controller = [{0}]", pageController.getName());
-		if (Boolean.TRUE.equals(removeSessionAttribute(SessionAttributeConstants.REFRESH_MENU))) {
-			Document document = getRequestContextUtil().getRequestDocument();
-			Panel menuPanel = document.getMenuPanel();
-			if (menuPanel != null) {
-				writer.write(",\"refreshPanels\":[");
-				writer.writeJsonPanel(menuPanel, true);
-				writer.write("]");
-				return;
-			}
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing refresh menu response: controller = [{0}]", pageController.getName());
+        if (Boolean.TRUE.equals(removeSessionAttribute(SessionAttributeConstants.REFRESH_MENU))) {
+            Document document = getRequestContextUtil().getRequestDocument();
+            Panel menuPanel = document.getMenuPanel();
+            if (menuPanel != null) {
+                writer.write(",\"refreshPanels\":[");
+                writer.writeJsonPanel(menuPanel, true);
+                writer.write("]");
+                return;
+            }
+        }
+    }
 
 }

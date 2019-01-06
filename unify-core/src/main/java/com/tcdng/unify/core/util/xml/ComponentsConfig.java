@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,25 +27,25 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ComponentsConfig {
 
-	private AliasesConfig aliasesConfig;
+    private AliasesConfig aliasesConfig;
 
-	private List<ComponentConfig> componentConfigList;
+    private List<ComponentConfig> componentConfigList;
 
-	public AliasesConfig getAliasesConfig() {
-		return aliasesConfig;
-	}
+    public AliasesConfig getAliasesConfig() {
+        return aliasesConfig;
+    }
 
-	@XmlElement(name = "aliases")
-	public void setAliasesConfig(AliasesConfig aliasesConfig) {
-		this.aliasesConfig = aliasesConfig;
-	}
+    @XmlElement(name = "aliases")
+    public void setAliasesConfig(AliasesConfig aliasesConfig) {
+        this.aliasesConfig = aliasesConfig;
+    }
 
-	public List<ComponentConfig> getComponentConfigList() {
-		return componentConfigList;
-	}
+    public List<ComponentConfig> getComponentConfigList() {
+        return componentConfigList;
+    }
 
-	@XmlElement(name = "component")
-	public void setComponentConfigList(List<ComponentConfig> componentConfigList) {
-		this.componentConfigList = componentConfigList;
-	}
+    @XmlElement(name = "component")
+    public void setComponentConfigList(List<ComponentConfig> componentConfigList) {
+        this.componentConfigList = componentConfigList;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,45 +30,45 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class WidgetRepository {
 
-	private static FactoryMaps<String, String, String> longNamesByShortName;
+    private static FactoryMaps<String, String, String> longNamesByShortName;
 
-	static {
-		longNamesByShortName = new FactoryMaps<String, String, String>() {
+    static {
+        longNamesByShortName = new FactoryMaps<String, String, String>() {
 
-			@Override
-			protected String createObject(String parentName, String shortName, Object... params) throws Exception {
-				return StringUtils.dotify(parentName, shortName);
-			}
+            @Override
+            protected String createObject(String parentName, String shortName, Object... params) throws Exception {
+                return StringUtils.dotify(parentName, shortName);
+            }
 
-		};
-	}
+        };
+    }
 
-	private Map<String, Widget> widgets;
+    private Map<String, Widget> widgets;
 
-	private Map<String, WidgetNameInfo> widgetNameInfos;
+    private Map<String, WidgetNameInfo> widgetNameInfos;
 
-	public WidgetRepository(Map<String, WidgetNameInfo> widgetNameInfos) {
-		widgets = new HashMap<String, Widget>();
-		this.widgetNameInfos = widgetNameInfos;
-	}
+    public WidgetRepository(Map<String, WidgetNameInfo> widgetNameInfos) {
+        widgets = new HashMap<String, Widget>();
+        this.widgetNameInfos = widgetNameInfos;
+    }
 
-	public Widget getWidget(String longName) throws UnifyException {
-		return widgets.get(longName);
-	}
+    public Widget getWidget(String longName) throws UnifyException {
+        return widgets.get(longName);
+    }
 
-	public Widget getWidget(String parentName, String shortName) throws UnifyException {
-		return widgets.get(longNamesByShortName.get(parentName, shortName));
-	}
+    public Widget getWidget(String parentName, String shortName) throws UnifyException {
+        return widgets.get(longNamesByShortName.get(parentName, shortName));
+    }
 
-	public boolean isWidget(String longName) throws UnifyException {
-		return widgets.containsKey(longName);
-	}
+    public boolean isWidget(String longName) throws UnifyException {
+        return widgets.containsKey(longName);
+    }
 
-	public void putWidget(Widget widget) throws UnifyException {
-		widgets.put(widget.getLongName(), widget);
-	}
+    public void putWidget(Widget widget) throws UnifyException {
+        widgets.put(widget.getLongName(), widget);
+    }
 
-	public WidgetNameInfo getWidgetInfo(String ownerLongName) {
-		return widgetNameInfos.get(ownerLongName);
-	}
+    public WidgetNameInfo getWidgetInfo(String ownerLongName) {
+        return widgetNameInfos.get(ownerLongName);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,35 +26,35 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TabularLayout extends Layout {
 
-	/**
-	 * Returns the layout cell type.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	TabularCellType getCellType() throws UnifyException;
+    /**
+     * Returns the layout cell type.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    TabularCellType getCellType() throws UnifyException;
 
-	/**
-	 * Returns true if layout cells should be padded otherwise a false is returned.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isCellPadding() throws UnifyException;
+    /**
+     * Returns true if layout cells should be padded otherwise a false is returned.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isCellPadding() throws UnifyException;
 
-	/**
-	 * Returns layout widths.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String[] getWidths() throws UnifyException;
+    /**
+     * Returns layout widths.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String[] getWidths() throws UnifyException;
 
-	/**
-	 * Returns layout heights.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String[] getHeights() throws UnifyException;
+    /**
+     * Returns layout heights.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String[] getHeights() throws UnifyException;
 }

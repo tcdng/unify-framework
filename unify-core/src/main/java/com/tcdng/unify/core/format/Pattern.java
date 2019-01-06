@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,56 +23,56 @@ package com.tcdng.unify.core.format;
  */
 public class Pattern {
 
-	private String pattern;
+    private String pattern;
 
-	private String target;
+    private String target;
 
-	private boolean filler;
+    private boolean filler;
 
-	private boolean quoted;
+    private boolean quoted;
 
-	public Pattern(String pattern, boolean filler) {
-		this(pattern, filler, false);
-	}
+    public Pattern(String pattern, boolean filler) {
+        this(pattern, filler, false);
+    }
 
-	public Pattern(String pattern, boolean filler, boolean quoted) {
-		this.pattern = pattern;
-		this.filler = filler;
-		this.quoted = quoted;
-	}
+    public Pattern(String pattern, boolean filler, boolean quoted) {
+        this.pattern = pattern;
+        this.filler = filler;
+        this.quoted = quoted;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		if (this.filler) {
-			sb.append('f');
-			if (this.quoted) {
-				sb.append('q');
-			}
-		} else {
-			sb.append('p');
-		}
-		sb.append('[').append(pattern).append(']');
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (this.filler) {
+            sb.append('f');
+            if (this.quoted) {
+                sb.append('q');
+            }
+        } else {
+            sb.append('p');
+        }
+        sb.append('[').append(pattern).append(']');
+        return sb.toString();
+    }
 
-	public String getTarget() {
-		return target;
-	}
+    public String getTarget() {
+        return target;
+    }
 
-	public void setTarget(String target) {
-		this.target = target;
-	}
+    public void setTarget(String target) {
+        this.target = target;
+    }
 
-	public String getPattern() {
-		return pattern;
-	}
+    public String getPattern() {
+        return pattern;
+    }
 
-	public boolean isFiller() {
-		return filler;
-	}
+    public boolean isFiller() {
+        return filler;
+    }
 
-	public boolean isQuoted() {
-		return quoted;
-	}
+    public boolean isQuoted() {
+        return quoted;
+    }
 }

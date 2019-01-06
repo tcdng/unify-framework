@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,47 +34,47 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-	public SingleParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
-		super(opSql, sqlDataSourceDialect);
-	}
+    public SingleParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+        super(opSql, sqlDataSourceDialect);
+    }
 
-	protected Object adjustValue(Object value) {
-		return value;
-	}
+    protected Object adjustValue(Object value) {
+        return value;
+    }
 
-	@Override
-	public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
-		String preOp = (String) criteria.getPreOp();
-		if (sqlEntityInfo != null) {
-			preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
-		}
-		translate(sql, sqlEntityInfo.getTableAlias(), preOp, criteria.getPostOp(), null);
-	}
+    @Override
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
+        String preOp = (String) criteria.getPreOp();
+        if (sqlEntityInfo != null) {
+            preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
+        }
+        translate(sql, sqlEntityInfo.getTableAlias(), preOp, criteria.getPostOp(), null);
+    }
 
-	@Override
-	public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-			throws UnifyException {
-		sql.append("(");
-		sql.append(tableName).append('.').append(columnName).append(opSql)
-				.append(getSqlStringValue(adjustValue(param1)));
-		sql.append(")");
-	}
+    @Override
+    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        sql.append("(");
+        sql.append(tableName).append('.').append(columnName).append(opSql)
+                .append(getSqlStringValue(adjustValue(param1)));
+        sql.append(")");
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-			SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
-		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) criteria.getPreOp());
-		sql.append("(");
-		sql.append(sqlFieldInfo.getColumn()).append(opSql).append("?");
-		sql.append(")");
-		if (sqlFieldInfo.isTransformed()) {
-			parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-					adjustValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
-							.forwardTransform(criteria.getPostOp()))));
-		} else {
-			Object postOp = convertType(sqlFieldInfo, adjustValue(criteria.getPostOp()));
-			parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
-		}
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) criteria.getPreOp());
+        sql.append("(");
+        sql.append(sqlFieldInfo.getColumn()).append(opSql).append("?");
+        sql.append(")");
+        if (sqlFieldInfo.isTransformed()) {
+            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+                    adjustValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
+                            .forwardTransform(criteria.getPostOp()))));
+        } else {
+            Object postOp = convertType(sqlFieldInfo, adjustValue(criteria.getPostOp()));
+            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
+        }
+    }
 }

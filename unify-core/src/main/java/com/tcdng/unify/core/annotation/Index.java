@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,9 +29,9 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Index {
 
-	/** The index properties */
-	String[] value();
+    /** The index properties */
+    String[] value();
 
-	/** Specifies if index should have unique values */
-	boolean unique() default false;
+    /** Specifies if index should have unique values */
+    boolean unique() default false;
 }

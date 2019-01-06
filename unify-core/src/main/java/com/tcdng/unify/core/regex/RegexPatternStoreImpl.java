@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,31 +33,31 @@ import com.tcdng.unify.core.data.LocaleFactoryMaps;
 @Component(ApplicationComponents.APPLICATION_REGEXPATTERNSTORE)
 public class RegexPatternStoreImpl extends AbstractUnifyComponent implements RegexPatternStore {
 
-	private LocaleFactoryMaps<String, Pattern> patterns;
+    private LocaleFactoryMaps<String, Pattern> patterns;
 
-	public RegexPatternStoreImpl() {
-		patterns = new LocaleFactoryMaps<String, Pattern>() {
+    public RegexPatternStoreImpl() {
+        patterns = new LocaleFactoryMaps<String, Pattern>() {
 
-			@Override
-			protected Pattern createObject(Locale locale, String regexMessageKey, Object... params) throws Exception {
-				String regex = getMessage(locale, regexMessageKey);
-				return Pattern.compile(regex);
-			}
-		};
-	}
+            @Override
+            protected Pattern createObject(Locale locale, String regexMessageKey, Object... params) throws Exception {
+                String regex = getMessage(locale, regexMessageKey);
+                return Pattern.compile(regex);
+            }
+        };
+    }
 
-	@Override
-	public Pattern getPattern(Locale locale, String regexMessageKey) throws UnifyException {
-		return patterns.get(locale, regexMessageKey);
-	}
+    @Override
+    public Pattern getPattern(Locale locale, String regexMessageKey) throws UnifyException {
+        return patterns.get(locale, regexMessageKey);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

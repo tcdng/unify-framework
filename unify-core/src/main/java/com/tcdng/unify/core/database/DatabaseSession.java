@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,481 +33,482 @@ import com.tcdng.unify.core.operation.Update;
  */
 public interface DatabaseSession {
 
-	/**
-	 * Creates an record in the database.
-	 * 
-	 * @param record
-	 *            the record to create
-	 * @return the record Id
-	 * @throws UnifyException
-	 *             if an error occurs during creation
-	 */
-	Object create(Entity record) throws UnifyException;
+    /**
+     * Creates an record in the database.
+     * 
+     * @param record
+     *            the record to create
+     * @return the record Id
+     * @throws UnifyException
+     *             if an error occurs during creation
+     */
+    Object create(Entity record) throws UnifyException;
 
-	/**
-	 * Retrieves a record by ID. Fetches all attribute lists if any.
-	 * 
-	 * @param clazz
-	 *            the record type
-	 * @param id
-	 *            the record ID
-	 * @throws UnifyException
-	 *             if record is not found
-	 */
-	<T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException;
+    /**
+     * Retrieves a record by ID. Fetches all attribute lists if any.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException;
 
-	/**
-	 * Retrieves a record by id and version number. Fetches all attribute lists if
-	 * any.
-	 * 
-	 * @param clazz
-	 *            the record type
-	 * @param id
-	 *            the record ID
-	 * @param versionNo
-	 *            the version number
-	 * @throws UnifyException
-	 *             if record is not found
-	 */
-	<T extends Entity> T find(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+    /**
+     * Retrieves a record by id and version number. Fetches all attribute lists if
+     * any.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param versionNo
+     *            the version number
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T find(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
-	/**
-	 * Retrieves a record by query.
-	 * 
-	 * @param query
-	 *            the query
-	 * @return the record found otherwise null
-	 * @throws UnifyException
-	 *             if multiple records are found. If an error occurs
-	 */
-	<T extends Entity> T find(Query<T> query) throws UnifyException;
+    /**
+     * Retrieves a record by query.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T find(Query<T> query) throws UnifyException;
 
-	/**
-	 * Finds constraining record that may prevent supplied record from being
-	 * successfully created.
-	 * 
-	 * @param record
-	 * @return contstraining record if found otherwise null
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T extends Entity> T findConstraint(T record) throws UnifyException;
+    /**
+     * Finds constraining record that may prevent supplied record from being
+     * successfully created.
+     * 
+     * @param record
+     * @return contstraining record if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T extends Entity> T findConstraint(T record) throws UnifyException;
 
-	/**
-	 * Finds record by query. Does not fetch attribute lists.
-	 * 
-	 * @param query
-	 *            the query
-	 * @return the list of record found
-	 * @throws UnifyException
-	 *             if an error occurs during search
-	 */
-	<T extends Entity> List<T> findAll(Query<T> query) throws UnifyException;
+    /**
+     * Finds record by query. Does not fetch attribute lists.
+     * 
+     * @param query
+     *            the query
+     * @return the list of record found
+     * @throws UnifyException
+     *             if an error occurs during search
+     */
+    <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException;
 
-	/**
-	 * Fetches record by query as a map. Uses query key as result map key. Does not
-	 * fetch attribute lists.
-	 * 
-	 * @param keyClass
-	 *            the map key class
-	 * @param keyName
-	 *            the key field name
-	 * @param query
-	 *            the query
-	 * @return the result map
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query) throws UnifyException;
+    /**
+     * Fetches record by query as a map. Uses query key as result map key. Does not
+     * fetch attribute lists.
+     * 
+     * @param keyClass
+     *            the map key class
+     * @param keyName
+     *            the key field name
+     * @param query
+     *            the query
+     * @return the result map
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query) throws UnifyException;
 
-	/**
-	 * Returns a map of lists by key.
-	 * 
-	 * @param keyClass
-	 *            the map key class
-	 * @param keyName
-	 *            the key name
-	 * @param query
-	 *            the search query
-	 * @return map of lists
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T, U extends Entity> Map<T, List<U>> findAllListMap(Class<T> keyClass, String keyName, Query<U> query)
-			throws UnifyException;
+    /**
+     * Returns a map of lists by key.
+     * 
+     * @param keyClass
+     *            the map key class
+     * @param keyName
+     *            the key name
+     * @param query
+     *            the search query
+     * @return map of lists
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T, U extends Entity> Map<T, List<U>> findAllListMap(Class<T> keyClass, String keyName, Query<U> query)
+            throws UnifyException;
 
-	/**
-	 * Retrieves a record by id from associated view. Fetches all attribute lists if
-	 * any.
-	 * 
-	 * @param clazz
-	 *            the record type
-	 * @param id
-	 *            the record ID
-	 * @throws UnifyException
-	 *             if record is not found
-	 */
-	<T extends Entity> T list(Class<T> clazz, Object id) throws UnifyException;
+    /**
+     * Retrieves a record by id from associated view. Fetches all attribute lists if
+     * any.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T list(Class<T> clazz, Object id) throws UnifyException;
 
-	/**
-	 * Retrieves a record by id and version number from associated view. Fetches all
-	 * attribute lists if any.
-	 * 
-	 * @param clazz
-	 *            the record type
-	 * @param id
-	 *            the record ID
-	 * @param versionNo
-	 *            the version number
-	 * @throws UnifyException
-	 *             if record is not found
-	 */
-	<T extends Entity> T list(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+    /**
+     * Retrieves a record by id and version number from associated view. Fetches all
+     * attribute lists if any.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param versionNo
+     *            the version number
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T list(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
-	/**
-	 * Retrieves a record by query from associated view. Does not fetch attribute
-	 * lists.
-	 * 
-	 * @param query
-	 *            the query
-	 * @return the record found otherwise null
-	 * @throws UnifyException
-	 *             if multiple records are found. if an error occurs
-	 */
-	<T extends Entity> T list(Query<T> query) throws UnifyException;
+    /**
+     * Retrieves a record by query from associated view. Does not fetch attribute
+     * lists.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. if an error occurs
+     */
+    <T extends Entity> T list(Query<T> query) throws UnifyException;
 
-	/**
-	 * Retrieves list of record by query from associated view. Does not fetch
-	 * attribute lists.
-	 * 
-	 * @param query
-	 *            the query
-	 * @return the list of record found
-	 * @throws UnifyException
-	 *             -if an error occurs during search
-	 */
-	<T extends Entity> List<T> listAll(Query<T> query) throws UnifyException;
+    /**
+     * Retrieves list of record by query from associated view. Does not fetch
+     * attribute lists.
+     * 
+     * @param query
+     *            the query
+     * @return the list of record found
+     * @throws UnifyException
+     *             -if an error occurs during search
+     */
+    <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException;
 
-	/**
-	 * Fetches map of records. Uses query key as result map key. Does not fetch
-	 * attribute lists.
-	 * 
-	 * @param keyClass
-	 *            the map key class
-	 * @param keyName
-	 *            the key field name
-	 * @param query
-	 *            the query
-	 * @return the result map
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T, U extends Entity> Map<T, U> listAll(Class<T> keyClass, String keyName, Query<U> query) throws UnifyException;
+    /**
+     * Fetches map of records. Uses query key as result map key. Does not fetch
+     * attribute lists.
+     * 
+     * @param keyClass
+     *            the map key class
+     * @param keyName
+     *            the key field name
+     * @param query
+     *            the query
+     * @return the result map
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T, U extends Entity> Map<T, U> listAll(Class<T> keyClass, String keyName, Query<U> query) throws UnifyException;
 
-	/**
-	 * Returns a map of lists by key.
-	 * 
-	 * @param keyClass
-	 *            the map key class
-	 * @param keyName
-	 *            the key name
-	 * @param query
-	 *            the search query
-	 * @return map of lists
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T, U extends Entity> Map<T, List<U>> listAllListMap(Class<T> keyClass, String keyName, Query<U> query)
-			throws UnifyException;
+    /**
+     * Returns a map of lists by key.
+     * 
+     * @param keyClass
+     *            the map key class
+     * @param keyName
+     *            the key name
+     * @param query
+     *            the search query
+     * @return map of lists
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T, U extends Entity> Map<T, List<U>> listAllListMap(Class<T> keyClass, String keyName, Query<U> query)
+            throws UnifyException;
 
-	/**
-	 * Lists values of selected field for all record by query. Field must be
-	 * selected in query.
-	 * 
-	 * @param fieldClass
-	 *            the value class
-	 * @param fieldName
-	 *            the value field name
-	 * @param query
-	 *            the query
-	 * @return the list of values found
-	 * @throws UnifyException
-	 *             if an error occurs during search
-	 */
-	<T, U extends Entity> List<T> valueList(Class<T> fieldClass, String fieldName, Query<U> query)
-			throws UnifyException;
+    /**
+     * Lists values of selected field for all record by query. Field must be
+     * selected in query.
+     * 
+     * @param fieldClass
+     *            the value class
+     * @param fieldName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return the list of values found
+     * @throws UnifyException
+     *             if an error occurs during search
+     */
+    <T, U extends Entity> List<T> valueList(Class<T> fieldClass, String fieldName, Query<U> query)
+            throws UnifyException;
 
-	/**
-	 * Obtains a set of values of selected field for all records by query. Field
-	 * must be selected in query.
-	 * 
-	 * @param fieldClass
-	 *            the value class
-	 * @param fieldName
-	 *            the value field name
-	 * @param query
-	 *            the query
-	 * @return the set of values found
-	 * @throws UnifyException
-	 *             if an error occurs during search
-	 */
-	<T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+    /**
+     * Obtains a set of values of selected field for all records by query. Field
+     * must be selected in query.
+     * 
+     * @param fieldClass
+     *            the value class
+     * @param fieldName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return the set of values found
+     * @throws UnifyException
+     *             if an error occurs during search
+     */
+    <T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
-	/**
-	 * Obtains a key value map
-	 * 
-	 * @param keyClass
-	 *            the key type
-	 * @param keyName
-	 *            the key field name
-	 * @param valueClass
-	 *            the value type
-	 * @param valueName
-	 *            the value field name
-	 * @param query
-	 *            the query
-	 * @return a map of key/values
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T, U, V extends Entity> Map<T, U> valueMap(Class<T> keyClass, String keyName, Class<U> valueClass,
-			String valueName, Query<V> query) throws UnifyException;
+    /**
+     * Obtains a key value map
+     * 
+     * @param keyClass
+     *            the key type
+     * @param keyName
+     *            the key field name
+     * @param valueClass
+     *            the value type
+     * @param valueName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return a map of key/values
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T, U, V extends Entity> Map<T, U> valueMap(Class<T> keyClass, String keyName, Class<U> valueClass,
+            String valueName, Query<V> query) throws UnifyException;
 
-	/**
-	 * Obtains a key value list map
-	 * 
-	 * @param keyClass
-	 *            the key type
-	 * @param keyName
-	 *            the key field name
-	 * @param valueClass
-	 *            the value type
-	 * @param valueName
-	 *            the value field name
-	 * @param query
-	 *            the query
-	 * @return a map of key/ list values
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T, U, V extends Entity> Map<T, List<U>> valueListMap(Class<T> keyClass, String keyName, Class<U> valueClass,
-			String valueName, Query<V> query) throws UnifyException;
+    /**
+     * Obtains a key value list map
+     * 
+     * @param keyClass
+     *            the key type
+     * @param keyName
+     *            the key field name
+     * @param valueClass
+     *            the value type
+     * @param valueName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return a map of key/ list values
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T, U, V extends Entity> Map<T, List<U>> valueListMap(Class<T> keyClass, String keyName, Class<U> valueClass,
+            String valueName, Query<V> query) throws UnifyException;
 
-	/**
-	 * Gets value of selected field for record fetched by query..
-	 * 
-	 * @param fieldClass
-	 *            the value class
-	 * @param fieldName
-	 *            the value field name
-	 * @param query
-	 *            the query
-	 * @return the value
-	 * @throws UnifyException
-	 *             if no field or multiple fields are selected in criteria. If
-	 *             multiple or no record match criteria. If an error occurs
-	 */
-	<T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+    /**
+     * Gets value of selected field for record fetched by query..
+     * 
+     * @param fieldClass
+     *            the value class
+     * @param fieldName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return the value
+     * @throws UnifyException
+     *             if no field or multiple fields are selected in criteria. If
+     *             multiple or no record match criteria. If an error occurs
+     */
+    <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
-	/**
-	 * Populate list-only fields of supplied record.
-	 * 
-	 * @param record
-	 *            the record to populate
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void populateListOnly(Entity record) throws UnifyException;
+    /**
+     * Populate list-only fields of supplied record.
+     * 
+     * @param record
+     *            the record to populate
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void populateListOnly(Entity record) throws UnifyException;
 
-	/**
-	 * Updates a record by ID.
-	 * 
-	 * @param record
-	 *            the record to modify
-	 * @return the number of record updated. Always 1.
-	 * @throws UnifyException
-	 *             if an error occurs during modify
-	 */
-	int updateById(Entity record) throws UnifyException;
+    /**
+     * Updates a record by ID.
+     * 
+     * @param record
+     *            the record to modify
+     * @return the number of record updated. Always 1.
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int updateById(Entity record) throws UnifyException;
 
-	/**
-	 * Updates a record by ID and version number.
-	 * 
-	 * @param record
-	 *            the record to modify
-	 * @return the number of record updated. Always 1.
-	 * @throws UnifyException
-	 *             if an error occurs during modify
-	 */
-	int updateByIdVersion(Entity record) throws UnifyException;
+    /**
+     * Updates a record by ID and version number.
+     * 
+     * @param record
+     *            the record to modify
+     * @return the number of record updated. Always 1.
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int updateByIdVersion(Entity record) throws UnifyException;
 
-	/**
-	 * Updates a a record by ID
-	 * 
-	 * @param clazz
-	 *            the record type
-	 * @param id
-	 *            the record ID
-	 * @param update
-	 *            the update list
-	 * @return number of records updated
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	int updateById(Class<? extends Entity> clazz, Object id, Update update) throws UnifyException;
+    /**
+     * Updates a a record by ID
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param update
+     *            the update list
+     * @return number of records updated
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int updateById(Class<? extends Entity> clazz, Object id, Update update) throws UnifyException;
 
-	/**
-	 * Updates record that match results of specified query.
-	 * 
-	 * @param query
-	 *            the query
-	 * @param update
-	 *            the update object
-	 * @return the number of record modified
-	 * @throws UnifyException
-	 *             if an error occurs during modify
-	 */
-	int updateAll(Query<? extends Entity> query, Update update) throws UnifyException;
+    /**
+     * Updates record that match results of specified query.
+     * 
+     * @param query
+     *            the query
+     * @param update
+     *            the update object
+     * @return the number of record modified
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int updateAll(Query<? extends Entity> query, Update update) throws UnifyException;
 
-	/**
-	 * Deletes a record by ID.
-	 * 
-	 * @param record
-	 *            the record to modify
-	 * @return the number of record deleted. Always 1.
-	 * @throws UnifyException
-	 *             if an error occurs during modify
-	 */
-	int deleteById(Entity record) throws UnifyException;
+    /**
+     * Deletes a record by ID.
+     * 
+     * @param record
+     *            the record to modify
+     * @return the number of record deleted. Always 1.
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int deleteById(Entity record) throws UnifyException;
 
-	/**
-	 * Deletes a record by ID and version number.
-	 * 
-	 * @param record
-	 *            the record to modify
-	 * @return the number of record deleted. Always 1.
-	 * @throws UnifyException
-	 *             if an error occurs during modify
-	 */
-	int deleteByIdVersion(Entity record) throws UnifyException;
+    /**
+     * Deletes a record by ID and version number.
+     * 
+     * @param record
+     *            the record to modify
+     * @return the number of record deleted. Always 1.
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int deleteByIdVersion(Entity record) throws UnifyException;
 
-	/**
-	 * Deletes a record with ID.
-	 * 
-	 * @param clazz
-	 *            the record type
-	 * @param id
-	 *            the record ID
-	 * @return the number of record deleted. Always 1.
-	 * @throws UnifyException
-	 *             if an error occurs during delete
-	 */
-	int delete(Class<? extends Entity> clazz, Object id) throws UnifyException;
+    /**
+     * Deletes a record with ID.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @return the number of record deleted. Always 1.
+     * @throws UnifyException
+     *             if an error occurs during delete
+     */
+    int delete(Class<? extends Entity> clazz, Object id) throws UnifyException;
 
-	/**
-	 * Deletes record by query.
-	 * 
-	 * @param query
-	 *            the query
-	 * @return the number of record deleted.
-	 * @throws UnifyException
-	 *             if an error occurs during delete
-	 */
-	int deleteAll(Query<? extends Entity> query) throws UnifyException;
+    /**
+     * Deletes record by query.
+     * 
+     * @param query
+     *            the query
+     * @return the number of record deleted.
+     * @throws UnifyException
+     *             if an error occurs during delete
+     */
+    int deleteAll(Query<? extends Entity> query) throws UnifyException;
 
-	/**
-	 * Counts number of record that match specified query.
-	 * 
-	 * @param query
-	 *            the query object
-	 * @return the number of record counted
-	 * @throws UnifyException
-	 *             if an error occurs during modify
-	 */
-	int count(Query<? extends Entity> query) throws UnifyException;
+    /**
+     * Counts number of record that match specified query.
+     * 
+     * @param query
+     *            the query object
+     * @return the number of record counted
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int count(Query<? extends Entity> query) throws UnifyException;
 
-	/**
-	 * Executes an aggregate function (individually) for selected fields of record
-	 * that match specified query.
-	 * 
-	 * @param aggregateType
-	 *            the aggregate type
-	 * @param list
-	 *            aggregate result
-	 * @throws UnifyException
-	 *             if selected fields are not numeric. If no field is selected. If
-	 *             an error occurs
-	 */
-	List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+    /**
+     * Executes an aggregate function (individually) for selected fields of record
+     * that match specified query.
+     * 
+     * @param aggregateType
+     *            the aggregate type
+     * @param query
+     *            the query to use
+     * @return list of aggregate objects
+     * @throws UnifyException
+     *             if selected fields are not numeric. If no field is selected. If
+     *             an error occurs
+     */
+    List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
 
-	/**
-	 * Gets the current timestamp of session data source.
-	 * 
-	 * @return the timestamp
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Date getNow() throws UnifyException;
+    /**
+     * Gets the current timestamp of session data source.
+     * 
+     * @return the timestamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Date getNow() throws UnifyException;
 
-	/**
-	 * Creates and sets a new save point on the session save point stack.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void setSavepoint() throws UnifyException;
+    /**
+     * Creates and sets a new save point on the session save point stack.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setSavepoint() throws UnifyException;
 
-	/**
-	 * Clears the last save point from the session save point stack
-	 * 
-	 * @throws UnifyException
-	 *             if no save point exists in the save point stack. If an error
-	 *             occurs.
-	 */
-	void clearSavepoint() throws UnifyException;
+    /**
+     * Clears the last save point from the session save point stack
+     * 
+     * @throws UnifyException
+     *             if no save point exists in the save point stack. If an error
+     *             occurs.
+     */
+    void clearSavepoint() throws UnifyException;
 
-	/**
-	 * Roll back session and clears all save points.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void rollback() throws UnifyException;
+    /**
+     * Roll back session and clears all save points.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void rollback() throws UnifyException;
 
-	/**
-	 * Roll back session to last save point.
-	 * 
-	 * @throws UnifyException
-	 *             if no save point exists in the save point stack. If an error
-	 *             occurs.
-	 */
-	void rollbackToSavepoint() throws UnifyException;
+    /**
+     * Roll back session to last save point.
+     * 
+     * @throws UnifyException
+     *             if no save point exists in the save point stack. If an error
+     *             occurs.
+     */
+    void rollbackToSavepoint() throws UnifyException;
 
-	/**
-	 * Commits session transactions and clears all save points.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void commit() throws UnifyException;
+    /**
+     * Commits session transactions and clears all save points.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void commit() throws UnifyException;
 
-	/**
-	 * Closes session.
-	 * 
-	 * @throws UnifyException
-	 */
-	void close() throws UnifyException;
+    /**
+     * Closes session.
+     * 
+     * @throws UnifyException
+     */
+    void close() throws UnifyException;
 
-	/**
-	 * Returns the session's closed state.
-	 * 
-	 * @throws UnifyException
-	 *             - If an error occurs
-	 */
-	boolean isClosed() throws UnifyException;
+    /**
+     * Returns the session's closed state.
+     * 
+     * @throws UnifyException
+     *             - If an error occurs
+     */
+    boolean isClosed() throws UnifyException;
 
-	/**
-	 * Returns the session's data source name.
-	 */
-	String getDataSourceName();
+    /**
+     * Returns the session's data source name.
+     */
+    String getDataSourceName();
 }

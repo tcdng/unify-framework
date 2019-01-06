@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,42 +35,47 @@ import com.tcdng.unify.web.ui.Control;
  * @since 1.0
  */
 @Component("ui-tilegroup")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
+@UplAttributes({ @UplAttribute(name = "columns", type = int.class),
+        @UplAttribute(name = "showTitleSection", type = boolean.class, defaultValue = "false") })
 public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
 
-	private Control imageCtrl;
+    private Control imageCtrl;
 
-	public TileGroup() {
-		super(false);
-	}
+    public TileGroup() {
+        super(false);
+    }
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image");
-	}
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image hintBinding:caption");
+    }
 
-	public int getColumns() throws UnifyException {
-		return getUplAttribute(int.class, "columns");
-	}
+    public int getColumns() throws UnifyException {
+        return getUplAttribute(int.class, "columns");
+    }
 
-	public Control getImageCtrl() {
-		return imageCtrl;
-	}
+    public boolean isShowTitleSection() throws UnifyException {
+        return getUplAttribute(boolean.class, "showTitleSection");
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected List<Tile> getItemList() throws UnifyException {
-		return (List<Tile>) getValue();
-	}
+    public Control getImageCtrl() {
+        return imageCtrl;
+    }
 
-	@Override
-	protected ValueStore newValue(Tile tile, int index) throws UnifyException {
-		return createValueStore(tile, index);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected List<Tile> getItemList() throws UnifyException {
+        return (List<Tile>) getValue();
+    }
 
-	@Override
-	protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
+    @Override
+    protected ValueStore newValue(Tile tile, int index) throws UnifyException {
+        return createValueStore(tile, index);
+    }
 
-	}
+    @Override
+    protected void onCreateValueList(List<ValueStore> valueList) throws UnifyException {
+
+    }
 }

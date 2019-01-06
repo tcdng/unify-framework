@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,32 +31,32 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 public abstract class AbstractJsonPageControllerResponse extends AbstractPageControllerResponse {
 
-	private String handlerName;
+    private String handlerName;
 
-	public AbstractJsonPageControllerResponse(String handlerName) {
-		this.handlerName = handlerName;
-	}
+    public AbstractJsonPageControllerResponse(String handlerName) {
+        this.handlerName = handlerName;
+    }
 
-	@Override
-	public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		writer.write("{\"handler\":\"").write(handlerName).write("\"");
-		doGenerate(writer, pageController);
-		appendOnSaveList(writer);
-		writer.write("}");
-	}
+    @Override
+    public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        writer.write("{\"handler\":\"").write(handlerName).write("\"");
+        doGenerate(writer, pageController);
+        appendOnSaveList(writer);
+        writer.write("}");
+    }
 
-	protected String getTimestampedResourceName(String resourceName) throws UnifyException {
-		return StringUtils.underscore(resourceName) + "_" + getFormatHelper().formatNow(FormatHelper.yyyyMMdd_HHmmss);
+    protected String getTimestampedResourceName(String resourceName) throws UnifyException {
+        return StringUtils.underscore(resourceName) + "_" + getFormatHelper().formatNow(FormatHelper.yyyyMMdd_HHmmss);
 
-	}
+    }
 
-	protected abstract void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException;
+    protected abstract void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException;
 
-	private void appendOnSaveList(ResponseWriter writer) throws UnifyException {
-		List<String> saveList = getRequestContextUtil().getOnSaveContentWidgets();
-		if (!DataUtils.isBlank(saveList)) {
-			writer.write(",\"pSaveList\":");
-			writer.writeJsonStringArray(saveList);
-		}
-	}
+    private void appendOnSaveList(ResponseWriter writer) throws UnifyException {
+        List<String> saveList = getRequestContextUtil().getOnSaveContentWidgets();
+        if (!DataUtils.isBlank(saveList)) {
+            writer.write(",\"pSaveList\":");
+            writer.writeJsonStringArray(saveList);
+        }
+    }
 }

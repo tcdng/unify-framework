@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,19 +38,19 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 @Component("repeatpanel-writer")
 public class RepeatPanelWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		RepeatPanel repeatPanel = (RepeatPanel) widget;
-		Widget innerWidget = repeatPanel.getWidgetByLongName(repeatPanel.getLayoutWidgetLongNames().get(0));
-		List<ValueStore> valueStoreList = repeatPanel.getRepeatValueStores();
-		if (!DataUtils.isBlank(valueStoreList)) {
-			for (ValueStore valueStore : valueStoreList) {
-				if (innerWidget.isVisible()) {
-					innerWidget.setValueStore(valueStore);
-					writer.writeBehaviour(innerWidget);
-				}
-			}
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        RepeatPanel repeatPanel = (RepeatPanel) widget;
+        Widget innerWidget = repeatPanel.getWidgetByLongName(repeatPanel.getLayoutWidgetLongNames().get(0));
+        List<ValueStore> valueStoreList = repeatPanel.getRepeatValueStores();
+        if (!DataUtils.isBlank(valueStoreList)) {
+            for (ValueStore valueStore : valueStoreList) {
+                if (innerWidget.isVisible()) {
+                    innerWidget.setValueStore(valueStore);
+                    writer.writeBehaviour(innerWidget);
+                }
+            }
+        }
+    }
 
 }

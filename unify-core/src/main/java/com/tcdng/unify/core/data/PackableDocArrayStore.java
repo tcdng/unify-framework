@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,29 +27,29 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class PackableDocArrayStore extends AbstractArrayValueStore<PackableDoc> {
 
-	public PackableDocArrayStore(PackableDoc[] storage, int dataIndex) {
-		super(storage, dataIndex);
-	}
+    public PackableDocArrayStore(PackableDoc[] storage, int dataIndex) {
+        super(storage, dataIndex);
+    }
 
-	@Override
-	protected boolean doSettable(PackableDoc storage, String property) throws UnifyException {
-		return storage != null && storage.isField(property);
-	}
+    @Override
+    protected boolean doSettable(PackableDoc storage, String property) throws UnifyException {
+        return storage != null && storage.isField(property);
+    }
 
-	@Override
-	protected boolean doGettable(PackableDoc storage, String property) throws UnifyException {
-		return storage != null && storage.isField(property);
-	}
+    @Override
+    protected boolean doGettable(PackableDoc storage, String property) throws UnifyException {
+        return storage != null && storage.isField(property);
+    }
 
-	@Override
-	protected Object doRetrieve(PackableDoc storage, String property) throws UnifyException {
-		return storage.readFieldValue(property);
-	}
+    @Override
+    protected Object doRetrieve(PackableDoc storage, String property) throws UnifyException {
+        return storage.readFieldValue(property);
+    }
 
-	@Override
-	protected void doStore(PackableDoc storage, String property, Object value, Formatter<?> formatter)
-			throws UnifyException {
-		storage.writeFieldValue(property, value, formatter);
-	}
+    @Override
+    protected void doStore(PackableDoc storage, String property, Object value, Formatter<?> formatter)
+            throws UnifyException {
+        storage.writeFieldValue(property, value, formatter);
+    }
 
 }

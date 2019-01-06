@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,76 +33,76 @@ import com.tcdng.unify.web.annotation.RequestParameter;
 @Component("/resource/mock")
 public class MockResourceController extends AbstractResourceController {
 
-	public MockResourceController() {
-		super(false);
-	}
+    public MockResourceController() {
+        super(false);
+    }
 
-	@RequestParameter
-	private String accountNo;
+    @RequestParameter
+    private String accountNo;
 
-	@RequestParameter
-	private Double balance;
+    @RequestParameter
+    private Double balance;
 
-	@Override
-	public void execute(OutputStream outputStream) throws UnifyException {
-		try {
-			OutputStreamWriter osw = new OutputStreamWriter(outputStream);
-			osw.write("Hello World!");
-			osw.flush();
-		} catch (IOException e) {
-			throwOperationErrorException(e);
-		}
-	}
+    @Override
+    public void execute(OutputStream outputStream) throws UnifyException {
+        try {
+            OutputStreamWriter osw = new OutputStreamWriter(outputStream);
+            osw.write("Hello World!");
+            osw.flush();
+        } catch (IOException e) {
+            throwOperationErrorException(e);
+        }
+    }
 
-	@Override
-	public String getContentType() {
-		return null;
-	}
+    @Override
+    public String getContentType() {
+        return null;
+    }
 
-	@Override
-	public void setContentType(String contentType) {
+    @Override
+    public void setContentType(String contentType) {
 
-	}
+    }
 
-	@Override
-	public String getResourceName() {
-		return null;
-	}
+    @Override
+    public String getResourceName() {
+        return null;
+    }
 
-	@Override
-	public void setResourceName(String resourceName) {
+    @Override
+    public void setResourceName(String resourceName) {
 
-	}
+    }
 
-	@Override
-	public Set<String> getMetaDataKeys() {
-		return null;
-	}
+    @Override
+    public Set<String> getMetaDataKeys() {
+        return null;
+    }
 
-	@Override
-	public String getMetaData(String name) {
-		return null;
-	}
+    @Override
+    public String getMetaData(String name) {
+        return null;
+    }
 
-	@Override
-	public void prepareExecution() throws UnifyException {
+    @Override
+    public void prepareExecution() throws UnifyException {
 
-	}
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public String getAccountNo() {
+        return accountNo;
+    }
 
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 
-	public Double getBalance() {
-		return balance;
-	}
+    public Double getBalance() {
+        return balance;
+    }
 
-	public void setBalance(Double balance) {
-		this.balance = balance;
-	}
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
 
 }

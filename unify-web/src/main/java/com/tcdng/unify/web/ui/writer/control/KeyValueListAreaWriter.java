@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,23 +35,23 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("keyvaluelistarea-writer")
 public class KeyValueListAreaWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		KeyValueListArea keyValueListArea = (KeyValueListArea) widget;
-		String styleClass = keyValueListArea.getUplAttribute(String.class, "styleClass");
-		writer.write("<div ");
-		writeTagAttributes(writer, keyValueListArea);
-		writer.write("><table class=\"").write(styleClass).write("-body\">");
-		Map<Object, Object> map = keyValueListArea.getMapValue();
-		if (map != null) {
-			for (Map.Entry<Object, Object> entry : map.entrySet()) {
-				writer.write("<tr><td class=\"").write(styleClass).write("-key\">");
-				writer.write(entry.getKey());
-				writer.write("</td><td class=\"").write(styleClass).write("-value\">");
-				writer.write(entry.getValue());
-				writer.write("</td></tr>");
-			}
-		}
-		writer.write("</table></div>");
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        KeyValueListArea keyValueListArea = (KeyValueListArea) widget;
+        String styleClass = keyValueListArea.getUplAttribute(String.class, "styleClass");
+        writer.write("<div ");
+        writeTagAttributes(writer, keyValueListArea);
+        writer.write("><table class=\"").write(styleClass).write("-body\">");
+        Map<Object, Object> map = keyValueListArea.getMapValue();
+        if (map != null) {
+            for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                writer.write("<tr><td class=\"").write(styleClass).write("-key\">");
+                writer.write(entry.getKey());
+                writer.write("</td><td class=\"").write(styleClass).write("-value\">");
+                writer.write(entry.getValue());
+                writer.write("</td></tr>");
+            }
+        }
+        writer.write("</table></div>");
+    }
 }

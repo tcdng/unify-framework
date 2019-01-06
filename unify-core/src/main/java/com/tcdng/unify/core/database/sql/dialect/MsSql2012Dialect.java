@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,37 +28,37 @@ import com.tcdng.unify.core.constant.SqlDialectConstants;
 @Component(name = SqlDialectConstants.MSSQL_2012, description = "$m{sqldialect.mssql2012db}")
 public class MsSql2012Dialect extends MsSqlDialect {
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		boolean isAppend = false;
-		if (offset > 0) {
-			sql.append(" OFFSET ").append(offset).append(" ROWS");
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        boolean isAppend = false;
+        if (offset > 0) {
+            sql.append(" OFFSET ").append(offset).append(" ROWS");
+            isAppend = true;
+        }
 
-		if (limit > 0) {
-			if (isAppend) {
-				sql.append(" FETCH NEXT ");
-			} else {
-				sql.append(" FETCH FIRST ");
-			}
+        if (limit > 0) {
+            if (isAppend) {
+                sql.append(" FETCH NEXT ");
+            } else {
+                sql.append(" FETCH FIRST ");
+            }
 
-			sql.append(limit).append(" ROWS ONLY");
-			isAppend = true;
-		}
+            sql.append(limit).append(" ROWS ONLY");
+            isAppend = true;
+        }
 
-		return isAppend;
-	}
+        return isAppend;
+    }
 }

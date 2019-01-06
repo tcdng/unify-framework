@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,20 +29,20 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
  */
 public class ReportFormatUtilsTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testFormat() throws Exception {
-		getComponent("mock-reportformatterstore");
-		assertEquals("2354", ReportFormatUtils.format("!integerformat useGrouping:false", 2354));
-		assertEquals("2.3 KB", ReportFormatUtils.format("!filesizeformat", 2354));
-	}
+    @Test
+    public void testFormat() throws Exception {
+        getComponent("mock-reportformatterstore");
+        assertEquals("2354", ReportFormatUtils.format("!integerformat useGrouping:false", 2354));
+        assertEquals("2.3 KB", ReportFormatUtils.format("!filesizeformat", 2354));
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

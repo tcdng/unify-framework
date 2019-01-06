@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.annotation.Child;
 import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
@@ -31,53 +32,64 @@ import com.tcdng.unify.core.annotation.Table;
 @Table("REPORT")
 public class Report extends AbstractTestEntity {
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	@Column
-	private String description;
+    @Column
+    private String description;
 
-	@ChildList
-	private List<ReportParameter> parameters;
+    @Child
+    private ReportForm reportForm;
 
-	public Report(String name, String description) {
-		this.name = name;
-		this.description = description;
-	}
+    @ChildList
+    private List<ReportParameter> parameters;
 
-	public Report() {
+    public Report(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
-	}
+    public Report() {
 
-	public Report addParameter(ReportParameter rp) {
-		if (this.parameters == null) {
-			this.parameters = new ArrayList<ReportParameter>();
-		}
-		this.parameters.add(rp);
-		return this;
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Report addParameter(ReportParameter rp) {
+        if (parameters == null) {
+            parameters = new ArrayList<ReportParameter>();
+        }
+        parameters.add(rp);
+        return this;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public List<ReportParameter> getParameters() {
-		return parameters;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setParameters(List<ReportParameter> parameters) {
-		this.parameters = parameters;
-	}
+    public ReportForm getReportForm() {
+        return reportForm;
+    }
+
+    public void setReportForm(ReportForm reportForm) {
+        this.reportForm = reportForm;
+    }
+
+    public List<ReportParameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<ReportParameter> parameters) {
+        this.parameters = parameters;
+    }
 }

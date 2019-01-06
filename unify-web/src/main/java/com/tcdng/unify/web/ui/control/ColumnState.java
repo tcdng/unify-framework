@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,24 +25,24 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ColumnState {
 
-	/**
-	 * Indicates the column is sortable.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs.
-	 */
-	boolean isSortable() throws UnifyException;
+    /**
+     * Indicates the column is sortable.
+     * 
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    boolean isSortable() throws UnifyException;
 
-	/**
-	 * Returns the current order of the column.
-	 */
-	boolean isAscending();
+    /**
+     * Returns the current order of the column.
+     */
+    boolean isAscending();
 
-	/**
-	 * Returns the bean field name associated with the column.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getFieldName() throws UnifyException;
+    /**
+     * Returns the bean field name associated with the column.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getFieldName() throws UnifyException;
 }

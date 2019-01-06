@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,26 +25,26 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class CharacterConverter extends AbstractConverter<Character> {
 
-	@Override
-	protected Character doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Character) {
-			return (Character) value;
-		}
+    @Override
+    protected Character doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Character) {
+            return (Character) value;
+        }
 
-		if (value instanceof Number) {
-			return Character.valueOf((char) ((Number) value).shortValue());
-		}
+        if (value instanceof Number) {
+            return Character.valueOf((char) ((Number) value).shortValue());
+        }
 
-		if (value instanceof String) {
-			String string = ((String) value).trim();
-			if (!string.isEmpty()) {
-				if (formatter == null) {
-					return Character.valueOf(string.charAt(0));
-				}
-				return doConvert(formatter.parse(string), null);
-			}
-		}
-		return null;
-	}
+        if (value instanceof String) {
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                if (formatter == null) {
+                    return Character.valueOf(string.charAt(0));
+                }
+                return doConvert(formatter.parse(string), null);
+            }
+        }
+        return null;
+    }
 
 }

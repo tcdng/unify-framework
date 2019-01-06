@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,73 +35,73 @@ import com.tcdng.unify.web.annotation.RequestParameter;
 @Component("/resource/scope")
 public class ScopeResourceController extends AbstractResourceController {
 
-	@RequestParameter
-	private String scope;
+    @RequestParameter
+    private String scope;
 
-	@RequestParameter
-	private boolean clearOnRead;
+    @RequestParameter
+    private boolean clearOnRead;
 
-	private boolean isApplicationScope;
+    private boolean isApplicationScope;
 
-	private Object resource;
+    private Object resource;
 
-	public ScopeResourceController() {
-		super(false);
-	}
+    public ScopeResourceController() {
+        super(false);
+    }
 
-	@Override
-	public void prepareExecution() throws UnifyException {
-		setContentDisposition(getResourceName());
+    @Override
+    public void prepareExecution() throws UnifyException {
+        setContentDisposition(getResourceName());
 
-		if (isApplicationScope = Scope.APPLICATION.equals(Scope.fromCode(scope))) {
-			resource = getApplicationAttribute(getResourceName());
-		} else {
-			resource = getSessionContext().getAttribute(getResourceName());
-		}
+        if (isApplicationScope = Scope.APPLICATION.equals(Scope.fromCode(scope))) {
+            resource = getApplicationAttribute(getResourceName());
+        } else {
+            resource = getSessionContext().getAttribute(getResourceName());
+        }
 
-		if (resource != null && resource instanceof byte[]) {
-			setContentLength(((byte[]) resource).length);
-		}
-	}
+        if (resource != null && resource instanceof byte[]) {
+            setContentLength(((byte[]) resource).length);
+        }
+    }
 
-	@Override
-	public void execute(OutputStream outputStream) throws UnifyException {
-		InputStream inputStream = null;
-		if (resource != null) {
-			if (resource instanceof byte[]) {
-				IOUtils.writeAll(outputStream, (byte[]) resource);
-			} else if (resource instanceof InputStream) {
-				inputStream = (InputStream) resource;
-				IOUtils.writeAll(outputStream, inputStream);
-				clearOnRead = true;
-			} else if (resource instanceof ResourceGenerator) {
-				((ResourceGenerator<?>) resource).generate(outputStream);
-				clearOnRead = true;
-			}
+    @Override
+    public void execute(OutputStream outputStream) throws UnifyException {
+        InputStream inputStream = null;
+        if (resource != null) {
+            if (resource instanceof byte[]) {
+                IOUtils.writeAll(outputStream, (byte[]) resource);
+            } else if (resource instanceof InputStream) {
+                inputStream = (InputStream) resource;
+                IOUtils.writeAll(outputStream, inputStream);
+                clearOnRead = true;
+            } else if (resource instanceof ResourceGenerator) {
+                ((ResourceGenerator<?>) resource).generate(outputStream);
+                clearOnRead = true;
+            }
 
-			if (clearOnRead) {
-				if (isApplicationScope) {
-					removeApplicationAttribute(getResourceName());
-				} else {
-					getSessionContext().removeAttribute(getResourceName());
-				}
-			}
-		}
-	}
+            if (clearOnRead) {
+                if (isApplicationScope) {
+                    removeApplicationAttribute(getResourceName());
+                } else {
+                    getSessionContext().removeAttribute(getResourceName());
+                }
+            }
+        }
+    }
 
-	public String getScope() {
-		return scope;
-	}
+    public String getScope() {
+        return scope;
+    }
 
-	public void setScope(String scope) {
-		this.scope = scope;
-	}
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
-	public boolean isClearOnRead() {
-		return clearOnRead;
-	}
+    public boolean isClearOnRead() {
+        return clearOnRead;
+    }
 
-	public void setClearOnRead(boolean clearOnRead) {
-		this.clearOnRead = clearOnRead;
-	}
+    public void setClearOnRead(boolean clearOnRead) {
+        this.clearOnRead = clearOnRead;
+    }
 }

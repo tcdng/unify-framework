@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,83 +23,90 @@ package com.tcdng.unify.core;
  */
 public class UserToken {
 
-	private String roleCode;
+    private String roleCode;
 
-	private String themePath;
+    private String themePath;
 
-	private String userLoginId;
+    private String userLoginId;
 
-	private String userName;
+    private String userName;
 
-	private Object userId;
+    private Object userId;
 
-	private Object branchId;
+    private Object branchCode;
 
-	private String ipAddress;
+    private String ipAddress;
 
-	private boolean reservedUser;
+    private boolean globalAccess;
 
-	private boolean allowMultipleLogin;
+    private boolean reservedUser;
 
-	private boolean remote;
+    private boolean allowMultipleLogin;
 
-	public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchId,
-			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
-		this.userLoginId = userLoginId;
-		this.userName = userName;
-		this.userId = userId;
-		this.branchId = branchId;
-		this.ipAddress = ipAddress;
-		this.reservedUser = reservedUser;
-		this.allowMultipleLogin = allowMultipleLogin;
-		this.remote = remote;
-	}
+    private boolean remote;
 
-	public String getRoleCode() {
-		return roleCode;
-	}
+    public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchCode,
+            boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+        this.userLoginId = userLoginId;
+        this.userName = userName;
+        this.userId = userId;
+        this.branchCode = branchCode;
+        this.ipAddress = ipAddress;
+        this.globalAccess = globalAccess;
+        this.reservedUser = reservedUser;
+        this.allowMultipleLogin = allowMultipleLogin;
+        this.remote = remote;
+    }
 
-	public String getThemePath() {
-		return themePath;
-	}
+    public String getRoleCode() {
+        return roleCode;
+    }
 
-	public void setRoleCode(String roleCode) {
-		this.roleCode = roleCode;
-	}
+    public String getThemePath() {
+        return themePath;
+    }
 
-	public void setThemePath(String themePath) {
-		this.themePath = themePath;
-	}
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
 
-	public String getUserLoginId() {
-		return userLoginId;
-	}
+    public void setThemePath(String themePath) {
+        this.themePath = themePath;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getUserLoginId() {
+        return userLoginId;
+    }
 
-	public Object getUserId() {
-		return userId;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public Object getBranchId() {
-		return branchId;
-	}
+    public Object getUserId() {
+        return userId;
+    }
 
-	public String getIpAddress() {
-		return ipAddress;
-	}
+    public Object getBranchCode() {
+        return branchCode;
+    }
 
-	public boolean isReservedUser() {
-		return reservedUser;
-	}
+    public String getIpAddress() {
+        return ipAddress;
+    }
 
-	public boolean isAllowMultipleLogin() {
-		return allowMultipleLogin;
-	}
+    public boolean isGlobalAccess() {
+        return globalAccess;
+    }
 
-	public boolean isRemote() {
-		return remote;
-	}
+    public boolean isReservedUser() {
+        return reservedUser;
+    }
+
+    public boolean isAllowMultipleLogin() {
+        return allowMultipleLogin;
+    }
+
+    public boolean isRemote() {
+        return remote;
+    }
 }

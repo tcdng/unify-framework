@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,21 +25,21 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class FloatConverter extends AbstractConverter<Float> {
 
-	@Override
-	protected Float doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof Number) {
-			return Float.valueOf(((Number) value).floatValue());
-		}
-		if (value instanceof String) {
-			String string = ((String) value).trim();
-			if (!string.isEmpty()) {
-				if (formatter == null) {
-					return Float.valueOf(string);
-				}
-				return doConvert(formatter.parse(string), null);
-			}
-		}
-		return null;
-	}
+    @Override
+    protected Float doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof Number) {
+            return Float.valueOf(((Number) value).floatValue());
+        }
+        if (value instanceof String) {
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                if (formatter == null) {
+                    return Float.valueOf(string);
+                }
+                return doConvert(formatter.parse(string), null);
+            }
+        }
+        return null;
+    }
 
 }

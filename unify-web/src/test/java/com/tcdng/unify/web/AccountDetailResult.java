@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,46 +31,46 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "accountNo", "accountName", "balance" })
 public class AccountDetailResult extends RemoteCallResult {
 
-	private String accountNo;
+    private String accountNo;
 
-	private String accountName;
+    private String accountName;
 
-	private BigDecimal balance;
+    private BigDecimal balance;
 
-	public AccountDetailResult(String accountNo, String accountName, BigDecimal balance) {
-		this.accountNo = accountNo;
-		this.accountName = accountName;
-		this.balance = balance;
-	}
+    public AccountDetailResult(String accountNo, String accountName, BigDecimal balance) {
+        this.accountNo = accountNo;
+        this.accountName = accountName;
+        this.balance = balance;
+    }
 
-	public AccountDetailResult() {
+    public AccountDetailResult() {
 
-	}
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public String getAccountNo() {
+        return accountNo;
+    }
 
-	@XmlElement
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
+    @XmlElement
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 
-	public String getAccountName() {
-		return accountName;
-	}
+    public String getAccountName() {
+        return accountName;
+    }
 
-	@XmlElement
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
+    @XmlElement
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
-	public BigDecimal getBalance() {
-		return balance;
-	}
+    public BigDecimal getBalance() {
+        return balance;
+    }
 
-	@XmlElement
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
+    @XmlElement
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
 }

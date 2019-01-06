@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,42 +35,42 @@ import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
  */
 @Component("ui-filedownload")
 @UplAttributes({ @UplAttribute(name = "fileSrc", type = String.class),
-		@UplAttribute(name = "fileProperty", type = String.class), @UplAttribute(name = "handler", type = String.class),
-		@UplAttribute(name = "imageSrc", type = String.class, defaultValue = "$t{images/download.png}"),
-		@UplAttribute(name = "caption", type = String.class, defaultValue = "$m{button.download}") })
+        @UplAttribute(name = "fileBinding", type = String.class), @UplAttribute(name = "handler", type = String.class),
+        @UplAttribute(name = "imageSrc", type = String.class, defaultValue = "$t{images/download.png}"),
+        @UplAttribute(name = "caption", type = String.class, defaultValue = "$m{button.download}") })
 public class FileDownload extends Button {
 
-	@Action
-	public void download() throws UnifyException {
-		DownloadFile downloadFile = null;
-		String fileSrc = getUplAttribute(String.class, "fileSrc");
-		if (!StringUtils.isBlank(fileSrc)) {
-			byte[] data = IOUtils.readFileResourceInputStream(fileSrc);
-			String fileName = fileSrc;
-			int index = fileName.lastIndexOf('/') + 1;
-			if (index > 0) {
-				fileName = fileName.substring(index);
-			}
+    @Action
+    public void download() throws UnifyException {
+        DownloadFile downloadFile = null;
+        String fileSrc = getUplAttribute(String.class, "fileSrc");
+        if (!StringUtils.isBlank(fileSrc)) {
+            byte[] data = IOUtils.readFileResourceInputStream(fileSrc);
+            String fileName = fileSrc;
+            int index = fileName.lastIndexOf('/') + 1;
+            if (index > 0) {
+                fileName = fileName.substring(index);
+            }
 
-			downloadFile = new DownloadFile(fileName, ContentTypeConstants.APPLICATION_OCTETSTREAM, data);
-		} else {
-			String fileProperty = getUplAttribute(String.class, "fileProperty");
-			if (!StringUtils.isBlank(fileProperty)) {
-				downloadFile = (DownloadFile) getValue(fileProperty);
-			} else {
-				String handler = getUplAttribute(String.class, "handler");
-				if (!StringUtils.isBlank(handler)) {
-					FileDownloadHandler fileDownloadHandler = (FileDownloadHandler) getComponent(handler);
-					String id = getRequestTarget(String.class);
-					downloadFile = fileDownloadHandler.handleFileDownload(id);
-				}
-			}
-		}
+            downloadFile = new DownloadFile(fileName, ContentTypeConstants.APPLICATION_OCTETSTREAM, data);
+        } else {
+            String fileBinding = getUplAttribute(String.class, "fileBinding");
+            if (!StringUtils.isBlank(fileBinding)) {
+                downloadFile = (DownloadFile) getValue(fileBinding);
+            } else {
+                String handler = getUplAttribute(String.class, "handler");
+                if (!StringUtils.isBlank(handler)) {
+                    FileDownloadHandler fileDownloadHandler = (FileDownloadHandler) getComponent(handler);
+                    String id = getRequestTarget(String.class);
+                    downloadFile = fileDownloadHandler.handleFileDownload(id);
+                }
+            }
+        }
 
-		if (downloadFile != null) {
-			setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
-			setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
-		}
-	}
+        if (downloadFile != null) {
+            setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
+            setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
+        }
+    }
 
 }

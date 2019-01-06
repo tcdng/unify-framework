@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,6 @@ package com.tcdng.unify.core.system;
 import java.util.List;
 import java.util.Locale;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -36,12 +35,12 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
 @Component("clusternodelist")
 public class ClusterNodeListCommand extends AbstractZeroParamsListCommand {
 
-	@Configurable(ApplicationComponents.APPLICATION_CLUSTERMANAGER)
-	private ClusterManagerBusinessModule clusterManager;
+    @Configurable
+    private ClusterService clusterService;
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-		return clusterManager
-				.findClusterNodes((ClusterNodeQuery) new ClusterNodeQuery().ignoreEmptyCriteria(true).order("nodeId"));
-	}
+    @Override
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        return clusterService
+                .findClusterNodes((ClusterNodeQuery) new ClusterNodeQuery().ignoreEmptyCriteria(true).order("nodeId"));
+    }
 }

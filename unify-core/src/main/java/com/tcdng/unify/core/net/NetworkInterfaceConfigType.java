@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,5 +22,5 @@ package com.tcdng.unify.core.net;
  * @since 1.0
  */
 public enum NetworkInterfaceConfigType {
-	REMOTE_UNICAST_SERVER, LOCAL_UNICAST_SERVER, REMOTE_MULTICAST_CLIENT, LOCAL_MULTICAST_CLIENT
+    REMOTE_UNICAST_SERVER, LOCAL_UNICAST_SERVER, REMOTE_MULTICAST_CLIENT, LOCAL_MULTICAST_CLIENT
 }

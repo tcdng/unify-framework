@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,64 +29,64 @@ import com.tcdng.unify.web.ui.Control;
 @Component("ui-shiftbuttons")
 public class ShiftButtons extends AbstractMultiControl {
 
-	private Control shiftTopCtrl;
+    private Control shiftTopCtrl;
 
-	private Control shiftUpCtrl;
+    private Control shiftUpCtrl;
 
-	private Control shiftDownCtrl;
+    private Control shiftDownCtrl;
 
-	private Control shiftBottomCtrl;
+    private Control shiftBottomCtrl;
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		shiftTopCtrl = addInternalChildControl(
-				"!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
-				false);
-		shiftUpCtrl = addInternalChildControl(
-				"!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
-		shiftDownCtrl = addInternalChildControl(
-				"!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
-				false);
-		shiftBottomCtrl = addInternalChildControl(
-				"!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
-				false);
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        shiftTopCtrl = addInternalChildControl(
+                "!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
+                false);
+        shiftUpCtrl = addInternalChildControl(
+                "!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
+        shiftDownCtrl = addInternalChildControl(
+                "!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
+                false);
+        shiftBottomCtrl = addInternalChildControl(
+                "!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
+                false);
 
-		shiftTopCtrl.setGroupId(getPrefixedId("shft_"));
-		shiftUpCtrl.setGroupId(getPrefixedId("shfu_"));
-		shiftDownCtrl.setGroupId(getPrefixedId("shfd_"));
-		shiftBottomCtrl.setGroupId(getPrefixedId("shfb_"));
-	}
+        shiftTopCtrl.setGroupId(getPrefixedId("shft_"));
+        shiftUpCtrl.setGroupId(getPrefixedId("shfu_"));
+        shiftDownCtrl.setGroupId(getPrefixedId("shfd_"));
+        shiftBottomCtrl.setGroupId(getPrefixedId("shfb_"));
+    }
 
-	public Control getShiftTopCtrl() {
-		return shiftTopCtrl;
-	}
+    public Control getShiftTopCtrl() {
+        return shiftTopCtrl;
+    }
 
-	public Control getShiftUpCtrl() {
-		return shiftUpCtrl;
-	}
+    public Control getShiftUpCtrl() {
+        return shiftUpCtrl;
+    }
 
-	public Control getShiftDownCtrl() {
-		return shiftDownCtrl;
-	}
+    public Control getShiftDownCtrl() {
+        return shiftDownCtrl;
+    }
 
-	public Control getShiftBottomCtrl() {
-		return shiftBottomCtrl;
-	}
+    public Control getShiftBottomCtrl() {
+        return shiftBottomCtrl;
+    }
 
-	public String getShiftTopGroupId() throws UnifyException {
-		return shiftTopCtrl.getGroupId();
-	}
+    public String getShiftTopGroupId() throws UnifyException {
+        return shiftTopCtrl.getGroupId();
+    }
 
-	public String getShiftUpGroupId() throws UnifyException {
-		return shiftUpCtrl.getGroupId();
-	}
+    public String getShiftUpGroupId() throws UnifyException {
+        return shiftUpCtrl.getGroupId();
+    }
 
-	public String getShiftDownGroupId() throws UnifyException {
-		return shiftDownCtrl.getGroupId();
-	}
+    public String getShiftDownGroupId() throws UnifyException {
+        return shiftDownCtrl.getGroupId();
+    }
 
-	public String getShiftBottomGroupId() throws UnifyException {
-		return shiftBottomCtrl.getGroupId();
-	}
+    public String getShiftBottomGroupId() throws UnifyException {
+        return shiftBottomCtrl.getGroupId();
+    }
 }

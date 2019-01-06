@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,38 +37,38 @@ import com.tcdng.unify.core.database.Entity;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ForeignKey {
 
-	/** The foreign entity that key references. */
-	Class<? extends Entity> value() default Entity.class;
+    /** The foreign entity that key references. */
+    Class<? extends Entity> value() default Entity.class;
 
-	/** The foreign entity that key references. */
-	Class<? extends Entity> type() default Entity.class;
+    /** The foreign entity that key references. */
+    Class<? extends Entity> type() default Entity.class;
 
-	/**
-	 * The field column name. If not set, the system generates a column name using
-	 * the field name.
-	 */
-	String name() default AnnotationConstants.NONE;
+    /**
+     * The field column name. If not set, the system generates a column name using
+     * the field name.
+     */
+    String name() default AnnotationConstants.NONE;
 
-	/** Indicates the field is nullable. */
-	boolean nullable() default false;
+    /** Indicates the field is nullable. */
+    boolean nullable() default false;
 
-	/**
-	 * Indicates child records are deleted on parent delete. Ignore for child lists
-	 * since always true
-	 */
-	boolean onDeleteCascade() default false;
+    /**
+     * Indicates child records are deleted on parent delete. Ignore for child lists
+     * since always true
+     */
+    boolean onDeleteCascade() default false;
 
-	/**
-	 * Indicates annotated field should be considered a foreign key for child lists.
-	 */
-	boolean childKey() default true;
+    /**
+     * Indicates annotated field should be considered a foreign key for child lists.
+     */
+    boolean childKey() default true;
 
-	/**
-	 * Indicates the foreign key constraint be enforced if global enforcement is
-	 * true, Defaults to true
-	 */
-	boolean enforce() default true;
+    /**
+     * Indicates the foreign key constraint be enforced if global enforcement is
+     * true, Defaults to true
+     */
+    boolean enforce() default true;
 
-	/** Column position */
-	int position() default DefaultColumnPositionConstants.FK_POSITION;
+    /** Column position */
+    int position() default DefaultColumnPositionConstants.FK_POSITION;
 }

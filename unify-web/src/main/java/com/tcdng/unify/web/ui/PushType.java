@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,16 +24,16 @@ package com.tcdng.unify.web.ui;
  */
 public enum PushType {
 
-	CHECKBOX("pushc_"), RADIO("pushr_"), GROUP("pushg_");
+    CHECKBOX("pushc_"), RADIO("pushr_"), GROUP("pushg_");
 
-	private String prefix;
+    private String prefix;
 
-	private PushType(String prefix) {
-		this.prefix = prefix;
-	}
+    private PushType(String prefix) {
+        this.prefix = prefix;
+    }
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public String getPrefix() {
+        return prefix;
+    }
 
 }

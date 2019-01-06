@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.tcdng.unify</groupId>
 		<artifactId>unify</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>unify-jcifs</artifactId>
@@ -31,9 +31,36 @@
 		</developer>
 	</developers>
 
+    <scm>
+        <connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>
+        <developerConnection>scm:git:ssh://github.com:tcdng/unify-framework.git</developerConnection>
+        <url>http://github.com/tcdng/unify-framework/tree/master</url>
+    </scm>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugin</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 	<dependencies>
 		<!-- Main dependencies -->

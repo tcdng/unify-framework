@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,20 +26,20 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class ByteArrayConverter extends AbstractConverter<byte[]> {
 
-	@Override
-	protected byte[] doConvert(Object value, Formatter<?> formatter) throws Exception {
-		if (value instanceof byte[]) {
-			return (byte[]) value;
-		}
+    @Override
+    protected byte[] doConvert(Object value, Formatter<?> formatter) throws Exception {
+        if (value instanceof byte[]) {
+            return (byte[]) value;
+        }
 
-		if (value instanceof UploadedFile) {
-			return ((UploadedFile) value).getData();
-		}
+        if (value instanceof UploadedFile) {
+            return ((UploadedFile) value).getData();
+        }
 
-		if (value instanceof UploadedFile[]) {
-			return ((UploadedFile[]) value)[0].getData();
-		}
-		return null;
-	}
+        if (value instanceof UploadedFile[]) {
+            return ((UploadedFile[]) value)[0].getData();
+        }
+        return null;
+    }
 
 }

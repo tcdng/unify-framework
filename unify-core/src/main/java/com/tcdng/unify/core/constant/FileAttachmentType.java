@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,45 +27,46 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("fileattachmenttypelist")
 public enum FileAttachmentType implements EnumConst {
 
-	AUDIO("AUD", "audio/*,audio/mp3", "audio/*,audio/mp3"), CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV), EXCEL(
-			"XLS", ".xls,.xlsx",
-			ContentTypeConstants.APPLICATION_XLS + ";" + ContentTypeConstants.APPLICATION_XLSX), IMAGE("IMG", "image/*",
-					ContentTypeConstants.IMAGE), PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF), TEXT("TXT",
-							"text/*", "text/*"), VIDEO("VID", "video/*,video/mp4", "video/*,video/mp4"), WILDCARD(
-									"WILD", "", ContentTypeConstants.APPLICATION_OCTETSTREAM), WORD("DOC", ".doc,.docx",
-											ContentTypeConstants.APPLICATION_DOC + ";"
-													+ ContentTypeConstants.APPLICATION_DOCX);
+    AUDIO("AUD", "audio/*,audio/mp3", "audio/*,audio/mp3"),
+    CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV),
+    EXCEL("XLS", ".xls,.xlsx", ContentTypeConstants.APPLICATION_XLS + ";" + ContentTypeConstants.APPLICATION_XLSX),
+    IMAGE("IMG", "image/*", ContentTypeConstants.IMAGE),
+    PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF),
+    TEXT("TXT", "text/*", "text/*"),
+    VIDEO("VID", "video/*,video/mp4", "video/*,video/mp4"),
+    WILDCARD("WILD", "", ContentTypeConstants.APPLICATION_OCTETSTREAM),
+    WORD("DOC", ".doc,.docx", ContentTypeConstants.APPLICATION_DOC + ";" + ContentTypeConstants.APPLICATION_DOCX);
 
-	private final String code;
+    private final String code;
 
-	private final String extensions;
+    private final String extensions;
 
-	private final String contentType;
+    private final String contentType;
 
-	private FileAttachmentType(String code, String extensions, String contentType) {
-		this.code = code;
-		this.extensions = extensions;
-		this.contentType = contentType;
-	}
+    private FileAttachmentType(String code, String extensions, String contentType) {
+        this.code = code;
+        this.extensions = extensions;
+        this.contentType = contentType;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return code;
+    }
 
-	public String extensions() {
-		return extensions;
-	}
+    public String extensions() {
+        return extensions;
+    }
 
-	public String contentType() {
-		return contentType;
-	}
+    public String contentType() {
+        return contentType;
+    }
 
-	public static FileAttachmentType fromCode(String code) {
-		return EnumUtils.fromCode(FileAttachmentType.class, code);
-	}
+    public static FileAttachmentType fromCode(String code) {
+        return EnumUtils.fromCode(FileAttachmentType.class, code);
+    }
 
-	public static FileAttachmentType fromName(String name) {
-		return EnumUtils.fromName(FileAttachmentType.class, name);
-	}
+    public static FileAttachmentType fromName(String name) {
+        return EnumUtils.fromName(FileAttachmentType.class, name);
+    }
 }

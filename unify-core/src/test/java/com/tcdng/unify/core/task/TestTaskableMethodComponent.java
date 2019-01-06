@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,38 +32,47 @@ import com.tcdng.unify.core.annotation.Taskable;
 @Component("test-taskablecomponent")
 public class TestTaskableMethodComponent extends AbstractUnifyComponent {
 
-	@Taskable(name = "computegalactic-task", description = "Galactic Calculator", parameters = { @Parameter("name"),
-			@Parameter(name = "factor", type = Double.class) })
-	public int computeGalactic(TaskMonitor taskMonitor, String name, Double factor) throws UnifyException {
-		if (name != null) {
-			return Double.valueOf((factor * 1000000)).intValue();
-		}
+    @Taskable(
+            name = "computegalactic-task",
+            description = "Galactic Calculator",
+            parameters = { @Parameter("name"), @Parameter(name = "factor", type = Double.class) })
+    public int computeGalactic(TaskMonitor taskMonitor, String name, Double factor) throws UnifyException {
+        if (name != null) {
+            return Double.valueOf((factor * 1000000)).intValue();
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	@Taskable(name = "getone-task", description = "Get One Task", parameters = {})
-	public int getOne(TaskMonitor taskMonitor) throws UnifyException {
-		return 1;
-	}
+    @Taskable(name = "getone-task", description = "Get One Task", parameters = {})
+    public int getOne(TaskMonitor taskMonitor) throws UnifyException {
+        return 1;
+    }
 
-	@Taskable(name = "generatedailyrpt-task", description = "Generate Daily Report", parameters = {
-			@Parameter(name = "reportBase", description = "Report Base", editor = "!ui-text"),
-			@Parameter(name = "workingDt", description = "Working Date", editor = "!ui-date", type = Date.class) }, schedulable = true)
-	public String generateDailyReport(TaskMonitor taskMonitor, String reportBase, Date workingDt)
-			throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		sb.append(reportBase).append('_').append(workingDt);
-		return sb.toString();
-	}
+    @Taskable(
+            name = "generatedailyrpt-task",
+            description = "Generate Daily Report",
+            parameters = { @Parameter(name = "reportBase", description = "Report Base", editor = "!ui-text"),
+                    @Parameter(
+                            name = "workingDt",
+                            description = "Working Date",
+                            editor = "!ui-date",
+                            type = Date.class) },
+            schedulable = true)
+    public String generateDailyReport(TaskMonitor taskMonitor, String reportBase, Date workingDt)
+            throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(reportBase).append('_').append(workingDt);
+        return sb.toString();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

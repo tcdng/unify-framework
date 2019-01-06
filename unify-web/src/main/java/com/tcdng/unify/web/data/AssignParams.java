@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,48 +29,48 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class AssignParams {
 
-	private List<String> assignedIdList;
+    private List<String> assignedIdList;
 
-	private String filterId1;
+    private String filterId1;
 
-	private String filterId2;
+    private String filterId2;
 
-	public AssignParams(List<String> assignedIdList, String filterId1, String filterId2) {
-		this.assignedIdList = assignedIdList;
-		this.filterId1 = filterId1;
-		this.filterId2 = filterId2;
-	}
+    public AssignParams(List<String> assignedIdList, String filterId1, String filterId2) {
+        this.assignedIdList = assignedIdList;
+        this.filterId1 = filterId1;
+        this.filterId2 = filterId2;
+    }
 
-	public List<String> getAssignedIdList() {
-		return assignedIdList;
-	}
+    public List<String> getAssignedIdList() {
+        return assignedIdList;
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> List<T> getAssignedIdList(Class<T> dataType) throws UnifyException {
-		return (List<T>) DataUtils.convert(List.class, dataType, assignedIdList, null);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getAssignedIdList(Class<T> dataType) throws UnifyException {
+        return (List<T>) DataUtils.convert(List.class, dataType, assignedIdList, null);
+    }
 
-	public String getFilterId1() {
-		return filterId1;
-	}
+    public String getFilterId1() {
+        return filterId1;
+    }
 
-	public <T> T getFilterId1(Class<T> dataType) throws UnifyException {
-		return DataUtils.convert(dataType, filterId1, null);
-	}
+    public <T> T getFilterId1(Class<T> dataType) throws UnifyException {
+        return DataUtils.convert(dataType, filterId1, null);
+    }
 
-	public String getFilterId2() {
-		return filterId2;
-	}
+    public String getFilterId2() {
+        return filterId2;
+    }
 
-	public <T> T getFilterId2(Class<T> dataType) throws UnifyException {
-		return DataUtils.convert(dataType, filterId2, null);
-	}
+    public <T> T getFilterId2(Class<T> dataType) throws UnifyException {
+        return DataUtils.convert(dataType, filterId2, null);
+    }
 
-	public boolean isAssignedIdList() {
-		return assignedIdList != null && !assignedIdList.isEmpty();
-	}
+    public boolean isAssignedIdList() {
+        return assignedIdList != null && !assignedIdList.isEmpty();
+    }
 
-	public boolean isEmpty() {
-		return assignedIdList == null && filterId1 == null && filterId2 == null;
-	}
+    public boolean isEmpty() {
+        return assignedIdList == null && filterId1 == null && filterId2 == null;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,45 +23,48 @@ package com.tcdng.unify.core;
  */
 public interface RequestContextManager extends UnifyComponent {
 
-	/**
-	 * Gets the current executing thread request context.
-	 * 
-	 * @return the request context
-	 */
-	RequestContext getRequestContext();
+    /**
+     * Gets the current executing thread request context.
+     * 
+     * @return the request context
+     */
+    RequestContext getRequestContext();
 
-	/**
-	 * Sets the request context for the current executing thread using supplied user
-	 * session, context path and request path. Adds user session to application
-	 * context if it's a new session.
-	 * 
-	 * @param userSession
-	 *            the user session object
-	 * @param requestPath
-	 *            the request path.
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void loadRequestContext(UserSession userSession, String requestPath) throws UnifyException;
+    /**
+     * Sets the request context for the current executing thread using supplied user
+     * session, context path and request path. Adds user session to application
+     * context if it's a new session.
+     * 
+     * @param userSession
+     *            the user session object
+     * @param requestPath
+     *            the request path.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void loadRequestContext(UserSession userSession, String requestPath) throws UnifyException;
 
-	/**
-	 * Sets the request context for the current executing thread with supplied
-	 * context object.
-	 * 
-	 * @param requestContext
-	 *            the request context object to use.
-	 * @throws UnifyException
-	 *             if an erro occurs
-	 */
-	void loadRequestContext(RequestContext requestContext) throws UnifyException;
+    /**
+     * Sets the request context for the current executing thread with supplied
+     * context object.
+     * 
+     * @param requestContext
+     *            the request context object to use.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void loadRequestContext(RequestContext requestContext) throws UnifyException;
 
-	/**
-	 * Unloads the current executing thread request context.
-	 */
-	void unloadRequestContext();
+    /**
+     * Unloads the current executing thread request context.
+     */
+    void unloadRequestContext();
 
-	/**
-	 * Resets application context.
-	 */
-	void reset() throws UnifyException;
+    /**
+     * Resets application context.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void reset() throws UnifyException;
 }

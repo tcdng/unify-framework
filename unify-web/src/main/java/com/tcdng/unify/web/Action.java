@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,21 +28,21 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class Action {
 
-	private Method method;
+    private Method method;
 
-	public Action(Method method) {
-		this.method = method;
-	}
+    public Action(Method method) {
+        this.method = method;
+    }
 
-	public String getName() {
-		return method.getName();
-	}
+    public String getName() {
+        return method.getName();
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public Method getMethod() {
+        return method;
+    }
 
-	public String toString() {
-		return StringUtils.beanToString(this);
-	}
+    public String toString() {
+        return StringUtils.beanToString(this);
+    }
 }

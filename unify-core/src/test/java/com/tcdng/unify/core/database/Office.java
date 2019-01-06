@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,57 +27,57 @@ import com.tcdng.unify.core.annotation.Table;
 @Table(name = "OFFICE")
 public class Office extends AbstractTestEntity {
 
-	@Column
-	private String address;
+    @Column
+    private String address;
 
-	@Column
-	private String telephone;
+    @Column
+    private String telephone;
 
-	@Column
-	private int size;
+    @Column
+    private Integer size;
 
-	@Column(nullable = true)
-	private String[] workDays;
+    @Column(nullable = true)
+    private String[] workDays;
 
-	public Office(String address, String telephone, int size) {
-		this.address = address;
-		this.telephone = telephone;
-		this.size = size;
-	}
+    public Office(String address, String telephone, Integer size) {
+        this.address = address;
+        this.telephone = telephone;
+        this.size = size;
+    }
 
-	public Office() {
+    public Office() {
 
-	}
+    }
 
-	public int getSize() {
-		return size;
-	}
+    public Integer getSize() {
+        return size;
+    }
 
-	public void setSize(int size) {
-		this.size = size;
-	}
+    public void setSize(Integer size) {
+        this.size = size;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public String getTelephone() {
-		return telephone;
-	}
+    public String getTelephone() {
+        return telephone;
+    }
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
-	public String[] getWorkDays() {
-		return workDays;
-	}
+    public String[] getWorkDays() {
+        return workDays;
+    }
 
-	public void setWorkDays(String[] workDays) {
-		this.workDays = workDays;
-	}
+    public void setWorkDays(String[] workDays) {
+        this.workDays = workDays;
+    }
 }

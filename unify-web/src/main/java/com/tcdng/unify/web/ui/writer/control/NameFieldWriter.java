@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,10 +32,10 @@ import com.tcdng.unify.web.ui.control.TextField;
 @Component("namefield-writer")
 public class NameFieldWriter extends TextFieldWriter {
 
-	@Override
-	protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-		NameField nameField = (NameField) textField;
-		writer.writeNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
-				nameField.isAcceptPeriod(), nameField.isAcceptDash());
-	}
+    @Override
+    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+        NameField nameField = (NameField) textField;
+        writer.writeNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
+                nameField.isAcceptPeriod(), nameField.isAcceptDash());
+    }
 }

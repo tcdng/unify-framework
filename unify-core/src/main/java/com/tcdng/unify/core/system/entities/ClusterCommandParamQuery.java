@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,23 +25,23 @@ import java.util.Collection;
  */
 public class ClusterCommandParamQuery extends SequencedEntityQuery<ClusterCommandParam> {
 
-	public ClusterCommandParamQuery() {
-		super(ClusterCommandParam.class);
-	}
+    public ClusterCommandParamQuery() {
+        super(ClusterCommandParam.class);
+    }
 
-	public ClusterCommandParamQuery clusterCommandId(Long clusterCommandId) {
-		return (ClusterCommandParamQuery) equals("clusterCommandId", clusterCommandId);
-	}
+    public ClusterCommandParamQuery clusterCommandId(Long clusterCommandId) {
+        return (ClusterCommandParamQuery) equals("clusterCommandId", clusterCommandId);
+    }
 
-	public ClusterCommandParamQuery clusterCommandIdIn(Collection<Long> clusterCommandId) {
-		return (ClusterCommandParamQuery) amongst("clusterCommandId", clusterCommandId);
-	}
+    public ClusterCommandParamQuery clusterCommandIdIn(Collection<Long> clusterCommandId) {
+        return (ClusterCommandParamQuery) amongst("clusterCommandId", clusterCommandId);
+    }
 
-	public ClusterCommandParamQuery nodeId(String nodeId) {
-		return (ClusterCommandParamQuery) equals("nodeId", nodeId);
-	}
+    public ClusterCommandParamQuery nodeId(String nodeId) {
+        return (ClusterCommandParamQuery) equals("nodeId", nodeId);
+    }
 
-	public ClusterCommandParamQuery nodeIdIn(Collection<String> nodeId) {
-		return (ClusterCommandParamQuery) amongst("nodeId", nodeId);
-	}
+    public ClusterCommandParamQuery nodeIdIn(Collection<String> nodeId) {
+        return (ClusterCommandParamQuery) amongst("nodeId", nodeId);
+    }
 }

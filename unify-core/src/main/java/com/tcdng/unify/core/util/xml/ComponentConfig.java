@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,58 +25,58 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ComponentConfig {
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private String className;
+    private String className;
 
-	private Boolean singleton;
+    private Boolean singleton;
 
-	private PropertiesConfig propertiesConfig;
+    private PropertiesConfig propertiesConfig;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@XmlAttribute
-	public void setName(String name) {
-		this.name = name;
-	}
+    @XmlAttribute
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	@XmlAttribute
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @XmlAttribute
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getClassName() {
-		return className;
-	}
+    public String getClassName() {
+        return className;
+    }
 
-	@XmlAttribute(name = "class", required = true)
-	public void setClassName(String className) {
-		this.className = className;
-	}
+    @XmlAttribute(name = "class", required = true)
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
-	public Boolean getSingleton() {
-		return singleton;
-	}
+    public Boolean getSingleton() {
+        return singleton;
+    }
 
-	@XmlAttribute
-	public void setSingleton(Boolean singleton) {
-		this.singleton = singleton;
-	}
+    @XmlAttribute
+    public void setSingleton(Boolean singleton) {
+        this.singleton = singleton;
+    }
 
-	public PropertiesConfig getPropertiesConfig() {
-		return propertiesConfig;
-	}
+    public PropertiesConfig getPropertiesConfig() {
+        return propertiesConfig;
+    }
 
-	@XmlElement(name = "properties")
-	public void setPropertiesConfig(PropertiesConfig propertiesConfig) {
-		this.propertiesConfig = propertiesConfig;
-	}
+    @XmlElement(name = "properties")
+    public void setPropertiesConfig(PropertiesConfig propertiesConfig) {
+        this.propertiesConfig = propertiesConfig;
+    }
 }

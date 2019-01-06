@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,8 +24,10 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
-import com.tcdng.unify.core.util.SqlUtils;
+import com.tcdng.unify.core.database.sql.SqlUtils;
 
 /**
  * HSQLDB SQL dialect.
@@ -36,69 +38,83 @@ import com.tcdng.unify.core.util.SqlUtils;
 @Component(name = SqlDialectConstants.HSQLDB, description = "$m{sqldialect.hsqldb}")
 public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
-	private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
+    private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
 
-	@Override
-	public int getMaxClauseValues() {
-		return -1;
-	}
+    @Override
+    public int getMaxClauseValues() {
+        return -1;
+    }
 
-	@Override
-	public String generateTestSql() throws UnifyException {
-		return "VALUES CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateTestSql() throws UnifyException {
+        return "VALUES CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public String generateNowSql() throws UnifyException {
-		return "VALUES CURRENT_TIMESTAMP";
-	}
+    @Override
+    public String generateNowSql() throws UnifyException {
+        return "VALUES CURRENT_TIMESTAMP";
+    }
 
-	@Override
-	public SqlShutdownHook getShutdownHook() throws UnifyException {
-		return sqlShutdownHook;
-	}
+    @Override
+    public SqlShutdownHook getShutdownHook() throws UnifyException {
+        return sqlShutdownHook;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-		return false;
-	}
+    @Override
+    public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("ALTER COLUMN ").append(sqlColumnInfo.getColumnName()).append(" SET NULL");
+        return sb.toString();
+    }
 
-	@Override
-	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		return false;
-	}
+    @Override
+    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+        return false;
+    }
 
-	@Override
-	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-			throws UnifyException {
-		boolean isAppend = false;
-		if (limit > 0) {
-			sql.append(" LIMIT ").append(limit);
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        return false;
+    }
 
-		if (offset > 0) {
-			sql.append(" OFFSET ").append(offset);
-			isAppend = true;
-		}
+    @Override
+    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+            throws UnifyException {
+        boolean isAppend = false;
+        if (limit > 0) {
+            sql.append(" LIMIT ").append(limit);
+            isAppend = true;
+        }
 
-		return isAppend;
-	}
+        if (offset > 0) {
+            sql.append(" OFFSET ").append(offset);
+            isAppend = true;
+        }
 
-	private class HSqlDbShutdownHook implements SqlShutdownHook {
+        return isAppend;
+    }
 
-		@Override
-		public void commandShutdown(Connection connection) throws UnifyException {
-			Statement st = null;
-			try {
-				st = connection.createStatement();
-				st.execute("SHUTDOWN");
-			} catch (SQLException e) {
-				throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName());
-			} finally {
-				SqlUtils.close(st);
-			}
-		}
-	}
+    private class HSqlDbShutdownHook implements SqlShutdownHook {
+
+        @Override
+        public void commandShutdown(Connection connection) throws UnifyException {
+            Statement st = null;
+            try {
+                st = connection.createStatement();
+                st.execute("SHUTDOWN");
+            } catch (SQLException e) {
+                throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName());
+            } finally {
+                SqlUtils.close(st);
+            }
+        }
+    }
 }

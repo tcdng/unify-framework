@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,52 +31,52 @@ import com.tcdng.unify.core.annotation.Table;
 @Table("CLUSTERLOCK")
 public class ClusterLock extends AbstractSystemEntity {
 
-	@Id(length = 128)
-	private String lockName;
+    @Id(length = 128)
+    private String lockName;
 
-	@Column(length = 128, nullable = true)
-	private String currentOwner;
+    @Column(length = 128, nullable = true)
+    private String currentOwner;
 
-	@Column(type = ColumnType.TIMESTAMP)
-	private Date expiryTime;
+    @Column(type = ColumnType.TIMESTAMP)
+    private Date expiryTime;
 
-	@Column
-	private Integer lockCount;
+    @Column
+    private Integer lockCount;
 
-	@Override
-	public Object getId() {
-		return this.lockName;
-	}
+    @Override
+    public Object getId() {
+        return this.lockName;
+    }
 
-	public String getLockName() {
-		return lockName;
-	}
+    public String getLockName() {
+        return lockName;
+    }
 
-	public void setLockName(String lockName) {
-		this.lockName = lockName;
-	}
+    public void setLockName(String lockName) {
+        this.lockName = lockName;
+    }
 
-	public String getCurrentOwner() {
-		return currentOwner;
-	}
+    public String getCurrentOwner() {
+        return currentOwner;
+    }
 
-	public void setCurrentOwner(String currentOwner) {
-		this.currentOwner = currentOwner;
-	}
+    public void setCurrentOwner(String currentOwner) {
+        this.currentOwner = currentOwner;
+    }
 
-	public Date getExpiryTime() {
-		return expiryTime;
-	}
+    public Date getExpiryTime() {
+        return expiryTime;
+    }
 
-	public void setExpiryTime(Date expiryTime) {
-		this.expiryTime = expiryTime;
-	}
+    public void setExpiryTime(Date expiryTime) {
+        this.expiryTime = expiryTime;
+    }
 
-	public Integer getLockCount() {
-		return lockCount;
-	}
+    public Integer getLockCount() {
+        return lockCount;
+    }
 
-	public void setLockCount(Integer lockCount) {
-		this.lockCount = lockCount;
-	}
+    public void setLockCount(Integer lockCount) {
+        this.lockCount = lockCount;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,21 +31,21 @@ import com.tcdng.unify.web.ui.AbstractMultiControl;
 @UplAttributes({ @UplAttribute(name = "draggable", type = boolean.class, defaultValue = "false") })
 public class TitleBar extends AbstractMultiControl {
 
-	@Override
-	public String getStyle() throws UnifyException {
-		if (getUplAttribute(boolean.class, "draggable")) {
-			if (getUplAttribute(String.class, "style") != null) {
-				return getUplAttribute(String.class, "style") + "cursor:move;";
-			}
+    @Override
+    public String getStyle() throws UnifyException {
+        if (getUplAttribute(boolean.class, "draggable")) {
+            if (getUplAttribute(String.class, "style") != null) {
+                return getUplAttribute(String.class, "style") + "cursor:move;";
+            }
 
-			return "cursor:move;";
-		}
-		return super.getStyle();
-	}
+            return "cursor:move;";
+        }
+        return super.getStyle();
+    }
 
-	@Override
-	public boolean isLayoutCaption() {
-		return false;
-	}
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
 
 }

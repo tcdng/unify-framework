@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.Date;
+
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
 
@@ -27,34 +29,50 @@ import com.tcdng.unify.core.annotation.Table;
 @Table(name = "TEST_USER")
 public class User extends AbstractTestEntity {
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	@Column(length = 128, transformer = "oneway-stringcryptograph")
-	private String password;
+    @Column(length = 128, transformer = "oneway-stringcryptograph")
+    private String password;
 
-	public User() {
+    @Column
+    private Date createDt;
 
-	}
+    public User() {
 
-	public User(String name, String password) {
-		this.name = name;
-		this.password = password;
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public User(String name, String password) {
+        this(name, password, new Date());
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public User(String name, String password, Date createDt) {
+        this.name = name;
+        this.password = password;
+        this.createDt = createDt;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getCreateDt() {
+        return createDt;
+    }
+
+    public void setCreateDt(Date createDt) {
+        this.createDt = createDt;
+    }
 }

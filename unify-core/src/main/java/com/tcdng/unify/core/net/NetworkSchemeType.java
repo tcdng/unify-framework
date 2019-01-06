@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,24 +28,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("networkschemelist")
 public enum NetworkSchemeType implements EnumConst {
 
-	HTTP("http"), HTTPS("https");
+    HTTP("http"), HTTPS("https");
 
-	private final String code;
+    private final String code;
 
-	private NetworkSchemeType(String code) {
-		this.code = code;
-	}
+    private NetworkSchemeType(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static NetworkSchemeType fromCode(String code) {
-		return EnumUtils.fromCode(NetworkSchemeType.class, code);
-	}
+    public static NetworkSchemeType fromCode(String code) {
+        return EnumUtils.fromCode(NetworkSchemeType.class, code);
+    }
 
-	public static NetworkSchemeType fromName(String name) {
-		return EnumUtils.fromName(NetworkSchemeType.class, name);
-	}
+    public static NetworkSchemeType fromName(String name) {
+        return EnumUtils.fromName(NetworkSchemeType.class, name);
+    }
 }

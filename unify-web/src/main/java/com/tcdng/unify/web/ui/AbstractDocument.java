@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,54 +26,54 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "styleSheet", type = String[].class),
-		@UplAttribute(name = "script", type = String[].class),
-		@UplAttribute(name = "layout", type = DocumentLayout.class, defaultValue = "$d{!ui-desktoptype0}"),
-		@UplAttribute(name = "headerPanel", type = String.class),
-		@UplAttribute(name = "footerPanel", type = String.class),
-		@UplAttribute(name = "menuPanel", type = String.class),
-		@UplAttribute(name = "contentPanel", type = String.class),
-		@UplAttribute(name = "caption", type = String.class, defaultValue = "$m{application.title}"),
-		@UplAttribute(name = "favicon", type = String.class, defaultValue = "web/images/favicon.png") })
+        @UplAttribute(name = "script", type = String[].class),
+        @UplAttribute(name = "layout", type = DocumentLayout.class, defaultValue = "$d{!ui-desktoptype0}"),
+        @UplAttribute(name = "headerPanel", type = String.class),
+        @UplAttribute(name = "footerPanel", type = String.class),
+        @UplAttribute(name = "menuPanel", type = String.class),
+        @UplAttribute(name = "contentPanel", type = String.class),
+        @UplAttribute(name = "caption", type = String.class, defaultValue = "$m{application.title}"),
+        @UplAttribute(name = "favicon", type = String.class, defaultValue = "web/images/favicon.png") })
 public abstract class AbstractDocument extends AbstractPage implements Document {
 
-	@Override
-	public Panel getHeaderPanel() throws UnifyException {
-		String headerPanelId = getUplAttribute(String.class, "headerPanel");
-		if (headerPanelId != null) {
-			return getPanelByLongName(headerPanelId);
-		}
-		return null;
-	}
+    @Override
+    public Panel getHeaderPanel() throws UnifyException {
+        String headerPanelId = getUplAttribute(String.class, "headerPanel");
+        if (headerPanelId != null) {
+            return getPanelByLongName(headerPanelId);
+        }
+        return null;
+    }
 
-	@Override
-	public Panel getMenuPanel() throws UnifyException {
-		String menuPanelId = getUplAttribute(String.class, "menuPanel");
-		if (menuPanelId != null) {
-			return getPanelByLongName(menuPanelId);
-		}
-		return null;
-	}
+    @Override
+    public Panel getMenuPanel() throws UnifyException {
+        String menuPanelId = getUplAttribute(String.class, "menuPanel");
+        if (menuPanelId != null) {
+            return getPanelByLongName(menuPanelId);
+        }
+        return null;
+    }
 
-	@Override
-	public Panel getContentPanel() throws UnifyException {
-		String contentPanelId = getUplAttribute(String.class, "contentPanel");
-		if (contentPanelId != null) {
-			return getPanelByLongName(contentPanelId);
-		}
-		return null;
-	}
+    @Override
+    public Panel getContentPanel() throws UnifyException {
+        String contentPanelId = getUplAttribute(String.class, "contentPanel");
+        if (contentPanelId != null) {
+            return getPanelByLongName(contentPanelId);
+        }
+        return null;
+    }
 
-	@Override
-	public Panel getFooterPanel() throws UnifyException {
-		String footerPanelId = getUplAttribute(String.class, "footerPanel");
-		if (footerPanelId != null) {
-			return getPanelByLongName(footerPanelId);
-		}
-		return null;
-	}
+    @Override
+    public Panel getFooterPanel() throws UnifyException {
+        String footerPanelId = getUplAttribute(String.class, "footerPanel");
+        if (footerPanelId != null) {
+            return getPanelByLongName(footerPanelId);
+        }
+        return null;
+    }
 
-	@Override
-	public boolean isDocument() {
-		return true;
-	}
+    @Override
+    public boolean isDocument() {
+        return true;
+    }
 }

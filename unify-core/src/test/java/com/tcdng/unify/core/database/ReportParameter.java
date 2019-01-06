@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,90 +34,90 @@ import com.tcdng.unify.core.constant.BooleanType;
 @Table(name = "REPORT_PARAMETER")
 public class ReportParameter extends AbstractTestEntity {
 
-	@ForeignKey(Report.class)
-	private Long reportId;
+    @ForeignKey(Report.class)
+    private Long reportId;
 
-	@ForeignKey
-	private BooleanType scheduled;
+    @ForeignKey
+    private BooleanType scheduled;
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	@ChildList
-	private List<ReportParameterOptions> options;
+    @ChildList
+    private List<ReportParameterOptions> options;
 
-	@ListOnly(key = "reportId", property = "description")
-	private String reportDesc;
+    @ListOnly(key = "reportId", property = "description")
+    private String reportDesc;
 
-	@ListOnly(key = "scheduled", property = "description")
-	private String scheduledDesc;
+    @ListOnly(key = "scheduled", property = "description")
+    private String scheduledDesc;
 
-	public ReportParameter(String name) {
-		this(name, BooleanType.FALSE);
-	}
+    public ReportParameter(String name) {
+        this(name, BooleanType.FALSE);
+    }
 
-	public ReportParameter(String name, BooleanType scheduled) {
-		this.name = name;
-		this.scheduled = scheduled;
-	}
+    public ReportParameter(String name, BooleanType scheduled) {
+        this.name = name;
+        this.scheduled = scheduled;
+    }
 
-	public ReportParameter() {
+    public ReportParameter() {
 
-	}
+    }
 
-	public ReportParameter addOption(ReportParameterOptions rp) {
-		if (this.options == null) {
-			this.options = new ArrayList<ReportParameterOptions>();
-		}
-		this.options.add(rp);
-		return this;
-	}
+    public ReportParameter addOption(ReportParameterOptions rp) {
+        if (this.options == null) {
+            this.options = new ArrayList<ReportParameterOptions>();
+        }
+        this.options.add(rp);
+        return this;
+    }
 
-	public Long getReportId() {
-		return reportId;
-	}
+    public Long getReportId() {
+        return reportId;
+    }
 
-	public void setReportId(Long reportId) {
-		this.reportId = reportId;
-	}
+    public void setReportId(Long reportId) {
+        this.reportId = reportId;
+    }
 
-	public BooleanType getScheduled() {
-		return scheduled;
-	}
+    public BooleanType getScheduled() {
+        return scheduled;
+    }
 
-	public void setScheduled(BooleanType scheduled) {
-		this.scheduled = scheduled;
-	}
+    public void setScheduled(BooleanType scheduled) {
+        this.scheduled = scheduled;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public List<ReportParameterOptions> getOptions() {
-		return options;
-	}
+    public List<ReportParameterOptions> getOptions() {
+        return options;
+    }
 
-	public void setOptions(List<ReportParameterOptions> options) {
-		this.options = options;
-	}
+    public void setOptions(List<ReportParameterOptions> options) {
+        this.options = options;
+    }
 
-	public String getReportDesc() {
-		return reportDesc;
-	}
+    public String getReportDesc() {
+        return reportDesc;
+    }
 
-	public void setReportDesc(String reportDesc) {
-		this.reportDesc = reportDesc;
-	}
+    public void setReportDesc(String reportDesc) {
+        this.reportDesc = reportDesc;
+    }
 
-	public String getScheduledDesc() {
-		return scheduledDesc;
-	}
+    public String getScheduledDesc() {
+        return scheduledDesc;
+    }
 
-	public void setScheduledDesc(String scheduledDesc) {
-		this.scheduledDesc = scheduledDesc;
-	}
+    public void setScheduledDesc(String scheduledDesc) {
+        this.scheduledDesc = scheduledDesc;
+    }
 }

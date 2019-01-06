@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,50 +32,50 @@ import com.tcdng.unify.core.Setting;
  */
 public class OneWayStringCryptographImplTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testEncryptNull() throws Exception {
-		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
-		OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) getComponent("cryptographB");
-		OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) getComponent("cryptographC");
+    @Test
+    public void testEncryptNull() throws Exception {
+        OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
+        OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) getComponent("cryptographB");
+        OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) getComponent("cryptographC");
 
-		assertNull(stringCryptographA.encrypt(null));
-		assertNull(stringCryptographB.encrypt(null));
-		assertNull(stringCryptographC.encrypt(null));
-	}
+        assertNull(stringCryptographA.encrypt(null));
+        assertNull(stringCryptographB.encrypt(null));
+        assertNull(stringCryptographC.encrypt(null));
+    }
 
-	@Test
-	public void testEncryptStringConsistent() throws Exception {
-		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
-		OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) getComponent("cryptographB");
-		String encryptedA = stringCryptographA.encrypt("Hello");
-		String encryptedB = stringCryptographB.encrypt("Hello");
-		assertEquals(encryptedA, encryptedB);
-	}
+    @Test
+    public void testEncryptStringConsistent() throws Exception {
+        OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
+        OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) getComponent("cryptographB");
+        String encryptedA = stringCryptographA.encrypt("Hello");
+        String encryptedB = stringCryptographB.encrypt("Hello");
+        assertEquals(encryptedA, encryptedB);
+    }
 
-	@Test
-	public void testEncryptStringWithDifferentCryptographs() throws Exception {
-		OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
-		OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) getComponent("cryptographC");
-		String encryptedA = stringCryptographA.encrypt("Hello");
-		String encryptedB = stringCryptographC.encrypt("Hello");
-		assertFalse(encryptedA.equals(encryptedB));
-	}
+    @Test
+    public void testEncryptStringWithDifferentCryptographs() throws Exception {
+        OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
+        OneWayStringCryptograph stringCryptographC = (OneWayStringCryptograph) getComponent("cryptographC");
+        String encryptedA = stringCryptographA.encrypt("Hello");
+        String encryptedB = stringCryptographC.encrypt("Hello");
+        assertFalse(encryptedA.equals(encryptedB));
+    }
 
-	@Override
-	protected void doAddSettingsAndDependencies() throws Exception {
-		addDependency("cryptographA", OneWayStringCryptographImpl.class, new Setting("encryptionKey", "Slink"));
-		addDependency("cryptographB", OneWayStringCryptographImpl.class, new Setting("encryptionKey", "Slink"));
-		addDependency("cryptographC", OneWayStringCryptographImpl.class,
-				new Setting("encryptionKey", "The Code Department"));
-	}
+    @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        addDependency("cryptographA", OneWayStringCryptographImpl.class, new Setting("encryptionKey", "Slink"));
+        addDependency("cryptographB", OneWayStringCryptographImpl.class, new Setting("encryptionKey", "Slink"));
+        addDependency("cryptographC", OneWayStringCryptographImpl.class,
+                new Setting("encryptionKey", "The Code Department"));
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

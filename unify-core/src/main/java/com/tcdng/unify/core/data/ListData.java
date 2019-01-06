@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,22 +23,22 @@ package com.tcdng.unify.core.data;
  */
 public class ListData implements Listable {
 
-	private String listKey;
+    private String listKey;
 
-	private String listDescription;
+    private String listDescription;
 
-	public ListData(String listKey, String listDescription) {
-		this.listKey = listKey;
-		this.listDescription = listDescription;
-	}
+    public ListData(String listKey, String listDescription) {
+        this.listKey = listKey;
+        this.listDescription = listDescription;
+    }
 
-	@Override
-	public String getListKey() {
-		return listKey;
-	}
+    @Override
+    public String getListKey() {
+        return listKey;
+    }
 
-	@Override
-	public String getListDescription() {
-		return listDescription;
-	}
+    @Override
+    public String getListDescription() {
+        return listDescription;
+    }
 }

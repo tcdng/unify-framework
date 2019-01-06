@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,78 +38,78 @@ import com.tcdng.unify.core.util.IOUtils;
  * @since 1.0
  */
 public abstract class AbstractReportServer extends AbstractUnifyComponent
-		implements ReportServer, ReportFormatterStore {
+        implements ReportServer, ReportFormatterStore {
 
-	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
-	private String defaultDatasource;
+    @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
+    private String defaultDatasource;
 
-	@Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
-	private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
+    @Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
+    private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
-		return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
+        return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
+    }
 
-	@Override
-	public void generateReport(Report report, String filename) throws UnifyException {
-		FileOutputStream fileOutputStream = null;
-		try {
-			fileOutputStream = new FileOutputStream(filename);
-			generateReport(report, fileOutputStream);
-		} catch (FileNotFoundException e) {
-			throwOperationErrorException(e);
-		} finally {
-			IOUtils.close(fileOutputStream);
-		}
-	}
+    @Override
+    public void generateReport(Report report, String filename) throws UnifyException {
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(filename);
+            generateReport(report, fileOutputStream);
+        } catch (FileNotFoundException e) {
+            throwOperationErrorException(e);
+        } finally {
+            IOUtils.close(fileOutputStream);
+        }
+    }
 
-	@Override
-	public void generateReport(Report report, File file) throws UnifyException {
-		FileOutputStream fileOutputStream = null;
-		try {
-			fileOutputStream = new FileOutputStream(file);
-			generateReport(report, fileOutputStream);
-		} catch (FileNotFoundException e) {
-			throwOperationErrorException(e);
-		} finally {
-			IOUtils.close(fileOutputStream);
-		}
-	}
+    @Override
+    public void generateReport(Report report, File file) throws UnifyException {
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            generateReport(report, fileOutputStream);
+        } catch (FileNotFoundException e) {
+            throwOperationErrorException(e);
+        } finally {
+            IOUtils.close(fileOutputStream);
+        }
+    }
 
-	@Override
-	public void generateReport(Report report, OutputStream outputStream) throws UnifyException {
-		if (report.getDataSource() == null) {
-			report.setDataSource(defaultDatasource);
-			report.setDynamicDataSource(false);
-		}
+    @Override
+    public void generateReport(Report report, OutputStream outputStream) throws UnifyException {
+        if (report.getDataSource() == null) {
+            report.setDataSource(defaultDatasource);
+            report.setDynamicDataSource(false);
+        }
 
-		if (report.getProcessor() != null) {
-			ReportProcessor reportProcessor = ((ReportProcessor) getComponent(report.getProcessor()));
-			reportProcessor.process(report);
-		}
+        if (report.getProcessor() != null) {
+            ReportProcessor reportProcessor = ((ReportProcessor) getComponent(report.getProcessor()));
+            reportProcessor.process(report);
+        }
 
-		doGenerateReport(report, outputStream);
-	}
+        doGenerateReport(report, outputStream);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		ReportFormatUtils.setReportFormatterStore(this);
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        ReportFormatUtils.setReportFormatterStore(this);
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-		ReportFormatUtils.setReportFormatterStore(null);
-	}
+    @Override
+    protected void onTerminate() throws UnifyException {
+        ReportFormatUtils.setReportFormatterStore(null);
+    }
 
-	protected DataSource getDataSource(Report report) throws UnifyException {
-		if (report.isDynamicDataSource()) {
-			return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
-		}
+    protected DataSource getDataSource(Report report) throws UnifyException {
+        if (report.isDynamicDataSource()) {
+            return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
+        }
 
-		return (DataSource) getComponent(report.getDataSource());
-	}
+        return (DataSource) getComponent(report.getDataSource());
+    }
 
-	protected abstract void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException;
+    protected abstract void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException;
 }

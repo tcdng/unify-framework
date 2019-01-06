@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,32 +29,32 @@ import com.tcdng.unify.web.ui.AbstractControl;
  */
 @Component("ui-textarea")
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class), @UplAttribute(name = "rows", type = int.class),
-		@UplAttribute(name = "minLen", type = int.class), @UplAttribute(name = "maxLen", type = int.class),
-		@UplAttribute(name = "wordWrap", type = boolean.class, defaultValue = "true"),
-		@UplAttribute(name = "scrollToEnd", type = boolean.class) })
+        @UplAttribute(name = "minLen", type = int.class), @UplAttribute(name = "maxLen", type = int.class),
+        @UplAttribute(name = "wordWrap", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "scrollToEnd", type = boolean.class) })
 public class TextArea extends AbstractControl {
 
-	public int getColumns() throws UnifyException {
-		return getUplAttribute(int.class, "columns");
-	}
+    public int getColumns() throws UnifyException {
+        return getUplAttribute(int.class, "columns");
+    }
 
-	public int getRows() throws UnifyException {
-		return getUplAttribute(int.class, "rows");
-	}
+    public int getRows() throws UnifyException {
+        return getUplAttribute(int.class, "rows");
+    }
 
-	public int getMinLen() throws UnifyException {
-		return getUplAttribute(int.class, "minLen");
-	}
+    public int getMinLen() throws UnifyException {
+        return getUplAttribute(int.class, "minLen");
+    }
 
-	public int getMaxLen() throws UnifyException {
-		return getUplAttribute(int.class, "maxLen");
-	}
+    public int getMaxLen() throws UnifyException {
+        return getUplAttribute(int.class, "maxLen");
+    }
 
-	public boolean isWordWrap() throws UnifyException {
-		return getUplAttribute(boolean.class, "wordWrap");
-	}
+    public boolean isWordWrap() throws UnifyException {
+        return getUplAttribute(boolean.class, "wordWrap");
+    }
 
-	public boolean isScrollToEnd() throws UnifyException {
-		return getUplAttribute(boolean.class, "scrollToEnd");
-	}
+    public boolean isScrollToEnd() throws UnifyException {
+        return getUplAttribute(boolean.class, "scrollToEnd");
+    }
 }

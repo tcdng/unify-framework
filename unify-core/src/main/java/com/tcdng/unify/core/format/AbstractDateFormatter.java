@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,105 +36,105 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "style", type = String.class),
-		@UplAttribute(name = "timeZoneId", type = String.class), @UplAttribute(name = "pattern", type = String.class) })
+        @UplAttribute(name = "timeZoneId", type = String.class), @UplAttribute(name = "pattern", type = String.class) })
 public abstract class AbstractDateFormatter extends AbstractFormatter<Date> implements DateFormatter {
 
-	protected enum TYPE {
-		DATE, TIME, DATETIME, FIXED
-	};
+    protected enum TYPE {
+        DATE, TIME, DATETIME, FIXED
+    };
 
-	private TYPE type;
+    private TYPE type;
 
-	private String pattern;
+    private String pattern;
 
-	private SimpleDateFormatPool sdfp;
+    private SimpleDateFormatPool sdfp;
 
-	private static final Map<String, Integer> dateStyleMap = new HashMap<String, Integer>();
+    private static final Map<String, Integer> dateStyleMap = new HashMap<String, Integer>();
 
-	static {
-		dateStyleMap.put(DateStyleConstants.DEFAULT_STYLE, DateFormat.DEFAULT);
-		dateStyleMap.put(DateStyleConstants.SHORT_STYLE, DateFormat.SHORT);
-		dateStyleMap.put(DateStyleConstants.MEDIUM_STYLE, DateFormat.MEDIUM);
-		dateStyleMap.put(DateStyleConstants.LONG_STYLE, DateFormat.LONG);
-		dateStyleMap.put(DateStyleConstants.FULL_STYLE, DateFormat.FULL);
-	}
+    static {
+        dateStyleMap.put(DateStyleConstants.DEFAULT_STYLE, DateFormat.DEFAULT);
+        dateStyleMap.put(DateStyleConstants.SHORT_STYLE, DateFormat.SHORT);
+        dateStyleMap.put(DateStyleConstants.MEDIUM_STYLE, DateFormat.MEDIUM);
+        dateStyleMap.put(DateStyleConstants.LONG_STYLE, DateFormat.LONG);
+        dateStyleMap.put(DateStyleConstants.FULL_STYLE, DateFormat.FULL);
+    }
 
-	protected AbstractDateFormatter(TYPE type) {
-		super(Date.class);
-		this.type = type;
-	}
+    protected AbstractDateFormatter(TYPE type) {
+        super(Date.class);
+        this.type = type;
+    }
 
-	@Override
-	public String getPattern() throws UnifyException {
-		getSimpleDateFormatPool();
-		return pattern;
-	}
+    @Override
+    public String getPattern() throws UnifyException {
+        getSimpleDateFormatPool();
+        return pattern;
+    }
 
-	@Override
-	public String format(Date date) throws UnifyException {
-		return getSimpleDateFormatPool().format(date);
-	}
+    @Override
+    public String format(Date date) throws UnifyException {
+        return getSimpleDateFormatPool().format(date);
+    }
 
-	@Override
-	public Date parse(String string) throws UnifyException {
-		return getSimpleDateFormatPool().parse(string);
-	}
+    @Override
+    public Date parse(String string) throws UnifyException {
+        return getSimpleDateFormatPool().parse(string);
+    }
 
-	private SimpleDateFormatPool getSimpleDateFormatPool() throws UnifyException {
-		if (sdfp == null) {
-			sdfp = CalendarUtils.getSimpleDateFormatPool(getSessionContext().getLocale(), getDatePattern());
-		}
-		return sdfp;
-	}
+    private SimpleDateFormatPool getSimpleDateFormatPool() throws UnifyException {
+        if (sdfp == null) {
+            sdfp = CalendarUtils.getSimpleDateFormatPool(getSessionContext().getLocale(), getDatePattern());
+        }
+        return sdfp;
+    }
 
-	private String getDatePattern() throws UnifyException {
-		DateFormat df = null;
+    private String getDatePattern() throws UnifyException {
+        DateFormat df = null;
 
-		switch (type) {
-		case DATETIME:
-			Integer styleId = getStyleId();
-			df = DateFormat.getDateTimeInstance(styleId, styleId, getLocale());
-			break;
-		case TIME:
-			df = DateFormat.getTimeInstance(getStyleId(), getLocale());
-			break;
-		case DATE:
-			df = DateFormat.getDateInstance(getStyleId(), getLocale());
-			break;
-		case FIXED:
-		default:
-			String uplPattern = getUplAttribute(String.class, "pattern");
-			df = new SimpleDateFormat(uplPattern, getLocale());
-			break;
-		}
+        switch (type) {
+            case DATETIME:
+                Integer styleId = getStyleId();
+                df = DateFormat.getDateTimeInstance(styleId, styleId, getLocale());
+                break;
+            case TIME:
+                df = DateFormat.getTimeInstance(getStyleId(), getLocale());
+                break;
+            case DATE:
+                df = DateFormat.getDateInstance(getStyleId(), getLocale());
+                break;
+            case FIXED:
+            default:
+                String uplPattern = getUplAttribute(String.class, "pattern");
+                df = new SimpleDateFormat(uplPattern, getLocale());
+                break;
+        }
 
-		String timeZoneId = getUplAttribute(String.class, "timeZoneId");
-		if (timeZoneId != null) {
-			df.setTimeZone(TimeZone.getTimeZone(timeZoneId));
-		}
+        String timeZoneId = getUplAttribute(String.class, "timeZoneId");
+        if (timeZoneId != null) {
+            df.setTimeZone(TimeZone.getTimeZone(timeZoneId));
+        }
 
-		SimpleDateFormat sdf = (SimpleDateFormat) df;
-		if (DateStyleConstants.CUSTOMSHORT_STYLE.equals(getUplAttribute(String.class, "style"))) {
-			sdf.applyPattern(getFormatHelper().getDatePatternWithLongYear(sdf.toPattern()));
-		}
+        SimpleDateFormat sdf = (SimpleDateFormat) df;
+        if (DateStyleConstants.CUSTOMSHORT_STYLE.equals(getUplAttribute(String.class, "style"))) {
+            sdf.applyPattern(getFormatHelper().getDatePatternWithLongYear(sdf.toPattern()));
+        }
 
-		pattern = sdf.toPattern();
-		return pattern;
-	}
+        pattern = sdf.toPattern();
+        return pattern;
+    }
 
-	private Integer getStyleId() throws UnifyException {
-		Integer id = null;
-		String style = getUplAttribute(String.class, "style");
-		if (style != null) {
-			String actStyle = style;
-			if (DateStyleConstants.CUSTOMSHORT_STYLE.equals(actStyle)) {
-				actStyle = DateStyleConstants.SHORT_STYLE;
-			}
-			id = dateStyleMap.get(actStyle);
-		}
-		if (id == null) {
-			id = dateStyleMap.get(DateStyleConstants.DEFAULT_STYLE);
-		}
-		return id;
-	}
+    private Integer getStyleId() throws UnifyException {
+        Integer id = null;
+        String style = getUplAttribute(String.class, "style");
+        if (style != null) {
+            String actStyle = style;
+            if (DateStyleConstants.CUSTOMSHORT_STYLE.equals(actStyle)) {
+                actStyle = DateStyleConstants.SHORT_STYLE;
+            }
+            id = dateStyleMap.get(actStyle);
+        }
+        if (id == null) {
+            id = dateStyleMap.get(DateStyleConstants.DEFAULT_STYLE);
+        }
+        return id;
+    }
 }

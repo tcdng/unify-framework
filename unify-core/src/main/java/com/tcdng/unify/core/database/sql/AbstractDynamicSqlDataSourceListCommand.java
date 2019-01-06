@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,42 +26,42 @@ import com.tcdng.unify.core.list.AbstractListCommand;
  * @since 1.0
  */
 public abstract class AbstractDynamicSqlDataSourceListCommand
-		extends AbstractListCommand<AbstractDynamicSqlDataSourceListCommand.DynamicSqlParams> {
+        extends AbstractListCommand<AbstractDynamicSqlDataSourceListCommand.DynamicSqlParams> {
 
-	@Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
-	private DynamicSqlDataSourceManager dsManager;
+    @Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
+    private DynamicSqlDataSourceManager dsManager;
 
-	public AbstractDynamicSqlDataSourceListCommand() {
-		super(DynamicSqlParams.class);
-	}
+    public AbstractDynamicSqlDataSourceListCommand() {
+        super(DynamicSqlParams.class);
+    }
 
-	protected DynamicSqlDataSourceManager getDsManager() {
-		return dsManager;
-	}
+    protected DynamicSqlDataSourceManager getDsManager() {
+        return dsManager;
+    }
 
-	public class DynamicSqlParams {
-		private String configName;
-		private String schemaName;
-		private String tableName;
+    public class DynamicSqlParams {
+        private String configName;
+        private String schemaName;
+        private String tableName;
 
-		public DynamicSqlParams(String configName, String schemaName, String tableName) {
-			super();
-			this.configName = configName;
-			this.schemaName = schemaName;
-			this.tableName = tableName;
-		}
+        public DynamicSqlParams(String configName, String schemaName, String tableName) {
+            super();
+            this.configName = configName;
+            this.schemaName = schemaName;
+            this.tableName = tableName;
+        }
 
-		public String getConfigName() {
-			return configName;
-		}
+        public String getConfigName() {
+            return configName;
+        }
 
-		public String getSchemaName() {
-			return schemaName;
-		}
+        public String getSchemaName() {
+            return schemaName;
+        }
 
-		public String getTableName() {
-			return tableName;
-		}
+        public String getTableName() {
+            return tableName;
+        }
 
-	}
+    }
 }

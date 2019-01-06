@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,27 +26,27 @@ import java.util.List;
  */
 public class Menu {
 
-	private String privilege;
+    private String privilege;
 
-	private String caption;
+    private String caption;
 
-	private List<MenuItemSet> menuItemSetList;
+    private List<MenuItemSet> menuItemSetList;
 
-	public Menu(String privilege, String caption, List<MenuItemSet> menuItemSetList) {
-		this.privilege = privilege;
-		this.caption = caption;
-		this.menuItemSetList = Collections.unmodifiableList(menuItemSetList);
-	}
+    public Menu(String privilege, String caption, List<MenuItemSet> menuItemSetList) {
+        this.privilege = privilege;
+        this.caption = caption;
+        this.menuItemSetList = Collections.unmodifiableList(menuItemSetList);
+    }
 
-	public String getPrivilege() {
-		return privilege;
-	}
+    public String getPrivilege() {
+        return privilege;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public List<MenuItemSet> getMenuItemSetList() {
-		return menuItemSetList;
-	}
+    public List<MenuItemSet> getMenuItemSetList() {
+        return menuItemSetList;
+    }
 }

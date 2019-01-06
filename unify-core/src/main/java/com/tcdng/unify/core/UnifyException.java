@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,52 +23,52 @@ package com.tcdng.unify.core;
  */
 public class UnifyException extends Exception {
 
-	private static final long serialVersionUID = 6283713822275326177L;
+    private static final long serialVersionUID = 6283713822275326177L;
 
-	private UnifyError unifyError;
+    private UnifyError unifyError;
 
-	public UnifyException(Throwable cause, String errorCode, Object... errorParams) {
-		super(UnifyException.buildMessage(errorCode, errorParams), cause);
-		this.unifyError = new UnifyError(errorCode, errorParams);
-	}
+    public UnifyException(Throwable cause, String errorCode, Object... errorParams) {
+        super(UnifyException.buildMessage(errorCode, errorParams), cause);
+        this.unifyError = new UnifyError(errorCode, errorParams);
+    }
 
-	public UnifyException(String errorCode, Object... errorParams) {
-		super(UnifyException.buildMessage(errorCode, errorParams));
-		this.unifyError = new UnifyError(errorCode, errorParams);
-	}
+    public UnifyException(String errorCode, Object... errorParams) {
+        super(UnifyException.buildMessage(errorCode, errorParams));
+        this.unifyError = new UnifyError(errorCode, errorParams);
+    }
 
-	public UnifyException(UnifyError unifyError) {
-		super(UnifyException.buildMessage(unifyError.getErrorCode(), unifyError.getErrorParams()));
-		this.unifyError = unifyError;
-	}
+    public UnifyException(UnifyError unifyError) {
+        super(UnifyException.buildMessage(unifyError.getErrorCode(), unifyError.getErrorParams()));
+        this.unifyError = unifyError;
+    }
 
-	public UnifyError getUnifyError() {
-		return unifyError;
-	}
+    public UnifyError getUnifyError() {
+        return unifyError;
+    }
 
-	public String getErrorCode() {
-		return this.unifyError.getErrorCode();
-	}
+    public String getErrorCode() {
+        return this.unifyError.getErrorCode();
+    }
 
-	public Object[] getErrorParams() {
-		return this.unifyError.getErrorParams();
-	}
+    public Object[] getErrorParams() {
+        return this.unifyError.getErrorParams();
+    }
 
-	private static String buildMessage(String errorCode, Object... errorParams) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Error Code: ").append(errorCode);
-		sb.append(", Parameter(s): [");
-		if (errorParams != null && errorParams.length > 0) {
-			boolean appendSym = false;
-			for (Object errorParam : errorParams) {
-				if (appendSym)
-					sb.append(',');
-				else
-					appendSym = true;
-				sb.append(errorParam);
-			}
-		}
-		sb.append("]");
-		return sb.toString();
-	}
+    private static String buildMessage(String errorCode, Object... errorParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Error Code: ").append(errorCode);
+        sb.append(", Parameter(s): [");
+        if (errorParams != null && errorParams.length > 0) {
+            boolean appendSym = false;
+            for (Object errorParam : errorParams) {
+                if (appendSym)
+                    sb.append(',');
+                else
+                    appendSym = true;
+                sb.append(errorParam);
+            }
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }

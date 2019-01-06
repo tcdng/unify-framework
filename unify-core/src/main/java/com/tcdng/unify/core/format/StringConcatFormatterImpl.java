@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,61 +33,61 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 @UplAttributes({ @UplAttribute(name = "newline", type = boolean.class) })
 public class StringConcatFormatterImpl extends AbstractFormatter<Object> implements StringConcatFormatter {
 
-	public StringConcatFormatterImpl() {
-		super(Object.class);
-	}
+    public StringConcatFormatterImpl() {
+        super(Object.class);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public String format(Object value) throws UnifyException {
-		String result = null;
-		if (value != null) {
-			String separator = "";
-			if (getUplAttribute(boolean.class, "newline")) {
-				separator = "<br/>";
-			}
+    @SuppressWarnings("unchecked")
+    @Override
+    public String format(Object value) throws UnifyException {
+        String result = null;
+        if (value != null) {
+            String separator = "";
+            if (getUplAttribute(boolean.class, "newline")) {
+                separator = "<br/>";
+            }
 
-			if (value.getClass().isArray()) {
-				StringBuilder sb = new StringBuilder();
-				int len = Array.getLength(value);
-				boolean appendSeparator = false;
-				for (int i = 0; i < len; i++) {
-					if (appendSeparator) {
-						sb.append(separator);
-					} else {
-						appendSeparator = true;
-					}
-					sb.append(String.valueOf(Array.get(value, i)));
-				}
-				result = sb.toString();
-			} else if (value instanceof Collection) {
-				StringBuilder sb = new StringBuilder();
-				boolean appendSeparator = false;
-				for (Object colValue : (Collection<Object>) value) {
-					if (appendSeparator) {
-						sb.append(separator);
-					} else {
-						appendSeparator = true;
-					}
-					sb.append(colValue);
-				}
-				result = sb.toString();
-			} else {
-				result = String.valueOf(value);
-			}
-		}
+            if (value.getClass().isArray()) {
+                StringBuilder sb = new StringBuilder();
+                int len = Array.getLength(value);
+                boolean appendSeparator = false;
+                for (int i = 0; i < len; i++) {
+                    if (appendSeparator) {
+                        sb.append(separator);
+                    } else {
+                        appendSeparator = true;
+                    }
+                    sb.append(String.valueOf(Array.get(value, i)));
+                }
+                result = sb.toString();
+            } else if (value instanceof Collection) {
+                StringBuilder sb = new StringBuilder();
+                boolean appendSeparator = false;
+                for (Object colValue : (Collection<Object>) value) {
+                    if (appendSeparator) {
+                        sb.append(separator);
+                    } else {
+                        appendSeparator = true;
+                    }
+                    sb.append(colValue);
+                }
+                result = sb.toString();
+            } else {
+                result = String.valueOf(value);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public Object parse(String string) throws UnifyException {
-		return null;
-	}
+    @Override
+    public Object parse(String string) throws UnifyException {
+        return null;
+    }
 
-	@Override
-	public String getPattern() throws UnifyException {
-		return null;
-	}
+    @Override
+    public String getPattern() throws UnifyException {
+        return null;
+    }
 
 }

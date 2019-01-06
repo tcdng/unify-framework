@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,28 +29,28 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  */
 @Component("ui-image")
 @UplAttributes({ @UplAttribute(name = "src", type = String.class),
-		@UplAttribute(name = "srcBinding", type = String.class), @UplAttribute(name = "scope", type = String.class),
-		@UplAttribute(name = "clearOnRead", type = boolean.class, defaultValue = "true"),
-		@UplAttribute(name = "alwaysFetch", type = boolean.class) })
+        @UplAttribute(name = "srcBinding", type = String.class), @UplAttribute(name = "scope", type = String.class),
+        @UplAttribute(name = "clearOnRead", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "alwaysFetch", type = boolean.class) })
 public class Image extends AbstractTargetControl {
 
-	public String getSrc() throws UnifyException {
-		return getUplAttribute(String.class, "src");
-	}
+    public String getSrc() throws UnifyException {
+        return getUplAttribute(String.class, "src");
+    }
 
-	public String getSrcBinding() throws UnifyException {
-		return getUplAttribute(String.class, "srcBinding");
-	}
+    public String getSrcBinding() throws UnifyException {
+        return getUplAttribute(String.class, "srcBinding");
+    }
 
-	public String getScope() throws UnifyException {
-		return getUplAttribute(String.class, "scope");
-	}
+    public String getScope() throws UnifyException {
+        return getUplAttribute(String.class, "scope");
+    }
 
-	public boolean isClearOnRead() throws UnifyException {
-		return getUplAttribute(boolean.class, "clearOnRead");
-	}
+    public boolean isClearOnRead() throws UnifyException {
+        return getUplAttribute(boolean.class, "clearOnRead");
+    }
 
-	public boolean isAlwaysFetch() throws UnifyException {
-		return getUplAttribute(boolean.class, "alwaysFetch");
-	}
+    public boolean isAlwaysFetch() throws UnifyException {
+        return getUplAttribute(boolean.class, "alwaysFetch");
+    }
 }

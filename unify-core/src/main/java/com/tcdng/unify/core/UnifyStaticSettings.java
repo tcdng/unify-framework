@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,13 +24,13 @@ package com.tcdng.unify.core;
  */
 public interface UnifyStaticSettings {
 
-	/**
-	 * Returns the messages bundle resource name.
-	 */
-	String getMessageBase();
+    /**
+     * Returns the messages bundle resource name.
+     */
+    String getMessageBase();
 
-	/**
-	 * Returns the settings priority level.
-	 */
-	int getLevel();
+    /**
+     * Returns the settings priority level.
+     */
+    int getLevel();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,17 +28,17 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonBigDecimalArrayConverter extends AbstractJsonArrayConverter<BigDecimal> {
 
-	public JsonBigDecimalArrayConverter() {
-		super(BigDecimal.class);
-	}
+    public JsonBigDecimalArrayConverter() {
+        super(BigDecimal.class);
+    }
 
-	@Override
-	protected BigDecimal getValue(JsonValue jsonValue) throws Exception {
-		return BigDecimal.valueOf(jsonValue.asDouble());
-	}
+    @Override
+    protected BigDecimal getValue(JsonValue jsonValue) throws Exception {
+        return BigDecimal.valueOf(jsonValue.asDouble());
+    }
 
-	@Override
-	protected JsonValue setValue(BigDecimal value) throws Exception {
-		return Json.value(value.doubleValue());
-	}
+    @Override
+    protected JsonValue setValue(BigDecimal value) throws Exception {
+        return Json.value(value.doubleValue());
+    }
 }

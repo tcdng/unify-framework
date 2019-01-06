@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,33 +23,37 @@ package com.tcdng.unify.web.constant;
  */
 public interface RequestParameterConstants {
 
-	String MORSIC = "morsic";
+    String MORSIC = "morsic";
 
-	String TARGET_VALUE = "req_trg";
+    String TARGET_VALUE = "req_trg";
 
-	String DOCUMENT = "req_doc";
+    String DOCUMENT = "req_doc";
 
-	String COMMAND = "req_cmd";
+    String COMMAND = "req_cmd";
 
-	String CONFIRM_MSG = "req_cmsg";
+    String CONFIRM_MSG = "req_cmsg";
 
-	String CONFIRM_PARAM = "req_cprm";
+    String CONFIRM_PARAM = "req_cprm";
 
-	String REFRESH = "req_rsh";
+    String REFRESH = "req_rsh";
 
-	String VALIDATION_ACTION = "req_va";
+    String VALIDATION_ACTION = "req_va";
 
-	String REMOTE_CALL_FORMAT = "req_rcf";
+    String REMOTE_CALL_FORMAT = "req_rcf";
 
-	String REMOTE_CALL_BODY = "req_rcb";
+    String REMOTE_CALL_BODY = "req_rcb";
 
-	String REMOTE_VIEWER = "req_rv";
+    String REMOTE_VIEWER = "req_rv";
 
-	String REMOTE_SESSION_ID = "req_rsi";
+    String REMOTE_SESSION_ID = "req_rsi";
 
-	String REMOTE_USERLOGINID = "req_uid";
+    String REMOTE_USERLOGINID = "req_uid";
 
-	String REMOTE_USERNAME = "req_unm";
+    String REMOTE_USERNAME = "req_unm";
 
-	String REMOTE_ROLECD = "req_rcd";
+    String REMOTE_ROLECD = "req_rcd";
+
+    String REMOTE_BRANCH_CODE = "req_bcd";
+
+    String REMOTE_GLOBAL_ACCESS = "req_gac";
 }

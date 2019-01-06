@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,31 +34,31 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("shiftbuttons-writer")
 public class ShiftButtonsWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		ShiftButtons shiftButtons = (ShiftButtons) widget;
-		boolean disabled = !shiftButtons.isContainerEditable();
-		Control topCtrl = shiftButtons.getShiftTopCtrl();
-		Control upCtrl = shiftButtons.getShiftUpCtrl();
-		Control downCtrl = shiftButtons.getShiftDownCtrl();
-		Control bottomCtrl = shiftButtons.getShiftBottomCtrl();
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        ShiftButtons shiftButtons = (ShiftButtons) widget;
+        boolean disabled = !shiftButtons.isContainerEditable();
+        Control topCtrl = shiftButtons.getShiftTopCtrl();
+        Control upCtrl = shiftButtons.getShiftUpCtrl();
+        Control downCtrl = shiftButtons.getShiftDownCtrl();
+        Control bottomCtrl = shiftButtons.getShiftBottomCtrl();
 
-		topCtrl.setDisabled(disabled);
-		upCtrl.setDisabled(disabled);
-		downCtrl.setDisabled(disabled);
-		bottomCtrl.setDisabled(disabled);
+        topCtrl.setDisabled(disabled);
+        upCtrl.setDisabled(disabled);
+        downCtrl.setDisabled(disabled);
+        bottomCtrl.setDisabled(disabled);
 
-		writer.write("<div");
-		writeTagAttributes(writer, shiftButtons);
-		writer.write(">");
-		writer.writeStructureAndContent(topCtrl);
-		writer.writeHtmlFixedSpace();
-		writer.writeStructureAndContent(upCtrl);
-		writer.writeHtmlFixedSpace();
-		writer.writeStructureAndContent(downCtrl);
-		writer.writeHtmlFixedSpace();
-		writer.writeStructureAndContent(bottomCtrl);
-		writer.write("</div>");
-	}
+        writer.write("<div");
+        writeTagAttributes(writer, shiftButtons);
+        writer.write(">");
+        writer.writeStructureAndContent(topCtrl);
+        writer.writeHtmlFixedSpace();
+        writer.writeStructureAndContent(upCtrl);
+        writer.writeHtmlFixedSpace();
+        writer.writeStructureAndContent(downCtrl);
+        writer.writeHtmlFixedSpace();
+        writer.writeStructureAndContent(bottomCtrl);
+        writer.write("</div>");
+    }
 
 }

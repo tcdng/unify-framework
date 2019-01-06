@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,29 +33,29 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("picture-writer")
 public class PictureWriter extends AbstractControlWriter {
 
-	@Override
-	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		Picture picture = (Picture) widget;
-		writer.writeStructureAndContent(picture.getFileCtrl());
-		writer.writeStructureAndContent(picture.getImageCtrl());
-	}
+    @Override
+    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        Picture picture = (Picture) widget;
+        writer.writeStructureAndContent(picture.getFileCtrl());
+        writer.writeStructureAndContent(picture.getImageCtrl());
+    }
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
 
-		// Append rigging
-		Picture picture = (Picture) widget;
-		writer.write("ux.rigPhotoUpload({");
-		writer.write("\"pId\":\"").write(picture.getId()).write('"');
-		writer.write(",\"pCmdURL\":\"");
-		writer.writeCommandURL();
-		writer.write('"');
-		writer.write(",\"pContId\":\"").write(picture.getContainerId()).write('"');
-		writer.write(",\"pFileId\":\"").write(picture.getFileCtrl().getId()).write('"');
-		writer.write(",\"pImgId\":\"").write(picture.getImageCtrl().getId()).write('"');
-		writer.write(",\"pEditable\":").write(picture.isContainerEditable());
-		writer.write("});");
-	}
+        // Append rigging
+        Picture picture = (Picture) widget;
+        writer.write("ux.rigPhotoUpload({");
+        writer.write("\"pId\":\"").write(picture.getId()).write('"');
+        writer.write(",\"pCmdURL\":\"");
+        writer.writeCommandURL();
+        writer.write('"');
+        writer.write(",\"pContId\":\"").write(picture.getContainerId()).write('"');
+        writer.write(",\"pFileId\":\"").write(picture.getFileCtrl().getId()).write('"');
+        writer.write(",\"pImgId\":\"").write(picture.getImageCtrl().getId()).write('"');
+        writer.write(",\"pEditable\":").write(picture.isContainerEditable());
+        writer.write("});");
+    }
 
 }

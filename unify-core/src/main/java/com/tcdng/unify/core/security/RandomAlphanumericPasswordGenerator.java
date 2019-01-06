@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,30 +30,30 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "randomalphanumeric-passwordgenerator", description = "$m{passwordgenerator.randomalphanumeric}")
 public class RandomAlphanumericPasswordGenerator extends AbstractUnifyComponent implements PasswordGenerator {
 
-	private static final String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyz";
+    private static final String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyz";
 
-	private Random random;
+    private Random random;
 
-	public RandomAlphanumericPasswordGenerator() {
-		random = new Random();
-	}
+    public RandomAlphanumericPasswordGenerator() {
+        random = new Random();
+    }
 
-	@Override
-	public String generatePassword(String principal, int length) throws UnifyException {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < length; i++) {
-			sb.append(ALPHANUMERIC.charAt(random.nextInt(ALPHANUMERIC.length())));
-		}
-		return sb.toString();
-	}
+    @Override
+    public String generatePassword(String principal, int length) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            sb.append(ALPHANUMERIC.charAt(random.nextInt(ALPHANUMERIC.length())));
+        }
+        return sb.toString();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

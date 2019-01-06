@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,13 +23,13 @@ package com.tcdng.unify.web.constant;
  */
 public interface UnifyWebRequestAttributeConstants {
 
-	String DOWNLOAD_FILE = "WR.downloadFile";
+    String DOWNLOAD_FILE = "WR.downloadFile";
 
-	String FILEATTACHMENTS_INFO = "WR.fileAttachmentsInfo";
+    String FILEATTACHMENTS_INFO = "WR.fileAttachmentsInfo";
 
-	String REFRESH_SECTION = "WR.refreshSection";
+    String REFRESH_SECTION = "WR.refreshSection";
 
-	String COMMAND_POSTRESPONSE_PATH = "WR.commandPostPath";
+    String COMMAND_POSTRESPONSE_PATH = "WR.commandPostPath";
 
-	String REPORTOPTIONS = "WR.REPORTOPTIONS";
+    String REPORTOPTIONS = "WR.REPORTOPTIONS";
 }

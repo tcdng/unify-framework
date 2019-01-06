@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,15 +28,15 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "CLUSTERUNIQUESTRING", uniqueConstraints = { @UniqueConstraint({ "uniqueString" }) })
 public class ClusterUniqueString extends AbstractSystemSequencedEntity {
 
-	@Column(length = 256)
-	private String uniqueString;
+    @Column(length = 256)
+    private String uniqueString;
 
-	public String getUniqueString() {
-		return uniqueString;
-	}
+    public String getUniqueString() {
+        return uniqueString;
+    }
 
-	public void setUniqueString(String uniqueString) {
-		this.uniqueString = uniqueString;
-	}
+    public void setUniqueString(String uniqueString) {
+        this.uniqueString = uniqueString;
+    }
 
 }

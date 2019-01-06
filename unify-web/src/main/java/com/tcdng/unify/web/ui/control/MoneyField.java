@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,67 +37,67 @@ import com.tcdng.unify.web.ui.ListParamType;
  */
 @Component("ui-money")
 @UplAttributes({ @UplAttribute(name = "currency", type = String.class, mandatory = true),
-		@UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
-		@UplAttribute(name = "acceptNegative", type = boolean.class),
-		@UplAttribute(name = "useGrouping", type = boolean.class),
-		@UplAttribute(name = "list", type = String.class, defaultValue = "currencylist"),
-		@UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "immediate"),
-		@UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!decimalformat}"),
-		@UplAttribute(name = "extStyleClass", type = String.class, defaultValue = "tnread"),
-		@UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
+        @UplAttribute(name = "acceptNegative", type = boolean.class),
+        @UplAttribute(name = "useGrouping", type = boolean.class),
+        @UplAttribute(name = "list", type = String.class, defaultValue = "currencylist"),
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "immediate"),
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!decimalformat}"),
+        @UplAttribute(name = "extStyleClass", type = String.class, defaultValue = "tnread"),
+        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "false") })
 public class MoneyField extends AbstractListPopupTextField {
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
-		int scale = getUplAttribute(int.class, "scale");
-		numberFormatter.setScale(scale);
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
+        int scale = getUplAttribute(int.class, "scale");
+        numberFormatter.setScale(scale);
 
-		super.onPageInitialize();
-	}
+        super.onPageInitialize();
+    }
 
-	@Override
-	public boolean isMultiple() {
-		return true;
-	}
+    @Override
+    public boolean isMultiple() {
+        return true;
+    }
 
-	@Override
-	public ExtensionType getExtensionType() {
-		return ExtensionType.FACADE_HIDDEN;
-	}
+    @Override
+    public ExtensionType getExtensionType() {
+        return ExtensionType.FACADE_HIDDEN;
+    }
 
-	@Override
-	public boolean isPopupOnEditableOnly() {
-		return true;
-	}
+    @Override
+    public boolean isPopupOnEditableOnly() {
+        return true;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public String getFacadeStringValue() throws UnifyException {
-		Money money = getValue(Money.class);
-		if (money != null) {
-			StringBuilder sb = new StringBuilder();
-			Formatter<BigDecimal> formatter = getUplAttribute(Formatter.class, "formatter");
-			if (money.getAmount() != null) {
-				sb.append(formatter.format(money.getAmount()));
-			}
+    @SuppressWarnings("unchecked")
+    @Override
+    public String getFacadeStringValue() throws UnifyException {
+        Money money = getValue(Money.class);
+        if (money != null) {
+            StringBuilder sb = new StringBuilder();
+            Formatter<BigDecimal> formatter = getUplAttribute(Formatter.class, "formatter");
+            if (money.getAmount() != null) {
+                sb.append(formatter.format(money.getAmount()));
+            }
 
-			return sb.toString();
-		}
+            return sb.toString();
+        }
 
-		return DataUtils.EMPTY_STRING;
-	}
+        return DataUtils.EMPTY_STRING;
+    }
 
-	public String getCurrencyCode() throws UnifyException {
-		return getUplAttribute(String.class, "currency");
-	}
+    public String getCurrencyCode() throws UnifyException {
+        return getUplAttribute(String.class, "currency");
+    }
 
-	public String getFramePanelId() throws UnifyException {
-		return getPrefixedId("frm_");
-	}
+    public String getFramePanelId() throws UnifyException {
+        return getPrefixedId("frm_");
+    }
 
-	public String getListPanelId() throws UnifyException {
-		return getPrefixedId("lst_");
-	}
+    public String getListPanelId() throws UnifyException {
+        return getPrefixedId("lst_");
+    }
 
 }

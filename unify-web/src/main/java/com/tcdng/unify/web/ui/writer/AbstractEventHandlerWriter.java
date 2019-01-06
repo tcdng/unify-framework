@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,20 +31,19 @@ import com.tcdng.unify.web.util.WriterUtils;
  */
 public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter implements EventHandlerWriter {
 
-	@Override
-	public void writeBehavior(ResponseWriter writer, Behavior behavior, String id) throws UnifyException {
-		EventHandler eventHandler = (EventHandler) behavior;
-		String event = eventHandler.getUplAttribute(String.class, "event");
-		if (!"none".equals(event)) {
-			if (eventHandler.getPageAction() != null) {
-				event = WriterUtils.getEventJS(event.toLowerCase());
-				for (PageAction pageAction : eventHandler.getPageAction()) {
-					String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
-					String eventParams = writeActionParamsJS(writer, event, function, id, pageAction, null, null,
-							null);
-					writer.write("ux.setOnEvent(").write(eventParams).write(");");
-				}
-			}
-		}
-	}
+    @Override
+    public void writeBehavior(ResponseWriter writer, Behavior behavior, String id) throws UnifyException {
+        EventHandler eventHandler = (EventHandler) behavior;
+        String event = eventHandler.getUplAttribute(String.class, "event");
+        if (!"none".equals(event)) {
+            if (eventHandler.getPageAction() != null) {
+                event = WriterUtils.getEventJS(event.toLowerCase());
+                for (PageAction pageAction : eventHandler.getPageAction()) {
+                    String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
+                    String eventParams = writeActionParamsJS(writer, event, function, id, pageAction, null, null, null);
+                    writer.write("ux.setOnEvent(").write(eventParams).write(");");
+                }
+            }
+        }
+    }
 }

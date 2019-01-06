@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,61 +25,61 @@ import java.lang.reflect.Method;
  */
 public class GetterSetterInfo {
 
-	private String name;
+    private String name;
 
-	private Method getter;
+    private Method getter;
 
-	private Method setter;
+    private Method setter;
 
-	private Class<?> type;
+    private Class<?> type;
 
-	private Class<?> argumentType;
+    private Class<?> argumentType;
 
-	private boolean field;
+    private boolean field;
 
-	public GetterSetterInfo(String name, Method getter, Method setter, Class<?> type, Class<?> argumentType,
-			boolean field) {
-		this.name = name;
-		this.getter = getter;
-		this.setter = setter;
-		this.type = type;
-		this.argumentType = argumentType;
-		this.field = field;
-	}
+    public GetterSetterInfo(String name, Method getter, Method setter, Class<?> type, Class<?> argumentType,
+            boolean field) {
+        this.name = name;
+        this.getter = getter;
+        this.setter = setter;
+        this.type = type;
+        this.argumentType = argumentType;
+        this.field = field;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Method getGetter() {
-		return getter;
-	}
+    public Method getGetter() {
+        return getter;
+    }
 
-	public Method getSetter() {
-		return setter;
-	}
+    public Method getSetter() {
+        return setter;
+    }
 
-	public Class<?> getType() {
-		return type;
-	}
+    public Class<?> getType() {
+        return type;
+    }
 
-	public Class<?> getArgumentType() {
-		return argumentType;
-	}
+    public Class<?> getArgumentType() {
+        return argumentType;
+    }
 
-	public boolean isGetter() {
-		return this.getter != null;
-	}
+    public boolean isGetter() {
+        return this.getter != null;
+    }
 
-	public boolean isSetter() {
-		return this.setter != null;
-	}
+    public boolean isSetter() {
+        return this.setter != null;
+    }
 
-	public boolean isParameterArgumented() {
-		return this.argumentType != null;
-	}
+    public boolean isParameterArgumented() {
+        return this.argumentType != null;
+    }
 
-	public boolean isProperty() {
-		return field;
-	}
+    public boolean isProperty() {
+        return field;
+    }
 }

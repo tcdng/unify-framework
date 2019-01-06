@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,12 +30,12 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("/resource/classloader")
 public class ClassLoaderResourceController extends FileResourceController {
 
-	public ClassLoaderResourceController() {
-		super(false);
-	}
+    public ClassLoaderResourceController() {
+        super(false);
+    }
 
-	@Override
-	protected InputStream getInputStream() throws UnifyException {
-		return IOUtils.openClassLoaderResourceInputStream(getResourceName());
-	}
+    @Override
+    protected InputStream getInputStream() throws UnifyException {
+        return IOUtils.openClassLoaderResourceInputStream(getResourceName());
+    }
 }

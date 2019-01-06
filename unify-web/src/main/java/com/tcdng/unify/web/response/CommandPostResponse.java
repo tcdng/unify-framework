@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,16 +31,16 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("commandpostresponse")
 public class CommandPostResponse extends AbstractJsonPageControllerResponse {
 
-	public CommandPostResponse() {
-		super("commandPostHdl");
-	}
+    public CommandPostResponse() {
+        super("commandPostHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		String path = getRequestContextUtil().getCommandResponsePath();
-		if (!StringUtils.isBlank(path)) {
-			writer.write(",");
-			writer.writeJsonPathVariable("postPath", path);
-		}
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        String path = getRequestContextUtil().getCommandResponsePath();
+        if (!StringUtils.isBlank(path)) {
+            writer.write(",");
+            writer.writeJsonPathVariable("postPath", path);
+        }
+    }
 }

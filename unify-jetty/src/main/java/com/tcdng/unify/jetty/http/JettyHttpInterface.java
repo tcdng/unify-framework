@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,64 +39,64 @@ import com.tcdng.unify.web.AbstractHttpInterface;
 @Component(JettyApplicationComponents.JETTY_HTTPINTERFACE)
 public class JettyHttpInterface extends AbstractHttpInterface {
 
-	private Server httpServer;
+    private Server httpServer;
 
-	private NetworkSchemeType networkSchemeType;
+    private NetworkSchemeType networkSchemeType;
 
-	public JettyHttpInterface() {
-		networkSchemeType = NetworkSchemeType.HTTP;
-	}
+    public JettyHttpInterface() {
+        networkSchemeType = NetworkSchemeType.HTTP;
+    }
 
-	@Override
-	public String getScheme() {
-		return networkSchemeType.code();
-	}
+    @Override
+    public String getScheme() {
+        return networkSchemeType.code();
+    }
 
-	@Override
-	public int getPort() {
-		return getHttpPort();
-	}
+    @Override
+    public int getPort() {
+        return getHttpPort();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		try {
-			logInfo("Initializing HTTP server on port {0}; using context path {1} and servlet path {2}...",
-					Integer.toString(getHttpPort()), getContextPath(), getServletPath());
-			httpServer = new Server(getHttpPort());
-			ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-			context.setContextPath(getContextPath());
-			context.getSessionHandler().getSessionManager().setMaxInactiveInterval(
-					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-							UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT));
-			httpServer.setHandler(context);
+    @Override
+    protected void onInitialize() throws UnifyException {
+        try {
+            logInfo("Initializing HTTP server on port {0}; using context path {1} and servlet path {2}...",
+                    Integer.toString(getHttpPort()), getContextPath(), getServletPath());
+            httpServer = new Server(getHttpPort());
+            ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+            context.setContextPath(getContextPath());
+            context.getSessionHandler().getSessionManager().setMaxInactiveInterval(
+                    getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
+                            UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT));
+            httpServer.setHandler(context);
 
-			ServletHolder mainHolder = new ServletHolder(createHttpServlet());
-			mainHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
-					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
-			context.addServlet(mainHolder, getServletPath());
-			httpServer.start();
-			logInfo("HTTP server initialization completed.");
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, getName());
-		}
-	}
+            ServletHolder mainHolder = new ServletHolder(createHttpServlet());
+            mainHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
+                    getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
+            context.addServlet(mainHolder, getServletPath());
+            httpServer.start();
+            logInfo("HTTP server initialization completed.");
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, getName());
+        }
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-		try {
-			httpServer.stop();
-		} catch (Exception e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_TERMINATION_ERROR, getName());
-		}
-	}
+    @Override
+    protected void onTerminate() throws UnifyException {
+        try {
+            httpServer.stop();
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_TERMINATION_ERROR, getName());
+        }
+    }
 
-	@Override
-	protected void onStartServicingRequests() throws UnifyException {
+    @Override
+    protected void onStartServicingRequests() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onStopServicingRequests() throws UnifyException {
+    @Override
+    protected void onStopServicingRequests() throws UnifyException {
 
-	}
+    }
 }

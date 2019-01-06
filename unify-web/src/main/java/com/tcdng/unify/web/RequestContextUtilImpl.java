@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,393 +51,393 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
 @Component(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL)
 public class RequestContextUtilImpl extends AbstractUnifyComponent implements RequestContextUtil {
 
-	private static final String COMMAND = "COMMAND";
+    private static final String COMMAND = "COMMAND";
 
-	private static final String COMMAND_RESULT_MAPPING = "COMMAND_RESULT_MAPPING";
+    private static final String COMMAND_RESULT_MAPPING = "COMMAND_RESULT_MAPPING";
 
-	private static final String COMMAND_POSTRESPONSE_PATH = "COMMAND_POSTRESPONSE_PATH";
+    private static final String COMMAND_POSTRESPONSE_PATH = "COMMAND_POSTRESPONSE_PATH";
 
-	private static final String PAGENAME_ALIASES = "PAGENAME_ALIASES";
+    private static final String PAGENAME_ALIASES = "PAGENAME_ALIASES";
 
-	private static final String REFRESH_PANEL_LONGNAMES = "REFRESH_PANEL_LONGNAMES";
+    private static final String REFRESH_PANEL_LONGNAMES = "REFRESH_PANEL_LONGNAMES";
 
-	private static final String SWITCHED_PANELS = "SWITCHED_PANELS";
+    private static final String SWITCHED_PANELS = "SWITCHED_PANELS";
 
-	private static final String REQUEST_DOCUMENT_PAGECONTROLLER = "REQUEST_DOCUMENT_PAGECONTROLLER";
+    private static final String REQUEST_DOCUMENT_PAGECONTROLLER = "REQUEST_DOCUMENT_PAGECONTROLLER";
 
-	private static final String REQUEST_PAGE = "REQUEST_PAGE";
+    private static final String REQUEST_PAGE = "REQUEST_PAGE";
 
-	private static final String REQUEST_POPUP_NAME = "REQUEST_POPUP_NAME";
+    private static final String REQUEST_POPUP_NAME = "REQUEST_POPUP_NAME";
 
-	private static final String RESULT_PAGECONTROLLER_INFO = "RESULT_PAGECONTROLLER_INFO";
+    private static final String RESULT_PAGECONTROLLER_INFO = "RESULT_PAGECONTROLLER_INFO";
 
-	private static final String DYNAMICPANEL_PAGENAME = "DYNAMICPANEL_PAGENAME";
+    private static final String DYNAMICPANEL_PAGENAME = "DYNAMICPANEL_PAGENAME";
 
-	private static final String USER_HINT_LIST = "USER_HINT_LIST";
+    private static final String USER_HINT_LIST = "USER_HINT_LIST";
 
-	private static final String VALIDATION_INFO_LIST = "VALIDATION_INFO_LIST";
+    private static final String VALIDATION_INFO_LIST = "VALIDATION_INFO_LIST";
 
-	private static final String ON_SAVE_LIST = "ON_SAVE_LIST";
+    private static final String ON_SAVE_LIST = "ON_SAVE_LIST";
 
-	@Configurable(ApplicationComponents.APPLICATION_EVENTSLOGGER)
-	private EventLogger eventLogger;
+    @Configurable(ApplicationComponents.APPLICATION_EVENTSLOGGER)
+    private EventLogger eventLogger;
 
-	@Override
-	public void setRequestPage(Page page) throws UnifyException {
-		setRequestAttribute(REQUEST_PAGE, page);
-	}
+    @Override
+    public void setRequestPage(Page page) throws UnifyException {
+        setRequestAttribute(REQUEST_PAGE, page);
+    }
 
-	@Override
-	public Page getRequestPage() throws UnifyException {
-		return (Page) getRequestAttribute(REQUEST_PAGE);
-	}
+    @Override
+    public Page getRequestPage() throws UnifyException {
+        return (Page) getRequestAttribute(REQUEST_PAGE);
+    }
 
-	@Override
-	public void setRequestPopupName(String longName) throws UnifyException {
-		setRequestAttribute(REQUEST_POPUP_NAME, longName);
-	}
-
-	@Override
-	public String getRequestPopupName() throws UnifyException {
-		return (String) getRequestAttribute(REQUEST_POPUP_NAME);
-	}
-
-	@Override
-	public void setRequestDocumentController(PageController pageController) throws UnifyException {
-		setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, pageController);
-	}
-
-	@Override
-	public PageController getRequestDocumentController() throws UnifyException {
-		return (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
-	}
-
-	@Override
-	public Document getRequestDocument() throws UnifyException {
-		PageController pageController = (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
-		if (pageController != null) {
-			return (Document) pageController.getPage();
-		}
-		return null;
-	}
-
-	@Override
-	public void setRequestCommand(RequestCommand requestCommand) throws UnifyException {
-		setRequestAttribute(COMMAND, requestCommand);
-	}
-
-	@Override
-	public RequestCommand getRequestCommand() throws UnifyException {
-		return (RequestCommand) getRequestAttribute(COMMAND);
-	}
-
-	@Override
-	public void setCommandResultMapping(String resultMapping) throws UnifyException {
-		setRequestAttribute(COMMAND_RESULT_MAPPING, resultMapping);
-	}
-
-	@Override
-	public String getCommandResultMapping() throws UnifyException {
-		return (String) getRequestAttribute(COMMAND_RESULT_MAPPING);
-	}
-
-	@Override
-	public void setCommandResponsePath(String path) throws UnifyException {
-		setRequestAttribute(COMMAND_POSTRESPONSE_PATH, path);
-	}
-
-	@Override
-	public String getCommandResponsePath() throws UnifyException {
-		return (String) getRequestAttribute(COMMAND_POSTRESPONSE_PATH);
-	}
-
-	@Override
-	public void extractRequestParameters(ClientRequest request) throws UnifyException {
-		setRequestAttribute(RequestParameterConstants.TARGET_VALUE,
-				request.getParameter(RequestParameterConstants.TARGET_VALUE));
-		setRequestAttribute(RequestParameterConstants.CONFIRM_MSG,
-				request.getParameter(RequestParameterConstants.CONFIRM_MSG));
-		setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM,
-				request.getParameter(RequestParameterConstants.CONFIRM_PARAM));
-	}
-
-	@Override
-	public <T> T getRequestTargetValue(Class<T> targetClazz) throws UnifyException {
-		return DataUtils.convert(targetClazz, getRequestAttribute(RequestParameterConstants.TARGET_VALUE), null);
-	}
-
-	@Override
-	public String getRequestConfirmMessage() throws UnifyException {
-		return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.CONFIRM_MSG), null);
-	}
-
-	@Override
-	public String getRequestConfirmParam() throws UnifyException {
-		return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.CONFIRM_PARAM), null);
-	}
-
-	@Override
-	public String getRemoteViewer() throws UnifyException {
-		return getSessionContext().getRemoteViewer();
-	}
-
-	@Override
-	public boolean isRemoteViewer() throws UnifyException {
-		return getSessionContext().isRemoteViewer();
-	}
-
-	@Override
-	public void setResponsePageControllerInfo(ControllerResponseInfo info) throws UnifyException {
-		setRequestAttribute(RESULT_PAGECONTROLLER_INFO, info);
-	}
-
-	@Override
-	public ControllerResponseInfo getResponsePageControllerInfo() throws UnifyException {
-		return (ControllerResponseInfo) getRequestAttribute(RESULT_PAGECONTROLLER_INFO);
-	}
-
-	@Override
-	public void setDynamicPanelPageName(String pageName, String parentPageName) throws UnifyException {
-		List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-				DYNAMICPANEL_PAGENAME);
-		if (dynamicPanelNameList == null) {
-			dynamicPanelNameList = new ArrayList<DynamicPanelNames>();
-			setRequestAttribute(DYNAMICPANEL_PAGENAME, dynamicPanelNameList);
-		}
-
-		dynamicPanelNameList.add(new DynamicPanelNames(pageName, parentPageName));
-	}
-
-	@Override
-	public String getDynamicPanelPageName() throws UnifyException {
-		List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-				DYNAMICPANEL_PAGENAME);
-		if (!DataUtils.isBlank(dynamicPanelNameList)) {
-			return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getPageName();
-		}
-
-		return null;
-	}
-
-	@Override
-	public String getDynamicPanelParentPageName() throws UnifyException {
-		List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-				DYNAMICPANEL_PAGENAME);
-		if (!DataUtils.isBlank(dynamicPanelNameList)) {
-			return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getParentPageName();
-		}
-
-		return null;
-	}
-
-	@Override
-	public void clearDynamicPanelPageName() throws UnifyException {
-		List<DynamicPanelNames> dynamicPanelNameList = (List<DynamicPanelNames>) getRequestAttribute(
-				DYNAMICPANEL_PAGENAME);
-		if (!DataUtils.isBlank(dynamicPanelNameList)) {
-			dynamicPanelNameList.remove(0);
-		}
-	}
-
-	@Override
-	public void setResponseRefreshPanels(String[] longNames) throws UnifyException {
-		setRequestAttribute(REFRESH_PANEL_LONGNAMES, longNames);
-	}
-
-	@Override
-	public String[] getResponseRefreshPanels() throws UnifyException {
-		return (String[]) getRequestAttribute(REFRESH_PANEL_LONGNAMES);
-	}
-
-	@Override
-	public void setPanelSwitchStateFlag(Panel panel) throws UnifyException {
-		Set<Panel> switchedPanels = (Set<Panel>) getRequestAttribute(SWITCHED_PANELS);
-		if (switchedPanels == null) {
-			switchedPanels = new HashSet<Panel>();
-			setRequestAttribute(SWITCHED_PANELS, switchedPanels);
-		}
-		switchedPanels.add(panel);
-	}
-
-	@Override
-	public boolean isPanelSwitched(Panel panel) throws UnifyException {
-		Set<Panel> switchedPanels = (Set<Panel>) getRequestAttribute(SWITCHED_PANELS);
-		return switchedPanels != null && switchedPanels.contains(panel);
-	}
-
-	@Override
-	public void addPageAlias(String id, String... aliases) throws UnifyException {
-		Map<String, Set<String>> aliasMap = (Map<String, Set<String>>) getRequestAttribute(PAGENAME_ALIASES);
-		if (aliasMap == null) {
-			aliasMap = new HashMap<String, Set<String>>();
-			setRequestAttribute(PAGENAME_ALIASES, aliasMap);
-		}
-
-		Set<String> set = aliasMap.get(id);
-		if (set == null) {
-			set = new HashSet<String>();
-			aliasMap.put(id, set);
-		}
-
-		for (String alias : aliases) {
-			set.add(alias);
-		}
-	}
-
-	@Override
-	public Set<String> getRequestPageNameAliases(String pageName) throws UnifyException {
-		Map<String, Set<String>> childAliasMap = (Map<String, Set<String>>) getRequestAttribute(PAGENAME_ALIASES);
-		if (childAliasMap != null && childAliasMap.containsKey(pageName)) {
-			return childAliasMap.get(pageName);
-		}
-		return (Set<String>) Collections.EMPTY_SET;
-	}
-
-	@Override
-	public Map<String, Set<String>> getRequestPageNameAliases() throws UnifyException {
-		return (Map<String, Set<String>>) getRequestAttribute(PAGENAME_ALIASES);
-	}
-
-	@Override
-	public void addRequestValidationInfo(String pageName, ValidationInfo validationInfo) throws UnifyException {
-		Map<String, ValidationInfo> validationInfos = (Map<String, ValidationInfo>) this
-				.getRequestAttribute(VALIDATION_INFO_LIST);
-		if (validationInfos == null) {
-			validationInfos = new LinkedHashMap<String, ValidationInfo>();
-			setRequestAttribute(VALIDATION_INFO_LIST, validationInfos);
-		}
-
-		ValidationInfo oldValidationInfo = validationInfos.get(pageName);
-		if (oldValidationInfo != null) {
-			if (oldValidationInfo.isPass() && !validationInfo.isPass()) {
-				validationInfos.put(pageName, validationInfo);
-			}
-		} else {
-			validationInfos.put(pageName, validationInfo);
-		}
-	}
-
-	@Override
-	public Collection<ValidationInfo> getRequestValidationInfoList() throws UnifyException {
-		Map<String, ValidationInfo> map = (Map<String, ValidationInfo>) getRequestAttribute(VALIDATION_INFO_LIST);
-		if (map != null) {
-			return map.values();
-		}
-
-		return Collections.emptyList();
-	}
-
-	@Override
-	public void addOnSaveContentWidget(String widgetId) throws UnifyException {
-		List<String> widgetList = (List<String>) getRequestAttribute(ON_SAVE_LIST);
-		if (widgetList == null) {
-			widgetList = new ArrayList<String>();
-			setRequestAttribute(ON_SAVE_LIST, widgetList);
-		}
-
-		widgetList.add(widgetId);
-	}
-
-	@Override
-	public List<String> getOnSaveContentWidgets() throws UnifyException {
-		List<String> widgetList = (List<String>) getRequestAttribute(ON_SAVE_LIST);
-		if (widgetList != null) {
-			return widgetList;
-		}
-
-		return Collections.emptyList();
-	}
-
-	@Override
-	public void hintUser(String messageKey, Object... params) throws UnifyException {
-		hintUser(Hint.MODE.INFO, messageKey, params);
-	}
-
-	@Override
-	public void hintUser(Hint.MODE mode, String messageKey, Object... params) throws UnifyException {
-		List<Hint> hintList = (List<Hint>) getRequestAttribute(USER_HINT_LIST);
-		if (hintList == null) {
-			hintList = new ArrayList<Hint>();
-			setRequestAttribute(USER_HINT_LIST, hintList);
-		}
-		hintList.add(new Hint(mode, getSessionMessage(messageKey, params)));
-	}
-
-	@Override
-	public List<Hint> getUserHints() throws UnifyException {
-		return (List<Hint>) getRequestAttribute(USER_HINT_LIST);
-	}
-
-	@Override
-	public void logUserEvent(String eventCode, String... details) throws UnifyException {
-		eventLogger.logUserEvent(eventCode, details);
-	}
-
-	@Override
-	public void logUserEvent(String eventCode, List<String> details) throws UnifyException {
-		eventLogger.logUserEvent(eventCode, details);
-	}
-
-	@Override
-	public void logUserEvent(EventType eventType, Class<? extends Entity> entityClass) throws UnifyException {
-		eventLogger.logUserEvent(eventType, entityClass);
-	}
-
-	@Override
-	public void logUserEvent(EventType eventType, Entity record, boolean isNewRecord) throws UnifyException {
-		eventLogger.logUserEvent(eventType, record, isNewRecord);
-	}
-
-	@Override
-	public <T extends Entity> void logUserEvent(EventType eventType, T oldRecord, T newRecord) throws UnifyException {
-		eventLogger.logUserEvent(eventType, oldRecord, newRecord);
-	}
-
-	@Override
-	public void clearRequestContext() throws UnifyException {
-		setRequestAttribute(RequestParameterConstants.TARGET_VALUE, null);
-		setRequestAttribute(RequestParameterConstants.CONFIRM_MSG, null);
-		setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM, null);
-		setRequestAttribute(COMMAND, null);
-		setRequestAttribute(COMMAND_POSTRESPONSE_PATH, null);
-		setRequestAttribute(PAGENAME_ALIASES, null);
-		setRequestAttribute(REFRESH_PANEL_LONGNAMES, null);
-		setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, null);
-		setRequestAttribute(REQUEST_PAGE, null);
-		setRequestAttribute(RESULT_PAGECONTROLLER_INFO, null);
-		setRequestAttribute(USER_HINT_LIST, null);
-		setRequestAttribute(VALIDATION_INFO_LIST, null);
-
-	}
-
-	@Override
-	protected void onInitialize() throws UnifyException {
-
-	}
-
-	@Override
-	protected void onTerminate() throws UnifyException {
-
-	}
-
-	private class DynamicPanelNames {
-
-		String pageName;
-
-		String parentPageName;
-
-		public DynamicPanelNames(String pageName, String parentPageName) {
-			this.pageName = pageName;
-			this.parentPageName = parentPageName;
-		}
-
-		public String getPageName() {
-			return pageName;
-		}
-
-		public String getParentPageName() {
-			return parentPageName;
-		}
-
-	}
+    @Override
+    public void setRequestPopupName(String longName) throws UnifyException {
+        setRequestAttribute(REQUEST_POPUP_NAME, longName);
+    }
+
+    @Override
+    public String getRequestPopupName() throws UnifyException {
+        return (String) getRequestAttribute(REQUEST_POPUP_NAME);
+    }
+
+    @Override
+    public void setRequestDocumentController(PageController pageController) throws UnifyException {
+        setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, pageController);
+    }
+
+    @Override
+    public PageController getRequestDocumentController() throws UnifyException {
+        return (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
+    }
+
+    @Override
+    public Document getRequestDocument() throws UnifyException {
+        PageController pageController = (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
+        if (pageController != null) {
+            return (Document) pageController.getPage();
+        }
+        return null;
+    }
+
+    @Override
+    public void setRequestCommand(RequestCommand requestCommand) throws UnifyException {
+        setRequestAttribute(COMMAND, requestCommand);
+    }
+
+    @Override
+    public RequestCommand getRequestCommand() throws UnifyException {
+        return (RequestCommand) getRequestAttribute(COMMAND);
+    }
+
+    @Override
+    public void setCommandResultMapping(String resultMapping) throws UnifyException {
+        setRequestAttribute(COMMAND_RESULT_MAPPING, resultMapping);
+    }
+
+    @Override
+    public String getCommandResultMapping() throws UnifyException {
+        return (String) getRequestAttribute(COMMAND_RESULT_MAPPING);
+    }
+
+    @Override
+    public void setCommandResponsePath(String path) throws UnifyException {
+        setRequestAttribute(COMMAND_POSTRESPONSE_PATH, path);
+    }
+
+    @Override
+    public String getCommandResponsePath() throws UnifyException {
+        return (String) getRequestAttribute(COMMAND_POSTRESPONSE_PATH);
+    }
+
+    @Override
+    public void extractRequestParameters(ClientRequest request) throws UnifyException {
+        setRequestAttribute(RequestParameterConstants.TARGET_VALUE,
+                request.getParameter(RequestParameterConstants.TARGET_VALUE));
+        setRequestAttribute(RequestParameterConstants.CONFIRM_MSG,
+                request.getParameter(RequestParameterConstants.CONFIRM_MSG));
+        setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM,
+                request.getParameter(RequestParameterConstants.CONFIRM_PARAM));
+    }
+
+    @Override
+    public <T> T getRequestTargetValue(Class<T> targetClazz) throws UnifyException {
+        return DataUtils.convert(targetClazz, getRequestAttribute(RequestParameterConstants.TARGET_VALUE), null);
+    }
+
+    @Override
+    public String getRequestConfirmMessage() throws UnifyException {
+        return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.CONFIRM_MSG), null);
+    }
+
+    @Override
+    public String getRequestConfirmParam() throws UnifyException {
+        return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.CONFIRM_PARAM), null);
+    }
+
+    @Override
+    public String getRemoteViewer() throws UnifyException {
+        return getSessionContext().getRemoteViewer();
+    }
+
+    @Override
+    public boolean isRemoteViewer() throws UnifyException {
+        return getSessionContext().isRemoteViewer();
+    }
+
+    @Override
+    public void setResponsePageControllerInfo(ControllerResponseInfo info) throws UnifyException {
+        setRequestAttribute(RESULT_PAGECONTROLLER_INFO, info);
+    }
+
+    @Override
+    public ControllerResponseInfo getResponsePageControllerInfo() throws UnifyException {
+        return (ControllerResponseInfo) getRequestAttribute(RESULT_PAGECONTROLLER_INFO);
+    }
+
+    @Override
+    public void setDynamicPanelPageName(String pageName, String parentPageName) throws UnifyException {
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
+        if (dynamicPanelNameList == null) {
+            dynamicPanelNameList = new ArrayList<DynamicPanelNames>();
+            setRequestAttribute(DYNAMICPANEL_PAGENAME, dynamicPanelNameList);
+        }
+
+        dynamicPanelNameList.add(new DynamicPanelNames(pageName, parentPageName));
+    }
+
+    @Override
+    public String getDynamicPanelPageName() throws UnifyException {
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
+        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+            return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getPageName();
+        }
+
+        return null;
+    }
+
+    @Override
+    public String getDynamicPanelParentPageName() throws UnifyException {
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
+        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+            return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getParentPageName();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void clearDynamicPanelPageName() throws UnifyException {
+        List<DynamicPanelNames> dynamicPanelNameList =
+                (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
+        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+            dynamicPanelNameList.remove(0);
+        }
+    }
+
+    @Override
+    public void setResponseRefreshPanels(String[] longNames) throws UnifyException {
+        setRequestAttribute(REFRESH_PANEL_LONGNAMES, longNames);
+    }
+
+    @Override
+    public String[] getResponseRefreshPanels() throws UnifyException {
+        return (String[]) getRequestAttribute(REFRESH_PANEL_LONGNAMES);
+    }
+
+    @Override
+    public void setPanelSwitchStateFlag(Panel panel) throws UnifyException {
+        Set<Panel> switchedPanels = (Set<Panel>) getRequestAttribute(SWITCHED_PANELS);
+        if (switchedPanels == null) {
+            switchedPanels = new HashSet<Panel>();
+            setRequestAttribute(SWITCHED_PANELS, switchedPanels);
+        }
+        switchedPanels.add(panel);
+    }
+
+    @Override
+    public boolean isPanelSwitched(Panel panel) throws UnifyException {
+        Set<Panel> switchedPanels = (Set<Panel>) getRequestAttribute(SWITCHED_PANELS);
+        return switchedPanels != null && switchedPanels.contains(panel);
+    }
+
+    @Override
+    public void addPageAlias(String id, String... aliases) throws UnifyException {
+        Map<String, Set<String>> aliasMap = (Map<String, Set<String>>) getRequestAttribute(PAGENAME_ALIASES);
+        if (aliasMap == null) {
+            aliasMap = new HashMap<String, Set<String>>();
+            setRequestAttribute(PAGENAME_ALIASES, aliasMap);
+        }
+
+        Set<String> set = aliasMap.get(id);
+        if (set == null) {
+            set = new HashSet<String>();
+            aliasMap.put(id, set);
+        }
+
+        for (String alias : aliases) {
+            set.add(alias);
+        }
+    }
+
+    @Override
+    public Set<String> getRequestPageNameAliases(String pageName) throws UnifyException {
+        Map<String, Set<String>> childAliasMap = (Map<String, Set<String>>) getRequestAttribute(PAGENAME_ALIASES);
+        if (childAliasMap != null && childAliasMap.containsKey(pageName)) {
+            return childAliasMap.get(pageName);
+        }
+        return (Set<String>) Collections.EMPTY_SET;
+    }
+
+    @Override
+    public Map<String, Set<String>> getRequestPageNameAliases() throws UnifyException {
+        return (Map<String, Set<String>>) getRequestAttribute(PAGENAME_ALIASES);
+    }
+
+    @Override
+    public void addRequestValidationInfo(String pageName, ValidationInfo validationInfo) throws UnifyException {
+        Map<String, ValidationInfo> validationInfos =
+                (Map<String, ValidationInfo>) this.getRequestAttribute(VALIDATION_INFO_LIST);
+        if (validationInfos == null) {
+            validationInfos = new LinkedHashMap<String, ValidationInfo>();
+            setRequestAttribute(VALIDATION_INFO_LIST, validationInfos);
+        }
+
+        ValidationInfo oldValidationInfo = validationInfos.get(pageName);
+        if (oldValidationInfo != null) {
+            if (oldValidationInfo.isPass() && !validationInfo.isPass()) {
+                validationInfos.put(pageName, validationInfo);
+            }
+        } else {
+            validationInfos.put(pageName, validationInfo);
+        }
+    }
+
+    @Override
+    public Collection<ValidationInfo> getRequestValidationInfoList() throws UnifyException {
+        Map<String, ValidationInfo> map = (Map<String, ValidationInfo>) getRequestAttribute(VALIDATION_INFO_LIST);
+        if (map != null) {
+            return map.values();
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void addOnSaveContentWidget(String widgetId) throws UnifyException {
+        List<String> widgetList = (List<String>) getRequestAttribute(ON_SAVE_LIST);
+        if (widgetList == null) {
+            widgetList = new ArrayList<String>();
+            setRequestAttribute(ON_SAVE_LIST, widgetList);
+        }
+
+        widgetList.add(widgetId);
+    }
+
+    @Override
+    public List<String> getOnSaveContentWidgets() throws UnifyException {
+        List<String> widgetList = (List<String>) getRequestAttribute(ON_SAVE_LIST);
+        if (widgetList != null) {
+            return widgetList;
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void hintUser(String messageKey, Object... params) throws UnifyException {
+        hintUser(Hint.MODE.INFO, messageKey, params);
+    }
+
+    @Override
+    public void hintUser(Hint.MODE mode, String messageKey, Object... params) throws UnifyException {
+        List<Hint> hintList = (List<Hint>) getRequestAttribute(USER_HINT_LIST);
+        if (hintList == null) {
+            hintList = new ArrayList<Hint>();
+            setRequestAttribute(USER_HINT_LIST, hintList);
+        }
+        hintList.add(new Hint(mode, getSessionMessage(messageKey, params)));
+    }
+
+    @Override
+    public List<Hint> getUserHints() throws UnifyException {
+        return (List<Hint>) getRequestAttribute(USER_HINT_LIST);
+    }
+
+    @Override
+    public void logUserEvent(String eventCode, String... details) throws UnifyException {
+        eventLogger.logUserEvent(eventCode, details);
+    }
+
+    @Override
+    public void logUserEvent(String eventCode, List<String> details) throws UnifyException {
+        eventLogger.logUserEvent(eventCode, details);
+    }
+
+    @Override
+    public void logUserEvent(EventType eventType, Class<? extends Entity> entityClass) throws UnifyException {
+        eventLogger.logUserEvent(eventType, entityClass);
+    }
+
+    @Override
+    public void logUserEvent(EventType eventType, Entity record, boolean isNewRecord) throws UnifyException {
+        eventLogger.logUserEvent(eventType, record, isNewRecord);
+    }
+
+    @Override
+    public <T extends Entity> void logUserEvent(EventType eventType, T oldRecord, T newRecord) throws UnifyException {
+        eventLogger.logUserEvent(eventType, oldRecord, newRecord);
+    }
+
+    @Override
+    public void clearRequestContext() throws UnifyException {
+        setRequestAttribute(RequestParameterConstants.TARGET_VALUE, null);
+        setRequestAttribute(RequestParameterConstants.CONFIRM_MSG, null);
+        setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM, null);
+        setRequestAttribute(COMMAND, null);
+        setRequestAttribute(COMMAND_POSTRESPONSE_PATH, null);
+        setRequestAttribute(PAGENAME_ALIASES, null);
+        setRequestAttribute(REFRESH_PANEL_LONGNAMES, null);
+        setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, null);
+        setRequestAttribute(REQUEST_PAGE, null);
+        setRequestAttribute(RESULT_PAGECONTROLLER_INFO, null);
+        setRequestAttribute(USER_HINT_LIST, null);
+        setRequestAttribute(VALIDATION_INFO_LIST, null);
+
+    }
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
+    }
+
+    private class DynamicPanelNames {
+
+        String pageName;
+
+        String parentPageName;
+
+        public DynamicPanelNames(String pageName, String parentPageName) {
+            this.pageName = pageName;
+            this.parentPageName = parentPageName;
+        }
+
+        public String getPageName() {
+            return pageName;
+        }
+
+        public String getParentPageName() {
+            return parentPageName;
+        }
+
+    }
 }

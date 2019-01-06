@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,57 +28,57 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface ApplicationMessages extends UnifyComponent {
-	/**
-	 * Gets a message resource by locale and message key.
-	 * 
-	 * @param locale
-	 *            the locale
-	 * @param messageKey
-	 *            the message key
-	 * @return the message resource value
-	 * @throws UnifyException
-	 *             if resource is missing. If an error occurs
-	 */
-	String getMessage(Locale locale, String messageKey) throws UnifyException;
+    /**
+     * Gets a message resource by locale and message key.
+     * 
+     * @param locale
+     *            the locale
+     * @param messageKey
+     *            the message key
+     * @return the message resource value
+     * @throws UnifyException
+     *             if resource is missing. If an error occurs
+     */
+    String getMessage(Locale locale, String messageKey) throws UnifyException;
 
-	/**
-	 * Gets a formatted message resource by locale and message key.
-	 * 
-	 * @param locale
-	 *            the locale
-	 * @param messageKey
-	 *            the message key
-	 * @param params
-	 *            optional formatting parameters
-	 * @return the message resource value
-	 * @throws UnifyException
-	 *             if resource is missing. If an error occurs
-	 */
-	String getMessage(Locale locale, String messageKey, Object... params) throws UnifyException;
+    /**
+     * Gets a formatted message resource by locale and message key.
+     * 
+     * @param locale
+     *            the locale
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            optional formatting parameters
+     * @return the message resource value
+     * @throws UnifyException
+     *             if resource is missing. If an error occurs
+     */
+    String getMessage(Locale locale, String messageKey, Object... params) throws UnifyException;
 
-	/**
-	 * Gets a formatted message resource by application locale and message key.
-	 * 
-	 * @param messageKey
-	 *            the message key
-	 * @param params
-	 *            optional formatting parameters
-	 * @return the message resource value
-	 * @throws UnifyException
-	 *             if resource is missing. If an error occurs
-	 */
-	String getApplicationMessage(String messageKey, Object... params) throws UnifyException;
+    /**
+     * Gets a formatted message resource by application locale and message key.
+     * 
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            optional formatting parameters
+     * @return the message resource value
+     * @throws UnifyException
+     *             if resource is missing. If an error occurs
+     */
+    String getApplicationMessage(String messageKey, Object... params) throws UnifyException;
 
-	/**
-	 * Gets a formatted message resource by session locale and message key.
-	 * 
-	 * @param messageKey
-	 *            the message key
-	 * @param params
-	 *            optional formatting parameters
-	 * @return the message resource value
-	 * @throws UnifyException
-	 *             if resource is missing. If an error occurs
-	 */
-	String getSessionMessage(String messageKey, Object... params) throws UnifyException;
+    /**
+     * Gets a formatted message resource by session locale and message key.
+     * 
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            optional formatting parameters
+     * @return the message resource value
+     * @throws UnifyException
+     *             if resource is missing. If an error occurs
+     */
+    String getSessionMessage(String messageKey, Object... params) throws UnifyException;
 }

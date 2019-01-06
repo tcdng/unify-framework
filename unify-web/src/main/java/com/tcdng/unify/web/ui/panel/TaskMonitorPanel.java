@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,43 +34,43 @@ import com.tcdng.unify.web.ui.data.TaskMonitorInfo;
 @UplBinding("web/panels/upl/taskmonitorpanel.upl")
 public class TaskMonitorPanel extends AbstractPanel {
 
-	@Override
-	@Action
-	public void switchState() throws UnifyException {
-		super.switchState();
-		TaskMonitorInfo taskMonitorInfo = getValue(TaskMonitorInfo.class);
-		if (taskMonitorInfo != null) {
-			boolean isBusy = taskMonitorInfo.getTaskState() == TaskMonitorInfo.BUSY;
-			getWidgetByShortName("cancelBtn").setVisible(isBusy);
-			getWidgetByShortName("doneBtn").setVisible(!isBusy);
-			setAllowRefresh(isBusy);
-		}
-	}
+    @Override
+    @Action
+    public void switchState() throws UnifyException {
+        super.switchState();
+        TaskMonitorInfo taskMonitorInfo = getValue(TaskMonitorInfo.class);
+        if (taskMonitorInfo != null) {
+            boolean isBusy = taskMonitorInfo.getTaskState() == TaskMonitorInfo.BUSY;
+            getWidgetByShortName("cancelBtn").setVisible(isBusy);
+            getWidgetByShortName("doneBtn").setVisible(!isBusy);
+            setAllowRefresh(isBusy);
+        }
+    }
 
-	@Action
-	public void cancelTask() throws UnifyException {
-		TaskMonitorInfo taskMonitorInfo = getValue(TaskMonitorInfo.class);
-		taskMonitorInfo.cancelTask();
-		setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
-	}
+    @Action
+    public void cancelTask() throws UnifyException {
+        TaskMonitorInfo taskMonitorInfo = getValue(TaskMonitorInfo.class);
+        taskMonitorInfo.cancelTask();
+        setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
+    }
 
-	@Action
-	public void taskDone() throws UnifyException {
-		TaskMonitorInfo taskMonitorInfo = getValue(TaskMonitorInfo.class);
-		String taskDonePath = null;
-		if (taskMonitorInfo.getTaskState() == TaskMonitorInfo.PASS) {
-			taskDonePath = taskMonitorInfo.getOnSuccessPath();
-		} else if (taskMonitorInfo.getTaskState() == TaskMonitorInfo.FAIL
-				|| taskMonitorInfo.getTaskState() == TaskMonitorInfo.ERROR) {
-			taskDonePath = taskMonitorInfo.getOnFailurePath();
-		}
+    @Action
+    public void taskDone() throws UnifyException {
+        TaskMonitorInfo taskMonitorInfo = getValue(TaskMonitorInfo.class);
+        String taskDonePath = null;
+        if (taskMonitorInfo.getTaskState() == TaskMonitorInfo.PASS) {
+            taskDonePath = taskMonitorInfo.getOnSuccessPath();
+        } else if (taskMonitorInfo.getTaskState() == TaskMonitorInfo.FAIL
+                || taskMonitorInfo.getTaskState() == TaskMonitorInfo.ERROR) {
+            taskDonePath = taskMonitorInfo.getOnFailurePath();
+        }
 
-		if (taskDonePath != null) {
-			setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, taskDonePath);
-			setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
-		}
+        if (taskDonePath != null) {
+            setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, taskDonePath);
+            setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
+        }
 
-		setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
-	}
+        setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
+    }
 
 }

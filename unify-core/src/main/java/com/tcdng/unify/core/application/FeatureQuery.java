@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,11 +25,11 @@ import com.tcdng.unify.core.database.Query;
  */
 public class FeatureQuery extends Query<FeatureData> {
 
-	public FeatureQuery() {
-		super(FeatureData.class);
-	}
+    public FeatureQuery() {
+        super(FeatureData.class);
+    }
 
-	public FeatureQuery code(String code) {
-		return (FeatureQuery) equals("code", code);
-	}
+    public FeatureQuery code(String code) {
+        return (FeatureQuery) equals("code", code);
+    }
 }

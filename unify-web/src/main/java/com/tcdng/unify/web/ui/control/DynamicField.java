@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,54 +36,54 @@ import com.tcdng.unify.web.ui.Control;
 @UplAttributes({ @UplAttribute(name = "descriptorBinding", type = String.class, mandatory = true) })
 public class DynamicField extends AbstractMultiControl {
 
-	private Map<String, String> descriptorToIdMap;
+    private Map<String, String> descriptorToIdMap;
 
-	public DynamicField() {
-		descriptorToIdMap = new HashMap<String, String>();
-	}
+    public DynamicField() {
+        descriptorToIdMap = new HashMap<String, String>();
+    }
 
-	@Override
-	public String getStyleClass() throws UnifyException {
-		return getControl().getStyleClass();
-	}
+    @Override
+    public String getStyleClass() throws UnifyException {
+        return getControl().getStyleClass();
+    }
 
-	@Override
-	public String getStyle() throws UnifyException {
-		return getControl().getStyle();
-	}
+    @Override
+    public String getStyle() throws UnifyException {
+        return getControl().getStyle();
+    }
 
-	@Override
-	public String getHint() throws UnifyException {
-		return getControl().getHint();
-	}
+    @Override
+    public String getHint() throws UnifyException {
+        return getControl().getHint();
+    }
 
-	@Override
-	public void setGroupId(String groupId) throws UnifyException {
-		super.setGroupId(groupId);
-		for (String id : descriptorToIdMap.values()) {
-			getChildControlInfo(id).getControl().setGroupId(groupId);
-		}
-	}
+    @Override
+    public void setGroupId(String groupId) throws UnifyException {
+        super.setGroupId(groupId);
+        for (String id : descriptorToIdMap.values()) {
+            getChildControlInfo(id).getControl().setGroupId(groupId);
+        }
+    }
 
-	public Control getControl() throws UnifyException {
-		Control control = null;
-		String descriptorBinding = getUplAttribute(String.class, "descriptorBinding");
-		String descriptor = (String) getValue(descriptorBinding);
-		if (!StringUtils.isBlank(descriptor)) {
-			String id = descriptorToIdMap.get(descriptor);
-			if (id == null) {
-				StringBuilder sb = new StringBuilder(descriptor);
-				appendUplAttribute(sb, "binding");
-				control = addInternalChildControl(sb.toString(), true, false);
-				descriptorToIdMap.put(descriptor, control.getBaseId());
-			} else {
-				control = getChildControlInfo(id).getControl();
-			}
+    public Control getControl() throws UnifyException {
+        Control control = null;
+        String descriptorBinding = getUplAttribute(String.class, "descriptorBinding");
+        String descriptor = (String) getValue(descriptorBinding);
+        if (!StringUtils.isBlank(descriptor)) {
+            String id = descriptorToIdMap.get(descriptor);
+            if (id == null) {
+                StringBuilder sb = new StringBuilder(descriptor);
+                appendUplAttribute(sb, "binding");
+                control = addInternalChildControl(sb.toString(), true, false);
+                descriptorToIdMap.put(descriptor, control.getBaseId());
+            } else {
+                control = getChildControlInfo(id).getControl();
+            }
 
-			addPageAlias(control);
-		}
+            addPageAlias(control);
+        }
 
-		return control;
-	}
+        return control;
+    }
 
 }

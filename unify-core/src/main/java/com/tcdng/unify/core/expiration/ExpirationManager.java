@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,9 +18,7 @@ package com.tcdng.unify.core.expiration;
 import com.tcdng.unify.core.UnifyComponent;
 
 /**
- * Component interface for managing expirable references. Implementations are
- * expected to fire the {@link ObservedExpirable#removeExpired()} method of
- * registered references at regular intervals.
+ * Component interface for managing expirable references.
  * 
  * @author Lateef Ojulari
  * @since 1.0

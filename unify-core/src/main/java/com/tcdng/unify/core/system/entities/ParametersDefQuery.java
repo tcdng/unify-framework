@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,11 +25,11 @@ import com.tcdng.unify.core.database.Query;
  */
 public class ParametersDefQuery extends Query<ParametersDef> {
 
-	public ParametersDefQuery() {
-		super(ParametersDef.class);
-	}
+    public ParametersDefQuery() {
+        super(ParametersDef.class);
+    }
 
-	public ParametersDefQuery typeName(String typeName) {
-		return (ParametersDefQuery) equals("typeName", typeName);
-	}
+    public ParametersDefQuery typeName(String typeName) {
+        return (ParametersDefQuery) equals("typeName", typeName);
+    }
 }

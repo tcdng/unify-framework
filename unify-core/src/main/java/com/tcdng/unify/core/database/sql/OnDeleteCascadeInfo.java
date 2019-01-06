@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,21 +28,21 @@ import com.tcdng.unify.core.database.Entity;
  */
 public class OnDeleteCascadeInfo {
 
-	private Class<? extends Entity> childEntityClass;
+    private Class<? extends Entity> childEntityClass;
 
-	private Field childFkField;
+    private Field childFkField;
 
-	public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkField) {
-		this.childEntityClass = childEntityClass;
-		this.childFkField = childFkField;
-	}
+    public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkField) {
+        this.childEntityClass = childEntityClass;
+        this.childFkField = childFkField;
+    }
 
-	public Class<? extends Entity> getChildEntityClass() {
-		return childEntityClass;
-	}
+    public Class<? extends Entity> getChildEntityClass() {
+        return childEntityClass;
+    }
 
-	public Field getChildFkField() {
-		return childFkField;
-	}
+    public Field getChildFkField() {
+        return childFkField;
+    }
 
 }

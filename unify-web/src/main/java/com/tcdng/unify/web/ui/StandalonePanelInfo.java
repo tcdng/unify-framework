@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,43 +21,43 @@ import java.util.Map;
 
 public class StandalonePanelInfo {
 
-	private Map<String, WidgetNameInfo> widgetNameInfos;
+    private Map<String, WidgetNameInfo> widgetNameInfos;
 
-	private Map<String, PageValidation> pageValidations;
+    private Map<String, PageValidation> pageValidations;
 
-	private Map<String, PageAction> pageActions;
+    private Map<String, PageAction> pageActions;
 
-	private boolean sourceInvalidated;
+    private boolean sourceInvalidated;
 
-	public StandalonePanelInfo(Map<String, WidgetNameInfo> widgetNameInfos, Map<String, PageValidation> pageValidations,
-			Map<String, PageAction> pageActions) {
-		this.widgetNameInfos = widgetNameInfos;
-		this.pageValidations = pageValidations;
-		this.pageActions = pageActions;
-		sourceInvalidated = false;
-	}
+    public StandalonePanelInfo(Map<String, WidgetNameInfo> widgetNameInfos, Map<String, PageValidation> pageValidations,
+            Map<String, PageAction> pageActions) {
+        this.widgetNameInfos = widgetNameInfos;
+        this.pageValidations = pageValidations;
+        this.pageActions = pageActions;
+        sourceInvalidated = false;
+    }
 
-	public Collection<String> getWidgetLongNames() {
-		return widgetNameInfos.keySet();
-	}
+    public Collection<String> getWidgetLongNames() {
+        return widgetNameInfos.keySet();
+    }
 
-	public Map<String, WidgetNameInfo> getWidgetInfos() {
-		return widgetNameInfos;
-	}
+    public Map<String, WidgetNameInfo> getWidgetInfos() {
+        return widgetNameInfos;
+    }
 
-	public Map<String, PageValidation> getPageValidations() {
-		return pageValidations;
-	}
+    public Map<String, PageValidation> getPageValidations() {
+        return pageValidations;
+    }
 
-	public Map<String, PageAction> getPageActions() {
-		return pageActions;
-	}
+    public Map<String, PageAction> getPageActions() {
+        return pageActions;
+    }
 
-	public void invalidate() {
-		sourceInvalidated = true;
-	}
+    public void invalidate() {
+        sourceInvalidated = true;
+    }
 
-	public boolean isSourceInvalidated() {
-		return sourceInvalidated;
-	}
+    public boolean isSourceInvalidated() {
+        return sourceInvalidated;
+    }
 }

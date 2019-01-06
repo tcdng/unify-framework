@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,33 +35,38 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 @Component("remotedocviewpanel-writer")
 public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		RemoteDocViewPanel remoteDocViewPanel = (RemoteDocViewPanel) widget;
-		writer.write("ux.loadRemoteDocViewPanel({");
-		writer.write("\"pId\":\"").write(remoteDocViewPanel.getId()).write('"');
-		writer.write(",\"pWinPgNm\":\"").write(getResponseControllerWinId()).write("\"");
-		writer.write(",\"pRemoteURL\":\"").write(remoteDocViewPanel.getRemoteDocViewInfo().getRemoteDocUrl())
-				.write("\"");
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        RemoteDocViewPanel remoteDocViewPanel = (RemoteDocViewPanel) widget;
+        writer.write("ux.loadRemoteDocViewPanel({");
+        writer.write("\"pId\":\"").write(remoteDocViewPanel.getId()).write('"');
+        writer.write(",\"pWinPgNm\":\"").write(getResponseControllerWinId()).write("\"");
+        writer.write(",\"pRemoteURL\":\"").write(remoteDocViewPanel.getRemoteDocViewInfo().getRemoteDocUrl())
+                .write("\"");
 
-		UserToken userToken = getUserToken();
-		writer.write(",\"pRemoteLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
-		writer.write(",\"pRemoteUserName\":\"").write(userToken.getUserName()).write("\"");
-		if (userToken.getRoleCode() != null) {
-			writer.write(",\"pRemoteRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
-		}
+        UserToken userToken = getUserToken();
+        writer.write(",\"pRemoteLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
+        writer.write(",\"pRemoteUserName\":\"").write(userToken.getUserName()).write("\"");
+        if (userToken.getRoleCode() != null) {
+            writer.write(",\"pRemoteRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
+        }
 
-		writer.write("});");
-	}
+        if (userToken.getBranchCode() != null) {
+            writer.write(",\"pRemoteBranchCode\":\"").write(userToken.getBranchCode()).write("\"");
+        }
 
-	@Override
-	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-		writer.write("<div id=\"").write(getResponseControllerWinId()).write("\" style=\"width:100%;height:100%;\">");
-		writer.write("</div>");
-	}
+        writer.write(",\"pRemoteGlobalFlag\":").write(userToken.isGlobalAccess());
+        writer.write("});");
+    }
 
-	private String getResponseControllerWinId() throws UnifyException {
-		return "win_" + getPageManager()
-				.getPageName(getRequestContextUtil().getResponsePageControllerInfo().getControllerId());
-	}
+    @Override
+    protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+        writer.write("<div id=\"").write(getResponseControllerWinId()).write("\" style=\"width:100%;height:100%;\">");
+        writer.write("</div>");
+    }
+
+    private String getResponseControllerWinId() throws UnifyException {
+        return "win_" + getPageManager()
+                .getPageName(getRequestContextUtil().getResponsePageControllerInfo().getControllerId());
+    }
 }

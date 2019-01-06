@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,165 +35,165 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
  */
 public class DatabaseTransactionManagerTest extends AbstractUnifyComponentTest {
 
-	private DatabaseTransactionManager tm;
+    private DatabaseTransactionManager tm;
 
-	@Before
-	public void setup() throws Exception {
-		tm = ((Database) getComponent(ApplicationComponents.APPLICATION_DATABASE)).getTransactionManager();
-	}
+    @Before
+    public void setup() throws Exception {
+        tm = ((Database) getComponent(ApplicationComponents.APPLICATION_DATABASE)).getTransactionManager();
+    }
 
-	@Test
-	public void testBeginTransaction() throws Exception {
-		tm.beginTransaction();
-		try {
-			assertTrue(tm.isTransactionOpen());
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransaction() throws Exception {
+        tm.beginTransaction();
+        try {
+            assertTrue(tm.isTransactionOpen());
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testBeginTransactionWithRequiresNew() throws Exception {
-		tm.beginTransaction(TransactionAttribute.REQUIRES_NEW);
-		try {
-			assertTrue(tm.isTransactionOpen());
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithRequiresNew() throws Exception {
+        tm.beginTransaction(TransactionAttribute.REQUIRES_NEW);
+        try {
+            assertTrue(tm.isTransactionOpen());
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testBeginTransactionWithRequired() throws Exception {
-		tm.beginTransaction(TransactionAttribute.REQUIRED);
-		try {
-			assertTrue(tm.isTransactionOpen());
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithRequired() throws Exception {
+        tm.beginTransaction(TransactionAttribute.REQUIRED);
+        try {
+            assertTrue(tm.isTransactionOpen());
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testBeginTransactionWithSupports() throws Exception {
-		tm.beginTransaction(TransactionAttribute.SUPPORTS);
-		try {
-			assertFalse(tm.isTransactionOpen());
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithSupports() throws Exception {
+        tm.beginTransaction(TransactionAttribute.SUPPORTS);
+        try {
+            assertFalse(tm.isTransactionOpen());
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testBeginTransactionWithSupportsAndOpenTransaction() throws Exception {
-		tm.beginTransaction();
-		try {
-			assertTrue(tm.isTransactionOpen());
-			try {
-				tm.beginTransaction(TransactionAttribute.SUPPORTS);
-				assertTrue(tm.isTransactionOpen());
-			} finally {
-				tm.endTransaction();
-			}
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithSupportsAndOpenTransaction() throws Exception {
+        tm.beginTransaction();
+        try {
+            assertTrue(tm.isTransactionOpen());
+            try {
+                tm.beginTransaction(TransactionAttribute.SUPPORTS);
+                assertTrue(tm.isTransactionOpen());
+            } finally {
+                tm.endTransaction();
+            }
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test(expected = UnifyException.class)
-	public void testBeginTransactionWithMandatory() throws Exception {
-		tm.beginTransaction(TransactionAttribute.MANDATORY);
-	}
+    @Test(expected = UnifyException.class)
+    public void testBeginTransactionWithMandatory() throws Exception {
+        tm.beginTransaction(TransactionAttribute.MANDATORY);
+    }
 
-	@Test
-	public void testBeginTransactionWithMandatoryAndOpenTransaction() throws Exception {
-		tm.beginTransaction();
-		try {
-			assertTrue(tm.isTransactionOpen());
-			try {
-				tm.beginTransaction(TransactionAttribute.MANDATORY);
-				assertTrue(tm.isTransactionOpen());
-			} finally {
-				tm.endTransaction();
-			}
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithMandatoryAndOpenTransaction() throws Exception {
+        tm.beginTransaction();
+        try {
+            assertTrue(tm.isTransactionOpen());
+            try {
+                tm.beginTransaction(TransactionAttribute.MANDATORY);
+                assertTrue(tm.isTransactionOpen());
+            } finally {
+                tm.endTransaction();
+            }
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testBeginTransactionWithNever() throws Exception {
-		tm.beginTransaction(TransactionAttribute.NEVER);
-		try {
-			assertFalse(tm.isTransactionOpen());
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithNever() throws Exception {
+        tm.beginTransaction(TransactionAttribute.NEVER);
+        try {
+            assertFalse(tm.isTransactionOpen());
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test(expected = UnifyException.class)
-	public void testBeginTransactionWithNeverAndOpenTransaction() throws Exception {
-		tm.beginTransaction();
-		try {
-			assertTrue(tm.isTransactionOpen());
-			tm.beginTransaction(TransactionAttribute.NEVER);
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test(expected = UnifyException.class)
+    public void testBeginTransactionWithNeverAndOpenTransaction() throws Exception {
+        tm.beginTransaction();
+        try {
+            assertTrue(tm.isTransactionOpen());
+            tm.beginTransaction(TransactionAttribute.NEVER);
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testBeginTransactionWithNotSupported() throws Exception {
-		tm.beginTransaction(TransactionAttribute.NOT_SUPPORTED);
-		try {
-			assertFalse(tm.isTransactionOpen());
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithNotSupported() throws Exception {
+        tm.beginTransaction(TransactionAttribute.NOT_SUPPORTED);
+        try {
+            assertFalse(tm.isTransactionOpen());
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testBeginTransactionWithNotSupportedAndOpenTransaction() throws Exception {
-		tm.beginTransaction();
-		try {
-			assertTrue(tm.isTransactionOpen());
-			try {
-				tm.beginTransaction(TransactionAttribute.NOT_SUPPORTED);
-				assertFalse(tm.isTransactionOpen());
-			} finally {
-				tm.endTransaction();
-			}
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testBeginTransactionWithNotSupportedAndOpenTransaction() throws Exception {
+        tm.beginTransaction();
+        try {
+            assertTrue(tm.isTransactionOpen());
+            try {
+                tm.beginTransaction(TransactionAttribute.NOT_SUPPORTED);
+                assertFalse(tm.isTransactionOpen());
+            } finally {
+                tm.endTransaction();
+            }
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Test
-	public void testEndTransaction() throws Exception {
-		tm.beginTransaction();
-		try {
-			assertTrue(tm.isTransactionOpen());
-		} finally {
-			tm.endTransaction();
-		}
-		assertFalse(tm.isTransactionOpen());
-	}
+    @Test
+    public void testEndTransaction() throws Exception {
+        tm.beginTransaction();
+        try {
+            assertTrue(tm.isTransactionOpen());
+        } finally {
+            tm.endTransaction();
+        }
+        assertFalse(tm.isTransactionOpen());
+    }
 
-	@Test
-	public void testSetRollBack() throws Exception {
-		tm.beginTransaction();
-		try {
-			tm.setRollback();
-		} finally {
-			tm.endTransaction();
-		}
-	}
+    @Test
+    public void testSetRollBack() throws Exception {
+        tm.beginTransaction();
+        try {
+            tm.setRollback();
+        } finally {
+            tm.endTransaction();
+        }
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

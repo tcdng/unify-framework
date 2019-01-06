@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,54 +27,54 @@ import java.util.Set;
  */
 public class FluentSet<T> {
 
-	private Set<T> set;
+    private Set<T> set;
 
-	public FluentSet() {
-		this.set = new LinkedHashSet<T>();
-	}
+    public FluentSet() {
+        this.set = new LinkedHashSet<T>();
+    }
 
-	public FluentSet(FluentSet<T> fluentSet) {
-		this.set = new LinkedHashSet<T>(fluentSet.set);
-	}
+    public FluentSet(FluentSet<T> fluentSet) {
+        this.set = new LinkedHashSet<T>(fluentSet.set);
+    }
 
-	public FluentSet<T> addAll(Collection<? extends T> collection) {
-		this.set.addAll(collection);
-		return this;
-	}
+    public FluentSet<T> addAll(Collection<? extends T> collection) {
+        this.set.addAll(collection);
+        return this;
+    }
 
-	public FluentSet<T> add(T value) {
-		this.set.add(value);
-		return this;
-	}
+    public FluentSet<T> add(T value) {
+        this.set.add(value);
+        return this;
+    }
 
-	public FluentSet<T> clear() {
-		this.set.clear();
-		return this;
-	}
+    public FluentSet<T> clear() {
+        this.set.clear();
+        return this;
+    }
 
-	public FluentSet<T> removeAll(Collection<? extends T> set) {
-		this.set.removeAll(set);
-		return this;
-	}
+    public FluentSet<T> removeAll(Collection<? extends T> set) {
+        this.set.removeAll(set);
+        return this;
+    }
 
-	public FluentSet<T> remove(T value) {
-		this.set.remove(value);
-		return this;
-	}
+    public FluentSet<T> remove(T value) {
+        this.set.remove(value);
+        return this;
+    }
 
-	public int size() {
-		return this.set.size();
-	}
+    public int size() {
+        return this.set.size();
+    }
 
-	public boolean isEmpty() {
-		return this.set.isEmpty();
-	}
+    public boolean isEmpty() {
+        return this.set.isEmpty();
+    }
 
-	public boolean contains(T object) {
-		return this.set.contains(object);
-	}
+    public boolean contains(T object) {
+        return this.set.contains(object);
+    }
 
-	public Set<T> values() {
-		return this.set;
-	}
+    public Set<T> values() {
+        return this.set;
+    }
 }

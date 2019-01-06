@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,32 +27,32 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface UplGenerator extends UnifyComponent {
 
-	/**
-	 * Returns the UPL component name that this generator generates UPL for
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String getUplComponentName() throws UnifyException;
+    /**
+     * Returns the UPL component name that this generator generates UPL for
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getUplComponentName() throws UnifyException;
 
-	/**
-	 * Generates a UPL source for specified target.
-	 * 
-	 * @param target
-	 *            the name of the target to generate a UPL source for
-	 * @return the generated UPL
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	String generateUplSource(String target) throws UnifyException;
+    /**
+     * Generates a UPL source for specified target.
+     * 
+     * @param target
+     *            the name of the target to generate a UPL source for
+     * @return the generated UPL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateUplSource(String target) throws UnifyException;
 
-	/**
-	 * Returns true if target source has a newer version.
-	 * 
-	 * @param target
-	 *            the name of the target
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	boolean isNewerVersion(String target) throws UnifyException;
+    /**
+     * Returns true if target source has a newer version.
+     * 
+     * @param target
+     *            the name of the target
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isNewerVersion(String target) throws UnifyException;
 }

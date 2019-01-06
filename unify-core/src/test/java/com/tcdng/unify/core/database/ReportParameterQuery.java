@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,11 +23,11 @@ package com.tcdng.unify.core.database;
  */
 public class ReportParameterQuery extends AbstractTestEntityQuery<ReportParameter> {
 
-	public ReportParameterQuery() {
-		super(ReportParameter.class);
-	}
+    public ReportParameterQuery() {
+        super(ReportParameter.class);
+    }
 
-	public ReportParameterQuery reportId(Long reportId) {
-		return (ReportParameterQuery) equals("reportId", reportId);
-	}
+    public ReportParameterQuery reportId(Long reportId) {
+        return (ReportParameterQuery) equals("reportId", reportId);
+    }
 }

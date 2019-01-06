@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,17 +33,17 @@ import com.tcdng.unify.web.ui.control.TextField;
 @Component("numberfield-writer")
 public class NumberFieldWriter extends TextFieldWriter {
 
-	@Override
-	protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-		AbstractNumberField numberField = (AbstractNumberField) textField;
-		int scale = 0;
-		if (textField.isUplAttribute("scale")) {
-			scale = numberField.getUplAttribute(int.class, "scale");
-		}
+    @Override
+    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+        AbstractNumberField numberField = (AbstractNumberField) textField;
+        int scale = 0;
+        if (textField.isUplAttribute("scale")) {
+            scale = numberField.getUplAttribute(int.class, "scale");
+        }
 
-		writer.writeNumberFormatRegex(((NumberFormatter<?>) numberField.getFormatter()).getNumberSymbols(),
-				numberField.getUplAttribute(int.class, "precision"), scale,
-				numberField.getUplAttribute(boolean.class, "acceptNegative"),
-				numberField.getUplAttribute(boolean.class, "useGrouping"));
-	}
+        writer.writeNumberFormatRegex(((NumberFormatter<?>) numberField.getFormatter()).getNumberSymbols(),
+                numberField.getUplAttribute(int.class, "precision"), scale,
+                numberField.getUplAttribute(boolean.class, "acceptNegative"),
+                numberField.getUplAttribute(boolean.class, "useGrouping"));
+    }
 }

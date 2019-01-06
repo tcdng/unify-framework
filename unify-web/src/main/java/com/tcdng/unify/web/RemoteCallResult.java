@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,50 +24,50 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public abstract class RemoteCallResult {
 
-	private String methodCode;
+    private String methodCode;
 
-	private String errorCode;
+    private String errorCode;
 
-	private String errorMsg;
+    private String errorMsg;
 
-	public RemoteCallResult(String methodCode, String errorCode, String errorMsg) {
-		this.methodCode = methodCode;
-		this.errorCode = errorCode;
-		this.errorMsg = errorMsg;
-	}
+    public RemoteCallResult(String methodCode, String errorCode, String errorMsg) {
+        this.methodCode = methodCode;
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+    }
 
-	public RemoteCallResult() {
+    public RemoteCallResult() {
 
-	}
+    }
 
-	public String getMethodCode() {
-		return methodCode;
-	}
+    public String getMethodCode() {
+        return methodCode;
+    }
 
-	@XmlElement
-	public void setMethodCode(String methodCode) {
-		this.methodCode = methodCode;
-	}
+    @XmlElement
+    public void setMethodCode(String methodCode) {
+        this.methodCode = methodCode;
+    }
 
-	public String getErrorCode() {
-		return errorCode;
-	}
+    public String getErrorCode() {
+        return errorCode;
+    }
 
-	@XmlElement
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
+    @XmlElement
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
 
-	public String getErrorMsg() {
-		return errorMsg;
-	}
+    public String getErrorMsg() {
+        return errorMsg;
+    }
 
-	@XmlElement
-	public void setErrorMsg(String errorMsg) {
-		this.errorMsg = errorMsg;
-	}
+    @XmlElement
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
 
-	public boolean isError() {
-		return errorCode != null || errorMsg != null;
-	}
+    public boolean isError() {
+        return errorCode != null || errorMsg != null;
+    }
 }

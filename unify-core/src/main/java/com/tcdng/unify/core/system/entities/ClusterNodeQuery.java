@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,23 +28,23 @@ import com.tcdng.unify.core.database.Query;
  */
 public class ClusterNodeQuery extends Query<ClusterNode> {
 
-	public ClusterNodeQuery() {
-		super(ClusterNode.class);
-	}
+    public ClusterNodeQuery() {
+        super(ClusterNode.class);
+    }
 
-	public ClusterNodeQuery nodeId(String nodeId) {
-		return (ClusterNodeQuery) equals("nodeId", nodeId);
-	}
+    public ClusterNodeQuery nodeId(String nodeId) {
+        return (ClusterNodeQuery) equals("nodeId", nodeId);
+    }
 
-	public ClusterNodeQuery nodeIdIn(Collection<String> nodeId) {
-		return (ClusterNodeQuery) amongst("nodeId", nodeId);
-	}
+    public ClusterNodeQuery nodeIdIn(Collection<String> nodeId) {
+        return (ClusterNodeQuery) amongst("nodeId", nodeId);
+    }
 
-	public ClusterNodeQuery nodeNotEqual(String nodeId) {
-		return (ClusterNodeQuery) notEqual("nodeId", nodeId);
-	}
+    public ClusterNodeQuery nodeNotEqual(String nodeId) {
+        return (ClusterNodeQuery) notEqual("nodeId", nodeId);
+    }
 
-	public ClusterNodeQuery lastHeartBeatOlderThan(Date expiryDt) {
-		return (ClusterNodeQuery) less("lastHeartBeat", expiryDt);
-	}
+    public ClusterNodeQuery lastHeartBeatOlderThan(Date expiryDt) {
+        return (ClusterNodeQuery) less("lastHeartBeat", expiryDt);
+    }
 }

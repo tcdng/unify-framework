@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,86 +27,86 @@ import java.util.List;
  */
 public class Customer extends AbstractDocument {
 
-	private String name;
+    private String name;
 
-	private Date birthDt;
+    private Date birthDt;
 
-	private BigDecimal balance;
+    private BigDecimal balance;
 
-	private Long id;
+    private Long id;
 
-	private Address address;
+    private Address address;
 
-	private List<String> modeList;
+    private List<String> modeList;
 
-	public Customer(String name, Date birthDt, BigDecimal balance, long id, Address address) {
-		this.name = name;
-		this.birthDt = birthDt;
-		this.balance = balance;
-		this.id = id;
-		this.address = address;
-	}
+    public Customer(String name, Date birthDt, BigDecimal balance, long id, Address address) {
+        this.name = name;
+        this.birthDt = birthDt;
+        this.balance = balance;
+        this.id = id;
+        this.address = address;
+    }
 
-	public Customer() {
+    public Customer() {
 
-	}
+    }
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	@Override
-	public String getDescription() {
-		return name;
-	}
+    @Override
+    public String getDescription() {
+        return name;
+    }
 
-	@Override
-	public Object getOwnerId() {
-		return null;
-	}
+    @Override
+    public Object getOwnerId() {
+        return null;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Date getBirthDt() {
-		return birthDt;
-	}
+    public Date getBirthDt() {
+        return birthDt;
+    }
 
-	public void setBirthDt(Date birthDt) {
-		this.birthDt = birthDt;
-	}
+    public void setBirthDt(Date birthDt) {
+        this.birthDt = birthDt;
+    }
 
-	public BigDecimal getBalance() {
-		return balance;
-	}
+    public BigDecimal getBalance() {
+        return balance;
+    }
 
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public Address getAddress() {
+        return address;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	public List<String> getModeList() {
-		return modeList;
-	}
+    public List<String> getModeList() {
+        return modeList;
+    }
 
-	public void setModeList(List<String> modeList) {
-		this.modeList = modeList;
-	}
+    public void setModeList(List<String> modeList) {
+        this.modeList = modeList;
+    }
 }

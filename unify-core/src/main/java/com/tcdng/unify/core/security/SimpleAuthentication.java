@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,34 +28,34 @@ import com.tcdng.unify.core.annotation.Configurable;
  */
 public class SimpleAuthentication extends AbstractUnifyComponent implements Authentication {
 
-	@Configurable
-	private String username;
+    @Configurable
+    private String username;
 
-	@Configurable(hidden = true)
-	private String password;
+    @Configurable(hidden = true)
+    private String password;
 
-	@Configurable
-	private TwoWayStringCryptograph cryptograph;
+    @Configurable
+    private TwoWayStringCryptograph cryptograph;
 
-	@Override
-	public String getUsername() throws UnifyException {
-		return username;
-	}
+    @Override
+    public String getUsername() throws UnifyException {
+        return username;
+    }
 
-	@Override
-	public String getPassword() throws UnifyException {
-		return password;
-	}
+    @Override
+    public String getPassword() throws UnifyException {
+        return password;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		if (cryptograph != null) {
-			password = cryptograph.decrypt(password);
-		}
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        if (cryptograph != null) {
+            password = cryptograph.decrypt(password);
+        }
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

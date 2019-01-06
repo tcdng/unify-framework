@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,38 +27,38 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum TabularCellType implements EnumConst {
 
-	TOP("TOP", "lcellt", "lcelltp"), MIDDLE("MID", "lcellm", "lcellmp"), BOTTOM("BTM", "lcellb", "lcellbp");
+    TOP("TOP", "lcellt", "lcelltp"), MIDDLE("MID", "lcellm", "lcellmp"), BOTTOM("BTM", "lcellb", "lcellbp");
 
-	private final String code;
+    private final String code;
 
-	private final String styleClass;
+    private final String styleClass;
 
-	private final String padStyleClass;
+    private final String padStyleClass;
 
-	private TabularCellType(String code, String styleClass, String padStyleClass) {
-		this.code = code;
-		this.styleClass = styleClass;
-		this.padStyleClass = padStyleClass;
-	}
+    private TabularCellType(String code, String styleClass, String padStyleClass) {
+        this.code = code;
+        this.styleClass = styleClass;
+        this.padStyleClass = padStyleClass;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public String styleClass() {
-		return styleClass;
-	}
+    public String styleClass() {
+        return styleClass;
+    }
 
-	public String padStyleClass() {
-		return padStyleClass;
-	}
+    public String padStyleClass() {
+        return padStyleClass;
+    }
 
-	public static TabularCellType fromCode(String code) {
-		return EnumUtils.fromCode(TabularCellType.class, code);
-	}
+    public static TabularCellType fromCode(String code) {
+        return EnumUtils.fromCode(TabularCellType.class, code);
+    }
 
-	public static TabularCellType fromName(String name) {
-		return EnumUtils.fromName(TabularCellType.class, name);
-	}
+    public static TabularCellType fromName(String name) {
+        return EnumUtils.fromName(TabularCellType.class, name);
+    }
 }

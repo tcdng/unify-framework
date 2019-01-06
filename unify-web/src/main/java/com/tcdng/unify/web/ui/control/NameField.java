@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,32 +21,32 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 
 /**
- * An input text field that allows only alphanumeric characters, underscore,
- * dollar and period.
+ * An input text field that allows only alphanumeric characters with optional
+ * underscore, dollar and period.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Component("ui-name")
 @UplAttributes({ @UplAttribute(name = "underscore", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "dollar", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "period", type = boolean.class, defaultValue = "false"),
-		@UplAttribute(name = "dash", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "dollar", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "period", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "dash", type = boolean.class, defaultValue = "false") })
 public class NameField extends TextField {
 
-	public boolean isAcceptUnderscore() throws UnifyException {
-		return getUplAttribute(boolean.class, "underscore");
-	}
+    public boolean isAcceptUnderscore() throws UnifyException {
+        return getUplAttribute(boolean.class, "underscore");
+    }
 
-	public boolean isAcceptDollar() throws UnifyException {
-		return getUplAttribute(boolean.class, "dollar");
-	}
+    public boolean isAcceptDollar() throws UnifyException {
+        return getUplAttribute(boolean.class, "dollar");
+    }
 
-	public boolean isAcceptPeriod() throws UnifyException {
-		return getUplAttribute(boolean.class, "period");
-	}
+    public boolean isAcceptPeriod() throws UnifyException {
+        return getUplAttribute(boolean.class, "period");
+    }
 
-	public boolean isAcceptDash() throws UnifyException {
-		return getUplAttribute(boolean.class, "dash");
-	}
+    public boolean isAcceptDash() throws UnifyException {
+        return getUplAttribute(boolean.class, "dash");
+    }
 }

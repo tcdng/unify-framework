@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,27 +26,27 @@ import java.util.Set;
  */
 public interface ClientRequest {
 
-	/**
-	 * Returns the request path
-	 */
-	String getPath();
+    /**
+     * Returns the request path
+     */
+    String getPath();
 
-	/**
-	 * Returns the request character set.
-	 */
-	Charset getCharset();
+    /**
+     * Returns the request character set.
+     */
+    Charset getCharset();
 
-	/**
-	 * Returns request parameter names.
-	 */
-	Set<String> getParameterNames();
+    /**
+     * Returns request parameter names.
+     */
+    Set<String> getParameterNames();
 
-	/**
-	 * Returns a request parameter
-	 * 
-	 * @param name
-	 *            the parameter name
-	 * @return object if found otherwise false
-	 */
-	Object getParameter(String name);
+    /**
+     * Returns a request parameter
+     * 
+     * @param name
+     *            the parameter name
+     * @return object if found otherwise false
+     */
+    Object getParameter(String name);
 }

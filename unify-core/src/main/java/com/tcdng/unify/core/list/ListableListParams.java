@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,17 +28,17 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class ListableListParams {
 
-	private List<? extends Listable> listableList;
+    private List<? extends Listable> listableList;
 
-	public ListableListParams(List<? extends Listable> listableList) {
-		this.listableList = listableList;
-	}
+    public ListableListParams(List<? extends Listable> listableList) {
+        this.listableList = listableList;
+    }
 
-	public List<? extends Listable> getListableList() {
-		return listableList;
-	}
+    public List<? extends Listable> getListableList() {
+        return listableList;
+    }
 
-	public boolean isListableList() {
-		return listableList != null && !listableList.isEmpty();
-	}
+    public boolean isListableList() {
+        return listableList != null && !listableList.isEmpty();
+    }
 }

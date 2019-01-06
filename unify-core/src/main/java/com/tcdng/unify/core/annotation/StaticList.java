@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,12 +33,12 @@ import com.tcdng.unify.core.ApplicationComponents;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StaticList {
 
-	/**
-	 * The datasource that static reference belongs to. Defaults to
-	 * {@link #ApplicationComponents.APPLICATION_DATASOURCE}
-	 */
-	String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
+    /**
+     * The datasource that static reference belongs to. Defaults to
+     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
+     */
+    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 
-	/** The static reference list */
-	String value();
+    /** The static reference list */
+    String value();
 }

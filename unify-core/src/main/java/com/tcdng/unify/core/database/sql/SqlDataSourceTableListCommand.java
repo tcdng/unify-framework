@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,21 +34,21 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component("sqldatasourcetablelist")
 public class SqlDataSourceTableListCommand extends AbstractDynamicSqlDataSourceListCommand {
 
-	@Override
-	public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-		if (!StringUtils.isBlank(params.getConfigName()) && !StringUtils.isBlank(params.getSchemaName())) {
-			SqlTableType sqlTableType = SqlTableType.TABLE;
-			if (params.getTableName() != null) {
-				sqlTableType = SqlTableType.fromName(params.getTableName());
-			}
+    @Override
+    public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
+        if (!StringUtils.isBlank(params.getConfigName()) && !StringUtils.isBlank(params.getSchemaName())) {
+            SqlTableType sqlTableType = SqlTableType.TABLE;
+            if (params.getTableName() != null) {
+                sqlTableType = SqlTableType.fromName(params.getTableName());
+            }
 
-			List<SqlTableInfo> tableList = getDsManager().getTables(params.getConfigName(), params.getSchemaName(),
-					sqlTableType);
-			DataUtils.sort(tableList, SqlTableInfo.class, "listDescription", true);
-			return tableList;
-		}
+            List<SqlTableInfo> tableList =
+                    getDsManager().getTables(params.getConfigName(), params.getSchemaName(), sqlTableType);
+            DataUtils.sort(tableList, SqlTableInfo.class, "listDescription", true);
+            return tableList;
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
 }

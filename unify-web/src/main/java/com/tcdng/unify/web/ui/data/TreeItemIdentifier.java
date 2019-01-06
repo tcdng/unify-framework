@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,14 +26,14 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface TreeItemIdentifier<T> {
 
-	/**
-	 * Uniquely identifies a tree item.
-	 * 
-	 * @param item
-	 *            the item
-	 * @return the item unique ID
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	Object identify(T item) throws UnifyException;
+    /**
+     * Uniquely identifies a tree item.
+     * 
+     * @param item
+     *            the item
+     * @return the item unique ID
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Object identify(T item) throws UnifyException;
 }

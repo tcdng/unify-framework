@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,56 +29,56 @@ import com.tcdng.unify.core.annotation.Configurable;
  */
 public abstract class AbstractTwoWayCryptograph extends AbstractUnifyComponent {
 
-	@Configurable("The Code Department")
-	private String encryptionKey;
+    @Configurable("The Code Department")
+    private String encryptionKey;
 
-	/** The encrypt cipher pool */
-	private CipherPool ecipherPool;
+    /** The encrypt cipher pool */
+    private CipherPool ecipherPool;
 
-	/** The decrypt cipher pool */
-	private CipherPool dcipherPool;
+    /** The decrypt cipher pool */
+    private CipherPool dcipherPool;
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		String encryptionKey = getEncryptionKey();
-		ecipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.ENCRYPT_MODE);
-		dcipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.DECRYPT_MODE);
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
+        String encryptionKey = getEncryptionKey();
+        ecipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.ENCRYPT_MODE);
+        dcipherPool = new CipherPool("PBEWithMD5AndDES", encryptionKey, Cipher.DECRYPT_MODE);
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected String getEncryptionKey() throws UnifyException {
-		return encryptionKey;
-	}
+    protected String getEncryptionKey() throws UnifyException {
+        return encryptionKey;
+    }
 
-	protected final byte[] doEncrypt(byte[] toEncrypt) throws UnifyException {
-		if (toEncrypt != null) {
-			Cipher ecipher = ecipherPool.borrowObject();
-			try {
-				return ecipher.doFinal(toEncrypt);
-			} catch (Exception e) {
-				throwOperationErrorException(e);
-			} finally {
-				ecipherPool.returnObject(ecipher);
-			}
-		}
-		return null;
-	}
+    protected final byte[] doEncrypt(byte[] toEncrypt) throws UnifyException {
+        if (toEncrypt != null) {
+            Cipher ecipher = ecipherPool.borrowObject();
+            try {
+                return ecipher.doFinal(toEncrypt);
+            } catch (Exception e) {
+                throwOperationErrorException(e);
+            } finally {
+                ecipherPool.returnObject(ecipher);
+            }
+        }
+        return null;
+    }
 
-	protected final byte[] doDecrypt(byte[] toDecrypt) throws UnifyException {
-		if (toDecrypt != null) {
-			Cipher dcipher = dcipherPool.borrowObject();
-			try {
-				return dcipher.doFinal(toDecrypt);
-			} catch (Exception e) {
-				throwOperationErrorException(e);
-			} finally {
-				dcipherPool.returnObject(dcipher);
-			}
-		}
-		return null;
-	}
+    protected final byte[] doDecrypt(byte[] toDecrypt) throws UnifyException {
+        if (toDecrypt != null) {
+            Cipher dcipher = dcipherPool.borrowObject();
+            try {
+                return dcipher.doFinal(toDecrypt);
+            } catch (Exception e) {
+                throwOperationErrorException(e);
+            } finally {
+                dcipherPool.returnObject(dcipher);
+            }
+        }
+        return null;
+    }
 }

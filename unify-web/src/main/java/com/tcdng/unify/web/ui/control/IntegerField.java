@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,12 +32,12 @@ import com.tcdng.unify.core.format.NumberFormatter;
 @UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!integerformat}") })
 public class IntegerField extends AbstractNumberField {
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
-		numberFormatter.setPrecision(getUplAttribute(int.class, "precision"));
-		numberFormatter.setGroupingUsed(getUplAttribute(boolean.class, "useGrouping"));
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
+        numberFormatter.setPrecision(getUplAttribute(int.class, "precision"));
+        numberFormatter.setGroupingUsed(getUplAttribute(boolean.class, "useGrouping"));
 
-		super.onPageInitialize();
-	}
+        super.onPageInitialize();
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,22 +30,22 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 @Component("test-uplelementa")
 @UplAttributes({ @UplAttribute(name = "name", type = String.class),
-		@UplAttribute(name = "description", type = String.class, defaultValue = "Application User"),
-		@UplAttribute(name = "friendList", type = String[].class),
-		@UplAttribute(name = "rateList", type = Double[].class),
-		@UplAttribute(name = "age", type = int.class, defaultValue = "20"),
-		@UplAttribute(name = "action", type = UplElementReferences.class),
-		@UplAttribute(name = "components", type = UplElementReferences.class),
-		@UplAttribute(name = "componentRef", type = String.class) })
+        @UplAttribute(name = "description", type = String.class, defaultValue = "Application User"),
+        @UplAttribute(name = "friendList", type = String[].class),
+        @UplAttribute(name = "rateList", type = Double[].class),
+        @UplAttribute(name = "age", type = int.class, defaultValue = "20"),
+        @UplAttribute(name = "action", type = UplElementReferences.class),
+        @UplAttribute(name = "components", type = UplElementReferences.class),
+        @UplAttribute(name = "componentRef", type = String.class) })
 public class TestElementA extends AbstractUplComponent {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 }

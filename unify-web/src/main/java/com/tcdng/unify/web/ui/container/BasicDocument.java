@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,10 +28,10 @@ import com.tcdng.unify.web.ui.AbstractDocument;
 @Component("ui-document")
 public class BasicDocument extends AbstractDocument {
 
-	@Configurable
-	private String[] meta;
+    @Configurable
+    private String[] meta;
 
-	public String[] getMeta() {
-		return meta;
-	}
+    public String[] getMeta() {
+        return meta;
+    }
 }

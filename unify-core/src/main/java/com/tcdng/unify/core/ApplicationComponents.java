@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,79 +23,79 @@ package com.tcdng.unify.core;
  */
 public interface ApplicationComponents {
 
-	String APPLICATION_BATCHFILEREADERWRITERFACTORY = "application-batchfilereaderwriterfactory";
+    String APPLICATION_BATCHFILEREADERWRITERFACTORY = "application-batchfilereaderwriterfactory";
 
-	String APPLICATION_BYTEARRAYCRYPTOGRAPH = "application-bytearraycryptograph";
+    String APPLICATION_BYTEARRAYCRYPTOGRAPH = "application-bytearraycryptograph";
 
-	String APPLICATION_CLUSTERMANAGER = "application-clustermanager";
+    String APPLICATION_CLUSTERSERVICE = "application-clusterservice";
 
-	String APPLICATION_CURRENCYSOURCE = "application-currencysource";
+    String APPLICATION_CURRENCYSOURCE = "application-currencysource";
 
-	String APPLICATION_DATABASE = "application-database";
+    String APPLICATION_DATABASE = "application-database";
 
-	String APPLICATION_DATASOURCE = "application-datasource";
+    String APPLICATION_DATASOURCE = "application-datasource";
 
-	String APPLICATION_DATASOURCEMANAGER = "application-datasourcemanager";
+    String APPLICATION_DATASOURCEMANAGER = "application-datasourcemanager";
 
-	String APPLICATION_DEFAULTBOOTMODULE = "default-bootmodule";
+    String APPLICATION_DEFAULTBOOTSERVICE = "default-bootservice";
 
-	String APPLICATION_DEFAULTEMAILSERVER = "default-emailserver";
+    String APPLICATION_DEFAULTEMAILSERVER = "default-emailserver";
 
-	String APPLICATION_DYNAMICSQLDATASOURCE = "application-dynamicsqldatasource";
+    String APPLICATION_DYNAMICSQLDATASOURCE = "application-dynamicsqldatasource";
 
-	String APPLICATION_DYNAMICSQLDATASOURCEMANAGER = "application-dynamicsqldatasourcemanager";
+    String APPLICATION_DYNAMICSQLDATASOURCEMANAGER = "application-dynamicsqldatasourcemanager";
 
-	String APPLICATION_EVENTSLOGGER = "application-eventlogger";
+    String APPLICATION_EVENTSLOGGER = "application-eventlogger";
 
-	String APPLICATION_EXPIRATIONMANAGER = "application-expirationmanager";
+    String APPLICATION_EXPIRATIONMANAGER = "application-expirationmanager";
 
-	String APPLICATION_FILECACHE = "application-filecache";
+    String APPLICATION_FILECACHE = "application-filecache";
 
-	String APPLICATION_FTPTRANSFERSERVER = "application-ftpfilestransferserver";
+    String APPLICATION_FTPTRANSFERSERVER = "application-ftpfilestransferserver";
 
-	String APPLICATION_FORMATHELPER = "application-formathelper";
+    String APPLICATION_FORMATHELPER = "application-formathelper";
 
-	String APPLICATION_GENERICBUSINESSMODULE = "application-genericbusinessmodule";
+    String APPLICATION_GENERICSERVICE = "application-genericservice";
 
-	String APPLICATION_JSONOBJECTSTREAMER = "application-jsonobjectstreamer";
+    String APPLICATION_JSONOBJECTSTREAMER = "application-jsonobjectstreamer";
 
-	String APPLICATION_LISTMANAGER = "application-listmanager";
+    String APPLICATION_LISTMANAGER = "application-listmanager";
 
-	String APPLICATION_MENULOADER = "application-menuloader";
+    String APPLICATION_MENULOADER = "application-menuloader";
 
-	String APPLICATION_MESSAGES = "application-messages";
+    String APPLICATION_MESSAGES = "application-messages";
 
-	String APPLICATION_NETWORKINTERFACE = "application-networkinterface";
+    String APPLICATION_NETWORKINTERFACE = "application-networkinterface";
 
-	String APPLICATION_PARAMETERBUSINESSMODULE = "parameter-businessmodule";
+    String APPLICATION_PARAMETERSERVICE = "parameterservice";
 
-	String APPLICATION_PROXYBUSINESSMODULEGENERATOR = "application-proxybusinessmodulegenerator";
+    String APPLICATION_PROXYBUSINESSSERVICEGENERATOR = "application-proxybusinessservicegenerator";
 
-	String APPLICATION_REGEXPATTERNSTORE = "appication-regexpatternstore";
+    String APPLICATION_REGEXPATTERNSTORE = "appication-regexpatternstore";
 
-	String APPLICATION_REQUESTCONTEXTMANAGER = "application-requestcontextmanager";
+    String APPLICATION_REQUESTCONTEXTMANAGER = "application-requestcontextmanager";
 
-	String APPLICATION_SEQUENCENUMBERBUSINESSMODULE = "application-sequencenumberbusinessmodule";
+    String APPLICATION_SEQUENCENUMBERSERVICE = "application-sequencenumberservice";
 
-	String APPLICATION_SQLENTITYINFOFACTORY = "application-sqlentityinfofactory";
+    String APPLICATION_SQLENTITYINFOFACTORY = "application-sqlentityinfofactory";
 
-	String APPLICATION_SQLSTATEMENTEXECUTOR = "application-sqlstatementexecutor";
+    String APPLICATION_SQLSTATEMENTEXECUTOR = "application-sqlstatementexecutor";
 
-	String APPLICATION_TASKMANAGER = "application-taskmanager";
+    String APPLICATION_TASKMANAGER = "application-taskmanager";
 
-	String APPLICATION_TASKSTATUSLOGGER = "application-taskstatuslogger";
+    String APPLICATION_TASKSTATUSLOGGER = "application-taskstatuslogger";
 
-	String APPLICATION_TASKLAUNCHER = "application-tasklauncher";
+    String APPLICATION_TASKLAUNCHER = "application-tasklauncher";
 
-	String APPLICATION_TWOFACTORAUTHENTICATIONSERVICE = "application-twofactorautenticationservice";
+    String APPLICATION_TWOFACTORAUTHENTICATIONSERVICE = "application-twofactorautenticationservice";
 
-	String APPLICATION_UPLCOMPILER = "application-uplcompiler";
+    String APPLICATION_UPLCOMPILER = "application-uplcompiler";
 
-	String APPLICATION_UPLCOMPONENTWRITERMANAGER = "application-uplcomponentwritermanager";
+    String APPLICATION_UPLCOMPONENTWRITERMANAGER = "application-uplcomponentwritermanager";
 
-	String APPLICATION_USERSESSIONMANAGER = "application-usersessionmanager";
+    String APPLICATION_USERSESSIONMANAGER = "application-usersessionmanager";
 
-	String APPLICATION_VALUESTOREFACTORY = "application-valuestorefactory";
+    String APPLICATION_VALUESTOREFACTORY = "application-valuestorefactory";
 
-	String APPLICATION_XMLOBJECTSTREAMER = "application-xmlobjectstreamer";
+    String APPLICATION_XMLOBJECTSTREAMER = "application-xmlobjectstreamer";
 }

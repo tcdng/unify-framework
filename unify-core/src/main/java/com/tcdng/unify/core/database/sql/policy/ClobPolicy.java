@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import java.sql.Types;
 import javax.sql.rowset.serial.SerialClob;
 
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * CLOB data type SQL policy.
@@ -32,36 +33,53 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  */
 public class ClobPolicy implements SqlDataTypePolicy {
 
-	@Override
-	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-		sb.append("CLOB");
-	}
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append("CLOB");
+    }
 
-	@Override
-	public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
-		if (data == null || ((String) data).length() == 0) {
-			((PreparedStatement) pstmt).setNull(index, Types.CLOB);
-		} else {
-			((PreparedStatement) pstmt).setClob(index, new SerialClob(((String) data).toCharArray()));
-		}
-	}
+    @Override
+    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        if (StringUtils.isBlank(defaultVal)) {
+            sb.append(" DEFAULT '").append(defaultVal).append("'");
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
-		Clob clob = ((ResultSet) rs).getClob(column);
-		if (clob != null) {
-			return clob.getSubString(1, (int) clob.length());
-		}
-		return null;
-	}
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+        if (data == null || ((String) data).length() == 0) {
+            ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
+        } else {
+            ((PreparedStatement) pstmt).setClob(index, new SerialClob(((String) data).toCharArray()));
+        }
+    }
 
-	@Override
-	public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
-		Clob clob = ((ResultSet) rs).getClob(index);
-		if (clob != null) {
-			return clob.getSubString(1, (int) clob.length());
-		}
-		return null;
-	}
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+        Clob clob = ((ResultSet) rs).getClob(column);
+        if (clob != null) {
+            return clob.getSubString(1, (int) clob.length());
+        }
+        return null;
+    }
+
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+        Clob clob = ((ResultSet) rs).getClob(index);
+        if (clob != null) {
+            return clob.getSubString(1, (int) clob.length());
+        }
+        return null;
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.CLOB;
+    }
+
+    @Override
+    public boolean isFixedLength() {
+        return true;
+    }
 
 }

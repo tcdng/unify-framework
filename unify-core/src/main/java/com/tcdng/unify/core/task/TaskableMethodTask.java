@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,38 +28,38 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(TaskableMethodConstants.TASKABLE_METHOD_TASK)
 public class TaskableMethodTask extends AbstractTask {
 
-	@Override
-	public TaskInstanceInfo getTaskInstanceInfo(TaskInput input) throws UnifyException {
-		TaskableMethodConfig tmc = input.getTmc();
-		String executionId = input.getOrigTaskName();
-		if (tmc.getIdGenerator() != null) {
-			TaskIdGenerator taskIdGenerator = (TaskIdGenerator) getComponent(tmc.getIdGenerator());
-			executionId = taskIdGenerator.generateID(input);
-		}
+    @Override
+    public TaskInstanceInfo getTaskInstanceInfo(TaskInput input) throws UnifyException {
+        TaskableMethodConfig tmc = input.getTmc();
+        String executionId = input.getOrigTaskName();
+        if (tmc.getIdGenerator() != null) {
+            TaskIdGenerator taskIdGenerator = (TaskIdGenerator) getComponent(tmc.getIdGenerator());
+            executionId = taskIdGenerator.generateID(input);
+        }
 
-		return new TaskInstanceInfo(tmc.getTaskExecLimit(), executionId);
-	}
+        return new TaskInstanceInfo(tmc.getTaskExecLimit(), executionId);
+    }
 
-	@Override
-	public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-		try {
-			TaskableMethodConfig tmc = input.getTmc();
-			Object[] params = new Object[tmc.getParamCount() + 1];
-			params[0] = taskMonitor;
-			int i = 1; // Skip task monitor
-			for (TaskableMethodConfig.ParamConfig pc : tmc.getParamConfigList()) {
-				params[i] = input.getParam(pc.getType(), pc.getParamName());
-				i++;
-			}
+    @Override
+    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+        try {
+            TaskableMethodConfig tmc = input.getTmc();
+            Object[] params = new Object[tmc.getParamCount() + 1];
+            params[0] = taskMonitor;
+            int i = 1; // Skip task monitor
+            for (TaskableMethodConfig.ParamConfig pc : tmc.getParamConfigList()) {
+                params[i] = input.getParam(pc.getType(), pc.getParamName());
+                i++;
+            }
 
-			UnifyComponent component = getComponent(tmc.getComponentName());
-			Object result = tmc.getMethod().invoke(component, params);
-			output.setResult(TaskableMethodConstants.TASK_RESULT, result);
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-	}
+            UnifyComponent component = getComponent(tmc.getComponentName());
+            Object result = tmc.getMethod().invoke(component, params);
+            output.setResult(TaskableMethodConstants.TASK_RESULT, result);
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+    }
 
 }

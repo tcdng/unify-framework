@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,13 +17,12 @@ package com.tcdng.unify.core.system.entities;
 
 import java.util.Date;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.AbstractEntityPolicy;
 import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.system.SequenceNumberBusinessModule;
+import com.tcdng.unify.core.system.SequenceNumberService;
 
 /**
  * Convenient base class for sequenced entity policies IDs.
@@ -34,54 +33,54 @@ import com.tcdng.unify.core.system.SequenceNumberBusinessModule;
 @Component("sequencedentity-policy")
 public class SequencedEntityPolicy extends AbstractEntityPolicy {
 
-	@Configurable(ApplicationComponents.APPLICATION_SEQUENCENUMBERBUSINESSMODULE)
-	private SequenceNumberBusinessModule sequenceNumberBusinessModule;
+    @Configurable
+    private SequenceNumberService sequenceNumberService;
 
-	private boolean setNow;
+    private boolean setNow;
 
-	public SequencedEntityPolicy() {
-		this(false);
-	}
+    public SequencedEntityPolicy() {
+        this(false);
+    }
 
-	public SequencedEntityPolicy(boolean setNow) {
-		this.setNow = setNow;
-	}
+    public SequencedEntityPolicy(boolean setNow) {
+        this.setNow = setNow;
+    }
 
-	@Override
-	public Object preCreate(Entity record, Date now) throws UnifyException {
-		Long id = sequenceNumberBusinessModule.getNextSequenceNumber(record.getClass().getName());
-		((AbstractSequencedEntity) record).setId(id);
-		return id;
-	}
+    @Override
+    public Object preCreate(Entity record, Date now) throws UnifyException {
+        Long id = sequenceNumberService.getNextSequenceNumber(record.getClass().getName());
+        ((AbstractSequencedEntity) record).setId(id);
+        return id;
+    }
 
-	@Override
-	public void preUpdate(Entity record, Date now) throws UnifyException {
+    @Override
+    public void preUpdate(Entity record, Date now) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void preDelete(Entity record, Date now) throws UnifyException {
+    @Override
+    public void preDelete(Entity record, Date now) throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void onCreateError(Entity record) {
+    @Override
+    public void onCreateError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public void onUpdateError(Entity record) {
+    @Override
+    public void onUpdateError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public void onDeleteError(Entity record) {
+    @Override
+    public void onDeleteError(Entity record) {
 
-	}
+    }
 
-	@Override
-	public boolean isSetNow() {
-		return setNow;
-	}
+    @Override
+    public boolean isSetNow() {
+        return setNow;
+    }
 
 }

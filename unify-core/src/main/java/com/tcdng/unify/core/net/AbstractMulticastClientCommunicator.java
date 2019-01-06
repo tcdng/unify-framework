@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,24 +27,24 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public abstract class AbstractMulticastClientCommunicator extends AbstractNetworkMulticastCommunicator
-		implements MulticastClientCommunicator {
+        implements MulticastClientCommunicator {
 
-	@Override
-	public void open(InputStream in) throws UnifyException {
-		if (open) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
-		}
-		onOpen(in);
-		open = true;
-	}
+    @Override
+    public void open(InputStream in) throws UnifyException {
+        if (open) {
+            throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
+        }
+        onOpen(in);
+        open = true;
+    }
 
-	/**
-	 * Executed on open of communicator.
-	 * 
-	 * @param in
-	 *            the input stream to communicate with
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void onOpen(InputStream in) throws UnifyException;
+    /**
+     * Executed on open of communicator.
+     * 
+     * @param in
+     *            the input stream to communicate with
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void onOpen(InputStream in) throws UnifyException;
 }

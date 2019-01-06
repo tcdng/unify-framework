@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,48 +28,48 @@ import com.tcdng.unify.core.util.StringUtils;
 @SuppressWarnings("unchecked")
 public class SqlParameter {
 
-	private SqlDataTypePolicy sqlDataTypePolicy;
+    private SqlDataTypePolicy sqlDataTypePolicy;
 
-	private Object value;
+    private Object value;
 
-	private boolean isMultiple;
+    private boolean isMultiple;
 
-	public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy) {
-		this(sqlDataTypePolicy, null, false);
-	}
+    public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy) {
+        this(sqlDataTypePolicy, null, false);
+    }
 
-	public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy, Object value) {
-		this(sqlDataTypePolicy, value, false);
-	}
+    public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy, Object value) {
+        this(sqlDataTypePolicy, value, false);
+    }
 
-	public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy, Object value, boolean isMultiple) {
-		this.sqlDataTypePolicy = sqlDataTypePolicy;
-		this.value = value;
-		this.isMultiple = isMultiple;
-	}
+    public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy, Object value, boolean isMultiple) {
+        this.sqlDataTypePolicy = sqlDataTypePolicy;
+        this.value = value;
+        this.isMultiple = isMultiple;
+    }
 
-	public SqlDataTypePolicy getSqlTypePolicy() {
-		return this.sqlDataTypePolicy;
-	}
+    public SqlDataTypePolicy getSqlTypePolicy() {
+        return this.sqlDataTypePolicy;
+    }
 
-	public void setValue(Object value) {
-		this.value = value;
-	}
+    public void setValue(Object value) {
+        this.value = value;
+    }
 
-	public Object getValue() {
-		return value;
-	}
+    public Object getValue() {
+        return value;
+    }
 
-	public boolean isMultiple() {
-		return isMultiple;
-	}
+    public boolean isMultiple() {
+        return isMultiple;
+    }
 
-	@Override
-	public String toString() {
-		if (this.isMultiple) {
-			return StringUtils.buildCommaSeparatedString((Collection<Object>) this.value, true);
-		}
+    @Override
+    public String toString() {
+        if (this.isMultiple) {
+            return StringUtils.buildCommaSeparatedString((Collection<Object>) this.value, true);
+        }
 
-		return String.valueOf(this.value);
-	}
+        return String.valueOf(this.value);
+    }
 }

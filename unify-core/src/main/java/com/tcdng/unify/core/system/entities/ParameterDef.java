@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,69 +29,69 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "PARAMDEF", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "name" }) })
 public class ParameterDef extends AbstractSequencedEntity {
 
-	@ForeignKey(ParametersDef.class)
-	private Long parametersDefId;
+    @ForeignKey(ParametersDef.class)
+    private Long parametersDefId;
 
-	@Column(length = 48)
-	private String name;
+    @Column(length = 48)
+    private String name;
 
-	@Column(length = 64)
-	private String description;
+    @Column(length = 64)
+    private String description;
 
-	@Column(length = 128)
-	private String editor;
+    @Column(length = 128)
+    private String editor;
 
-	@Column(length = 128)
-	private String type;
+    @Column(length = 128)
+    private String type;
 
-	@Column
-	private boolean mandatory;
+    @Column
+    private boolean mandatory;
 
-	public Long getParametersDefId() {
-		return parametersDefId;
-	}
+    public Long getParametersDefId() {
+        return parametersDefId;
+    }
 
-	public void setParametersDefId(Long parametersDefId) {
-		this.parametersDefId = parametersDefId;
-	}
+    public void setParametersDefId(Long parametersDefId) {
+        this.parametersDefId = parametersDefId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getEditor() {
-		return editor;
-	}
+    public String getEditor() {
+        return editor;
+    }
 
-	public void setEditor(String editor) {
-		this.editor = editor;
-	}
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public boolean isMandatory() {
-		return mandatory;
-	}
+    public boolean isMandatory() {
+        return mandatory;
+    }
 
-	public void setMandatory(boolean mandatory) {
-		this.mandatory = mandatory;
-	}
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
 }

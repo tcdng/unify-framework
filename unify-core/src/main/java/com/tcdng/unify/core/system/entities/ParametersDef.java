@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,26 +31,26 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "PARAMETERSDEF", uniqueConstraints = { @UniqueConstraint({ "typeName" }) })
 public class ParametersDef extends AbstractSystemSequencedEntity {
 
-	@Column(name = "PARAMETERSDEF_NM", length = 64)
-	private String typeName;
+    @Column(name = "PARAMETERSDEF_NM", length = 64)
+    private String typeName;
 
-	@ChildList
-	private List<ParameterDef> parameterDefs;
+    @ChildList
+    private List<ParameterDef> parameterDefs;
 
-	public String getTypeName() {
-		return typeName;
-	}
+    public String getTypeName() {
+        return typeName;
+    }
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
-	public List<ParameterDef> getParameterDefs() {
-		return parameterDefs;
-	}
+    public List<ParameterDef> getParameterDefs() {
+        return parameterDefs;
+    }
 
-	public void setParameterDefs(List<ParameterDef> parameterDefs) {
-		this.parameterDefs = parameterDefs;
-	}
+    public void setParameterDefs(List<ParameterDef> parameterDefs) {
+        this.parameterDefs = parameterDefs;
+    }
 
 }

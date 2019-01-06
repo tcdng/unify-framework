@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,37 +30,37 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "CLUSTERDATESEQ", uniqueConstraints = { @UniqueConstraint({ "sequenceName", "sequenceDate" }) })
 public class ClusterDateSequenceNumber extends AbstractSystemSequencedEntity {
 
-	@Column(name = "SEQUENCE_NM", length = 256)
-	private String sequenceName;
+    @Column(name = "SEQUENCE_NM", length = 256)
+    private String sequenceName;
 
-	@Column(name = "SEQUENCE_DT")
-	private Date sequenceDate;
+    @Column(name = "SEQUENCE_DT")
+    private Date sequenceDate;
 
-	@Column
-	private Long sequenceCounter;
+    @Column
+    private Long sequenceCounter;
 
-	public String getSequenceName() {
-		return sequenceName;
-	}
+    public String getSequenceName() {
+        return sequenceName;
+    }
 
-	public void setSequenceName(String sequenceName) {
-		this.sequenceName = sequenceName;
-	}
+    public void setSequenceName(String sequenceName) {
+        this.sequenceName = sequenceName;
+    }
 
-	public Date getSequenceDate() {
-		return sequenceDate;
-	}
+    public Date getSequenceDate() {
+        return sequenceDate;
+    }
 
-	public void setSequenceDate(Date sequenceDate) {
-		this.sequenceDate = sequenceDate;
-	}
+    public void setSequenceDate(Date sequenceDate) {
+        this.sequenceDate = sequenceDate;
+    }
 
-	public Long getSequenceCounter() {
-		return sequenceCounter;
-	}
+    public Long getSequenceCounter() {
+        return sequenceCounter;
+    }
 
-	public void setSequenceCounter(Long sequenceCounter) {
-		this.sequenceCounter = sequenceCounter;
-	}
+    public void setSequenceCounter(Long sequenceCounter) {
+        this.sequenceCounter = sequenceCounter;
+    }
 
 }

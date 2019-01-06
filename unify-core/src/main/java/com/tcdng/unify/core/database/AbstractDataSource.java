@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,51 +35,51 @@ import com.tcdng.unify.core.constant.EnumConst;
  */
 public abstract class AbstractDataSource extends AbstractUnifyComponent implements DataSource {
 
-	@Configurable
-	private DataSourceDialect dialect;
+    @Configurable
+    private DataSourceDialect dialect;
 
-	private List<Class<?>> assembledEntityTypeList;
+    private List<Class<?>> assembledEntityTypeList;
 
-	public AbstractDataSource() {
-		assembledEntityTypeList = new ArrayList<Class<?>>();
-	}
+    public AbstractDataSource() {
+        assembledEntityTypeList = new ArrayList<Class<?>>();
+    }
 
-	@Override
-	public List<Class<?>> getEntityTypes() throws UnifyException {
-		return assembledEntityTypeList;
-	}
+    @Override
+    public List<Class<?>> getEntityTypes() throws UnifyException {
+        return assembledEntityTypeList;
+    }
 
-	@Override
-	public DataSourceDialect getDialect() throws UnifyException {
-		return dialect;
-	}
+    @Override
+    public DataSourceDialect getDialect() throws UnifyException {
+        return dialect;
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-		logInfo("Assembling entity type information for {0}...", getName());
+    @Override
+    protected void onInitialize() throws UnifyException {
+        logInfo("Assembling entity type information for {0}...", getName());
 
-		String name = getName();
-		// Enumeration constants
-		for (Class<? extends EnumConst> enumConstClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
-			StaticList sa = enumConstClass.getAnnotation(StaticList.class);
-			if (sa.datasource().equals(name)) {
-				assembledEntityTypeList.add(enumConstClass);
-			}
-		}
+        String name = getName();
+        // Enumeration constants
+        for (Class<? extends EnumConst> enumConstClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
+            StaticList sa = enumConstClass.getAnnotation(StaticList.class);
+            if (sa.datasource().equals(name)) {
+                assembledEntityTypeList.add(enumConstClass);
+            }
+        }
 
-		// Records
-		for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, Table.class)) {
-			Table ta = entityClass.getAnnotation(Table.class);
-			if (ta.datasource().equals(name)) {
-				assembledEntityTypeList.add(entityClass);
-			}
-		}
+        // Records
+        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, Table.class)) {
+            Table ta = entityClass.getAnnotation(Table.class);
+            if (ta.datasource().equals(name)) {
+                assembledEntityTypeList.add(entityClass);
+            }
+        }
 
-		assembledEntityTypeList = Collections.unmodifiableList(assembledEntityTypeList);
-		logInfo("Assembly of entity type information for {0} completed.", getName());
-	}
+        assembledEntityTypeList = Collections.unmodifiableList(assembledEntityTypeList);
+        logInfo("Assembly of entity type information for {0} completed.", getName());
+    }
 
-	protected void setDialect(DataSourceDialect dialect) {
-		this.dialect = dialect;
-	}
+    protected void setDialect(DataSourceDialect dialect) {
+        this.dialect = dialect;
+    }
 }

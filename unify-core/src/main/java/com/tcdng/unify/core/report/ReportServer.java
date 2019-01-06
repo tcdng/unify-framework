@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,39 +29,39 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ReportServer extends UnifyComponent {
 
-	/**
-	 * Generates a report to file with specified file name.
-	 * 
-	 * @param report
-	 *            the report to generate
-	 * @param filename
-	 *            the output filename
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void generateReport(Report report, String filename) throws UnifyException;
+    /**
+     * Generates a report to file with specified file name.
+     * 
+     * @param report
+     *            the report to generate
+     * @param filename
+     *            the output filename
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void generateReport(Report report, String filename) throws UnifyException;
 
-	/**
-	 * Generates a report to a specified file.
-	 * 
-	 * @param report
-	 *            the report to generate
-	 * @param file
-	 *            The output file
-	 * @throws UnifyException
-	 *             If an error occurs
-	 */
-	void generateReport(Report report, File file) throws UnifyException;
+    /**
+     * Generates a report to a specified file.
+     * 
+     * @param report
+     *            the report to generate
+     * @param file
+     *            The output file
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    void generateReport(Report report, File file) throws UnifyException;
 
-	/**
-	 * Generates a report into specified output stream.
-	 * 
-	 * @param report
-	 *            the report to generate
-	 * @param outputStream
-	 *            the output stream
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void generateReport(Report report, OutputStream outputStream) throws UnifyException;
+    /**
+     * Generates a report into specified output stream.
+     * 
+     * @param report
+     *            the report to generate
+     * @param outputStream
+     *            the output stream
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void generateReport(Report report, OutputStream outputStream) throws UnifyException;
 }

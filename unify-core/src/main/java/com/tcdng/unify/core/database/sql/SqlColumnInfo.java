@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,58 +25,84 @@ import com.tcdng.unify.core.data.Listable;
  */
 public class SqlColumnInfo implements Listable {
 
-	private Class<?> javaType;
+    private Class<?> javaType;
 
-	private String columnName;
+    private String typeName;
 
-	private int sqlType;
+    private String columnName;
 
-	private int size;
+    private String defaultVal;
 
-	private int decimalDigits;
+    private int sqlType;
 
-	private boolean nullable;
+    private int size;
 
-	public SqlColumnInfo(Class<?> javaType, String name, int sqlType, int size, int decimalDigits, boolean nullable) {
-		this.javaType = javaType;
-		this.columnName = name;
-		this.sqlType = sqlType;
-		this.size = size;
-		this.decimalDigits = decimalDigits;
-		this.nullable = nullable;
-	}
+    private int decimalDigits;
 
-	@Override
-	public String getListKey() {
-		return columnName;
-	}
+    private boolean nullable;
 
-	@Override
-	public String getListDescription() {
-		return columnName;
-	}
+    public SqlColumnInfo(Class<?> javaType, String typeName, String columnName, String defaultVal, int sqlType,
+            int size, int decimalDigits, boolean nullable) {
+        this.javaType = javaType;
+        this.typeName = typeName;
+        this.columnName = columnName;
+        this.defaultVal = defaultVal;
+        this.sqlType = sqlType;
+        this.size = size;
+        this.decimalDigits = decimalDigits;
+        this.nullable = nullable;
+    }
 
-	public Class<?> getJavaType() {
-		return javaType;
-	}
+    @Override
+    public String getListKey() {
+        return columnName;
+    }
 
-	public String getColumnName() {
-		return columnName;
-	}
+    @Override
+    public String getListDescription() {
+        return columnName;
+    }
 
-	public int getSqlType() {
-		return sqlType;
-	}
+    public Class<?> getJavaType() {
+        return javaType;
+    }
 
-	public int getSize() {
-		return size;
-	}
+    public String getTypeName() {
+        return typeName;
+    }
 
-	public int getDecimalDigits() {
-		return decimalDigits;
-	}
+    public String getColumnName() {
+        return columnName;
+    }
 
-	public boolean isNullable() {
-		return nullable;
-	}
+    public String getDefaultVal() {
+        return defaultVal;
+    }
+
+    public int getSqlType() {
+        return sqlType;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{columnName = ").append(columnName);
+        sb.append(", typeName = ").append(typeName);
+        sb.append(", sqlType = ").append(sqlType);
+        sb.append(", size = ").append(size);
+        sb.append(", decimalDigits = ").append(decimalDigits);
+        sb.append(", defaultVal = ").append(defaultVal).append("}");
+        return sb.toString();
+    }
 }

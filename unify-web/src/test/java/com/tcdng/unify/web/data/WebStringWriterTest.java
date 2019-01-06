@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,21 +28,21 @@ import org.junit.Test;
  */
 public class WebStringWriterTest {
 
-	@Test
-	public void testAppendJsonQuotedWithString() throws Exception {
-		WebStringWriter lsw = new WebStringWriter(64);
-		lsw.appendJsonQuoted("Hello world!");
-		lsw.close();
-		assertEquals("\"Hello world!\"", lsw.toString());
-	}
+    @Test
+    public void testAppendJsonQuotedWithString() throws Exception {
+        WebStringWriter lsw = new WebStringWriter(64);
+        lsw.appendJsonQuoted("Hello world!");
+        lsw.close();
+        assertEquals("\"Hello world!\"", lsw.toString());
+    }
 
-	@Test
-	public void testAppendJsonQuotedWithWebStringWriter() throws Exception {
-		WebStringWriter lsw1 = new WebStringWriter(64);
-		WebStringWriter lsw2 = new WebStringWriter(64);
-		lsw2.append("Hello world!");
-		lsw1.appendJsonQuoted(lsw2);
-		lsw1.close();
-		assertEquals("\"Hello world!\"", lsw1.toString());
-	}
+    @Test
+    public void testAppendJsonQuotedWithWebStringWriter() throws Exception {
+        WebStringWriter lsw1 = new WebStringWriter(64);
+        WebStringWriter lsw2 = new WebStringWriter(64);
+        lsw2.append("Hello world!");
+        lsw1.appendJsonQuoted(lsw2);
+        lsw1.close();
+        assertEquals("\"Hello world!\"", lsw1.toString());
+    }
 }

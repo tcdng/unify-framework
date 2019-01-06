@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,18 +33,18 @@ import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 @Component("togglebutton-writer")
 public class ToggleButtonWriter extends AbstractTargetControlWriter {
 
-	@Override
-	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
-		ToggleButton toggleButton = (ToggleButton) targetControl;
-		writer.write("<button type=\"button\"");
-		writeTagAttributes(writer, toggleButton);
-		writer.write(">");
-		if (toggleButton.getValue(boolean.class, toggleButton.getToggleAttribute())) {
-			writer.writeWithHtmlEscape(toggleButton.getOnMessageKey());
-		} else {
-			writer.writeWithHtmlEscape(toggleButton.getOffMessageKey());
-		}
-		writer.write("</button>");
-	}
+    @Override
+    protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+        ToggleButton toggleButton = (ToggleButton) targetControl;
+        writer.write("<button type=\"button\"");
+        writeTagAttributes(writer, toggleButton);
+        writer.write(">");
+        if (toggleButton.getValue(boolean.class, toggleButton.getToggleBinding())) {
+            writer.writeWithHtmlEscape(toggleButton.getOnMessageKey());
+        } else {
+            writer.writeWithHtmlEscape(toggleButton.getOffMessageKey());
+        }
+        writer.write("</button>");
+    }
 
 }

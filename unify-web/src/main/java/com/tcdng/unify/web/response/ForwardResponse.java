@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,22 +33,22 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 @Component("forwardresponse")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
-		@UplAttribute(name = "pathProperty", type = String.class) })
+        @UplAttribute(name = "pathBinding", type = String.class) })
 public class ForwardResponse extends AbstractJsonPageControllerResponse {
 
-	public ForwardResponse() {
-		super("forwardHdl");
-	}
+    public ForwardResponse() {
+        super("forwardHdl");
+    }
 
-	@Override
-	public void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		String path = getUplAttribute(String.class, "path");
-		if (StringUtils.isBlank(path)) {
-			String pathProperty = getUplAttribute(String.class, "pathProperty");
-			path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathProperty);
-		}
-		logDebug("Preparing forward response:controller = [{0}],  path = [{1}]", pageController.getName(), path);
-		writer.write(",");
-		writer.writeJsonPathVariable("loadDocument", path);
-	}
+    @Override
+    public void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        String path = getUplAttribute(String.class, "path");
+        if (StringUtils.isBlank(path)) {
+            String pathBinding = getUplAttribute(String.class, "pathBinding");
+            path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathBinding);
+        }
+        logDebug("Preparing forward response:controller = [{0}],  path = [{1}]", pageController.getName(), path);
+        writer.write(",");
+        writer.writeJsonPathVariable("loadDocument", path);
+    }
 }

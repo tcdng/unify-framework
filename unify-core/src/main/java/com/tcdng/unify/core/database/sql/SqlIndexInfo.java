@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,30 +26,30 @@ import java.util.List;
  */
 public class SqlIndexInfo implements SqlIndexSchemaInfo {
 
-	private String name;
+    private String name;
 
-	private List<String> fieldNameList;
+    private List<String> fieldNameList;
 
-	private boolean unique;
+    private boolean unique;
 
-	public SqlIndexInfo(String name, List<String> fieldNameList, boolean unique) {
-		this.name = name;
-		this.fieldNameList = Collections.unmodifiableList(fieldNameList);
-		this.unique = unique;
-	}
+    public SqlIndexInfo(String name, List<String> fieldNameList, boolean unique) {
+        this.name = name;
+        this.fieldNameList = Collections.unmodifiableList(fieldNameList);
+        this.unique = unique;
+    }
 
-	@Override
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
-	@Override
-	public List<String> getFieldNameList() {
-		return fieldNameList;
-	}
+    @Override
+    public List<String> getFieldNameList() {
+        return fieldNameList;
+    }
 
-	@Override
-	public boolean isUnique() {
-		return unique;
-	}
+    @Override
+    public boolean isUnique() {
+        return unique;
+    }
 }

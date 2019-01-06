@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,37 +35,37 @@ import com.tcdng.unify.web.ui.layout.HorizontalLayout;
 @Component("horizontallayout-writer")
 public class HorizontalLayoutWriter extends AbstractTabularLayoutWriter {
 
-	@Override
-	protected void writeTableContent(ResponseWriter writer, TabularLayout layout, Container container)
-			throws UnifyException {
-		int columnIndex = 0;
-		appendRowStart(writer, layout, 0);
-		for (String longName : container.getLayoutWidgetLongNames()) {
-			Widget widget = container.getWidgetByLongName(longName);
-			if (widget.isVisible()) {
-				appendCellContent(writer, layout, widget, 0, columnIndex++);
-			} else if (widget.isHidden()) {
-				writer.writeStructureAndContent(widget);
-			}
-		}
-		appendRowEnd(writer);
-	}
+    @Override
+    protected void writeTableContent(ResponseWriter writer, TabularLayout layout, Container container)
+            throws UnifyException {
+        int columnIndex = 0;
+        appendRowStart(writer, layout, 0);
+        for (String longName : container.getLayoutWidgetLongNames()) {
+            Widget widget = container.getWidgetByLongName(longName);
+            if (widget.isVisible()) {
+                appendCellContent(writer, layout, widget, 0, columnIndex++);
+            } else if (widget.isHidden()) {
+                writer.writeStructureAndContent(widget);
+            }
+        }
+        appendRowEnd(writer);
+    }
 
-	@Override
-	protected void writeRepeatTableContent(ResponseWriter writer, TabularLayout layout, Container container)
-			throws UnifyException {
-		int columnIndex = 0;
-		appendRowStart(writer, layout, 0);
-		Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
-		for (ValueStore valueStore : container.getRepeatValueStores()) {
-			widget.setValueStore(valueStore);
-			if (widget.isVisible()) {
-				appendCellContent(writer, layout, widget, 0, columnIndex++);
-			} else if (widget.isHidden()) {
-				writer.writeStructureAndContent(widget);
-			}
-		}
-		appendRowEnd(writer);
-	}
+    @Override
+    protected void writeRepeatTableContent(ResponseWriter writer, TabularLayout layout, Container container)
+            throws UnifyException {
+        int columnIndex = 0;
+        appendRowStart(writer, layout, 0);
+        Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
+        for (ValueStore valueStore : container.getRepeatValueStores()) {
+            widget.setValueStore(valueStore);
+            if (widget.isVisible()) {
+                appendCellContent(writer, layout, widget, 0, columnIndex++);
+            } else if (widget.isHidden()) {
+                writer.writeStructureAndContent(widget);
+            }
+        }
+        appendRowEnd(writer);
+    }
 
 }

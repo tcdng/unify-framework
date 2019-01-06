@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,7 @@ package com.tcdng.unify.core.operation;
  */
 public class NotEqual extends Criteria {
 
-	public NotEqual(String field, Object value) {
-		super(Operator.NOT_EQUAL, field, value);
-	}
+    public NotEqual(String field, Object value) {
+        super(Operator.NOT_EQUAL, field, value);
+    }
 }

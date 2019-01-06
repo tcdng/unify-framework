@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,20 +22,20 @@ package com.tcdng.unify.web.ui;
  * @since 1.0
  */
 public class ValidationPart {
-	private String validation;
+    private String validation;
 
-	private String[] components;
+    private String[] components;
 
-	public ValidationPart(String validation, String... components) {
-		this.validation = validation;
-		this.components = components;
-	}
+    public ValidationPart(String validation, String... components) {
+        this.validation = validation;
+        this.components = components;
+    }
 
-	public String getValidation() {
-		return validation;
-	}
+    public String getValidation() {
+        return validation;
+    }
 
-	public String[] getComponents() {
-		return components;
-	}
+    public String[] getComponents() {
+        return components;
+    }
 }

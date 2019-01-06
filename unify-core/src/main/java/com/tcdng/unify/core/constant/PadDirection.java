@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,24 +27,24 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("paddirectionlist")
 public enum PadDirection implements EnumConst {
 
-	LEFT("L"), RIGHT("R");
+    LEFT("L"), RIGHT("R");
 
-	private final String code;
+    private final String code;
 
-	private PadDirection(String code) {
-		this.code = code;
-	}
+    private PadDirection(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String code() {
-		return this.code;
-	}
+    @Override
+    public String code() {
+        return this.code;
+    }
 
-	public static PadDirection fromCode(String code) {
-		return EnumUtils.fromCode(PadDirection.class, code);
-	}
+    public static PadDirection fromCode(String code) {
+        return EnumUtils.fromCode(PadDirection.class, code);
+    }
 
-	public static PadDirection fromName(String name) {
-		return EnumUtils.fromName(PadDirection.class, name);
-	}
+    public static PadDirection fromName(String name) {
+        return EnumUtils.fromName(PadDirection.class, name);
+    }
 }

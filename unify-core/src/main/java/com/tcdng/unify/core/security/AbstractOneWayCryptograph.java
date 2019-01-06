@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,33 +31,33 @@ import com.tcdng.unify.core.annotation.Configurable;
  */
 public class AbstractOneWayCryptograph extends AbstractUnifyComponent {
 
-	@Configurable("The Code Department")
-	private String encryptionKey;
+    @Configurable("The Code Department")
+    private String encryptionKey;
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected final byte[] doEncrypt(byte[] toEncrypt) throws UnifyException {
-		if (toEncrypt != null) {
-			try {
-				MessageDigest digest = MessageDigest.getInstance("SHA-256");
-				digest.reset();
-				digest.update(encryptionKey.getBytes("UTF-8"));
-				digest.update(toEncrypt);
-				return digest.digest();
-			} catch (NoSuchAlgorithmException e) {
-				throwOperationErrorException(e);
-			} catch (UnsupportedEncodingException e) {
-				throwOperationErrorException(e);
-			}
-		}
-		return null;
-	}
+    protected final byte[] doEncrypt(byte[] toEncrypt) throws UnifyException {
+        if (toEncrypt != null) {
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                digest.reset();
+                digest.update(encryptionKey.getBytes("UTF-8"));
+                digest.update(toEncrypt);
+                return digest.digest();
+            } catch (NoSuchAlgorithmException e) {
+                throwOperationErrorException(e);
+            } catch (UnsupportedEncodingException e) {
+                throwOperationErrorException(e);
+            }
+        }
+        return null;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,8 +27,8 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  */
 @Component(name = "amountformat", description = "$m{format.amount}")
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class, defaultValue = "16"),
-		@UplAttribute(name = "scale", type = int.class, defaultValue = "2"),
-		@UplAttribute(name = "useGrouping", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "scale", type = int.class, defaultValue = "2"),
+        @UplAttribute(name = "useGrouping", type = boolean.class, defaultValue = "true") })
 public class AmountFormatterImpl extends DecimalFormatterImpl implements AmountFormatter {
 
 }

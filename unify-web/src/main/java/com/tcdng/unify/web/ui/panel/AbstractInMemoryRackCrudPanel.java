@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,8 +27,8 @@ import com.tcdng.unify.core.database.Entity;
 @UplBinding("web/panels/upl/inmemoryrackcrudpanel.upl")
 public abstract class AbstractInMemoryRackCrudPanel<T extends Entity> extends AbstractInMemoryTableCrudPanel<T> {
 
-	public AbstractInMemoryRackCrudPanel(Class<T> entityClass, String titleKey, boolean populateListOnly) {
-		super(entityClass, titleKey, populateListOnly);
-	}
+    public AbstractInMemoryRackCrudPanel(Class<T> entityClass, String titleKey, boolean populateListOnly) {
+        super(entityClass, titleKey, populateListOnly);
+    }
 
 }

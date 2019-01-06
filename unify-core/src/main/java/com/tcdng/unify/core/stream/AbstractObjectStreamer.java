@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,24 +30,24 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractObjectStreamer extends AbstractUnifyComponent implements ObjectStreamer {
 
-	@Override
-	public <T> T unmarshal(Class<T> type, InputStream inputStream) throws UnifyException {
-		return unmarshal(type, inputStream, null);
-	}
+    @Override
+    public <T> T unmarshal(Class<T> type, InputStream inputStream) throws UnifyException {
+        return unmarshal(type, inputStream, null);
+    }
 
-	@Override
-	public void marshal(Object object, OutputStream outputStream) throws UnifyException {
-		marshal(object, outputStream, null);
-	}
+    @Override
+    public void marshal(Object object, OutputStream outputStream) throws UnifyException {
+        marshal(object, outputStream, null);
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
 }

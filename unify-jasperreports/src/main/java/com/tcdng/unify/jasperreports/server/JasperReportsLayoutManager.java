@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,15 +30,15 @@ import com.tcdng.unify.core.report.Report;
  */
 public interface JasperReportsLayoutManager extends UnifyComponent {
 
-	/**
-	 * Applies a layout to a jasper report design object.
-	 * 
-	 * @param jasperDesign
-	 *            the design to apply layout to
-	 * @param report
-	 *            the report definition object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void applyLayout(JasperDesign jasperDesign, Report report) throws UnifyException;
+    /**
+     * Applies a layout to a jasper report design object.
+     * 
+     * @param jasperDesign
+     *            the design to apply layout to
+     * @param report
+     *            the report definition object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void applyLayout(JasperDesign jasperDesign, Report report) throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,38 +33,38 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 @Component("postresponse")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
-		@UplAttribute(name = "pathProperty", type = String.class),
-		@UplAttribute(name = "pathRequestAttribute", type = String.class) })
+        @UplAttribute(name = "pathBinding", type = String.class),
+        @UplAttribute(name = "pathRequestAttribute", type = String.class) })
 public class PostResponse extends AbstractJsonPageControllerResponse {
 
-	public PostResponse() {
-		super("postHdl");
-	}
+    public PostResponse() {
+        super("postHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		String path = getUplAttribute(String.class, "path");
-		if (StringUtils.isBlank(path)) {
-			String pathProperty = getUplAttribute(String.class, "pathProperty");
-			if (!StringUtils.isBlank(pathProperty)) {
-				path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathProperty);
-			}
-		}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        String path = getUplAttribute(String.class, "path");
+        if (StringUtils.isBlank(path)) {
+            String pathBinding = getUplAttribute(String.class, "pathBinding");
+            if (!StringUtils.isBlank(pathBinding)) {
+                path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathBinding);
+            }
+        }
 
-		if (StringUtils.isBlank(path)) {
-			String pathRequestAttribute = getUplAttribute(String.class, "pathRequestAttribute");
-			if (!StringUtils.isBlank(pathRequestAttribute)) {
-				path = (String) getRequestAttribute(pathRequestAttribute);
-			}
-		}
+        if (StringUtils.isBlank(path)) {
+            String pathRequestAttribute = getUplAttribute(String.class, "pathRequestAttribute");
+            if (!StringUtils.isBlank(pathRequestAttribute)) {
+                path = (String) getRequestAttribute(pathRequestAttribute);
+            }
+        }
 
-		logDebug("Preparing post response: controller = [{0}], path = [{1}]", pageController.getName(), path);
-		if (!StringUtils.isBlank(path)) {
-			writer.write(",");
-			writer.writeJsonPathVariable("postPath", path);
-		} else {
-			writer.write(",\"postPath\":\"content_open\"");
-		}
+        logDebug("Preparing post response: controller = [{0}], path = [{1}]", pageController.getName(), path);
+        if (!StringUtils.isBlank(path)) {
+            writer.write(",");
+            writer.writeJsonPathVariable("postPath", path);
+        } else {
+            writer.write(",\"postPath\":\"content_open\"");
+        }
 
-	}
+    }
 }

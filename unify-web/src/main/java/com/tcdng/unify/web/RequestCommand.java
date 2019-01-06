@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,20 +23,20 @@ package com.tcdng.unify.web;
  */
 public class RequestCommand {
 
-	private String targetId;
+    private String targetId;
 
-	private String command;
+    private String command;
 
-	public RequestCommand(String targetId, String command) {
-		this.targetId = targetId;
-		this.command = command;
-	}
+    public RequestCommand(String targetId, String command) {
+        this.targetId = targetId;
+        this.command = command;
+    }
 
-	public String getTargetId() {
-		return targetId;
-	}
+    public String getTargetId() {
+        return targetId;
+    }
 
-	public String getCommand() {
-		return command;
-	}
+    public String getCommand() {
+        return command;
+    }
 }

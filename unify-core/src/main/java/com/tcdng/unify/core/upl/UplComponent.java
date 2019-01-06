@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,65 +28,65 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface UplComponent extends UnifyComponent {
 
-	/**
-	 * Returns the UPL component parent long name.
-	 */
-	String getParentLongName() throws UnifyException;
+    /**
+     * Returns the UPL component parent long name.
+     */
+    String getParentLongName() throws UnifyException;
 
-	/**
-	 * Returns the UPL component long name.
-	 */
-	String getLongName() throws UnifyException;
+    /**
+     * Returns the UPL component long name.
+     */
+    String getLongName() throws UnifyException;
 
-	/**
-	 * Returns the UPL component short name.
-	 */
-	String getShortName() throws UnifyException;
+    /**
+     * Returns the UPL component short name.
+     */
+    String getShortName() throws UnifyException;
 
-	/**
-	 * Returns the original ID or system generated ID
-	 */
-	String getUplId() throws UnifyException;
+    /**
+     * Returns the original ID or system generated ID
+     */
+    String getUplId() throws UnifyException;
 
-	/**
-	 * Returns referenced long names for specified attribute.
-	 * 
-	 * @param attribute
-	 *            the attribute name
-	 */
-	List<String> getShallowReferencedLongNames(String attribute) throws UnifyException;
+    /**
+     * Returns referenced long names for specified attribute.
+     * 
+     * @param attribute
+     *            the attribute name
+     */
+    List<String> getShallowReferencedLongNames(String attribute) throws UnifyException;
 
-	/**
-	 * Sets the component UPL attributes.
-	 * 
-	 * @param uplAttributes
-	 *            the UPL attributes to set
-	 */
-	void setUplAttributes(UplElementAttributes uplAttributes);
+    /**
+     * Sets the component UPL attributes.
+     * 
+     * @param uplAttributes
+     *            the UPL attributes to set
+     */
+    void setUplAttributes(UplElementAttributes uplAttributes);
 
-	/**
-	 * Returns this component's UPL attributes.
-	 */
-	UplElementAttributes getUplElementAttributes();
+    /**
+     * Returns this component's UPL attributes.
+     */
+    UplElementAttributes getUplElementAttributes();
 
-	/**
-	 * Tests if supplied name is a UPL attribute.
-	 * 
-	 * @param name
-	 *            the name to test
-	 * @return
-	 */
-	boolean isUplAttribute(String name) throws UnifyException;
+    /**
+     * Tests if supplied name is a UPL attribute.
+     * 
+     * @param name
+     *            the name to test
+     * @return
+     */
+    boolean isUplAttribute(String name) throws UnifyException;
 
-	/**
-	 * Returns the UPL attribute for a component.
-	 * 
-	 * @param clazz
-	 *            the attribute type
-	 * @param attribute
-	 *            the attribute name
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	<T> T getUplAttribute(Class<T> clazz, String attribute) throws UnifyException;
+    /**
+     * Returns the UPL attribute for a component.
+     * 
+     * @param clazz
+     *            the attribute type
+     * @param attribute
+     *            the attribute name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T getUplAttribute(Class<T> clazz, String attribute) throws UnifyException;
 }

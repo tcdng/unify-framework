@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,29 +23,29 @@ package com.tcdng.unify.core.net;
  */
 public class TestMulticastMessage implements NetworkMessage {
 
-	private static final long serialVersionUID = -850546394766034606L;
+    private static final long serialVersionUID = -850546394766034606L;
 
-	private char code;
+    private char code;
 
-	private int width;
+    private int width;
 
-	private int height;
+    private int height;
 
-	public TestMulticastMessage(char code, int width, int height) {
-		this.code = code;
-		this.width = width;
-		this.height = height;
-	}
+    public TestMulticastMessage(char code, int width, int height) {
+        this.code = code;
+        this.width = width;
+        this.height = height;
+    }
 
-	public char getCode() {
-		return code;
-	}
+    public char getCode() {
+        return code;
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getHeight() {
+        return height;
+    }
 }

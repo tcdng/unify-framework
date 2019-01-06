@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,18 +26,18 @@ import com.tcdng.unify.core.constant.NetworkSecurityType;
  */
 public class SmsServerConfig extends NotificationServerConfig {
 
-	public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
-			String password) {
-		super(hostAddress, hostPort, securityType, username, password);
-	}
+    public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
+            String password) {
+        super(hostAddress, hostPort, securityType, username, password);
+    }
 
-	public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
-			String authentication) {
-		super(hostAddress, hostPort, securityType, authentication);
-	}
+    public SmsServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
+            String authentication) {
+        super(hostAddress, hostPort, securityType, authentication);
+    }
 
-	public SmsServerConfig(String hostAddress, Integer hostPort) {
-		super(hostAddress, hostPort);
-	}
+    public SmsServerConfig(String hostAddress, Integer hostPort) {
+        super(hostAddress, hostPort);
+    }
 
 }

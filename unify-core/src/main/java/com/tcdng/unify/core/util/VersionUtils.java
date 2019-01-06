@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,29 +23,29 @@ package com.tcdng.unify.core.util;
  */
 public final class VersionUtils {
 
-	private VersionUtils() {
+    private VersionUtils() {
 
-	}
+    }
 
-	public static boolean isNewerVersion(String newVersion, String oldVersion) {
-		if (oldVersion != null && newVersion != null) {
-			String[] oldVersionDigits = oldVersion.split("\\.");
-			String[] newVersionDigits = newVersion.split("\\.");
-			int length = oldVersionDigits.length;
-			if (length > newVersionDigits.length) {
-				length = newVersionDigits.length;
-			}
+    public static boolean isNewerVersion(String newVersion, String oldVersion) {
+        if (oldVersion != null && newVersion != null) {
+            String[] oldVersionDigits = oldVersion.split("\\.");
+            String[] newVersionDigits = newVersion.split("\\.");
+            int length = oldVersionDigits.length;
+            if (length > newVersionDigits.length) {
+                length = newVersionDigits.length;
+            }
 
-			for (int i = 0; i < length; i++) {
-				int compareResult = Integer.valueOf(oldVersionDigits[i])
-						.compareTo(Integer.valueOf(newVersionDigits[i]));
-				if (compareResult < 0) {
-					return true;
-				} else if (compareResult > 0) {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
+            for (int i = 0; i < length; i++) {
+                int compareResult =
+                        Integer.valueOf(oldVersionDigits[i]).compareTo(Integer.valueOf(newVersionDigits[i]));
+                if (compareResult < 0) {
+                    return true;
+                } else if (compareResult > 0) {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 }

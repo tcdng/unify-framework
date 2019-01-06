@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,19 +32,19 @@ import com.tcdng.unify.core.annotation.Singleton;
 @Singleton(true)
 public class TestMulticastClientDataCommunicator extends AbstractMulticastClientDataCommunicator {
 
-	private List<TestMulticastMessage> messages;
+    private List<TestMulticastMessage> messages;
 
-	public TestMulticastClientDataCommunicator() {
-		messages = new ArrayList<TestMulticastMessage>();
-	}
+    public TestMulticastClientDataCommunicator() {
+        messages = new ArrayList<TestMulticastMessage>();
+    }
 
-	@Override
-	public void receive() throws UnifyException {
-		messages.add(new TestMulticastMessage(readChar(), readInt(), readInt()));
-	}
+    @Override
+    public void receive() throws UnifyException {
+        messages.add(new TestMulticastMessage(readChar(), readInt(), readInt()));
+    }
 
-	public List<TestMulticastMessage> getMessages() {
-		return messages;
-	}
+    public List<TestMulticastMessage> getMessages() {
+        return messages;
+    }
 
 }

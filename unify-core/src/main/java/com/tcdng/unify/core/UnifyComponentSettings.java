@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,94 +28,94 @@ import java.util.Set;
  */
 public class UnifyComponentSettings {
 
-	public static final UnifyComponentSettings EMPTY_SETTINGS = new UnifyComponentSettings.Builder().build();
+    public static final UnifyComponentSettings EMPTY_SETTINGS = new UnifyComponentSettings.Builder().build();
 
-	private Map<String, Setting> settings;
+    private Map<String, Setting> settings;
 
-	public UnifyComponentSettings(Setting[] settings) {
-		this.settings = new HashMap<String, Setting>();
-		for (Setting setting : settings) {
-			this.settings.put(setting.getName(), setting);
-		}
-	}
+    public UnifyComponentSettings(Setting[] settings) {
+        this.settings = new HashMap<String, Setting>();
+        for (Setting setting : settings) {
+            this.settings.put(setting.getName(), setting);
+        }
+    }
 
-	private UnifyComponentSettings(Map<String, Setting> settings) {
-		this.settings = settings;
-	}
+    private UnifyComponentSettings(Map<String, Setting> settings) {
+        this.settings = settings;
+    }
 
-	public Set<String> getPropertyNames() {
-		return settings.keySet();
-	}
+    public Set<String> getPropertyNames() {
+        return settings.keySet();
+    }
 
-	public Setting getSetting(String property) {
-		return settings.get(property);
-	}
+    public Setting getSetting(String property) {
+        return settings.get(property);
+    }
 
-	public boolean isProperty(String property) {
-		return settings.containsKey(property);
-	}
+    public boolean isProperty(String property) {
+        return settings.containsKey(property);
+    }
 
-	public Object getSettingValue(String property) {
-		Setting setting = settings.get(property);
-		if (setting != null) {
-			return setting.getValue();
-		}
+    public Object getSettingValue(String property) {
+        Setting setting = settings.get(property);
+        if (setting != null) {
+            return setting.getValue();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public boolean isConcealed(String property) {
-		Setting setting = settings.get(property);
-		if (setting != null) {
-			return setting.isHidden();
-		}
+    public boolean isConcealed(String property) {
+        Setting setting = settings.get(property);
+        if (setting != null) {
+            return setting.isHidden();
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("\tsettings = {\n");
-		boolean isAppendSymbol = false;
-		for (Map.Entry<String, Setting> entry : settings.entrySet()) {
-			if (isAppendSymbol) {
-				sb.append(",\n");
-			} else {
-				isAppendSymbol = true;
-			}
-			sb.append("\t\t").append(entry.getKey()).append(": value = ").append(entry.getValue().getValue())
-					.append(", concealed = ").append(entry.getValue().isHidden());
-		}
-		sb.append("}");
-		return sb.toString();
-	}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\tsettings = {\n");
+        boolean isAppendSymbol = false;
+        for (Map.Entry<String, Setting> entry : settings.entrySet()) {
+            if (isAppendSymbol) {
+                sb.append(",\n");
+            } else {
+                isAppendSymbol = true;
+            }
+            sb.append("\t\t").append(entry.getKey()).append(": value = ").append(entry.getValue().getValue())
+                    .append(", concealed = ").append(entry.getValue().isHidden());
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private Map<String, Setting> settings;
+        private Map<String, Setting> settings;
 
-		public Builder() {
-			settings = new HashMap<String, Setting>();
-		}
+        public Builder() {
+            settings = new HashMap<String, Setting>();
+        }
 
-		public Builder(UnifyComponentSettings annotationSettings) {
-			settings = new HashMap<String, Setting>();
-			settings.putAll(annotationSettings.settings);
-		}
+        public Builder(UnifyComponentSettings annotationSettings) {
+            settings = new HashMap<String, Setting>();
+            settings.putAll(annotationSettings.settings);
+        }
 
-		public Builder setProperty(String name, Object value) {
-			return setProperty(name, value, false);
-		}
+        public Builder setProperty(String name, Object value) {
+            return setProperty(name, value, false);
+        }
 
-		public Builder setProperty(String name, Object value, boolean concealed) {
-			settings.put(name, new Setting(name, value, concealed));
-			return this;
-		}
+        public Builder setProperty(String name, Object value, boolean concealed) {
+            settings.put(name, new Setting(name, value, concealed));
+            return this;
+        }
 
-		public UnifyComponentSettings build() {
-			return new UnifyComponentSettings(settings);
-		}
+        public UnifyComponentSettings build() {
+            return new UnifyComponentSettings(settings);
+        }
 
-	}
+    }
 
 }

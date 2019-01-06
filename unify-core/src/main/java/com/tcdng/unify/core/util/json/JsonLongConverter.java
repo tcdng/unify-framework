@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,13 +25,13 @@ import com.eclipsesource.json.JsonValue;
  * @since 1.0
  */
 public class JsonLongConverter implements JsonValueConverter<Long> {
-	@Override
-	public Long read(JsonValue jsonValue) throws Exception {
-		return jsonValue.asLong();
-	}
+    @Override
+    public Long read(JsonValue jsonValue) throws Exception {
+        return jsonValue.asLong();
+    }
 
-	@Override
-	public JsonValue write(Object value) throws Exception {
-		return Json.value((Long) value);
-	}
+    @Override
+    public JsonValue write(Object value) throws Exception {
+        return Json.value((Long) value);
+    }
 }

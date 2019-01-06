@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,34 +33,34 @@ import com.tcdng.unify.core.operation.Criteria;
  */
 public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-	public ZeroParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
-		super(opSql, sqlDataSourceDialect);
-	}
+    public ZeroParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+        super(opSql, sqlDataSourceDialect);
+    }
 
-	@Override
-	public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
-		String preOp = (String) criteria.getPreOp();
-		if (sqlEntityInfo != null) {
-			preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
-		}
-		translate(sql, sqlEntityInfo.getTableAlias(), preOp, null, null);
-	}
+    @Override
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
+        String preOp = (String) criteria.getPreOp();
+        if (sqlEntityInfo != null) {
+            preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
+        }
+        translate(sql, sqlEntityInfo.getTableAlias(), preOp, null, null);
+    }
 
-	@Override
-	public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-			throws UnifyException {
-		sql.append("(");
-		sql.append(tableName).append('.').append(columnName).append(opSql);
-		sql.append(")");
-	}
+    @Override
+    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        sql.append("(");
+        sql.append(tableName).append('.').append(columnName).append(opSql);
+        sql.append(")");
+    }
 
-	@Override
-	public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-			SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
-		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) criteria.getPreOp());
-		sql.append("(");
-		sql.append(sqlFieldInfo.getColumn()).append(opSql);
-		sql.append(")");
-	}
+    @Override
+    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) criteria.getPreOp());
+        sql.append("(");
+        sql.append(sqlFieldInfo.getColumn()).append(opSql);
+        sql.append(")");
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,20 +23,20 @@ package com.tcdng.unify.web.ui.data;
  */
 public class LinkInfo {
 
-	private String code;
+    private String code;
 
-	private String caption;
+    private String caption;
 
-	public LinkInfo(String code, String caption) {
-		this.code = code;
-		this.caption = caption;
-	}
+    public LinkInfo(String code, String caption) {
+        this.code = code;
+        this.caption = caption;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 }

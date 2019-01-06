@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,94 +32,94 @@ import com.tcdng.unify.core.annotation.Singleton;
  */
 @Singleton(false)
 public abstract class AbstractNetworkUnicastCommunicator extends AbstractUnifyComponent
-		implements NetworkUnicastCommunicator {
+        implements NetworkUnicastCommunicator {
 
-	@Configurable("true")
-	private boolean autoFlush;
+    @Configurable("true")
+    private boolean autoFlush;
 
-	private boolean open;
+    private boolean open;
 
-	@Override
-	public void open(InputStream in, OutputStream out) throws UnifyException {
-		if (open) {
-			throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
-		}
-		onOpen(in, out);
-		open = true;
-	}
+    @Override
+    public void open(InputStream in, OutputStream out) throws UnifyException {
+        if (open) {
+            throw new UnifyException(UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_OPEN, getName());
+        }
+        onOpen(in, out);
+        open = true;
+    }
 
-	@Override
-	public void close() throws UnifyException {
-		open = false;
-		onClose();
-	}
+    @Override
+    public void close() throws UnifyException {
+        open = false;
+        onClose();
+    }
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-		close();
-	}
+    @Override
+    protected void onTerminate() throws UnifyException {
+        close();
+    }
 
-	/**
-	 * Returns true if auto flush after every write.
-	 */
-	protected boolean isAutoFlush() {
-		return autoFlush;
-	}
+    /**
+     * Returns true if auto flush after every write.
+     */
+    protected boolean isAutoFlush() {
+        return autoFlush;
+    }
 
-	/**
-	 * Throws a receive exception.
-	 * 
-	 * @param cause
-	 *            the cause
-	 * @throws UnifyException
-	 *             the receive exception
-	 */
-	protected void throwReceiveException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, getName());
-	}
+    /**
+     * Throws a receive exception.
+     * 
+     * @param cause
+     *            the cause
+     * @throws UnifyException
+     *             the receive exception
+     */
+    protected void throwReceiveException(Exception cause) throws UnifyException {
+        throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_RECEIVE_ERROR, getName());
+    }
 
-	/**
-	 * Throws a transmit exception.
-	 * 
-	 * @param cause
-	 *            the cause
-	 * @throws UnifyException
-	 *             the transmit exception
-	 */
-	protected void throwTransmitException(Exception cause) throws UnifyException {
-		throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, getName());
-	}
+    /**
+     * Throws a transmit exception.
+     * 
+     * @param cause
+     *            the cause
+     * @throws UnifyException
+     *             the transmit exception
+     */
+    protected void throwTransmitException(Exception cause) throws UnifyException {
+        throw new UnifyException(cause, UnifyCoreErrorConstants.NETWORKCOMMUNICATOR_TRANSMIT_ERROR, getName());
+    }
 
-	/**
-	 * Executed on open of communicator.
-	 * 
-	 * @param in
-	 *            the input stream to communicate with
-	 * @param out
-	 *            the output stream to communicate with
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void onOpen(InputStream in, OutputStream out) throws UnifyException;
+    /**
+     * Executed on open of communicator.
+     * 
+     * @param in
+     *            the input stream to communicate with
+     * @param out
+     *            the output stream to communicate with
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void onOpen(InputStream in, OutputStream out) throws UnifyException;
 
-	/**
-	 * Executed on close of communicator.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void onClose() throws UnifyException;
+    /**
+     * Executed on close of communicator.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void onClose() throws UnifyException;
 
-	/**
-	 * Flushes transmission stream.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	protected abstract void flushWrite() throws UnifyException;
+    /**
+     * Flushes transmission stream.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected abstract void flushWrite() throws UnifyException;
 }

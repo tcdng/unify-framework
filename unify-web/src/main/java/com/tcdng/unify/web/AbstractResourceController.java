@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,101 +30,101 @@ import com.tcdng.unify.web.annotation.RequestParameter;
  */
 public abstract class AbstractResourceController extends AbstractUserInterfaceController implements ResourceController {
 
-	@RequestParameter
-	private String resourceName;
+    @RequestParameter
+    private String resourceName;
 
-	@RequestParameter
-	private String contentType;
+    @RequestParameter
+    private String contentType;
 
-	@RequestParameter
-	private boolean attachment;
+    @RequestParameter
+    private boolean attachment;
 
-	@RequestParameter
-	private String morsic;
+    @RequestParameter
+    private String morsic;
 
-	private Map<String, String> metaDataMap;
+    private Map<String, String> metaDataMap;
 
-	public AbstractResourceController(boolean secured) {
-		super(secured, false);
-	}
+    public AbstractResourceController(boolean secured) {
+        super(secured, false);
+    }
 
-	@Override
-	public ControllerType getType() {
-		return ControllerType.RESOURCE_CONTROLLER;
-	}
+    @Override
+    public ControllerType getType() {
+        return ControllerType.RESOURCE_CONTROLLER;
+    }
 
-	@Override
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
+    @Override
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
 
-	@Override
-	public String getContentType() {
-		return contentType;
-	}
+    @Override
+    public String getContentType() {
+        return contentType;
+    }
 
-	@Override
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
+    @Override
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
-	@Override
-	public void setAttachment(boolean attachment) {
-		this.attachment = attachment;
-	}
+    @Override
+    public void setAttachment(boolean attachment) {
+        this.attachment = attachment;
+    }
 
-	public String getMorsic() {
-		return morsic;
-	}
+    public String getMorsic() {
+        return morsic;
+    }
 
-	public void setMorsic(String morsic) {
-		this.morsic = morsic;
-	}
+    public void setMorsic(String morsic) {
+        this.morsic = morsic;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Set<String> getMetaDataKeys() {
-		if (metaDataMap != null) {
-			return metaDataMap.keySet();
-		}
-		return (Set<String>) Collections.EMPTY_SET;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Set<String> getMetaDataKeys() {
+        if (metaDataMap != null) {
+            return metaDataMap.keySet();
+        }
+        return (Set<String>) Collections.EMPTY_SET;
+    }
 
-	@Override
-	public String getMetaData(String name) {
-		if (metaDataMap != null) {
-			return metaDataMap.get(name);
-		}
-		return null;
-	}
+    @Override
+    public String getMetaData(String name) {
+        if (metaDataMap != null) {
+            return metaDataMap.get(name);
+        }
+        return null;
+    }
 
-	protected void setMetaData(String name, String value) {
-		if (metaDataMap == null) {
-			metaDataMap = new HashMap<String, String>();
-		}
+    protected void setMetaData(String name, String value) {
+        if (metaDataMap == null) {
+            metaDataMap = new HashMap<String, String>();
+        }
 
-		metaDataMap.put(name, value);
-	}
+        metaDataMap.put(name, value);
+    }
 
-	protected void setContentLength(long contentLength) {
-		setMetaData("Content-Length", String.valueOf(contentLength));
-	}
+    protected void setContentLength(long contentLength) {
+        setMetaData("Content-Length", String.valueOf(contentLength));
+    }
 
-	protected void setContentDisposition(String fileName) {
-		String disposition = "inline;filename=";
-		if (isAttachment()) {
-			disposition = "attachment;filename=";
-		}
+    protected void setContentDisposition(String fileName) {
+        String disposition = "inline;filename=";
+        if (isAttachment()) {
+            disposition = "attachment;filename=";
+        }
 
-		disposition = disposition + "\"" + fileName + "\"";
-		setMetaData("Content-Disposition", disposition);
-	}
+        disposition = disposition + "\"" + fileName + "\"";
+        setMetaData("Content-Disposition", disposition);
+    }
 
-	protected String getResourceName() {
-		return resourceName;
-	}
+    protected String getResourceName() {
+        return resourceName;
+    }
 
-	protected boolean isAttachment() {
-		return attachment;
-	}
+    protected boolean isAttachment() {
+        return attachment;
+    }
 }

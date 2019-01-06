@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,14 +25,14 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface UnicastClientCommunicator extends NetworkUnicastCommunicator {
 
-	/**
-	 * Performs a unicase client communication.
-	 * 
-	 * @param message
-	 *            the message to send
-	 * @return a response message if any
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	NetworkMessage communicate(NetworkMessage message) throws UnifyException;
+    /**
+     * Performs a unicase client communication.
+     * 
+     * @param message
+     *            the message to send
+     * @return a response message if any
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    NetworkMessage communicate(NetworkMessage message) throws UnifyException;
 }

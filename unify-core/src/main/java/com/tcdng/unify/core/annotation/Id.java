@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,17 +34,17 @@ import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Id {
-	/**
-	 * The field column name. If not set, the underlying datasource dialect
-	 * generates a column name using the field name. The default implementation
-	 * generates one by appending the table name with a "ID" suffix. So for a table
-	 * with name "BOOK" the dialect would produce "BOOKID".
-	 */
-	String name() default AnnotationConstants.NONE;
+    /**
+     * The field column name. If not set, the underlying datasource dialect
+     * generates a column name using the field name. The default implementation
+     * generates one by appending the table name with a "ID" suffix. So for a table
+     * with name "BOOK" the dialect would produce "BOOKID".
+     */
+    String name() default AnnotationConstants.NONE;
 
-	/** The length of the field. Applies to character columns. */
-	int length() default -1;
+    /** The length of the field. Applies to character columns. */
+    int length() default -1;
 
-	/** Column position */
-	int position() default DefaultColumnPositionConstants.ID_POSITION;
+    /** Column position */
+    int position() default DefaultColumnPositionConstants.ID_POSITION;
 }

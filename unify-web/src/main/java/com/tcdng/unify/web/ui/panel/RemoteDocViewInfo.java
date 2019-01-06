@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,28 +23,28 @@ package com.tcdng.unify.web.ui.panel;
  */
 public class RemoteDocViewInfo {
 
-	private String pageTitle;
+    private String pageTitle;
 
-	private String remoteDocUrl;
+    private String remoteDocUrl;
 
-	private String remoteSaveUrl;
+    private String remoteSaveUrl;
 
-	public RemoteDocViewInfo(String pageTitle, String remoteDocUrl, String remoteSaveUrl) {
-		this.pageTitle = pageTitle;
-		this.remoteDocUrl = remoteDocUrl;
-		this.remoteSaveUrl = remoteSaveUrl;
-	}
+    public RemoteDocViewInfo(String pageTitle, String remoteDocUrl, String remoteSaveUrl) {
+        this.pageTitle = pageTitle;
+        this.remoteDocUrl = remoteDocUrl;
+        this.remoteSaveUrl = remoteSaveUrl;
+    }
 
-	public String getPageTitle() {
-		return pageTitle;
-	}
+    public String getPageTitle() {
+        return pageTitle;
+    }
 
-	public String getRemoteDocUrl() {
-		return remoteDocUrl;
-	}
+    public String getRemoteDocUrl() {
+        return remoteDocUrl;
+    }
 
-	public String getRemoteSaveUrl() {
-		return remoteSaveUrl;
-	}
+    public String getRemoteSaveUrl() {
+        return remoteSaveUrl;
+    }
 
 }

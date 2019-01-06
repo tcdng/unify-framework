@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,70 +26,70 @@ import java.util.List;
  */
 public class UnifyComponentInfo {
 
-	private String name;
+    private String name;
 
-	private String type;
+    private String type;
 
-	private Date firstPassTime;
+    private Date firstPassTime;
 
-	private Date firstFailTime;
+    private Date firstFailTime;
 
-	private Date lastPassTime;
+    private Date lastPassTime;
 
-	private Date lastFailTime;
+    private Date lastFailTime;
 
-	private int passCount;
+    private int passCount;
 
-	private int failCount;
+    private int failCount;
 
-	private List<Setting> settingInfoList;
+    private List<Setting> settingInfoList;
 
-	public UnifyComponentInfo(String name, String type, Date firstPassTime, Date firstFailTime, Date lastPassTime,
-			Date lastFailTime, int passCount, int failCount, List<Setting> settingInfoList) {
-		this.name = name;
-		this.type = type;
-		this.firstPassTime = firstPassTime;
-		this.firstFailTime = firstFailTime;
-		this.lastPassTime = lastPassTime;
-		this.lastFailTime = lastFailTime;
-		this.passCount = passCount;
-		this.failCount = failCount;
-		this.settingInfoList = settingInfoList;
-	}
+    public UnifyComponentInfo(String name, String type, Date firstPassTime, Date firstFailTime, Date lastPassTime,
+            Date lastFailTime, int passCount, int failCount, List<Setting> settingInfoList) {
+        this.name = name;
+        this.type = type;
+        this.firstPassTime = firstPassTime;
+        this.firstFailTime = firstFailTime;
+        this.lastPassTime = lastPassTime;
+        this.lastFailTime = lastFailTime;
+        this.passCount = passCount;
+        this.failCount = failCount;
+        this.settingInfoList = settingInfoList;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public Date getFirstPassTime() {
-		return firstPassTime;
-	}
+    public Date getFirstPassTime() {
+        return firstPassTime;
+    }
 
-	public Date getFirstFailTime() {
-		return firstFailTime;
-	}
+    public Date getFirstFailTime() {
+        return firstFailTime;
+    }
 
-	public Date getLastPassTime() {
-		return lastPassTime;
-	}
+    public Date getLastPassTime() {
+        return lastPassTime;
+    }
 
-	public Date getLastFailTime() {
-		return lastFailTime;
-	}
+    public Date getLastFailTime() {
+        return lastFailTime;
+    }
 
-	public int getPassCount() {
-		return passCount;
-	}
+    public int getPassCount() {
+        return passCount;
+    }
 
-	public int getFailCount() {
-		return failCount;
-	}
+    public int getFailCount() {
+        return failCount;
+    }
 
-	public List<Setting> getSettingInfoList() {
-		return settingInfoList;
-	}
+    public List<Setting> getSettingInfoList() {
+        return settingInfoList;
+    }
 }

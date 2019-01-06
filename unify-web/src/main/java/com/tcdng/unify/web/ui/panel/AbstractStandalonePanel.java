@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,82 +42,82 @@ import com.tcdng.unify.web.ui.Widget;
 @UplAttributes({ @UplAttribute(name = "validationList", type = PageValidation[].class) })
 public abstract class AbstractStandalonePanel extends AbstractPanel implements StandalonePanel {
 
-	private StandalonePanelInfo standalonePanelInfo;
+    private StandalonePanelInfo standalonePanelInfo;
 
-	private Map<String, PageWidgetValidator> pageWidgetValidators;
+    private Map<String, PageWidgetValidator> pageWidgetValidators;
 
-	private boolean validationEnabled;
+    private boolean validationEnabled;
 
-	public AbstractStandalonePanel() {
-		validationEnabled = true;
-	}
+    public AbstractStandalonePanel() {
+        validationEnabled = true;
+    }
 
-	@Override
-	@Action
-	public void switchState() throws UnifyException {
+    @Override
+    @Action
+    public void switchState() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	public void setStandalonePanelInfo(StandalonePanelInfo standalonePanelInfo) {
-		this.standalonePanelInfo = standalonePanelInfo;
-	}
+    @Override
+    public void setStandalonePanelInfo(StandalonePanelInfo standalonePanelInfo) {
+        this.standalonePanelInfo = standalonePanelInfo;
+    }
 
-	@Override
-	public boolean isSourceInvalidated() throws UnifyException {
-		return standalonePanelInfo.isSourceInvalidated();
-	}
+    @Override
+    public boolean isSourceInvalidated() throws UnifyException {
+        return standalonePanelInfo.isSourceInvalidated();
+    }
 
-	@Override
-	public PageWidgetValidator getPageWidgetValidator(PageManager pageManager, String longName) throws UnifyException {
-		if (pageWidgetValidators == null) {
-			pageWidgetValidators = new HashMap<String, PageWidgetValidator>();
-		}
+    @Override
+    public PageWidgetValidator getPageWidgetValidator(PageManager pageManager, String longName) throws UnifyException {
+        if (pageWidgetValidators == null) {
+            pageWidgetValidators = new HashMap<String, PageWidgetValidator>();
+        }
 
-		PageWidgetValidator pageWidgetValidator = pageWidgetValidators.get(longName);
-		if (pageWidgetValidator == null) {
-			PageValidation pageValidation = getPageValidation(longName);
-			List<Widget> widgets = getWidgetsByLongNames(
-					pageManager.getLongNames(pageManager.getExpandedReferences(pageValidation.getId())));
-			pageWidgetValidator = new PageWidgetValidator(pageValidation, widgets);
-			pageWidgetValidators.put(longName, pageWidgetValidator);
-		}
+        PageWidgetValidator pageWidgetValidator = pageWidgetValidators.get(longName);
+        if (pageWidgetValidator == null) {
+            PageValidation pageValidation = getPageValidation(longName);
+            List<Widget> widgets = getWidgetsByLongNames(
+                    pageManager.getLongNames(pageManager.getExpandedReferences(pageValidation.getId())));
+            pageWidgetValidator = new PageWidgetValidator(pageValidation, widgets);
+            pageWidgetValidators.put(longName, pageWidgetValidator);
+        }
 
-		return pageWidgetValidator;
-	}
+        return pageWidgetValidator;
+    }
 
-	@Override
-	public PageValidation getPageValidation(String longName) {
-		return standalonePanelInfo.getPageValidations().get(longName);
-	}
+    @Override
+    public PageValidation getPageValidation(String longName) {
+        return standalonePanelInfo.getPageValidations().get(longName);
+    }
 
-	@Override
-	public Set<String> getPageValidationNames() {
-		return standalonePanelInfo.getPageValidations().keySet();
-	}
+    @Override
+    public Set<String> getPageValidationNames() {
+        return standalonePanelInfo.getPageValidations().keySet();
+    }
 
-	@Override
-	public PageAction getPageAction(String longName) {
-		return standalonePanelInfo.getPageActions().get(longName);
-	}
+    @Override
+    public PageAction getPageAction(String longName) {
+        return standalonePanelInfo.getPageActions().get(longName);
+    }
 
-	@Override
-	public List<Widget> getWidgetsByLongNames(List<String> longNames) throws UnifyException {
-		List<Widget> widgets = new ArrayList<Widget>(longNames.size());
-		for (String longName : longNames) {
-			widgets.add(getWidgetByLongName(longName));
-		}
-		return widgets;
-	}
+    @Override
+    public List<Widget> getWidgetsByLongNames(List<String> longNames) throws UnifyException {
+        List<Widget> widgets = new ArrayList<Widget>(longNames.size());
+        for (String longName : longNames) {
+            widgets.add(getWidgetByLongName(longName));
+        }
+        return widgets;
+    }
 
-	@Override
-	public boolean isValidationEnabled() throws UnifyException {
-		return validationEnabled;
-	}
+    @Override
+    public boolean isValidationEnabled() throws UnifyException {
+        return validationEnabled;
+    }
 
-	@Override
-	public void setValidationEnabled(boolean validationEnabled) {
-		this.validationEnabled = validationEnabled;
-	}
+    @Override
+    public void setValidationEnabled(boolean validationEnabled) {
+        this.validationEnabled = validationEnabled;
+    }
 
 }

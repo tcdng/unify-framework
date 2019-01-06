@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,67 +30,64 @@ import com.tcdng.unify.web.ui.AbstractControl;
  */
 @Component("ui-fileupload")
 @UplAttributes({ @UplAttribute(name = "accept", type = String.class),
-		@UplAttribute(name = "multiple", type = boolean.class),
-		@UplAttribute(name = "selectOnly", type = boolean.class), @UplAttribute(name = "maxSize", type = int.class),
-		@UplAttribute(name = "maxSizeProperty", type = String.class),
-		@UplAttribute(name = "uploadPath", type = String.class),
-		@UplAttribute(name = "browseCaption", type = String.class, defaultValue = "$m{button.browse}"),
-		@UplAttribute(name = "uploadCaption", type = String.class, defaultValue = "$m{button.upload}") })
+        @UplAttribute(name = "acceptBinding", type = String.class),
+        @UplAttribute(name = "multiple", type = boolean.class),
+        @UplAttribute(name = "selectOnly", type = boolean.class), @UplAttribute(name = "maxSize", type = int.class),
+        @UplAttribute(name = "maxSizeBinding", type = String.class),
+        @UplAttribute(name = "uploadPath", type = String.class),
+        @UplAttribute(name = "browseCaption", type = String.class, defaultValue = "$m{button.browse}"),
+        @UplAttribute(name = "uploadCaption", type = String.class, defaultValue = "$m{button.upload}") })
 public class FileUpload extends AbstractControl {
 
-	private String accept;
+    public String getAccept() throws UnifyException {
+        String accept = getUplAttribute(String.class, "accept");
+        if (StringUtils.isBlank(accept)) {
+            String acceptBinding = getUplAttribute(String.class, "acceptBinding");
+            if (!StringUtils.isBlank(acceptBinding)) {
+                accept = getValue(String.class, acceptBinding);
+            }
+        }
 
-	@Override
-	public void onPageInitialize() throws UnifyException {
-		super.onPageInitialize();
-		accept = getUplAttribute(String.class, "accept");
-	}
+        return accept;
+    }
 
-	public String getAccept() {
-		return accept;
-	}
+    public int getMaxSize() throws UnifyException {
+        int maxSize = getUplAttribute(int.class, "maxSize");
+        if (maxSize <= 0) {
+            String maxSizeBinding = getUplAttribute(String.class, "maxSizeBinding");
+            if (!StringUtils.isBlank(maxSizeBinding)) {
+                maxSize = getValue(int.class, maxSizeBinding);
+            }
+        }
 
-	public void setAccept(String accept) {
-		this.accept = accept;
-	}
+        return maxSize;
+    }
 
-	public int getMaxSize() throws UnifyException {
-		int maxSize = getUplAttribute(int.class, "maxSize");
-		if (maxSize <= 0) {
-			String maxSizeProperty = getUplAttribute(String.class, "maxSizeProperty");
-			if (!StringUtils.isBlank(maxSizeProperty)) {
-				maxSize = getValue(int.class, maxSizeProperty);
-			}
-		}
+    public String getUploadURL() throws UnifyException {
+        return getUplAttribute(String.class, "uploadPath");
+    }
 
-		return maxSize;
-	}
+    public String getBrowseCaption() throws UnifyException {
+        return getUplAttribute(String.class, "browseCaption");
+    }
 
-	public String getUploadURL() throws UnifyException {
-		return getUplAttribute(String.class, "uploadPath");
-	}
+    public String getUploadCaption() throws UnifyException {
+        return getUplAttribute(String.class, "uploadCaption");
+    }
 
-	public String getBrowseCaption() throws UnifyException {
-		return getUplAttribute(String.class, "browseCaption");
-	}
+    public boolean isSelectOnly() throws UnifyException {
+        return getUplAttribute(boolean.class, "selectOnly");
+    }
 
-	public String getUploadCaption() throws UnifyException {
-		return getUplAttribute(String.class, "uploadCaption");
-	}
+    public String getButtonId() throws UnifyException {
+        return getPrefixedId("btn_");
+    }
 
-	public boolean isSelectOnly() throws UnifyException {
-		return getUplAttribute(boolean.class, "selectOnly");
-	}
+    public String getSpanId() throws UnifyException {
+        return getPrefixedId("spn_");
+    }
 
-	public String getButtonId() throws UnifyException {
-		return getPrefixedId("btn_");
-	}
-
-	public String getSpanId() throws UnifyException {
-		return getPrefixedId("spn_");
-	}
-
-	public String getUploadButtonId() throws UnifyException {
-		return getPrefixedId("btnu_");
-	}
+    public String getUploadButtonId() throws UnifyException {
+        return getPrefixedId("btnu_");
+    }
 }

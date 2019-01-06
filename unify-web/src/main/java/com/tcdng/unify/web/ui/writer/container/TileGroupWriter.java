@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,58 +39,60 @@ import com.tcdng.unify.web.ui.writer.AbstractContainerWriter;
 @Component("tilegroup-writer")
 public class TileGroupWriter extends AbstractContainerWriter {
 
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-		super.doWriteBehavior(writer, widget);
-		TileGroup tileGroup = (TileGroup) widget;
-		Control imageCtrl = tileGroup.getImageCtrl();
-		for (ValueStore valueStore : tileGroup.getValueList()) {
-			String actionPath = ((Tile) valueStore.getValueObject()).getActionPath();
-			if (actionPath != null) {
-				imageCtrl.setValueStore(valueStore);
-				writePathEventHandlerJS(writer, imageCtrl.getId(), "onclick", "post", actionPath);
-			}
-		}
-	}
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        TileGroup tileGroup = (TileGroup) widget;
+        Control imageCtrl = tileGroup.getImageCtrl();
+        for (ValueStore valueStore : tileGroup.getValueList()) {
+            String actionPath = ((Tile) valueStore.getValueObject()).getActionPath();
+            if (actionPath != null) {
+                imageCtrl.setValueStore(valueStore);
+                writePathEventHandlerJS(writer, imageCtrl.getId(), "onclick", "post", actionPath);
+            }
+        }
+    }
 
-	@Override
-	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-		TileGroup tileGroup = (TileGroup) container;
-		List<ValueStore> valueStoreList = tileGroup.getValueList();
-		if (!valueStoreList.isEmpty()) {
-			int columns = tileGroup.getColumns();
-			if (columns <= 0) {
-				columns = 1;
-			}
+    @Override
+    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+        TileGroup tileGroup = (TileGroup) container;
+        List<ValueStore> valueStoreList = tileGroup.getValueList();
+        if (!valueStoreList.isEmpty()) {
+            int columns = tileGroup.getColumns();
+            if (columns <= 0) {
+                columns = 1;
+            }
 
-			int childIndex = 0;
-			int numCards = valueStoreList.size();
-			int rows = numCards / columns;
-			if ((numCards % columns) > 0) {
-				rows++;
-			}
+            int childIndex = 0;
+            int numCards = valueStoreList.size();
+            int rows = numCards / columns;
+            if ((numCards % columns) > 0) {
+                rows++;
+            }
 
-			Control imageCtrl = tileGroup.getImageCtrl();
-			writer.write("<div style=\"display:table;\"><div style=\"display:table-row;\">");
-			for (int i = 0; i < columns; i++) {
-				writer.write("<div style=\"display:table-cell;\">");
-				for (int j = 0; j < rows; j++) {
-					int k = j * columns + i;
-					if (k < numCards) {
-						ValueStore valueStore = valueStoreList.get(childIndex++);
-						writer.write("<div class=\"tgtile\">");
-						imageCtrl.setValueStore(valueStore);
-						writer.writeStructureAndContent(imageCtrl);
-						writer.write("<span id=\"").write(imageCtrl.getPrefixedId("spn_")).write("\">");
-						writer.writeWithHtmlEscape(
-								resolveSessionMessage(((Tile) valueStore.getValueObject()).getCaption()));
-						writer.write("</span>");
-						writer.write("</div>");
-					}
-				}
-				writer.write("</div>");
-			}
-			writer.write("</div></div>");
-		}
-	}
+            Control imageCtrl = tileGroup.getImageCtrl();
+            boolean isShowTitleSection = tileGroup.isShowTitleSection();
+            writer.write("<div style=\"display:table;\"><div style=\"display:table-row;\">");
+            for (int i = 0; i < columns; i++) {
+                writer.write("<div style=\"display:table-cell;\">");
+                for (int j = 0; j < rows; j++) {
+                    int k = j * columns + i;
+                    if (k < numCards) {
+                        ValueStore valueStore = valueStoreList.get(childIndex++);
+                        writer.write("<div class=\"tgtile\">");
+                        imageCtrl.setValueStore(valueStore);
+                        writer.writeStructureAndContent(imageCtrl);
+                        if (isShowTitleSection) {
+                            writer.write("<span id=\"").write(imageCtrl.getPrefixedId("spn_")).write("\">");
+                            writer.writeWithHtmlEscape(((Tile) valueStore.getValueObject()).getCaption());
+                            writer.write("</span>");
+                        }
+                        writer.write("</div>");
+                    }
+                }
+                writer.write("</div>");
+            }
+            writer.write("</div></div>");
+        }
+    }
 }

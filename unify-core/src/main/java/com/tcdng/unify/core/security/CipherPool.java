@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,45 +31,45 @@ import com.tcdng.unify.core.data.AbstractPool;
  */
 public class CipherPool extends AbstractPool<Cipher> {
 
-	private String transformation;
+    private String transformation;
 
-	private String key;
+    private String key;
 
-	private int mode;
+    private int mode;
 
-	public CipherPool(String transformation, String key, int mode) {
-		this(transformation, key, mode, 2000, 1, 4);
-	}
+    public CipherPool(String transformation, String key, int mode) {
+        this(transformation, key, mode, 2000, 1, 4);
+    }
 
-	public CipherPool(String transformation, String key, int mode, long getTimeout, int minSize, int maxSize) {
-		super(getTimeout, minSize, maxSize);
-		this.transformation = transformation;
-		this.key = key;
-		this.mode = mode;
-	}
+    public CipherPool(String transformation, String key, int mode, long getTimeout, int minSize, int maxSize) {
+        super(getTimeout, minSize, maxSize);
+        this.transformation = transformation;
+        this.key = key;
+        this.mode = mode;
+    }
 
-	@Override
-	protected Cipher createObject(Object... params) throws Exception {
-		PBEKeySpec keySpec = new PBEKeySpec(this.key.toCharArray());
-		SecretKeyFactory kf = SecretKeyFactory.getInstance(this.transformation);
-		SecretKey key = kf.generateSecret(keySpec);
+    @Override
+    protected Cipher createObject(Object... params) throws Exception {
+        PBEKeySpec keySpec = new PBEKeySpec(this.key.toCharArray());
+        SecretKeyFactory kf = SecretKeyFactory.getInstance(this.transformation);
+        SecretKey key = kf.generateSecret(keySpec);
 
-		byte[] salt = { (byte) 0xc9, (byte) 0x36, (byte) 0x78, (byte) 0x99, (byte) 0x52, (byte) 0x3e, (byte) 0xea,
-				(byte) 0xf2 };
-		PBEParameterSpec paramSpec = new PBEParameterSpec(salt, 20);
+        byte[] salt = { (byte) 0xc9, (byte) 0x36, (byte) 0x78, (byte) 0x99, (byte) 0x52, (byte) 0x3e, (byte) 0xea,
+                (byte) 0xf2 };
+        PBEParameterSpec paramSpec = new PBEParameterSpec(salt, 20);
 
-		Cipher cipher = Cipher.getInstance(this.transformation);
-		cipher.init(this.mode, key, paramSpec);
-		return cipher;
-	}
+        Cipher cipher = Cipher.getInstance(this.transformation);
+        cipher.init(this.mode, key, paramSpec);
+        return cipher;
+    }
 
-	@Override
-	protected void onGetObject(Cipher object, Object... params) throws Exception {
+    @Override
+    protected void onGetObject(Cipher object, Object... params) throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void destroyObject(Cipher object) {
+    @Override
+    protected void destroyObject(Cipher object) {
 
-	}
+    }
 }

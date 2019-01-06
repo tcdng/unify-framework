@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,44 +29,44 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "twoway-stringcryptograph", description = "$m{twowaycryptograph.default}")
 public class TwoWayStringCryptographImpl extends AbstractTwoWayCryptograph implements TwoWayStringCryptograph {
 
-	@Override
-	public String forwardTransform(String value) throws UnifyException {
-		return encrypt(value);
-	}
+    @Override
+    public String forwardTransform(String value) throws UnifyException {
+        return encrypt(value);
+    }
 
-	@Override
-	public String reverseTransform(String value) throws UnifyException {
-		return decrypt(value);
-	}
+    @Override
+    public String reverseTransform(String value) throws UnifyException {
+        return decrypt(value);
+    }
 
-	@Override
-	public String encrypt(String string) throws UnifyException {
-		try {
-			if (string != null) {
-				byte encrypted[] = doEncrypt(string.getBytes("UTF-8"));
-				return DatatypeConverter.printBase64Binary(encrypted);
-			}
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public String encrypt(String string) throws UnifyException {
+        try {
+            if (string != null) {
+                byte encrypted[] = doEncrypt(string.getBytes("UTF-8"));
+                return DatatypeConverter.printBase64Binary(encrypted);
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 
-	@Override
-	public String decrypt(String string) throws UnifyException {
-		try {
-			if (string != null) {
-				byte input[] = DatatypeConverter.parseBase64Binary(string);
-				byte decrypted[] = doDecrypt(input);
-				return new String(decrypted, "UTF-8");
-			}
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-		return null;
-	}
+    @Override
+    public String decrypt(String string) throws UnifyException {
+        try {
+            if (string != null) {
+                byte input[] = DatatypeConverter.parseBase64Binary(string);
+                byte decrypted[] = doDecrypt(input);
+                return new String(decrypted, "UTF-8");
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        }
+        return null;
+    }
 }

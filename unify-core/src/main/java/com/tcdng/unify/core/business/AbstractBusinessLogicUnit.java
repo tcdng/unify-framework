@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 package com.tcdng.unify.core.business;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStoreFactory;
@@ -30,24 +29,24 @@ import com.tcdng.unify.core.database.Database;
  */
 public abstract class AbstractBusinessLogicUnit extends AbstractUnifyComponent implements BusinessLogicUnit {
 
-	@Configurable(ApplicationComponents.APPLICATION_VALUESTOREFACTORY)
-	private ValueStoreFactory valueStoreFactory;
+    @Configurable
+    private ValueStoreFactory valueStoreFactory;
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	protected void onTerminate() throws UnifyException {
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-	}
+    }
 
-	protected ValueStoreFactory getValueStoreFactory() {
-		return valueStoreFactory;
-	}
+    protected ValueStoreFactory getValueStoreFactory() {
+        return valueStoreFactory;
+    }
 
-	protected Database getDatabase(BusinessLogicInput input) throws UnifyException {
-		return (Database) getComponent(input.getDbName());
-	}
+    protected Database getDatabase(BusinessLogicInput input) throws UnifyException {
+        return (Database) getComponent(input.getDbName());
+    }
 }

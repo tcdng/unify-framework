@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,14 +24,14 @@ package com.tcdng.unify.core.list;
  */
 public class StatusParams {
 
-	private String status;
+    private String status;
 
-	public StatusParams(String status) {
-		this.status = status;
-	}
+    public StatusParams(String status) {
+        this.status = status;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
 }

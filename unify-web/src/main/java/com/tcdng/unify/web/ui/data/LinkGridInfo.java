@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,90 +32,90 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class LinkGridInfo {
 
-	private List<LinkCategoryInfo> linkCategoryList;
+    private List<LinkCategoryInfo> linkCategoryList;
 
-	public LinkGridInfo(List<LinkCategoryInfo> linkCategoryList) {
-		this.linkCategoryList = linkCategoryList;
-	}
+    public LinkGridInfo(List<LinkCategoryInfo> linkCategoryList) {
+        this.linkCategoryList = linkCategoryList;
+    }
 
-	public List<LinkCategoryInfo> getLinkCategoryList() {
-		return linkCategoryList;
-	}
+    public List<LinkCategoryInfo> getLinkCategoryList() {
+        return linkCategoryList;
+    }
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
+    public static Builder newBuilder() {
+        return new Builder();
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private Map<String, CategoryInfo> categories;
+        private Map<String, CategoryInfo> categories;
 
-		private Builder() {
-			categories = new LinkedHashMap<String, CategoryInfo>();
-		}
+        private Builder() {
+            categories = new LinkedHashMap<String, CategoryInfo>();
+        }
 
-		public Builder addCategory(String name, String caption, String path) throws UnifyException {
-			if (categories.containsKey(name)) {
-				throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-						"Category with name [" + name + "] exists.");
-			}
+        public Builder addCategory(String name, String caption, String path) throws UnifyException {
+            if (categories.containsKey(name)) {
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                        "Category with name [" + name + "] exists.");
+            }
 
-			categories.put(name, new CategoryInfo(caption, path));
-			return this;
-		}
+            categories.put(name, new CategoryInfo(caption, path));
+            return this;
+        }
 
-		public Builder addLink(String categoryName, String code, String caption) throws UnifyException {
-			CategoryInfo categoryInfo = categories.get(categoryName);
-			if (categoryInfo == null) {
-				throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-						"Category with name [" + categoryName + "] is unknown.");
-			}
+        public Builder addLink(String categoryName, String code, String caption) throws UnifyException {
+            CategoryInfo categoryInfo = categories.get(categoryName);
+            if (categoryInfo == null) {
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                        "Category with name [" + categoryName + "] is unknown.");
+            }
 
-			categoryInfo.getLinkInfoList().add(new LinkInfo(code, caption));
-			return this;
-		}
+            categoryInfo.getLinkInfoList().add(new LinkInfo(code, caption));
+            return this;
+        }
 
-		public boolean isCategory(String name) {
-			return categories.containsKey(name);
-		}
+        public boolean isCategory(String name) {
+            return categories.containsKey(name);
+        }
 
-		public LinkGridInfo build() {
-			List<LinkCategoryInfo> linkCategoryList = new ArrayList<LinkCategoryInfo>();
-			for (Map.Entry<String, CategoryInfo> entry : categories.entrySet()) {
-				CategoryInfo categoryInfo = entry.getValue();
-				linkCategoryList.add(new LinkCategoryInfo(entry.getKey(), categoryInfo.getCaption(),
-						categoryInfo.getPath(), Collections.unmodifiableList(categoryInfo.getLinkInfoList())));
-			}
+        public LinkGridInfo build() {
+            List<LinkCategoryInfo> linkCategoryList = new ArrayList<LinkCategoryInfo>();
+            for (Map.Entry<String, CategoryInfo> entry : categories.entrySet()) {
+                CategoryInfo categoryInfo = entry.getValue();
+                linkCategoryList.add(new LinkCategoryInfo(entry.getKey(), categoryInfo.getCaption(),
+                        categoryInfo.getPath(), Collections.unmodifiableList(categoryInfo.getLinkInfoList())));
+            }
 
-			return new LinkGridInfo(Collections.unmodifiableList(linkCategoryList));
-		}
+            return new LinkGridInfo(Collections.unmodifiableList(linkCategoryList));
+        }
 
-		private class CategoryInfo {
+        private class CategoryInfo {
 
-			private String caption;
+            private String caption;
 
-			private String path;
+            private String path;
 
-			private List<LinkInfo> linkInfoList;
+            private List<LinkInfo> linkInfoList;
 
-			public CategoryInfo(String caption, String path) {
-				this.caption = caption;
-				this.path = path;
-				linkInfoList = new ArrayList<LinkInfo>();
-			}
+            public CategoryInfo(String caption, String path) {
+                this.caption = caption;
+                this.path = path;
+                linkInfoList = new ArrayList<LinkInfo>();
+            }
 
-			public String getCaption() {
-				return caption;
-			}
+            public String getCaption() {
+                return caption;
+            }
 
-			public String getPath() {
-				return path;
-			}
+            public String getPath() {
+                return path;
+            }
 
-			public List<LinkInfo> getLinkInfoList() {
-				return linkInfoList;
-			}
+            public List<LinkInfo> getLinkInfoList() {
+                return linkInfoList;
+            }
 
-		}
-	}
+        }
+    }
 }

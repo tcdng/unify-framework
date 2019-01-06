@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,18 +25,18 @@ import com.tcdng.unify.core.data.AbstractWrappedData;
  */
 public class WrappedAddress extends AbstractWrappedData<Address> {
 
-	private String addressLine3;
+    private String addressLine3;
 
-	public WrappedAddress() {
-		super(new Address());
-	}
+    public WrappedAddress() {
+        super(new Address());
+    }
 
-	public String getAddressLine3() {
-		return addressLine3;
-	}
+    public String getAddressLine3() {
+        return addressLine3;
+    }
 
-	public void setAddressLine3(String addressLine3) {
-		this.addressLine3 = addressLine3;
-	}
+    public void setAddressLine3(String addressLine3) {
+        this.addressLine3 = addressLine3;
+    }
 
 }

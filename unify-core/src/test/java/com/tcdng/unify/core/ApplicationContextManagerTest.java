@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,32 +27,32 @@ import org.junit.Test;
  */
 public class ApplicationContextManagerTest extends AbstractUnifyComponentTest {
 
-	@Test
-	public void testLoadRequestContext() throws Exception {
-		RequestContextManager requestContextManager = (RequestContextManager) this
-				.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-		requestContextManager.reset();
-		requestContextManager.loadRequestContext(null);
-		assertNotNull(requestContextManager.getRequestContext());
-	}
+    @Test
+    public void testLoadRequestContext() throws Exception {
+        RequestContextManager requestContextManager =
+                (RequestContextManager) this.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+        requestContextManager.reset();
+        requestContextManager.loadRequestContext(null);
+        assertNotNull(requestContextManager.getRequestContext());
+    }
 
-	@Test
-	public void testUnloadRequestContext() throws Exception {
-		RequestContextManager requestContextManager = (RequestContextManager) this
-				.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-		requestContextManager.reset();
-		requestContextManager.loadRequestContext(null);
-		assertNotNull(requestContextManager.getRequestContext());
-		requestContextManager.unloadRequestContext();
-	}
+    @Test
+    public void testUnloadRequestContext() throws Exception {
+        RequestContextManager requestContextManager =
+                (RequestContextManager) this.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+        requestContextManager.reset();
+        requestContextManager.loadRequestContext(null);
+        assertNotNull(requestContextManager.getRequestContext());
+        requestContextManager.unloadRequestContext();
+    }
 
-	@Override
-	protected void onSetup() throws Exception {
+    @Override
+    protected void onSetup() throws Exception {
 
-	}
+    }
 
-	@Override
-	protected void onTearDown() throws Exception {
+    @Override
+    protected void onTearDown() throws Exception {
 
-	}
+    }
 }

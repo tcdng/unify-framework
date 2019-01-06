@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,36 +29,36 @@ import com.tcdng.unify.core.annotation.Table;
 @Table("CLUSTERCOMMANDPRM")
 public class ClusterCommandParam extends AbstractSystemSequencedEntity {
 
-	@ForeignKey(ClusterCommand.class)
-	private Long clusterCommandId;
+    @ForeignKey(ClusterCommand.class)
+    private Long clusterCommandId;
 
-	@Column(length = 64)
-	private String parameter;
+    @Column(length = 64)
+    private String parameter;
 
-	@ListOnly(key = "clusterCommandId", property = "nodeId")
-	private String nodeId;
+    @ListOnly(key = "clusterCommandId", property = "nodeId")
+    private String nodeId;
 
-	public Long getClusterCommandId() {
-		return clusterCommandId;
-	}
+    public Long getClusterCommandId() {
+        return clusterCommandId;
+    }
 
-	public void setClusterCommandId(Long clusterCommandId) {
-		this.clusterCommandId = clusterCommandId;
-	}
+    public void setClusterCommandId(Long clusterCommandId) {
+        this.clusterCommandId = clusterCommandId;
+    }
 
-	public String getParameter() {
-		return parameter;
-	}
+    public String getParameter() {
+        return parameter;
+    }
 
-	public void setParameter(String parameter) {
-		this.parameter = parameter;
-	}
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 }

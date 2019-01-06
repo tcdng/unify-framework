@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,15 +26,15 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface RemoteCallGate extends UnifyComponent {
 
-	/**
-	 * Grants application access to remote function.
-	 * 
-	 * @param applicationCode
-	 *            the application code
-	 * @param functionCode
-	 *            the function code
-	 * @throws UnifyException
-	 *             if access is not granted
-	 */
-	void grantPass(String applicationCode, String functionCode) throws UnifyException;
+    /**
+     * Grants application access to remote function.
+     * 
+     * @param applicationCode
+     *            the application code
+     * @param functionCode
+     *            the function code
+     * @throws UnifyException
+     *             if access is not granted
+     */
+    void grantPass(String applicationCode, String functionCode) throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,13 +30,13 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 @Component("firepreconfirmresponse")
 public class FirePreConfirmResponse extends AbstractJsonPageControllerResponse {
 
-	public FirePreConfirmResponse() {
-		super("firePreConfirmHdl");
-	}
+    public FirePreConfirmResponse() {
+        super("firePreConfirmHdl");
+    }
 
-	@Override
-	protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-		logDebug("Preparing fire pre-confirm response: controller = [{0}]", pageController.getName());
-		writer.write(",\"fire\":true");
-	}
+    @Override
+    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+        logDebug("Preparing fire pre-confirm response: controller = [{0}]", pageController.getName());
+        writer.write(",\"fire\":true");
+    }
 }

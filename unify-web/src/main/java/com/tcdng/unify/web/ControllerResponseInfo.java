@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,21 +23,21 @@ package com.tcdng.unify.web;
  */
 public class ControllerResponseInfo {
 
-	private String controllerName;
+    private String controllerName;
 
-	private String controllerId;
+    private String controllerId;
 
-	public ControllerResponseInfo(String controllerName, String controllerId) {
-		this.controllerName = controllerName;
-		this.controllerId = controllerId;
-	}
+    public ControllerResponseInfo(String controllerName, String controllerId) {
+        this.controllerName = controllerName;
+        this.controllerId = controllerId;
+    }
 
-	public String getControllerName() {
-		return controllerName;
-	}
+    public String getControllerName() {
+        return controllerName;
+    }
 
-	public String getControllerId() {
-		return controllerId;
-	}
+    public String getControllerId() {
+        return controllerId;
+    }
 
 }

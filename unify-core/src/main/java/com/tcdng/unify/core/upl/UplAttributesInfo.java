@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,25 +25,25 @@ import java.util.Set;
  * @since 1.0
  */
 public class UplAttributesInfo {
-	private Map<String, UplAttributeInfo> uplAttributeInfoMap;
+    private Map<String, UplAttributeInfo> uplAttributeInfoMap;
 
-	public UplAttributesInfo(String componentName, Map<String, UplAttributeInfo> uplAttributeInfoMap) {
-		this.uplAttributeInfoMap = uplAttributeInfoMap;
-	}
+    public UplAttributesInfo(String componentName, Map<String, UplAttributeInfo> uplAttributeInfoMap) {
+        this.uplAttributeInfoMap = uplAttributeInfoMap;
+    }
 
-	public Set<String> getAttributes() {
-		return uplAttributeInfoMap.keySet();
-	}
+    public Set<String> getAttributes() {
+        return uplAttributeInfoMap.keySet();
+    }
 
-	public boolean isAttribute(String name) {
-		return uplAttributeInfoMap.containsKey(name);
-	}
+    public boolean isAttribute(String name) {
+        return uplAttributeInfoMap.containsKey(name);
+    }
 
-	public UplAttributeInfo getUplAttributeInfo(String attributeName) {
-		return uplAttributeInfoMap.get(attributeName);
-	}
+    public UplAttributeInfo getUplAttributeInfo(String attributeName) {
+        return uplAttributeInfoMap.get(attributeName);
+    }
 
-	public int size() {
-		return uplAttributeInfoMap.size();
-	}
+    public int size() {
+        return uplAttributeInfoMap.size();
+    }
 }

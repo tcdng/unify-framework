@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The Code Department
+ * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,105 +30,112 @@ import com.tcdng.unify.web.annotation.Action;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "backImageSrc", type = String.class),
-		@UplAttribute(name = "refreshPath", type = String.class),
-		@UplAttribute(name = "refreshEvery", type = int.class), @UplAttribute(name = "legend", type = String.class),
-		@UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "refreshPath", type = String.class),
+        @UplAttribute(name = "refreshEvery", type = int.class),
+        @UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "legend", type = String.class),
+        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "true") })
 public abstract class AbstractPanel extends AbstractContainer implements Panel {
 
-	private List<PanelEventListener> listeners;
+    private List<PanelEventListener> listeners;
 
-	private boolean allowRefresh;
+    private boolean allowRefresh;
 
-	public AbstractPanel() {
-		allowRefresh = true;
-	}
+    public AbstractPanel() {
+        allowRefresh = true;
+    }
 
-	@Override
-	public void resetState() throws UnifyException {
+    @Override
+    public void resetState() throws UnifyException {
 
-	}
+    }
 
-	@Override
-	@Action
-	public void switchState() throws UnifyException {
-		getRequestContextUtil().setPanelSwitchStateFlag(this);
-	}
+    @Override
+    @Action
+    public void switchState() throws UnifyException {
+        getRequestContextUtil().setPanelSwitchStateFlag(this);
+    }
 
-	@Override
-	public boolean isVisible() throws UnifyException {
-		if (getUplAttribute(boolean.class, "hideOnNoComponents")) {
-			if (isNoReferencedComponents()) {
-				return false;
-			}
-		}
-		return super.isVisible();
-	}
+    @Override
+    public boolean isVisible() throws UnifyException {
+        if (getUplAttribute(boolean.class, "hideOnNoComponents")) {
+            if (isNoReferencedComponents()) {
+                return false;
+            }
+        }
+        return super.isVisible();
+    }
 
-	@Override
-	public boolean isAllowRefresh() {
-		return allowRefresh;
-	}
+    @Override
+    public boolean isAllowRefresh() {
+        return allowRefresh;
+    }
 
-	@Override
-	public void addEventListener(PanelEventListener listener) {
-		if (listeners == null) {
-			listeners = new ArrayList<PanelEventListener>();
-		}
+    @Override
+    public void addEventListener(PanelEventListener listener) {
+        if (listeners == null) {
+            listeners = new ArrayList<PanelEventListener>();
+        }
 
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		}
-	}
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
 
-	@Override
-	public void removeEventListener(PanelEventListener listener) {
-		if (listeners != null) {
-			listeners.remove(listener);
-		}
-	}
+    @Override
+    public void removeEventListener(PanelEventListener listener) {
+        if (listeners != null) {
+            listeners.remove(listener);
+        }
+    }
 
-	@Override
-	public String getBackImageSrc() throws UnifyException {
-		return getUplAttribute(String.class, "backImageSrc");
-	}
+    @Override
+    public String getBackImageSrc() throws UnifyException {
+        return getUplAttribute(String.class, "backImageSrc");
+    }
 
-	@Override
-	public String getRefreshPath() throws UnifyException {
-		return getUplAttribute(String.class, "refreshPath");
-	}
+    @Override
+    public String getRefreshPath() throws UnifyException {
+        return getUplAttribute(String.class, "refreshPath");
+    }
 
-	@Override
-	public int getRefreshEvery() throws UnifyException {
-		return getUplAttribute(int.class, "refreshEvery");
-	}
+    @Override
+    public int getRefreshEvery() throws UnifyException {
+        return getUplAttribute(int.class, "refreshEvery");
+    }
 
-	@Override
-	public String getLegend() throws UnifyException {
-		return getUplAttribute(String.class, "legend");
-	}
+    @Override
+    public boolean isRefreshOnUserAct() throws UnifyException {
+        return getUplAttribute(boolean.class, "refreshOnUserAct");
+    }
 
-	/**
-	 * Sets this panel's refresh flag. If true panel would be automatically
-	 * refreshed at a frequency based on 'refreshEvery' attribute.
-	 * 
-	 * @param allowRefresh
-	 *            the refresh flag to set
-	 */
-	protected void setAllowRefresh(boolean allowRefresh) {
-		this.allowRefresh = allowRefresh;
-	}
+    @Override
+    public String getLegend() throws UnifyException {
+        return getUplAttribute(String.class, "legend");
+    }
 
-	/**
-	 * Notifies all listeners of event.
-	 * 
-	 * @param eventCode
-	 *            the event code
-	 */
-	protected void notifyListeners(String eventCode) throws UnifyException {
-		if (listeners != null) {
-			for (PanelEventListener listener : listeners) {
-				listener.notify(this, eventCode);
-			}
-		}
-	}
+    /**
+     * Sets this panel's refresh flag. If true panel would be automatically
+     * refreshed at a frequency based on 'refreshEvery' attribute.
+     * 
+     * @param allowRefresh
+     *            the refresh flag to set
+     */
+    protected void setAllowRefresh(boolean allowRefresh) {
+        this.allowRefresh = allowRefresh;
+    }
+
+    /**
+     * Notifies all listeners of event.
+     * 
+     * @param eventCode
+     *            the event code
+     */
+    protected void notifyListeners(String eventCode) throws UnifyException {
+        if (listeners != null) {
+            for (PanelEventListener listener : listeners) {
+                listener.notify(this, eventCode);
+            }
+        }
+    }
 }
