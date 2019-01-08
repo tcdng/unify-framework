@@ -878,7 +878,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         StringBuilder aggregateSql = new StringBuilder();
         aggregateSql.append("SELECT ");
-        appendAggregateFunctionSql(aggregateSql, AggregateType.COUNT, "*");
+        appendAggregateFunctionSql(aggregateSql, AggregateType.COUNT, "*", false);
+        boolean distinct = query.isDistinct();
         returnFieldInfoList = new ArrayList<SqlFieldInfo>();
         for (String name : select.values()) {
             SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
@@ -887,7 +888,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                         sqlEntityInfo.getKeyClass());
             }
             aggregateSql.append(", ");
-            appendAggregateFunctionSql(aggregateSql, aggregateType, sqlFieldInfo.getColumn());
+            appendAggregateFunctionSql(aggregateSql, aggregateType, sqlFieldInfo.getColumn(), distinct);
             returnFieldInfoList.add(sqlFieldInfo);
         }
 
@@ -1344,10 +1345,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
      *            the aggregate type
      * @param funcParam
      *            the function parameter
+     * @param distinct indicates aggregate on distinct values
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void appendAggregateFunctionSql(StringBuilder sb, AggregateType aggregateType, String funcParam)
+    protected void appendAggregateFunctionSql(StringBuilder sb, AggregateType aggregateType, String funcParam, boolean distinct)
             throws UnifyException {
         switch (aggregateType) {
             case AVERAGE:
@@ -1366,6 +1368,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             default:
                 sb.append("COUNT(");
                 break;
+        }
+        
+        if (distinct) {
+            sb.append("DISTINCT ");
         }
         sb.append(funcParam).append(')');
     }

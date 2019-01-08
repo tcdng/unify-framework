@@ -185,6 +185,45 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testAggregateCountDistinct() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("grape", "red", 25.00, 11));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("orange", "orange", 15.00, 11));
+
+            // Count
+            List<Aggregate<?>> list = db.aggregate(AggregateType.COUNT,
+                    new FruitQuery().select("color").lessEqual("price", 45.00));
+            assertNotNull(list);
+            assertEquals(1, list.size());
+
+            Aggregate<?> countAggregate = list.get(0);
+            assertNotNull(countAggregate);
+            assertEquals("color", countAggregate.getFieldName());
+            assertEquals(4, countAggregate.getCount());
+            assertEquals("4", countAggregate.getValue());
+            
+            // Count with distinct
+            list = db.aggregate(AggregateType.COUNT,
+                    new FruitQuery().select("color").lessEqual("price", 45.00).distinct(true));
+            assertNotNull(list);
+            assertEquals(1, list.size());
+
+            countAggregate = list.get(0);
+            assertNotNull(countAggregate);
+            assertEquals("color", countAggregate.getFieldName());
+            assertEquals(4, countAggregate.getCount());
+            assertEquals("3", countAggregate.getValue());
+            
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testCountRecord() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
