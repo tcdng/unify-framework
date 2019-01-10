@@ -219,7 +219,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
             }
         }
     }
-
+    
+    protected Set<String> getAllWidgetLongNames() throws UnifyException {
+        return widgetRepository.getWidgetLongNames();
+    }
+    
     /**
      * Adds an internal child control to this container.
      * 

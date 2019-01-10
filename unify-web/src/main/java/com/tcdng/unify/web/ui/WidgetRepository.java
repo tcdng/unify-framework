@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.FactoryMaps;
@@ -70,5 +71,9 @@ public class WidgetRepository {
 
     public WidgetNameInfo getWidgetInfo(String ownerLongName) {
         return widgetNameInfos.get(ownerLongName);
+    }
+    
+    public Set<String> getWidgetLongNames() {
+        return widgets.keySet();
     }
 }
