@@ -26,7 +26,7 @@ public class ListNumberData implements Listable {
     private String number;
 
     public ListNumberData(int num) {
-        this.number = String.valueOf(num);
+        number = String.valueOf(num);
     }
 
     @Override

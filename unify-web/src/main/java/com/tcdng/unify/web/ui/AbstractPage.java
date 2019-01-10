@@ -83,6 +83,22 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
             return (Panel) getWidgetByLongName(longName);
         }
 
+        // Fix refresh panels bug #0001
+        // Check standalone panels
+        if (standalonePanels != null) {
+            StandalonePanel panel = standalonePanels.get(longName);
+            if (panel != null) {
+                return panel;
+            }
+            
+            // Check standalone panel widgets
+            for(StandalonePanel standalonePanel: standalonePanels.values()) {
+                if (standalonePanel.isWidget(longName)) {
+                    return (Panel) standalonePanel.getWidgetByLongName(longName);
+                }
+            }
+        }
+
         throw new UnifyException(UnifyWebErrorConstants.PAGE_PANEL_WITH_ID_NOT_FOUND, longName);
     }
 
