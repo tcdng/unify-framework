@@ -908,4 +908,14 @@ public interface UnifyCoreErrorConstants {
      * field = {2}
      */
     String RECORD_MULTIPLE_CHILD_FOUND = "UC_00E2";
+
+    /**
+     * Chart generator {0} has no generator unit for chart type {1}.
+     */
+    String CHARTGENERATOR_NO_GENERATOR_UNIT = "UC_00E3";
+
+    /**
+     * Chart generator {0} has multiple generator units for chart type {1}.
+     */
+    String CHARTGENERATOR_MULTIPLE_GENERATOR_UNIT = "UC_00E4";
 }
