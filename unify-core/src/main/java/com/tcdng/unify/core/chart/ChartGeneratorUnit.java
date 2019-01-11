@@ -77,8 +77,8 @@ public interface ChartGeneratorUnit<T extends Chart> extends UnifyComponent {
      * 
      * @param chart
      *            the chart to generate
-     * @param file
-     *            the file to generate to
+     * @param outputStream
+     *            the output stream to generate to
      * @throws UnifyException
      *             if there is no generator unit for chart type. if an error occurs
      */
