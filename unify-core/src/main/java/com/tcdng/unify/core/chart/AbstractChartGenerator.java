@@ -18,6 +18,7 @@ package com.tcdng.unify.core.chart;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
@@ -34,6 +35,10 @@ public abstract class AbstractChartGenerator extends AbstractUnifyComponent impl
 
     private Map<Class<? extends Chart>, ChartGeneratorUnit<Chart>> generatorUnits;
 
+    public AbstractChartGenerator() {
+        generatorUnits = new HashMap<Class<? extends Chart>, ChartGeneratorUnit<Chart>>();
+    }
+    
     @Override
     public byte[] generateBitmap(Chart chart) throws UnifyException {
         return getChartGeneratorUnit(chart).generateBitmap(chart);
