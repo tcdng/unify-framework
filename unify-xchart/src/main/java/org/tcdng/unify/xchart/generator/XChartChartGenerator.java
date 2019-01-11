@@ -14,35 +14,28 @@
  * the License.
  */
 
-package com.tcdng.unify.core.list;
+package org.tcdng.unify.xchart.generator;
 
-import java.util.List;
+import org.tcdng.unify.xchart.XChartApplicationComponents;
 
-import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.chart.AbstractChartGenerator;
 
 /**
- * Listable list parameters.
+ * Implementation of a chart generator using XChart.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ListableListParams {
+@Component(XChartApplicationComponents.XCHART_CHARTGENERATOR)
+public class XChartChartGenerator extends AbstractChartGenerator {
 
-    private List<? extends Listable> listableList;
+    private static final String[] GENERATOR_UNITS = { XChartApplicationComponents.XCHART_SIMPLEDIALGENERATOR };
 
-    public ListableListParams(List<? extends Listable> listableList) {
-        this.listableList = listableList;
+    @Override
+    protected String[] getProvidedChartGeneratorUnitNames() throws UnifyException {
+        return GENERATOR_UNITS;
     }
 
-    public List<? extends Listable> getListableList() {
-        return listableList;
-    }
-
-    /**
-     * Checks if params has valid and non-zero sized list.
-     * @return a true value if valid non-zero sized list
-     */
-    public boolean isListableList() {
-        return listableList != null && !listableList.isEmpty();
-    }
 }

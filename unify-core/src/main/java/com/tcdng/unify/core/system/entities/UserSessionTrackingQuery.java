@@ -53,11 +53,11 @@ public class UserSessionTrackingQuery extends Query<UserSessionTracking> {
     }
 
     public UserSessionTrackingQuery loggedIn() {
-        return (UserSessionTrackingQuery) isNotNull("userId");
+        return (UserSessionTrackingQuery) isNotNull("userLoginId");
     }
 
     public UserSessionTrackingQuery notLoggedIn() {
-        return (UserSessionTrackingQuery) isNull("userId");
+        return (UserSessionTrackingQuery) isNull("userLoginId");
     }
 
     public UserSessionTrackingQuery expired(Date expirationDt) {

@@ -14,35 +14,39 @@
  * the License.
  */
 
-package com.tcdng.unify.core.list;
+package com.tcdng.unify.core.chart;
 
-import java.util.List;
-
-import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Listable list parameters.
+ * Abstract base class for chart generator units.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ListableListParams {
+public abstract class AbstractChartGeneratorUnit<T extends Chart> extends AbstractUnifyComponent
+        implements ChartGeneratorUnit<T> {
 
-    private List<? extends Listable> listableList;
-
-    public ListableListParams(List<? extends Listable> listableList) {
-        this.listableList = listableList;
+    private Class<T> chartType;
+    
+    public AbstractChartGeneratorUnit(Class<T> chartType) {
+        this.chartType = chartType;
     }
 
-    public List<? extends Listable> getListableList() {
-        return listableList;
+    @Override
+    public Class<T> getChartType() {
+        return chartType;
     }
 
-    /**
-     * Checks if params has valid and non-zero sized list.
-     * @return a true value if valid non-zero sized list
-     */
-    public boolean isListableList() {
-        return listableList != null && !listableList.isEmpty();
+    @Override
+    protected void onInitialize() throws UnifyException {
+
     }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
+    }
+
 }

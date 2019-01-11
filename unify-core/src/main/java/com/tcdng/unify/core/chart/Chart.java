@@ -13,35 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
 
-import java.util.Date;
+package com.tcdng.unify.core.chart;
 
 /**
- * Supported aggregate function enumeration.
+ * Chart object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum AggregateType {
-    COUNT(Object.class),
-    SUM(Number.class),
-    AVERAGE(Number.class),
-    MAXIMUM(Number.class, Date.class),
-    MINIMUM(Number.class, Date.class);
+public interface Chart {
 
-    private final Class<?>[] supports;
+    /**
+     * Gets the chart width.
+     * 
+     * @return the chart width
+     */
+    int getWidth();
 
-    private AggregateType(Class<?>... supports) {
-        this.supports = supports;
-    }
+    /**
+     * Gets the chart height.
+     * 
+     * @return the chart height
+     */
+    int getHeight();
 
-    public boolean supports(Class<?> clazz) {
-        for (Class<?> spClass : supports) {
-            if (spClass.isAssignableFrom(clazz)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    /**
+     * Gets the chart bitmap format.
+     * 
+     * @return the chart bitmap format
+     */
+    ChartBitmapFormat getBitmapFormat();
 }

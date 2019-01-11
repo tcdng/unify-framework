@@ -13,35 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
 
-import java.util.Date;
+package org.tcdng.unify.xchart;
 
 /**
- * Supported aggregate function enumeration.
+ * XChart application components.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum AggregateType {
-    COUNT(Object.class),
-    SUM(Number.class),
-    AVERAGE(Number.class),
-    MAXIMUM(Number.class, Date.class),
-    MINIMUM(Number.class, Date.class);
+public interface XChartApplicationComponents {
 
-    private final Class<?>[] supports;
+    String XCHART_CHARTGENERATOR = "xchart-chartgenerator";
 
-    private AggregateType(Class<?>... supports) {
-        this.supports = supports;
-    }
-
-    public boolean supports(Class<?> clazz) {
-        for (Class<?> spClass : supports) {
-            if (spClass.isAssignableFrom(clazz)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    String XCHART_SIMPLEDIALGENERATOR = "xchart-simpledialgenerator";
 }
