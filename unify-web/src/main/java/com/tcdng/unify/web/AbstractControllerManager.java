@@ -643,7 +643,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         actionMap.put(controllerName, action);
 
         // Process result mappings
-        ConcurrentHashMap<String, Result> resultMap = new ConcurrentHashMap<String, Result>();
+        Map<String, Result> resultMap = new ConcurrentHashMap<String, Result>();
         List<Class<?>> classList = ReflectUtils.getClassHierachyList(typeClass);
         for (Class<?> clazz : classList) {
             // Grab results definition by super class hierarchy with subclass

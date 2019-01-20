@@ -17,6 +17,7 @@ package com.tcdng.unify.core;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.logging.LogManager;
 
 import com.tcdng.unify.core.util.CommandInterfaceUtils;
 import com.tcdng.unify.core.util.IOUtils;
@@ -116,6 +117,11 @@ public class Unify {
     }
 
     private static void doStartup(String workingFolder, String configFile, boolean deploymentMode) {
+        // Java 9 an 10 temp fix for jaxb bidning and warnings
+        // This is a temporary fix and should be removed and resolved with jaxb-api 2.3.1 when moving to minimum Java 9
+        System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
+        LogManager.getLogManager().reset();
+        
         if (workingFolder == null || workingFolder.isEmpty()) {
             workingFolder = System.getProperty("user.dir");
         }
