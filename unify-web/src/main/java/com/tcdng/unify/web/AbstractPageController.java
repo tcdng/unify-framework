@@ -193,7 +193,25 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
      * @throws UnifyException
      *             if an error occurs
      */
+    @Deprecated
     protected void writeValueTo(String controllerName, String propertyName, Object value) throws UnifyException {
+        ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
+                .populateController(controllerName, propertyName, value);
+    }
+
+    /**
+     * Writes value to another page controller in current session.
+     * 
+     * @param controllerName
+     *            the target controller
+     * @param propertyName
+     *            the controller property to set
+     * @param value
+     *            the value to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void populate(String controllerName, String propertyName, Object value) throws UnifyException {
         ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
                 .populateController(controllerName, propertyName, value);
     }
