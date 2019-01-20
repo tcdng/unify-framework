@@ -140,7 +140,7 @@ public class UnifyConfigUtilsTest {
     @Test
     public void testResolveConfigurationOverrides() throws Exception {
         List<String> overrideSuffixList = Arrays.asList("red", "blue");
-        ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<String, Object>();
+        Map<String, Object> map = new ConcurrentHashMap<String, Object>();
         map.put("a", Integer.valueOf(32));
         map.put("b", Integer.valueOf(16));
         map.put("c", Integer.valueOf(16));

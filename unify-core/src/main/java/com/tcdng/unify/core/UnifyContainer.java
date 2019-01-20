@@ -109,7 +109,7 @@ public class UnifyContainer {
 
     private UnifyContainerEnvironment unifyContainerEnvironment;
 
-    private ConcurrentHashMap<String, InternalUnifyComponentInfo> internalUnifyComponentInfos;
+    private Map<String, InternalUnifyComponentInfo> internalUnifyComponentInfos;
 
     private Map<String, String> internalResolutionMap;
 
