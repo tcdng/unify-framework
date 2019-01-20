@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyComponentSettings;
@@ -183,7 +182,7 @@ public final class UnifyConfigUtils {
      * @param overrideSuffixList
      *            the override suffix list
      */
-    public static <T> Map<String, String> resolveConfigurationOverrides(ConcurrentHashMap<String, T> map,
+    public static <T> Map<String, String> resolveConfigurationOverrides(Map<String, T> map,
             List<String> overrideSuffixList) {
         Map<String, String> resolutionMap = new HashMap<String, String>();
         if (overrideSuffixList != null && !overrideSuffixList.isEmpty()) {
