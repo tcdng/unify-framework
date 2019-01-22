@@ -28,7 +28,7 @@ var UNIFY_ALT = 0x0400;
 
 var UNIFY_RIGHT_BUTTON = 0x02;
 
-var UNIFY_DEFAULT_POPUP_Y_OFFSET = -40; // Negative offset in pixels
+var UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 
 var UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
 var UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
@@ -3347,8 +3347,7 @@ ux.centralize = function(baseElem, elem) {
 	else
 		elem.style.left = x + "px";
 
-	var y = Math.floor((baseElem.offsetHeight - elem.offsetHeight) / 2)
-			+ UNIFY_DEFAULT_POPUP_Y_OFFSET;
+	var y = Math.floor((baseElem.offsetHeight - elem.offsetHeight) / UNIFY_DEFAULT_POPUP_Y_SCALE);
 	if (y < 0)
 		elem.style.top = "0px";
 	else
