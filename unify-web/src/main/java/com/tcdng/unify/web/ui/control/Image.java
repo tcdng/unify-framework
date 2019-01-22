@@ -29,17 +29,14 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  */
 @Component("ui-image")
 @UplAttributes({ @UplAttribute(name = "src", type = String.class),
-        @UplAttribute(name = "srcBinding", type = String.class), @UplAttribute(name = "scope", type = String.class),
+        @UplAttribute(name = "srcBinding", type = String.class),
+        @UplAttribute(name = "scope", type = String.class),
         @UplAttribute(name = "clearOnRead", type = boolean.class, defaultValue = "true"),
         @UplAttribute(name = "alwaysFetch", type = boolean.class) })
 public class Image extends AbstractTargetControl {
 
     public String getSrc() throws UnifyException {
-        return getUplAttribute(String.class, "src");
-    }
-
-    public String getSrcBinding() throws UnifyException {
-        return getUplAttribute(String.class, "srcBinding");
+        return getUplAttribute(String.class, "src", "srcBinding");
     }
 
     public String getScope() throws UnifyException {

@@ -54,13 +54,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         }
 
         if (contentPanel.getPageCount() == 0) {
-            String path = contentPanel.getPath();
-            if (StringUtils.isBlank(path)) {
-                String pathBinding = contentPanel.getPathBinding();
-                path = contentPanel.getStringValue(pathBinding);
-            }
-
-            writer.write(",\"pImmURL\":\"").writeContextURL(path).write("\"");
+            writer.write(",\"pImmURL\":\"").writeContextURL(contentPanel.getPath()).write("\"");
         } else {
             writer.write(",\"pCurIdx\":").write(contentPanel.getPageIndex());
             ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();

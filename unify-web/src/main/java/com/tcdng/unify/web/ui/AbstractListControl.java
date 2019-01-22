@@ -30,8 +30,11 @@ import com.tcdng.unify.web.WebApplicationComponents;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "list", type = String.class, mandatory = true),
-        @UplAttribute(name = "listParams", type = String[].class), @UplAttribute(name = "listKey", type = String.class),
+@UplAttributes({
+        @UplAttribute(name = "list", type = String.class),
+        @UplAttribute(name = "listBinding", type = String.class),
+        @UplAttribute(name = "listParams", type = String[].class),
+        @UplAttribute(name = "listKey", type = String.class),
         @UplAttribute(name = "listDescription", type = String.class),
         @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "control"),
         @UplAttribute(name = "flow", type = boolean.class) })
@@ -55,7 +58,7 @@ public abstract class AbstractListControl extends AbstractControl implements Lis
 
     @Override
     public String getList() throws UnifyException {
-        return getUplAttribute(String.class, "list");
+        return getUplAttribute(String.class, "list", "listBinding");
     }
 
     @Override

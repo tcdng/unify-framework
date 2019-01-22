@@ -58,13 +58,6 @@ public class ImageWriter extends AbstractTargetControlWriter {
             writer.writeURLParameter("clearOnRead", "true");
         } else {
             String src = imageCtrl.getSrc();
-            if (StringUtils.isBlank(src)) {
-                String srcBinding = imageCtrl.getSrcBinding();
-                if (!StringUtils.isBlank(srcBinding)) {
-                    src = imageCtrl.getStringValue(srcBinding);
-                }
-            }
-
             if (!StringUtils.isBlank(src)) {
                 boolean alwaysFetch = imageCtrl.isAlwaysFetch();
                 if (TokenUtils.isContextScopeTag(src)) {
