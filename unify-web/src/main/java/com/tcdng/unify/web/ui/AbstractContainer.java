@@ -25,6 +25,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.util.WidgetUtils;
@@ -113,9 +114,12 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
             return widget;
         }
 
-        widget = widgetRepository.getWidget(getParentLongName(), shortName);
-        if (widget != null) {
-            return widget;
+        String parentLongName = getParentLongName();
+        if (!StringUtils.isBlank(parentLongName)) {
+            widget = widgetRepository.getWidget(parentLongName, shortName);
+            if (widget != null) {
+                return widget;
+            }
         }
 
         throw new UnifyException(UnifyWebErrorConstants.WIDGET_WITH_SHORTNAME_UNKNOWN, shortName, getLongName());
