@@ -38,9 +38,11 @@ import com.tcdng.unify.web.util.WidgetUtils;
 @UplAttributes({ @UplAttribute(name = "binding", type = String.class),
         @UplAttribute(name = "styleClass", type = String.class, defaultValue = "$e{}"),
         @UplAttribute(name = "styleClassBinding", type = String.class),
-        @UplAttribute(name = "style", type = String.class), @UplAttribute(name = "caption", type = String.class),
+        @UplAttribute(name = "style", type = String.class),
+        @UplAttribute(name = "caption", type = String.class),
         @UplAttribute(name = "captionBinding", type = String.class),
-        @UplAttribute(name = "columnStyle", type = String.class), @UplAttribute(name = "hint", type = String.class),
+        @UplAttribute(name = "columnStyle", type = String.class),
+        @UplAttribute(name = "hint", type = String.class),
         @UplAttribute(name = "hintBinding", type = String.class),
         @UplAttribute(name = "readOnly", type = boolean.class, defaultValue = "false"),
         @UplAttribute(name = "privilege", type = String.class),
@@ -159,14 +161,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public String getHint() throws UnifyException {
-        String hint = getUplAttribute(String.class, "hint");
-        if (StringUtils.isBlank(hint)) {
-            String hintBinding = getUplAttribute(String.class, "hintBinding");
-            if (!StringUtils.isBlank(hintBinding)) {
-                hint = getValue(String.class, hintBinding);
-            }
-        }
-        return hint;
+        return getUplAttribute(String.class, "hint", "hintBinding");
     }
 
     @Override
@@ -469,5 +464,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         if (value != null) {
             sb.append(' ').append(attribute).append(':').append(value);
         }
+    }
+    
+    protected <T> T getUplAttribute(Class<T> type, String attribute, String attributeBinding) throws UnifyException {
+        T list = getUplAttribute(type, attribute);
+        if (list == null) {
+            String listBinding = getUplAttribute(String.class, attributeBinding);
+            if (!StringUtils.isBlank(listBinding)) {
+                list = getValue(type, listBinding);
+            }
+        }
+        return list;
     }
 }

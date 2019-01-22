@@ -35,7 +35,8 @@ import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
  */
 @Component("ui-filedownload")
 @UplAttributes({ @UplAttribute(name = "fileSrc", type = String.class),
-        @UplAttribute(name = "fileBinding", type = String.class), @UplAttribute(name = "handler", type = String.class),
+        @UplAttribute(name = "fileBinding", type = String.class),
+        @UplAttribute(name = "handler", type = String.class),
         @UplAttribute(name = "imageSrc", type = String.class, defaultValue = "$t{images/download.png}"),
         @UplAttribute(name = "caption", type = String.class, defaultValue = "$m{button.download}") })
 public class FileDownload extends Button {
