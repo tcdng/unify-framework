@@ -33,6 +33,10 @@ public abstract class RemoteCallParams {
         this.methodCode = methodCode;
     }
 
+    public RemoteCallParams() {
+        
+    }
+
     public String getClientAppCode() {
         return clientAppCode;
     }

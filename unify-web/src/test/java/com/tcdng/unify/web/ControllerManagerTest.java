@@ -16,6 +16,7 @@
 package com.tcdng.unify.web;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -41,7 +42,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testGetPageControllerInfo() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testauthor");
         assertNotNull(pbbi);
     }
@@ -49,7 +50,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testPageControllerInfoActions() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testauthor");
 
         Set<String> actionNames = pbbi.getActionNames();
@@ -76,17 +77,55 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         assertEquals("newAuthor", action.getMethod().getName());
     }
 
+    @Test
+    public void testPageControllerInfoActionsInheritance() throws Exception {
+        ControllerManager bbm =
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        PageControllerInfo pbbi = bbm.getPageControllerInfo("/testtechnicalauthor");
+
+        Set<String> actionNames = pbbi.getActionNames();
+        assertTrue(actionNames.contains("/testtechnicalauthor/createAuthor"));
+        assertTrue(actionNames.contains("/testtechnicalauthor/viewAuthor"));
+        assertTrue(actionNames.contains("/testtechnicalauthor/newAuthor"));
+        assertTrue(actionNames.contains("/testtechnicalauthor/printTechnicalSpec"));
+        assertFalse(actionNames.contains("/testtechnicalauthor/drawTechnicalSpec"));
+
+        Action action = pbbi.getAction("/testtechnicalauthor/createAuthor");
+        assertNotNull(action);
+        assertNotNull(action.getMethod());
+        assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
+        assertEquals("createAuthor", action.getMethod().getName());
+
+        action = pbbi.getAction("/testtechnicalauthor/viewAuthor");
+        assertNotNull(action);
+        assertNotNull(action.getMethod());
+        assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
+        assertEquals("viewAuthor", action.getMethod().getName());
+
+        action = pbbi.getAction("/testtechnicalauthor/newAuthor");
+        assertNotNull(action);
+        assertNotNull(action.getMethod());
+        assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
+        assertEquals("newAuthor", action.getMethod().getName());
+
+        action = pbbi.getAction("/testtechnicalauthor/printTechnicalSpec");
+        assertNotNull(action);
+        assertNotNull(action.getMethod());
+        assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
+        assertEquals("printTechnicalSpec", action.getMethod().getName());
+    }
+
     @Test(expected = UnifyException.class)
     public void testGetPageControllerInfoInvalid() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         bbm.getPageControllerInfo("/resource/mock");
     }
 
     @Test
     public void testGetResourceControllerInfo() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         ResourceControllerInfo rbbi = bbm.getResourceControllerInfo("/resource/mock");
         assertNotNull(rbbi);
     }
@@ -94,7 +133,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testResourceControllerInfoActions() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         ResourceControllerInfo rbbi = bbm.getResourceControllerInfo("/resource/mock");
 
         Set<String> pageNames = rbbi.getPropertyIds();
@@ -118,14 +157,14 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test(expected = UnifyException.class)
     public void testGetResourceControllerInfoInvalid() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         bbm.getResourceControllerInfo("/testauthor");
     }
 
     @Test
     public void testGetRemoteCallControllerInfo() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         RemoteCallControllerInfo rcbbi = bbm.getRemoteCallControllerInfo("/remotecall/mock");
         assertNotNull(rcbbi);
     }
@@ -133,7 +172,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testRemoteCallControllerInfoHandlers() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         RemoteCallControllerInfo rcbbiXml = bbm.getRemoteCallControllerInfo("/remotecall/mock");
         RemoteCallHandler handler = rcbbiXml.getRemoteCallHandler("/remotecall/mock/getAccountDetails");
         assertNotNull(handler);
@@ -146,7 +185,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testGetController() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         Controller pbb = bbm.getController("/testauthor");
         assertNotNull(pbb);
 
@@ -157,14 +196,14 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test(expected = UnifyException.class)
     public void testGetControllerUnknown() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         bbm.getController("/snuffleupagus");
     }
 
     @Test
     public void testGetPageControllerSameSession() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
         Controller bb1 = bbm.getController("/testauthor");
         Controller bb2 = bbm.getController("/testauthor");
         assertSame(bb1, bb2);
@@ -174,7 +213,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testPopulateControllerProperty() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
         Date birthDt = new Date();
         bbm.populateController("/testauthor", "fullName", "Adrian Skim");
@@ -190,26 +229,26 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testExecuteXMLRemoteCallController() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
-        TestClientResponse response = new TestClientResponse();
         TestClientRequest request = new TestClientRequest("/remotecall/mock/getAccountDetails");
         String reqXml = "<accountDetailParams>" + "<accountNo>0123456785</accountNo>" + "</accountDetailParams>";
         request.setParameter(RequestParameterConstants.REMOTE_CALL_FORMAT, RemoteCallFormat.XML);
         request.setParameter(RequestParameterConstants.REMOTE_CALL_BODY, reqXml);
 
+        TestClientResponse response = new TestClientResponse();
         bbm.executeController(request, response);
 
-//        String expRespXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<accountDetailResult>"
-//                + "<accountNo>0123456785</accountNo>" + "<accountName>Edward Banfa</accountName>"
-//                + "<balance>250000.0</balance>" + "</accountDetailResult>";
-        //assertEquals(expRespXml, response.toString());
+        String expRespXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<accountDetailResult>"
+                + "<accountNo>0123456785</accountNo>" + "<accountName>Edward Banfa</accountName>"
+                + "<balance>250000.0</balance>" + "</accountDetailResult>";
+        assertEquals(expRespXml, response.toString());
     }
 
     @Test
     public void testExecuteJSONRemoteCallController() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
         TestClientResponse response = new TestClientResponse();
         TestClientRequest request = new TestClientRequest("/remotecall/mock/getAccountDetails");
@@ -223,7 +262,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     @Test
     public void testExecutePageController() throws Exception {
         ControllerManager bbm =
-                (ControllerManager) this.getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
 
         TestClientResponse response = new TestClientResponse();
         TestClientRequest request = new TestClientRequest("/testauthor/createAuthor");

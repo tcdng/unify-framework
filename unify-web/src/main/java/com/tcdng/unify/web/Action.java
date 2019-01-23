@@ -34,7 +34,7 @@ public class Action {
         this.method = method;
     }
 
-    public String getName() {
+    public String getMethodName() {
         return method.getName();
     }
 

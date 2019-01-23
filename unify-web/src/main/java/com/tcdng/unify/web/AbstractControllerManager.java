@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -93,6 +94,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     private Map<String, Result> defaultResultMap;
 
+    private FactoryMap<Class<? extends PageController>, PageControllerActionInfo> pageControllerActionInfoMap;
+
     private FactoryMap<String, PageControllerInfo> pageControllerInfoMap;
 
     private FactoryMap<String, RemoteCallControllerInfo> remoteCallControllerInfoMap;
@@ -109,6 +112,41 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         actionToControllerNameMap = new ConcurrentHashMap<String, String>();
         defaultResultMap = new HashMap<String, Result>();
         skipOnPopulateSet = new HashSet<String>();
+
+        pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>() {
+
+            @Override
+            protected PageControllerActionInfo create(Class<? extends PageController> clazz, Object... params)
+                    throws Exception {
+                PageControllerActionInfo pageControllerActionInfo = new PageControllerActionInfo();
+                Method[] methods = clazz.getMethods();
+                for (Method method : methods) {
+                    com.tcdng.unify.web.annotation.Action aa =
+                            method.getAnnotation(com.tcdng.unify.web.annotation.Action.class);
+                    if (aa != null) {
+                        if (isActionHandlerSignature(method)) {
+                            pageControllerActionInfo.addActionMethod(method);
+                        } else {
+                            throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_INVALID_ACTION_HANDLER_SIGNATURE,
+                                    clazz.getName(), method.getName());
+                        }
+                    } else {
+                        // Check if method has an action handler method signature and super class has
+                        // similar.
+                        // In other words, check inheritance of @Action from super class.
+                        // This implies that if a action handler method overrides a super action handler
+                        // method, we
+                        // don't have to apply the @Action annotation
+                        if (isActionHandlerSignature(method) && isSuperCommandMethod(clazz, method.getName())) {
+                            pageControllerActionInfo.addActionMethod(method);
+                        }
+                    }
+                }
+
+                return pageControllerActionInfo;
+            }
+
+        };
 
         pageControllerInfoMap = new FactoryMap<String, PageControllerInfo>() {
             @Override
@@ -619,23 +657,53 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         }
     }
 
+    private class PageControllerActionInfo {
+
+        private Map<String, Method> actionMethods;
+
+        public PageControllerActionInfo() {
+            actionMethods = new HashMap<String, Method>();
+        }
+
+        public void addActionMethod(Method method) {
+            actionMethods.put(method.getName(), method);
+        }
+
+        public boolean isActionMethod(String name) {
+            return actionMethods.containsKey(name);
+        }
+
+        public Collection<Method> getActionMethods() {
+            return actionMethods.values();
+        }
+    }
+
+    private boolean isActionHandlerSignature(Method method) throws UnifyException {
+        return String.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0
+                && method.getExceptionTypes().length == 1
+                && UnifyException.class.isAssignableFrom(method.getExceptionTypes()[0]);
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean isSuperCommandMethod(Class<? extends PageController> pageControllerClass, String methodName)
+            throws UnifyException {
+        Class<?> clazz = pageControllerClass;
+        while ((clazz = clazz.getSuperclass()) != null && PageController.class.isAssignableFrom(clazz)) {
+            if (pageControllerActionInfoMap.get((Class<? extends PageController>) clazz).isActionMethod(methodName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     private PageControllerInfo createPageControllerInfo(String controllerName) throws UnifyException {
         // Process action handlers
         Map<String, Action> actionMap = new HashMap<String, Action>();
         Class<? extends PageController> typeClass = getComponentType(PageController.class, controllerName);
-        Method[] methods = typeClass.getMethods();
-        for (Method method : methods) {
-            com.tcdng.unify.web.annotation.Action aa =
-                    method.getAnnotation(com.tcdng.unify.web.annotation.Action.class);
-            if (aa != null) {
-                if (String.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
-                    actionMap.put(controllerName + '/' + method.getName(), new Action(method));
-                } else {
-                    throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_INVALID_ACTION_HANDLER_SIGNATURE,
-                            controllerName, method.getName());
-                }
-            }
+        for (Method method : pageControllerActionInfoMap.get(typeClass).getActionMethods()) {
+            actionMap.put(controllerName + '/' + method.getName(), new Action(method));
         }
 
         // Set auto routing to index action
