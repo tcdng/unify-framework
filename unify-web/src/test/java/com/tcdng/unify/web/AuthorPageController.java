@@ -52,7 +52,7 @@ public class AuthorPageController extends AbstractPageController {
 
     private MapValues bio;
 
-    public AuthorPageController() throws UnifyException {
+    public AuthorPageController() {
 
     }
 
