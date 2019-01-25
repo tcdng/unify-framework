@@ -195,8 +195,8 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             // Count
-            List<Aggregate<?>> list = db.aggregate(AggregateType.COUNT,
-                    new FruitQuery().select("color").lessEqual("price", 45.00));
+            List<Aggregate<?>> list =
+                    db.aggregate(AggregateType.COUNT, new FruitQuery().select("color").lessEqual("price", 45.00));
             assertNotNull(list);
             assertEquals(1, list.size());
 
@@ -205,7 +205,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("color", countAggregate.getFieldName());
             assertEquals(4, countAggregate.getCount());
             assertEquals("4", countAggregate.getValue());
-            
+
             // Count with distinct
             list = db.aggregate(AggregateType.COUNT,
                     new FruitQuery().select("color").lessEqual("price", 45.00).distinct(true));
@@ -217,7 +217,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("color", countAggregate.getFieldName());
             assertEquals(4, countAggregate.getCount());
             assertEquals("3", countAggregate.getValue());
-            
+
         } finally {
             db.getTransactionManager().endTransaction();
         }
@@ -420,6 +420,25 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testDeleteAllRecordWithOrder() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
+            db.create(pineapple);
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertEquals(3, db.deleteAll(new FruitQuery().notEqual("color", "cyan")));
+            // Order should be ignored
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().order("color").ignoreEmptyCriteria(true));
+            assertEquals(1, testFruitList.size());
+            assertEquals(pineapple, testFruitList.get(0));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testDeleteAllRecordWithListOnlyCriteria() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -508,15 +527,15 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("tampico", "red", 4.50));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).order("name").offset(6).limit(3));
+            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).order("id").offset(6).limit(3));
             List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
             assertEquals(8, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
             assertEquals("orange", testFruitList.get(2).getName());
             assertEquals("mango", testFruitList.get(3).getName());
-            assertEquals("avocado", testFruitList.get(4).getName());
-            assertEquals("tampico", testFruitList.get(5).getName());
+            assertEquals("pineapple", testFruitList.get(4).getName());
+            assertEquals("peach", testFruitList.get(5).getName());
             assertEquals("grape", testFruitList.get(6).getName());
             assertEquals("strawberry", testFruitList.get(7).getName());
         } finally {
@@ -1499,6 +1518,32 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(3, db.updateAll(new FruitQuery().lessEqual("price", 45.00), new Update().add("price", 30.00)));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("name"));
+            assertEquals(4, testFruitList.size());
+
+            assertEquals("apple", testFruitList.get(0).getName());
+            assertEquals(Double.valueOf(30.00), testFruitList.get(0).getPrice());
+            assertEquals("banana", testFruitList.get(1).getName());
+            assertEquals(Double.valueOf(30.00), testFruitList.get(1).getPrice());
+            assertEquals("orange", testFruitList.get(2).getName());
+            assertEquals(Double.valueOf(30.00), testFruitList.get(2).getPrice());
+            assertEquals("pineapple", testFruitList.get(3).getName());
+            assertEquals(Double.valueOf(60.00), testFruitList.get(3).getPrice());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateAllRecordWithOrder() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertEquals(3, db.updateAll(new FruitQuery().lessEqual("price", 45.00).order("id"),
+                    new Update().add("price", 30.00)));
             List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("name"));
             assertEquals(4, testFruitList.size());
 
