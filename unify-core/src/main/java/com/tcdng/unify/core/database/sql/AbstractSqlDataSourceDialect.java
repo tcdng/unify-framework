@@ -855,7 +855,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
         StringBuilder countSql = new StringBuilder(sqlCacheFactory.get(query.getEntityClass()).getCountSql());
-        appendWhereClause(countSql, parameterInfoList, sqlEntityInfo, query, false);
+        appendWhereClause(countSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
         return new SqlStatement(sqlEntityInfo, SqlStatementType.COUNT, countSql.toString(), parameterInfoList);
     }
 
@@ -895,7 +895,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         // Select from view because criteria can contain view-only properties
         aggregateSql.append(" FROM ").append(sqlEntityInfo.getView());
 
-        appendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, false);
+        appendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
 
         return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
                 getSqlResultList(returnFieldInfoList));
@@ -924,7 +924,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
         StringBuilder deleteSql = new StringBuilder(sqlCacheFactory.get(sqlEntityInfo.getKeyClass()).getDeleteSql());
-        appendWhereClause(deleteSql, parameterInfoList, sqlEntityInfo, query, true);
+        appendWhereClause(deleteSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.DELETE);
         return new SqlStatement(sqlEntityInfo, SqlStatementType.DELETE, deleteSql.toString(), parameterInfoList);
     }
 
@@ -1003,7 +1003,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             findSql.append(" FROM ").append(sqlEntityInfo.getView());
         }
 
-        appendWhereClause(findSql, parameterInfoList, sqlEntityInfo, query, false);
+        appendWhereClause(findSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
         return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, findSql.toString(), parameterInfoList,
                 getSqlResultList(returnFieldInfoList));
     }
@@ -1082,7 +1082,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             listSql.append(" FROM ").append(sqlEntityInfo.getView());
         }
 
-        appendWhereClause(listSql, parameterInfoList, sqlEntityInfo, query, false);
+        appendWhereClause(listSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
         return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST, listSql.toString(), parameterInfoList,
                 getSqlResultList(returnFieldInfoList));
     }
@@ -1115,7 +1115,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             listSql.append(fieldsSql).append(" FROM ").append(sqlEntityInfo.getView());
         }
 
-        appendWhereClause(listSql, sqlEntityInfo, query);
+        appendWhereClause(listSql, sqlEntityInfo, query, SqlQueryType.SELECT);
         return listSql.toString();
     }
 
@@ -1221,7 +1221,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         StringBuilder updateSql = new StringBuilder();
         updateSql.append("UPDATE ").append(sqlEntityInfo.getTable()).append(" SET ").append(updateParams);
-        appendWhereClause(updateSql, parameterInfoList, sqlEntityInfo, query, true);
+        appendWhereClause(updateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.UPDATE);
         return new SqlStatement(sqlEntityInfo, SqlStatementType.UPDATE, updateSql.toString(), parameterInfoList);
     }
 
@@ -1345,12 +1345,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
      *            the aggregate type
      * @param funcParam
      *            the function parameter
-     * @param distinct indicates aggregate on distinct values
+     * @param distinct
+     *            indicates aggregate on distinct values
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void appendAggregateFunctionSql(StringBuilder sb, AggregateType aggregateType, String funcParam, boolean distinct)
-            throws UnifyException {
+    protected void appendAggregateFunctionSql(StringBuilder sb, AggregateType aggregateType, String funcParam,
+            boolean distinct) throws UnifyException {
         switch (aggregateType) {
             case AVERAGE:
                 sb.append("AVG(");
@@ -1369,7 +1370,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 sb.append("COUNT(");
                 break;
         }
-        
+
         if (distinct) {
             sb.append("DISTINCT ");
         }
@@ -1385,12 +1386,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
      *            the record info
      * @param query
      *            the query
+     * @param queryType
+     *            the query type
      * @return a true value if clause was appended
      * @throws UnifyException
      *             if an error occurs
      */
-    protected boolean appendWhereClause(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
-            throws UnifyException {
+    protected boolean appendWhereClause(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query,
+            SqlQueryType queryType) throws UnifyException {
         boolean isAppend = false;
         if (!query.isEmptyCriteria()) {
             sql.append(" WHERE ");
@@ -1413,11 +1416,17 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
         }
 
-        if (query.isOrder()) {
+        if (queryType.includeLimit()) {
+            isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), getQueryLimit(query), isAppend);
+        }
+
+        if (queryType.includeOrder() && query.isOrder()) {
             isAppend |= appendOrderClause(sql, sqlEntityInfo, query);
         }
 
-        isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), getQueryLimit(query), isAppend);
+        if (queryType.includeLimit()) {
+            isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), getQueryLimit(query), isAppend);
+        }
 
         return isAppend;
     }
@@ -1433,18 +1442,18 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
      *            the SQl record information
      * @param query
      *            the query
-     * @param isUpdate
-     *            indicates update
+     * @param queryType
+     *            the query type
      * @return true if an clause was appended otherwise false
      * @throws UnifyException
      *             if an error occurs
      */
     protected boolean appendWhereClause(StringBuilder sql, List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query, boolean isUpdate) throws UnifyException {
+            SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query, SqlQueryType queryType) throws UnifyException {
         boolean isAppend = false;
 
         int limit = getQueryLimit(query);
-        boolean isCritLimOffset = isUpdate && (limit > 0 || query.isOffset());
+        boolean isCritLimOffset = queryType.isUpdate() && (limit > 0 || query.isOffset());
         if (isCritLimOffset) {
             sql.append(" WHERE ").append(sqlEntityInfo.getIdFieldInfo().getColumn()).append(" IN (SELECT ")
                     .append(sqlEntityInfo.getIdFieldInfo().getColumn()).append(" FROM ")
@@ -1477,13 +1486,19 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
         }
 
-        isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
-
-        if (query.isOrder()) {
-            isAppend |= appendOrderClause(sql, sqlEntityInfo, query);
+        if (queryType.includeLimit()) {
+            isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
         }
 
-        isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
+        if (queryType.includeOrder() && query.isOrder()) {
+            if (!(queryType.isUpdate() && !(query.isLimit() || query.isOffset()))) {
+                isAppend |= appendOrderClause(sql, sqlEntityInfo, query);
+            }
+        }
+
+        if (queryType.includeLimit()) {
+            isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
+        }
 
         if (isCritLimOffset) {
             sql.append(")");
