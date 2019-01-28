@@ -33,8 +33,8 @@ import com.tcdng.unify.web.ui.control.Tree;
 import com.tcdng.unify.web.ui.data.EventType;
 import com.tcdng.unify.web.ui.data.TreeInfo;
 import com.tcdng.unify.web.ui.data.TreeInfo.MenuInfo;
+import com.tcdng.unify.web.ui.data.TreeInfo.TreeItemInfo;
 import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
-import com.tcdng.unify.web.ui.data.TreeItemInfo;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 
 /**
@@ -52,29 +52,28 @@ public class TreeWriter extends AbstractControlWriter {
     private static final String[] EVENT_CODES = { EventType.MOUSE_CLICK.code(), EventType.MOUSE_DBLCLICK.code(),
             EventType.MOUSE_RIGHTCLICK.code(), EventType.MOUSE_MENUCLICK.code() };
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        Tree<Object> tree = (Tree<Object>) widget;
+        Tree tree = (Tree) widget;
         writer.write("<div");
         writeTagAttributes(writer, tree);
         writer.write("><ul>");
-        TreeInfo<Object> treeInfo = (TreeInfo<Object>) tree.getValue();
-        List<TreeItemInfo<Object>> selectedItems = Collections.emptyList();
-        List<Integer> visibleItemIndexes = Collections.emptyList();
+        TreeInfo treeInfo = (TreeInfo) tree.getValue();
+        List<Integer> selectedItemIds = Collections.emptyList();
+        List<Integer> visibleItemIds = Collections.emptyList();
         if (treeInfo != null) {
-            selectedItems = treeInfo.getSelectedItems();
+            selectedItemIds = treeInfo.getSelectedItemIds();
             String collapsedSrc = tree.getCollapsedIcon();
             String expandedSrc = tree.getExpandedIcon();
             String ctrlIdBase = tree.getControlImgIdBase();
             String captionIdBase = tree.getCaptionIdBase();
 
-            visibleItemIndexes = new ArrayList<Integer>();
-            int itemCount = treeInfo.itemCount();
-            for (int i = 0; i < itemCount; i++) {
-                TreeItemInfo<Object> treeItemInfo = treeInfo.getTreeItemInfo(i);
+            visibleItemIds = new ArrayList<Integer>();
+            TreeItemInfo treeItemInfo = treeInfo.getFirstTreeItemInfo();
+            while (treeItemInfo != null) {
                 if (!treeItemInfo.isHidden()) {
-                    visibleItemIndexes.add(i);
+                    Integer itemId = treeItemInfo.getId();
+                    visibleItemIds.add(itemId);
 
                     // Open branch
                     writer.write("<li>");
@@ -87,17 +86,17 @@ public class TreeWriter extends AbstractControlWriter {
                     // Add control icon
                     if (treeItemInfo.isParent()) {
                         if (treeItemInfo.isExpanded()) {
-                            writeFileImageHtmlElement(writer, expandedSrc, ctrlIdBase + i, null, null);
+                            writeFileImageHtmlElement(writer, expandedSrc, ctrlIdBase + itemId, null, null);
                         } else {
-                            writeFileImageHtmlElement(writer, collapsedSrc, ctrlIdBase + i, null, null);
+                            writeFileImageHtmlElement(writer, collapsedSrc, ctrlIdBase + itemId, null, null);
                         }
                     } else {
                         writeFileImageHtmlElement(writer, "$t{images/blank.png}", null, null, null);
                     }
 
                     // Add item icon and caption
-                    writer.write("<span id=\"").write(captionIdBase).write(i);
-                    if (selectedItems.contains(treeItemInfo)) {
+                    writer.write("<span id=\"").write(captionIdBase).write(itemId);
+                    if (selectedItemIds.contains(itemId)) {
                         writer.write("\" class=\"tsel\">");
                     } else {
                         writer.write("\" class=\"tnorm\">");
@@ -111,19 +110,20 @@ public class TreeWriter extends AbstractControlWriter {
                     // Close branch
                     writer.write("</li>");
                 }
+
+                treeItemInfo = treeItemInfo.getNext();
             }
         }
         writer.write("</ul>");
         // Hidden controls
         writer.write("<select ");
-        writeTagId(writer, tree.getSelectedItemIndexCtrl());
+        writeTagId(writer, tree.getSelectedItemIdsCtrl());
         writeTagStyle(writer, "display:none;");
         writer.write(" multiple=\"multiple\">");
         if (treeInfo != null) {
-            for (Integer i : visibleItemIndexes) {
-                TreeItemInfo<Object> treeItemInfo = treeInfo.getTreeItemInfo(i);
-                writer.write("<option value=\"").write(i).write("\"");
-                if (selectedItems.contains(treeItemInfo)) {
+            for (Integer itemId : visibleItemIds) {
+                writer.write("<option value=\"").write(itemId).write("\"");
+                if (selectedItemIds.contains(itemId)) {
                     writer.write(" selected");
                 }
                 writer.write("></option>");
@@ -132,7 +132,7 @@ public class TreeWriter extends AbstractControlWriter {
         writer.write("</select>");
 
         writer.writeStructureAndContent(tree.getMenuCodeCtrl());
-        writer.writeStructureAndContent(tree.getSelectedCtrlIndexCtrl());
+        writer.writeStructureAndContent(tree.getSelectedCtrlIdCtrl());
         writer.writeStructureAndContent(tree.getEventTypeCtrl());
         writer.write("</div>");
 
@@ -154,20 +154,19 @@ public class TreeWriter extends AbstractControlWriter {
 
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         super.doWriteBehavior(writer, widget);
 
         try {
-            Tree<Object> tree = (Tree<Object>) widget;
+            Tree tree = (Tree) widget;
             writer.write("ux.rigTree(");
             JsonObject jsonPrm = Json.object();
             jsonPrm.add("pId", tree.getId());
             jsonPrm.add("pContId", tree.getContainerId());
             jsonPrm.add("pCmdURL", getCommandURL());
-            jsonPrm.add("pSelCtrlId", tree.getSelectedCtrlIndexCtrl().getId());
-            jsonPrm.add("pSelItemId", tree.getSelectedItemIndexCtrl().getId());
+            jsonPrm.add("pSelCtrlId", tree.getSelectedCtrlIdCtrl().getId());
+            jsonPrm.add("pSelItemId", tree.getSelectedItemIdsCtrl().getId());
             jsonPrm.add("pMenuCodeCtrlId", tree.getMenuCodeCtrl().getId());
             jsonPrm.add("pEventTypeId", tree.getEventTypeCtrl().getId());
             jsonPrm.add("pSel", "tsel");
@@ -177,13 +176,12 @@ public class TreeWriter extends AbstractControlWriter {
             jsonPrm.add("pEventCode", Json.array(EVENT_CODES));
 
             // Added to be able to push values on tree event
-            List<String> pageNames =
-                    getPageManager().getExpandedReferences(tree.getId());
+            List<String> pageNames = getPageManager().getExpandedReferences(tree.getId());
             if (!pageNames.isEmpty()) {
                 jsonPrm.add("pEventRef", Json.array(pageNames.toArray(new String[pageNames.size()])));
             }
 
-            TreeInfo<Object> treeInfo = (TreeInfo<Object>) tree.getValue();
+            TreeInfo treeInfo = (TreeInfo) tree.getValue();
             if (treeInfo != null) {
                 if (treeInfo.isMenu()) {
                     jsonPrm.add("pMenu", getJsonMenu(tree.getPrefixedId(RESERVED_MENU_PREFIX), treeInfo.getMenuList()));
@@ -200,14 +198,14 @@ public class TreeWriter extends AbstractControlWriter {
             }
 
             JsonArray items = Json.array();
-            for (int i = 0; i < tree.getItemCount(); i++) {
-                TreeItemInfo<Object> treeItemInfo = tree.getTreeItemInfo(i);
+            TreeItemInfo treeItemInfo = treeInfo.getFirstTreeItemInfo();
+            while (treeItemInfo != null) {
                 TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
                 String popupId = "pop_" + tree.getPrefixedId(treeItemCategoryInfo.getName());
                 Set<EventType> eventTypes = treeItemCategoryInfo.getEventTypes();
                 if (!treeItemInfo.isHidden()) {
                     JsonObject item = Json.object();
-                    item.add("idx", i);
+                    item.add("idx", treeItemInfo.getId());
                     if (treeItemCategoryInfo.isMenu()) {
                         item.add("popupId", popupId);
                     }
@@ -219,6 +217,8 @@ public class TreeWriter extends AbstractControlWriter {
                     item.add("pRtClick", eventTypes.contains(EventType.MOUSE_RIGHTCLICK));
                     items.add(item);
                 }
+
+                treeItemInfo = treeItemInfo.getNext();
             }
             jsonPrm.add("pItemList", items);
 
