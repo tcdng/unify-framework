@@ -176,6 +176,13 @@ public class TreeWriter extends AbstractControlWriter {
             jsonPrm.add("pLblBase", tree.getCaptionIdBase());
             jsonPrm.add("pEventCode", Json.array(EVENT_CODES));
 
+            // Added to be able to push values on tree event
+            List<String> pageNames =
+                    getPageManager().getExpandedReferences(tree.getId());
+            if (!pageNames.isEmpty()) {
+                jsonPrm.add("pEventRef", Json.array(pageNames.toArray(new String[pageNames.size()])));
+            }
+
             TreeInfo<Object> treeInfo = (TreeInfo<Object>) tree.getValue();
             if (treeInfo != null) {
                 if (treeInfo.isMenu()) {

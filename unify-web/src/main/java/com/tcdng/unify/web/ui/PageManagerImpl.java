@@ -149,6 +149,10 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                             reusablePageValidations.put(longName, pageValidation);
                         }
                     } else {
+                        if(uea.isAttribute("dataComponents")) {
+                            expandReferences(uplDocumentAttributes, uea);
+                        }
+
                         nonreusableComponentLongNames.add(longName);
                     }
                 }
@@ -355,13 +359,14 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     @Override
     public List<String> getPageNames(Collection<String> longNames) throws UnifyException {
-        List<String> pageNameList = new ArrayList<String>();
-        if (longNames != null) {
+        if (!DataUtils.isBlank(longNames)) {
+            List<String> resultList = new ArrayList<String>();
             for (String longName : longNames) {
-                pageNameList.add(pageNameMap.get(longName));
+                resultList.add(pageNameMap.get(longName));
             }
+            return resultList;
         }
-        return pageNameList;
+        return Collections.emptyList();
     }
 
     @Override
@@ -380,7 +385,45 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     @Override
     public List<String> getExpandedReferences(String pageName) throws UnifyException {
-        return expandedReferences.get(pageName);
+        List<String> resultList = expandedReferences.get(pageName);
+        if (resultList != null) {
+            return resultList;
+        }
+        
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> getExpandedReferencesForLongNames(Collection<String> longNames) throws UnifyException {
+        if (!DataUtils.isBlank(longNames)) {
+            List<String> resultList = new ArrayList<String>();
+            for (String longName : longNames) {
+                List<String> list = expandedReferences.get(pageNameMap.get(longName));
+                if (!DataUtils.isBlank(list)) {
+                    resultList.addAll(list);
+                }
+            }
+
+            return resultList;
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> getExpandedReferencesForPageNames(Collection<String> pageNames) throws UnifyException {
+        if (!DataUtils.isBlank(pageNames)) {
+            List<String> resultList = new ArrayList<String>();
+            for (String pageName : pageNames) {
+                List<String> list = expandedReferences.get(pageName);
+                if (!DataUtils.isBlank(list)) {
+                    resultList.addAll(list);
+                }
+            }
+
+            return resultList;
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -481,7 +524,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         String pageName = getPageName(uea.getLongName());
         if (!expandedReferences.containsKey(pageName)) {
             List<String> expandedList = new ArrayList<String>();
-            expandReferences(expandedList, uplDocumentAttributes, uea);
+            subExpandReferences(expandedList, uplDocumentAttributes, uea);
             expandedList = StringUtils.removeDuplicates(expandedList);
             expandedList.remove(uea.getLongName());
             expandedReferences.put(pageName, Collections.unmodifiableList(getPageNames(expandedList)));
@@ -489,27 +532,34 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
     }
 
     @SuppressWarnings("unchecked")
-    private void expandReferences(List<String> expandedList, UplDocumentAttributes uplDocumentAttributes,
+    private void subExpandReferences(List<String> expandedList, UplDocumentAttributes uplDocumentAttributes,
             UplElementAttributes uea) throws UnifyException {
         for (String longName : uea.getShallowReferencedLongNames("components")) {
-            expandReferences(expandedList, uplDocumentAttributes,
+            subExpandReferences(expandedList, uplDocumentAttributes,
+                    uplDocumentAttributes.getChildElementByLongName(longName));
+        }
+
+        for (String longName : uea.getShallowReferencedLongNames("dataComponents")) {
+            subExpandReferences(expandedList, uplDocumentAttributes,
                     uplDocumentAttributes.getChildElementByLongName(longName));
         }
 
         if (uea.isAttribute("section")) {
             Section[] sections = uea.getAttributeValue(Section[].class, "section");
-            for (Section section : sections) {
-                UplElementReferences uplRef = section.getUplAttribute(UplElementReferences.class, "components");
-                for (String longName : uplRef.getLongNames()) {
-                    expandReferences(expandedList, uplDocumentAttributes,
-                            uplDocumentAttributes.getChildElementByLongName(longName));
+            if (sections != null) {
+                for (Section section : sections) {
+                    UplElementReferences uplRef = section.getUplAttribute(UplElementReferences.class, "components");
+                    for (String longName : uplRef.getLongNames()) {
+                        subExpandReferences(expandedList, uplDocumentAttributes,
+                                uplDocumentAttributes.getChildElementByLongName(longName));
+                    }
                 }
             }
         }
 
         Set<UplElementAttributes> childElements = uea.getChildElements();
         for (UplElementAttributes ueaInner : childElements) {
-            expandReferences(expandedList, uplDocumentAttributes, ueaInner);
+            subExpandReferences(expandedList, uplDocumentAttributes, ueaInner);
         }
 
         if (childElements.isEmpty() && !expandedList.contains(uea.getLongName())) {

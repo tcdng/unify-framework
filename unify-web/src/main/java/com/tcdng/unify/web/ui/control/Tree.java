@@ -23,6 +23,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
@@ -40,7 +41,8 @@ import com.tcdng.unify.web.ui.data.TreeItemInfo;
 @Component("ui-tree")
 @UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultValue = "$t{images/collapsed.png}"),
         @UplAttribute(name = "expandedIcon", type = String.class, defaultValue = "$t{images/expanded.png}"),
-        @UplAttribute(name = "treeEventPath", type = String.class) })
+        @UplAttribute(name = "treeEventPath", type = String.class),
+        @UplAttribute(name = "dataComponents", type = UplElementReferences.class)})
 public class Tree<T> extends AbstractMultiControl {
 
     private Control eventTypeCtrl;
@@ -79,7 +81,7 @@ public class Tree<T> extends AbstractMultiControl {
     public String getTreeEventPath() throws UnifyException {
         return getUplAttribute(String.class, "treeEventPath");
     }
-
+    
     public Control getEventTypeCtrl() {
         return eventTypeCtrl;
     }
