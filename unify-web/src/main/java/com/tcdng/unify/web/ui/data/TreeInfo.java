@@ -35,28 +35,31 @@ import com.tcdng.unify.core.util.DataUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TreeInfo<T> {
+public class TreeInfo {
 
     private Map<String, TreeItemCategoryInfo> categories;
 
+    private Map<Integer, TreeItemInfo> treeItemsById;
+
     private List<MenuInfo> menuList;
 
-    private List<TreeItemInfo<T>> selectedItems;
+    private List<Integer> selectedItemIdList;
 
-    private TreeItemInfo<T>[] treeItems;
+    private TreeItemInfo firstTreeItemInfo;
 
-    private Map<Object, TreeItemInfo<T>> treeItemsById;
+    private Queue<TreeEvent> eventQueue;
 
-    private Queue<TreeEvent<T>> eventQueue;
-
-    private TreeInfo(Map<String, TreeItemCategoryInfo> categories, TreeItemInfo<T>[] treeItems,
-            Map<Object, TreeItemInfo<T>> treeItemsById, List<MenuInfo> menuList) {
+    private int idCounter;
+    
+    private TreeInfo(Map<String, TreeItemCategoryInfo> categories, List<MenuInfo> menuList,
+            Map<Integer, TreeItemInfo> treeItemsById, TreeItemInfo firstTreeItemInfo, int idCounter) {
         this.categories = categories;
-        this.treeItems = treeItems;
         this.treeItemsById = treeItemsById;
+        this.firstTreeItemInfo = firstTreeItemInfo;
         this.menuList = menuList;
-        selectedItems = Collections.emptyList();
-        eventQueue = new LinkedList<TreeEvent<T>>();
+        selectedItemIdList = Collections.emptyList();
+        eventQueue = new LinkedList<TreeEvent>();
+        this.idCounter = idCounter;
         evaluate();
     }
 
@@ -68,16 +71,20 @@ public class TreeInfo<T> {
         return categories.values();
     }
 
-    public TreeItemInfo<T> getTreeItemInfo(int index) {
-        return treeItems[index];
+    public TreeItemInfo getFirstTreeItemInfo() {
+        return firstTreeItemInfo;
+    }
+
+    public TreeItemInfo getTreeItemInfo(Integer id) {
+        return treeItemsById.get(id);
     }
 
     public int itemCount() {
-        return treeItems.length;
+        return treeItemsById.size();
     }
 
-    public List<TreeItemInfo<T>> getSelectedItems() {
-        return selectedItems;
+    public List<Integer> getSelectedItemIds() {
+        return selectedItemIdList;
     }
 
     public List<MenuInfo> getMenuList() {
@@ -88,140 +95,126 @@ public class TreeInfo<T> {
         return !DataUtils.isBlank(menuList);
     }
 
-    public int setSelectedItem(Object id) {
-        TreeItemInfo<T> treeItemInfo = treeItemsById.get(id);
+    public void setSelectedItem(Integer id) {
+        TreeItemInfo treeItemInfo = treeItemsById.get(id);
         if (treeItemInfo != null) {
-            selectedItems = new ArrayList<TreeItemInfo<T>>();
-            selectedItems.add(treeItemInfo);
+            selectedItemIdList = new ArrayList<Integer>(1);
+            selectedItemIdList.add(id);
             expandParents(treeItemInfo);
             evaluate();
-            return treeItemInfo.getIndex();
         }
-        selectedItems = Collections.emptyList();
-        return -1;
 
+        selectedItemIdList = Collections.emptyList();
     }
 
-    public void setSelectedItems(List<Integer> selectIndexes) {
-        if (!DataUtils.isBlank(selectIndexes)) {
-            selectedItems = new ArrayList<TreeItemInfo<T>>(selectIndexes.size());
-            for (Integer i : selectIndexes) {
-                selectedItems.add(treeItems[i]);
-            }
-        } else {
-            selectedItems = Collections.emptyList();
-        }
+    public void setSelectedItems(List<Integer> selectedItemIdList) {
+        this.selectedItemIdList = selectedItemIdList;
     }
 
     public void registerEvent(EventType type, String menuCode) {
-        eventQueue.offer(new TreeEvent<T>(type, menuCode, selectedItems));
+        eventQueue.offer(new TreeEvent(type, menuCode, selectedItemIdList));
     }
 
-    public TreeEvent<T> getEvent() {
+    public TreeEvent getEvent() {
         return eventQueue.poll();
     }
 
-    public void reflectOn(TreeInfo<T> targetTreeInfo, boolean evaluate) {
-        if (treeItemsById != null && targetTreeInfo.treeItemsById != null) {
-            for (Map.Entry<Object, TreeItemInfo<T>> entry : targetTreeInfo.treeItemsById.entrySet()) {
-                TreeItemInfo<T> thisItem = treeItemsById.get(entry.getKey());
-                if (thisItem != null) {
-                    TreeItemInfo<T> targetItem = entry.getValue();
-                    targetItem.setExpanded(thisItem.isExpanded());
-                    targetItem.setHidden(thisItem.isHidden());
-                }
-            }
-
-            if (evaluate) {
-                targetTreeInfo.evaluate();
-            }
-        }
-    }
-
     public void collapseAll() {
-        for (TreeItemInfo<T> treeItemInfo : treeItems) {
+        TreeItemInfo treeItemInfo = firstTreeItemInfo;
+        while (treeItemInfo != null) {
             treeItemInfo.setExpanded(false);
+            treeItemInfo = treeItemInfo.getNext();
         }
 
         evaluate();
+    }
+
+    public boolean collapse(Integer itemId) {
+        return setExpand(itemId, false);
     }
 
     public void expandAll() {
-        for (TreeItemInfo<T> treeItemInfo : treeItems) {
+        TreeItemInfo treeItemInfo = firstTreeItemInfo;
+        while (treeItemInfo != null) {
             treeItemInfo.setExpanded(true);
+            treeItemInfo = treeItemInfo.getNext();
         }
+
         evaluate();
     }
 
-    public boolean collapse(int itemIndex) {
-        return setExpand(itemIndex, false);
+    public boolean expand(Integer itemId) {
+        return setExpand(itemId, true);
     }
 
-    public boolean expand(int itemIndex) {
-        return setExpand(itemIndex, true);
-    }
-
-    private boolean setExpand(int itemIndex, boolean expand) {
-        if (itemIndex >= 0 && itemIndex < treeItems.length) {
-            treeItems[itemIndex].setExpanded(expand);
+    private boolean setExpand(Integer itemId, boolean expand) {
+        TreeItemInfo treeItemInfo = treeItemsById.get(itemId);
+        if (treeItemInfo != null) {
+            treeItemInfo.setExpanded(expand);
             evaluate();
             return true;
         }
+
         return false;
     }
 
-    private void expandParents(TreeItemInfo<T> treeItemInfo) {
-        TreeItemInfo<T> parent = treeItemInfo;
-        while ((parent = getParent(parent)) != null) {
-            parent.setExpanded(true);
+    private void expandParents(TreeItemInfo treeItemInfo) {
+        while ((treeItemInfo = getParent(treeItemInfo)) != null) {
+            treeItemInfo.setExpanded(true);
         }
     }
 
-    private TreeItemInfo<T> getParent(TreeItemInfo<T> treeItemInfo) {
-        int i = treeItemInfo.getIndex();
+    private TreeItemInfo getParent(TreeItemInfo treeItemInfo) {
+        TreeItemInfo topTreeItemInfo = treeItemInfo;
         int depth = treeItemInfo.getDepth();
-        while (--i >= 0) {
-            TreeItemInfo<T> topTreeItemInfo = treeItems[i];
+        while ((topTreeItemInfo = topTreeItemInfo.getPrevious()) != null) {
             if (topTreeItemInfo.getDepth() < depth) {
                 return topTreeItemInfo;
             }
         }
+
         return null;
     }
 
     private void evaluate() {
-        // Evaluate and set visibility
-        TreeItemInfo<T> mainCollapsed = null;
-        for (TreeItemInfo<T> treeItemInfo : treeItems) {
-            boolean hidden = false;
-            if (!(hidden = mainCollapsed != null && mainCollapsed.getDepth() < treeItemInfo.getDepth())) {
+        TreeItemInfo treeItemInfo = firstTreeItemInfo;
+        int checkDepth = -1;
+        while (treeItemInfo != null) {
+            boolean hidden = checkDepth >= 0 && checkDepth < treeItemInfo.getDepth();
+            if (!hidden) {
                 if (treeItemInfo.isExpanded()) {
-                    mainCollapsed = null;
+                    checkDepth = -1;
                 } else {
-                    mainCollapsed = treeItemInfo;
+                    checkDepth = treeItemInfo.getDepth();
                 }
             }
+
             treeItemInfo.setHidden(hidden);
+            treeItemInfo = treeItemInfo.getNext();
         }
     }
 
-    public static <U> Builder<U> newBuilder() {
-        return new Builder<U>();
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
-    public static <U> Builder<U> newBuilder(TreeInfo<U> refTreeInfo) {
-        return new Builder<U>(refTreeInfo);
+    public static Builder newBuilder(TreeInfo refTreeInfo) {
+        return new Builder(refTreeInfo);
     }
 
-    public static class Builder<T> {
+    public static class Builder {
 
         private Map<String, MenuInfo> menuList;
 
         private Map<String, TreeItemCategoryInfo> categories;
 
-        private List<TreeItemInfo<T>> treeItemList;
+        private Map<Integer, TreeItemInfo> treeItemsById;
 
-        private TreeItemIdentifier<T> identifier;
+        private TreeItemInfo firstTreeItemInfo;
+
+        private TreeItemInfo lastTreeItemInfo;
+
+        private int idCounter;
 
         private int depth;
 
@@ -229,17 +222,17 @@ public class TreeInfo<T> {
             this(null);
         }
 
-        private Builder(TreeInfo<T> refTreeInfo) {
+        private Builder(TreeInfo treeInfo) {
             menuList = new LinkedHashMap<String, MenuInfo>();
-            if (refTreeInfo != null) {
-                categories = new HashMap<String, TreeItemCategoryInfo>(refTreeInfo.categories);
+            treeItemsById = new HashMap<Integer, TreeItemInfo>();
+            if (treeInfo != null) {
+                categories = new HashMap<String, TreeItemCategoryInfo>(treeInfo.categories);
             } else {
                 categories = new HashMap<String, TreeItemCategoryInfo>();
             }
-            treeItemList = new ArrayList<TreeItemInfo<T>>();
         }
 
-        public Builder<T> addCategory(TreeItemCategoryInfo treeCategoryInfo) throws UnifyException {
+        public Builder addCategory(TreeItemCategoryInfo treeCategoryInfo) throws UnifyException {
             if (categories.containsKey(treeCategoryInfo.getName())) {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                         "Category with name [" + treeCategoryInfo.getName() + "] exists.");
@@ -249,28 +242,27 @@ public class TreeInfo<T> {
             return this;
         }
 
-        public Builder<T> useIdentifier(TreeItemIdentifier<T> identifier) {
-            this.identifier = identifier;
-            return this;
-        }
-
-        public Builder<T> addTreeItem(String categoryName, String caption) throws UnifyException {
+        public Builder addTreeItem(String categoryName, String caption) throws UnifyException {
             return addTreeItem(categoryName, caption, null);
         }
 
-        public Builder<T> addTreeItem(String categoryName, String caption, T item) throws UnifyException {
-            TreeItemInfo<T> lastTreeItemInfo = getLastTreeItemInfo();
-            if (lastTreeItemInfo != null && lastTreeItemInfo.getDepth() < depth) {
-                lastTreeItemInfo.setParent(true);
-            }
-
+        public Builder addTreeItem(String categoryName, String caption, Object item) throws UnifyException {
             if (!categories.containsKey(categoryName)) {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                         "Unknown category [" + categoryName + "].");
             }
 
-            treeItemList
-                    .add(new TreeItemInfo<T>(categories.get(categoryName), item, caption, treeItemList.size(), depth));
+            TreeItemInfo treeItemInfo =
+                    new TreeItemInfo(categories.get(categoryName), idCounter++, caption, depth, item);
+            if (lastTreeItemInfo == null) {
+                firstTreeItemInfo = treeItemInfo;
+            } else {
+                lastTreeItemInfo.setNext(treeItemInfo);
+                treeItemInfo.setPrevious(lastTreeItemInfo);
+            }
+
+            treeItemsById.put(treeItemInfo.getId(), treeItemInfo);
+            lastTreeItemInfo = treeItemInfo;
             return this;
         }
 
@@ -278,35 +270,11 @@ public class TreeInfo<T> {
             return categories.containsKey(name);
         }
 
-        /**
-         * Adds a menu item for general tree menu.
-         * 
-         * @param code
-         *            the item code sent to event handler on click.
-         * @param caption
-         *            the item caption
-         * @return this builder
-         * @throws UnifyException
-         *             if menu with code already exists
-         */
-        public Builder<T> addMenuItem(String code, String caption) throws UnifyException {
+        public Builder addMenuItem(String code, String caption) throws UnifyException {
             return addMenuItem(code, caption, false);
         }
 
-        /**
-         * Adds a menu item with separator option for general tree menu.
-         * 
-         * @param code
-         *            the item code sent to event handler on click.
-         * @param caption
-         *            the item caption
-         * @param separator
-         *            the separator flag
-         * @return this builder
-         * @throws UnifyException
-         *             if menu with code already exists
-         */
-        public Builder<T> addMenuItem(String code, String caption, boolean separator) throws UnifyException {
+        public Builder addMenuItem(String code, String caption, boolean separator) throws UnifyException {
             if (menuList.containsKey(code)) {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                         "Menu item with code [" + code + "] exists.");
@@ -317,7 +285,6 @@ public class TreeInfo<T> {
         }
 
         public boolean descend() {
-            TreeItemInfo<T> lastTreeItemInfo = getLastTreeItemInfo();
             if (lastTreeItemInfo != null && depth == lastTreeItemInfo.getDepth()) {
                 depth++;
                 return true;
@@ -339,30 +306,9 @@ public class TreeInfo<T> {
             return depth;
         }
 
-        @SuppressWarnings("unchecked")
-        public TreeInfo<T> build() throws UnifyException {
-            Map<Object, TreeItemInfo<T>> treeItemsById = null;
-            if (identifier != null) {
-                treeItemsById = new HashMap<Object, TreeItemInfo<T>>();
-                for (TreeItemInfo<T> treeItemInfo : treeItemList) {
-                    Object id = identifier.identify(treeItemInfo.getItem());
-                    if (id != null) {
-                        treeItemsById.put(id, treeItemInfo);
-                    }
-                }
-            }
-
-            return new TreeInfo<T>(categories,
-                    (TreeItemInfo<T>[]) treeItemList.toArray(new TreeItemInfo[treeItemList.size()]), treeItemsById,
-                    new ArrayList<MenuInfo>(menuList.values()));
-        }
-
-        private TreeItemInfo<T> getLastTreeItemInfo() {
-            if (!treeItemList.isEmpty()) {
-                return treeItemList.get(treeItemList.size() - 1);
-            }
-
-            return null;
+        public TreeInfo build() throws UnifyException {
+            return new TreeInfo(categories, new ArrayList<MenuInfo>(menuList.values()), treeItemsById,
+                    firstTreeItemInfo, idCounter);
         }
     }
 
@@ -400,18 +346,18 @@ public class TreeInfo<T> {
         }
     }
 
-    public class TreeEvent<U> {
+    public static class TreeEvent {
 
         private EventType type;
 
         private String menuCode;
 
-        private List<TreeItemInfo<U>> items;
+        private List<Integer> itemIdList;
 
-        public TreeEvent(EventType type, String menuCode, List<TreeItemInfo<U>> items) {
+        public TreeEvent(EventType type, String menuCode, List<Integer> itemIdList) {
             this.type = type;
             this.menuCode = menuCode;
-            this.items = items;
+            this.itemIdList = itemIdList;
         }
 
         public EventType getType() {
@@ -422,9 +368,104 @@ public class TreeInfo<T> {
             return menuCode;
         }
 
-        public List<TreeItemInfo<U>> getItems() {
-            return items;
+        public List<Integer> getItemIds() {
+            return itemIdList;
         }
 
     }
+
+    public static class TreeItemInfo {
+
+        private TreeItemCategoryInfo categoryInfo;
+
+        private TreeItemInfo previous;
+
+        private TreeItemInfo next;
+
+        private Integer id;
+
+        private String caption;
+
+        private Object item;
+
+        private int depth;
+
+        private boolean expanded;
+
+        private boolean hidden;
+
+        public TreeItemInfo(TreeItemCategoryInfo categoryInfo, Integer id, String caption, int depth, Object item) {
+            this.categoryInfo = categoryInfo;
+            this.id = id;
+            this.caption = caption;
+            this.depth = depth;
+            this.item = item;
+        }
+
+        public TreeItemCategoryInfo getCategoryInfo() {
+            return categoryInfo;
+        }
+
+        public TreeItemInfo getPrevious() {
+            return previous;
+        }
+
+        private void setPrevious(TreeItemInfo previous) {
+            this.previous = previous;
+        }
+
+        public boolean isFirst() {
+            return previous == null;
+        }
+
+        public TreeItemInfo getNext() {
+            return next;
+        }
+
+        private void setNext(TreeItemInfo next) {
+            this.next = next;
+        }
+
+        public boolean isLast() {
+            return next == null;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public String getCaption() {
+            return caption;
+        }
+
+        public int getDepth() {
+            return depth;
+        }
+
+        public Object getItem() {
+            return item;
+        }
+
+        public boolean isParent() {
+            return next != null && depth < next.getDepth();
+        }
+
+        public boolean isExpanded() {
+            return expanded;
+        }
+
+        private void setExpanded(boolean expanded) {
+            this.expanded = expanded;
+        }
+
+        public boolean isHidden() {
+            return hidden;
+        }
+
+        private void setHidden(boolean hidden) {
+            this.hidden = hidden;
+        }
+
+    }
+
 }

@@ -103,53 +103,14 @@ public class TreeItemCategoryInfo {
             return this;
         }
 
-        /**
-         * Adds a menu item for category. Item is not visible on multiple selection.
-         * 
-         * @param code
-         *            the item code sent to event handler on click.
-         * @param caption
-         *            the item caption
-         * @return this builder
-         * @throws UnifyException
-         *             if menu with code already exists
-         */
         public Builder addMenuItem(String code, String caption) throws UnifyException {
             return addMenuItem(code, caption, false);
         }
 
-        /**
-         * Adds a menu item for category.
-         * 
-         * @param code
-         *            the item code sent to event handler on click.
-         * @param caption
-         *            the item caption
-         * @param separator
-         *            the separator flag
-         * @return this builder
-         * @throws UnifyException
-         *             if menu with code already exists
-         */
         public Builder addMenuItem(String code, String caption, boolean separator) throws UnifyException {
             return addMenuItem(code, caption, separator, false);
         }
 
-        /**
-         * Adds a menu item for category with separator option.
-         * 
-         * @param code
-         *            the item code sent to event handler on click.
-         * @param caption
-         *            the item caption
-         * @param separator
-         *            the separator flag
-         * @param showOnMultiple
-         *            Indicates menu item should be visible on multiple selection
-         * @return this builder
-         * @throws UnifyException
-         *             if menu with code already exists
-         */
         public Builder addMenuItem(String code, String caption, boolean separator, boolean showOnMultiple)
                 throws UnifyException {
             if (menuList.containsKey(code)) {
