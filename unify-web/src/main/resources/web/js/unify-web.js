@@ -2552,6 +2552,13 @@ ux.rigTree = function(rgp) {
 	if (rgp.pItemList) {
 		var pItemList = rgp.pItemList;
 		var selObj = _id(rgp.pSelItemId);
+		var evpEq = {};
+		evpEq.uPanels = [ rgp.pContId ];
+		evpEq.uRef = [ rgp.pSelItemId, rgp.pEventTypeId ];
+		if(rgp.pEventRef) {
+			evpEq.uRef = evpEq.uRef.concat(rgp.pEventRef);
+		}
+
 		for (var i = 0; i < pItemList.length; i++) {
 			var itemInfo = pItemList[i];
 			if (itemInfo.parent) {
@@ -2570,13 +2577,13 @@ ux.rigTree = function(rgp) {
 			}
 
 			var tElem = _id(rgp.pLblBase + itemInfo.idx);
-			var evp = ux.treeNewEvPrm(rgp, pItemList, i, TREE_CLICK);
+			var evp = ux.treeNewEvPrm(rgp, evpEq, pItemList, i, TREE_CLICK);
 			ux.attachEventHandler(tElem, "click", ux.treeDelayItemClickHandler, evp);
 
-			evp = ux.treeNewEvPrm(rgp, pItemList, i, TREE_DBLCLICK);
+			evp = ux.treeNewEvPrm(rgp, evpEq, pItemList, i, TREE_DBLCLICK);
 			ux.attachEventHandler(tElem, "dblclick", ux.treeItemClickHandler, evp);
 				
-			evp = ux.treeNewEvPrm(rgp, pItemList, i, TREE_RTCLICK);
+			evp = ux.treeNewEvPrm(rgp, evpEq, pItemList, i, TREE_RTCLICK);
 			ux.attachEventHandler(tElem, "rtclick", ux.treeItemClickHandler, evp);
 			
 			if (selObj.options[i].selected) {
@@ -2604,17 +2611,24 @@ ux.rigTree = function(rgp) {
 }
 
 ux.rigTreeMenu = function(rgp, menu) {
+	var evpEq = {};
+	evpEq.uPanels = [ rgp.pContId ];
+	evpEq.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];
+	if(rgp.pEventRef) {
+		evpEq.uRef = evpEq.uRef.concat(rgp.pEventRef);
+	}
+
 	for(var i = 0; i < menu.items.length; i++) {
 		var menuItem = menu.items[i];
-		var evp = ux.treeMenuEvPrm(rgp, menuItem, TREE_MENUCLICK);
+		var evp = ux.treeMenuEvPrm(rgp, evpEq, menuItem, TREE_MENUCLICK);
 		ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
 	}
 }
 
-ux.treeMenuEvPrm = function(rgp, menuItem, eventCodeIdx) {
+ux.treeMenuEvPrm = function(rgp, evpEq, menuItem, eventCodeIdx) {
 	var evp = ux.newEvPrm(rgp);
-	evp.uPanels = [ rgp.pContId ];
-	evp.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];
+	evp.uPanels = evpEq.uPanels;
+	evp.uRef = evpEq.uRef;
 	evp.uEventTypeId = rgp.pEventTypeId;
 	evp.uMenuCodeCtrlId = rgp.pMenuCodeCtrlId;
 	evp.uEvCode = rgp.pEventCode[eventCodeIdx];
@@ -2639,10 +2653,10 @@ ux.treeMenuClickHandler = function(uEv) {
 	ux.post(uEv);
 }
 
-ux.treeNewEvPrm = function(rgp, pItemList, visualIdx, eventCodeIdx) {
+ux.treeNewEvPrm = function(rgp, evpEq, pItemList, visualIdx, eventCodeIdx) {
 	var evp = ux.newEvPrm(rgp);
-	evp.uPanels = [ rgp.pContId ];
-	evp.uRef = [ rgp.pSelItemId, rgp.pEventTypeId ];
+	evp.uPanels = evpEq.uPanels;
+	evp.uRef = evpEq.uRef;
 	evp.uSelItemId = rgp.pSelItemId;
 	evp.uEventTypeId = rgp.pEventTypeId;
 	evp.uSel = rgp.pSel;
@@ -3188,12 +3202,10 @@ ux.listKeydownHit = function(sCom) {
 
 ux.listKeydownEnter = function(sCom) {
 	/*
-	if(sCom.uIndexes && sCom.uIndexes.length > 0) {
-		sCom.uSelHandler(sCom, sCom.uIndexes[0], true);
-	} else {
-		sCom.uSelHandler(sCom, sCom.uOldSelIdx, true);
-	}
-	*/
+	 * if(sCom.uIndexes && sCom.uIndexes.length > 0) { sCom.uSelHandler(sCom,
+	 * sCom.uIndexes[0], true); } else { sCom.uSelHandler(sCom, sCom.uOldSelIdx,
+	 * true); }
+	 */
 	sCom.uSelHandler(sCom, sCom.uOldSelIdx, true);
 	ux.hidePopup(null);
 }

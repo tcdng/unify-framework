@@ -156,6 +156,30 @@ public interface PageManager extends UnifyComponent {
     List<String> getExpandedReferences(String pageName) throws UnifyException;
 
     /**
+     * Gets the expanded component page name list of a UPL component by collection of long names.
+     * 
+     * @param longNames
+     *            the UPL component long names
+     * @return the expanded component list if one exists for supplied long names,
+     *         otherwise null
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    List<String> getExpandedReferencesForLongNames(Collection<String> longNames) throws UnifyException;
+
+    /**
+     * Gets the expanded component page name list of a UPL component by collection of page names.
+     * 
+     * @param pageNames
+     *            the UPL component page names
+     * @return the expanded component list if one exists for supplied page names,
+     *         otherwise null
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    List<String> getExpandedReferencesForPageNames(Collection<String> pageNames) throws UnifyException;
+
+    /**
      * Gets the value component page name list of a UPL component by page name.
      * 
      * @param pageName
