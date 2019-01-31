@@ -651,12 +651,13 @@ z-index:400;}
 
 /** Tree */
 .ui-tree {display:inline-block;}
-.ui-tree ul {display:block; list-style-type: none; white-space:nowrap;font-size:11px;}
-.ui-tree .tsel {background-color:#C3C3E3;}
-.ui-tree .tnorm {}
-.ui-tree li span:hover {background-color:#9393B3;}
-.ui-tree li span {display:inline-block;padding:2px; vertical-align: top;font-size:14px;}
-.ui-tree li img {height:20px;width:20px;}
+.ui-tree .tlist {display:block; list-style-type: none; white-space:nowrap;font-size:12px;}
+.ui-tree .tsel {display:inline-block; background-color:#C7D5FC;}
+.ui-tree .tnorm {display:inline-block;}
+.ui-tree .tnorm:hover {background-color:#E6EBF9;}
+.ui-tree .titem {display:inline-block;padding:2px; vertical-align: top;}
+.ui-tree .timg {height:18px;width:18px;}
+.ui-tree .tindent {display:inline-block;height:18px;width:18px;padding:0px;}
 
 .tree-popup {position: absolute; visibility: hidden; width: auto; z-index: 300;
 	background-color: #F0F0F0;}

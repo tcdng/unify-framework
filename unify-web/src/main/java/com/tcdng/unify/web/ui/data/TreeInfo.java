@@ -50,7 +50,7 @@ public class TreeInfo {
     private Queue<TreeEvent> eventQueue;
 
     private int idCounter;
-    
+
     private TreeInfo(Map<String, TreeItemCategoryInfo> categories, List<MenuInfo> menuList,
             Map<Integer, TreeItemInfo> treeItemsById, TreeItemInfo firstTreeItemInfo, int idCounter) {
         this.categories = categories;
@@ -61,6 +61,27 @@ public class TreeInfo {
         eventQueue = new LinkedList<TreeEvent>();
         this.idCounter = idCounter;
         evaluate();
+    }
+
+    public Integer addTreeItem(Integer parentItemId, String categoryName, Object item)
+            throws UnifyException {
+        TreeItemCategoryInfo categoryInfo = categories.get(categoryName);
+        if (categoryInfo == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                    "Unknown category [" + categoryName + "].");
+        }
+
+        TreeItemInfo parentTreeItemInfo = treeItemsById.get(parentItemId);
+        if (parentTreeItemInfo == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                    "Unknown parent tree item with  [" + parentItemId + "].");
+        }
+
+        TreeItemInfo attachmentPointTreeItemInfo = findAttachmentPoint(parentTreeItemInfo, categoryInfo);
+        TreeItemInfo treeItemInfo =
+                new TreeItemInfo(categoryInfo, idCounter++, parentTreeItemInfo.getDepth() + 1, item);
+        attachTreeItem(attachmentPointTreeItemInfo, treeItemInfo);
+        return treeItemInfo.getId();
     }
 
     public TreeItemCategoryInfo getTreeCategoryInfo(String name) {
@@ -75,8 +96,12 @@ public class TreeInfo {
         return firstTreeItemInfo;
     }
 
-    public TreeItemInfo getTreeItemInfo(Integer id) {
-        return treeItemsById.get(id);
+    public TreeItemInfo getTreeItemInfo(Integer itemId) {
+        return treeItemsById.get(itemId);
+    }
+
+    public TreeItemInfo getTreeItemInfo(TreeEvent treeEvent, int index) {
+        return treeItemsById.get(treeEvent.getItemIds().get(index));
     }
 
     public int itemCount() {
@@ -194,6 +219,52 @@ public class TreeInfo {
         }
     }
 
+    private TreeItemInfo findAttachmentPoint(TreeItemInfo parentTreeItemInfo, TreeItemCategoryInfo categoryInfo) {
+        TreeItemInfo attachmentPointTreeItemInfo = parentTreeItemInfo;
+        TreeItemInfo nextTreeItemInfo = parentTreeItemInfo;
+        int targetDepth = parentTreeItemInfo.getDepth() + 1;
+        boolean siblings = false;
+        while ((nextTreeItemInfo = nextTreeItemInfo.getNext()) != null) {
+            if (nextTreeItemInfo.getDepth() != targetDepth) {
+                break;
+            }
+
+            if (categoryInfo.getLevel() < nextTreeItemInfo.getCategoryInfo().getLevel()) {
+                break;
+            }
+
+            if (categoryInfo == nextTreeItemInfo.getCategoryInfo()) {
+                attachmentPointTreeItemInfo = nextTreeItemInfo;
+                siblings = true;
+            } else {
+                if (!siblings) {
+                    attachmentPointTreeItemInfo = nextTreeItemInfo;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        nextTreeItemInfo = attachmentPointTreeItemInfo;
+        while ((nextTreeItemInfo = nextTreeItemInfo.getNext()) != null && nextTreeItemInfo.getDepth() > targetDepth) {
+            attachmentPointTreeItemInfo = nextTreeItemInfo;
+        }
+
+        return attachmentPointTreeItemInfo;
+    }
+
+    private void attachTreeItem(TreeItemInfo attachmentPointTreeItemInfo, TreeItemInfo treeItemInfo) {
+        treeItemInfo.setPrevious(attachmentPointTreeItemInfo);
+        TreeItemInfo nextPointTreeItemInfo = attachmentPointTreeItemInfo.getNext();
+        attachmentPointTreeItemInfo.setNext(treeItemInfo);
+        treeItemInfo.setNext(nextPointTreeItemInfo);
+        if (nextPointTreeItemInfo != null) {
+            nextPointTreeItemInfo.setPrevious(treeItemInfo);
+        }
+
+        treeItemsById.put(treeItemInfo.getId(), treeItemInfo);
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -242,18 +313,14 @@ public class TreeInfo {
             return this;
         }
 
-        public Builder addTreeItem(String categoryName, String caption) throws UnifyException {
-            return addTreeItem(categoryName, caption, null);
-        }
-
-        public Builder addTreeItem(String categoryName, String caption, Object item) throws UnifyException {
+        public Builder addTreeItem(String categoryName, Object item) throws UnifyException {
             if (!categories.containsKey(categoryName)) {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                         "Unknown category [" + categoryName + "].");
             }
 
             TreeItemInfo treeItemInfo =
-                    new TreeItemInfo(categories.get(categoryName), idCounter++, caption, depth, item);
+                    new TreeItemInfo(categories.get(categoryName), idCounter++, depth, item);
             if (lastTreeItemInfo == null) {
                 firstTreeItemInfo = treeItemInfo;
             } else {
@@ -264,6 +331,14 @@ public class TreeInfo {
             treeItemsById.put(treeItemInfo.getId(), treeItemInfo);
             lastTreeItemInfo = treeItemInfo;
             return this;
+        }
+
+        public Integer getLastTreeItemId() {
+            if (lastTreeItemInfo != null) {
+                return lastTreeItemInfo.getId();
+            }
+
+            return null;
         }
 
         public boolean isCategory(String name) {
@@ -384,8 +459,6 @@ public class TreeInfo {
 
         private Integer id;
 
-        private String caption;
-
         private Object item;
 
         private int depth;
@@ -394,10 +467,9 @@ public class TreeInfo {
 
         private boolean hidden;
 
-        public TreeItemInfo(TreeItemCategoryInfo categoryInfo, Integer id, String caption, int depth, Object item) {
+        public TreeItemInfo(TreeItemCategoryInfo categoryInfo, Integer id, int depth, Object item) {
             this.categoryInfo = categoryInfo;
             this.id = id;
-            this.caption = caption;
             this.depth = depth;
             this.item = item;
         }
@@ -432,10 +504,6 @@ public class TreeInfo {
 
         public Integer getId() {
             return id;
-        }
-
-        public String getCaption() {
-            return caption;
         }
 
         public int getDepth() {
