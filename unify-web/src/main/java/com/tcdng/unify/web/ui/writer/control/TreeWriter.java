@@ -51,13 +51,13 @@ public class TreeWriter extends AbstractControlWriter {
 
     private static final String[] EVENT_CODES = { EventType.MOUSE_CLICK.code(), EventType.MOUSE_DBLCLICK.code(),
             EventType.MOUSE_RIGHTCLICK.code(), EventType.MOUSE_MENUCLICK.code() };
-
+    
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         Tree tree = (Tree) widget;
         writer.write("<div");
         writeTagAttributes(writer, tree);
-        writer.write("><ul>");
+        writer.write("><ul class=\"tlist\">");
         TreeInfo treeInfo = (TreeInfo) tree.getValue();
         List<Integer> selectedItemIds = Collections.emptyList();
         List<Integer> visibleItemIds = Collections.emptyList();
@@ -80,18 +80,18 @@ public class TreeWriter extends AbstractControlWriter {
 
                     // Add left tabs
                     for (int j = 0; j < treeItemInfo.getDepth(); j++) {
-                        writeFileImageHtmlElement(writer, "$t{images/blank.png}", null, null, null);
+                        writeIndent(writer);
                     }
 
                     // Add control icon
                     if (treeItemInfo.isParent()) {
                         if (treeItemInfo.isExpanded()) {
-                            writeFileImageHtmlElement(writer, expandedSrc, ctrlIdBase + itemId, null, null);
+                            writeFileImageHtmlElement(writer, expandedSrc, ctrlIdBase + itemId, "timg", null);
                         } else {
-                            writeFileImageHtmlElement(writer, collapsedSrc, ctrlIdBase + itemId, null, null);
+                            writeFileImageHtmlElement(writer, collapsedSrc, ctrlIdBase + itemId, "timg", null);
                         }
                     } else {
-                        writeFileImageHtmlElement(writer, "$t{images/blank.png}", null, null, null);
+                        writeIndent(writer);
                     }
 
                     // Add item icon and caption
@@ -102,9 +102,11 @@ public class TreeWriter extends AbstractControlWriter {
                         writer.write("\" class=\"tnorm\">");
                     }
 
-                    writeFileImageHtmlElement(writer, treeItemInfo.getCategoryInfo().getIcon(), null, null, null);
-                    writer.write("<span>");
-                    writer.writeWithHtmlEscape(treeItemInfo.getCaption());
+                    TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
+                    writeFileImageHtmlElement(writer, treeItemCategoryInfo.getIcon(), null, "timg", null);
+                    writer.write("<span class=\"titem\">");
+                    writer.writeWithHtmlEscape(
+                            tree.getTreeItemRule().getTreeItemCaption(treeItemCategoryInfo, treeItemInfo.getItem()));
                     writer.write("</span></span>");
 
                     // Close branch
@@ -227,6 +229,10 @@ public class TreeWriter extends AbstractControlWriter {
         } catch (IOException e) {
             throwOperationErrorException(e);
         }
+    }
+
+    private void writeIndent(ResponseWriter writer) throws UnifyException {
+        writer.write("<span class=\"tindent\"></span>");
     }
 
     private void writeMenuStructureAndContent(ResponseWriter writer, String menuId, List<MenuInfo> menuInfoList)

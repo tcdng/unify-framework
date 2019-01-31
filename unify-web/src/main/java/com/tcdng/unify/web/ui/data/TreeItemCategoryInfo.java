@@ -41,15 +41,22 @@ public class TreeItemCategoryInfo {
 
     private String icon;
 
+    private String itemCaptionKey;
+
     private Set<EventType> eventTypes;
 
     private List<MenuInfo> menuList;
 
-    private TreeItemCategoryInfo(String name, String icon, Set<EventType> eventTypes, List<MenuInfo> menuList) {
+    private int level;
+
+    private TreeItemCategoryInfo(String name, String icon, String itemCaptionKey, Set<EventType> eventTypes,
+            List<MenuInfo> menuList, int level) {
         this.name = name;
         this.icon = icon;
+        this.itemCaptionKey = itemCaptionKey;
         this.eventTypes = Collections.unmodifiableSet(eventTypes);
         this.menuList = Collections.unmodifiableList(menuList);
+        this.level = level;
     }
 
     public String getName() {
@@ -60,12 +67,20 @@ public class TreeItemCategoryInfo {
         return icon;
     }
 
+    public String getItemCaptionKey() {
+        return itemCaptionKey;
+    }
+
     public Set<EventType> getEventTypes() {
         return eventTypes;
     }
 
     public List<MenuInfo> getMenuList() {
         return menuList;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public boolean isMenu() {
@@ -82,9 +97,13 @@ public class TreeItemCategoryInfo {
 
         private String icon;
 
+        private String itemCaptionKey;
+
         private Set<EventType> eventTypes;
 
         private Map<String, MenuInfo> menuList;
+
+        private int level;
 
         private Builder(String name) {
             this.name = name;
@@ -97,9 +116,18 @@ public class TreeItemCategoryInfo {
             return this;
         }
 
-        public Builder listenTo(EventType eventType) {
-            this.eventTypes.add(eventType);
+        public Builder useItemCaptionKey(String itemCaptionKey) {
+            this.itemCaptionKey = itemCaptionKey;
+            return this;
+        }
 
+        public Builder atLevel(int level) {
+            this.level = level;
+            return this;
+        }
+
+        public Builder listenTo(EventType eventType) {
+            eventTypes.add(eventType);
             return this;
         }
 
@@ -124,8 +152,8 @@ public class TreeItemCategoryInfo {
         }
 
         public TreeItemCategoryInfo build() {
-            return new TreeItemCategoryInfo(this.name, this.icon, this.eventTypes,
-                    new ArrayList<MenuInfo>(this.menuList.values()));
+            return new TreeItemCategoryInfo(name, icon, itemCaptionKey, eventTypes,
+                    new ArrayList<MenuInfo>(menuList.values()), level);
         }
     }
 }

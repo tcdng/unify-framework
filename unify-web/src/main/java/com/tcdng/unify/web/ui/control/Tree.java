@@ -41,8 +41,9 @@ import com.tcdng.unify.web.ui.data.TreeInfo.TreeItemInfo;
 @Component("ui-tree")
 @UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultValue = "$t{images/collapsed.png}"),
         @UplAttribute(name = "expandedIcon", type = String.class, defaultValue = "$t{images/expanded.png}"),
+        @UplAttribute(name = "treeRule", type = String.class, defaultValue = "default-treeitemrule"),
         @UplAttribute(name = "treeEventPath", type = String.class),
-        @UplAttribute(name = "dataComponents", type = UplElementReferences.class)})
+        @UplAttribute(name = "dataComponents", type = UplElementReferences.class) })
 public class Tree extends AbstractMultiControl {
 
     private Control eventTypeCtrl;
@@ -61,6 +62,8 @@ public class Tree extends AbstractMultiControl {
 
     private Integer selectedCtrlId;
 
+    private TreeItemRule treeItemRule;
+    
     @Override
     public void onPageInitialize() throws UnifyException {
         eventTypeCtrl = (Control) addInternalChildControl("!ui-hidden binding:eventType");
@@ -68,6 +71,11 @@ public class Tree extends AbstractMultiControl {
         selectedItemIdsCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedItemIds");
         selectedCtrlIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedCtrlId");
         selectedItemIds = Collections.emptyList();
+        treeItemRule = (TreeItemRule) getComponent(getUplAttribute(String.class, "treeRule"));
+    }
+
+    public TreeItemRule getTreeItemRule() {
+        return treeItemRule;
     }
 
     public String getCollapsedIcon() throws UnifyException {
@@ -81,7 +89,7 @@ public class Tree extends AbstractMultiControl {
     public String getTreeEventPath() throws UnifyException {
         return getUplAttribute(String.class, "treeEventPath");
     }
-    
+
     public Control getEventTypeCtrl() {
         return eventTypeCtrl;
     }
@@ -114,14 +122,14 @@ public class Tree extends AbstractMultiControl {
         this.menuCode = menuCode;
     }
 
-    public int getSelectedCtrlId() {
+    public Integer getSelectedCtrlId() {
         return selectedCtrlId;
     }
 
     public void setSelectedCtrlId(Integer selectedCtrlId) {
         this.selectedCtrlId = selectedCtrlId;
     }
-    
+
     public List<Integer> getSelectedItemIds() {
         return selectedItemIds;
     }
