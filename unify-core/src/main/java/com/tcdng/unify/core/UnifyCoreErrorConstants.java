@@ -918,4 +918,19 @@ public interface UnifyCoreErrorConstants {
      * Chart generator {0} has multiple generator units for chart type {1}.
      */
     String CHARTGENERATOR_MULTIPLE_GENERATOR_UNIT = "UC_00E4";
+    
+    /**
+     * Marked tree default.
+     */
+    String MARKEDTREE_DEFAULT = "UC_00E5";
+    
+    /**
+     * Marked tree not in chain mode.
+     */
+    String MARKEDTREE_NOT_CHAIN = "UC_00E6";
+    
+    /**
+     * Marked tree in chain mode.
+     */
+    String MARKEDTREE_IN_CHAIN = "UC_00E7";
 }
