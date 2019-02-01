@@ -1087,6 +1087,78 @@ public class MarkedTreeTest {
         assertTrue(vegetable.getChild().getItem().isSelected());
         assertFalse(vegetable.getChild().getNext().getItem().isSelected());
     }
+
+    @Test
+    public void testUpdateParentsFromMark() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        Long aspMark =  mTree.add(new TestFood("asparagus"));
+
+
+        // Select all parents from specific node
+        mTree.updateParentNodes(aspMark, new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertTrue(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertFalse(fruit.getItem().isSelected());
+        assertFalse(fruit.getChild().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertTrue(vegetable.getItem().isSelected());
+        assertFalse(vegetable.getChild().getItem().isSelected());
+        assertFalse(vegetable.getChild().getNext().getItem().isSelected());
+    }
+
+    @Test
+    public void testUpdateParentsFromMarkWithMatch() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        Long aspMark =  mTree.add(new TestFood("asparagus"));
+
+
+        // Select all parents from specific node
+        mTree.updateParentNodes(aspMark, new TestMatcher2("v"), new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertFalse(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertFalse(fruit.getItem().isSelected());
+        assertFalse(fruit.getChild().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertTrue(vegetable.getItem().isSelected());
+        assertFalse(vegetable.getChild().getItem().isSelected());
+        assertFalse(vegetable.getChild().getNext().getItem().isSelected());
+    }
     
     @Test
     public void testRemoveByUnknownMark() throws Exception {

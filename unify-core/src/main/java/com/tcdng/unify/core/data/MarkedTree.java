@@ -486,6 +486,42 @@ public class MarkedTree<T> {
     }
 
     /**
+     * Updates all parent nodes of node at supplied mark using supplied update policy.
+     * 
+     * @param startMark
+     *            the start mark
+     * @param updateChildPolicy
+     *            the update policy
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void updateParentNodes(Long startMark, UpdateChildPolicy<T> updateChildPolicy) throws UnifyException {
+        updateParentNodes(startMark, null, updateChildPolicy);
+    }
+
+    /**
+     * Updates all parent nodes of node at supplied mark that are matched by supplied matcher using supplied update policy.
+     * 
+     * @param startMark
+     *            the start mark
+     * @param matcher the matcher
+     * @param updateChildPolicy
+     *            the update policy
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void updateParentNodes(Long startMark, Matcher<T> matcher, UpdateChildPolicy<T> updateChildPolicy) throws UnifyException {
+        Node<T> trg = nodes.get(startMark);
+        if (trg != null) {
+            if (matcher != null) {
+                updateParentNode(trg, matcher, updateChildPolicy);
+            } else {
+                updateParentNode(trg, updateChildPolicy);
+            }
+        }
+    }
+
+    /**
      * An unchained mode operation that removes node, including all its children, at
      * supplied mark.
      * 
@@ -731,6 +767,25 @@ public class MarkedTree<T> {
         while (ch != null) {
             updateNode(ch, matcher, updateChildPolicy);
             ch = ch.next;
+        }
+    }
+
+    private void updateParentNode(Node<T> trg, UpdateChildPolicy<T> updateChildPolicy) {
+        Node<T> parent = getParent(trg);
+        if (parent != null) {
+            updateChildPolicy.update(parent.item);
+            updateParentNode(parent, updateChildPolicy);
+        }
+    }
+
+    private void updateParentNode(Node<T> trg, Matcher<T> matcher, UpdateChildPolicy<T> updateChildPolicy) {
+        Node<T> parent = getParent(trg);
+        if (parent != null) {
+            if (matcher.match(parent.item)) {
+                updateChildPolicy.update(parent.item);
+            }
+
+            updateParentNode(parent, matcher, updateChildPolicy);
         }
     }
 
