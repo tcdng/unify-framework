@@ -16,21 +16,33 @@
 
 package com.tcdng.unify.core.list;
 
+import java.util.List;
+
+import com.tcdng.unify.core.data.Listable;
+
 /**
- * Single long list parameters.
+ * List listable value parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SingleLongParams {
+public class ListableListParam {
 
-    private Long value;
+    private List<? extends Listable> listableList;
 
-    public SingleLongParams(Long value) {
-        this.value = value;
+    public ListableListParam(List<? extends Listable> listableList) {
+        this.listableList = listableList;
     }
 
-    public Long getValue() {
-        return value;
+    public List<? extends Listable> getListableList() {
+        return listableList;
+    }
+
+    /**
+     * Checks if params has valid and non-zero sized list.
+     * @return a true value if valid non-zero sized list
+     */
+    public boolean isListableList() {
+        return listableList != null && !listableList.isEmpty();
     }
 }

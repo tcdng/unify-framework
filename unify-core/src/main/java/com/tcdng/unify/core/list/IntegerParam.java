@@ -17,20 +17,20 @@
 package com.tcdng.unify.core.list;
 
 /**
- * Single double list parameters.
+ * List integer value parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SingleDoubleParams {
+public class IntegerParam {
 
-    private Double value;
+    private Integer value;
 
-    public SingleDoubleParams(Double value) {
+    public IntegerParam(Integer value) {
         this.value = value;
     }
 
-    public Double getValue() {
+    public Integer getValue() {
         return value;
     }
 }

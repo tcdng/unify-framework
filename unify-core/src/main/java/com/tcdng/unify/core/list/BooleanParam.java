@@ -17,20 +17,20 @@
 package com.tcdng.unify.core.list;
 
 /**
- * Single string list parameters.
+ * List boolean value parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SingleStringParams {
+public class BooleanParam {
 
-    private String value;
+    private Boolean value;
 
-    public SingleStringParams(String value) {
+    public BooleanParam(Boolean value) {
         this.value = value;
     }
 
-    public String getValue() {
+    public Boolean getValue() {
         return value;
     }
 }

@@ -17,7 +17,7 @@
 package com.tcdng.unify.core.list;
 
 /**
- * Zero list parameters.
+ * List zero parameters.
  * 
  * @author Lateef Ojulari
  * @since 1.0
