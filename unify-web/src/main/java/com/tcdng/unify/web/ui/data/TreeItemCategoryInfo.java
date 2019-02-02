@@ -28,8 +28,6 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.MarkedTree.AddChildPolicy;
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.web.ui.data.TreeInfo.MenuInfo;
-import com.tcdng.unify.web.ui.data.TreeInfo.TreeItemInfo;
 
 /**
  * Tree item category info.
@@ -47,14 +45,14 @@ public class TreeItemCategoryInfo {
 
     private Set<EventType> eventTypes;
 
-    private List<MenuInfo> menuList;
+    private List<TreeMenuInfo> menuList;
     
     private AddChildPolicy<TreeItemInfo> addChildPolicy;
 
     private int level;
 
     private TreeItemCategoryInfo(String name, String icon, String itemCaptionKey, Set<EventType> eventTypes,
-            List<MenuInfo> menuList, AddChildPolicy<TreeItemInfo> addChildPolicy, int level) {
+            List<TreeMenuInfo> menuList, AddChildPolicy<TreeItemInfo> addChildPolicy, int level) {
         this.name = name;
         this.icon = icon;
         this.itemCaptionKey = itemCaptionKey;
@@ -80,7 +78,7 @@ public class TreeItemCategoryInfo {
         return eventTypes;
     }
 
-    public List<MenuInfo> getMenuList() {
+    public List<TreeMenuInfo> getMenuList() {
         return menuList;
     }
 
@@ -102,7 +100,7 @@ public class TreeItemCategoryInfo {
 
     public static class Builder {
 
-        private static final DefaultAddChildPolicy defaultAddChildPolicy = new DefaultAddChildPolicy();
+        private static final DefaultTreeItemAddPolicy defaultAddChildPolicy = new DefaultTreeItemAddPolicy();
 
         private String name;
 
@@ -112,7 +110,7 @@ public class TreeItemCategoryInfo {
 
         private Set<EventType> eventTypes;
 
-        private Map<String, MenuInfo> menuList;
+        private Map<String, TreeMenuInfo> menuList;
 
         private AddChildPolicy<TreeItemInfo> addChildPolicy;
         
@@ -121,7 +119,7 @@ public class TreeItemCategoryInfo {
         private Builder(String name) {
             this.name = name;
             eventTypes = new HashSet<EventType>();
-            menuList = new LinkedHashMap<String, MenuInfo>();
+            menuList = new LinkedHashMap<String, TreeMenuInfo>();
             addChildPolicy = defaultAddChildPolicy;
         }
 
@@ -166,25 +164,13 @@ public class TreeItemCategoryInfo {
             }
 
             listenTo(EventType.MOUSE_RIGHTCLICK);
-            menuList.put(code, new MenuInfo(code, caption, showOnMultiple, separator));
+            menuList.put(code, new TreeMenuInfo(code, caption, showOnMultiple, separator));
             return this;
         }
 
         public TreeItemCategoryInfo build() {
             return new TreeItemCategoryInfo(name, icon, itemCaptionKey, eventTypes,
-                    new ArrayList<MenuInfo>(menuList.values()), addChildPolicy, level);
+                    new ArrayList<TreeMenuInfo>(menuList.values()), addChildPolicy, level);
         }
-    }
-    
-    private static class DefaultAddChildPolicy implements AddChildPolicy<TreeItemInfo> {
-
-        @Override
-        public int addDecision(TreeItemInfo targetItem, TreeItemInfo childItem) {
-            if (childItem.getLevel() < targetItem.getLevel()) {
-                return -1;
-            }
-            return 0;
-        }
-        
     }
 }

@@ -28,8 +28,8 @@ import java.util.Queue;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.MarkedTree;
+import com.tcdng.unify.core.data.MarkedTree.Matcher;
 import com.tcdng.unify.core.data.MarkedTree.Node;
-import com.tcdng.unify.core.data.MarkedTree.UpdateChildPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -40,21 +40,21 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class TreeInfo {
 
-    private static final ExpandChildPolicy expandChildPolicy = new ExpandChildPolicy();
+    private static final DefaultTreeItemExpandPolicy expandChildPolicy = new DefaultTreeItemExpandPolicy();
 
-    private static final CollapseChildPolicy collapseChildPolicy = new CollapseChildPolicy();
+    private static final DefaultTreeItemCollapsePolicy collapseChildPolicy = new DefaultTreeItemCollapsePolicy();
 
     private Map<String, TreeItemCategoryInfo> categories;
 
     private MarkedTree<TreeItemInfo> itemInfoTree;
 
-    private List<MenuInfo> menuList;
+    private List<TreeMenuInfo> menuList;
 
     private List<Long> selectedItemIdList;
 
     private Queue<TreeEvent> eventQueue;
 
-    private TreeInfo(List<MenuInfo> menuList, Map<String, TreeItemCategoryInfo> categories,
+    private TreeInfo(List<TreeMenuInfo> menuList, Map<String, TreeItemCategoryInfo> categories,
             MarkedTree<TreeItemInfo> itemInfoTree) {
         this.menuList = menuList;
         this.categories = categories;
@@ -97,6 +97,15 @@ public class TreeInfo {
         return itemInfoTree.getNode(treeEvent.getItemIds().get(index));
     }
 
+    public Node<TreeItemInfo> findNode(Long parentItemId, Matcher<TreeItemInfo> childMatcher) throws UnifyException {
+        return itemInfoTree.findNode(parentItemId, childMatcher);
+    }
+
+    public List<Node<TreeItemInfo>> findNodes(Long parentItemId, Matcher<TreeItemInfo> childMatcher)
+            throws UnifyException {
+        return itemInfoTree.findNodes(parentItemId, childMatcher);
+    }
+
     public TreeItemInfo getTreeItemInfo(Long itemId) {
         Node<TreeItemInfo> node = itemInfoTree.getNode(itemId);
         if (node != null) {
@@ -114,7 +123,7 @@ public class TreeInfo {
         return itemInfoTree.size();
     }
 
-    public List<MenuInfo> getMenuList() {
+    public List<TreeMenuInfo> getMenuList() {
         return menuList;
     }
 
@@ -151,7 +160,7 @@ public class TreeInfo {
     public boolean collapse(Long itemId) {
         TreeItemInfo treeItemInfo = getTreeItemInfo(itemId);
         if (treeItemInfo != null) {
-            treeItemInfo.expanded = false;
+            treeItemInfo.setExpanded(false);
             return true;
         }
 
@@ -165,7 +174,8 @@ public class TreeInfo {
     public boolean expand(Long itemId) {
         TreeItemInfo treeItemInfo = getTreeItemInfo(itemId);
         if (treeItemInfo != null) {
-            return treeItemInfo.expanded = true;
+            treeItemInfo.setExpanded(true);
+            return true;
         }
 
         return false;
@@ -181,7 +191,7 @@ public class TreeInfo {
 
     public static class Builder {
 
-        private Map<String, MenuInfo> menuList;
+        private Map<String, TreeMenuInfo> menuList;
 
         private Map<String, TreeItemCategoryInfo> categories;
 
@@ -192,7 +202,7 @@ public class TreeInfo {
         }
 
         private Builder(TreeInfo treeInfo) {
-            menuList = new LinkedHashMap<String, MenuInfo>();
+            menuList = new LinkedHashMap<String, TreeMenuInfo>();
             itemInfoTree = new MarkedTree<TreeItemInfo>(new TreeItemInfo());
             if (treeInfo != null) {
                 categories = new HashMap<String, TreeItemCategoryInfo>(treeInfo.categories);
@@ -239,7 +249,7 @@ public class TreeInfo {
                         "Menu item with code [" + code + "] exists.");
             }
 
-            menuList.put(code, new MenuInfo(code, caption, true, separator));
+            menuList.put(code, new TreeMenuInfo(code, caption, true, separator));
             return this;
         }
 
@@ -253,125 +263,9 @@ public class TreeInfo {
 
         public TreeInfo build() throws UnifyException {
             itemInfoTree.setChain(false); // Enter unchained mode
-            return new TreeInfo(Collections.unmodifiableList(new ArrayList<MenuInfo>(menuList.values())), categories,
+            return new TreeInfo(Collections.unmodifiableList(new ArrayList<TreeMenuInfo>(menuList.values())), categories,
                     itemInfoTree);
         }
-    }
-
-    public static class MenuInfo {
-
-        private String code;
-
-        private String caption;
-
-        private boolean showOnMultiple;
-
-        private boolean separator;
-
-        public MenuInfo(String code, String caption, boolean showOnMultiple, boolean separator) {
-            this.code = code;
-            this.caption = caption;
-            this.separator = separator;
-            this.showOnMultiple = showOnMultiple;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getCaption() {
-            return caption;
-        }
-
-        public boolean isShowOnMultiple() {
-            return showOnMultiple;
-        }
-
-        public boolean isSeparator() {
-            return separator;
-        }
-    }
-
-    public static class TreeEvent {
-
-        private EventType type;
-
-        private String menuCode;
-
-        private List<Long> itemIdList;
-
-        public TreeEvent(EventType type, String menuCode, List<Long> itemIdList) {
-            this.type = type;
-            this.menuCode = menuCode;
-            this.itemIdList = itemIdList;
-        }
-
-        public EventType getType() {
-            return type;
-        }
-
-        public String getMenuCode() {
-            return menuCode;
-        }
-
-        public List<Long> getItemIds() {
-            return itemIdList;
-        }
-
-    }
-
-    public static class TreeItemInfo {
-
-        private TreeItemCategoryInfo categoryInfo;
-
-        private Object item;
-
-        private boolean expanded;
-
-        public TreeItemInfo(TreeItemCategoryInfo categoryInfo, Object item) {
-            this.categoryInfo = categoryInfo;
-            this.item = item;
-        }
-
-        public TreeItemInfo() {
-
-        }
-
-        public TreeItemCategoryInfo getCategoryInfo() {
-            return categoryInfo;
-        }
-
-        public int getLevel() {
-            return categoryInfo.getLevel();
-        }
-
-        public Object getItem() {
-            return item;
-        }
-
-        public boolean isExpanded() {
-            return expanded;
-        }
-
-    }
-
-    private static class ExpandChildPolicy implements UpdateChildPolicy<TreeItemInfo> {
-
-        @Override
-        public void update(TreeItemInfo childItem) {
-            childItem.expanded = true;
-        }
-
-    }
-
-    private static class CollapseChildPolicy implements UpdateChildPolicy<TreeItemInfo> {
-
-        @Override
-        public void update(TreeItemInfo childItem) {
-            childItem.expanded = false;
-
-        }
-
     }
 
 }

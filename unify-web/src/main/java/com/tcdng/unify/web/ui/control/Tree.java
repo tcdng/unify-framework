@@ -30,11 +30,11 @@ import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.data.EventType;
+import com.tcdng.unify.web.ui.data.TreeEvent;
 import com.tcdng.unify.web.ui.data.TreeInfo;
-import com.tcdng.unify.web.ui.data.TreeInfo.MenuInfo;
-import com.tcdng.unify.web.ui.data.TreeInfo.TreeEvent;
-import com.tcdng.unify.web.ui.data.TreeInfo.TreeItemInfo;
 import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
+import com.tcdng.unify.web.ui.data.TreeItemInfo;
+import com.tcdng.unify.web.ui.data.TreeMenuInfo;
 
 /**
  * Represents a tree control.
@@ -227,7 +227,7 @@ public class Tree extends AbstractMultiControl {
         return treeInfo.itemCount();
     }
 
-    public List<MenuInfo> getMenuList() {
+    public List<TreeMenuInfo> getMenuList() {
         return treeInfo.getMenuList();
     }
 

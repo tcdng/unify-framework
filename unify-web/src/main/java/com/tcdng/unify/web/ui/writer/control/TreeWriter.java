@@ -31,9 +31,9 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.Tree;
 import com.tcdng.unify.web.ui.data.EventType;
-import com.tcdng.unify.web.ui.data.TreeInfo.MenuInfo;
-import com.tcdng.unify.web.ui.data.TreeInfo.TreeItemInfo;
 import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
+import com.tcdng.unify.web.ui.data.TreeItemInfo;
+import com.tcdng.unify.web.ui.data.TreeMenuInfo;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 
 /**
@@ -246,7 +246,7 @@ public class TreeWriter extends AbstractControlWriter {
         writer.write("<span class=\"tindent\"></span>");
     }
 
-    private void writeMenuStructureAndContent(ResponseWriter writer, String menuId, List<MenuInfo> menuInfoList)
+    private void writeMenuStructureAndContent(ResponseWriter writer, String menuId, List<TreeMenuInfo> menuInfoList)
             throws UnifyException {
         writer.write("<div");
         writeTagId(writer, "pop_" + menuId);
@@ -254,7 +254,7 @@ public class TreeWriter extends AbstractControlWriter {
         writer.write(">");
         writer.write("<ul id=\"").write("popc_" + menuId).write("\">");
         for (int i = 0; i < menuInfoList.size(); i++) {
-            MenuInfo menuInfo = menuInfoList.get(i);
+            TreeMenuInfo menuInfo = menuInfoList.get(i);
             if (menuInfo.isSeparator()) {
                 writer.write("<li class=\"msep\">");
             } else {
@@ -268,14 +268,14 @@ public class TreeWriter extends AbstractControlWriter {
         writer.write("</div>");
     }
 
-    private JsonObject getJsonMenu(String menuId, List<MenuInfo> menuInfoList) throws UnifyException {
+    private JsonObject getJsonMenu(String menuId, List<TreeMenuInfo> menuInfoList) throws UnifyException {
         JsonObject menu = Json.object();
         menu.add("menuId", menuId);
         menu.add("popupId", "pop_" + menuId);
 
         JsonArray items = Json.array();
         for (int i = 0; i < menuInfoList.size(); i++) {
-            MenuInfo menuInfo = menuInfoList.get(i);
+            TreeMenuInfo menuInfo = menuInfoList.get(i);
             JsonObject item = Json.object();
             item.add("id", menuId + i);
             item.add("code", menuInfo.getCode());
