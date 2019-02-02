@@ -27,9 +27,10 @@ import java.util.List;
 import org.junit.Test;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.MarkedTree.ChildRule;
+import com.tcdng.unify.core.data.MarkedTree.AddChildPolicy;
 import com.tcdng.unify.core.data.MarkedTree.Matcher;
 import com.tcdng.unify.core.data.MarkedTree.Node;
+import com.tcdng.unify.core.data.MarkedTree.UpdateChildPolicy;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -405,7 +406,7 @@ public class MarkedTreeTest {
     }
 
     @Test
-    public void testAddChildAboveWithRule() throws Exception {
+    public void testAddChildAboveWithPolicy() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         Long musicMark = mTree.add("music");
         mTree.descend();
@@ -416,12 +417,12 @@ public class MarkedTreeTest {
         mTree.setChain(false);
 
         // Add child items
-        TestChildRule1 testChildRule1 = new TestChildRule1();
-        mTree.addChild(musicMark, "blues", testChildRule1);
-        mTree.addChild(musicMark, "hiphop", testChildRule1);
-        mTree.addChild(musicMark, "zelt", testChildRule1);
-        mTree.addChild(jazzMark, "Take Five", testChildRule1);
-        mTree.addChild(jazzMark, "So What", testChildRule1);
+        TestAddChildPolicy1 testAddChildPolicy1 = new TestAddChildPolicy1();
+        mTree.addChild(musicMark, "blues", testAddChildPolicy1);
+        mTree.addChild(musicMark, "hiphop", testAddChildPolicy1);
+        mTree.addChild(musicMark, "zelt", testAddChildPolicy1);
+        mTree.addChild(jazzMark, "Take Five", testAddChildPolicy1);
+        mTree.addChild(jazzMark, "So What", testAddChildPolicy1);
         
         // Validate
         Node<String> root =  mTree.getRoot();
@@ -449,7 +450,7 @@ public class MarkedTreeTest {
     }
 
     @Test
-    public void testAddChildBelowWithRule() throws Exception {
+    public void testAddChildBelowWithPolicy() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         Long musicMark = mTree.add("music");
         mTree.descend();
@@ -460,12 +461,12 @@ public class MarkedTreeTest {
         mTree.setChain(false);
 
         // Add child items
-        TestChildRule2 testChildRule2 = new TestChildRule2();
-        mTree.addChild(musicMark, "blues", testChildRule2);
-        mTree.addChild(musicMark, "hiphop", testChildRule2);
-        mTree.addChild(musicMark, "zelt", testChildRule2);
-        mTree.addChild(jazzMark, "Take Five", testChildRule2);
-        mTree.addChild(jazzMark, "So What", testChildRule2);
+        TestAddChildPolicy2 testAddChildPolicy2 = new TestAddChildPolicy2();
+        mTree.addChild(musicMark, "blues", testAddChildPolicy2);
+        mTree.addChild(musicMark, "hiphop", testAddChildPolicy2);
+        mTree.addChild(musicMark, "zelt", testAddChildPolicy2);
+        mTree.addChild(jazzMark, "Take Five", testAddChildPolicy2);
+        mTree.addChild(jazzMark, "So What", testAddChildPolicy2);
         
         // Validate
         Node<String> root =  mTree.getRoot();
@@ -930,6 +931,236 @@ public class MarkedTreeTest {
     }
 
     @Test
+    public void testUpdateFromRootNewTree() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+
+        // Select all
+        mTree.updateNodes(new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertTrue(root.getItem().isSelected());
+    }
+
+    @Test
+    public void testUpdateFromRoot() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        mTree.add(new TestFood("asparagus"));
+
+
+        // Select all
+        mTree.updateNodes(new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertTrue(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertTrue(fruit.getItem().isSelected());
+        assertTrue(fruit.getChild().getItem().isSelected());
+        assertTrue(fruit.getChild().getNext().getItem().isSelected());
+        assertTrue(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertTrue(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertTrue(vegetable.getItem().isSelected());
+        assertTrue(vegetable.getChild().getItem().isSelected());
+        assertTrue(vegetable.getChild().getNext().getItem().isSelected());
+    }
+
+    @Test
+    public void testUpdateFromRootWithMatch() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        mTree.add(new TestFood("asparagus"));
+
+
+        // Select all with name starting with "a"
+        mTree.updateNodes(new TestMatcher2("a"), new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertFalse(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertFalse(fruit.getItem().isSelected());
+        assertTrue(fruit.getChild().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getItem().isSelected());
+        assertTrue(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertFalse(vegetable.getItem().isSelected());
+        assertFalse(vegetable.getChild().getItem().isSelected());
+        assertTrue(vegetable.getChild().getNext().getItem().isSelected());
+    }
+
+    @Test
+    public void testUpdateFromMark() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        Long orangeMark = mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        Long vegMark = mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        mTree.add(new TestFood("asparagus"));
+
+
+        // Select all from specific nodes
+        mTree.updateNodes(orangeMark, new TestUpdateChildPolicy1());
+        mTree.updateNodes(vegMark, new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertFalse(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertFalse(fruit.getItem().isSelected());
+        assertFalse(fruit.getChild().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertTrue(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertTrue(vegetable.getItem().isSelected());
+        assertTrue(vegetable.getChild().getItem().isSelected());
+        assertTrue(vegetable.getChild().getNext().getItem().isSelected());
+    }
+
+    @Test
+    public void testUpdateFromMarkWithMatch() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        Long fruitMark = mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        Long vegMark = mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        mTree.add(new TestFood("asparagus"));
+
+
+        // Select all from specific nodes
+        mTree.updateNodes(fruitMark, new TestMatcher2("a"), new TestUpdateChildPolicy1());
+        mTree.updateNodes(vegMark, new TestMatcher2("t"), new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertFalse(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertFalse(fruit.getItem().isSelected());
+        assertTrue(fruit.getChild().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getItem().isSelected());
+        assertTrue(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertFalse(vegetable.getItem().isSelected());
+        assertTrue(vegetable.getChild().getItem().isSelected());
+        assertFalse(vegetable.getChild().getNext().getItem().isSelected());
+    }
+
+    @Test
+    public void testUpdateParentsFromMark() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        Long aspMark =  mTree.add(new TestFood("asparagus"));
+
+
+        // Select all parents from specific node
+        mTree.updateParentNodes(aspMark, new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertTrue(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertFalse(fruit.getItem().isSelected());
+        assertFalse(fruit.getChild().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertTrue(vegetable.getItem().isSelected());
+        assertFalse(vegetable.getChild().getItem().isSelected());
+        assertFalse(vegetable.getChild().getNext().getItem().isSelected());
+    }
+
+    @Test
+    public void testUpdateParentsFromMarkWithMatch() throws Exception {
+        MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
+        mTree.add(new TestFood("fruit"));
+        mTree.descend();
+        mTree.add(new TestFood("apple"));
+        mTree.add(new TestFood("bananna"));
+        mTree.add(new TestFood("apricot"));
+        mTree.add(new TestFood("orange"));
+        mTree.ascend();
+        mTree.add(new TestFood("vegetable"));
+        mTree.descend();
+        mTree.add(new TestFood("tomato"));
+        Long aspMark =  mTree.add(new TestFood("asparagus"));
+
+
+        // Select all parents from specific node
+        mTree.updateParentNodes(aspMark, new TestMatcher2("v"), new TestUpdateChildPolicy1());
+        
+        // Validate
+        Node<TestFood> root = mTree.getRoot();
+        assertFalse(root.getItem().isSelected());
+
+        Node<TestFood> fruit = root.getChild();
+        assertFalse(fruit.getItem().isSelected());
+        assertFalse(fruit.getChild().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getItem().isSelected());
+        assertFalse(fruit.getChild().getNext().getNext().getNext().getItem().isSelected());
+
+        Node<TestFood> vegetable = root.getChild().getNext();
+        assertTrue(vegetable.getItem().isSelected());
+        assertFalse(vegetable.getChild().getItem().isSelected());
+        assertFalse(vegetable.getChild().getNext().getItem().isSelected());
+    }
+    
+    @Test
     public void testRemoveByUnknownMark() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
 
@@ -1106,7 +1337,7 @@ class TestMatcher1 implements Matcher<String> {
     
 }
 
-class TestChildRule1 implements ChildRule<String> {
+class TestAddChildPolicy1 implements AddChildPolicy<String> {
 
     @Override
     public int addDecision(String targetItem, String childItem) {
@@ -1119,7 +1350,7 @@ class TestChildRule1 implements ChildRule<String> {
     }  
 }
 
-class TestChildRule2 implements ChildRule<String> {
+class TestAddChildPolicy2 implements AddChildPolicy<String> {
 
     @Override
     public int addDecision(String targetItem, String childItem) {
@@ -1131,4 +1362,54 @@ class TestChildRule2 implements ChildRule<String> {
         return 0;
     }  
 }
+
+
+class TestMatcher2 implements Matcher<TestFood> {
+
+    private String beginStr;
+    
+    public TestMatcher2(String beginStr) {
+        this.beginStr = beginStr;
+    }
+
+    @Override
+    public boolean match(TestFood item) {
+        return item.getName().startsWith(beginStr);
+    }
+    
+}
+
+class TestUpdateChildPolicy1 implements UpdateChildPolicy<TestFood> {
+
+    @Override
+    public void update(TestFood childItem) {
+        childItem.setSelected(true); 
+    }
+    
+}
+
+class TestFood {
+    
+    private String name;
+    
+    private boolean selected;
+
+    public TestFood(String name) {
+        this.name = name;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
+}
+
 
