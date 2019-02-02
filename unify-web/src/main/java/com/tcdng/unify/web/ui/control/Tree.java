@@ -45,7 +45,7 @@ import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
 @Component("ui-tree")
 @UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultValue = "$t{images/collapsed.png}"),
         @UplAttribute(name = "expandedIcon", type = String.class, defaultValue = "$t{images/expanded.png}"),
-        @UplAttribute(name = "treeRule", type = String.class, defaultValue = "default-treeitemrule"),
+        @UplAttribute(name = "treeRule", type = String.class, defaultValue = "default-treepolicy"),
         @UplAttribute(name = "treeEventPath", type = String.class),
         @UplAttribute(name = "dataComponents", type = UplElementReferences.class) })
 public class Tree extends AbstractMultiControl {
@@ -66,7 +66,7 @@ public class Tree extends AbstractMultiControl {
 
     private Long selectedCtrlId;
 
-    private TreeItemRule treeItemRule;
+    private TreePolicy treeItemRule;
 
     private TreeInfo treeInfo;
 
@@ -77,7 +77,8 @@ public class Tree extends AbstractMultiControl {
         selectedItemIdsCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedItemIds");
         selectedCtrlIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedCtrlId");
         singleSelectedItemId = new ArrayList<Long>(1);
-        treeItemRule = (TreeItemRule) getComponent(getUplAttribute(String.class, "treeRule"));
+        singleSelectedItemId.add(null);
+        treeItemRule = (TreePolicy) getComponent(getUplAttribute(String.class, "treeRule"));
     }
 
     @Override
@@ -112,7 +113,7 @@ public class Tree extends AbstractMultiControl {
         this.treeInfo = treeInfo;
     }
 
-    public TreeItemRule getTreeItemRule() {
+    public TreePolicy getTreeItemRule() {
         return treeItemRule;
     }
 

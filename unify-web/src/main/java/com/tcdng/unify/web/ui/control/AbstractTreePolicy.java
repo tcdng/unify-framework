@@ -16,28 +16,25 @@
 
 package com.tcdng.unify.web.ui.control;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
 
 /**
- * Default implementation of a tree item rule.
+ * Convenient abstract base class for tree item policies.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("default-treeitemrule")
-public class DefaultTreeItemRule extends AbstractTreeItemRule {
+public abstract class AbstractTreePolicy extends AbstractUnifyComponent implements TreePolicy {
 
     @Override
-    public String getTreeItemCaption(TreeItemCategoryInfo treeItemCategoryInfo, Object item) throws UnifyException {
-        String itemCaptionKey = treeItemCategoryInfo.getItemCaptionKey();
-        if (StringUtils.isBlank(itemCaptionKey)) {
-            return String.valueOf(item);
-        }
+    protected void onInitialize() throws UnifyException {
 
-        return resolveSessionMessage(itemCaptionKey, item);
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
     }
 
 }
