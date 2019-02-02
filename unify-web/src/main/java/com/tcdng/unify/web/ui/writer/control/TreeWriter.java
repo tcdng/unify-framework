@@ -27,6 +27,7 @@ import com.eclipsesource.json.JsonObject;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.data.MarkedTree.Node;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.Tree;
@@ -51,79 +52,36 @@ public class TreeWriter extends AbstractControlWriter {
 
     private static final String[] EVENT_CODES = { EventType.MOUSE_CLICK.code(), EventType.MOUSE_DBLCLICK.code(),
             EventType.MOUSE_RIGHTCLICK.code(), EventType.MOUSE_MENUCLICK.code() };
-    
+
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         Tree tree = (Tree) widget;
         writer.write("<div");
         writeTagAttributes(writer, tree);
-        writer.write("><ul class=\"tlist\">");
+        writer.write(">");
+        
+        // Main list
+        writer.write("<ul class=\"tlist\">");
         TreeInfo treeInfo = (TreeInfo) tree.getValue();
-        List<Integer> selectedItemIds = Collections.emptyList();
-        List<Integer> visibleItemIds = Collections.emptyList();
+        List<Long> selectedItemIds = Collections.emptyList();
+        List<Long> visibleItemIds = Collections.emptyList();
         if (treeInfo != null) {
+            visibleItemIds = new ArrayList<Long>();
             selectedItemIds = treeInfo.getSelectedItemIds();
-            String collapsedSrc = tree.getCollapsedIcon();
-            String expandedSrc = tree.getExpandedIcon();
-            String ctrlIdBase = tree.getControlImgIdBase();
-            String captionIdBase = tree.getCaptionIdBase();
-
-            visibleItemIds = new ArrayList<Integer>();
-            TreeItemInfo treeItemInfo = treeInfo.getFirstTreeItemInfo();
-            while (treeItemInfo != null) {
-                if (!treeItemInfo.isHidden()) {
-                    Integer itemId = treeItemInfo.getId();
-                    visibleItemIds.add(itemId);
-
-                    // Open branch
-                    writer.write("<li>");
-
-                    // Add left tabs
-                    for (int j = 0; j < treeItemInfo.getDepth(); j++) {
-                        writeIndent(writer);
-                    }
-
-                    // Add control icon
-                    if (treeItemInfo.isParent()) {
-                        if (treeItemInfo.isExpanded()) {
-                            writeFileImageHtmlElement(writer, expandedSrc, ctrlIdBase + itemId, "timg", null);
-                        } else {
-                            writeFileImageHtmlElement(writer, collapsedSrc, ctrlIdBase + itemId, "timg", null);
-                        }
-                    } else {
-                        writeIndent(writer);
-                    }
-
-                    // Add item icon and caption
-                    writer.write("<span id=\"").write(captionIdBase).write(itemId);
-                    if (selectedItemIds.contains(itemId)) {
-                        writer.write("\" class=\"tsel\">");
-                    } else {
-                        writer.write("\" class=\"tnorm\">");
-                    }
-
-                    TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
-                    writeFileImageHtmlElement(writer, treeItemCategoryInfo.getIcon(), null, "timg", null);
-                    writer.write("<span class=\"titem\">");
-                    writer.writeWithHtmlEscape(
-                            tree.getTreeItemRule().getTreeItemCaption(treeItemCategoryInfo, treeItemInfo.getItem()));
-                    writer.write("</span></span>");
-
-                    // Close branch
-                    writer.write("</li>");
-                }
-
-                treeItemInfo = treeItemInfo.getNext();
+            Node<TreeItemInfo> root =  treeInfo.getRootNode();
+            if (root.isParent()) {
+                writeChildListStructure(writer, tree, root, visibleItemIds, 0);
             }
         }
         writer.write("</ul>");
+        
         // Hidden controls
         writer.write("<select ");
         writeTagId(writer, tree.getSelectedItemIdsCtrl());
         writeTagStyle(writer, "display:none;");
         writer.write(" multiple=\"multiple\">");
         if (treeInfo != null) {
-            for (Integer itemId : visibleItemIds) {
+            for (Long itemId : visibleItemIds) {
                 writer.write("<option value=\"").write(itemId).write("\"");
                 if (selectedItemIds.contains(itemId)) {
                     writer.write(" selected");
@@ -200,27 +158,9 @@ public class TreeWriter extends AbstractControlWriter {
             }
 
             JsonArray items = Json.array();
-            TreeItemInfo treeItemInfo = treeInfo.getFirstTreeItemInfo();
-            while (treeItemInfo != null) {
-                TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
-                String popupId = "pop_" + tree.getPrefixedId(treeItemCategoryInfo.getName());
-                Set<EventType> eventTypes = treeItemCategoryInfo.getEventTypes();
-                if (!treeItemInfo.isHidden()) {
-                    JsonObject item = Json.object();
-                    item.add("idx", treeItemInfo.getId());
-                    if (treeItemCategoryInfo.isMenu()) {
-                        item.add("popupId", popupId);
-                    }
-
-                    item.add("parent", treeItemInfo.isParent());
-                    item.add("expanded", treeItemInfo.isExpanded());
-                    item.add("pClick", eventTypes.contains(EventType.MOUSE_CLICK));
-                    item.add("pDblClick", eventTypes.contains(EventType.MOUSE_DBLCLICK));
-                    item.add("pRtClick", eventTypes.contains(EventType.MOUSE_RIGHTCLICK));
-                    items.add(item);
-                }
-
-                treeItemInfo = treeItemInfo.getNext();
+            Node<TreeItemInfo> root =  treeInfo.getRootNode();
+            if (root.isParent()) {
+                writeChildListBehaviorItems(items, tree, root);
             }
             jsonPrm.add("pItemList", items);
 
@@ -229,6 +169,92 @@ public class TreeWriter extends AbstractControlWriter {
         } catch (IOException e) {
             throwOperationErrorException(e);
         }
+    }
+    
+    private void writeChildListStructure(ResponseWriter writer, Tree tree, Node<TreeItemInfo> node, List<Long> visibleItemIds,
+            int indent) throws UnifyException {
+        Node<TreeItemInfo> ch = node.getChild();
+        List<Long> selectedItemIds = tree.getTreeInfo().getSelectedItemIds();
+        String collapsedSrc = tree.getCollapsedIcon();
+        String expandedSrc = tree.getExpandedIcon();
+        String ctrlIdBase = tree.getControlImgIdBase();
+        String captionIdBase = tree.getCaptionIdBase();
+        int chIndent = indent + 1;
+        do {
+            TreeItemInfo treeItemInfo = ch.getItem();
+            Long itemId = ch.getMark();
+            visibleItemIds.add(itemId);
+
+            // Open branch
+            writer.write("<li>");
+
+            // Add left tabs
+            for (int j = 0; j < indent; j++) {
+                writeIndent(writer);
+            }
+
+            // Add control icon
+            if (ch.isParent()) {
+                if (treeItemInfo.isExpanded()) {
+                    writeFileImageHtmlElement(writer, expandedSrc, ctrlIdBase + itemId, "timg", null);
+                } else {
+                    writeFileImageHtmlElement(writer, collapsedSrc, ctrlIdBase + itemId, "timg", null);
+                }
+            } else {
+                writeIndent(writer);
+            }
+
+            // Add item icon and caption
+            // TODO In future implement dynamic renderer
+            writer.write("<span id=\"").write(captionIdBase).write(itemId);
+            if (selectedItemIds.contains(itemId)) {
+                writer.write("\" class=\"tsel\">");
+            } else {
+                writer.write("\" class=\"tnorm\">");
+            }
+
+            TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
+            writeFileImageHtmlElement(writer, treeItemCategoryInfo.getIcon(), null, "timg", null);
+            writer.write("<span class=\"titem\">");
+            writer.writeWithHtmlEscape(
+                    tree.getTreeItemRule().getTreeItemCaption(treeItemCategoryInfo, treeItemInfo.getItem()));
+            writer.write("</span></span>");
+
+            // Close branch
+            writer.write("</li>");
+
+            // Child branch
+            if (ch.isParent() && treeItemInfo.isExpanded()) {
+                writeChildListStructure(writer, tree, ch, visibleItemIds, chIndent);
+            }
+
+        } while ((ch = ch.getNext()) != null);
+    }
+
+    private void writeChildListBehaviorItems(JsonArray items, Tree tree, Node<TreeItemInfo> node) throws UnifyException {
+        Node<TreeItemInfo> ch = node.getChild();
+        do {
+            TreeItemInfo treeItemInfo = ch.getItem();
+            TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
+            String popupId = "pop_" + tree.getPrefixedId(treeItemCategoryInfo.getName());
+            Set<EventType> eventTypes = treeItemCategoryInfo.getEventTypes();
+            JsonObject item = Json.object();
+            item.add("idx", ch.getMark());
+            if (treeItemCategoryInfo.isMenu()) {
+                item.add("popupId", popupId);
+            }
+
+            item.add("parent", ch.isParent());
+            item.add("expanded", treeItemInfo.isExpanded());
+            item.add("pClick", eventTypes.contains(EventType.MOUSE_CLICK));
+            item.add("pDblClick", eventTypes.contains(EventType.MOUSE_DBLCLICK));
+            item.add("pRtClick", eventTypes.contains(EventType.MOUSE_RIGHTCLICK));
+            items.add(item);
+            
+            if(ch.isParent() && treeItemInfo.isExpanded()) {
+                writeChildListBehaviorItems(items, tree, ch);
+            }
+        } while((ch = ch.getNext()) != null);
     }
 
     private void writeIndent(ResponseWriter writer) throws UnifyException {

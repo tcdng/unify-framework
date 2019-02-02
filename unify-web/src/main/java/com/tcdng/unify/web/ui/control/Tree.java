@@ -58,9 +58,9 @@ public class Tree extends AbstractMultiControl {
 
     private String menuCode;
 
-    private List<Integer> selectedItemIds;
+    private List<Long> selectedItemIds;
 
-    private Integer selectedCtrlId;
+    private Long selectedCtrlId;
 
     private TreeItemRule treeItemRule;
     
@@ -122,19 +122,19 @@ public class Tree extends AbstractMultiControl {
         this.menuCode = menuCode;
     }
 
-    public Integer getSelectedCtrlId() {
+    public Long getSelectedCtrlId() {
         return selectedCtrlId;
     }
 
-    public void setSelectedCtrlId(Integer selectedCtrlId) {
+    public void setSelectedCtrlId(Long selectedCtrlId) {
         this.selectedCtrlId = selectedCtrlId;
     }
 
-    public List<Integer> getSelectedItemIds() {
+    public List<Long> getSelectedItemIds() {
         return selectedItemIds;
     }
 
-    public void setSelectedItemIds(List<Integer> selectedItemIds) {
+    public void setSelectedItemIds(List<Long> selectedItemIds) {
         this.selectedItemIds = selectedItemIds;
         try {
             TreeInfo treeInfo = getTreeInfo();
@@ -146,7 +146,7 @@ public class Tree extends AbstractMultiControl {
         }
     }
 
-    public void setSelectedItem(Integer itemId) {
+    public void setSelectedItem(Long itemId) {
         setSelectedItemIds(Arrays.asList(itemId));
     }
 
@@ -166,7 +166,7 @@ public class Tree extends AbstractMultiControl {
         return 0;
     }
 
-    public TreeItemInfo getTreeItemInfo(Integer itemId) throws UnifyException {
+    public TreeItemInfo getTreeItemInfo(Long itemId) throws UnifyException {
         TreeInfo treeInfo = getTreeInfo();
         if (treeInfo != null) {
             return treeInfo.getTreeItemInfo(itemId);
@@ -211,7 +211,7 @@ public class Tree extends AbstractMultiControl {
         addPageAlias(eventTypeCtrl);
     }
 
-    private TreeInfo getTreeInfo() throws UnifyException {
+    public TreeInfo getTreeInfo() throws UnifyException {
         return (TreeInfo) getValue();
     }
 
