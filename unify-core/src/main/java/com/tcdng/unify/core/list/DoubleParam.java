@@ -17,20 +17,20 @@
 package com.tcdng.unify.core.list;
 
 /**
- * Single boolean list parameters.
+ * List double value parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SingleBooleanParams {
+public class DoubleParam {
 
-    private Boolean value;
+    private Double value;
 
-    public SingleBooleanParams(Boolean value) {
+    public DoubleParam(Double value) {
         this.value = value;
     }
 
-    public Boolean getValue() {
+    public Double getValue() {
         return value;
     }
 }

@@ -30,14 +30,14 @@ import com.tcdng.unify.core.data.Listable;
  * @since 1.0
  */
 @Component("listableparamlist")
-public class ListableParamListCommand extends AbstractListCommand<ListableListParams> {
+public class ListableParamListCommand extends AbstractListCommand<ListableListParam> {
 
     public ListableParamListCommand() {
-        super(ListableListParams.class);
+        super(ListableListParam.class);
     }
 
     @Override
-    public List<? extends Listable> execute(Locale locale, ListableListParams params) throws UnifyException {
+    public List<? extends Listable> execute(Locale locale, ListableListParam params) throws UnifyException {
         if (params.isListableList()) {
             return params.getListableList();
         }

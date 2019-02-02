@@ -17,20 +17,20 @@
 package com.tcdng.unify.core.list;
 
 /**
- * Single integer list parameters.
+ * List long value parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SingleIntegerParams {
+public class LongParam {
 
-    private Integer value;
+    private Long value;
 
-    public SingleIntegerParams(Integer value) {
+    public LongParam(Long value) {
         this.value = value;
     }
 
-    public Integer getValue() {
+    public Long getValue() {
         return value;
     }
 }
