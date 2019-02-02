@@ -832,6 +832,10 @@ public class MarkedTree<T> {
             return child;
         }
 
+        public boolean isParent() {
+            return child != null;
+        }
+        
         public List<T> getChildItemList() {
             if (child != null) {
                 List<T> list = new ArrayList<T>();
