@@ -17,7 +17,6 @@ package com.tcdng.unify.web.ui.writer.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.Tree;
 import com.tcdng.unify.web.ui.data.EventType;
-import com.tcdng.unify.web.ui.data.TreeInfo;
 import com.tcdng.unify.web.ui.data.TreeInfo.MenuInfo;
 import com.tcdng.unify.web.ui.data.TreeInfo.TreeItemInfo;
 import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
@@ -62,16 +60,11 @@ public class TreeWriter extends AbstractControlWriter {
         
         // Main list
         writer.write("<ul class=\"tlist\">");
-        TreeInfo treeInfo = (TreeInfo) tree.getValue();
-        List<Long> selectedItemIds = Collections.emptyList();
-        List<Long> visibleItemIds = Collections.emptyList();
-        if (treeInfo != null) {
-            visibleItemIds = new ArrayList<Long>();
-            selectedItemIds = treeInfo.getSelectedItemIds();
-            Node<TreeItemInfo> root =  treeInfo.getRootNode();
-            if (root.isParent()) {
-                writeChildListStructure(writer, tree, root, visibleItemIds, 0);
-            }
+        List<Long> selectedItemIds = tree.getSelectedItemIds();
+        List<Long> visibleItemIds = new ArrayList<Long>();
+        Node<TreeItemInfo> root =  tree.getRootNode();
+        if (root.isParent()) {
+            writeChildListStructure(writer, tree, root, visibleItemIds, 0);
         }
         writer.write("</ul>");
         
@@ -80,14 +73,12 @@ public class TreeWriter extends AbstractControlWriter {
         writeTagId(writer, tree.getSelectedItemIdsCtrl());
         writeTagStyle(writer, "display:none;");
         writer.write(" multiple=\"multiple\">");
-        if (treeInfo != null) {
-            for (Long itemId : visibleItemIds) {
-                writer.write("<option value=\"").write(itemId).write("\"");
-                if (selectedItemIds.contains(itemId)) {
-                    writer.write(" selected");
-                }
-                writer.write("></option>");
+        for (Long itemId : visibleItemIds) {
+            writer.write("<option value=\"").write(itemId).write("\"");
+            if (selectedItemIds.contains(itemId)) {
+                writer.write(" selected");
             }
+            writer.write("></option>");
         }
         writer.write("</select>");
 
@@ -96,22 +87,19 @@ public class TreeWriter extends AbstractControlWriter {
         writer.writeStructureAndContent(tree.getEventTypeCtrl());
         writer.write("</div>");
 
-        if (treeInfo != null) {
-            // Main Menu
-            if (treeInfo.isMenu()) {
-                String menuId = tree.getPrefixedId(RESERVED_MENU_PREFIX);
-                writeMenuStructureAndContent(writer, menuId, treeInfo.getMenuList());
-            }
-
-            // Category menu
-            for (TreeItemCategoryInfo treeItemCategoryInfo : treeInfo.getTreeCategoryInfos()) {
-                if (treeItemCategoryInfo.isMenu()) {
-                    String menuId = tree.getPrefixedId(treeItemCategoryInfo.getName());
-                    writeMenuStructureAndContent(writer, menuId, treeItemCategoryInfo.getMenuList());
-                }
-            }
+        // Main Menu
+        if (tree.isMenu()) {
+            String menuId = tree.getPrefixedId(RESERVED_MENU_PREFIX);
+            writeMenuStructureAndContent(writer, menuId, tree.getMenuList());
         }
 
+        // Category menu
+        for (TreeItemCategoryInfo treeItemCategoryInfo : tree.getTreeCategoryInfos()) {
+            if (treeItemCategoryInfo.isMenu()) {
+                String menuId = tree.getPrefixedId(treeItemCategoryInfo.getName());
+                writeMenuStructureAndContent(writer, menuId, treeItemCategoryInfo.getMenuList());
+            }
+        }
     }
 
     @Override
@@ -141,24 +129,21 @@ public class TreeWriter extends AbstractControlWriter {
                 jsonPrm.add("pEventRef", Json.array(pageNames.toArray(new String[pageNames.size()])));
             }
 
-            TreeInfo treeInfo = (TreeInfo) tree.getValue();
-            if (treeInfo != null) {
-                if (treeInfo.isMenu()) {
-                    jsonPrm.add("pMenu", getJsonMenu(tree.getPrefixedId(RESERVED_MENU_PREFIX), treeInfo.getMenuList()));
-                }
-
-                JsonArray menus = Json.array();
-                for (TreeItemCategoryInfo treeItemCategoryInfo : treeInfo.getTreeCategoryInfos()) {
-                    if (treeItemCategoryInfo.isMenu()) {
-                        menus.add(getJsonMenu(tree.getPrefixedId(treeItemCategoryInfo.getName()),
-                                treeItemCategoryInfo.getMenuList()));
-                    }
-                }
-                jsonPrm.add("pMenus", menus);
+            if (tree.isMenu()) {
+                jsonPrm.add("pMenu", getJsonMenu(tree.getPrefixedId(RESERVED_MENU_PREFIX), tree.getMenuList()));
             }
 
+            JsonArray menus = Json.array();
+            for (TreeItemCategoryInfo treeItemCategoryInfo : tree.getTreeCategoryInfos()) {
+                if (treeItemCategoryInfo.isMenu()) {
+                    menus.add(getJsonMenu(tree.getPrefixedId(treeItemCategoryInfo.getName()),
+                            treeItemCategoryInfo.getMenuList()));
+                }
+            }
+            jsonPrm.add("pMenus", menus);
+
             JsonArray items = Json.array();
-            Node<TreeItemInfo> root =  treeInfo.getRootNode();
+            Node<TreeItemInfo> root =  tree.getRootNode();
             if (root.isParent()) {
                 writeChildListBehaviorItems(items, tree, root);
             }
@@ -174,7 +159,7 @@ public class TreeWriter extends AbstractControlWriter {
     private void writeChildListStructure(ResponseWriter writer, Tree tree, Node<TreeItemInfo> node, List<Long> visibleItemIds,
             int indent) throws UnifyException {
         Node<TreeItemInfo> ch = node.getChild();
-        List<Long> selectedItemIds = tree.getTreeInfo().getSelectedItemIds();
+        List<Long> selectedItemIds = tree.getSelectedItemIds();
         String collapsedSrc = tree.getCollapsedIcon();
         String expandedSrc = tree.getExpandedIcon();
         String ctrlIdBase = tree.getControlImgIdBase();

@@ -70,7 +70,9 @@ public class TreeInfo {
                     "Unknown category [" + categoryName + "].");
         }
 
-        return itemInfoTree.addChild(parentItemId, new TreeItemInfo(categoryInfo, item));
+        Long itemId = itemInfoTree.addChild(parentItemId, new TreeItemInfo(categoryInfo, item));
+        itemInfoTree.updateParentNodes(itemId, expandChildPolicy); // Expand parents
+        return itemId;
     }
 
     public TreeItemCategoryInfo getTreeCategoryInfo(String name) {
@@ -83,6 +85,14 @@ public class TreeInfo {
 
     public Node<TreeItemInfo> getRootNode() {
         return itemInfoTree.getRoot();
+    }
+
+    public Node<TreeItemInfo> getNode(Long itemId) {
+        return itemInfoTree.getNode(itemId);
+    }
+
+    public Node<TreeItemInfo> getNode(TreeEvent treeEvent, int index) {
+        return itemInfoTree.getNode(treeEvent.getItemIds().get(index));
     }
 
     public TreeItemInfo getTreeItemInfo(Long itemId) {
@@ -102,10 +112,6 @@ public class TreeInfo {
         return itemInfoTree.size();
     }
 
-    public List<Long> getSelectedItemIds() {
-        return selectedItemIdList;
-    }
-
     public List<MenuInfo> getMenuList() {
         return menuList;
     }
@@ -114,19 +120,18 @@ public class TreeInfo {
         return !DataUtils.isBlank(menuList);
     }
 
-    public void setSelectedItem(Long id) throws UnifyException {
-        TreeItemInfo treeItemInfo = getTreeItemInfo(id);
-        if (treeItemInfo != null) {
-            selectedItemIdList = new ArrayList<Long>(1);
-            selectedItemIdList.add(id);
-            itemInfoTree.updateParentNodes(id, expandChildPolicy);
-        }
-
-        selectedItemIdList = Collections.emptyList();
-    }
-
     public void setSelectedItems(List<Long> selectedItemIdList) {
         this.selectedItemIdList = selectedItemIdList;
+        for (Long itemId: selectedItemIdList) {
+            try {
+                itemInfoTree.updateParentNodes(itemId, expandChildPolicy);
+            } catch (UnifyException e) {
+            }
+        }
+    }
+
+    public List<Long> getSelectedItems() {
+        return selectedItemIdList;
     }
 
     public void registerEvent(EventType type, String menuCode) {
@@ -214,12 +219,8 @@ public class TreeInfo {
             return this;
         }
 
-        public Long getLastTreeItemId() {
-            if (itemInfoTree.getChainLast() != null) {
-                return itemInfoTree.getChainLast().getMark();
-            }
-
-            return null;
+        public Node<TreeItemInfo> getLastNode() {
+            return itemInfoTree.getChainLast();
         }
 
         public boolean isCategory(String name) {
@@ -249,7 +250,7 @@ public class TreeInfo {
         }
 
         public TreeInfo build() throws UnifyException {
-            itemInfoTree.setChain(false);
+            itemInfoTree.setChain(false); // Enter unchained mode
             return new TreeInfo(Collections.unmodifiableList(new ArrayList<MenuInfo>(menuList.values())), categories, itemInfoTree);
         }
     }
