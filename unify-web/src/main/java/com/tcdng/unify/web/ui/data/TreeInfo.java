@@ -43,7 +43,7 @@ public class TreeInfo {
     private static final ExpandChildPolicy expandChildPolicy = new ExpandChildPolicy();
 
     private static final CollapseChildPolicy collapseChildPolicy = new CollapseChildPolicy();
-    
+
     private Map<String, TreeItemCategoryInfo> categories;
 
     private MarkedTree<TreeItemInfo> itemInfoTree;
@@ -54,7 +54,8 @@ public class TreeInfo {
 
     private Queue<TreeEvent> eventQueue;
 
-    private TreeInfo(List<MenuInfo> menuList, Map<String, TreeItemCategoryInfo> categories, MarkedTree<TreeItemInfo> itemInfoTree) {
+    private TreeInfo(List<MenuInfo> menuList, Map<String, TreeItemCategoryInfo> categories,
+            MarkedTree<TreeItemInfo> itemInfoTree) {
         this.menuList = menuList;
         this.categories = categories;
         this.itemInfoTree = itemInfoTree;
@@ -62,15 +63,16 @@ public class TreeInfo {
         eventQueue = new LinkedList<TreeEvent>();
     }
 
-    public Long addTreeItem(Long parentItemId, String categoryName, Object item)
-            throws UnifyException {
+    public Long addTreeItem(Long parentItemId, String categoryName, Object item) throws UnifyException {
         TreeItemCategoryInfo categoryInfo = categories.get(categoryName);
         if (categoryInfo == null) {
             throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                     "Unknown category [" + categoryName + "].");
         }
 
-        Long itemId = itemInfoTree.addChild(parentItemId, new TreeItemInfo(categoryInfo, item));
+        TreeItemCategoryInfo parentCategoryInfo = itemInfoTree.getNode(parentItemId).getItem().getCategoryInfo();
+        Long itemId = itemInfoTree.addChild(parentItemId, new TreeItemInfo(categoryInfo, item),
+                parentCategoryInfo.getAddChildPolicy());
         itemInfoTree.updateParentNodes(itemId, expandChildPolicy); // Expand parents
         return itemId;
     }
@@ -100,7 +102,7 @@ public class TreeInfo {
         if (node != null) {
             return node.getItem();
         }
-        
+
         return null;
     }
 
@@ -122,7 +124,7 @@ public class TreeInfo {
 
     public void setSelectedItems(List<Long> selectedItemIdList) {
         this.selectedItemIdList = selectedItemIdList;
-        for (Long itemId: selectedItemIdList) {
+        for (Long itemId : selectedItemIdList) {
             try {
                 itemInfoTree.updateParentNodes(itemId, expandChildPolicy);
             } catch (UnifyException e) {
@@ -191,7 +193,7 @@ public class TreeInfo {
 
         private Builder(TreeInfo treeInfo) {
             menuList = new LinkedHashMap<String, MenuInfo>();
-            itemInfoTree =  new MarkedTree<TreeItemInfo>(new TreeItemInfo());
+            itemInfoTree = new MarkedTree<TreeItemInfo>(new TreeItemInfo());
             if (treeInfo != null) {
                 categories = new HashMap<String, TreeItemCategoryInfo>(treeInfo.categories);
             } else {
@@ -251,7 +253,8 @@ public class TreeInfo {
 
         public TreeInfo build() throws UnifyException {
             itemInfoTree.setChain(false); // Enter unchained mode
-            return new TreeInfo(Collections.unmodifiableList(new ArrayList<MenuInfo>(menuList.values())), categories, itemInfoTree);
+            return new TreeInfo(Collections.unmodifiableList(new ArrayList<MenuInfo>(menuList.values())), categories,
+                    itemInfoTree);
         }
     }
 
@@ -331,11 +334,15 @@ public class TreeInfo {
         }
 
         public TreeItemInfo() {
-            
+
         }
-        
+
         public TreeItemCategoryInfo getCategoryInfo() {
             return categoryInfo;
+        }
+
+        public int getLevel() {
+            return categoryInfo.getLevel();
         }
 
         public Object getItem() {
@@ -347,24 +354,24 @@ public class TreeInfo {
         }
 
     }
-    
+
     private static class ExpandChildPolicy implements UpdateChildPolicy<TreeItemInfo> {
 
         @Override
         public void update(TreeItemInfo childItem) {
             childItem.expanded = true;
         }
-        
+
     }
-    
+
     private static class CollapseChildPolicy implements UpdateChildPolicy<TreeItemInfo> {
 
         @Override
         public void update(TreeItemInfo childItem) {
             childItem.expanded = false;
-            
+
         }
-        
+
     }
 
 }

@@ -21,15 +21,15 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
 
 /**
- * Handles rules relating to a tree items.
+ * Handles rules relating to a tree.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TreeItemRule extends UnifyComponent {
+public interface TreePolicy extends UnifyComponent {
 
     /**
-     * Gets a tree item caption based on this rule for supplied category and tree
+     * Gets a tree item caption based on this policy for supplied category and tree
      * item.
      * 
      * @param treeItemCategoryInfo
