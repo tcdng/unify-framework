@@ -188,6 +188,40 @@ public class MarkedTree<T> {
     }
 
     /**
+     * Finds all node, starting from root node, whose items are matched by matcher.
+     * 
+     * @param matcher
+     *            the matcher
+     * @return list of matching nodes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public List<Node<T>> findNodes(Matcher<T> matcher) throws UnifyException {
+        return matchNodes(root, matcher);
+    }
+
+    /**
+     * Finds all nodes, starting from supplied mark, whose items are matched by
+     * matcher.
+     * 
+     * @param startMark
+     *            the start mark
+     * @param matcher
+     *            the matcher
+     * @return list of matching nodes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public List<Node<T>> findNodes(Long startMark, Matcher<T> matcher) throws UnifyException {
+        Node<T> trg = nodes.get(startMark);
+        if (trg != null) {
+            return matchNodes(trg, matcher);
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
      * A chained mode operation that adds item to marked tree.
      * 
      * @param item
@@ -727,6 +761,33 @@ public class MarkedTree<T> {
             ch = ch.next;
         }
         return null;
+    }
+
+    private List<Node<T>> matchNodes(Node<T> trg, Matcher<T> matcher) throws UnifyException {
+        List<Node<T>> list = matchNodes(trg, null, matcher);
+        if (list != null) {
+            return list;
+        }
+        
+        return Collections.emptyList();
+    }
+    
+    private List<Node<T>> matchNodes(Node<T> trg, List<Node<T>> matchList, Matcher<T> matcher) throws UnifyException {
+        if (matcher.match(trg.item)) {
+            if (matchList == null) {
+                matchList = new ArrayList<Node<T>>();
+            }
+
+            matchList.add(trg);
+        }
+
+        Node<T> ch = trg.child;
+        while (ch != null) {
+            matchList = matchNodes(ch, matchList, matcher);
+            ch = ch.next;
+        }
+        
+        return matchList;
     }
 
     private void updateAll(UpdateChildPolicy<T> updateChildPolicy) {

@@ -931,6 +931,64 @@ public class MarkedTreeTest {
     }
 
     @Test
+    public void testFindNodesFromRoot() throws Exception {
+        MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
+        mTree.add("music");
+        mTree.descend();
+        mTree.add("jazz");
+        mTree.add("blues");
+        mTree.descend();
+        mTree.add("The Thrill is Gone");
+        mTree.add("Mannish Boy");
+        mTree.ascend();
+        mTree.add("rap");
+        mTree.descend();
+        mTree.add("No Man's Land");
+        mTree.add("The Beast");
+        mTree.ascend();
+        mTree.ascend();
+        mTree.add("video");
+        
+        List<Node<String>> nodeList = mTree.findNodes(new TestMatcher2("The"));
+        assertNotNull(nodeList);
+        assertEquals(2, nodeList.size());
+        assertNotNull(nodeList.get(0));
+        assertEquals("The Thrill is Gone", nodeList.get(0).getItem());
+        assertNotNull(nodeList.get(1));
+        assertEquals("The Beast", nodeList.get(1).getItem());
+    }
+
+    @Test
+    public void testFindNodesFromMark() throws Exception {
+        MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
+        mTree.add("music");
+        mTree.descend();
+        Long jazzMark = mTree.add("jazz");
+        mTree.add("blues");
+        mTree.descend();
+        mTree.add("The Thrill is Gone");
+        mTree.add("Mannish Boy");
+        mTree.ascend();
+        Long rapMark = mTree.add("rap");
+        mTree.descend();
+        mTree.add("No Man's Land");
+        mTree.add("The Beast");
+        mTree.ascend();
+        mTree.ascend();
+        mTree.add("video");
+        
+        List<Node<String>> nodeList = mTree.findNodes(jazzMark, new TestMatcher2("No"));
+        assertNotNull(nodeList);
+        assertEquals(0, nodeList.size());
+        
+        nodeList = mTree.findNodes(rapMark, new TestMatcher2("No"));
+        assertNotNull(nodeList);
+        assertEquals(1, nodeList.size());
+        assertNotNull(nodeList.get(0));
+        assertEquals("No Man's Land", nodeList.get(0).getItem());
+    }
+
+    @Test
     public void testUpdateFromRootNewTree() throws Exception {
         MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
 
@@ -995,7 +1053,7 @@ public class MarkedTreeTest {
 
 
         // Select all with name starting with "a"
-        mTree.updateNodes(new TestMatcher2("a"), new TestUpdateChildPolicy1());
+        mTree.updateNodes(new TestMatcher3("a"), new TestUpdateChildPolicy1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1068,8 +1126,8 @@ public class MarkedTreeTest {
 
 
         // Select all from specific nodes
-        mTree.updateNodes(fruitMark, new TestMatcher2("a"), new TestUpdateChildPolicy1());
-        mTree.updateNodes(vegMark, new TestMatcher2("t"), new TestUpdateChildPolicy1());
+        mTree.updateNodes(fruitMark, new TestMatcher3("a"), new TestUpdateChildPolicy1());
+        mTree.updateNodes(vegMark, new TestMatcher3("t"), new TestUpdateChildPolicy1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1141,7 +1199,7 @@ public class MarkedTreeTest {
 
 
         // Select all parents from specific node
-        mTree.updateParentNodes(aspMark, new TestMatcher2("v"), new TestUpdateChildPolicy1());
+        mTree.updateParentNodes(aspMark, new TestMatcher3("v"), new TestUpdateChildPolicy1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1337,6 +1395,21 @@ class TestMatcher1 implements Matcher<String> {
     
 }
 
+class TestMatcher2 implements Matcher<String> {
+
+    private String beginStr;
+    
+    public TestMatcher2(String beginStr) {
+        this.beginStr = beginStr;
+    }
+
+    @Override
+    public boolean match(String item) {
+        return item.startsWith(beginStr);
+    }
+    
+}
+
 class TestAddChildPolicy1 implements AddChildPolicy<String> {
 
     @Override
@@ -1363,12 +1436,11 @@ class TestAddChildPolicy2 implements AddChildPolicy<String> {
     }  
 }
 
-
-class TestMatcher2 implements Matcher<TestFood> {
+class TestMatcher3 implements Matcher<TestFood> {
 
     private String beginStr;
     
-    public TestMatcher2(String beginStr) {
+    public TestMatcher3(String beginStr) {
         this.beginStr = beginStr;
     }
 
