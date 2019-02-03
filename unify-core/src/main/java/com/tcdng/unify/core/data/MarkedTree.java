@@ -222,6 +222,45 @@ public class MarkedTree<T> {
     }
 
     /**
+     * Get all immediate child nodes for node at supplied parent mark.
+     * 
+     * @param parentMark
+     *            the parent mark
+     * @return list of matching child nodes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public List<Node<T>> getChildNodes(Long parentMark) throws UnifyException {
+        Node<T> trg = nodes.get(parentMark);
+        if (trg != null) {
+            return trg.getChildNodeList();
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
+     * Get all immediate child nodes for node at supplied parent mark that are
+     * matched by supplied matcher..
+     * 
+     * @param parentMark
+     *            the parent mark
+     * @param matcher
+     *            the matcher
+     * @return list of matching child nodes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public List<Node<T>> getChildNodes(Long parentMark, Matcher<T> matcher) throws UnifyException {
+        Node<T> trg = nodes.get(parentMark);
+        if (trg != null) {
+            return trg.getChildNodeList(matcher);
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
      * A chained mode operation that adds item to marked tree.
      * 
      * @param item
@@ -324,8 +363,8 @@ public class MarkedTree<T> {
      * @param childItem
      *            the item to add
      * @param addChildPolicy
-     *            the policy to use when adding child item. If not supplied or policy
-     *            does not effect addition, item is added as last child.
+     *            the policy to use when adding child item. If not supplied or
+     *            policy does not effect addition, item is added as last child.
      * 
      * @return the added child item mark if successfully added otherwise null
      * @throws UnifyException
@@ -345,7 +384,7 @@ public class MarkedTree<T> {
 
         return null;
     }
-    
+
     /**
      * An unchained mode operation that moves a node, including all its children, at
      * source mark to location above node at destination mark.
@@ -397,13 +436,13 @@ public class MarkedTree<T> {
 
             // Attach below
             attachBelow(dest, src);
-            
+
             return true;
         }
 
         return false;
     }
-    
+
     /**
      * An unchained mode operation that moves a node, including all its children, at
      * source mark to node at destination mark as a child item.
@@ -429,8 +468,8 @@ public class MarkedTree<T> {
      * @param srcMark
      *            the source mark
      * @param addChildPolicy
-     *            the policy to use when adding child item. If not supplied or policy
-     *            does not effect addition, item is added as last child.
+     *            the policy to use when adding child item. If not supplied or
+     *            policy does not effect addition, item is added as last child.
      * @return a true value if movement was successful otherwise false
      * @throws UnifyException
      *             if marked tree is not in unchained mode.
@@ -445,7 +484,7 @@ public class MarkedTree<T> {
 
             // Add as child
             attachChild(dest, src, addChildPolicy);
-            
+
             return true;
         }
 
@@ -465,11 +504,13 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Updates root node and all descendants that are matched by supplied matcher using supplied update policy.
+     * Updates root node and all descendants that are matched by supplied matcher
+     * using supplied update policy.
      * 
      * @param startMark
      *            the start mark
-     * @param matcher the matcher
+     * @param matcher
+     *            the matcher
      * @param updateChildPolicy
      *            the update policy
      * @throws UnifyException
@@ -484,7 +525,8 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Updates node at supplied mark and all descendants using supplied update policy.
+     * Updates node at supplied mark and all descendants using supplied update
+     * policy.
      * 
      * @param startMark
      *            the start mark
@@ -498,17 +540,20 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Updates node at supplied mark and all descendants that are matched by supplied matcher using supplied update policy.
+     * Updates node at supplied mark and all descendants that are matched by
+     * supplied matcher using supplied update policy.
      * 
      * @param startMark
      *            the start mark
-     * @param matcher the matcher
+     * @param matcher
+     *            the matcher
      * @param updateChildPolicy
      *            the update policy
      * @throws UnifyException
      *             if an error occurs
      */
-    public void updateNodes(Long startMark, Matcher<T> matcher, UpdateChildPolicy<T> updateChildPolicy) throws UnifyException {
+    public void updateNodes(Long startMark, Matcher<T> matcher, UpdateChildPolicy<T> updateChildPolicy)
+            throws UnifyException {
         Node<T> trg = nodes.get(startMark);
         if (trg != null) {
             if (matcher != null) {
@@ -520,7 +565,8 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Updates all parent nodes of node at supplied mark using supplied update policy.
+     * Updates all parent nodes of node at supplied mark using supplied update
+     * policy.
      * 
      * @param startMark
      *            the start mark
@@ -534,17 +580,20 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Updates all parent nodes of node at supplied mark that are matched by supplied matcher using supplied update policy.
+     * Updates all parent nodes of node at supplied mark that are matched by
+     * supplied matcher using supplied update policy.
      * 
      * @param startMark
      *            the start mark
-     * @param matcher the matcher
+     * @param matcher
+     *            the matcher
      * @param updateChildPolicy
      *            the update policy
      * @throws UnifyException
      *             if an error occurs
      */
-    public void updateParentNodes(Long startMark, Matcher<T> matcher, UpdateChildPolicy<T> updateChildPolicy) throws UnifyException {
+    public void updateParentNodes(Long startMark, Matcher<T> matcher, UpdateChildPolicy<T> updateChildPolicy)
+            throws UnifyException {
         Node<T> trg = nodes.get(startMark);
         if (trg != null) {
             if (matcher != null) {
@@ -585,7 +634,7 @@ public class MarkedTree<T> {
         root.child = null;
         setChain(true);
     }
-    
+
     /**
      * Gets the number of nodes in this tree.
      * 
@@ -630,7 +679,7 @@ public class MarkedTree<T> {
             // Can not move a source node if destination node is its descendant.
             return false;
         }
-        
+
         return true;
     }
 
@@ -668,10 +717,10 @@ public class MarkedTree<T> {
                         added = true;
                         break;
                     }
-                    
+
                     lch = dch;
                 } while ((dch = dch.next) != null);
-                
+
                 if (!added) {
                     attachBelow(lch, child);
                 }
@@ -768,10 +817,10 @@ public class MarkedTree<T> {
         if (list != null) {
             return list;
         }
-        
+
         return Collections.emptyList();
     }
-    
+
     private List<Node<T>> matchNodes(Node<T> trg, List<Node<T>> matchList, Matcher<T> matcher) throws UnifyException {
         if (matcher.match(trg.item)) {
             if (matchList == null) {
@@ -786,13 +835,13 @@ public class MarkedTree<T> {
             matchList = matchNodes(ch, matchList, matcher);
             ch = ch.next;
         }
-        
+
         return matchList;
     }
 
     private void updateAll(UpdateChildPolicy<T> updateChildPolicy) {
         updateChildPolicy.update(root.item);
-        for (Node<T> node: nodes.values()) {
+        for (Node<T> node : nodes.values()) {
             updateChildPolicy.update(node.item);
         }
     }
@@ -801,8 +850,8 @@ public class MarkedTree<T> {
         if (matcher.match(root.item)) {
             updateChildPolicy.update(root.item);
         }
-        
-        for (Node<T> node: nodes.values()) {
+
+        for (Node<T> node : nodes.values()) {
             if (matcher.match(node.item)) {
                 updateChildPolicy.update(node.item);
             }
@@ -811,7 +860,7 @@ public class MarkedTree<T> {
 
     private void updateNode(Node<T> trg, UpdateChildPolicy<T> updateChildPolicy) {
         updateChildPolicy.update(trg.item);
-        
+
         Node<T> ch = trg.child;
         while (ch != null) {
             updateNode(ch, updateChildPolicy);
@@ -823,7 +872,7 @@ public class MarkedTree<T> {
         if (matcher.match(trg.item)) {
             updateChildPolicy.update(trg.item);
         }
-        
+
         Node<T> ch = trg.child;
         while (ch != null) {
             updateNode(ch, matcher, updateChildPolicy);
@@ -896,7 +945,35 @@ public class MarkedTree<T> {
         public boolean isParent() {
             return child != null;
         }
-        
+
+        public List<Node<T>> getChildNodeList() {
+            if (child != null) {
+                List<Node<T>> list = new ArrayList<Node<T>>();
+                Node<T> ch = child;
+                do {
+                    list.add(ch);
+                } while ((ch = ch.next) != null);
+                return list;
+            }
+
+            return Collections.emptyList();
+        }
+
+        public List<Node<T>> getChildNodeList(Matcher<T> matcher) {
+            if (child != null) {
+                List<Node<T>> list = new ArrayList<Node<T>>();
+                Node<T> ch = child;
+                do {
+                    if (matcher.match(ch.item)) {
+                        list.add(ch);
+                    }
+                } while ((ch = ch.next) != null);
+                return list;
+            }
+
+            return Collections.emptyList();
+        }
+
         public List<T> getChildItemList() {
             if (child != null) {
                 List<T> list = new ArrayList<T>();
