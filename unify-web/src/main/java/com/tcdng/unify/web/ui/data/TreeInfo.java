@@ -106,6 +106,15 @@ public class TreeInfo {
         return itemInfoTree.findNodes(parentItemId, childMatcher);
     }
 
+    public List<Node<TreeItemInfo>> getChildNodes(Long parentItemId) throws UnifyException {
+        return itemInfoTree.getChildNodes(parentItemId);
+    }
+
+    public List<Node<TreeItemInfo>> getChildNodes(Long parentItemId, Matcher<TreeItemInfo> matcher)
+            throws UnifyException {
+        return itemInfoTree.getChildNodes(parentItemId, matcher);
+    }
+
     public TreeItemInfo getTreeItemInfo(Long itemId) {
         Node<TreeItemInfo> node = itemInfoTree.getNode(itemId);
         if (node != null) {
@@ -263,8 +272,8 @@ public class TreeInfo {
 
         public TreeInfo build() throws UnifyException {
             itemInfoTree.setChain(false); // Enter unchained mode
-            return new TreeInfo(Collections.unmodifiableList(new ArrayList<TreeMenuInfo>(menuList.values())), categories,
-                    itemInfoTree);
+            return new TreeInfo(Collections.unmodifiableList(new ArrayList<TreeMenuInfo>(menuList.values())),
+                    categories, itemInfoTree);
         }
     }
 
