@@ -2120,6 +2120,45 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindLeanRecordByIdWithChild() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("greenEditor"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.findLean(Report.class, id);
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindLeanRecordByIdWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.findLean(Report.class, id);
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getParameters());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testFindRecordByIdWithChild() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -2173,6 +2212,45 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindLeanRecordByCriteriaWithChild() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("beanEditor"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.findLean(new ReportQuery().equals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindLeanRecordByCriteriaWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.findLean(new ReportQuery().equals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getParameters());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testFindRecordByCriteriaWithChild() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -2184,26 +2262,6 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
-
-            assertNotNull(foundReport.getReportForm());
-            assertEquals("beanEditor", foundReport.getReportForm().getEditor());
-        } finally {
-            db.getTransactionManager().endTransaction();
-        }
-    }
-
-    @Test
-    public void testFindRecordByCriteriaWithSelectChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
-        try {
-            Report report = new Report("weeklyReport", "Weekly Report");
-            report.setReportForm(new ReportForm("beanEditor"));
-            Long id = (Long) db.create(report);
-
-            Report foundReport = db.find(new ReportQuery().equals("id", id).select("name", "reportForm"));
-            assertNotNull(foundReport);
-            assertEquals("weeklyReport", foundReport.getName());
-            assertNull(foundReport.getDescription());
 
             assertNotNull(foundReport.getReportForm());
             assertEquals("beanEditor", foundReport.getReportForm().getEditor());
@@ -2240,6 +2298,26 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(BooleanType.TRUE, rParam.getScheduled());
             assertNull(rParam.getReportDesc());
             assertNull(rParam.getScheduledDesc());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordByCriteriaWithSelectChild() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("beanEditor"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.find(new ReportQuery().equals("id", id).select("name", "reportForm"));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertNull(foundReport.getDescription());
+
+            assertNotNull(foundReport.getReportForm());
+            assertEquals("beanEditor", foundReport.getReportForm().getEditor());
         } finally {
             db.getTransactionManager().endTransaction();
         }
@@ -2452,6 +2530,44 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testListLeanRecordByIdWithChild() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("cyanEditor"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.listLean(Report.class, id);
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testListLeanRecordByIdWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.listLean(Report.class, id);
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getParameters());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testListRecordByIdWithChild() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -2494,6 +2610,44 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testListLeanRecordByCriteriaWithChild() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("grayEditor"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.listLean(new ReportQuery().equals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testListLeanRecordByCriteriaWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.listLean(new ReportQuery().equals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getParameters());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testListRecordByCriteriaWithChild() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -2508,6 +2662,28 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNotNull(foundReport.getReportForm());
             assertEquals("grayEditor", foundReport.getReportForm().getEditor());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testListRecordByCriteriaWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.list(new ReportQuery().equals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNotNull(foundReport.getParameters());
+            assertEquals(2, foundReport.getParameters().size());
+            assertEquals("startDate", foundReport.getParameters().get(0).getName());
+            assertEquals("endDate", foundReport.getParameters().get(1).getName());
         } finally {
             db.getTransactionManager().endTransaction();
         }
@@ -2545,28 +2721,6 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport);
             assertNull(foundReport.getName());
             assertNull(foundReport.getDescription());
-
-            assertNotNull(foundReport.getParameters());
-            assertEquals(2, foundReport.getParameters().size());
-            assertEquals("startDate", foundReport.getParameters().get(0).getName());
-            assertEquals("endDate", foundReport.getParameters().get(1).getName());
-        } finally {
-            db.getTransactionManager().endTransaction();
-        }
-    }
-
-    @Test
-    public void testListRecordByCriteriaWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
-        try {
-            Report report = new Report("weeklyReport", "Weekly Report");
-            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
-            Long id = (Long) db.create(report);
-
-            Report foundReport = db.list(new ReportQuery().equals("id", id));
-            assertNotNull(foundReport);
-            assertEquals("weeklyReport", foundReport.getName());
-            assertEquals("Weekly Report", foundReport.getDescription());
 
             assertNotNull(foundReport.getParameters());
             assertEquals(2, foundReport.getParameters().size());

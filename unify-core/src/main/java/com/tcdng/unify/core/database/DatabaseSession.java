@@ -45,7 +45,8 @@ public interface DatabaseSession {
     Object create(Entity record) throws UnifyException;
 
     /**
-     * Retrieves a record by ID. Fetches all attribute lists if any.
+     * Retrieves a record by ID. List-only properties of returned object are not
+     * populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
@@ -57,8 +58,8 @@ public interface DatabaseSession {
     <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException;
 
     /**
-     * Retrieves a record by id and version number. Fetches all attribute lists if
-     * any.
+     * Retrieves a record by id and version number. List-only properties of returned
+     * object are not populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
@@ -72,7 +73,8 @@ public interface DatabaseSession {
     <T extends Entity> T find(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
     /**
-     * Retrieves a record by query.
+     * Retrieves a record by query. List-only properties of returned object are not
+     * populated. Child and child list properties are populated.
      * 
      * @param query
      *            the query
@@ -81,6 +83,46 @@ public interface DatabaseSession {
      *             if multiple records are found. If an error occurs
      */
     <T extends Entity> T find(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves a record by ID. List-only properties of returned object are not
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T findLean(Class<T> clazz, Object id) throws UnifyException;
+
+    /**
+     * Retrieves a record by id and version number. List-only properties of returned
+     * object are not populated. Child and child list properties are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param versionNo
+     *            the version number
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T findLean(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+
+    /**
+     * Retrieves a record by query. List-only properties of returned object are not
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T findLean(Query<T> query) throws UnifyException;
 
     /**
      * Finds constraining record that may prevent supplied record from being
@@ -137,8 +179,8 @@ public interface DatabaseSession {
             throws UnifyException;
 
     /**
-     * Retrieves a record by id from associated view. Fetches all attribute lists if
-     * any.
+     * Retrieves a record by id from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
@@ -150,8 +192,9 @@ public interface DatabaseSession {
     <T extends Entity> T list(Class<T> clazz, Object id) throws UnifyException;
 
     /**
-     * Retrieves a record by id and version number from associated view. Fetches all
-     * attribute lists if any.
+     * Retrieves a record by id and version number from associated view. List-only
+     * properties of returned object are populated. Child and child list properties
+     * are populated.
      * 
      * @param clazz
      *            the record type
@@ -165,8 +208,8 @@ public interface DatabaseSession {
     <T extends Entity> T list(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
     /**
-     * Retrieves a record by query from associated view. Does not fetch attribute
-     * lists.
+     * Retrieves a record by query from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are populated.
      * 
      * @param query
      *            the query
@@ -175,6 +218,49 @@ public interface DatabaseSession {
      *             if multiple records are found. if an error occurs
      */
     <T extends Entity> T list(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves a record by id from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are not
+     * populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T listLean(Class<T> clazz, Object id) throws UnifyException;
+
+    /**
+     * Retrieves a record by id and version number from associated view. List-only
+     * properties of returned object are populated. Child and child list properties
+     * are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param versionNo
+     *            the version number
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T listLean(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+
+    /**
+     * Retrieves a record by query from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are not
+     * populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. if an error occurs
+     */
+    <T extends Entity> T listLean(Query<T> query) throws UnifyException;
 
     /**
      * Retrieves list of record by query from associated view. Does not fetch
