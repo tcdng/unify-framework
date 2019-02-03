@@ -121,35 +121,32 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException {
-        SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkStatement(clazz, id);
-        try {
-            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
-            if (record == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
-            }
-
-            fetchChildRecords(record, null, false);
-            return record;
-        } finally {
-            sqlDataSourceDialect.restoreStatement(sqlStatement);
-        }
+        return find(clazz, id, true);
     }
 
     @Override
     public <T extends Entity> T find(Class<T> clazz, Object id, final Object versionNo) throws UnifyException {
-        SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkVersionStatement(clazz, id, versionNo);
-        try {
-            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
-            if (record == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
-                        versionNo);
-            }
+        return find(clazz, id, versionNo, true);
+    }
 
-            fetchChildRecords(record, null, false);
-            return record;
-        } finally {
-            sqlDataSourceDialect.restoreStatement(sqlStatement);
-        }
+    @Override
+    public <T extends Entity> T find(Query<T> query) throws UnifyException {
+        return find(query, true);
+    }
+
+    @Override
+    public <T extends Entity> T findLean(Class<T> clazz, Object id) throws UnifyException {
+        return find(clazz, id, false);
+    }
+
+    @Override
+    public <T extends Entity> T findLean(Class<T> clazz, Object id, final Object versionNo) throws UnifyException {
+        return find(clazz, id, versionNo, false);
+    }
+
+    @Override
+    public <T extends Entity> T findLean(Query<T> query) throws UnifyException {
+        return find(query, false);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -171,34 +168,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
         }
         return null;
-    }
-
-    @Override
-    public <T extends Entity> T find(Query<T> query) throws UnifyException {
-        T record = null;
-        try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
-                record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
-                        sqlDataSourceDialect.prepareFindStatement(query), false);
-            } else {
-                SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-                List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-                if (!idList.isEmpty()) {
-                    Query<T> findQuery = query.copyNoCriteria();
-                    findQuery.add(new Amongst(idFieldInfo.getName(), idList));
-                    record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
-                            sqlDataSourceDialect.prepareFindStatement(findQuery), false);
-                }
-            }
-
-            fetchChildRecords(record, query.getSelect(), false);
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
-        }
-        return record;
     }
 
     @Override
@@ -280,43 +249,32 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T extends Entity> T list(Class<T> clazz, Object id) throws UnifyException {
-        SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkStatement(clazz, id);
-        try {
-            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
-            if (record == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
-            }
-
-            fetchChildRecords(record, null, true);
-            return record;
-        } finally {
-            sqlDataSourceDialect.restoreStatement(sqlStatement);
-        }
+        return list(clazz, id, true);
     }
 
     @Override
     public <T extends Entity> T list(Class<T> clazz, Object id, final Object versionNo) throws UnifyException {
-        SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkVersionStatement(clazz, id, versionNo);
-        try {
-            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
-            if (record == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
-                        versionNo);
-            }
-
-            fetchChildRecords(record, null, true);
-            return record;
-        } finally {
-            sqlDataSourceDialect.restoreStatement(sqlStatement);
-        }
+        return list(clazz, id, versionNo, true);
     }
 
     @Override
     public <T extends Entity> T list(Query<T> query) throws UnifyException {
-        T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
-                sqlDataSourceDialect.prepareListStatement(query), false);
-        fetchChildRecords(record, query.getSelect(), true);
-        return record;
+        return list(query, true);
+    }
+
+    @Override
+    public <T extends Entity> T listLean(Class<T> clazz, Object id) throws UnifyException {
+        return list(clazz, id, false);
+    }
+
+    @Override
+    public <T extends Entity> T listLean(Class<T> clazz, Object id, final Object versionNo) throws UnifyException {
+        return list(clazz, id, versionNo, false);
+    }
+
+    @Override
+    public <T extends Entity> T listLean(Query<T> query) throws UnifyException {
+        return list(query, false);
     }
 
     @Override
@@ -871,6 +829,115 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public boolean isClosed() throws UnifyException {
         return closed;
+    }
+
+    private <T extends Entity> T find(Class<T> clazz, Object id, boolean fetchChild) throws UnifyException {
+        SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkStatement(clazz, id);
+        try {
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
+            if (record == null) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
+            }
+
+            if (fetchChild) {
+                fetchChildRecords(record, null, false);
+            }
+            return record;
+        } finally {
+            sqlDataSourceDialect.restoreStatement(sqlStatement);
+        }
+    }
+
+    private <T extends Entity> T find(Class<T> clazz, Object id, final Object versionNo, boolean fetchChild)
+            throws UnifyException {
+        SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkVersionStatement(clazz, id, versionNo);
+        try {
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
+            if (record == null) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
+                        versionNo);
+            }
+
+            if (fetchChild) {
+                fetchChildRecords(record, null, false);
+            }
+            return record;
+        } finally {
+            sqlDataSourceDialect.restoreStatement(sqlStatement);
+        }
+    }
+
+    private <T extends Entity> T find(Query<T> query, boolean fetchChild) throws UnifyException {
+        T record = null;
+        try {
+            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
+                record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
+                        sqlDataSourceDialect.prepareFindStatement(query), false);
+            } else {
+                SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
+                List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
+                if (!idList.isEmpty()) {
+                    Query<T> findQuery = query.copyNoCriteria();
+                    findQuery.add(new Amongst(idFieldInfo.getName(), idList));
+                    record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
+                            sqlDataSourceDialect.prepareFindStatement(findQuery), false);
+                }
+            }
+
+            if (fetchChild) {
+                fetchChildRecords(record, query.getSelect(), false);
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        }
+        return record;
+    }
+
+    private <T extends Entity> T list(Class<T> clazz, Object id, boolean fetchChild) throws UnifyException {
+        SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkStatement(clazz, id);
+        try {
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
+            if (record == null) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
+            }
+
+            if (fetchChild) {
+                fetchChildRecords(record, null, true);
+            }
+            return record;
+        } finally {
+            sqlDataSourceDialect.restoreStatement(sqlStatement);
+        }
+    }
+
+    private <T extends Entity> T list(Class<T> clazz, Object id, final Object versionNo, boolean fetchChild) throws UnifyException {
+        SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkVersionStatement(clazz, id, versionNo);
+        try {
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
+            if (record == null) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
+                        versionNo);
+            }
+
+            if (fetchChild) {
+                fetchChildRecords(record, null, true);
+            }
+            return record;
+        } finally {
+            sqlDataSourceDialect.restoreStatement(sqlStatement);
+        }
+    }
+
+    private <T extends Entity> T list(Query<T> query, boolean fetchChild) throws UnifyException {
+        T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
+                sqlDataSourceDialect.prepareListStatement(query), false);
+        if (fetchChild) {
+            fetchChildRecords(record, query.getSelect(), true);
+        }
+        return record;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
