@@ -115,6 +115,15 @@ public class TreeInfo {
         return itemInfoTree.getChildNodes(parentItemId, matcher);
     }
 
+    public List<TreeItemInfo> getChildTreeItems(Long parentItemId) throws UnifyException {
+        return itemInfoTree.getChildItems(parentItemId);
+    }
+
+    public List<TreeItemInfo> getChildTreeItems(Long parentItemId, Matcher<TreeItemInfo> matcher)
+            throws UnifyException {
+        return itemInfoTree.getChildItems(parentItemId, matcher);
+    }
+
     public TreeItemInfo getTreeItemInfo(Long itemId) {
         Node<TreeItemInfo> node = itemInfoTree.getNode(itemId);
         if (node != null) {

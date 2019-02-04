@@ -392,10 +392,13 @@ public class MarkedTreeTest {
         Node<String> music =  mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
+        assertEquals("music", music.getChild().getPrev().getItem());
         assertNotNull(music.getChild().getNext());
         assertEquals("blues", music.getChild().getNext().getItem());
+        assertEquals("jazz", music.getChild().getNext().getPrev().getItem());
         assertNotNull(music.getChild().getNext().getNext());
         assertEquals("rap", music.getChild().getNext().getNext().getItem());
+        assertEquals("blues", music.getChild().getNext().getNext().getPrev().getItem());
         assertNull(music.getChild().getNext().getNext().getNext());
         
         Node<String> jazz =  mTree.getNode(jazzMark);
@@ -435,12 +438,16 @@ public class MarkedTreeTest {
         assertEquals("blues", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
         assertEquals("hiphop", music.getChild().getNext().getItem());
+        assertEquals("blues", music.getChild().getNext().getPrev().getItem());
         assertNotNull(music.getChild().getNext().getNext());
         assertEquals("jazz", music.getChild().getNext().getNext().getItem());
+        assertEquals("hiphop", music.getChild().getNext().getNext().getPrev().getItem());
         assertNotNull(music.getChild().getNext().getNext().getNext());
         assertEquals("rap", music.getChild().getNext().getNext().getNext().getItem());
+        assertEquals("jazz", music.getChild().getNext().getNext().getNext().getPrev().getItem());
         assertNotNull(music.getChild().getNext().getNext().getNext().getNext());
         assertEquals("zelt", music.getChild().getNext().getNext().getNext().getNext().getItem());
+        assertEquals("rap", music.getChild().getNext().getNext().getNext().getNext().getPrev().getItem());
         
         Node<String> jazz =  mTree.getNode(jazzMark);
         assertNotNull(jazz.getChild());

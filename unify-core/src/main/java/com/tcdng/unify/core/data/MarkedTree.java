@@ -241,7 +241,7 @@ public class MarkedTree<T> {
 
     /**
      * Get all immediate child nodes for node at supplied parent mark that are
-     * matched by supplied matcher..
+     * matched by supplied matcher.
      * 
      * @param parentMark
      *            the parent mark
@@ -261,6 +261,45 @@ public class MarkedTree<T> {
     }
 
     /**
+     * Get all immediate child node items for node at supplied parent mark.
+     * 
+     * @param parentMark
+     *            the parent mark
+     * @return list of matching child node items
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public List<T> getChildItems(Long parentMark) throws UnifyException {
+        Node<T> trg = nodes.get(parentMark);
+        if (trg != null) {
+            return trg.getChildItemList();
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
+     * Get all immediate child node items for node at supplied parent mark that are
+     * matched by supplied matcher..
+     * 
+     * @param parentMark
+     *            the parent mark
+     * @param matcher
+     *            the matcher
+     * @return list of matching child nodes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public List<T> getChildItems(Long parentMark, Matcher<T> matcher) throws UnifyException {
+        Node<T> trg = nodes.get(parentMark);
+        if (trg != null) {
+            return trg.getChildItemList(matcher);
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
      * A chained mode operation that adds item to marked tree.
      * 
      * @param item
@@ -274,10 +313,13 @@ public class MarkedTree<T> {
         checkNotChain();
         checkDefault();
 
+        Node<T> nw = createNode(item);
         if (last == null) {
-            last = parent.child = addItem(item, parent);
+            nw.prev = parent;
+            last = parent.child = nw;
         } else {
-            last = last.next = addItem(item, last);
+            nw.prev = last;
+            last = last.next = nw;
         }
 
         return last.mark;
@@ -302,7 +344,7 @@ public class MarkedTree<T> {
 
         Node<T> trg = nodes.get(mark);
         if (trg != null) {
-            Node<T> nw = addItem(item, trg.prev);
+            Node<T> nw = createNode(item);
             attachAbove(trg, nw);
             return nw.mark;
         }
@@ -329,7 +371,7 @@ public class MarkedTree<T> {
 
         Node<T> trg = nodes.get(mark);
         if (trg != null) {
-            Node<T> nw = addItem(item, trg);
+            Node<T> nw = createNode(item);
             attachBelow(trg, nw);
             return nw.mark;
         }
@@ -377,7 +419,7 @@ public class MarkedTree<T> {
 
         Node<T> dest = nodes.get(destMark);
         if (dest != null) {
-            Node<T> nw = addItem(childItem, dest);
+            Node<T> nw = createNode(childItem);
             attachChild(dest, nw, addChildPolicy);
             return nw.mark;
         }
@@ -746,13 +788,14 @@ public class MarkedTree<T> {
         return last;
     }
 
-    private Node<T> addItem(T item, Node<T> prev) {
-        Node<T> nw = new Node<T>(item, markCounter++, prev);
+    private Node<T> createNode(T item) {
+        Node<T> nw = new Node<T>(item, markCounter++);
         nodes.put(nw.mark, nw);
         return nw;
     }
 
     private void attachAbove(Node<T> trg, Node<T> nw) {
+        nw.prev = trg.prev;
         nw.next = trg;
         if (isFirstChild(trg)) {
             trg.prev.child = nw;
@@ -763,6 +806,7 @@ public class MarkedTree<T> {
     }
 
     private void attachBelow(Node<T> trg, Node<T> nw) {
+        nw.prev = trg;
         nw.next = trg.next;
         if (trg.next != null) {
             trg.next.prev = nw;
@@ -914,12 +958,6 @@ public class MarkedTree<T> {
         private Node(T item, long mark) {
             this.item = item;
             this.mark = mark;
-        }
-
-        private Node(T item, long mark, Node<T> prev) {
-            this.item = item;
-            this.mark = mark;
-            this.prev = prev;
         }
 
         public Long getMark() {
