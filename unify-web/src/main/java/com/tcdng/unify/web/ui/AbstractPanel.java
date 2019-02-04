@@ -34,7 +34,7 @@ import com.tcdng.unify.web.annotation.Action;
         @UplAttribute(name = "refreshEvery", type = int.class),
         @UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultValue = "true"),
         @UplAttribute(name = "legend", type = String.class),
-        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
 public abstract class AbstractPanel extends AbstractContainer implements Panel {
 
     private List<PanelEventListener> listeners;
