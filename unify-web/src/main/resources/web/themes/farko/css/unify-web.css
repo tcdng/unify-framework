@@ -163,7 +163,7 @@ z-index:400;}
 
 /** Collapsible panel */
 .ui-collapsiblepanel {border: 1px solid #A9A9A9; background: #FFF;}
-.ui-collapsiblepanel .cptitlebar {display:block; font-size:20px; color:#878787; background-color:#EDEDED;;}
+.ui-collapsiblepanel .cptitlebar {display:block; font-size:20px; color:#878787; background-color:#EDEDED;}
 .ui-collapsiblepanel .cptitlebar .tblabel {float:left; text-align: left;}
 .ui-collapsiblepanel .cptitlebar .tbcontrols {float:right; text-align: right;}
 .ui-collapsiblepanel .cptitlebar .tbbutton {width:20px; height:20px; cursor:pointer}
@@ -197,6 +197,12 @@ z-index:400;}
 .ui-dialogpanel {}
 .ui-dialogpanel-base {background: #FFF; border: 1px solid #A9A9A9;}
 
+
+/** Fixed content panel */
+.ui-fixedcontentpanel {}
+.ui-fixedcontentpanel .fcphint {position: relative; top: 2px; height:0px; overflow-y:visible; width: 100%; z-index:100;}
+.ui-fixedcontentpanel .fcpbusy {display: none; position: absolute; padding-top: 4px; padding-left: 4px; z-index:101;}
+.ui-fixedcontentpanel .fcpbusy .fcpimage {width:48px; border: 2px solid #606060; background-color:#E0E0E0;}
 
 /** Form panel */
 .ui-formpanel {}
