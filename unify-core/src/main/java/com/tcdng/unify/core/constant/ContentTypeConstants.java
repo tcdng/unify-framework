@@ -49,5 +49,5 @@ public interface ContentTypeConstants {
 
     String TEXT_XML = "text/xml";
 
-    String IMAGE = "image/jpeg;image/gif;image/bmp;image/jpg;image/png";
+    String IMAGE = "image/*";
 }
