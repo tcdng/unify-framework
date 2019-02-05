@@ -360,7 +360,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
             hintList = new ArrayList<Hint>();
             setRequestAttribute(USER_HINT_LIST, hintList);
         }
-        hintList.add(new Hint(mode, getSessionMessage(messageKey, params)));
+
+        hintList.add(new Hint(mode, resolveSessionMessage(messageKey, params)));
     }
 
     @Override
