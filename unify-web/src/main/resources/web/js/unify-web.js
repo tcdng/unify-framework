@@ -1057,6 +1057,12 @@ ux.contentOpen  = function(uEv) {
 	ux.post(uEv);
 }
 
+/** Fixed content panel */
+ux.rigFixedContentPanel = function(rgp) {
+	ux.cntHintId = rgp.pHintPanelId;
+	ux.busyIndicator = rgp.pBusyIndId;
+}
+
 /** Split panel */
 ux.rigSplitPanel = function(rgp) {
 	var evp = {};
