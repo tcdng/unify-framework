@@ -3949,6 +3949,7 @@ ux.attachEventHandler = function(domObject, eventName, handler, evp) {
 }
 
 ux.handleOrConfirmRedirect = function(event, handler, evp) {
+	console.log("@Debug: evp.uConf = " + evp.uConf);
 	if (evp.uConf) {
 		// Store action
 		ux.confirmStore.handler = handler;

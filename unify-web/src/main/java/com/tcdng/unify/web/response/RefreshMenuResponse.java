@@ -19,8 +19,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
 import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.annotation.ResultMapping;
-import com.tcdng.unify.web.constant.SessionAttributeConstants;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -43,7 +43,7 @@ public class RefreshMenuResponse extends AbstractJsonPageControllerResponse {
     @Override
     protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
         logDebug("Preparing refresh menu response: controller = [{0}]", pageController.getName());
-        if (Boolean.TRUE.equals(removeSessionAttribute(SessionAttributeConstants.REFRESH_MENU))) {
+        if (Boolean.TRUE.equals(removeSessionAttribute(UnifyWebSessionAttributeConstants.REFRESH_MENU))) {
             Document document = getRequestContextUtil().getRequestDocument();
             Panel menuPanel = document.getMenuPanel();
             if (menuPanel != null) {

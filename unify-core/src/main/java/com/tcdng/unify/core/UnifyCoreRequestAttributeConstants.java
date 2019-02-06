@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.constant;
+package com.tcdng.unify.core;
 
 /**
- * Page attribute constants.
+ * Unify core request attribute constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface PageAttributeConstants {
+public interface UnifyCoreRequestAttributeConstants {
 
-    String PAGE_TITLE = "pageTitle";
+    String SUPPRESS_BROADCAST = "UNIFYCORE.SUPRESSBROADCAST";
 }

@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.SessionAttributeConstants;
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.SessionAttributeValueConstants;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyContainer;
@@ -182,7 +182,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
             logOut(otherSessionId);
             UserSession userSession = userSessions.get(otherSessionId);
             if (userSession != null) {
-                userSession.getSessionContext().setAttribute(SessionAttributeConstants.FORCE_LOGOUT,
+                userSession.getSessionContext().setAttribute(UnifyCoreSessionAttributeConstants.FORCE_LOGOUT,
                         SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN);
             }
         }
@@ -220,7 +220,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
 
     private void broadcast(UserSession userSession, String attribute, Object value) throws UnifyException {
         if (userSession != null) {
-            if (SessionAttributeConstants.FORCE_LOGOUT.equals(attribute)) {
+            if (UnifyCoreSessionAttributeConstants.FORCE_LOGOUT.equals(attribute)) {
                 logOut(userSession);
             }
             userSession.getSessionContext().setAttribute(attribute, value);
@@ -239,7 +239,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     private void setRequiredAttributes(SessionContext sessionContext) throws UnifyException {
-        sessionContext.setAttribute(SessionAttributeConstants.UPLCOMPONENT_WRITERS,
+        sessionContext.setAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
                 uplComponentWriterManager.getWriters(sessionContext.getPlatform()));
     }
 

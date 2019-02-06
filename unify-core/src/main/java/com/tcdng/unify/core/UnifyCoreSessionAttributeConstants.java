@@ -16,12 +16,14 @@
 package com.tcdng.unify.core;
 
 /**
- * Request attribute constants.
+ * Unify core session attribute constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface RequestAttributeConstants {
+public interface UnifyCoreSessionAttributeConstants {
 
-    String SUPPRESS_BROADCAST = "R.suppressBroadcast";
+    String FORCE_LOGOUT = "UNIFYCORE.FORCELOGOUT";
+
+    String UPLCOMPONENT_WRITERS = "UNIFYCORE.UPLCOMPONENTWRITERS";
 }
