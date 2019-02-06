@@ -13,15 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.constant;
+package com.tcdng.unify.web;
 
 /**
- * Session attribute constants.
+ * Unify web session attribute constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SessionAttributeConstants extends com.tcdng.unify.core.SessionAttributeConstants {
+public interface UnifyWebSessionAttributeConstants extends com.tcdng.unify.core.UnifyCoreSessionAttributeConstants {
 
-    String REFRESH_MENU = "refreshMenu";
+    String REFRESH_MENU = "UNIFYWEB.REFRESHMENU";
+
+    /** Message Box */
+    String MESSAGEBOX = "UNIFYWEB.MESSAGEBOX";
+
+    /** Task monitor info */
+    String TASKMONITORINFO = "UNIFYWEB.TASKMONITORINFO";
 }

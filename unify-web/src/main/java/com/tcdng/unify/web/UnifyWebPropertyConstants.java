@@ -25,6 +25,8 @@ public interface UnifyWebPropertyConstants {
 
     String APPLICATION_HOME = "application.web.home";
 
+    String APPLICATION_COMMON_UTILITIES = "application.web.common.utilities";
+
     String APPLICATION_DOCUMENT_STYLESHEET = "application.web.document.stylesheet";
 
     String APPLICATION_DOCUMENT_SCRIPT = "application.web.document.script";

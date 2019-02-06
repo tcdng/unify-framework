@@ -1399,7 +1399,7 @@ public class UnifyContainer {
                 try {
                     if (clusterMode) {
                         requestContextManager.getRequestContext()
-                                .setAttribute(RequestAttributeConstants.SUPPRESS_BROADCAST, Boolean.TRUE);
+                                .setAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST, Boolean.TRUE);
                         List<Command> clusterCommandList = clusterService.getClusterCommands();
                         for (Command clusterCommand : clusterCommandList) {
                             BroadcastInfo broadcastInfo = broadcastInfoMap.get(clusterCommand.getCommand());
@@ -1410,7 +1410,7 @@ public class UnifyContainer {
                             }
                         }
                         requestContextManager.getRequestContext()
-                                .setAttribute(RequestAttributeConstants.SUPPRESS_BROADCAST, Boolean.FALSE);
+                                .setAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST, Boolean.FALSE);
                     }
 
                     ContainerCommand cc = containerCommandQueue.poll();

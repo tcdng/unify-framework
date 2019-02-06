@@ -13,17 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core;
+package com.tcdng.unify.web;
 
 /**
- * Session attribute constants.
+ * Page attribute constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SessionAttributeConstants {
+public interface PageAttributeConstants {
 
-    String FORCE_LOGOUT = "S.forceLogout";
-
-    String UPLCOMPONENT_WRITERS = "S.uplComponentWriters";
+    String PAGE_TITLE = "pageTitle";
 }

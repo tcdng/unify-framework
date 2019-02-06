@@ -57,7 +57,6 @@ import com.tcdng.unify.web.annotation.ResultMappings;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
-import com.tcdng.unify.web.constant.SessionAttributeConstants;
 import com.tcdng.unify.web.constant.SystemInfoConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.BindingInfo;
@@ -107,6 +106,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     private PageControllerResponse refreshMenuResponse;
 
     private Set<String> skipOnPopulateSet;
+
+    private String commonUtilitiesControllerName;
 
     public AbstractControllerManager() {
         actionToControllerNameMap = new ConcurrentHashMap<String, String>();
@@ -278,7 +279,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
             SessionContext sessionContext = getSessionContext();
             if (controller.isSecured() && !sessionContext.isUserLoggedIn()) {
-                String forceLogout = (String) sessionContext.removeAttribute(SessionAttributeConstants.FORCE_LOGOUT);
+                String forceLogout = (String) sessionContext.removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
                 if (forceLogout != null) {
                     throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout), request.getPath());
                 }
@@ -346,9 +347,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
                         // Route to common utilities if necessary
                         if (!pbbInfo.hasResultWithName(resultName)) {
-                            pageController = (PageController) this
-                                    .getController(ReservedPageControllerConstants.COMMONUTILITIES);
-                            pbbInfo = pageControllerInfoMap.get(ReservedPageControllerConstants.COMMONUTILITIES);
+                            pageController = (PageController) getController(commonUtilitiesControllerName);
+                            pbbInfo = pageControllerInfoMap.get(commonUtilitiesControllerName);
                         }
                     }
 
@@ -378,11 +378,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             }
 
             if (isUserInterface) {
-                e.printStackTrace();
                 writeExceptionResponseForUserInterface(request, response, e);
             } else {
-                e.printStackTrace();
                 // TODO
+                e.printStackTrace();
             }
         } finally {
             response.close();
@@ -398,6 +397,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     @Override
     protected void onInitialize() throws UnifyException {
         Locale defaultLocale = Locale.getDefault();
+        commonUtilitiesControllerName =
+                getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_COMMON_UTILITIES,
+                        ReservedPageControllerConstants.COMMONUTILITIES);
+
         hintUserResponse = (PageControllerResponse) getUplComponent(defaultLocale, "!hintuserresponse", false);
 
         refreshMenuResponse = (PageControllerResponse) getUplComponent(defaultLocale, "!refreshmenuresponse", false);

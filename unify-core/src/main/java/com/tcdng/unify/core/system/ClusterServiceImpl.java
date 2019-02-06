@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.RequestAttributeConstants;
+import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyContainerInterface;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -132,7 +132,7 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
     @Override
     public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
         if (isClusterMode()
-                && !Boolean.TRUE.equals(getRequestAttribute(RequestAttributeConstants.SUPPRESS_BROADCAST))) {
+                && !Boolean.TRUE.equals(getRequestAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST))) {
             List<String> nodeIdList =
                     db().valueList(String.class, "nodeId", new ClusterNodeQuery().nodeNotEqual(getNodeId()));
             if (!nodeIdList.isEmpty()) {
