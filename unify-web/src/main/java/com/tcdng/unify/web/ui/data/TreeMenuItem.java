@@ -16,14 +16,42 @@
 
 package com.tcdng.unify.web.ui.data;
 
-import com.tcdng.unify.core.data.MarkedTree.AddChildPolicy;
-
 /**
- * Convenient base class for tree item info add child policy.
+ * Tree menu item.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTreeItemAddPolicy implements AddChildPolicy<TreeItemInfo> {
+public class TreeMenuItem {
 
+    private String code;
+
+    private String caption;
+
+    private boolean showOnMultiple;
+
+    private boolean separator;
+
+    public TreeMenuItem(String code, String caption, boolean showOnMultiple, boolean separator) {
+        this.code = code;
+        this.caption = caption;
+        this.separator = separator;
+        this.showOnMultiple = showOnMultiple;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public boolean isShowOnMultiple() {
+        return showOnMultiple;
+    }
+
+    public boolean isSeparator() {
+        return separator;
+    }
 }

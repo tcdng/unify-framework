@@ -16,14 +16,13 @@
 
 package com.tcdng.unify.web.ui.data;
 
-import com.tcdng.unify.core.data.MarkedTree.Matcher;
 
 /**
- * Convenient base class for tree item info matcher.
+ * Convenient base class for tree item matcher.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTreeItemMatcher implements Matcher<TreeItemInfo> {
+public abstract class AbstractTreeItemMatcher implements TreeItemMatcher {
 
 }

@@ -23,6 +23,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
 import com.tcdng.unify.core.data.MarkedTree.Node;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
@@ -31,24 +32,25 @@ import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.data.EventType;
 import com.tcdng.unify.web.ui.data.TreeEvent;
-import com.tcdng.unify.web.ui.data.TreeInfo;
-import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
-import com.tcdng.unify.web.ui.data.TreeItemInfo;
-import com.tcdng.unify.web.ui.data.TreeMenuInfo;
+import com.tcdng.unify.web.ui.data.Tree;
+import com.tcdng.unify.web.ui.data.TreePolicy;
+import com.tcdng.unify.web.ui.data.TreeItemCategory;
+import com.tcdng.unify.web.ui.data.TreeItem;
+import com.tcdng.unify.web.ui.data.TreeMenuItem;
 
 /**
- * Represents a tree control.
+ * Represents a tree explorer control.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("ui-tree")
+@Component("ui-treeexplorer")
 @UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultValue = "$t{images/collapsed.png}"),
         @UplAttribute(name = "expandedIcon", type = String.class, defaultValue = "$t{images/expanded.png}"),
         @UplAttribute(name = "treeRule", type = String.class, defaultValue = "default-treepolicy"),
         @UplAttribute(name = "treeEventPath", type = String.class),
         @UplAttribute(name = "dataComponents", type = UplElementReferences.class) })
-public class Tree extends AbstractMultiControl {
+public class TreeExplorer extends AbstractMultiControl {
 
     private Control eventTypeCtrl;
 
@@ -66,9 +68,7 @@ public class Tree extends AbstractMultiControl {
 
     private Long selectedCtrlId;
 
-    private TreePolicy treeItemRule;
-
-    private TreeInfo treeInfo;
+    private Tree tree;
 
     @Override
     public void onPageInitialize() throws UnifyException {
@@ -78,7 +78,6 @@ public class Tree extends AbstractMultiControl {
         selectedCtrlIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedCtrlId");
         singleSelectedItemId = new ArrayList<Long>(1);
         singleSelectedItemId.add(null);
-        treeItemRule = (TreePolicy) getComponent(getUplAttribute(String.class, "treeRule"));
     }
 
     @Override
@@ -91,30 +90,37 @@ public class Tree extends AbstractMultiControl {
 
     @Action
     public void collapse() throws UnifyException {
-        treeInfo.collapse(selectedCtrlId);
+        tree.collapse(selectedCtrlId);
     }
 
     @Action
     public void expand() throws UnifyException {
-        treeInfo.expand(selectedCtrlId);
+        tree.expand(selectedCtrlId);
     }
 
     @Action
     public void executeEventPath() throws UnifyException {
         String treeEventPath = getTreeEventPath();
         if (!StringUtils.isBlank(treeEventPath)) {
-            treeInfo.registerEvent(eventType, menuCode);
+            tree.registerEvent(eventType, menuCode);
             getRequestContextUtil().setCommandResponsePath(treeEventPath);
             menuCode = null;
         }
     }
 
-    public void setTreeInfo(TreeInfo treeInfo) {
-        this.treeInfo = treeInfo;
+    @SuppressWarnings("unchecked")
+    public void setTree(Tree tree) throws UnifyException {
+        this.tree = tree;
+        this.tree.setTreePolicy(
+                (MarkedTreePolicy<TreeItem>) getComponent(this.getUplAttribute(String.class, "treeRule")));
     }
 
-    public TreePolicy getTreeItemRule() {
-        return treeItemRule;
+    public TreePolicy getTreePolicy() {
+        return tree.getTreePolicy();
+    }
+
+    public boolean hasTreePolicy() {
+        return tree.isTreePolicy();
     }
 
     public String getCollapsedIcon() throws UnifyException {
@@ -170,11 +176,11 @@ public class Tree extends AbstractMultiControl {
     }
 
     public List<Long> getSelectedItemIds() {
-        return treeInfo.getSelectedItems();
+        return tree.getSelectedItems();
     }
 
     public void setSelectedItemIds(List<Long> selectedItemIds) {
-        treeInfo.setSelectedItems(selectedItemIds);
+        tree.setSelectedItems(selectedItemIds);
     }
 
     public void setSelectedItem(Long itemId) {
@@ -190,53 +196,52 @@ public class Tree extends AbstractMultiControl {
         return getPrefixedId("cap_");
     }
 
-    public Long addTreeItem(Long parentItemId, String categoryName, Object item)
-            throws UnifyException {
-        return treeInfo.addTreeItem(parentItemId, categoryName, item);
+    public Long addTreeItem(Long parentItemId, String categoryName, Object item) throws UnifyException {
+        return tree.addTreeItem(parentItemId, categoryName, item);
     }
 
-    public TreeItemCategoryInfo getTreeCategoryInfo(String name) {
-        return treeInfo.getTreeCategoryInfo(name);
+    public TreeItemCategory getTreeCategory(String name) {
+        return tree.getTreeCategory(name);
     }
 
-    public Collection<TreeItemCategoryInfo> getTreeCategoryInfos() {
-        return treeInfo.getTreeCategoryInfos();
+    public Collection<TreeItemCategory> getTreeCategories() {
+        return tree.getTreeCategories();
     }
 
-    public Node<TreeItemInfo> getRootNode() {
-        return treeInfo.getRootNode();
+    public Node<TreeItem> getRootNode() {
+        return tree.getRootNode();
     }
 
-    public Node<TreeItemInfo> getNode(Long itemId) {
-        return treeInfo.getNode(itemId);
+    public Node<TreeItem> getNode(Long itemId) {
+        return tree.getNode(itemId);
     }
 
-    public Node<TreeItemInfo> getNode(TreeEvent treeEvent, int index) {
-        return treeInfo.getNode(treeEvent, index);
+    public Node<TreeItem> getNode(TreeEvent treeEvent, int index) {
+        return tree.getNode(treeEvent, index);
     }
 
-    public TreeItemInfo getTreeItemInfo(Long itemId) {
-        return treeInfo.getTreeItemInfo(itemId);
+    public TreeItem getTreeItem(Long itemId) {
+        return tree.getTreeItem(itemId);
     }
 
-    public TreeItemInfo getTreeItemInfo(TreeEvent treeEvent, int index) {
-        return treeInfo.getTreeItemInfo(treeEvent, index);
+    public TreeItem getTreeItem(TreeEvent treeEvent, int index) {
+        return tree.getTreeItem(treeEvent, index);
     }
 
     public int itemCount() {
-        return treeInfo.itemCount();
+        return tree.itemCount();
     }
 
-    public List<TreeMenuInfo> getMenuList() {
-        return treeInfo.getMenuList();
+    public List<TreeMenuItem> getMenuList() {
+        return tree.getMenuList();
     }
 
-    public boolean isMenu() {
-        return treeInfo.isMenu();
+    public boolean hasMenuList() {
+        return tree.isMenuList();
     }
 
     public TreeEvent getEvent() {
-        return treeInfo.getEvent();
+        return tree.getEvent();
     }
 
 }

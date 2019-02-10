@@ -16,42 +16,14 @@
 
 package com.tcdng.unify.web.ui.data;
 
+import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemMatcher;
+
 /**
- * Tree menu information.
+ * Tree item matcher interface.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TreeMenuInfo {
+public interface TreeItemMatcher extends MarkedTreeItemMatcher<TreeItem>{
 
-    private String code;
-
-    private String caption;
-
-    private boolean showOnMultiple;
-
-    private boolean separator;
-
-    public TreeMenuInfo(String code, String caption, boolean showOnMultiple, boolean separator) {
-        this.code = code;
-        this.caption = caption;
-        this.separator = separator;
-        this.showOnMultiple = showOnMultiple;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public boolean isShowOnMultiple() {
-        return showOnMultiple;
-    }
-
-    public boolean isSeparator() {
-        return separator;
-    }
 }

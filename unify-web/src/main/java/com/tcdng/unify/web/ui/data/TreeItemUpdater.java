@@ -14,27 +14,16 @@
  * the License.
  */
 
-package com.tcdng.unify.web.ui.control;
+package com.tcdng.unify.web.ui.data;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemUpdater;
 
 /**
- * Convenient abstract base class for tree item policies.
+ * Tree item updater interface.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTreePolicy extends AbstractUnifyComponent implements TreePolicy {
-
-    @Override
-    protected void onInitialize() throws UnifyException {
-
-    }
-
-    @Override
-    protected void onTerminate() throws UnifyException {
-
-    }
+public interface TreeItemUpdater extends MarkedTreeItemUpdater<TreeItem> {
 
 }

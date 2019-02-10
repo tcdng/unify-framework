@@ -2552,7 +2552,7 @@ var TREE_MENUCLICK = 3;
 
 var treeDataMap = {};
 
-ux.rigTree = function(rgp) {
+ux.rigTreeExplorer = function(rgp) {
 	var id = rgp.pId;
 	var selList = [];
 	if (rgp.pItemList) {
@@ -2599,12 +2599,12 @@ ux.rigTree = function(rgp) {
 	}
 	
 	if(rgp.pMenu) {
-		ux.rigTreeMenu(rgp, rgp.pMenu);
+		ux.rigTreeExplorerMenu(rgp, rgp.pMenu);
 	}
 	
 	if(rgp.pMenus) {
 		for(var i = 0; i < rgp.pMenus.length; i++) {
-			ux.rigTreeMenu(rgp, rgp.pMenus[i]);
+			ux.rigTreeExplorerMenu(rgp, rgp.pMenus[i]);
 		}
 	}
 	
@@ -2616,7 +2616,7 @@ ux.rigTree = function(rgp) {
 	ux.disableWinContextMenu();
 }
 
-ux.rigTreeMenu = function(rgp, menu) {
+ux.rigTreeExplorerMenu = function(rgp, menu) {
 	var evpEq = {};
 	evpEq.uPanels = [ rgp.pContId ];
 	evpEq.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];

@@ -29,22 +29,22 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.MarkedTree.Node;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
-import com.tcdng.unify.web.ui.control.Tree;
+import com.tcdng.unify.web.ui.control.TreeExplorer;
 import com.tcdng.unify.web.ui.data.EventType;
-import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
-import com.tcdng.unify.web.ui.data.TreeItemInfo;
-import com.tcdng.unify.web.ui.data.TreeMenuInfo;
+import com.tcdng.unify.web.ui.data.TreeItemCategory;
+import com.tcdng.unify.web.ui.data.TreeItem;
+import com.tcdng.unify.web.ui.data.TreeMenuItem;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 
 /**
- * Tree writer.
+ * Tree explorer writer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Writes(Tree.class)
-@Component("tree-writer")
-public class TreeWriter extends AbstractControlWriter {
+@Writes(TreeExplorer.class)
+@Component("treeexplorer-writer")
+public class TreeExplorerWriter extends AbstractControlWriter {
 
     private static final String RESERVED_MENU_PREFIX = "trermp";
 
@@ -53,24 +53,24 @@ public class TreeWriter extends AbstractControlWriter {
 
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        Tree tree = (Tree) widget;
+        TreeExplorer treeExplorer = (TreeExplorer) widget;
         writer.write("<div");
-        writeTagAttributes(writer, tree);
+        writeTagAttributes(writer, treeExplorer);
         writer.write(">");
-        
+
         // Main list
         writer.write("<ul class=\"tlist\">");
-        List<Long> selectedItemIds = tree.getSelectedItemIds();
+        List<Long> selectedItemIds = treeExplorer.getSelectedItemIds();
         List<Long> visibleItemIds = new ArrayList<Long>();
-        Node<TreeItemInfo> root =  tree.getRootNode();
+        Node<TreeItem> root = treeExplorer.getRootNode();
         if (root.isParent()) {
-            writeChildListStructure(writer, tree, root, visibleItemIds, 0);
+            writeChildListStructure(writer, treeExplorer, root, visibleItemIds, 0);
         }
         writer.write("</ul>");
-        
+
         // Hidden controls
         writer.write("<select ");
-        writeTagId(writer, tree.getSelectedItemIdsCtrl());
+        writeTagId(writer, treeExplorer.getSelectedItemIdsCtrl());
         writeTagStyle(writer, "display:none;");
         writer.write(" multiple=\"multiple\">");
         for (Long itemId : visibleItemIds) {
@@ -82,22 +82,22 @@ public class TreeWriter extends AbstractControlWriter {
         }
         writer.write("</select>");
 
-        writer.writeStructureAndContent(tree.getMenuCodeCtrl());
-        writer.writeStructureAndContent(tree.getSelectedCtrlIdCtrl());
-        writer.writeStructureAndContent(tree.getEventTypeCtrl());
+        writer.writeStructureAndContent(treeExplorer.getMenuCodeCtrl());
+        writer.writeStructureAndContent(treeExplorer.getSelectedCtrlIdCtrl());
+        writer.writeStructureAndContent(treeExplorer.getEventTypeCtrl());
         writer.write("</div>");
 
         // Main Menu
-        if (tree.isMenu()) {
-            String menuId = tree.getPrefixedId(RESERVED_MENU_PREFIX);
-            writeMenuStructureAndContent(writer, menuId, tree.getMenuList());
+        if (treeExplorer.hasMenuList()) {
+            String menuId = treeExplorer.getPrefixedId(RESERVED_MENU_PREFIX);
+            writeMenuStructureAndContent(writer, menuId, treeExplorer.getMenuList());
         }
 
         // Category menu
-        for (TreeItemCategoryInfo treeItemCategoryInfo : tree.getTreeCategoryInfos()) {
-            if (treeItemCategoryInfo.isMenu()) {
-                String menuId = tree.getPrefixedId(treeItemCategoryInfo.getName());
-                writeMenuStructureAndContent(writer, menuId, treeItemCategoryInfo.getMenuList());
+        for (TreeItemCategory treeItemCategory : treeExplorer.getTreeCategories()) {
+            if (treeItemCategory.isMenuList()) {
+                String menuId = treeExplorer.getPrefixedId(treeItemCategory.getName());
+                writeMenuStructureAndContent(writer, menuId, treeItemCategory.getMenuList());
             }
         }
     }
@@ -107,45 +107,45 @@ public class TreeWriter extends AbstractControlWriter {
         super.doWriteBehavior(writer, widget);
 
         try {
-            Tree tree = (Tree) widget;
-            writer.write("ux.rigTree(");
+            TreeExplorer treeExplorer = (TreeExplorer) widget;
+            writer.write("ux.rigTreeExplorer(");
             JsonObject jsonPrm = Json.object();
-            jsonPrm.add("pId", tree.getId());
-            jsonPrm.add("pContId", tree.getContainerId());
+            jsonPrm.add("pId", treeExplorer.getId());
+            jsonPrm.add("pContId", treeExplorer.getContainerId());
             jsonPrm.add("pCmdURL", getCommandURL());
-            jsonPrm.add("pSelCtrlId", tree.getSelectedCtrlIdCtrl().getId());
-            jsonPrm.add("pSelItemId", tree.getSelectedItemIdsCtrl().getId());
-            jsonPrm.add("pMenuCodeCtrlId", tree.getMenuCodeCtrl().getId());
-            jsonPrm.add("pEventTypeId", tree.getEventTypeCtrl().getId());
+            jsonPrm.add("pSelCtrlId", treeExplorer.getSelectedCtrlIdCtrl().getId());
+            jsonPrm.add("pSelItemId", treeExplorer.getSelectedItemIdsCtrl().getId());
+            jsonPrm.add("pMenuCodeCtrlId", treeExplorer.getMenuCodeCtrl().getId());
+            jsonPrm.add("pEventTypeId", treeExplorer.getEventTypeCtrl().getId());
             jsonPrm.add("pSel", "tsel");
             jsonPrm.add("pNorm", "tnorm");
-            jsonPrm.add("pCtrlBase", tree.getControlImgIdBase());
-            jsonPrm.add("pLblBase", tree.getCaptionIdBase());
+            jsonPrm.add("pCtrlBase", treeExplorer.getControlImgIdBase());
+            jsonPrm.add("pLblBase", treeExplorer.getCaptionIdBase());
             jsonPrm.add("pEventCode", Json.array(EVENT_CODES));
 
             // Added to be able to push values on tree event
-            List<String> pageNames = getPageManager().getExpandedReferences(tree.getId());
+            List<String> pageNames = getPageManager().getExpandedReferences(treeExplorer.getId());
             if (!pageNames.isEmpty()) {
                 jsonPrm.add("pEventRef", Json.array(pageNames.toArray(new String[pageNames.size()])));
             }
 
-            if (tree.isMenu()) {
-                jsonPrm.add("pMenu", getJsonMenu(tree.getPrefixedId(RESERVED_MENU_PREFIX), tree.getMenuList()));
+            if (treeExplorer.hasMenuList()) {
+                jsonPrm.add("pMenu", getJsonMenu(treeExplorer.getPrefixedId(RESERVED_MENU_PREFIX), treeExplorer.getMenuList()));
             }
 
             JsonArray menus = Json.array();
-            for (TreeItemCategoryInfo treeItemCategoryInfo : tree.getTreeCategoryInfos()) {
-                if (treeItemCategoryInfo.isMenu()) {
-                    menus.add(getJsonMenu(tree.getPrefixedId(treeItemCategoryInfo.getName()),
-                            treeItemCategoryInfo.getMenuList()));
+            for (TreeItemCategory treeItemCategory : treeExplorer.getTreeCategories()) {
+                if (treeItemCategory.isMenuList()) {
+                    menus.add(getJsonMenu(treeExplorer.getPrefixedId(treeItemCategory.getName()),
+                            treeItemCategory.getMenuList()));
                 }
             }
             jsonPrm.add("pMenus", menus);
 
             JsonArray items = Json.array();
-            Node<TreeItemInfo> root =  tree.getRootNode();
+            Node<TreeItem> root = treeExplorer.getRootNode();
             if (root.isParent()) {
-                writeChildListBehaviorItems(items, tree, root);
+                writeChildListBehaviorItems(items, treeExplorer, root);
             }
             jsonPrm.add("pItemList", items);
 
@@ -155,18 +155,19 @@ public class TreeWriter extends AbstractControlWriter {
             throwOperationErrorException(e);
         }
     }
-    
-    private void writeChildListStructure(ResponseWriter writer, Tree tree, Node<TreeItemInfo> node, List<Long> visibleItemIds,
-            int indent) throws UnifyException {
-        Node<TreeItemInfo> ch = node.getChild();
+
+    private void writeChildListStructure(ResponseWriter writer, TreeExplorer tree, Node<TreeItem> node,
+            List<Long> visibleItemIds, int indent) throws UnifyException {
+        Node<TreeItem> ch = node.getChild();
         List<Long> selectedItemIds = tree.getSelectedItemIds();
         String collapsedSrc = tree.getCollapsedIcon();
         String expandedSrc = tree.getExpandedIcon();
         String ctrlIdBase = tree.getControlImgIdBase();
         String captionIdBase = tree.getCaptionIdBase();
         int chIndent = indent + 1;
+        boolean isTreePolicy = tree.hasTreePolicy();
         do {
-            TreeItemInfo treeItemInfo = ch.getItem();
+            TreeItem treeItem = ch.getItem();
             Long itemId = ch.getMark();
             visibleItemIds.add(itemId);
 
@@ -180,7 +181,7 @@ public class TreeWriter extends AbstractControlWriter {
 
             // Add control icon
             if (ch.isParent()) {
-                if (treeItemInfo.isExpanded()) {
+                if (treeItem.isExpanded()) {
                     writeFileImageHtmlElement(writer, expandedSrc, ctrlIdBase + itemId, "timg", null);
                 } else {
                     writeFileImageHtmlElement(writer, collapsedSrc, ctrlIdBase + itemId, "timg", null);
@@ -198,88 +199,93 @@ public class TreeWriter extends AbstractControlWriter {
                 writer.write("\" class=\"tnorm\">");
             }
 
-            TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
-            writeFileImageHtmlElement(writer, treeItemCategoryInfo.getIcon(), null, "timg", null);
+            TreeItemCategory treeItemCategory = treeItem.getCategory();
+            writeFileImageHtmlElement(writer, treeItemCategory.getIcon(), null, "timg", null);
             writer.write("<span class=\"titem\">");
-            writer.writeWithHtmlEscape(
-                    tree.getTreeItemRule().getTreeItemCaption(treeItemCategoryInfo, treeItemInfo.getItem()));
+            if (isTreePolicy) {
+                writer.writeWithHtmlEscape(
+                        tree.getTreePolicy().getTreeItemCaption(treeItemCategory, treeItem.getObject()));
+            } else {
+                writer.writeWithHtmlEscape(String.valueOf(treeItem.getObject()));
+            }
             writer.write("</span></span>");
 
             // Close branch
             writer.write("</li>");
 
             // Child branch
-            if (ch.isParent() && treeItemInfo.isExpanded()) {
+            if (ch.isParent() && treeItem.isExpanded()) {
                 writeChildListStructure(writer, tree, ch, visibleItemIds, chIndent);
             }
 
         } while ((ch = ch.getNext()) != null);
     }
 
-    private void writeChildListBehaviorItems(JsonArray items, Tree tree, Node<TreeItemInfo> node) throws UnifyException {
-        Node<TreeItemInfo> ch = node.getChild();
+    private void writeChildListBehaviorItems(JsonArray items, TreeExplorer tree, Node<TreeItem> node)
+            throws UnifyException {
+        Node<TreeItem> ch = node.getChild();
         do {
-            TreeItemInfo treeItemInfo = ch.getItem();
-            TreeItemCategoryInfo treeItemCategoryInfo = treeItemInfo.getCategoryInfo();
+            TreeItem treeItem = ch.getItem();
+            TreeItemCategory treeItemCategoryInfo = treeItem.getCategory();
             String popupId = "pop_" + tree.getPrefixedId(treeItemCategoryInfo.getName());
             Set<EventType> eventTypes = treeItemCategoryInfo.getEventTypes();
             JsonObject item = Json.object();
             item.add("idx", ch.getMark());
-            if (treeItemCategoryInfo.isMenu()) {
+            if (treeItemCategoryInfo.isMenuList()) {
                 item.add("popupId", popupId);
             }
 
             item.add("parent", ch.isParent());
-            item.add("expanded", treeItemInfo.isExpanded());
+            item.add("expanded", treeItem.isExpanded());
             item.add("pClick", eventTypes.contains(EventType.MOUSE_CLICK));
             item.add("pDblClick", eventTypes.contains(EventType.MOUSE_DBLCLICK));
             item.add("pRtClick", eventTypes.contains(EventType.MOUSE_RIGHTCLICK));
             items.add(item);
-            
-            if(ch.isParent() && treeItemInfo.isExpanded()) {
+
+            if (ch.isParent() && treeItem.isExpanded()) {
                 writeChildListBehaviorItems(items, tree, ch);
             }
-        } while((ch = ch.getNext()) != null);
+        } while ((ch = ch.getNext()) != null);
     }
 
     private void writeIndent(ResponseWriter writer) throws UnifyException {
         writer.write("<span class=\"tindent\"></span>");
     }
 
-    private void writeMenuStructureAndContent(ResponseWriter writer, String menuId, List<TreeMenuInfo> menuInfoList)
+    private void writeMenuStructureAndContent(ResponseWriter writer, String menuId, List<TreeMenuItem> menuItemList)
             throws UnifyException {
         writer.write("<div");
         writeTagId(writer, "pop_" + menuId);
         writeTagStyleClass(writer, "tree-popup");
         writer.write(">");
         writer.write("<ul id=\"").write("popc_" + menuId).write("\">");
-        for (int i = 0; i < menuInfoList.size(); i++) {
-            TreeMenuInfo menuInfo = menuInfoList.get(i);
-            if (menuInfo.isSeparator()) {
+        for (int i = 0; i < menuItemList.size(); i++) {
+            TreeMenuItem menuItem = menuItemList.get(i);
+            if (menuItem.isSeparator()) {
                 writer.write("<li class=\"msep\">");
             } else {
                 writer.write("<li>");
             }
             writer.write("<a class=\"mitem\" id=\"").write(menuId + i).write("\">");
-            writer.writeWithHtmlEscape(resolveSessionMessage(menuInfo.getCaption()));
+            writer.writeWithHtmlEscape(resolveSessionMessage(menuItem.getCaption()));
             writer.write("</a></li>");
         }
         writer.write("</ul>");
         writer.write("</div>");
     }
 
-    private JsonObject getJsonMenu(String menuId, List<TreeMenuInfo> menuInfoList) throws UnifyException {
+    private JsonObject getJsonMenu(String menuId, List<TreeMenuItem> menuItemList) throws UnifyException {
         JsonObject menu = Json.object();
         menu.add("menuId", menuId);
         menu.add("popupId", "pop_" + menuId);
 
         JsonArray items = Json.array();
-        for (int i = 0; i < menuInfoList.size(); i++) {
-            TreeMenuInfo menuInfo = menuInfoList.get(i);
+        for (int i = 0; i < menuItemList.size(); i++) {
+            TreeMenuItem menuItem = menuItemList.get(i);
             JsonObject item = Json.object();
             item.add("id", menuId + i);
-            item.add("code", menuInfo.getCode());
-            item.add("multiple", menuInfo.isShowOnMultiple());
+            item.add("code", menuItem.getCode());
+            item.add("multiple", menuItem.isShowOnMultiple());
             items.add(item);
         }
         menu.add("items", items);
