@@ -14,11 +14,10 @@
  * the License.
  */
 
-package com.tcdng.unify.web.ui.control;
+package com.tcdng.unify.web.ui.data;
 
-import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
+import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
 
 /**
  * Handles rules relating to a tree.
@@ -26,13 +25,13 @@ import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TreePolicy extends UnifyComponent {
+public interface TreePolicy extends MarkedTreePolicy<TreeItem> {
 
     /**
      * Gets a tree item caption based on this policy for supplied category and tree
      * item.
      * 
-     * @param treeItemCategoryInfo
+     * @param category
      *            the tree item category
      * @param item
      *            the tree item
@@ -40,5 +39,5 @@ public interface TreePolicy extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String getTreeItemCaption(TreeItemCategoryInfo treeItemCategoryInfo, Object item) throws UnifyException;
+    String getTreeItemCaption(TreeItemCategory category, Object item) throws UnifyException;
 }

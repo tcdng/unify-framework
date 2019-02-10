@@ -16,47 +16,25 @@
 
 package com.tcdng.unify.web.ui.data;
 
+import com.tcdng.unify.core.annotation.Component;
+
 /**
- * Tree item information object.
+ * Default implementation of a tree policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TreeItemInfo {
+@Component("default-treepolicy")
+public class DefaultTreePolicy extends AbstractTreePolicy {
 
-    private TreeItemCategoryInfo categoryInfo;
-
-    private Object item;
-
-    private boolean expanded;
-
-    public TreeItemInfo(TreeItemCategoryInfo categoryInfo, Object item) {
-        this.categoryInfo = categoryInfo;
-        this.item = item;
-    }
-
-    public TreeItemInfo() {
+    @Override
+    public void performOnAdd(TreeItem targetParentItem, TreeItem childItem) {
 
     }
 
-    public TreeItemCategoryInfo getCategoryInfo() {
-        return categoryInfo;
-    }
+    @Override
+    public void performOnRemove(TreeItem targetParentItem, TreeItem childItem) {
 
-    public int getLevel() {
-        return categoryInfo.getLevel();
-    }
-
-    public Object getItem() {
-        return item;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
-    }
-
-    public boolean isExpanded() {
-        return expanded;
     }
 
 }

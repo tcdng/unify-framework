@@ -655,22 +655,22 @@ z-index:400;}
 /** Toggle Indicator */
 .ui-toggleimage {width:32px; height:32px;}
 
-/** Tree */
-.ui-tree {display:inline-block;}
-.ui-tree .tlist {display:block; list-style-type: none; white-space:nowrap;font-size:12px;}
-.ui-tree .tsel {display:inline-block; background-color:#C7D5FC;}
-.ui-tree .tnorm {display:inline-block;}
-.ui-tree .tnorm:hover {background-color:#E6EBF9;}
-.ui-tree .titem {display:inline-block;padding:2px; vertical-align: top;}
-.ui-tree .timg {height:18px;width:18px;}
-.ui-tree .tindent {display:inline-block;height:18px;width:18px;padding:0px;}
+/** Tree explorer */
+.ui-treeexplorer {display:inline-block;}
+.ui-treeexplorer .tlist {display:block; list-style-type: none; white-space:nowrap;font-size:12px;}
+.ui-treeexplorer .tsel {display:inline-block; background-color:#C7D5FC;}
+.ui-treeexplorer .tnorm {display:inline-block;}
+.ui-treeexplorer .tnorm:hover {background-color:#E6EBF9;}
+.ui-treeexplorer .titem {display:inline-block;padding:2px; vertical-align: top;}
+.ui-treeexplorer .timg {height:18px;width:18px;}
+.ui-treeexplorer .tindent {display:inline-block;height:18px;width:18px;padding:0px;}
 
 .tree-popup {position: absolute; visibility: hidden; width: auto; z-index: 300;
 	background-color: #F0F0F0;}
 .tree-popup ul {list-style: none; padding: 2px; position: absolute; top: 100%;
     border: 1px solid #808080; background-color: #F0F0F0;}
 .tree-popup ul li {float: none; position: relative;}
-.tree-popup .msep {border-bottom:1px solid #AAA; padding-bottom:4px;}
+.tree-popup .msep {border-top:1px solid #AAA; padding-top:4px;margin-top:4px;}
 .tree-popup .mitem {display: block; width: auto; margin: 0; padding: 8px 10px; font-size:10pt;
     color: #000; text-align: left; text-decoration: none; white-space: nowrap;}
 .tree-popup .mitem:hover {background-color: #49A3FF; color: #FFF;}

@@ -16,16 +16,13 @@
 
 package com.tcdng.unify.web.ui.data;
 
+
 /**
- * Default tree item expand policy.
+ * Convenient base class for tree item updater.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DefaultTreeItemExpandPolicy extends AbstractTreeItemUpdatePolicy {
+public abstract class AbstractTreeItemUpdater implements TreeItemUpdater {
 
-    @Override
-    public void update(TreeItemInfo childItem) {
-        childItem.setExpanded(true);
-    }
 }

@@ -27,10 +27,10 @@ import java.util.List;
 import org.junit.Test;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.MarkedTree.AddChildPolicy;
-import com.tcdng.unify.core.data.MarkedTree.Matcher;
+import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemMatcher;
+import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemUpdater;
+import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
 import com.tcdng.unify.core.data.MarkedTree.Node;
-import com.tcdng.unify.core.data.MarkedTree.UpdateChildPolicy;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -411,6 +411,7 @@ public class MarkedTreeTest {
     @Test
     public void testAddChildAboveWithPolicy() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
+        mTree.setTreePolicy(new TestMarkedTreePolicy1());
         Long musicMark = mTree.add("music");
         mTree.descend();
         Long jazzMark = mTree.add("jazz");
@@ -420,12 +421,11 @@ public class MarkedTreeTest {
         mTree.setChain(false);
 
         // Add child items
-        TestAddChildPolicy1 testAddChildPolicy1 = new TestAddChildPolicy1();
-        mTree.addChild(musicMark, "blues", testAddChildPolicy1);
-        mTree.addChild(musicMark, "hiphop", testAddChildPolicy1);
-        mTree.addChild(musicMark, "zelt", testAddChildPolicy1);
-        mTree.addChild(jazzMark, "Take Five", testAddChildPolicy1);
-        mTree.addChild(jazzMark, "So What", testAddChildPolicy1);
+        mTree.addChild(musicMark, "blues");
+        mTree.addChild(musicMark, "hiphop");
+        mTree.addChild(musicMark, "zelt");
+        mTree.addChild(jazzMark, "Take Five");
+        mTree.addChild(jazzMark, "So What");
         
         // Validate
         Node<String> root =  mTree.getRoot();
@@ -459,6 +459,7 @@ public class MarkedTreeTest {
     @Test
     public void testAddChildBelowWithPolicy() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
+        mTree.setTreePolicy(new TestMarkedTreePolicy2());
         Long musicMark = mTree.add("music");
         mTree.descend();
         Long jazzMark = mTree.add("jazz");
@@ -468,12 +469,11 @@ public class MarkedTreeTest {
         mTree.setChain(false);
 
         // Add child items
-        TestAddChildPolicy2 testAddChildPolicy2 = new TestAddChildPolicy2();
-        mTree.addChild(musicMark, "blues", testAddChildPolicy2);
-        mTree.addChild(musicMark, "hiphop", testAddChildPolicy2);
-        mTree.addChild(musicMark, "zelt", testAddChildPolicy2);
-        mTree.addChild(jazzMark, "Take Five", testAddChildPolicy2);
-        mTree.addChild(jazzMark, "So What", testAddChildPolicy2);
+        mTree.addChild(musicMark, "blues");
+        mTree.addChild(musicMark, "hiphop");
+        mTree.addChild(musicMark, "zelt");
+        mTree.addChild(jazzMark, "Take Five");
+        mTree.addChild(jazzMark, "So What");
         
         // Validate
         Node<String> root =  mTree.getRoot();
@@ -1000,7 +1000,7 @@ public class MarkedTreeTest {
         MarkedTree<TestFood> mTree = new MarkedTree<TestFood>(new TestFood("food"));
 
         // Select all
-        mTree.updateNodes(new TestUpdateChildPolicy1());
+        mTree.updateNodes(new TestMarkedTreeItemUpdater1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1024,7 +1024,7 @@ public class MarkedTreeTest {
 
 
         // Select all
-        mTree.updateNodes(new TestUpdateChildPolicy1());
+        mTree.updateNodes(new TestMarkedTreeItemUpdater1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1060,7 +1060,7 @@ public class MarkedTreeTest {
 
 
         // Select all with name starting with "a"
-        mTree.updateNodes(new TestMatcher3("a"), new TestUpdateChildPolicy1());
+        mTree.updateNodes(new TestMatcher3("a"), new TestMarkedTreeItemUpdater1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1096,8 +1096,8 @@ public class MarkedTreeTest {
 
 
         // Select all from specific nodes
-        mTree.updateNodes(orangeMark, new TestUpdateChildPolicy1());
-        mTree.updateNodes(vegMark, new TestUpdateChildPolicy1());
+        mTree.updateNodes(orangeMark, new TestMarkedTreeItemUpdater1());
+        mTree.updateNodes(vegMark, new TestMarkedTreeItemUpdater1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1133,8 +1133,8 @@ public class MarkedTreeTest {
 
 
         // Select all from specific nodes
-        mTree.updateNodes(fruitMark, new TestMatcher3("a"), new TestUpdateChildPolicy1());
-        mTree.updateNodes(vegMark, new TestMatcher3("t"), new TestUpdateChildPolicy1());
+        mTree.updateNodes(fruitMark, new TestMatcher3("a"), new TestMarkedTreeItemUpdater1());
+        mTree.updateNodes(vegMark, new TestMatcher3("t"), new TestMarkedTreeItemUpdater1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1170,7 +1170,7 @@ public class MarkedTreeTest {
 
 
         // Select all parents from specific node
-        mTree.updateParentNodes(aspMark, new TestUpdateChildPolicy1());
+        mTree.updateParentNodes(aspMark, new TestMarkedTreeItemUpdater1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1206,7 +1206,7 @@ public class MarkedTreeTest {
 
 
         // Select all parents from specific node
-        mTree.updateParentNodes(aspMark, new TestMatcher3("v"), new TestUpdateChildPolicy1());
+        mTree.updateParentNodes(aspMark, new TestMatcher3("v"), new TestMarkedTreeItemUpdater1());
         
         // Validate
         Node<TestFood> root = mTree.getRoot();
@@ -1387,7 +1387,7 @@ public class MarkedTreeTest {
     }
 }
 
-class TestMatcher1 implements Matcher<String> {
+class TestMatcher1 implements MarkedTreeItemMatcher<String> {
 
     private String matchStr;
     
@@ -1402,7 +1402,7 @@ class TestMatcher1 implements Matcher<String> {
     
 }
 
-class TestMatcher2 implements Matcher<String> {
+class TestMatcher2 implements MarkedTreeItemMatcher<String> {
 
     private String beginStr;
     
@@ -1417,33 +1417,7 @@ class TestMatcher2 implements Matcher<String> {
     
 }
 
-class TestAddChildPolicy1 implements AddChildPolicy<String> {
-
-    @Override
-    public int addDecision(String targetItem, String childItem) {
-        if (!StringUtils.isBlank(targetItem) && !StringUtils.isBlank(childItem)) {
-            if (childItem.compareTo(targetItem) < 0) {
-                return -1;
-            }
-        }
-        return 0;
-    }  
-}
-
-class TestAddChildPolicy2 implements AddChildPolicy<String> {
-
-    @Override
-    public int addDecision(String targetItem, String childItem) {
-        if (!StringUtils.isBlank(targetItem) && !StringUtils.isBlank(childItem)) {
-            if (childItem.compareTo(targetItem) < 0) {
-                return 1;
-            }
-        }
-        return 0;
-    }  
-}
-
-class TestMatcher3 implements Matcher<TestFood> {
+class TestMatcher3 implements MarkedTreeItemMatcher<TestFood> {
 
     private String beginStr;
     
@@ -1458,13 +1432,58 @@ class TestMatcher3 implements Matcher<TestFood> {
     
 }
 
-class TestUpdateChildPolicy1 implements UpdateChildPolicy<TestFood> {
+class TestMarkedTreePolicy1 implements MarkedTreePolicy<String> {
+
+    @Override
+    public int addDecision(String targetItem, String childItem) {
+        if (!StringUtils.isBlank(targetItem) && !StringUtils.isBlank(childItem)) {
+            if (childItem.compareTo(targetItem) < 0) {
+                return -1;
+            }
+        }
+        return 0;
+    }  
+
+    @Override
+    public void performOnAdd(String targetParentItem, String childItem) {
+        
+    }
+
+    @Override
+    public void performOnRemove(String targetParentItem, String childItem) {
+        
+    }
+}
+
+class TestMarkedTreePolicy2 implements MarkedTreePolicy<String> {
+
+    @Override
+    public int addDecision(String targetItem, String childItem) {
+        if (!StringUtils.isBlank(targetItem) && !StringUtils.isBlank(childItem)) {
+            if (childItem.compareTo(targetItem) < 0) {
+                return 1;
+            }
+        }
+        return 0;
+    }  
+
+    @Override
+    public void performOnAdd(String targetParentItem, String childItem) {
+        
+    }
+
+    @Override
+    public void performOnRemove(String targetParentItem, String childItem) {
+        
+    }
+}
+
+class TestMarkedTreeItemUpdater1 implements MarkedTreeItemUpdater<TestFood> {
 
     @Override
     public void update(TestFood childItem) {
         childItem.setSelected(true); 
     }
-    
 }
 
 class TestFood {

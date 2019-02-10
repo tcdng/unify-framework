@@ -17,15 +17,15 @@
 package com.tcdng.unify.web.ui.data;
 
 /**
- * Default tree item collapse policy.
+ * Tree item collapser.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DefaultTreeItemCollapsePolicy extends AbstractTreeItemUpdatePolicy {
+public class TreeItemCollapser extends AbstractTreeItemUpdater {
 
     @Override
-    public void update(TreeItemInfo childItem) {
+    public void update(TreeItem childItem) {
         childItem.setExpanded(true);
     }
 }

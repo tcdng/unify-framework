@@ -16,14 +16,16 @@
 
 package com.tcdng.unify.web.ui.data;
 
-import com.tcdng.unify.core.data.MarkedTree.UpdateChildPolicy;
-
 /**
- * Convenient base class for tree item info update child policy.
+ * Tree item expander.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTreeItemUpdatePolicy implements UpdateChildPolicy<TreeItemInfo> {
+public class TreeItemExpander extends AbstractTreeItemUpdater {
 
+    @Override
+    public void update(TreeItem childItem) {
+        childItem.setExpanded(true);
+    }
 }

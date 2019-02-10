@@ -14,30 +14,46 @@
  * the License.
  */
 
-package com.tcdng.unify.web.ui.control;
+package com.tcdng.unify.web.ui.data;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.ui.data.TreeItemCategoryInfo;
 
 /**
- * Default implementation of a tree policy.
+ * Convenient abstract base class for tree policies.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("default-treepolicy")
-public class DefaultTreePolicy extends AbstractTreePolicy {
+public abstract class AbstractTreePolicy extends AbstractUnifyComponent implements TreePolicy {
 
     @Override
-    public String getTreeItemCaption(TreeItemCategoryInfo treeItemCategoryInfo, Object item) throws UnifyException {
-        String itemCaptionKey = treeItemCategoryInfo.getItemCaptionKey();
+    public String getTreeItemCaption(TreeItemCategory category, Object item) throws UnifyException {
+        String itemCaptionKey = category.getItemCaptionKey();
         if (StringUtils.isBlank(itemCaptionKey)) {
             return String.valueOf(item);
         }
 
         return resolveSessionMessage(itemCaptionKey, item);
+    }
+
+    @Override
+    public int addDecision(TreeItem siblingItem, TreeItem childItem) {
+        if (childItem.getLevel() < siblingItem.getLevel()) {
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
     }
 
 }
