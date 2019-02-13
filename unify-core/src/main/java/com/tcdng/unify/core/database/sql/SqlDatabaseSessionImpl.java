@@ -418,95 +418,22 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int updateById(Entity record) throws UnifyException {
-        int result;
-        SqlStatement sqlStatement = null;
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
-        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
-        try {
-            if (entityPolicy != null) {
-                if (entityPolicy.isSetNow()) {
-                    entityPolicy.preUpdate(record, getNow());
-                } else {
-                    entityPolicy.preUpdate(record, null);
-                }
-            }
-
-            sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
-            result = getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
-            if (result == 0) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, record.getClass(),
-                        record.getId());
-            }
-
-            if (sqlEntityInfo.isChildList()) {
-                updateChildRecords(sqlEntityInfo, record);
-            }
-        } catch (UnifyException e) {
-            if (entityPolicy != null) {
-                entityPolicy.onUpdateError(record);
-            }
-            throw e;
-        } finally {
-            if (sqlStatement != null) {
-                sqlDataSourceDialect.restoreStatement(sqlStatement);
-            }
-        }
-        return result;
+        return updateById(record, true);
     }
 
     @Override
     public int updateByIdVersion(Entity record) throws UnifyException {
-        int result;
-        SqlStatement sqlStatement = null;
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
-        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
-        try {
-            Object oldVersionNo = null;
-            if (sqlEntityInfo.isVersioned()) {
-                oldVersionNo = sqlEntityInfo.getVersionFieldInfo().getGetter().invoke(record);
-                if (entityPolicy != null) {
-                    if (entityPolicy.isSetNow()) {
-                        entityPolicy.preUpdate(record, getNow());
-                    } else {
-                        entityPolicy.preUpdate(record, null);
-                    }
-                }
-                sqlStatement = sqlDataSourceDialect.prepareUpdateByPkVersionStatement(record, oldVersionNo);
-            } else {
-                if (entityPolicy != null) {
-                    if (entityPolicy.isSetNow()) {
-                        entityPolicy.preUpdate(record, getNow());
-                    } else {
-                        entityPolicy.preUpdate(record, null);
-                    }
-                }
-                sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
-            }
+        return updateByIdVersion(record, true);
+    }
 
-            result = getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
-            if (result == 0) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, record.getClass(),
-                        sqlEntityInfo.getIdFieldInfo().getGetter().invoke(record), oldVersionNo);
-            }
+    @Override
+    public int updateLeanById(Entity record) throws UnifyException {
+        return updateById(record, false);
+    }
 
-            if (sqlEntityInfo.isChildList()) {
-                updateChildRecords(sqlEntityInfo, record);
-            }
-        } catch (Exception e) {
-            if (entityPolicy != null) {
-                entityPolicy.onUpdateError(record);
-            }
-
-            if (e instanceof UnifyException) {
-                throw ((UnifyException) e);
-            }
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
-        } finally {
-            if (sqlStatement != null) {
-                sqlDataSourceDialect.restoreStatement(sqlStatement);
-            }
-        }
-        return result;
+    @Override
+    public int updateLeanByIdVersion(Entity record) throws UnifyException {
+        return updateByIdVersion(record, false);
     }
 
     @Override
@@ -913,7 +840,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
     }
 
-    private <T extends Entity> T list(Class<T> clazz, Object id, final Object versionNo, boolean fetchChild) throws UnifyException {
+    private <T extends Entity> T list(Class<T> clazz, Object id, final Object versionNo, boolean fetchChild)
+            throws UnifyException {
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkVersionStatement(clazz, id, versionNo);
         try {
             T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, true);
@@ -1024,6 +952,97 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         getClass().getSimpleName());
             }
         }
+    }
+
+    private int updateById(Entity record, boolean updateChild) throws UnifyException {
+        int result;
+        SqlStatement sqlStatement = null;
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        try {
+            if (entityPolicy != null) {
+                if (entityPolicy.isSetNow()) {
+                    entityPolicy.preUpdate(record, getNow());
+                } else {
+                    entityPolicy.preUpdate(record, null);
+                }
+            }
+
+            sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
+            result = getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
+            if (result == 0) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, record.getClass(),
+                        record.getId());
+            }
+
+            if (updateChild && sqlEntityInfo.isChildList()) {
+                updateChildRecords(sqlEntityInfo, record);
+            }
+        } catch (UnifyException e) {
+            if (entityPolicy != null) {
+                entityPolicy.onUpdateError(record);
+            }
+            throw e;
+        } finally {
+            if (sqlStatement != null) {
+                sqlDataSourceDialect.restoreStatement(sqlStatement);
+            }
+        }
+        return result;
+    }
+
+    private int updateByIdVersion(Entity record, boolean updateChild) throws UnifyException {
+        int result;
+        SqlStatement sqlStatement = null;
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        try {
+            Object oldVersionNo = null;
+            if (sqlEntityInfo.isVersioned()) {
+                oldVersionNo = sqlEntityInfo.getVersionFieldInfo().getGetter().invoke(record);
+                if (entityPolicy != null) {
+                    if (entityPolicy.isSetNow()) {
+                        entityPolicy.preUpdate(record, getNow());
+                    } else {
+                        entityPolicy.preUpdate(record, null);
+                    }
+                }
+                sqlStatement = sqlDataSourceDialect.prepareUpdateByPkVersionStatement(record, oldVersionNo);
+            } else {
+                if (entityPolicy != null) {
+                    if (entityPolicy.isSetNow()) {
+                        entityPolicy.preUpdate(record, getNow());
+                    } else {
+                        entityPolicy.preUpdate(record, null);
+                    }
+                }
+                sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
+            }
+
+            result = getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
+            if (result == 0) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, record.getClass(),
+                        sqlEntityInfo.getIdFieldInfo().getGetter().invoke(record), oldVersionNo);
+            }
+
+            if (updateChild && sqlEntityInfo.isChildList()) {
+                updateChildRecords(sqlEntityInfo, record);
+            }
+        } catch (Exception e) {
+            if (entityPolicy != null) {
+                entityPolicy.onUpdateError(record);
+            }
+
+            if (e instanceof UnifyException) {
+                throw ((UnifyException) e);
+            }
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        } finally {
+            if (sqlStatement != null) {
+                sqlDataSourceDialect.restoreStatement(sqlStatement);
+            }
+        }
+        return result;
     }
 
     private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {

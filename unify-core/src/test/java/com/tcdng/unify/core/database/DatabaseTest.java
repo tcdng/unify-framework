@@ -1446,6 +1446,103 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testUpdateRecordByIdWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.setParameters(Arrays.asList(new ReportParameter("resolutionDate")));
+            db.updateById(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> reportParamList = fetchedReport.getParameters();
+            assertNotNull(reportParamList);
+            assertEquals(1, reportParamList.size());
+            assertEquals("resolutionDate", reportParamList.get(0).getName());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateLeanRecordById() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            apple.setColor("green");
+            apple.setPrice(50.00);
+            assertEquals(1, db.updateLeanById(apple));
+
+            Fruit foundFruit = db.find(Fruit.class, apple.getId());
+            assertEquals(apple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateLeanRecordByIdWithBlankChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.setParameters(null); // blank
+            db.updateLeanById(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> reportParamList = fetchedReport.getParameters();
+            assertNotNull(reportParamList);
+            assertEquals(2, reportParamList.size());
+            assertEquals("startDate", reportParamList.get(0).getName());
+            assertEquals("endDate", reportParamList.get(1).getName());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateLeanRecordByIdWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.setParameters(Arrays.asList(new ReportParameter("resolutionDate")));
+            db.updateLeanById(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> reportParamList = fetchedReport.getParameters();
+            assertNotNull(reportParamList);
+            assertEquals(2, reportParamList.size());
+            assertEquals("startDate", reportParamList.get(0).getName());
+            assertEquals("endDate", reportParamList.get(1).getName());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+    
+    @Test
     public void testUpdateRecordByIdUsingUpdate() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -1489,6 +1586,103 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             Fruit foundFruit = db.find(Fruit.class, apple.getId());
             assertEquals(apple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateRecordByIdVersionWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.setParameters(Arrays.asList(new ReportParameter("resolutionDate")));
+            db.updateByIdVersion(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> reportParamList = fetchedReport.getParameters();
+            assertNotNull(reportParamList);
+            assertEquals(1, reportParamList.size());
+            assertEquals("resolutionDate", reportParamList.get(0).getName());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateLeanRecordByIdVersion() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            apple.setColor("green");
+            apple.setPrice(50.00);
+            assertEquals(1, db.updateLeanByIdVersion(apple));
+
+            Fruit foundFruit = db.find(Fruit.class, apple.getId());
+            assertEquals(apple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateLeanRecordByIdVersionWithBlankChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.setParameters(null); // Blank child list
+            db.updateLeanByIdVersion(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> reportParamList = fetchedReport.getParameters();
+            assertNotNull(reportParamList);
+            assertEquals(2, reportParamList.size());
+            assertEquals("startDate", reportParamList.get(0).getName());
+            assertEquals("endDate", reportParamList.get(1).getName());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateLeanRecordByIdVersionWithChildList() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.setParameters(Arrays.asList(new ReportParameter("resolutionDate")));
+            db.updateLeanByIdVersion(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> reportParamList = fetchedReport.getParameters();
+            assertNotNull(reportParamList);
+            assertEquals(2, reportParamList.size());
+            assertEquals("startDate", reportParamList.get(0).getName());
+            assertEquals("endDate", reportParamList.get(1).getName());
         } finally {
             db.getTransactionManager().endTransaction();
         }
