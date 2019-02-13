@@ -428,6 +428,29 @@ public interface DatabaseSession {
     int updateByIdVersion(Entity record) throws UnifyException;
 
     /**
+     * Updates record in database by ID. Child records, if any, are not updated.
+     * 
+     * @param record
+     *            the record to update
+     * @return the number of record updated. Always 1.
+     * @throws UnifyException
+     *             if record with ID is not found. If an error occurs
+     */
+    int updateLeanById(Entity record) throws UnifyException;
+
+    /**
+     * Updates record in database by ID and version number. Child records, if any,
+     * are not updated.
+     * 
+     * @param record
+     *            the record to update
+     * @return the number of record updated.
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    int updateLeanByIdVersion(Entity record) throws UnifyException;
+
+    /**
      * Updates a a record by ID
      * 
      * @param clazz
