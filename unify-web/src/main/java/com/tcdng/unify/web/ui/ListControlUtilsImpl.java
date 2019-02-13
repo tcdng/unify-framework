@@ -131,41 +131,49 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
                 listableList.size());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<? extends Listable> getListables(ListControl listControl) throws UnifyException {
-        String listName = listControl.getList();
-        List<? extends Listable> list = getList(LocaleType.SESSION, listName, resolveParams(listControl));
-        if (!list.isEmpty()) {
-            ListInfo listInfo = listInfoMap.get(listName);
-            String keyProperty = listInfo.getListKey();
-            if (keyProperty == null) {
-                keyProperty = listControl.getListKey();
-            }
-
-            String descProperty = listInfo.getListDescription();
-            if (descProperty == null) {
-                descProperty = listControl.getListDescription();
-            }
-
-            if (keyProperty != null || descProperty != null) {
-                List<ListData> newList = new ArrayList<ListData>();
-                for (Listable listable : list) {
-                    String key = listable.getListKey();
-                    String description = listable.getListDescription();
-                    if (keyProperty != null) {
-                        key = String.valueOf(ReflectUtils.getBeanProperty(listable, keyProperty));
-                    }
-
-                    if (descProperty != null) {
-                        description = String.valueOf(ReflectUtils.getBeanProperty(listable, descProperty));
-                    }
-
-                    newList.add(new ListData(key, description));
+        String reqId = "reqList_" + listControl.getId();
+        List<? extends Listable> list = (List<? extends Listable>) getRequestAttribute(reqId);
+        if (list == null) {
+            String listName = listControl.getList();
+            list = getList(LocaleType.SESSION, listName, resolveParams(listControl));
+            if (!list.isEmpty()) {
+                ListInfo listInfo = listInfoMap.get(listName);
+                String keyProperty = listInfo.getListKey();
+                if (keyProperty == null) {
+                    keyProperty = listControl.getListKey();
                 }
 
-                return newList;
+                String descProperty = listInfo.getListDescription();
+                if (descProperty == null) {
+                    descProperty = listControl.getListDescription();
+                }
+
+                if (keyProperty != null || descProperty != null) {
+                    List<ListData> newList = new ArrayList<ListData>();
+                    for (Listable listable : list) {
+                        String key = listable.getListKey();
+                        String description = listable.getListDescription();
+                        if (keyProperty != null) {
+                            key = String.valueOf(ReflectUtils.getBeanProperty(listable, keyProperty));
+                        }
+
+                        if (descProperty != null) {
+                            description = String.valueOf(ReflectUtils.getBeanProperty(listable, descProperty));
+                        }
+
+                        newList.add(new ListData(key, description));
+                    }
+
+                    list = newList;
+                }
             }
+            
+            setRequestAttribute(reqId, list);
         }
+
         return list;
     }
 

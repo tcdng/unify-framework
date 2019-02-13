@@ -39,7 +39,7 @@ public class RequestContext extends Context {
     }
 
     public String getContextPath() {
-        return this.sessionContext.getContextPath();
+        return sessionContext.getContextPath();
     }
 
     public String getRequestPath() {
@@ -51,7 +51,7 @@ public class RequestContext extends Context {
     }
 
     public Locale getLocale() {
-        return this.sessionContext.getLocale();
+        return sessionContext.getLocale();
     }
 
     public Object getQuickReference() {
