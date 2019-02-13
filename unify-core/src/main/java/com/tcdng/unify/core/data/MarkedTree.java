@@ -192,7 +192,7 @@ public class MarkedTree<T> {
      * @throws UnifyException
      *             if an error occurs
      */
-    public Node<T> findNode(MarkedTreeItemMatcher<T> matcher) throws UnifyException {
+    public Node<T> findFirstNode(MarkedTreeItemMatcher<T> matcher) throws UnifyException {
         return matchNode(root, matcher);
     }
 
@@ -208,7 +208,7 @@ public class MarkedTree<T> {
      * @throws UnifyException
      *             if an error occurs
      */
-    public Node<T> findNode(Long startMark, MarkedTreeItemMatcher<T> matcher) throws UnifyException {
+    public Node<T> findFirstNode(Long startMark, MarkedTreeItemMatcher<T> matcher) throws UnifyException {
         Node<T> trg = nodes.get(startMark);
         if (trg != null) {
             return matchNode(trg, matcher);
@@ -288,6 +288,27 @@ public class MarkedTree<T> {
         }
 
         return Collections.emptyList();
+    }
+
+    /**
+     * Get first immediate child node for node at supplied parent mark that is
+     * matched by supplied matcher.
+     * 
+     * @param parentMark
+     *            the parent mark
+     * @param matcher
+     *            the matcher
+     * @return the matching child node otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public Node<T> getFirstChildNode(Long parentMark, MarkedTreeItemMatcher<T> matcher) throws UnifyException {
+        Node<T> trg = nodes.get(parentMark);
+        if (trg != null) {
+            return trg.getFirstChildNode(matcher);
+        }
+
+        return null;
     }
 
     /**
@@ -1023,6 +1044,19 @@ public class MarkedTree<T> {
             }
 
             return Collections.emptyList();
+        }
+
+        public Node<T> getFirstChildNode(MarkedTreeItemMatcher<T> matcher) {
+            if (child != null) {
+                Node<T> ch = child;
+                do {
+                    if (matcher.match(ch.item)) {
+                        return ch;
+                    }
+                } while ((ch = ch.next) != null);
+            }
+
+            return null;
         }
 
         public List<T> getChildItemList() {
