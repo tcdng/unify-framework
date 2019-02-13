@@ -108,9 +108,9 @@ public class Tree {
         return markedTree.getNode(treeEvent.getItemIds().get(index));
     }
 
-    public Node<TreeItem> findNode(Long parentItemId, MarkedTreeItemMatcher<TreeItem> childMatcher)
+    public Node<TreeItem> findFirstNode(Long parentItemId, MarkedTreeItemMatcher<TreeItem> childMatcher)
             throws UnifyException {
-        return markedTree.findNode(parentItemId, childMatcher);
+        return markedTree.findFirstNode(parentItemId, childMatcher);
     }
 
     public List<Node<TreeItem>> findNodes(Long parentItemId, MarkedTreeItemMatcher<TreeItem> childMatcher)

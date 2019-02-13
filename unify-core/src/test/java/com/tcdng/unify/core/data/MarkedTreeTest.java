@@ -792,13 +792,13 @@ public class MarkedTreeTest {
     }
 
     @Test
-    public void testFindNodeFromRootBlank() throws Exception {
+    public void testFindFirstNodeFromRootBlank() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
-        assertNull(mTree.findNode(new TestMatcher1("music")));
+        assertNull(mTree.findFirstNode(new TestMatcher1("music")));
     }
 
     @Test
-    public void testFindNodeFromRoot() throws Exception {
+    public void testFindFirstNodeFromRoot() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         mTree.add("music");
         mTree.descend();
@@ -812,7 +812,7 @@ public class MarkedTreeTest {
         mTree.ascend();
         mTree.add("video");
         
-        Node<String> music = mTree.findNode(new TestMatcher1("music"));
+        Node<String> music = mTree.findFirstNode(new TestMatcher1("music"));
         assertNotNull(music);
         assertEquals("music", music.getItem());
         assertNotNull(music.getChild());
@@ -823,14 +823,14 @@ public class MarkedTreeTest {
         assertEquals("rap", music.getChild().getNext().getNext().getItem());
         assertNull(music.getChild().getNext().getNext().getNext());
         
-        Node<String> video = mTree.findNode(new TestMatcher1("video"));
+        Node<String> video = mTree.findFirstNode(new TestMatcher1("video"));
         assertNotNull(video);
         assertEquals("video", video.getItem());
         assertNull(video.getChild());
     }
 
     @Test
-    public void testFindNodeDeepFromRoot() throws Exception {
+    public void testFindFirstNodeDeepFromRoot() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         mTree.add("music");
         mTree.descend();
@@ -844,7 +844,7 @@ public class MarkedTreeTest {
         mTree.ascend();
         mTree.add("video");
         
-        Node<String> blues = mTree.findNode(new TestMatcher1("blues"));
+        Node<String> blues = mTree.findFirstNode(new TestMatcher1("blues"));
         assertNotNull(blues);
         assertEquals("blues", blues.getItem());
         assertNotNull(blues.getChild());
@@ -853,14 +853,14 @@ public class MarkedTreeTest {
         assertEquals("Mannish Boy", blues.getChild().getNext().getItem());
         assertNull(blues.getChild().getNext().getNext());
 
-        Node<String> mannish = mTree.findNode(new TestMatcher1("Mannish Boy"));
+        Node<String> mannish = mTree.findFirstNode(new TestMatcher1("Mannish Boy"));
         assertNotNull(mannish);
         assertEquals("Mannish Boy", mannish.getItem());
         assertNull(mannish.getChild());
     }
 
     @Test
-    public void testFindNodeFromRootNoMatch() throws Exception {
+    public void testFindFirstNodeFromRootNoMatch() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         mTree.add("music");
         mTree.descend();
@@ -874,7 +874,7 @@ public class MarkedTreeTest {
         mTree.ascend();
         mTree.add("video");
         
-        assertNull(mTree.findNode(new TestMatcher1("hiphop")));
+        assertNull(mTree.findFirstNode(new TestMatcher1("hiphop")));
     }
 
     @Test
@@ -892,7 +892,7 @@ public class MarkedTreeTest {
         mTree.ascend();
         Long videoMark = mTree.add("video");
         
-        Node<String> blues = mTree.findNode(musicMark, new TestMatcher1("blues"));
+        Node<String> blues = mTree.findFirstNode(musicMark, new TestMatcher1("blues"));
         assertNotNull(blues);
         assertEquals("blues", blues.getItem());
         assertNotNull(blues.getChild());
@@ -901,13 +901,13 @@ public class MarkedTreeTest {
         assertEquals("Mannish Boy", blues.getChild().getNext().getItem());
         assertNull(blues.getChild().getNext().getNext());
 
-        Node<String> mannish = mTree.findNode(bluesMark, new TestMatcher1("Mannish Boy"));
+        Node<String> mannish = mTree.findFirstNode(bluesMark, new TestMatcher1("Mannish Boy"));
         assertNotNull(mannish);
         assertEquals("Mannish Boy", mannish.getItem());
         assertNull(mannish.getChild());
         
         // Match at start point
-        Node<String> video = mTree.findNode(videoMark, new TestMatcher1("video"));
+        Node<String> video = mTree.findFirstNode(videoMark, new TestMatcher1("video"));
         assertNotNull(video);
         assertEquals("video", video.getItem());
     }
@@ -928,13 +928,13 @@ public class MarkedTreeTest {
         mTree.add("video");
         
         // No existent mark
-        assertNull(mTree.findNode(Long.valueOf(99L), new TestMatcher1("video")));
+        assertNull(mTree.findFirstNode(Long.valueOf(99L), new TestMatcher1("video")));
         
         // Not in branch
-        assertNull(mTree.findNode(bluesMark, new TestMatcher1("music")));
+        assertNull(mTree.findFirstNode(bluesMark, new TestMatcher1("music")));
         
         // Unmatched
-        assertNull(mTree.findNode(musicMark, new TestMatcher1("hiphop")));
+        assertNull(mTree.findFirstNode(musicMark, new TestMatcher1("hiphop")));
     }
 
     @Test
