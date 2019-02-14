@@ -33,4 +33,8 @@ public class BooleanParam {
     public Boolean getValue() {
         return value;
     }
+    
+    public boolean isPresent() {
+        return value != null;
+    }
 }

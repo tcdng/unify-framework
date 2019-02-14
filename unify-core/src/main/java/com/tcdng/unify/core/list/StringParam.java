@@ -33,4 +33,8 @@ public class StringParam {
     public String getValue() {
         return value;
     }
+    
+    public boolean isPresent() {
+        return value != null;
+    }
 }

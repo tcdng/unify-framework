@@ -33,5 +33,9 @@ public class StatusParams {
     public String getStatus() {
         return status;
     }
+    
+    public boolean isPresent() {
+        return status != null;
+    }
 
 }
