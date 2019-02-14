@@ -33,4 +33,8 @@ public class DoubleParam {
     public Double getValue() {
         return value;
     }
+    
+    public boolean isPresent() {
+        return value != null;
+    }
 }

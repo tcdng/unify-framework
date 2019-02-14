@@ -38,10 +38,6 @@ public class ListableListParam {
         return listableList;
     }
 
-    /**
-     * Checks if params has valid and non-zero sized list.
-     * @return a true value if valid non-zero sized list
-     */
     public boolean isListableList() {
         return listableList != null && !listableList.isEmpty();
     }

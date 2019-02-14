@@ -33,4 +33,8 @@ public class LongParam {
     public Long getValue() {
         return value;
     }
+    
+    public boolean isPresent() {
+        return value != null;
+    }
 }

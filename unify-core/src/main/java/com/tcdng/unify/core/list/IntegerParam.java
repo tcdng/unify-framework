@@ -33,4 +33,8 @@ public class IntegerParam {
     public Integer getValue() {
         return value;
     }
+    
+    public boolean isPresent() {
+        return value != null;
+    }
 }
