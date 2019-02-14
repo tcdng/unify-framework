@@ -1069,11 +1069,30 @@ ux.rigSplitPanel = function(rgp) {
 	evp.uCtrlId = rgp.pCtrlId;
 	evp.uMinorId = rgp.pMinorId;
 	evp.uMinorScrId = rgp.pMinorScrId;
+	evp.uMajorScrId = rgp.pMajorScrId;
 	evp.uMax = rgp.pMax;
 	evp.uMin = rgp.pMin;
 	evp.uVert = rgp.pVert;
 	ux.attachEventHandler(_id(rgp.pId), "mousedown", ux.splitEngage,
 					evp);
+	ux.registerResizeFunc(rgp.pId, ux.splitFitContent, evp);
+	ux.splitFitContent(evp);
+}
+
+ux.splitFitContent = function(evp) {
+	var minWElm = _id(evp.uMinorId);
+	var minElm = _id(evp.uMinorScrId);
+	var majElm = _id(evp.uMajorScrId);
+	
+	minElm.style.display = "none";
+	majElm.style.display = "none";
+	
+	var dim = ux.boundingRect(minWElm);
+	minElm.style.height = dim.height + "px";
+	majElm.style.height = dim.height + "px";
+
+	minElm.style.display = "inline-block";
+	majElm.style.display = "inline-block";
 }
 
 ux.splCtrl = null;

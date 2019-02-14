@@ -55,6 +55,7 @@ public class SplitPanelWriter extends AbstractPanelWriter {
         writer.write(",\"pCtrlId\":\"").write(splitPanel.getSplitCtrlId()).write('"');
         writer.write(",\"pMinorId\":\"").write(splitPanel.getMinorWinId()).write('"');
         writer.write(",\"pMinorScrId\":\"").write(splitPanel.getMinorPaneId()).write('"');
+        writer.write(",\"pMajorScrId\":\"").write(splitPanel.getMajorPaneId()).write('"');
         writer.write(",\"pMax\":").write(splitPanel.getMinorWinMax());
         writer.write(",\"pMin\":").write(splitPanel.getMinorWinMin());
         writer.write(",\"pVert\":").write(splitPanel.isVertical());
@@ -73,8 +74,8 @@ public class SplitPanelWriter extends AbstractPanelWriter {
                     .write("\" style=\"display:table-cell;vertical-align:top;width:").write(minorWidth)
                     .write("px;height:100%;\">");
             writer.write("<div id=\"").write(splitPanel.getMinorPaneId())
-                    .write("\" class=\"spminor\" style=\"display:inline-block;width:").write(minorWidth)
-                    .write("px;height:100%;overflow:hidden;\">");
+                    .write("\" class=\"spminor\" style=\"display:none;width:").write(minorWidth)
+                    .write("px;overflow:hidden;\">");
             Widget widget = splitPanel.getWidgetByLongName(longNames.get(0));
             if (widget.isVisible() || widget.isHidden()) {
                 writer.writeStructureAndContent(widget);
@@ -83,8 +84,8 @@ public class SplitPanelWriter extends AbstractPanelWriter {
             writer.write("<div id=\"").write(splitPanel.getSplitCtrlId())
                     .write("\" style=\"display:table-cell;width:4px;height:100%;cursor:e-resize;\"></div>");
             writer.write("<div style=\"display:table-cell;vertical-align:top;height:100%;\">");
-            writer.write(
-                    "<div class=\"spmajor\" style=\"display:inline-block;width:100%;height:100%;overflow:hidden;\">");
+            writer.write("<div id=\"").write(splitPanel.getMajorPaneId())
+                    .write("\" class=\"spmajor\" style=\"display:none;width:100%;overflow:hidden;\">");
             widget = splitPanel.getWidgetByLongName(longNames.get(1));
             ;
             if (widget.isVisible() || widget.isHidden()) {
