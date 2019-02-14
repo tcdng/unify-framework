@@ -42,7 +42,11 @@ public class SplitPanel extends AbstractPanel {
     }
 
     public String getMinorPaneId() throws UnifyException {
-        return getPrefixedId("pane");
+        return getPrefixedId("minp");
+    }
+
+    public String getMajorPaneId() throws UnifyException {
+        return getPrefixedId("majp");
     }
 
     public int getMinorWinMax() throws UnifyException {
