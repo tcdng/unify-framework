@@ -97,43 +97,45 @@ public class PackableDocConfig {
 
         private PackableDocConfig packableDocConfig;
 
-        private int repeat;
+        private int presetLen;
 
         public FieldConfig(String name, Class<?> type) throws UnifyException {
             this.name = name;
             this.type = type;
-            this.repeat = -1;
         }
 
         public FieldConfig(String name, DataType type) throws UnifyException {
-            this(name, type, -1);
+            this(name, type, false, 0);
         }
 
-        public FieldConfig(String name, DataType type, int repeat) throws UnifyException {
+        public FieldConfig(String name, DataType type, boolean array, int presetLen) throws UnifyException {
             this.name = name;
-            this.type = type.javaClass(repeat >= 0);
-            this.repeat = repeat;
-            if (this.repeat < 0) {
-                this.repeat = 0;
+            this.type = type.javaClass(array);
+            this.presetLen = presetLen;
+            if (this.presetLen < 0) {
+                this.presetLen = 0;
             }
         }
 
         public FieldConfig(String name, FieldConfig... fieldConfigs) {
-            this(name, -1, fieldConfigs);
+            this(name, false, 0, fieldConfigs);
         }
 
-        public FieldConfig(String name, int repeat, FieldConfig... fieldConfigs) {
-            this(name, repeat, Arrays.asList(fieldConfigs));
+        public FieldConfig(String name, boolean array, int presetLen, FieldConfig... fieldConfigs) {
+            this(name, false, presetLen, Arrays.asList(fieldConfigs));
         }
 
         public FieldConfig(String name, List<FieldConfig> fieldConfigList) {
-            this(name, -1, fieldConfigList);
+            this(name, false, 0, fieldConfigList);
         }
 
-        public FieldConfig(String name, int repeat, List<FieldConfig> fieldConfigList) {
+        public FieldConfig(String name, boolean array, int presetLen, List<FieldConfig> fieldConfigList) {
             this.name = name;
-            this.type = DataType.COMPLEX.javaClass(repeat >= 0);
-            this.repeat = repeat;
+            this.type = DataType.COMPLEX.javaClass(array);
+            this.presetLen = presetLen;
+            if (this.presetLen < 0) {
+                this.presetLen = 0;
+            }
             this.packableDocConfig = new PackableDocConfig(name, fieldConfigList);
         }
 
@@ -145,8 +147,8 @@ public class PackableDocConfig {
             return type;
         }
 
-        public int getRepeat() {
-            return repeat;
+        public int getPresetLength() {
+            return presetLen;
         }
 
         public PackableDocConfig getPackableDocConfig() {
@@ -163,7 +165,8 @@ public class PackableDocConfig {
 
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("{name=\"").append(name).append("\", type=\"").append(type).append("\"");
+            sb.append("{name=\"").append(name).append("\", type=\"").append(type).append("\", presetLen=\"")
+                    .append(presetLen).append("\"");
             if (packableDocConfig != null) {
                 sb.append("\n").append(packableDocConfig);
             }
