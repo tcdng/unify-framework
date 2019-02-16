@@ -33,7 +33,6 @@ public enum DataType implements EnumConst {
 
     CHAR("CH", Character.class, Character[].class),
     BOOLEAN("BL", Boolean.class, Boolean[].class),
-    BYTE("BT", Byte.class, Byte[].class),
     SHORT("SH", Short.class, Short[].class),
     INTEGER("IN", Integer.class, Integer[].class),
     LONG("LN", Long.class, Long[].class),
@@ -42,6 +41,7 @@ public enum DataType implements EnumConst {
     DECIMAL("DC", BigDecimal.class, BigDecimal[].class),
     DATE("DT", Date.class, Date[].class),
     STRING("ST", String.class, String[].class),
+    BLOB("BT", byte[].class, byte[][].class),
     COMPLEX("CX", PackableDoc.class, PackableDoc[].class);
 
     private final String code;
