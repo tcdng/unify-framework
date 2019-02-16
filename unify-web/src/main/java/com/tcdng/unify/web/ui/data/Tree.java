@@ -42,8 +42,7 @@ public class Tree {
 
     private static final TreeItemExpander expandChildPolicy = new TreeItemExpander();
 
-    private static final TreeItemCollapser collapseChildPolicy =
-            new TreeItemCollapser();
+    private static final TreeItemCollapser collapseChildPolicy = new TreeItemCollapser();
 
     private Map<String, TreeItemCategory> categories;
 
@@ -75,7 +74,7 @@ public class Tree {
         markedTree.updateParentNodes(itemId, expandChildPolicy); // Expand parents
         return itemId;
     }
-    
+
     public void setTreePolicy(MarkedTreePolicy<TreeItem> treePolicy) {
         markedTree.setTreePolicy(treePolicy);
     }
@@ -83,11 +82,11 @@ public class Tree {
     public TreePolicy getTreePolicy() {
         return (TreePolicy) markedTree.getTreePolicy();
     }
-    
+
     public boolean isTreePolicy() {
         return markedTree.isTreePolicy();
     }
-    
+
     public TreeItemCategory getTreeCategory(String name) {
         return categories.get(name);
     }
@@ -108,14 +107,19 @@ public class Tree {
         return markedTree.getNode(treeEvent.getItemIds().get(index));
     }
 
-    public Node<TreeItem> findFirstNode(Long parentItemId, MarkedTreeItemMatcher<TreeItem> childMatcher)
+    public Node<TreeItem> findFirstNode(Long firstItemId, MarkedTreeItemMatcher<TreeItem> matcher)
             throws UnifyException {
-        return markedTree.findFirstNode(parentItemId, childMatcher);
+        return markedTree.findFirstNode(firstItemId, matcher);
     }
 
-    public List<Node<TreeItem>> findNodes(Long parentItemId, MarkedTreeItemMatcher<TreeItem> childMatcher)
+    public List<Node<TreeItem>> findNodes(Long firstItemId, MarkedTreeItemMatcher<TreeItem> matcher)
             throws UnifyException {
-        return markedTree.findNodes(parentItemId, childMatcher);
+        return markedTree.findNodes(firstItemId, matcher);
+    }
+
+    public Node<TreeItem> findFirstChildNode(Long parentItemId, MarkedTreeItemMatcher<TreeItem> childMatcher)
+            throws UnifyException {
+        return markedTree.getFirstChildNode(parentItemId, childMatcher);
     }
 
     public List<Node<TreeItem>> getChildNodes(Long parentItemId) throws UnifyException {
@@ -281,8 +285,8 @@ public class Tree {
 
         public Tree build() throws UnifyException {
             markedTree.setChain(false); // Enter unchained mode
-            return new Tree(Collections.unmodifiableList(new ArrayList<TreeMenuItem>(menuList.values())),
-                    categories, markedTree);
+            return new Tree(Collections.unmodifiableList(new ArrayList<TreeMenuItem>(menuList.values())), categories,
+                    markedTree);
         }
     }
 
