@@ -17,6 +17,7 @@ package com.tcdng.unify.core.transform;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Forward transforms a string to upper case letters. Performs no transformation
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling("Upper Case Transformer")
 @Component("uppercase-transformer")
 public class UpperCaseTransformer extends AbstractStringTransformer {
 

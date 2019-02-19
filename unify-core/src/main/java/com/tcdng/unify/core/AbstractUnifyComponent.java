@@ -453,6 +453,24 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Fetches a list of annotated classes of a specific type and annotation type.
+     * 
+     * @param classType
+     *            the annotated class type
+     * @param annotationClass
+     *            the annotation class
+     * @param excludePackages
+     *            packages to exclude search from. This parameter is optional.
+     * @return a list of annotated classes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T> List<Class<? extends T>> getAnnotatedClassesExcluded(Class<T> classType,
+            Class<? extends Annotation> annotationClass, String... excludePackages) throws UnifyException {
+        return unifyComponentContext.getAnnotatedClassesExcluded(classType, annotationClass, excludePackages);
+    }
+
+    /**
      * Checks if component context is in cluster mode.
      * 
      * @return a true if component context is in cluster mode otherwise false

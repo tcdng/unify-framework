@@ -19,6 +19,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Default implementation of a one-way string cryptograph.
@@ -26,6 +27,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling("Default One-way String Cryptograph")
 @Component("oneway-stringcryptograph")
 public class OneWayStringCryptographImpl extends AbstractOneWayCryptograph implements OneWayStringCryptograph {
 

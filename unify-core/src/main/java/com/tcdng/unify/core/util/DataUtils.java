@@ -304,7 +304,8 @@ public final class DataUtils {
             }
             return ca.type();
         }
-        return null;
+        
+        return DataUtils.getColumnType(field.getType());
     }
 
     /**

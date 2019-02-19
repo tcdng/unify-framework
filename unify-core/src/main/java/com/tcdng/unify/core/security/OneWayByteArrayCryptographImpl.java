@@ -17,6 +17,7 @@ package com.tcdng.unify.core.security;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Default implementation of a one-way byte array cryptograph.
@@ -24,6 +25,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling("Default One-way Bytes Cryptograph")
 @Component("oneway-bytearraycryptograph")
 public class OneWayByteArrayCryptographImpl extends AbstractOneWayCryptograph implements OneWayByteArrayCryptograph {
 
