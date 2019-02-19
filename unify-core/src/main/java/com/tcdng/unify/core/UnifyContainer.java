@@ -766,6 +766,26 @@ public class UnifyContainer {
         return unifyContainerEnvironment.getTypeRepository().getAnnotatedClasses(classType, annotationClass, packages);
     }
 
+    /**
+     * Returns classes of a particular type annotated with a specific type of
+     * annotation.
+     * 
+     * @param classType
+     *            the annotated class type
+     * @param annotationClass
+     *            the annotation
+     * @param excludedPackages
+     *            packages to exclude search from. This parameter is optional.
+     * @return list of annotated classes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public <T> List<Class<? extends T>> getAnnotatedClassesExcluded(Class<T> classType,
+            Class<? extends Annotation> annotationClass, String... excludedPackages) throws UnifyException {
+        return unifyContainerEnvironment.getTypeRepository().getAnnotatedClassesExcluded(classType, annotationClass,
+                excludedPackages);
+    }
+
     public String getNodeId() {
         return nodeId;
     }

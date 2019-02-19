@@ -217,7 +217,27 @@ public class UnifyComponentContext {
      */
     public <T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType,
             Class<? extends Annotation> annotationClass, String... basePackages) throws UnifyException {
-        return applicationContext.getContainer().getAnnotatedClasses(classType, annotationClass);
+        return applicationContext.getContainer().getAnnotatedClasses(classType, annotationClass, basePackages);
+    }
+
+    /**
+     * Returns classes of a particular type annotated with a specific type of
+     * annotation.
+     * 
+     * @param classType
+     *            the annotated class type
+     * @param annotationClass
+     *            the annotation
+     * @param excludePackages
+     *            packages to exclude search from. This parameter is optional.
+     * @return list of annotated classes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public <T> List<Class<? extends T>> getAnnotatedClassesExcluded(Class<T> classType,
+            Class<? extends Annotation> annotationClass, String... excludePackages) throws UnifyException {
+        return applicationContext.getContainer().getAnnotatedClassesExcluded(classType, annotationClass,
+                excludePackages);
     }
 
     /**
