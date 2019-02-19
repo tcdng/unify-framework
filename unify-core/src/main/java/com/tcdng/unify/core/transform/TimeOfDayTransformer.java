@@ -20,6 +20,7 @@ import java.util.Date;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
@@ -28,6 +29,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling("Time-Of-Day Transformer")
 @Component("timeofday-transformer")
 public class TimeOfDayTransformer extends AbstractUnifyComponent implements Transformer<Date, Date> {
 

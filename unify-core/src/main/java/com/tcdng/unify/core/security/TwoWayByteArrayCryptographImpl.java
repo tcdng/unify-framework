@@ -18,6 +18,7 @@ package com.tcdng.unify.core.security;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Default implementation of a byte array cryptograph.
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling("Default Two-way Bytes Cryptograph")
 @Component(ApplicationComponents.APPLICATION_BYTEARRAYCRYPTOGRAPH)
 public class TwoWayByteArrayCryptographImpl extends AbstractTwoWayCryptograph implements TwoWayByteArrayCryptograph {
 
