@@ -1073,7 +1073,7 @@ ux.rigSplitPanel = function(rgp) {
 	evp.uMax = rgp.pMax;
 	evp.uMin = rgp.pMin;
 	evp.uVert = rgp.pVert;
-	ux.attachEventHandler(_id(rgp.pId), "mousedown", ux.splitEngage,
+	ux.attachEventHandler(_id(rgp.pCtrlId), "mousedown", ux.splitEngage,
 					evp);
 	ux.registerResizeFunc(rgp.pId, ux.splitFitContent, evp);
 	ux.splitFitContent(evp);
@@ -3968,7 +3968,6 @@ ux.attachEventHandler = function(domObject, eventName, handler, evp) {
 }
 
 ux.handleOrConfirmRedirect = function(event, handler, evp) {
-	console.log("@Debug: evp.uConf = " + evp.uConf);
 	if (evp.uConf) {
 		// Store action
 		ux.confirmStore.handler = handler;
