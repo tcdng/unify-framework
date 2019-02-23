@@ -47,7 +47,7 @@ import com.tcdng.unify.web.ui.data.TaskMonitorInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractPageController extends AbstractUserInterfaceController implements PageController {
+public abstract class AbstractPageController extends AbstractUnifyPageController implements PageController {
 
     @Configurable
     private TaskLauncher taskLauncher;
@@ -86,7 +86,7 @@ public abstract class AbstractPageController extends AbstractUserInterfaceContro
     }
 
     @Override
-    public ControllerType getType() {
+    public final ControllerType getType() {
         return ControllerType.PAGE_CONTROLLER;
     }
 

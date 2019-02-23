@@ -93,14 +93,16 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                 new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
         ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
-        if (!remoteViewerList.isEmpty()) {
-            String origin = request.getHeader("origin");
-            if (remoteViewerList.contains(origin)) {
-                HttpServletResponse response = (HttpServletResponse) responseObject;
-                response.setHeader("Access-Control-Allow-Origin", origin);
-                response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-                response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-                response.setHeader("Access-Control-Max-Age", "600");
+        if(!StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+            if (!remoteViewerList.isEmpty()) {
+                String origin = request.getHeader("origin");
+                if (remoteViewerList.contains(origin)) {
+                    HttpServletResponse response = (HttpServletResponse) responseObject;
+                    response.setHeader("Access-Control-Allow-Origin", origin);
+                    response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+                    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                    response.setHeader("Access-Control-Max-Age", "600");
+                }
             }
         }
 

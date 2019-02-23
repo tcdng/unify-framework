@@ -22,6 +22,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.IOUtils;
 
 /**
@@ -64,13 +65,13 @@ public class TestClientResponse implements ClientResponse {
     }
 
     @Override
-    public OutputStream getOutputStream() throws Exception {
+    public OutputStream getOutputStream() throws UnifyException {
         used = true;
         return outputStream;
     }
 
     @Override
-    public Writer getWriter() throws Exception {
+    public Writer getWriter() throws UnifyException {
         used = true;
         return writer;
     }

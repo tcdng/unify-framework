@@ -26,7 +26,7 @@ import java.util.Set;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TestClientRequest implements ClientRequest {
+public class TestClientRequest extends AbstractClientRequest {
 
     private String path;
 

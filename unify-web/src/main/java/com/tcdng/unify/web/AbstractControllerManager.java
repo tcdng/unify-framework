@@ -246,13 +246,14 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
                     controller = (Controller) getComponent(pathParts.getActBeanName());
 
-                    if (ControllerType.PAGE_CONTROLLER.equals(controller.getType())) {
+                    ControllerType type = controller.getType();
+                    if (ControllerType.PAGE_CONTROLLER.equals(type)) {
                         PageController pageController = (PageController) controller;
                         Page page = pageManager.createPage(sessionContext.getLocale(), pathParts.getActBeanName());
                         page.setSessionId(pathParts.getBeanId());
                         pageController.setPage(page);
                         sessionContext.setAttribute(pathParts.getBeanId(), controller);
-                    } else if (ControllerType.REMOTECALL_CONTROLLER.equals(controller.getType())) {
+                    } else if (ControllerType.REMOTECALL_CONTROLLER.equals(type)) {
                         sessionContext.setAttribute(pathParts.getActBeanName(), controller);
                     }
                 }
@@ -267,7 +268,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         Controller controller = null;
         try {
             controller = getController(request.getPath());
-            if (controller.isUserInterface()) {
+            if (controller.isBackUnifyPage()) {
                 String documentPath = (String) request.getParameter(RequestParameterConstants.DOCUMENT);
                 if (documentPath != null) {
                     PageController docPageController = (PageController) getController(documentPath);
@@ -287,7 +288,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, request.getPath());
             }
 
-            if (ControllerType.REMOTECALL_CONTROLLER.equals(controller.getType())) {
+            ControllerType type = controller.getType();
+            if (ControllerType.PLAIN_CONTROLLER.equals(type)) {
+                ((PlainController) controller).execute(request, response);
+            } else if (ControllerType.REMOTECALL_CONTROLLER.equals(type)) {
                 RemoteCallController remoteCallController = (RemoteCallController) controller;
                 String reqBody = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
                 RemoteCallFormat remoteCallFormat =
@@ -300,8 +304,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 }
 
                 response.getWriter().write(responseString);
-                response.getWriter().flush();
-            } else if (ControllerType.RESOURCE_CONTROLLER.equals(controller.getType())) {
+            } else if (ControllerType.RESOURCE_CONTROLLER.equals(type)) {
                 ResourceController resourceController = (ResourceController) controller;
                 if (!resourceController.isReadOnly()) {
                     DataTransfer dataTransfer = prepareDataTransfer(resourceController, request);
@@ -319,7 +322,6 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 }
 
                 resourceController.execute(response.getOutputStream());
-                response.getOutputStream().flush();
             } else {
                 ResponseWriter writer = responseWriterPool.getResponseWriter();
                 try {
@@ -364,20 +366,19 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                     }
 
                     writer.writeTo(response.getWriter());
-                    response.getWriter().flush();
                 } finally {
                     responseWriterPool.restore(writer);
                 }
             }
         } catch (Exception e) {
-            boolean isUserInterface = false;
+            boolean backUnifyPage = false;
             if (controller != null) {
-                isUserInterface = controller.isUserInterface();
+                backUnifyPage = controller.isBackUnifyPage();
             } else {
-                isUserInterface = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY) == null;
+                backUnifyPage = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY) == null;
             }
 
-            if (isUserInterface) {
+            if (backUnifyPage) {
                 writeExceptionResponseForUserInterface(request, response, e);
             } else {
                 // TODO

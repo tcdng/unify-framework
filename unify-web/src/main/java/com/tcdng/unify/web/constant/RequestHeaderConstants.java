@@ -13,33 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyComponent;
+package com.tcdng.unify.web.constant;
 
 /**
- * Component interface that must be implemented by every controller class.
+ * Request header constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Controller extends UnifyComponent {
+public interface RequestHeaderConstants {
 
-    /**
-     * Returns the controller type.
-     */
-    ControllerType getType();
+    String REMOTECALL_HEADER_NAME = "Remote-Call-Type";
 
-    /**
-     * Tests if controller requires secured access.
-     * 
-     * @return a true value means that access to this controller must have been
-     *         authenticated
-     */
-    boolean isSecured();
-
-    /**
-     * Returns true if controller backs a unify page or page resource
-     */
-    boolean isBackUnifyPage();
+    String REMOTECALL= "remCall";
 }

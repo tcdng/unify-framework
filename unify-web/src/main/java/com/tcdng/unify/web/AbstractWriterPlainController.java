@@ -13,33 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyComponent;
+import java.io.Writer;
+
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Component interface that must be implemented by every controller class.
+ * Abstract writer plain controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Controller extends UnifyComponent {
+public abstract class AbstractWriterPlainController extends AbstractPlainController {
 
-    /**
-     * Returns the controller type.
-     */
-    ControllerType getType();
+    private String contentType;
 
-    /**
-     * Tests if controller requires secured access.
-     * 
-     * @return a true value means that access to this controller must have been
-     *         authenticated
-     */
-    boolean isSecured();
+    public AbstractWriterPlainController(String contentType) {
+        this.contentType = contentType;
+    }
 
-    /**
-     * Returns true if controller backs a unify page or page resource
-     */
-    boolean isBackUnifyPage();
+    @Override
+    public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
+        response.setContentType(contentType);
+        doExecute(response.getWriter(), request);
+    }
+
+    protected abstract void doExecute(Writer writer, ClientRequest request) throws UnifyException;
 }

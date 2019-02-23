@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.web.ClientRequest;
+import com.tcdng.unify.web.AbstractClientRequest;
 import com.tcdng.unify.web.ClientRequestType;
 
 /**
@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ClientRequestType;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class HttpClientRequest implements ClientRequest {
+public class HttpClientRequest extends AbstractClientRequest {
 
     private HttpRequestMethodType methodType;
 

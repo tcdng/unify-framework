@@ -28,8 +28,6 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface RemoteCallClient extends UnifyComponent {
 
-    String USER_AGENT_ID = "Unify/1.0";
-
     /**
      * Setup remote call.
      * 

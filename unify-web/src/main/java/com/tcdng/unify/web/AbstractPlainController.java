@@ -15,31 +15,28 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.annotation.Singleton;
 
 /**
- * Component interface that must be implemented by every controller class.
+ * Convenient base class for plain controllers.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Controller extends UnifyComponent {
+@Singleton(true)
+public abstract class AbstractPlainController extends AbstractController implements PlainController {
 
-    /**
-     * Returns the controller type.
-     */
-    ControllerType getType();
+    public AbstractPlainController() {
+        super(false);
+    }
 
-    /**
-     * Tests if controller requires secured access.
-     * 
-     * @return a true value means that access to this controller must have been
-     *         authenticated
-     */
-    boolean isSecured();
+    @Override
+    public final ControllerType getType() {
+        return ControllerType.PLAIN_CONTROLLER;
+    }
 
-    /**
-     * Returns true if controller backs a unify page or page resource
-     */
-    boolean isBackUnifyPage();
+    @Override
+    public final boolean isBackUnifyPage() {
+        return false;
+    }
 }

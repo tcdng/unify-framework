@@ -18,6 +18,8 @@ package com.tcdng.unify.web;
 import java.nio.charset.Charset;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * A client request.
  * 
@@ -47,11 +49,21 @@ public interface ClientRequest {
     Set<String> getParameterNames();
 
     /**
-     * Returns a request parameter
+     * Gets a request parameter
      * 
      * @param name
      *            the parameter name
      * @return object if found otherwise false
      */
     Object getParameter(String name);
+
+    /**
+     * Gets a request parameter
+     * 
+     * @param clazz type
+     * @param name
+     *            the parameter name
+     * @return object if found otherwise false
+     */
+    <T> T getParameter(Class<T> clazz, String name) throws UnifyException ;
 }

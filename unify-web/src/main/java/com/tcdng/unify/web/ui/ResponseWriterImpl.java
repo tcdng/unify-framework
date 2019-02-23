@@ -356,7 +356,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             buf.append(getSessionContext().getUriBase());
         }
 
-        buf.append(requestContext.getContextPath()); // .append(requestContext.getRequestPath())
+        buf.append(requestContext.getContextPath());
         buf.append(path);
         for (String element : pathElement) {
             buf.append(element);
