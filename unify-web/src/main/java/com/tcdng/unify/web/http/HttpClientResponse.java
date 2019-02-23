@@ -15,11 +15,14 @@
  */
 package com.tcdng.unify.web.http;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.ClientResponse;
 
@@ -59,21 +62,29 @@ public class HttpClientResponse implements ClientResponse {
     }
 
     @Override
-    public OutputStream getOutputStream() throws Exception {
-        if (outputStream == null) {
-            outputStream = response.getOutputStream();
-            outUsed = true;
+    public OutputStream getOutputStream() throws UnifyException {
+        try {
+            if (outputStream == null) {
+                outputStream = response.getOutputStream();
+                outUsed = true;
+            }
+            return outputStream;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
         }
-        return outputStream;
     }
 
     @Override
-    public Writer getWriter() throws Exception {
-        if (writer == null) {
-            writer = response.getWriter();
-            outUsed = true;
+    public Writer getWriter() throws UnifyException {
+        try {
+            if (writer == null) {
+                writer = response.getWriter();
+                outUsed = true;
+            }
+            return writer;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
         }
-        return writer;
     }
 
     @Override

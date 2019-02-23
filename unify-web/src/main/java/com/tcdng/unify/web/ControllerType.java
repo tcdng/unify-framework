@@ -23,6 +23,8 @@ package com.tcdng.unify.web;
  */
 public enum ControllerType {
 
+    PLAIN_CONTROLLER,
+
     PAGE_CONTROLLER,
 
     RESOURCE_CONTROLLER,

@@ -13,33 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Component interface that must be implemented by every controller class.
+ * Abstract base class for client requests.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Controller extends UnifyComponent {
+public abstract class AbstractClientRequest implements ClientRequest {
 
-    /**
-     * Returns the controller type.
-     */
-    ControllerType getType();
+    @Override
+    public <T> T getParameter(Class<T> clazz, String name) throws UnifyException {
+        return DataUtils.convert(clazz, getParameter(name), null);
+    }
 
-    /**
-     * Tests if controller requires secured access.
-     * 
-     * @return a true value means that access to this controller must have been
-     *         authenticated
-     */
-    boolean isSecured();
-
-    /**
-     * Returns true if controller backs a unify page or page resource
-     */
-    boolean isBackUnifyPage();
 }

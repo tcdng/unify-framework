@@ -33,10 +33,10 @@ import com.tcdng.unify.web.WebApplicationComponents;
 @Component(WebApplicationComponents.APPLICATION_RESPONSEWRITERPOOL)
 public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements ResponseWriterPool {
 
-    @Configurable("2000") // 2 seconds
+    @Configurable("4000") // 4 seconds
     private long getTimeout;
 
-    @Configurable("128")
+    @Configurable("512")
     private int maxSize;
 
     @Configurable("8")

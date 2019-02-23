@@ -13,33 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Component interface that must be implemented by every controller class.
+ * Represents a plain controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Controller extends UnifyComponent {
+public interface PlainController extends Controller {
 
     /**
-     * Returns the controller type.
-     */
-    ControllerType getType();
-
-    /**
-     * Tests if controller requires secured access.
+     * Executes control using supplied request and response objects.
      * 
-     * @return a true value means that access to this controller must have been
-     *         authenticated
+     * @param request the request object
+     * @param response the response object
+     * @throws UnifyException if an error occurs
      */
-    boolean isSecured();
-
-    /**
-     * Returns true if controller backs a unify page or page resource
-     */
-    boolean isBackUnifyPage();
+    void execute(ClientRequest request, ClientResponse response) throws UnifyException;
 }

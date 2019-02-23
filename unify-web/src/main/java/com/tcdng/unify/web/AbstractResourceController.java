@@ -28,7 +28,7 @@ import com.tcdng.unify.web.annotation.RequestParameter;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractResourceController extends AbstractUserInterfaceController implements ResourceController {
+public abstract class AbstractResourceController extends AbstractUnifyPageController implements ResourceController {
 
     @RequestParameter
     private String resourceName;
@@ -49,7 +49,7 @@ public abstract class AbstractResourceController extends AbstractUserInterfaceCo
     }
 
     @Override
-    public ControllerType getType() {
+    public final ControllerType getType() {
         return ControllerType.RESOURCE_CONTROLLER;
     }
 

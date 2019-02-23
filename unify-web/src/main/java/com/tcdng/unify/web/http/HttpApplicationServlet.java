@@ -42,10 +42,10 @@ import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
-import com.tcdng.unify.web.RemoteCallClient;
 import com.tcdng.unify.web.UnifyWebInterface;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
+import com.tcdng.unify.web.constant.RequestHeaderConstants;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.util.WebTypeUtils;
@@ -167,27 +167,32 @@ public class HttpApplicationServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doRequestMethod(HttpRequestMethodType.DELETE, request, response);
     }
 
     @Override
-    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doHead(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doRequestMethod(HttpRequestMethodType.HEAD, request, response);
     }
 
     @Override
-    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doRequestMethod(HttpRequestMethodType.OPTIONS, request, response);
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doRequestMethod(HttpRequestMethodType.PUT, request, response);
     }
 
     @Override
-    protected void doTrace(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doTrace(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doRequestMethod(HttpRequestMethodType.TRACE, request, response);
     }
 
@@ -211,7 +216,8 @@ public class HttpApplicationServlet extends HttpServlet {
 
     private UserSession getUserSession(HttpServletRequest request) throws UnifyException {
         HttpUserSession userSession = null;
-        if (RemoteCallClient.USER_AGENT_ID.equalsIgnoreCase(request.getHeader("User-Agent"))) {
+        if (RequestHeaderConstants.REMOTECALL
+                .equals(request.getHeader(RequestHeaderConstants.REMOTECALL_HEADER_NAME))) {
             // Handle remote call
             HttpSession httpSession = request.getSession(false);
             if (httpSession != null) {

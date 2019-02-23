@@ -20,17 +20,17 @@ import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Convenient base class for user interface controller.
+ * Convenient base class for unify page controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Singleton(false)
-public abstract class AbstractUserInterfaceController extends AbstractController implements UserInterfaceController {
+public abstract class AbstractUnifyPageController extends AbstractController implements UserInterfaceController {
 
     private boolean readOnly;
 
-    public AbstractUserInterfaceController(boolean secured, boolean readOnly) {
+    public AbstractUnifyPageController(boolean secured, boolean readOnly) {
         super(secured);
         this.readOnly = readOnly;
     }
@@ -41,7 +41,7 @@ public abstract class AbstractUserInterfaceController extends AbstractController
     }
 
     @Override
-    public boolean isUserInterface() {
+    public final boolean isBackUnifyPage() {
         return true;
     }
 

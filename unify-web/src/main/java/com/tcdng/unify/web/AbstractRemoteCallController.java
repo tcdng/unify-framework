@@ -31,12 +31,12 @@ public abstract class AbstractRemoteCallController extends AbstractController im
     }
 
     @Override
-    public ControllerType getType() {
+    public final ControllerType getType() {
         return ControllerType.REMOTECALL_CONTROLLER;
     }
 
     @Override
-    public boolean isUserInterface() {
+    public final boolean isBackUnifyPage() {
         return false;
     }
 }
