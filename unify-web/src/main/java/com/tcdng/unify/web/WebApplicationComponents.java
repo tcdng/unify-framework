@@ -29,7 +29,7 @@ public interface WebApplicationComponents {
 
     String APPLICATION_CONTROLLERMANAGER = "application-controllermanager";
 
-    String APPLICATION_HTTPCONTROLLER = "application-httpcontroller";
+    String APPLICATION_HTTPREQUESTHANDLER = "application-httprequesthandler";
 
     String APPLICATION_HTTPCLIENT = "application-httpclient";
 

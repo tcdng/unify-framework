@@ -13,24 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core;
+
+package com.tcdng.unify.web;
 
 /**
- * A centralized application request handler component.
+ * Client request type enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ApplicationController extends UnifyComponent {
-    /**
-     * Executes control.
-     * 
-     * @param requestObject
-     *            the request object
-     * @param responseObject
-     *            the response object
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void execute(Object requestObject, Object responseObject) throws UnifyException;
+public enum ClientRequestType {
+    GET,
+    HEAD,
+    POST,
+    PUT,
+    DELETE,
+    OPTIONS,
+    TRACE
 }

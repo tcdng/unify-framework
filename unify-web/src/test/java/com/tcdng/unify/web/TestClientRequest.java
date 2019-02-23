@@ -38,6 +38,11 @@ public class TestClientRequest implements ClientRequest {
     }
 
     @Override
+    public ClientRequestType getType() {
+        return ClientRequestType.GET;
+    }
+
+    @Override
     public String getPath() {
         return path;
     }

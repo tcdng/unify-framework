@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.web.ClientRequest;
+import com.tcdng.unify.web.ClientRequestType;
 
 /**
  * HTTP client request.
@@ -29,16 +30,25 @@ import com.tcdng.unify.web.ClientRequest;
  */
 public class HttpClientRequest implements ClientRequest {
 
+    private HttpRequestMethodType methodType;
+
     private String path;
 
     private Charset charset;
 
     private Map<String, Object> parameters;
 
-    public HttpClientRequest(String path, Charset charset, Map<String, Object> parameters) {
+    public HttpClientRequest(HttpRequestMethodType methodType, String path, Charset charset,
+            Map<String, Object> parameters) {
         this.path = path;
         this.charset = charset;
         this.parameters = parameters;
+        this.methodType = methodType;
+    }
+
+    @Override
+    public ClientRequestType getType() {
+        return methodType.clientRequestType();
     }
 
     @Override

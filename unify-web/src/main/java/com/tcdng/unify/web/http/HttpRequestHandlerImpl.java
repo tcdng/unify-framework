@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationController;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -51,13 +50,13 @@ import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 
 /**
- * Default HTTP application controller.
+ * Default application HTTP request handler.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(WebApplicationComponents.APPLICATION_HTTPCONTROLLER)
-public class HttpApplicationController extends AbstractUnifyComponent implements ApplicationController {
+@Component(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER)
+public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements HttpRequestHandler {
 
     private static final String CONTENT_DISPOSITION = "content-disposition";
     private static final String DISPOSITION_FILENAME = "filename";
@@ -72,7 +71,8 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
     private List<String> remoteViewerList;
 
     @Override
-    public void execute(Object requestObject, Object responseObject) throws UnifyException {
+    public void handleRequest(HttpRequestMethodType methodType, Object requestObject, Object responseObject)
+            throws UnifyException {
         HttpServletRequest request = (HttpServletRequest) requestObject;
         String resolvedPath = request.getPathInfo();
         if (resolvedPath != null && resolvedPath.endsWith("/")) {
@@ -90,7 +90,7 @@ public class HttpApplicationController extends AbstractUnifyComponent implements
         }
 
         ClientRequest clientRequest =
-                new HttpClientRequest(resolvedPath, charset, extractRequestParameters(request, charset));
+                new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
         ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
         if (!remoteViewerList.isEmpty()) {

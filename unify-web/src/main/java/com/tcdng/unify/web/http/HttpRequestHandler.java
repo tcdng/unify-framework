@@ -13,45 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.http;
 
-import java.nio.charset.Charset;
-import java.util.Set;
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * A client request.
+ * HTTP request handler component.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ClientRequest {
+public interface HttpRequestHandler extends UnifyComponent {
 
     /**
-     * Returns the client request type.
-     */
-    ClientRequestType getType();
-    
-    /**
-     * Returns the request path
-     */
-    String getPath();
-
-    /**
-     * Returns the request character set.
-     */
-    Charset getCharset();
-
-    /**
-     * Returns request parameter names.
-     */
-    Set<String> getParameterNames();
-
-    /**
-     * Returns a request parameter
+     * Handles HTTP request.
      * 
-     * @param name
-     *            the parameter name
-     * @return object if found otherwise false
+     * @param methodType
+     *            the request method type
+     * @param requestObject
+     *            the request object
+     * @param responseObject
+     *            the response object
+     * @throws UnifyException
+     *             if an error occurs
      */
-    Object getParameter(String name);
+    void handleRequest(HttpRequestMethodType methodType, Object requestObject, Object responseObject) throws UnifyException;
 }
