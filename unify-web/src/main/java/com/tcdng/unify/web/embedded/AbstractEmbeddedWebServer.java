@@ -13,23 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+
+package com.tcdng.unify.web.embedded;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.ApplicationController;
 import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.system.UserSessionManager;
+import com.tcdng.unify.web.WebApplicationComponents;
+import com.tcdng.unify.web.http.AbstractHttpWebInterface;
 import com.tcdng.unify.web.http.HttpApplicationServlet;
+import com.tcdng.unify.web.http.HttpRequestHandler;
 
 /**
- * Abstract base for a HTTP interface.
+ * Abstract base class for embedded web servers.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractHttpInterface extends AbstractUnifyWebInterface {
+public abstract class AbstractEmbeddedWebServer extends AbstractHttpWebInterface implements EmbeddedWebServer {
 
     @Configurable("8080")
     private int httpPort;
@@ -58,10 +61,10 @@ public abstract class AbstractHttpInterface extends AbstractUnifyWebInterface {
     }
 
     protected HttpApplicationServlet createHttpServlet() throws UnifyException {
-        HttpApplicationServlet httpApplicationServlet = new HttpApplicationServlet(true); // Standalone
+        HttpApplicationServlet httpApplicationServlet = new HttpApplicationServlet(true); // Embedded
         httpApplicationServlet.setup(this,
                 (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER),
-                (ApplicationController) getComponent(WebApplicationComponents.APPLICATION_HTTPCONTROLLER),
+                (HttpRequestHandler) getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER),
                 (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER));
         return httpApplicationServlet;
     }
@@ -89,5 +92,4 @@ public abstract class AbstractHttpInterface extends AbstractUnifyWebInterface {
     protected int getMultipartFileSizeThreshold() {
         return multipartFileSizeThreshold;
     }
-
 }

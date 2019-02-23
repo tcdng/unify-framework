@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.ApplicationController;
 import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyContainer;
 import com.tcdng.unify.core.UnifyContainerConfig;
@@ -72,27 +71,27 @@ public class HttpApplicationServlet extends HttpServlet {
 
     private RequestContextManager requestContextManager;
 
-    private ApplicationController applicationController;
+    private HttpRequestHandler httpRequestHandler;
 
     private UserSessionManager userSessionManager;
 
     private String contextPath;
 
-    private boolean standalone;
+    private boolean embedded;
 
     public HttpApplicationServlet() {
         this(false);
     }
 
-    public HttpApplicationServlet(boolean standalone) {
-        this.standalone = standalone;
+    public HttpApplicationServlet(boolean embedded) {
+        this.embedded = embedded;
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        if (!standalone) {
+        if (!embedded) {
             ServletContext servletContext = config.getServletContext();
             String workingFolder = servletContext.getRealPath("");
             String configFilename = config.getInitParameter("application-config-file");
@@ -123,8 +122,8 @@ public class HttpApplicationServlet extends HttpServlet {
                 unifyContainer.startup(uce, ucc);
                 requestContextManager = (RequestContextManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-                applicationController = (ApplicationController) unifyContainer
-                        .getComponent(WebApplicationComponents.APPLICATION_HTTPCONTROLLER);
+                httpRequestHandler = (HttpRequestHandler) unifyContainer
+                        .getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER);
                 userSessionManager = (UserSessionManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
             } catch (Exception e) {
@@ -147,10 +146,10 @@ public class HttpApplicationServlet extends HttpServlet {
     }
 
     public void setup(UnifyWebInterface webInterface, RequestContextManager requestContextManager,
-            ApplicationController applicationController, UserSessionManager userSessionManager) {
+            HttpRequestHandler applicationController, UserSessionManager userSessionManager) {
         this.webInterface = webInterface;
         this.requestContextManager = requestContextManager;
-        this.applicationController = applicationController;
+        this.httpRequestHandler = applicationController;
         this.userSessionManager = userSessionManager;
         contextPath = webInterface.getContextPath();
     }
@@ -158,16 +157,46 @@ public class HttpApplicationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        doRequestMethod(HttpRequestMethodType.GET, request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!standalone || webInterface.isServicingRequests()) {
+        doRequestMethod(HttpRequestMethodType.POST, request, response);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.DELETE, request, response);
+    }
+
+    @Override
+    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.HEAD, request, response);
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.OPTIONS, request, response);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.PUT, request, response);
+    }
+
+    @Override
+    protected void doTrace(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.TRACE, request, response);
+    }
+
+    private void doRequestMethod(HttpRequestMethodType type, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if (!embedded || webInterface.isServicingRequests()) {
             try {
                 requestContextManager.loadRequestContext(getUserSession(request), request.getServletPath());
-                applicationController.execute(request, response);
+                httpRequestHandler.handleRequest(type, request, response);
             } catch (Exception e) {
                 throw new ServletException(e);
             } finally {

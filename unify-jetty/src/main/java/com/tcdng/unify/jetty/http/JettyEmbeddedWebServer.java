@@ -28,22 +28,22 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.net.NetworkSchemeType;
 import com.tcdng.unify.jetty.JettyApplicationComponents;
-import com.tcdng.unify.web.AbstractHttpInterface;
+import com.tcdng.unify.web.embedded.AbstractEmbeddedWebServer;
 
 /**
- * Jetty HTTP web interface implementation.
+ * Jetty embedded web server.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(JettyApplicationComponents.JETTY_HTTPINTERFACE)
-public class JettyHttpInterface extends AbstractHttpInterface {
+@Component(JettyApplicationComponents.JETTY_EMBEDDEDWEBSERVER)
+public class JettyEmbeddedWebServer extends AbstractEmbeddedWebServer {
 
     private Server httpServer;
 
     private NetworkSchemeType networkSchemeType;
 
-    public JettyHttpInterface() {
+    public JettyEmbeddedWebServer() {
         networkSchemeType = NetworkSchemeType.HTTP;
     }
 

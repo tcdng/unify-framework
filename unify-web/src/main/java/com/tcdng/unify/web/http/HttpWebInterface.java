@@ -13,15 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.jetty;
+
+package com.tcdng.unify.web.http;
+
+import com.tcdng.unify.web.UnifyWebInterface;
 
 /**
- * Jetty application components.
+ * HTTP web interface.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface JettyApplicationComponents {
+public interface HttpWebInterface extends UnifyWebInterface {
 
-    String JETTY_EMBEDDEDWEBSERVER = "jetty-embeddedwebserver";
 }
