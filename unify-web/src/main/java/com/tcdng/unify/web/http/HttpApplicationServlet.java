@@ -307,7 +307,8 @@ public class HttpApplicationServlet extends HttpServlet {
 
     private UserPlatform detectRequestPlatform(HttpServletRequest request) {
         UserPlatform platform = UserPlatform.DEFAULT;
-        if (request.getHeader("User-Agent").indexOf("Mobile") >= 0) {
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent != null && userAgent.indexOf("Mobile") >= 0) {
             platform = UserPlatform.MOBILE;
         }
         return platform;
