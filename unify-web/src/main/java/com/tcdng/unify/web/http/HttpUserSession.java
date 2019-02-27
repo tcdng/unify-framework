@@ -70,10 +70,7 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     @Override
     public void valueBound(HttpSessionBindingEvent event) {
-        try {
-            userSessionManager.addUserSession(this);
-        } catch (UnifyException e) {
-        }
+
     }
 
     @Override

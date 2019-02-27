@@ -32,7 +32,6 @@ import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
@@ -42,7 +41,6 @@ import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.system.entities.UserSessionTracking;
 import com.tcdng.unify.core.system.entities.UserSessionTrackingQuery;
 import com.tcdng.unify.core.task.TaskMonitor;
-import com.tcdng.unify.core.upl.UplComponentWriterManager;
 import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
@@ -54,9 +52,6 @@ import com.tcdng.unify.core.util.CalendarUtils;
 @Transactional
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)
 public class UserSessionManagerImpl extends AbstractBusinessService implements UserSessionManager {
-
-    @Configurable
-    private UplComponentWriterManager uplComponentWriterManager;
 
     private Map<String, UserSession> userSessions;
 
@@ -100,7 +95,6 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         userSessionData.setCreateTime(createTime);
         userSessionData.setLastAccessTime(createTime);
         db().create(userSessionData);
-        setRequiredAttributes(sessionContext);
         userSessions.put(sessionContext.getId(), userSession);
     }
 
@@ -234,13 +228,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
                     new Update().add("userLoginId", null).add("userName", null));
             sessionContext.setUserToken(null);
             sessionContext.clearAttributes();
-            setRequiredAttributes(sessionContext);
         }
-    }
-
-    private void setRequiredAttributes(SessionContext sessionContext) throws UnifyException {
-        sessionContext.setAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
-                uplComponentWriterManager.getWriters(sessionContext.getPlatform()));
     }
 
     private class LocalUserSession implements UserSession {
