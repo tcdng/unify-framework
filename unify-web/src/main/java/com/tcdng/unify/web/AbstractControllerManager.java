@@ -181,6 +181,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         };
 
         skipOnPopulateSet.add(RequestParameterConstants.DOCUMENT);
+        skipOnPopulateSet.add(RequestParameterConstants.PAGE_INDICATOR);
         skipOnPopulateSet.add(RequestParameterConstants.TARGET_VALUE);
         skipOnPopulateSet.add(RequestParameterConstants.VALIDATION_ACTION);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSG);

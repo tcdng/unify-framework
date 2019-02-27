@@ -33,11 +33,13 @@ import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyContainer;
 import com.tcdng.unify.core.UnifyContainerConfig;
 import com.tcdng.unify.core.UnifyContainerEnvironment;
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.system.UserSessionManager;
+import com.tcdng.unify.core.upl.UplComponentWriterManager;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
@@ -45,7 +47,6 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
 import com.tcdng.unify.web.UnifyWebInterface;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.constant.RequestHeaderConstants;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.util.WebTypeUtils;
@@ -74,6 +75,8 @@ public class HttpApplicationServlet extends HttpServlet {
     private HttpRequestHandler httpRequestHandler;
 
     private UserSessionManager userSessionManager;
+
+    private UplComponentWriterManager uplComponentWriterManager;
 
     private String contextPath;
 
@@ -126,6 +129,8 @@ public class HttpApplicationServlet extends HttpServlet {
                         .getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER);
                 userSessionManager = (UserSessionManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
+                uplComponentWriterManager = (UplComponentWriterManager) unifyContainer
+                        .getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
             } catch (Exception e) {
                 if (unifyContainer != null && unifyContainer.isStarted()) {
                     unifyContainer.shutdown();
@@ -146,11 +151,13 @@ public class HttpApplicationServlet extends HttpServlet {
     }
 
     public void setup(UnifyWebInterface webInterface, RequestContextManager requestContextManager,
-            HttpRequestHandler applicationController, UserSessionManager userSessionManager) {
+            HttpRequestHandler applicationController, UserSessionManager userSessionManager,
+            UplComponentWriterManager uplComponentWriterManager) {
         this.webInterface = webInterface;
         this.requestContextManager = requestContextManager;
         this.httpRequestHandler = applicationController;
         this.userSessionManager = userSessionManager;
+        this.uplComponentWriterManager = uplComponentWriterManager;
         contextPath = webInterface.getContextPath();
     }
 
@@ -216,9 +223,8 @@ public class HttpApplicationServlet extends HttpServlet {
 
     private UserSession getUserSession(HttpServletRequest request) throws UnifyException {
         HttpUserSession userSession = null;
-        if (RequestHeaderConstants.REMOTECALL
-                .equals(request.getHeader(RequestHeaderConstants.REMOTECALL_HEADER_NAME))) {
-            // Handle remote call
+        if (StringUtils.isBlank(request.getParameter(RequestParameterConstants.PAGE_INDICATOR))) {
+            // Handle sessionless remote call
             HttpSession httpSession = request.getSession(false);
             if (httpSession != null) {
                 httpSession.invalidate();
@@ -226,7 +232,7 @@ public class HttpApplicationServlet extends HttpServlet {
             // Create single use session object
             userSession = createHttpUserSession(request);
         } else {
-            if (!StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+            if (!StringUtils.isBlank(request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
                 // Handle remote view
                 HttpSession httpSession = request.getSession(false);
                 if (httpSession != null) {
@@ -301,6 +307,8 @@ public class HttpApplicationServlet extends HttpServlet {
         HttpUserSession userSession = new HttpUserSession(uriBase, contextPath, request.getRemoteHost(),
                 remoteIpAddress, request.getRemoteUser(),
                 (String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER), platform);
+        userSession.getSessionContext().setAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
+                uplComponentWriterManager.getWriters(platform));
         userSession.setTransient(userSessionManager);
         return userSession;
     }
