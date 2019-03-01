@@ -203,9 +203,9 @@ public class TreeExplorerWriter extends AbstractControlWriter {
             writer.write("<span class=\"titem\">");
             if (isTreePolicy) {
                 writer.writeWithHtmlEscape(
-                        tree.getTreePolicy().getTreeItemCaption(treeItemCategory, treeItem.getObject()));
+                        tree.getTreePolicy().getTreeItemCaption(treeItemCategory, treeItem.getContent()));
             } else {
-                writer.writeWithHtmlEscape(String.valueOf(treeItem.getObject()));
+                writer.writeWithHtmlEscape(String.valueOf(treeItem.getContent()));
             }
             writer.write("</span></span>");
 

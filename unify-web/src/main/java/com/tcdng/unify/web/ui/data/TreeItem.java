@@ -26,15 +26,15 @@ public class TreeItem {
 
     private TreeItemCategory category;
 
-    private Object object;
+    private Object content;
 
     private String menuMode;
 
     private boolean expanded;
 
-    public TreeItem(TreeItemCategory category, Object object) {
+    public TreeItem(TreeItemCategory category, Object content) {
         this.category = category;
-        this.object = object;
+        this.content = content;
     }
 
     public TreeItem() {
@@ -49,8 +49,8 @@ public class TreeItem {
         return category.getLevel();
     }
 
-    public Object getObject() {
-        return object;
+    public Object getContent() {
+        return content;
     }
 
     public String getMenuMode() {
