@@ -32,7 +32,6 @@ import com.tcdng.unify.core.stream.ObjectStreamer;
 import com.tcdng.unify.core.stream.XMLObjectStreamer;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.NetworkUtils;
-import com.tcdng.unify.web.constant.RequestHeaderConstants;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryPathConstants;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryRemoteCallCodeConstants;
 import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallParams;
@@ -140,7 +139,6 @@ public class RemoteCallClientImpl extends AbstractUnifyComponent implements Remo
             conn.setRequestMethod("POST");
             conn.setUseCaches(false);
             conn.setRequestProperty("Content-Type", remoteCallSetup.getFormat().getContentType());
-            conn.setRequestProperty(RequestHeaderConstants.REMOTECALL_HEADER_NAME, RequestHeaderConstants.REMOTECALL);
             conn.setRequestProperty("Accept-Charset", charset.name());
             conn.connect();
 
