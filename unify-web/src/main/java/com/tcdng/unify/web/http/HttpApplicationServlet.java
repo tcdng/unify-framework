@@ -64,7 +64,7 @@ public class HttpApplicationServlet extends HttpServlet {
     /** The serial version ID */
     private static final long serialVersionUID = 3971544226497014269L;
 
-    private static final String CONFIGURATION_FILE = "config/unify.xml";
+    private static final String CONFIGURATION_FILE = "conf/unify.xml";
 
     private UnifyContainer unifyContainer;
 
