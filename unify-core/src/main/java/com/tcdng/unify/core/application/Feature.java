@@ -21,13 +21,13 @@ import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.database.AbstractEntity;
 
 /**
- * Feature data.
+ * Feature entity.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table("FEATURE")
-public class FeatureData extends AbstractEntity {
+@Table("UNFEATURE")
+public class Feature extends AbstractEntity {
 
     @Id(name = "FEATURE_CD", length = 40)
     private String code;

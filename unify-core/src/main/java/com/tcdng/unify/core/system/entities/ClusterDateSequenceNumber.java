@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table(name = "CLUSTERDATESEQ", uniqueConstraints = { @UniqueConstraint({ "sequenceName", "sequenceDate" }) })
+@Table(name = "UNCLUSTERDATESEQ", uniqueConstraints = { @UniqueConstraint({ "sequenceName", "sequenceDate" }) })
 public class ClusterDateSequenceNumber extends AbstractSystemSequencedEntity {
 
     @Column(name = "SEQUENCE_NM", length = 256)

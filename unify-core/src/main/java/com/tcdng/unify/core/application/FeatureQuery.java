@@ -23,10 +23,10 @@ import com.tcdng.unify.core.database.Query;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class FeatureQuery extends Query<FeatureData> {
+public class FeatureQuery extends Query<Feature> {
 
     public FeatureQuery() {
-        super(FeatureData.class);
+        super(Feature.class);
     }
 
     public FeatureQuery code(String code) {

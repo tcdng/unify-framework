@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table("CLUSTERCOMMAND")
+@Table("UNCLUSTERCOMMAND")
 public class ClusterCommand extends AbstractSystemSequencedEntity {
 
     @ForeignKey(ClusterNode.class)

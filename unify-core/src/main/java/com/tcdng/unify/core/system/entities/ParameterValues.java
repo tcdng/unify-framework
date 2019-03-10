@@ -30,7 +30,7 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table(name = "PARAMVALUES", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "instTypeName", "instId" }) })
+@Table(name = "UNPARAMVALUES", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "instTypeName", "instId" }) })
 public class ParameterValues extends AbstractSystemSequencedEntity {
 
     @ForeignKey(ParametersDef.class)
