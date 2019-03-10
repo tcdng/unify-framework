@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table("USERSESSION")
+@Table("UNUSERSESSION")
 public class UserSessionTracking extends AbstractSystemEntity {
 
     @Id(length = 64)

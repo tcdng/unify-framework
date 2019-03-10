@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table("CLUSTERLOCK")
+@Table("UNCLUSTERLOCK")
 public class ClusterLock extends AbstractSystemEntity {
 
     @Id(length = 128)

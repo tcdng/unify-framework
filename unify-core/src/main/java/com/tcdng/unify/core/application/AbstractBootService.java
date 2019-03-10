@@ -66,7 +66,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
             if (grabClusterMasterLock()) {
                 logInfo("Checking application version information...");
-                FeatureData featureData = getFeatureData("deploymentVersion", "0.0", true);
+                Feature featureData = getFeatureData("deploymentVersion", "0.0", true);
                 String lastDeploymentVersion = featureData.getValue();
                 String versionToDeploy = getDeploymentVersion();
 
@@ -165,10 +165,10 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
         }
     }
 
-    private FeatureData getFeatureData(String code, String value, boolean createNew) throws UnifyException {
-        FeatureData FeatureData = db().find(new FeatureQuery().code(code));
+    private Feature getFeatureData(String code, String value, boolean createNew) throws UnifyException {
+        Feature FeatureData = db().find(new FeatureQuery().code(code));
         if (FeatureData == null) {
-            FeatureData = new FeatureData();
+            FeatureData = new Feature();
             FeatureData.setCode(code);
             FeatureData.setValue(value);
             db().create(FeatureData);

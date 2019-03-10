@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table(name = "PARAMETERSDEF", uniqueConstraints = { @UniqueConstraint({ "typeName" }) })
+@Table(name = "UNPARAMETERSDEF", uniqueConstraints = { @UniqueConstraint({ "typeName" }) })
 public class ParametersDef extends AbstractSystemSequencedEntity {
 
     @Column(name = "PARAMETERSDEF_NM", length = 64)

@@ -29,7 +29,7 @@ import com.tcdng.unify.core.data.Listable;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table("CLUSTERNODE")
+@Table("UNCLUSTERNODE")
 public class ClusterNode extends AbstractSystemEntity implements Listable {
 
     @Id(length = 40)
