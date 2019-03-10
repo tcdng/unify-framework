@@ -31,5 +31,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Tooling {
 
-    String value();
+    String name();
+    
+    String description();
 }

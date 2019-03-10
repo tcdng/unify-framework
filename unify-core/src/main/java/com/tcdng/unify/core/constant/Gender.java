@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Tooling("Gender List")
+@Tooling(name="genderEnum", description="Gender List")
 @StaticList("genderlist")
 public enum Gender implements EnumConst {
 
