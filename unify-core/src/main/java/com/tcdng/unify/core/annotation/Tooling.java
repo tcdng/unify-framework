@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Annotation that indicates a type is available for tooling.
  * 
@@ -31,7 +33,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Tooling {
 
-    String name();
+    String name() default AnnotationConstants.NONE;
     
     String description();
     
