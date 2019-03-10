@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Tooling;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Tooling("Default Two-way Bytes Cryptograph")
+@Tooling(name = "twoWayBytesCrypt", description = "Default Two-way Bytes Cryptograph")
 @Component(ApplicationComponents.APPLICATION_BYTEARRAYCRYPTOGRAPH)
 public class TwoWayByteArrayCryptographImpl extends AbstractTwoWayCryptograph implements TwoWayByteArrayCryptograph {
 

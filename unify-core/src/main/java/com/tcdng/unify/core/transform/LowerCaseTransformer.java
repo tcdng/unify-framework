@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Tooling;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Tooling("Lower Case Transformer")
+@Tooling(name = "lowerCaseTrans", description = "Lower Case Transformer")
 @Component("lowercase-transformer")
 public class LowerCaseTransformer extends AbstractStringTransformer {
 

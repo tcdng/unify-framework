@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.constant;
 
 import com.tcdng.unify.core.annotation.StaticList;
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
@@ -24,6 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(name="reqTypeEnum", description = "Requirement Type List")
 @StaticList("requirementtypelist")
 public enum RequirementType implements EnumConst {
 

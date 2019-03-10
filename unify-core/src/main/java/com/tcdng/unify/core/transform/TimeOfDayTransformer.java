@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Tooling("Time-Of-Day Transformer")
+@Tooling(name = "timeOfDayTrans", description = "Time-Of-Day Transformer")
 @Component("timeofday-transformer")
 public class TimeOfDayTransformer extends AbstractUnifyComponent implements Transformer<Date, Date> {
 
