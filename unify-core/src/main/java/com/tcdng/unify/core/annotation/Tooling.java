@@ -34,4 +34,6 @@ public @interface Tooling {
     String name();
     
     String description();
+    
+    boolean guarded() default false;
 }
