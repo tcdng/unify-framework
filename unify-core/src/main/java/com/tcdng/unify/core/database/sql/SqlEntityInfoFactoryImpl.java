@@ -67,6 +67,8 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(ApplicationComponents.APPLICATION_SQLENTITYINFOFACTORY)
 public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
+    private static final String ENUM_TABLE_PREFIX = "RF";
+    
     @Configurable("true")
     private boolean sqlOrderColumns;
 
@@ -98,7 +100,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
 
                 if (EnumConst.class.isAssignableFrom(entityClass)) {
-                    String tableName = SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
+                    String tableName = ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
 
                     SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
                     Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
