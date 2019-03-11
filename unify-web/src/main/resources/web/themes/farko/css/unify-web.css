@@ -202,7 +202,7 @@ z-index:400;}
 .ui-fixedcontentpanel {}
 .ui-fixedcontentpanel .fcphint {position: relative; top: 2px; height:0px; overflow-y:visible; width: 100%; z-index:100;}
 .ui-fixedcontentpanel .fcpbusy {display: none; position: absolute; padding-top: 4px; padding-left: 4px; z-index:101;}
-.ui-fixedcontentpanel .fcpbusy .fcpimage {width:48px; border: 2px solid #606060; background-color:#E0E0E0;}
+.ui-fixedcontentpanel .fcpbusy .fcpimage {width:124px;}
 
 /** Form panel */
 .ui-formpanel {}
