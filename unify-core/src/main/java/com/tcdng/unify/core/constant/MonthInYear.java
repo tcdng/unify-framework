@@ -19,7 +19,7 @@ import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
-@Tooling(name="monthInYearEnum", description = "Month in Year List")
+@Tooling(description = "Month in Year")
 @StaticList("staticmonthinyearlist")
 public enum MonthInYear implements EnumConst {
 

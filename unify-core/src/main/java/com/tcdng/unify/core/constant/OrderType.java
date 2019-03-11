@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Tooling(name="orderEnum", description = "Order List")
+@Tooling(description = "Order")
 @StaticList("orderlist")
 public enum OrderType implements EnumConst {
 

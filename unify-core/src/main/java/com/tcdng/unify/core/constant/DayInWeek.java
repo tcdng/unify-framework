@@ -19,7 +19,7 @@ import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
-@Tooling(name = "dayInWeekEnum", description = "Day in Week List")
+@Tooling(description = "Day in Week")
 @StaticList("staticdayinweeklist")
 public enum DayInWeek implements EnumConst {
 

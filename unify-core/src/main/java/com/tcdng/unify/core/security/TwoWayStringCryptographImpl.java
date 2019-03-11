@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Tooling;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Tooling(name = "twoWayStringCrypt", description = "Default Two-way String Cryptograph")
+@Tooling(description = "Default Two-way String Cryptograph")
 @Component(name = "twoway-stringcryptograph", description = "$m{twowaycryptograph.default}")
 public class TwoWayStringCryptographImpl extends AbstractTwoWayCryptograph implements TwoWayStringCryptograph {
 

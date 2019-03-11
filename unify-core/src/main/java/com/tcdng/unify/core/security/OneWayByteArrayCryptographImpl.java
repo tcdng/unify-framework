@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Tooling;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Tooling(name = "oneWayBytesCrypt", description = "Default One-way Bytes Cryptograph")
+@Tooling(description = "Default One-way Bytes Cryptograph")
 @Component("oneway-bytearraycryptograph")
 public class OneWayByteArrayCryptographImpl extends AbstractOneWayCryptograph implements OneWayByteArrayCryptograph {
 

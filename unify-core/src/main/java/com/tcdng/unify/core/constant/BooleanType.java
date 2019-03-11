@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @version 1.0
  */
-@Tooling(name="booleanEnum", description = "Boolean List")
+@Tooling(description = "Boolean")
 @StaticList("booleanlist")
 public enum BooleanType implements EnumConst {
 
