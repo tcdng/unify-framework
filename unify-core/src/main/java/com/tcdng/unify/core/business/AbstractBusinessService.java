@@ -94,12 +94,14 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 
     protected void addTaskMonitorSessionMessage(TaskMonitor taskMonitor, String messageKey, Object... params)
             throws UnifyException {
-        addTaskMessage(taskMonitor, getSessionMessage(messageKey, params));
+        if (taskMonitor != null) {
+            taskMonitor.addMessage(resolveSessionMessage(messageKey, params));
+        }
     }
 
     protected void addTaskMessage(TaskMonitor taskMonitor, String message) throws UnifyException {
         if (taskMonitor != null) {
-            taskMonitor.addMessage(message);
+            taskMonitor.addMessage(resolveSessionMessage(message));
         }
     }
 
