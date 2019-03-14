@@ -26,6 +26,7 @@ import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
 import com.tcdng.unify.core.database.sql.SqlUtils;
 
@@ -58,6 +59,21 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     @Override
     public SqlShutdownHook getShutdownHook() throws UnifyException {
         return sqlShutdownHook;
+    }
+
+    @Override
+    public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("ADD COLUMN ");
+        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+        return sb.toString();
     }
 
     @Override
