@@ -196,6 +196,11 @@ public class TableWriter extends AbstractControlWriter {
             writer.write(",\"pNaviStop\":").write(table.getNaviPageStop());
         }
 
+        if (table.getPageItemCount() <= 0) {
+            writer.write(",\"pConDepList\":");
+            writer.writeJsonStringArray(table.getContentDependentList());
+        }
+
         writer.write(",\"pMultiSel\":").write(table.isMultiSelect());
         if (table.isMultiSelect()) {
             writer.write(",\"pSelAllId\":\"").write(table.getSelectAllId()).write('"');

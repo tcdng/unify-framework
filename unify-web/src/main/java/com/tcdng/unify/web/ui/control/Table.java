@@ -43,6 +43,7 @@ import com.tcdng.unify.web.ui.EventHandler;
 @Component("ui-table")
 @UplAttributes({ @UplAttribute(name = "bodyStyle", type = String.class),
         @UplAttribute(name = "selectBinding", type = String.class),
+        @UplAttribute(name = "contentDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "multiSelDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "pagination", type = boolean.class),
@@ -105,6 +106,8 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     private int visibleColumnCount;
 
+    private List<String> contentDependentList;
+    
     private List<String> selDependentList;
 
     private List<String> multiSelDependentList;
@@ -201,6 +204,18 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public String getDataGroupId() {
         return dataGroupId;
+    }
+
+    public List<String> getContentDependentList() throws UnifyException {
+        if (contentDependentList == null) {
+            UplElementReferences uer = getUplAttribute(UplElementReferences.class, "contentDependentList");
+            if (uer != null) {
+                contentDependentList = getPageManager().getPageNames(uer.getLongNames());
+            } else {
+                contentDependentList = Collections.emptyList();
+            }
+        }
+        return contentDependentList;
     }
 
     public List<String> getSelDependentList() throws UnifyException {

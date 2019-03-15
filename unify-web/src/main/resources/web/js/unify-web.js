@@ -2336,6 +2336,10 @@ ux.rigTable = function(rgp) {
 			}
 		}
 	}
+	
+	if (rgp.pItemCount <= 0) {
+		ux.setDisabledById(rgp.pConDepList, true);
+	}
 }
 
 ux.tableShiftClickHandler = function(uEv) {
