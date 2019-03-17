@@ -37,7 +37,7 @@ public class DoublePolicy implements SqlDataTypePolicy {
 
     @Override
     public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (StringUtils.isBlank(defaultVal)) {
+        if (!StringUtils.isBlank(defaultVal)) {
             sb.append(" DEFAULT ").append(Double.valueOf(defaultVal));
         }
     }

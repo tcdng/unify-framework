@@ -1294,6 +1294,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
         sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
                 sqlFieldSchemaInfo.getScale());
+        
         if (sqlFieldSchemaInfo.isWithDefaultValue()) {
             sqlDataTypePolicy.appendSpecifyDefaultValueSql(sb, sqlFieldSchemaInfo.getFieldType(),
                     sqlFieldSchemaInfo.getDefaultValue());
@@ -1316,6 +1317,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
         sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
                 sqlFieldSchemaInfo.getScale());
+
         if (sqlColumnAlterInfo.isDefaultChange() && sqlFieldSchemaInfo.isWithDefaultValue()) {
             sqlDataTypePolicy.appendSpecifyDefaultValueSql(sb, sqlFieldSchemaInfo.getFieldType(),
                     sqlFieldSchemaInfo.getDefaultValue());

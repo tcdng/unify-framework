@@ -44,7 +44,7 @@ public class EnumConstPolicy implements SqlDataTypePolicy {
     @SuppressWarnings("unchecked")
     @Override
     public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (StringUtils.isBlank(defaultVal)) {
+        if (!StringUtils.isBlank(defaultVal)) {
             EnumConst val = EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) defaultVal);
             if (val == null) {
                 val = EnumUtils.fromName((Class<? extends EnumConst>) type, (String) defaultVal);
