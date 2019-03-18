@@ -5,7 +5,8 @@
 !ui-searchboxpanel  layout:$d{!ui-vertical}
     components:$c{titleBar searchFilterPanel searchResultTablePanel searchActionPanel}
     cancelSelectPath:$n{/hidePopup} filterCaptionSuffix:$s{:}
-
+    selectBtnCaption:$m{button.select}
+    
 // Title bar
 !ui-titlebar:titleBar caption:$g{captionPanelCaption} components:$c{captionCancelBtn} draggable:true
 !ui-image:captionCancelBtn src:$s{/web/images/cross_white.png} styleClass:$e{tbbutton}
@@ -30,10 +31,10 @@
 // Action panel
 !ui-panel:searchActionPanel layout:$d{!ui-horizontal} components:$c{selOptBtn cancelSelOptBtn}
 
-!ui-button:selOptBtn caption:$m{button.select} eventHandler:$d{!ui-event event:onclick action:$c{selOptAct}}
+!ui-button:selOptBtn caption:$f{selectBtnCaption} eventHandler:$d{!ui-event event:onclick action:$c{selOptAct}}
 !ui-button:cancelSelOptBtn caption:$m{button.cancel} eventHandler:$d{!ui-event event:onclick action:$c{cancelSelOptAct}}
 
 //Actions
 !ui-postcommand:searchAct components:$c{searchFilterPanel} refresh:$c{searchResultTablePanel}
-!ui-post:selOptAct path:$g{searchSelectPath}  components:$c{searchResultTablePanel}
+!ui-post:selOptAct path:$g{searchSelectPath} components:$c{searchResultTablePanel}
 !ui-post:cancelSelOptAct path:$g{cancelSelectPath}
