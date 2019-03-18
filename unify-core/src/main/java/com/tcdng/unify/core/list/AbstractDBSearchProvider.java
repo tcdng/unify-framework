@@ -72,7 +72,9 @@ public abstract class AbstractDBSearchProvider extends AbstractSearchProviderLis
 
         String filter = params.getFilter();
         if (!StringUtils.isBlank(filter)) {
-            return genericService.listAll(new Query(recordType).like(descProperty, filter).limit(searchLimit));
+            Query<?> query = new Query(recordType).like(descProperty, filter).limit(searchLimit);
+            addQueryFilters(query);
+            return genericService.listAll(query);
         }
 
         return Collections.emptyList();
@@ -88,4 +90,7 @@ public abstract class AbstractDBSearchProvider extends AbstractSearchProviderLis
         return descProperty;
     }
 
+    protected void addQueryFilters(Query<?> query) throws UnifyException {
+
+    }
 }
