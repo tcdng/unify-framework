@@ -6,10 +6,11 @@
     components:$c{titleBar searchFilterPanel searchResultTablePanel searchActionPanel}
     cancelSelectPath:$n{/hidePopup} filterCaptionSuffix:$s{:}
     selectBtnCaption:$m{button.select}
+    searchResultTableBodyStyle:$s{height:320px;}
     
 // Title bar
 !ui-titlebar:titleBar caption:$g{captionPanelCaption} components:$c{captionCancelBtn} draggable:true
-!ui-image:captionCancelBtn src:$s{/web/images/cross_white.png} styleClass:$e{tbbutton}
+!ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
      eventHandler:$d{!ui-event event:onclick action:$c{cancelSelOptAct}}
 
 // Filter panel
@@ -22,7 +23,7 @@
 
 // Search result panel
 !ui-tablepanel:searchResultTablePanel layout:$d{!ui-vertical style:$s{table-layout:fixed;width:100%;}}
-    tableBodyStyle:$s{height:320px;}
+    tableBodyStyle:$f{searchResultTableBodyStyle}
     tableSerialNumbers:true tableBinding:resultList tableColumnList:$g{tableColumnList}
     tableRowSelectable:true  tableSelDependentList:$c{selOptBtn}
     tableWindowed:true tablePagination:false tableMultiSelect:false tableSortable:false
