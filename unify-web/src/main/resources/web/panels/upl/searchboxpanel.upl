@@ -14,7 +14,7 @@
      eventHandler:$d{!ui-event event:onclick action:$c{cancelSelOptAct}}
 
 // Filter panel
-!ui-panel:searchFilterPanel layout:$d{!ui-horizontal showCaption:true captionSuffix:$f{filterCaptionSuffix}}
+!ui-panel:searchFilterPanel layout:$d{!ui-horizontal showCaption:true inlineCaption:true captionSuffix:$f{filterCaptionSuffix}}
     components:$c{filter filterSearchBtn}
 !ui-text:filter caption:$g{filterCaption} binding:filter focus:true
     eventHandler:$d{!ui-event event:onenter action:$c{searchAct}}

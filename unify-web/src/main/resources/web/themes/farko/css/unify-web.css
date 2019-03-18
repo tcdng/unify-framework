@@ -57,7 +57,7 @@ z-index:400;}
 .ui-tabular .lcellmp {display:table-cell; padding: 2px; vertical-align: middle;}
 .ui-tabular .lcellbp {display:table-cell; padding: 2px; vertical-align: bottom;}
 .ui-tabular .llabel {}
-.ui-tabular .llabelinl {float:left;}
+.ui-tabular .llabelinl {float:left;padding-right:4px;}
 .ui-tabular .lcontent {display:block; width:100%; height:100%;}
 .ui-tabular .lcontentinl {float:left; display:block; height:100%;}
 .ui-tabular .llabelblank {}
