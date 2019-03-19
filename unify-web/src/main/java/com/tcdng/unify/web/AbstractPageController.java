@@ -20,6 +20,7 @@ import java.text.MessageFormat;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.task.TaskLauncher;
@@ -28,6 +29,7 @@ import com.tcdng.unify.core.task.TaskSetup;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.DataTransferWidget;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
@@ -205,6 +207,21 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     }
 
     /**
+     * Sets up a file for download in current request context and returns a file
+     * download response.
+     * 
+     * @param downloadFile
+     *            the file download object
+     * @return {@link ResultMappingConstants#DOWNLOAD_FILE}
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String fileDownloadResult(DownloadFile downloadFile) throws UnifyException {
+        setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
+        return ResultMappingConstants.DOWNLOAD_FILE;
+    }
+
+    /**
      * Sets up a response that shows a message box with default info icon and OK
      * button. {@link MessageBox} value of the session attribute
      * {@link JacklynSessionAttributeConstants#MESSAGEBOX}.
@@ -316,8 +333,8 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     protected String launchTaskWithMonitorBox(TaskSetup taskSetup, String caption, String onSuccessPath,
             String onFailurePath) throws UnifyException {
         TaskMonitor taskMonitor = launchTask(taskSetup);
-        TaskMonitorInfo taskMonitorInfo = new TaskMonitorInfo(taskMonitor, resolveSessionMessage(caption), onSuccessPath,
-                onFailurePath);
+        TaskMonitorInfo taskMonitorInfo =
+                new TaskMonitorInfo(taskMonitor, resolveSessionMessage(caption), onSuccessPath, onFailurePath);
         setSessionAttribute(UnifyWebSessionAttributeConstants.TASKMONITORINFO, taskMonitorInfo);
         return "showapplicationtaskmonitor";
     }
