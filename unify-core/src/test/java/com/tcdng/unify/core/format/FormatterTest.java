@@ -18,6 +18,7 @@ package com.tcdng.unify.core.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -81,6 +82,19 @@ public class FormatterTest extends AbstractUnifyComponentTest {
         DateTimeFormatter dateTimeFormatter =
                 (DateTimeFormatter) getUplComponent(Locale.UK, "!datetimeformat style:default");
         dateTimeFormatter.parse("October 19, 2014 44:14:27");
+    }
+
+    @Test
+    public void testMoneyFormatter() throws Exception {
+        MoneyFormatter moneyFormatter = (MoneyFormatter) getUplComponent(Locale.UK, "!moneyformat currency:$s{NGN}");
+        assertEquals("NGN5.50", moneyFormatter.format(BigDecimal.valueOf(5.5)));
+        assertEquals("NGN3,000.00", moneyFormatter.format(BigDecimal.valueOf(3000)));
+        assertEquals("NGN28,900.21", moneyFormatter.format(BigDecimal.valueOf(28900.206)));
+        assertNull(moneyFormatter.format(null));
+
+        assertEquals(BigDecimal.valueOf(1000.25), moneyFormatter.parse("NGN1000.25"));
+        assertEquals(BigDecimal.valueOf(270000).setScale(2), moneyFormatter.parse("NGN270,000.00"));
+        assertNull(moneyFormatter.parse(null));
     }
 
     @Test
