@@ -65,6 +65,30 @@ public final class UplAppender {
         }
     }
 
+    public static void appendColumnsUplAttribute(StringBuilder sb, Integer size) {
+        if (size != null) {
+            sb.append(" columns:").append(size);
+        }
+    }
+
+    public static void appendRowsUplAttribute(StringBuilder sb, Integer size) {
+        if (size != null) {
+            sb.append(" rows:").append(size);
+        }
+    }
+
+    public static void appendMultipleUplAttribute(StringBuilder sb, Boolean multiple) {
+        if (Boolean.TRUE.equals(multiple)) {
+            sb.append(" multiple:true");
+        }
+    }
+
+    public static void appendSelectOnlyUplAttribute(StringBuilder sb, Boolean selectOnly) {
+        if (Boolean.TRUE.equals(selectOnly)) {
+            sb.append(" selectOnly:true");
+        }
+    }
+
     public static void appendUseGroupingUplAttribute(StringBuilder sb, Boolean useGrouping) {
         if (Boolean.TRUE.equals(useGrouping)) {
             sb.append(" useGrouping:true");
