@@ -102,7 +102,7 @@ public final class UplAppender {
     }
 
     public static void appendBlankOptionUplAttribute(StringBuilder sb, String blankOption) {
-        if (!StringUtils.isBlank(blankOption)) {
+        if (blankOption != null) {
             sb.append(" blankOption:$s{").append(blankOption).append("}");
         }
     }
