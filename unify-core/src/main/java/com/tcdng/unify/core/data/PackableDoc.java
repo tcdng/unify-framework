@@ -70,15 +70,17 @@ public class PackableDoc implements Serializable {
         for (FieldConfig fc : config.getFieldConfigs()) {
             if (fc.isArray()) {
                 Class<?> type = fc.getType().getComponentType();
-                int len = fc.getPresetLength();
-                Object arr = Array.newInstance(type, len);
-                if (fc.isComplex()) {
-                    for (int i = 0; i < len; i++) {
-                        Array.set(arr, i, new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
+                if (!byte.class.equals(type)) {
+                    int len = fc.getPresetLength();
+                    Object arr = Array.newInstance(type, len);
+                    if (fc.isComplex()) {
+                        for (int i = 0; i < len; i++) {
+                            Array.set(arr, i, new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
+                        }
                     }
-                }
 
-                values.put(fc.getName(), arr);
+                    values.put(fc.getName(), arr);
+                }
             } else if (fc.isComplex()) {
                 values.put(fc.getName(), new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
             }
