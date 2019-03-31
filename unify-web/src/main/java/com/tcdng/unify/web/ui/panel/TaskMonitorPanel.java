@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.panel;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
@@ -65,12 +66,12 @@ public class TaskMonitorPanel extends AbstractPanel {
             taskDonePath = taskMonitorInfo.getOnFailurePath();
         }
 
-        if (taskDonePath != null) {
+        if (!StringUtils.isBlank(taskDonePath)) {
             setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, taskDonePath);
             setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
+        } else {
+            setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
         }
-
-        setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
     }
 
 }

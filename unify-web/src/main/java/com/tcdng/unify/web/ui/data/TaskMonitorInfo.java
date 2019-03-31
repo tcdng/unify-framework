@@ -49,7 +49,7 @@ public class TaskMonitorInfo {
     public TaskMonitorInfo(TaskMonitor taskMonitor, String caption, String onSuccessPath, String onFailurePath) {
         this.taskMonitor = taskMonitor;
         this.caption = caption;
-        this.onSuccessPath = onFailurePath;
+        this.onSuccessPath = onSuccessPath;
         this.onFailurePath = onFailurePath;
     }
 
