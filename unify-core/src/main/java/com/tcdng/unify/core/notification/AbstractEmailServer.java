@@ -35,6 +35,7 @@ import javax.mail.util.ByteArrayDataSource;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.FileAttachmentType;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.NetworkSecurityType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.security.Authentication;
@@ -205,15 +206,15 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
                 for (EmailAttachment emailAttachment : attachments) {
                     if (emailAttachment.getBlob() != null) {
                         messageBodyPart = new MimeBodyPart();
-                        String contentType = FileAttachmentType.WILDCARD.contentType();
+                        MimeType mimeType = FileAttachmentType.WILDCARD.mimeType();
                         FileAttachmentType type = emailAttachment.getType();
                         if (type != null) {
-                            contentType = type.contentType();
+                            mimeType = type.mimeType();
                         }
 
-                        messageBodyPart.setDataHandler(
-                                new DataHandler(new ByteArrayDataSource(emailAttachment.getBlob(), contentType)));
-                        messageBodyPart.setHeader("Content-Type", contentType);
+                        messageBodyPart.setDataHandler(new DataHandler(
+                                new ByteArrayDataSource(emailAttachment.getBlob(), mimeType.template())));
+                        messageBodyPart.setHeader("Content-Type", mimeType.template());
                         multipart.addBodyPart(messageBodyPart);
                     } else if (emailAttachment.getFile() != null) {
                         messageBodyPart = new MimeBodyPart();

@@ -38,7 +38,7 @@ public class FileAttachmentResponse extends AbstractOpenWindowPageControllerResp
         FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
         String resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
         return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", resourceName,
-                fileAttachmentInfo.getType().contentType(), false);
+                fileAttachmentInfo.getType().mimeType().template(), false);
     }
 
 }

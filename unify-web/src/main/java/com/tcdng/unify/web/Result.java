@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 
 /**
  * Result mapping data object.
@@ -25,21 +25,21 @@ import com.tcdng.unify.core.constant.ContentTypeConstants;
  */
 public class Result {
 
-    private String contentType;
+    private MimeType mimeType;
 
     private PageControllerResponse[] pageControllerResponses;
 
     public Result(PageControllerResponse[] responses) {
-        this(ContentTypeConstants.APPLICATION_JSON, responses);
+        this(MimeType.APPLICATION_JSON, responses);
     }
 
-    public Result(String contentType, PageControllerResponse[] responses) {
-        this.contentType = contentType;
+    public Result(MimeType mimeType, PageControllerResponse[] responses) {
+        this.mimeType = mimeType;
         this.pageControllerResponses = responses;
     }
 
-    public String getContentType() {
-        return contentType;
+    public MimeType getMimeType() {
+        return mimeType;
     }
 
     public PageControllerResponse[] getResponses() {

@@ -38,7 +38,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyError;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.stream.JSONObjectStreamer;
@@ -299,7 +299,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                         (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
                 String responseString =
                         executeRemoteCall(remoteCallController, remoteCallFormat, request.getPath(), reqBody);
-                response.setContentType(remoteCallFormat.getContentType());
+                response.setContentType(remoteCallFormat.mimeType().template());
                 if (request.getCharset() != null) {
                     response.setCharacterEncoding(request.getCharset().name());
                 }
@@ -361,7 +361,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                     writeResponse(writer, pageController, result);
 
                     // logDebug("Page controller response: response = [{0}]", responseString);
-                    response.setContentType(result.getContentType());
+                    response.setContentType(result.getMimeType().template());
                     if (request.getCharset() != null) {
                         response.setCharacterEncoding(request.getCharset().name());
                     }
@@ -411,7 +411,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 new Result(new PageControllerResponse[] { hintUserResponse, refreshMenuResponse }));
 
         defaultResultMap.put(ResultMappingConstants.INDEX,
-                new Result(ContentTypeConstants.TEXT_HTML, new PageControllerResponse[] {
+                new Result(MimeType.TEXT_HTML, new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!loaddocumentresponse", false) }));
 
         defaultResultMap.put(ResultMappingConstants.OPEN,
@@ -651,7 +651,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                     new ControllerResponseInfo(pageController.getName(), pageController.getSessionId()));
             writeResponse(writer, pageController, result);
 
-            response.setContentType(result.getContentType());
+            response.setContentType(result.getMimeType().template());
             writer.writeTo(response.getWriter());
         } catch (UnifyException e1) {
             throw e1;
@@ -802,7 +802,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     private void writeResponse(ResponseWriter writer, PageController pageController, Result result)
             throws UnifyException {
-        if (ContentTypeConstants.APPLICATION_JSON.equals(result.getContentType())) {
+        if (MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
             writer.write("{\"jsonResp\":[");
             boolean appendSym = false;
             for (PageControllerResponse pageControllerResponse : result.getResponses()) {

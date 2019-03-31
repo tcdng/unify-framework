@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
@@ -27,19 +27,19 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum RemoteCallFormat implements EnumConst {
 
-    JSON("JSON", ContentTypeConstants.APPLICATION_JSON), XML("XML", ContentTypeConstants.APPLICATION_XML);
+    JSON("JSON", MimeType.APPLICATION_JSON), XML("XML", MimeType.APPLICATION_XML);
 
     private String code;
 
-    private String contentType;
+    private MimeType mimeType;
 
-    private RemoteCallFormat(String code, String contentType) {
+    private RemoteCallFormat(String code, MimeType mimeType) {
         this.code = code;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
     }
 
-    public String getContentType() {
-        return contentType;
+    public MimeType mimeType() {
+        return mimeType;
     }
 
     @Override
@@ -57,11 +57,11 @@ public enum RemoteCallFormat implements EnumConst {
 
     public static RemoteCallFormat fromContentType(String contentType) {
         if (contentType != null) {
-            if (contentType.startsWith(JSON.getContentType())) {
+            if (contentType.startsWith(JSON.mimeType.template())) {
                 return JSON;
             }
 
-            if (contentType.startsWith(XML.getContentType())) {
+            if (contentType.startsWith(XML.mimeType.template())) {
                 return XML;
             }
         }

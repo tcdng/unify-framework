@@ -33,7 +33,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.NumberSymbols;
@@ -414,13 +414,13 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     @Override
     public ResponseWriter writeFileImageContextURL(String src) throws UnifyException {
-        writeContextResourceURL("/resource/file", ContentTypeConstants.IMAGE, src);
+        writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), src);
         return this;
     }
 
     @Override
     public ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException {
-        writeContextResourceURL("/resource/scope", ContentTypeConstants.IMAGE, imageName);
+        writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName);
         return this;
     }
 

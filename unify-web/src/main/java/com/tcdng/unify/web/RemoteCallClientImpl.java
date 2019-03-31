@@ -138,7 +138,7 @@ public class RemoteCallClientImpl extends AbstractUnifyComponent implements Remo
             conn.setDoInput(true);
             conn.setRequestMethod("POST");
             conn.setUseCaches(false);
-            conn.setRequestProperty("Content-Type", remoteCallSetup.getFormat().getContentType());
+            conn.setRequestProperty("Content-Type", remoteCallSetup.getFormat().mimeType().template());
             conn.setRequestProperty("Accept-Charset", charset.name());
             conn.connect();
 

@@ -18,7 +18,7 @@ package com.tcdng.unify.web.ui.writer.panel;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerResponseInfo;
 import com.tcdng.unify.web.PageAttributeConstants;
@@ -108,7 +108,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         writer.write("<div id=\"").write(contentPanel.getHintPanelId()).write("\" class=\"cphint\"></div>");
         writer.write("<div id=\"").write(contentPanel.getBusyIndicatorId()).write("\" class=\"cpbusy\">");
         writer.write("<img class=\"cpimage\" src=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.IMAGE, "$t{images/busy.gif}");
+        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/busy.gif}");
         writer.write("\"></div>");
 
         writer.write("<div style=\"display:table;width:100%;height:100%;\">");

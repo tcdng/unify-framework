@@ -19,7 +19,7 @@ package com.tcdng.unify.web;
 import java.io.OutputStream;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 
 /**
  * Abstract output stream plain controller.
@@ -32,7 +32,7 @@ public abstract class AbstractOutputStreamPlainController extends AbstractPlainC
     private String contentType;
 
     public AbstractOutputStreamPlainController() {
-        this(ContentTypeConstants.APPLICATION_OCTETSTREAM);
+        this(MimeType.APPLICATION_OCTETSTREAM.template());
     }
 
     public AbstractOutputStreamPlainController(String contentType) {

@@ -18,7 +18,7 @@ package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.stream.JSONObjectStreamer;
 
 /**
@@ -34,7 +34,7 @@ public abstract class AbstractJsonResultPlainController extends AbstractPlainCon
 
     @Override
     public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
-        response.setContentType(ContentTypeConstants.APPLICATION_JSON);
+        response.setContentType(MimeType.APPLICATION_JSON.template());
         jsonObjectStreamer.marshal(doExecute(request), response.getWriter());
     }
 

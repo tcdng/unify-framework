@@ -18,7 +18,7 @@ package com.tcdng.unify.web.ui.writer.panel;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.web.ui.Container;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
@@ -52,7 +52,7 @@ public class FixedContentPanelWriter extends AbstractPanelWriter {
         writer.write("<div id=\"").write(fixedContentPanel.getHintPanelId()).write("\" class=\"fcphint\"></div>");
         writer.write("<div id=\"").write(fixedContentPanel.getBusyIndicatorId()).write("\" class=\"fcpbusy\">");
         writer.write("<img class=\"fcpimage\" src=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.IMAGE, "$t{images/busy.gif}");
+        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/busy.gif}");
         writer.write("\"></div>");
       
         super.writeLayoutContent(writer, container);

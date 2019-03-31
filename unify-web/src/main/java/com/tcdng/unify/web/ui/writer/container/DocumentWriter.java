@@ -18,7 +18,7 @@ package com.tcdng.unify.web.ui.writer.container;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.ui.DocumentLayout;
@@ -154,13 +154,13 @@ public class DocumentWriter extends AbstractPageWriter {
 
     private void writeStyleSheet(ResponseWriter writer, String styleSheet) throws UnifyException {
         writer.write("<link href=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.TEXT_CSS, styleSheet);
+        writer.writeContextResourceURL("/resource/file", MimeType.TEXT_CSS.template(), styleSheet);
         writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
     }
 
     private void writeJavascript(ResponseWriter writer, String script) throws UnifyException {
         writer.write("<script src=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.TEXT_JAVASCRIPT, script);
+        writer.writeContextResourceURL("/resource/file", MimeType.TEXT_JAVASCRIPT.template(), script);
         writer.write("\"></script>");
     }
 

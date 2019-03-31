@@ -19,7 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -53,7 +53,7 @@ public class FileDownload extends Button {
                 fileName = fileName.substring(index);
             }
 
-            downloadFile = new DownloadFile(fileName, ContentTypeConstants.APPLICATION_OCTETSTREAM, data);
+            downloadFile = new DownloadFile(MimeType.APPLICATION_OCTETSTREAM, fileName, data);
         } else {
             String fileBinding = getUplAttribute(String.class, "fileBinding");
             if (!StringUtils.isBlank(fileBinding)) {

@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.core.constant.MimeType;
+
 /**
  * Data object that represents a download file.
  * 
@@ -23,20 +25,20 @@ package com.tcdng.unify.core.data;
  */
 public class DownloadFile {
 
-    private String contentType;
+    private MimeType mimeType;
 
     private String filename;
 
     byte[] data;
 
-    public DownloadFile(String contentType, String filename, byte[] data) {
-        this.contentType = contentType;
+    public DownloadFile(MimeType mimeType, String filename, byte[] data) {
+        this.mimeType = mimeType;
         this.filename = filename;
         this.data = data;
     }
 
-    public String getContentType() {
-        return contentType;
+    public MimeType getMimeType() {
+        return mimeType;
     }
 
     public String getFilename() {

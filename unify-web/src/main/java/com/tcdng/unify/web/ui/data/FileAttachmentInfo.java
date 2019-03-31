@@ -62,7 +62,7 @@ public class FileAttachmentInfo {
     }
 
     public String getAccept() {
-        return type.contentType();
+        return type.mimeType().template();
     }
 
     public String getFilename() {

@@ -27,26 +27,26 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("fileattachmenttypelist")
 public enum FileAttachmentType implements EnumConst {
 
-    AUDIO("AUD", "audio/*,audio/mp3", "audio/*,audio/mp3"),
-    CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV),
-    EXCEL("XLS", ".xls,.xlsx", ContentTypeConstants.APPLICATION_XLS + ";" + ContentTypeConstants.APPLICATION_XLSX),
-    IMAGE("IMG", "image/*", ContentTypeConstants.IMAGE),
-    PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF),
-    TEXT("TXT", "text/*", "text/*"),
-    VIDEO("VID", "video/*,video/mp4", "video/*,video/mp4"),
-    WILDCARD("WILD", "", ContentTypeConstants.APPLICATION_OCTETSTREAM),
-    WORD("DOC", ".doc,.docx", ContentTypeConstants.APPLICATION_DOC + ";" + ContentTypeConstants.APPLICATION_DOCX);
+    AUDIO("AUD", "audio/*,audio/mp3", MimeType.AUDIO),
+    CSV("CSV", ".csv", MimeType.TEXT_CSV),
+    EXCEL("XLS", ".xls,.xlsx", MimeType.APPLICATION_EXCEL),
+    IMAGE("IMG", "image/*", MimeType.IMAGE),
+    PDF("PDF", ".pdf", MimeType.APPLICATION_PDF),
+    TEXT("TXT", "text/*", MimeType.TEXT),
+    VIDEO("VID", "video/*,video/mp4", MimeType.VIDEO),
+    WILDCARD("WILD", "", MimeType.APPLICATION_OCTETSTREAM),
+    WORD("DOC", ".doc,.docx", MimeType.APPLICATION_WORD);
 
     private final String code;
 
     private final String extensions;
 
-    private final String contentType;
+    private final MimeType mimeType;
 
-    private FileAttachmentType(String code, String extensions, String contentType) {
+    private FileAttachmentType(String code, String extensions, MimeType mimeType) {
         this.code = code;
         this.extensions = extensions;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
     }
 
     @Override
@@ -58,8 +58,8 @@ public enum FileAttachmentType implements EnumConst {
         return extensions;
     }
 
-    public String contentType() {
-        return contentType;
+    public MimeType mimeType() {
+        return mimeType;
     }
 
     public static FileAttachmentType fromCode(String code) {

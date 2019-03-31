@@ -51,7 +51,7 @@ public class FileUploadWriter extends AbstractControlWriter {
         if (!StringUtils.isBlank(accept)) {
             FileAttachmentType fileAttachmentType = FileAttachmentType.fromName(accept);
             if (fileAttachmentType != null && !FileAttachmentType.WILDCARD.equals(fileAttachmentType)) {
-                writer.write(" accept=\"").write(fileAttachmentType.contentType()).write('"');
+                writer.write(" accept=\"").write(fileAttachmentType.mimeType().template()).write('"');
             }
         }
 

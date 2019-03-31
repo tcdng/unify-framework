@@ -41,9 +41,9 @@ public class FileDownloadResponse extends AbstractJsonPageControllerResponse {
         DownloadFile downloadFile = (DownloadFile) getRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE);
         setSessionAttribute(downloadFile.getFilename(), downloadFile.getData());
         writer.write(",\"downloadPath\":\"");
-        writer.writeContextResourceURL("/resource/scope", downloadFile.getContentType(), downloadFile.getFilename(),
-                null, true, true); // Download is true. Clear on read is
-                                   // true
+        writer.writeContextResourceURL("/resource/scope", downloadFile.getMimeType().template(),
+                downloadFile.getFilename(), null, true, true); // Download is true. Clear on read is
+                                                               // true
         writer.write("\"");
     }
 }

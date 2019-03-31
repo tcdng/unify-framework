@@ -19,7 +19,7 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
 import com.tcdng.unify.core.upl.UplElementReferences;
@@ -439,7 +439,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         }
 
         writer.write(" src=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.IMAGE, writer.expandThemeTag(src));
+        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), writer.expandThemeTag(src));
         writer.write("\">");
     }
 
@@ -627,7 +627,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
             if ("ux.download".equals(function)) {
                 writer.write(",\"uURL\":\"");
-                writer.writeContextResourceURL("/resource/downloadpath", ContentTypeConstants.APPLICATION_OCTETSTREAM,
+                writer.writeContextResourceURL("/resource/downloadpath", MimeType.APPLICATION_OCTETSTREAM.template(),
                         pageAction.getUplAttribute(String.class, "resource"), null, true, false);
                 writer.write('"');
             }
