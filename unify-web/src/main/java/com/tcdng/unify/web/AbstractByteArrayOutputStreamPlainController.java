@@ -16,10 +16,10 @@
 
 package com.tcdng.unify.web;
 
-import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.constant.MimeType;
 
 /**
  * Abstract output stream plain controller.
@@ -27,27 +27,20 @@ import com.tcdng.unify.core.constant.MimeType;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractOutputStreamPlainController extends AbstractPlainController {
-
-    private String contentType;
-
-    public AbstractOutputStreamPlainController() {
-        this(MimeType.APPLICATION_OCTETSTREAM.template());
-    }
-
-    public AbstractOutputStreamPlainController(String contentType) {
-        this.contentType = contentType;
-    }
+public abstract class AbstractByteArrayOutputStreamPlainController extends AbstractOutputStreamPlainController {
 
     @Override
     public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
-        response.setContentType(contentType);
-        doExecute(response.getOutputStream(), request);
+        try {
+            response.setContentType(getContentType());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            doExecute(baos, request);
+            baos.flush();
+            byte[] data = baos.toByteArray();
+            response.setMetaData("Content-Length", String.valueOf(data.length));
+            response.getOutputStream().write(data);
+        } catch (IOException e) {
+            throwOperationErrorException(e);
+        }
     }
-
-    protected String getContentType() {
-        return contentType;
-    }
-
-    protected abstract void doExecute(OutputStream outStream, ClientRequest request) throws UnifyException;
 }
