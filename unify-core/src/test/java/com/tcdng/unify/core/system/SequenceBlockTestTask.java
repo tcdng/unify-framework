@@ -24,23 +24,23 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskOutput;
 
 /**
- * Sequence number test task.
+ * Sequence block test task.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("sequencenumber-test")
-public class SequenceNumberTestTask extends AbstractTask {
+@Component("clustersequenceblock-test")
+public class SequenceBlockTestTask extends AbstractTask {
 
     @Configurable
     private SequenceNumberService sequenceNumberService;
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-        String sequenceId = input.getParam(String.class, SequenceNumberTestTaskConstants.SEQUENCEID);
-        int seqCount = input.getParam(int.class, SequenceNumberTestTaskConstants.SEQUENCECOUNT);
+        String sequenceId = input.getParam(String.class, SequenceTestTaskConstants.SEQUENCEID);
+        int seqCount = input.getParam(int.class, SequenceTestTaskConstants.SEQUENCECOUNT);
         for (int i = 0; i < seqCount; i++) {
-            sequenceNumberService.getNextSequenceNumber(sequenceId);
+            sequenceNumberService.getCachedBlockNextSequenceNumber(sequenceId);
             if (seqCount % 11 == 0) {
                 Thread.yield();
             }

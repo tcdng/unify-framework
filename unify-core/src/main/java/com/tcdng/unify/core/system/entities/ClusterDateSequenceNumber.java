@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 
 /**
- * Entity for storing sequence number generation information.
+ * Entity for storing date sequence number generation information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
