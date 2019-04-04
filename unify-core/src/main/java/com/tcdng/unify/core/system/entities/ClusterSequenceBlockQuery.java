@@ -13,17 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.system;
+package com.tcdng.unify.core.system.entities;
+
+import com.tcdng.unify.core.database.Query;
 
 /**
- * Sequence number test task constants.
+ * Sequence block query.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SequenceNumberTestTaskConstants {
+public class ClusterSequenceBlockQuery extends Query<ClusterSequenceBlock> {
 
-    String SEQUENCEID = "sequenceId";
+    public ClusterSequenceBlockQuery() {
+        super(ClusterSequenceBlock.class);
+    }
 
-    String SEQUENCECOUNT = "sequenceCount";
+    public ClusterSequenceBlockQuery sequenceName(String sequenceName) {
+        return (ClusterSequenceBlockQuery) equals("sequenceName", sequenceName);
+    }
 }

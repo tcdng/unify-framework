@@ -16,23 +16,37 @@
 package com.tcdng.unify.core.system.entities;
 
 import com.tcdng.unify.core.annotation.Column;
+import com.tcdng.unify.core.annotation.Id;
+import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.annotation.UniqueConstraint;
+import com.tcdng.unify.core.annotation.Version;
 
 /**
- * Entity for storing sequence number generation information.
+ * Entity for storing sequence block information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table(name = "UNCLUSTERSEQ", uniqueConstraints = { @UniqueConstraint({ "sequenceName"}) })
-public class ClusterSequenceNumber extends AbstractSystemSequencedEntity {
+@Policy("sequenceblock-policy")
+@Table("UNCLUSTERSEQBLOCK")
+public class ClusterSequenceBlock extends AbstractSystemEntity {
 
-    @Column(name = "SEQUENCE_NM", length = 256)
+    @Id(name = "SEQUENCE_NM", length = 256)
     private String sequenceName;
 
     @Column
-    private Long sequenceCounter;
+    private long nextBlock;
+
+    @Column
+    private int blockSize;
+
+    @Version
+    private long versionNo;
+
+    @Override
+    public Object getId() {
+        return sequenceName;
+    }
 
     public String getSequenceName() {
         return sequenceName;
@@ -42,12 +56,27 @@ public class ClusterSequenceNumber extends AbstractSystemSequencedEntity {
         this.sequenceName = sequenceName;
     }
 
-    public Long getSequenceCounter() {
-        return sequenceCounter;
+    public long getNextBlock() {
+        return nextBlock;
     }
 
-    public void setSequenceCounter(Long sequenceCounter) {
-        this.sequenceCounter = sequenceCounter;
+    public void setNextBlock(long nextBlock) {
+        this.nextBlock = nextBlock;
     }
 
+    public int getBlockSize() {
+        return blockSize;
+    }
+
+    public void setBlockSize(int blockSize) {
+        this.blockSize = blockSize;
+    }
+
+    public long getVersionNo() {
+        return versionNo;
+    }
+
+    public void setVersionNo(long versionNo) {
+        this.versionNo = versionNo;
+    }
 }

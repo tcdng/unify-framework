@@ -30,10 +30,12 @@ import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumber;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumberQuery;
+import com.tcdng.unify.core.system.entities.ClusterSequenceBlock;
+import com.tcdng.unify.core.system.entities.ClusterSequenceBlockQuery;
 import com.tcdng.unify.core.system.entities.ClusterSequenceNumber;
+import com.tcdng.unify.core.system.entities.ClusterSequenceNumberQuery;
 import com.tcdng.unify.core.system.entities.ClusterUniqueString;
 import com.tcdng.unify.core.system.entities.ClusterUniqueStringQuery;
-import com.tcdng.unify.core.system.entities.SequenceNumberQuery;
 import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.ThreadUtils;
 
@@ -46,48 +48,68 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
 public class SequenceNumberServiceImpl extends AbstractBusinessService implements SequenceNumberService {
 
-    private Map<String, SequenceCounter> sequenceCounterMap;
+    private Map<String, SequenceBlock> sequenceBlockMap;
 
     @Configurable("100")
     private int sequenceBlockSize;
 
     /**
-     * The number of attempts to get next sequence for sequence ID. For distributed
-     * environment where consistent sequence has to be maintained
+     * The number of attempts to get next sequence block.
      */
     @Configurable("20")
-    private int maxNextSequenceAttempts;
+    private int maxNextSequenceBlockAttempts;
 
     public SequenceNumberServiceImpl() {
-        sequenceCounterMap = new HashMap<String, SequenceCounter>();
+        sequenceBlockMap = new HashMap<String, SequenceBlock>();
     }
 
     @Override
     @Transactional(TransactionAttribute.REQUIRES_NEW)
-    public synchronized Long getNextSequenceNumber(String sequencedName) throws UnifyException {
-        SequenceCounter sequenceCounter = sequenceCounterMap.get(sequencedName);
-        if (sequenceCounter == null) {
+    public synchronized Long getCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {
+        SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
+        if (sequenceBlock == null) {
             try {
-                sequenceCounter = new SequenceCounter();
-                nextSequence(sequencedName, sequenceCounter, 1);
+                sequenceBlock = new SequenceBlock();
+                nextSequenceBlock(sequencedName, sequenceBlock, 1);
             } catch (UnifyException e) {
-                ClusterSequenceNumber sequenceNumberData = new ClusterSequenceNumber();
-                sequenceNumberData.setSequenceName(sequencedName);
-                sequenceNumberData.setNextBlock(sequenceBlockSize + 1);
-                sequenceNumberData.setBlockSize(sequenceBlockSize);
-                db().create(sequenceNumberData);
+                ClusterSequenceBlock clusterSequenceBlock = new ClusterSequenceBlock();
+                clusterSequenceBlock.setSequenceName(sequencedName);
+                clusterSequenceBlock.setNextBlock(sequenceBlockSize + 1);
+                clusterSequenceBlock.setBlockSize(sequenceBlockSize);
+                db().create(clusterSequenceBlock);
 
-                sequenceCounter.next = 1;
-                sequenceCounter.last = sequenceCounter.next + sequenceNumberData.getBlockSize() - 1;
+                sequenceBlock.next = 1;
+                sequenceBlock.last = sequenceBlock.next + clusterSequenceBlock.getBlockSize() - 1;
             }
-            sequenceCounterMap.put(sequencedName, sequenceCounter);
+            sequenceBlockMap.put(sequencedName, sequenceBlock);
         }
 
-        Long id = Long.valueOf(sequenceCounter.next++);
-        if (sequenceCounter.next > sequenceCounter.last) {
-            nextSequence(sequencedName, sequenceCounter, maxNextSequenceAttempts);
+        Long id = Long.valueOf(sequenceBlock.next++);
+        if (sequenceBlock.next > sequenceBlock.last) {
+            nextSequenceBlock(sequencedName, sequenceBlock, maxNextSequenceBlockAttempts);
         }
         return id;
+    }
+
+    @Override
+    @Transactional
+    @Synchronized("nextsequencenumber-lock")
+    public Long getNextSequenceNumber(String sequenceName) throws UnifyException {
+        Long sequenceNumber = null;
+        ClusterSequenceNumber clusterSequenceNumber =
+                db().find(new ClusterSequenceNumberQuery().sequenceName(sequenceName));
+        if (clusterSequenceNumber != null) {
+            sequenceNumber = clusterSequenceNumber.getSequenceCounter() + 1;
+            clusterSequenceNumber.setSequenceCounter(sequenceNumber);
+            db().updateById(clusterSequenceNumber);
+        } else {
+            sequenceNumber = Long.valueOf(1);
+            clusterSequenceNumber = new ClusterSequenceNumber();
+            clusterSequenceNumber.setSequenceName(sequenceName);
+            clusterSequenceNumber.setSequenceCounter(sequenceNumber);
+            db().create(clusterSequenceNumber);
+        }
+        return sequenceNumber;
     }
 
     @Override
@@ -96,19 +118,19 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     public Long getNextSequenceNumber(String sequenceName, Date date) throws UnifyException {
         Long sequenceNumber = null;
         Date midnightDate = CalendarUtils.getMidnightDate(date);
-        ClusterDateSequenceNumber dateSequenceNumberData =
+        ClusterDateSequenceNumber dateSequenceNumber =
                 db().find(new ClusterDateSequenceNumberQuery().sequenceDate(midnightDate).sequenceName(sequenceName));
-        if (dateSequenceNumberData != null) {
-            sequenceNumber = dateSequenceNumberData.getSequenceCounter() + 1;
-            dateSequenceNumberData.setSequenceCounter(sequenceNumber);
-            db().updateById(dateSequenceNumberData);
+        if (dateSequenceNumber != null) {
+            sequenceNumber = dateSequenceNumber.getSequenceCounter() + 1;
+            dateSequenceNumber.setSequenceCounter(sequenceNumber);
+            db().updateById(dateSequenceNumber);
         } else {
             sequenceNumber = Long.valueOf(1);
-            dateSequenceNumberData = new ClusterDateSequenceNumber();
-            dateSequenceNumberData.setSequenceDate(midnightDate);
-            dateSequenceNumberData.setSequenceName(sequenceName);
-            dateSequenceNumberData.setSequenceCounter(sequenceNumber);
-            db().create(dateSequenceNumberData);
+            dateSequenceNumber = new ClusterDateSequenceNumber();
+            dateSequenceNumber.setSequenceDate(midnightDate);
+            dateSequenceNumber.setSequenceName(sequenceName);
+            dateSequenceNumber.setSequenceCounter(sequenceNumber);
+            db().create(dateSequenceNumber);
         }
         return sequenceNumber;
     }
@@ -130,16 +152,16 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     @Override
     public void reset() throws UnifyException {
         if (!isProductionMode()) {
-            db().updateAll(new SequenceNumberQuery().ignoreEmptyCriteria(true),
+            db().updateAll(new ClusterSequenceBlockQuery().ignoreEmptyCriteria(true),
                     new Update().add("nextBlock", 1L).add("blockSize", sequenceBlockSize));
-            sequenceCounterMap.clear();
+            sequenceBlockMap.clear();
         }
     }
 
     /**
-     * Gets the next sequence for a sequence. Makes multiple attempts in case
-     * version number changes. This maintains a consistent sequence number
-     * generation for clustered environments that share the same database.
+     * Gets the next sequence block for a sequence. Makes multiple attempts in case
+     * version number changes. This facilitates sequence number generation for
+     * clustered environments that share the same database.
      * 
      * @param sequencedName
      *            the sequence name
@@ -148,15 +170,15 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
      * @throws UnifyException
      *             if an error occurs
      */
-    private void nextSequence(String sequencedName, SequenceCounter sequenceCounter, int maxAttempts)
+    private void nextSequenceBlock(String sequencedName, SequenceBlock sequenceCounter, int maxAttempts)
             throws UnifyException {
         for (int attempts = 1; attempts <= maxAttempts; attempts++) {
             try {
-                ClusterSequenceNumber sequenceNumberData = db().find(ClusterSequenceNumber.class, sequencedName);
-                sequenceCounter.next = sequenceNumberData.getNextBlock();
-                sequenceCounter.last = sequenceCounter.next + sequenceNumberData.getBlockSize() - 1;
-                sequenceNumberData.setNextBlock(sequenceCounter.next + sequenceNumberData.getBlockSize());
-                db().updateByIdVersion(sequenceNumberData);
+                ClusterSequenceBlock clusterSequenceBlock = db().find(ClusterSequenceBlock.class, sequencedName);
+                sequenceCounter.next = clusterSequenceBlock.getNextBlock();
+                sequenceCounter.last = sequenceCounter.next + clusterSequenceBlock.getBlockSize() - 1;
+                clusterSequenceBlock.setNextBlock(sequenceCounter.next + clusterSequenceBlock.getBlockSize());
+                db().updateByIdVersion(clusterSequenceBlock);
                 break;
             } catch (UnifyException e) {
                 if (attempts >= maxAttempts) {
@@ -167,7 +189,7 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
         }
     }
 
-    private class SequenceCounter {
+    private class SequenceBlock {
         public long next;
 
         public long last;

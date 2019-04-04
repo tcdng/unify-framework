@@ -47,4 +47,8 @@ public class TaskOutput {
     public <T> T getResult(Class<T> valueType, String name) throws UnifyException {
         return DataUtils.convert(valueType, results.get(name), null);
     }
+
+    public Object getResult(String name) throws UnifyException {
+        return results.get(name);
+    }
 }
