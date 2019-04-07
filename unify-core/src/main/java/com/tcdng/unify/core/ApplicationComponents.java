@@ -23,8 +23,6 @@ package com.tcdng.unify.core;
  */
 public interface ApplicationComponents {
 
-    String APPLICATION_BATCHFILEREADERWRITERFACTORY = "application-batchfilereaderwriterfactory";
-
     String APPLICATION_BYTEARRAYCRYPTOGRAPH = "application-bytearraycryptograph";
 
     String APPLICATION_CLUSTERSERVICE = "application-clusterservice";

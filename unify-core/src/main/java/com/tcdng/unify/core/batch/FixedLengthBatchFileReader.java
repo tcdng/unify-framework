@@ -29,11 +29,11 @@ public class FixedLengthBatchFileReader extends AbstractMultiLineTextFileRecordR
 
     @Override
     protected String[] parseEntry(String entry) throws UnifyException {
-        String[] result = new String[getBatchFileConfig().getFieldConfigs().size()];
+        String[] result = new String[getBatchFileConfig().getFieldConfigList().size()];
         logDebug("Parsing fixed length [{0}] in line number = {1}", entry, getEntryCounter());
         int index = 0;
         int beginIndex = 0;
-        for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigs()) {
+        for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigList()) {
             int endIndex = beginIndex + fieldConfig.getLength();
             result[index] = entry.substring(beginIndex, endIndex);
 

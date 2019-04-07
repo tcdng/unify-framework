@@ -24,11 +24,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.TestTaskMonitor;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessLogicInput;
-import com.tcdng.unify.core.business.BusinessLogicOutput;
-import com.tcdng.unify.core.business.BusinessLogicUnit;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Query;
@@ -50,25 +46,13 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
     @Test
     public void testBatchItemProcessing() throws Exception {
         // Setup parameters
-        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-        byte[][] fileObject = new byte[1][];
-        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+        BatchFileReadConfig batchFileReadConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, false);
+        byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                 "6758495839Bamanga Tukur       NGN0000000052000");
-        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
         // Perform batch file processing and do some assertions
-        BusinessLogicOutput output = new BusinessLogicOutput();
-        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-        tm.beginTransaction();
-        try {
-            blu.execute(input, output);
-        } finally {
-            tm.endTransaction();
-        }
-
-        List<Object> result = output.getResult(List.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        BatchFileReadProcessor processor = (BatchFileReadProcessor) getComponent("test-batchfileprocessor-a");
+        List<Object> result = (List<Object>) processor.process(batchFileReadConfig, file);
         assertNotNull(result);
         assertEquals(2, result.size());
 
@@ -101,25 +85,13 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
     @Test
     public void testBatchItemProcessingSkipExisting() throws Exception {
         // Setup parameters
-        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-        byte[][] fileObject = new byte[1][];
-        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+        BatchFileReadConfig batchFileReadConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, false);
+        byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                 "6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteNGN0000000040000");
-        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
         // Perform batch file processing and do some assertions
-        BusinessLogicOutput output = new BusinessLogicOutput();
-        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-        tm.beginTransaction();
-        try {
-            blu.execute(input, output);
-        } finally {
-            tm.endTransaction();
-        }
-
-        List<Object> result = output.getResult(List.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        BatchFileReadProcessor processor = (BatchFileReadProcessor) getComponent("test-batchfileprocessor-a");
+        List<Object> result = (List<Object>) processor.process(batchFileReadConfig, file);
         assertNotNull(result);
         assertEquals(2, result.size());
 
@@ -152,27 +124,13 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
     @Test
     public void testBatchItemProcessingUpdateExisting() throws Exception {
         // Setup parameters
-        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-        fileBulkConfig.setOnConstraint(ConstraintAction.UPDATE);
-        byte[][] fileObject = new byte[1][];
-        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+        BatchFileReadConfig batchFileReadConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(ConstraintAction.UPDATE, true, false);
+        byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                 "6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteGBP0000000040000");
-        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
         // Perform batch file processing and do some assertions
-        BusinessLogicOutput output = new BusinessLogicOutput();
-        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-        tm.beginTransaction();
-        try {
-            blu.execute(input, output);
-        } finally {
-            tm.endTransaction();
-        }
-
-        List<Object> result =
-                (List<Object>) output.getResult(List.class, BatchFileReadProcessorOutputConstants.BATCHFILEREADRESULT);
+        BatchFileReadProcessor processor = (BatchFileReadProcessor) getComponent("test-batchfileprocessor-a");
+        List<Object> result = (List<Object>) processor.process(batchFileReadConfig, file);
         assertNotNull(result);
         assertEquals(2, result.size());
 
@@ -205,23 +163,13 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
     @Test(expected = UnifyException.class)
     public void testBatchItemProcessingFailOnExisting() throws Exception {
         // Setup parameters
-        BusinessLogicInput input = new BusinessLogicInput(new TestTaskMonitor(), db.getName());
-        BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-        fileBulkConfig.setOnConstraint(ConstraintAction.FAIL);
-        byte[][] fileObject = new byte[1][];
-        fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+        BatchFileReadConfig batchFileReadConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(ConstraintAction.FAIL, true, false);
+        byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                 "6758495839Bamanga Tukur       NGN0000000052000", "6758495839William Thomas TutteGBP0000000040000");
-        input.setParameter(BatchFileReadProcessorInputConstants.BATCHFILECONFIG, fileBulkConfig);
-        input.setParameter(BatchFileReadProcessorInputConstants.FILEOBJECTS, fileObject);
 
         // Perform batch file processing and do some assertions
-        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent("test-batchfileprocessor-a");
-        tm.beginTransaction();
-        try {
-            blu.execute(input, new BusinessLogicOutput());
-        } finally {
-            tm.endTransaction();
-        }
+        BatchFileReadProcessor processor = (BatchFileReadProcessor) getComponent("test-batchfileprocessor-a");
+        processor.process(batchFileReadConfig, file);
     }
 
     @Override

@@ -15,7 +15,12 @@
  */
 package com.tcdng.unify.core.batch;
 
-import com.tcdng.unify.core.business.BusinessLogicUnit;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Reader;
+
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
  * Batch file read processor.
@@ -23,6 +28,20 @@ import com.tcdng.unify.core.business.BusinessLogicUnit;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface BatchFileReadProcessor extends BusinessLogicUnit {
+public interface BatchFileReadProcessor extends UnifyComponent {
 
+    /**
+     * Performs batch file processing using supplied configuration.
+     * 
+     * @param batchFileReadConfig
+     *            the batch file read configuration
+     * @param file
+     *            the array of file objects that constitutes a batch. Supported file
+     *            objects are {@link InputStream}, {@link Reader}, {@link File} and
+     *            {@link byte[]}
+     * @return a processing result object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Object process(BatchFileReadConfig batchFileReadConfig, Object... file) throws UnifyException;
 }

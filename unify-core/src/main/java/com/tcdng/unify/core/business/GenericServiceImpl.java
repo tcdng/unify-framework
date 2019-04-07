@@ -93,4 +93,9 @@ public class GenericServiceImpl extends AbstractBusinessService implements Gener
         return db().countAll(query);
     }
 
+    @Override
+    public <T extends Entity> T findConstraint(T record) throws UnifyException {
+        return db().findConstraint(record);
+    }
+
 }

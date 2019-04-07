@@ -17,7 +17,6 @@ package com.tcdng.unify.core.batch;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.business.BusinessLogicInput;
 
 /**
  * Test batch file processor B.
@@ -38,16 +37,16 @@ public class TestBatchFileProcessorB extends AbstractDBBatchFileReadProcessor<Te
     }
 
     @Override
-    public void preBatchCreate(BusinessLogicInput input, TestBatchRecordB batch, TestBatchItemRecordB batchItem)
-            throws UnifyException {
+    protected void preBatchCreate(BatchFileReadConfig batchFileReadConfig, TestBatchRecordB batch,
+            TestBatchItemRecordB batchItem) throws UnifyException {
         TestBatchRecordB testBatchRecordB = (TestBatchRecordB) batch;
         testBatchRecordB.setItemCount(Integer.valueOf(1));
         testBatchRecordB.setTotalAmount(((TestBatchItemRecordB) batchItem).getAmount());
     }
 
     @Override
-    public void preBatchUpdate(BusinessLogicInput input, TestBatchRecordB batch, TestBatchItemRecordB batchItem)
-            throws UnifyException {
+    protected void preBatchUpdate(BatchFileReadConfig batchFileReadConfig, TestBatchRecordB batch,
+            TestBatchItemRecordB batchItem) throws UnifyException {
         TestBatchRecordB testBatchRecordB = (TestBatchRecordB) batch;
         testBatchRecordB.setItemCount(Integer.valueOf(testBatchRecordB.getItemCount().intValue() + 1));
         testBatchRecordB.setTotalAmount(Double.valueOf(testBatchRecordB.getTotalAmount().doubleValue()
@@ -55,7 +54,8 @@ public class TestBatchFileProcessorB extends AbstractDBBatchFileReadProcessor<Te
     }
 
     @Override
-    protected void postBatchCreate(BusinessLogicInput input, TestBatchRecordB batch) throws UnifyException {
+    protected void postBatchCreate(BatchFileReadConfig batchFileReadConfig, TestBatchRecordB batch)
+            throws UnifyException {
 
     }
 }

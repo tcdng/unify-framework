@@ -37,4 +37,5 @@ public abstract class AbstractBatchFileReader extends AbstractUnifyComponent imp
     protected void onTerminate() throws UnifyException {
 
     }
+
 }

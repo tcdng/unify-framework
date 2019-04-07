@@ -21,11 +21,10 @@ import java.io.Reader;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessLogicInput;
 import com.tcdng.unify.core.data.ValueStore;
 
 /**
- * Batch file reader. This component typically a non-singleton.
+ * Batch file reader. This component should be implemented as a non-singleton.
  * 
  * @author Lateef Ojulari
  * @since 1.0
@@ -35,10 +34,8 @@ public interface BatchFileReader extends UnifyComponent {
     /**
      * Opens batch file reader for reading using supplied configuration.
      * 
-     * @param input
-     *            the logic input
-     * @param configuration
-     *            the batch file configuration
+     * @param batchFileReadConfig
+     *            the batch file read configuration
      * @param file
      *            the array of file objects that constitutes a batch. Supported file
      *            objects are {@link InputStream}, {@link Reader}, {@link File} and
@@ -46,7 +43,7 @@ public interface BatchFileReader extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException;
+    void open(BatchFileReadConfig batchFileReadConfig, Object... file) throws UnifyException;
 
     /**
      * Reads next record from batch.

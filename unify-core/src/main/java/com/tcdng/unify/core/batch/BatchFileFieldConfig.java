@@ -25,9 +25,9 @@ import com.tcdng.unify.core.constant.PadDirection;
  */
 public class BatchFileFieldConfig {
 
-    private String fieldName;
+    private String beanFieldName;
 
-    private String readerFieldName;
+    private String fileFieldName;
 
     private String formatter;
 
@@ -43,10 +43,10 @@ public class BatchFileFieldConfig {
 
     private boolean updateOnConstraint;
 
-    public BatchFileFieldConfig(String fieldName, String readerFieldName, String formatter, PadDirection padDirection,
+    public BatchFileFieldConfig(String beanFieldName, String fileFieldName, String formatter, PadDirection padDirection,
             int length, boolean trim, boolean pad, boolean updateOnConstraint, Character padChar) {
-        this.fieldName = fieldName;
-        this.readerFieldName = readerFieldName;
+        this.beanFieldName = beanFieldName;
+        this.fileFieldName = fileFieldName;
         this.formatter = formatter;
         this.padDirection = padDirection;
         this.length = length;
@@ -56,12 +56,12 @@ public class BatchFileFieldConfig {
         this.padChar = padChar;
     }
 
-    public String getFieldName() {
-        return fieldName;
+    public String getBeanFieldName() {
+        return beanFieldName;
     }
 
-    public String getReaderFieldName() {
-        return readerFieldName;
+    public String getFileFieldName() {
+        return fileFieldName;
     }
 
     public String getFormatter() {

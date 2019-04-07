@@ -168,4 +168,15 @@ public interface GenericService extends BusinessService {
      */
     <T extends Entity> int countAll(Query<T> query) throws UnifyException;
 
+    /**
+     * Finds constraining record that may prevent supplied record from being
+     * successfully created.
+     * 
+     * @param record
+     * @return constraining record if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T extends Entity> T findConstraint(T record) throws UnifyException;
+
 }
