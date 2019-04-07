@@ -23,5 +23,5 @@ package com.tcdng.unify.core.batch;
  */
 public interface DelimitedBatchFileReaderInputConstants {
 
-    String FIELDDELIMITER = "coreBfrFileDelimiter";
+    String FIELDDELIMITER = "unify.batchFileDelimiter";
 }
