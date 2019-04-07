@@ -59,18 +59,18 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
             updateFields = updateList.toArray(new String[updateList.size()]);
         }
 
-        Database pm = getDatabase(input);
+        Database db = getDatabase(input);
         T batchItem = ReflectUtils.newInstance(batchItemClass);
         ValueStore itemStore = getValueStoreFactory().getValueStore(batchItem, 0);
         int createCount = 0;
         int updateCount = 0;
         int skipCount = 0;
         while (reader.readNextRecord(itemStore)) {
-            T constraint = pm.findConstraint(batchItem);
+            T constraint = db.findConstraint(batchItem);
             if (constraint == null) {
                 // No constraint. Just create item.
                 preBatchItemCreate(input, batchItem);
-                Object id = pm.create(batchItem);
+                Object id = db.create(batchItem);
                 idList.add(id);
                 postBatchItemCreate(input, batchItem);
                 createCount++;
@@ -82,7 +82,7 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
                                 batchItem);
                     case UPDATE:
                         ReflectUtils.shallowBeanCopy(constraint, batchItem, updateFields);
-                        pm.updateByIdVersion(constraint);
+                        db.updateByIdVersion(constraint);
                         updateCount++;
                         break;
                     case SKIP:
