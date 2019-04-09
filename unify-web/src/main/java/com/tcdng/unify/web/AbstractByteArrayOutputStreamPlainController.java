@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Abstract output stream plain controller.
@@ -29,14 +30,29 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractByteArrayOutputStreamPlainController extends AbstractOutputStreamPlainController {
 
+    private String disposition;
+    
+    public AbstractByteArrayOutputStreamPlainController(String disposition) {
+        this.disposition = disposition;
+    }
+    
+    public AbstractByteArrayOutputStreamPlainController() {
+
+    }
+
     @Override
     public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
         try {
             response.setContentType(getContentType());
+            if (!StringUtils.isBlank(disposition)) {
+                response.setMetaData("Content-Disposition", disposition);
+            }
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             doExecute(baos, request);
             baos.flush();
             byte[] data = baos.toByteArray();
+
             response.setMetaData("Content-Length", String.valueOf(data.length));
             response.getOutputStream().write(data);
         } catch (IOException e) {
