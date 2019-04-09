@@ -32,7 +32,7 @@ public class BatchFileReaderTestUtils {
     public static BatchFileReadConfig createSampleFixedLengthBatchConfig(ConstraintAction cAction, boolean trim,
             boolean formattedAmt) throws Exception {
         BatchFileReadConfig.Builder bb =
-                BatchFileReadConfig.newBuilder("fixedlength-batchfilereader").addFieldConfig("accountNo", 10, trim)
+                BatchFileReadConfig.newBuilder().reader("fixedlength-batchfilereader").addFieldConfig("accountNo", 10, trim)
                         .addFieldConfig("beneficiary", 20, trim).addFieldConfig("currency", 3, trim);
         if (formattedAmt) {
             bb.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true, '0');
@@ -49,7 +49,7 @@ public class BatchFileReaderTestUtils {
     public static BatchFileReadConfig createSampleDelimitedFileBatchConfig(ConstraintAction cAction, boolean trim,
             boolean formattedAmt) throws Exception {
         BatchFileReadConfig.Builder bb =
-                BatchFileReadConfig.newBuilder("delimited-batchfilereader").addFieldConfig("accountNo", 10, trim)
+                BatchFileReadConfig.newBuilder().reader("delimited-batchfilereader").addFieldConfig("accountNo", 10, trim)
                         .addFieldConfig("beneficiary", 20, trim).addFieldConfig("currency", 3, trim);
         if (formattedAmt) {
             bb.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true, '0');

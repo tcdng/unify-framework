@@ -34,6 +34,8 @@ public class BatchFileReadConfig {
 
     private String readerName;
 
+    private String readProcessor;
+
     private Map<String, Object> parameters;
 
     private List<BatchFileFieldConfig> fieldConfigList;
@@ -42,9 +44,10 @@ public class BatchFileReadConfig {
 
     private boolean skipFirstRecord;
 
-    public BatchFileReadConfig(String readerName, Map<String, Object> parameters,
+    public BatchFileReadConfig(String readerName, String readProcessor, Map<String, Object> parameters,
             List<BatchFileFieldConfig> fieldConfigList, ConstraintAction onConstraint, boolean skipFirstRecord) {
         this.readerName = readerName;
+        this.readProcessor = readProcessor;
         this.parameters = parameters;
         this.fieldConfigList = fieldConfigList;
         this.onConstraint = onConstraint;
@@ -53,6 +56,10 @@ public class BatchFileReadConfig {
 
     public String getReaderName() {
         return readerName;
+    }
+
+    public String getReadProcessor() {
+        return readProcessor;
     }
 
     public <T> T getParameter(Class<T> paramType, String name) throws UnifyException {
@@ -71,13 +78,15 @@ public class BatchFileReadConfig {
         return skipFirstRecord;
     }
 
-    public static Builder newBuilder(String readerName) {
-        return new Builder(readerName);
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     public static class Builder {
 
         private String readerName;
+
+        private String readProcessor;
 
         private Map<String, Object> parameters;
 
@@ -87,10 +96,24 @@ public class BatchFileReadConfig {
 
         private boolean skipFirstRecord;
 
-        private Builder(String readerName) {
-            this.readerName = readerName;
+        private Builder() {
             onConstraint = ConstraintAction.SKIP;
             skipFirstRecord = false;
+        }
+
+        public Builder reader(String readerName) {
+            this.readerName = readerName;
+            return this;
+        }
+
+        public Builder processor(String readProcessor) {
+            this.readProcessor = readProcessor;
+            return this;
+        }
+
+        public Builder skipFirstRecord(boolean skipFirstRecord) {
+            this.skipFirstRecord = skipFirstRecord;
+            return this;
         }
 
         public Builder addFieldConfig(String beanFieldName, String fileFieldName, String formatter,
@@ -117,18 +140,18 @@ public class BatchFileReadConfig {
             return this;
         }
 
+        public Builder addParams(Map<String, Object> params) {
+            getParameters().putAll(params);
+            return this;
+        }
+
         public Builder onConstraint(ConstraintAction onConstraint) {
             this.onConstraint = onConstraint;
             return this;
         }
 
-        public Builder skipFirstRecord(boolean skipFirstRecord) {
-            this.skipFirstRecord = skipFirstRecord;
-            return this;
-        }
-
         public BatchFileReadConfig build() {
-            return new BatchFileReadConfig(readerName, DataUtils.unmodifiableMap(parameters),
+            return new BatchFileReadConfig(readerName, readProcessor, DataUtils.unmodifiableMap(parameters),
                     DataUtils.unmodifiableList(fieldConfigList), onConstraint, skipFirstRecord);
         }
 
