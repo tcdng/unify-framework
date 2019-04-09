@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
@@ -32,6 +33,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Ignore // Comment Ignore to run
 public class NetworkInterfaceTest extends AbstractUnifyComponentTest {
 
     private static final String TESTUNICASTCLIENTCOMM = "test-textunicastclientcomm";
