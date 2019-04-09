@@ -43,6 +43,7 @@ public class HttpClientResponse implements ClientResponse {
     private boolean outUsed;
 
     public HttpClientResponse(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
         this.response = response;
     }
 
@@ -94,7 +95,6 @@ public class HttpClientResponse implements ClientResponse {
 
     @Override
     public void close() {
-        response.setStatus(HttpServletResponse.SC_OK);
         IOUtils.close(outputStream);
         IOUtils.close(writer);
     }
