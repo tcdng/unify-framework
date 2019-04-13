@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -31,11 +32,12 @@ import com.tcdng.unify.core.util.StringUtils;
 public abstract class AbstractByteArrayOutputStreamPlainController extends AbstractOutputStreamPlainController {
 
     private String disposition;
-    
-    public AbstractByteArrayOutputStreamPlainController(String disposition) {
+
+    public AbstractByteArrayOutputStreamPlainController(MimeType mimeType, String disposition) {
+        super(mimeType);
         this.disposition = disposition;
     }
-    
+
     public AbstractByteArrayOutputStreamPlainController() {
 
     }

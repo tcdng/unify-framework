@@ -32,11 +32,11 @@ public abstract class AbstractOutputStreamPlainController extends AbstractPlainC
     private String contentType;
 
     public AbstractOutputStreamPlainController() {
-        this(MimeType.APPLICATION_OCTETSTREAM.template());
+        this(MimeType.APPLICATION_OCTETSTREAM);
     }
 
-    public AbstractOutputStreamPlainController(String contentType) {
-        this.contentType = contentType;
+    public AbstractOutputStreamPlainController(MimeType mimeType) {
+        this.contentType = mimeType.template();
     }
 
     @Override

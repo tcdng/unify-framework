@@ -37,6 +37,8 @@ public enum MimeType {
     TEXT_CSS("text/css"),
     TEXT_JAVASCRIPT("text/javascript"),
     TEXT_XML("text/xml"),
+    TEXT_PLAIN("text/plain"),
+    TEXT_PLAIN_UTF8("text/plain;charset=UTF-8"),
     TEXT("text/*"),
     IMAGE_PNG("image/png"),
     IMAGE_JPG("image/jpg"),
