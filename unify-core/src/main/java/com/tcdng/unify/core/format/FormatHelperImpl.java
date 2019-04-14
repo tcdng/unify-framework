@@ -59,6 +59,10 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 
     private FactoryMap<String, SimpleDateFormatPool> simpleDateFormatPoolMap;
 
+    private FactoryMap<String, List<Pattern.Base>> datePatternMap;
+
+    private FactoryMap<String, String> longYearDatePatternMap;
+
     static {
         numberPatternRangeMap = new HashMap<String, int[]>();
         numberPatternRangeMap.put("HH", new int[] { 0, 23 });
@@ -148,6 +152,85 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
                 return new SimpleDateFormatPool(pattern, Locale.getDefault());
             }
         };
+
+        datePatternMap = new FactoryMap<String, List<Pattern.Base>>() {
+
+            @Override
+            protected List<Pattern.Base> create(String pattern, Object... params) throws Exception {
+                List<Pattern.Base> result = new ArrayList<Pattern.Base>();
+                int len = pattern.length();
+                StringBuilder sb = new StringBuilder();
+                boolean isQuoteBegun = false;
+                boolean isFiller = false;
+                for (int i = 0; i < len;) {
+                    char ch = pattern.charAt(i);
+                    i++;
+                    if (ch == '\'') {
+                        if (i < len && pattern.charAt(i) == '\'') {
+                            if (!isFiller) {
+                                result.add(new Pattern.Base(sb.toString(), isFiller));
+                                sb = new StringBuilder();
+                                isFiller = true;
+                            }
+                            sb.append(ch);
+                            i++;
+                        } else {
+                            if (isQuoteBegun) {
+                                result.add(new Pattern.Base(sb.toString(), true, true));
+                                sb = new StringBuilder();
+                                isQuoteBegun = false;
+                            } else {
+                                if (sb.length() > 0) {
+                                    result.add(new Pattern.Base(sb.toString(), isFiller));
+                                    sb = new StringBuilder();
+                                }
+                                isQuoteBegun = true;
+                                isFiller = true;
+                            }
+                        }
+                    } else if (Character.isLetter(ch) || Character.isDigit(ch)) {
+                        if (isFiller && !isQuoteBegun) {
+                            result.add(new Pattern.Base(sb.toString(), isFiller));
+                            sb = new StringBuilder();
+                            isFiller = false;
+                        }
+                        sb.append(ch);
+                    } else {
+                        if (!isFiller) {
+                            result.add(new Pattern.Base(sb.toString(), isFiller));
+                            sb = new StringBuilder();
+                            isFiller = true;
+                        }
+                        sb.append(ch);
+                    }
+                }
+
+                if (sb.length() > 0) {
+                    result.add(new Pattern.Base(sb.toString(), isFiller));
+                }
+                return result;
+            }
+        };
+        
+        longYearDatePatternMap = new FactoryMap<String, String>() {
+
+            @Override
+            protected String create(String pattern, Object... params) throws Exception {
+                List<Pattern.Base> list = datePatternMap.get(pattern);
+                Pattern[] subPatterns = new Pattern[list.size()];
+                for (int i = 0; i < subPatterns.length; i++) {
+                    Pattern.Base base = list.get(i);
+                    if (!base.isFiller() && base.getPattern().charAt(0) == 'y') {
+                        subPatterns[i] = new Pattern(new Pattern.Base("yyyy", false));
+                    } else {
+                        subPatterns[i] = new Pattern(base);
+                    }
+                }
+
+                return reconstructDatePattern(subPatterns);
+            }
+            
+        };
     }
 
     @Override
@@ -157,58 +240,13 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 
     @Override
     public Pattern[] splitDatePattern(String pattern) throws UnifyException {
-        List<Pattern> result = new ArrayList<Pattern>();
-        int len = pattern.length();
-        StringBuilder sb = new StringBuilder();
-        boolean isQuoteBegun = false;
-        boolean isFiller = false;
-        for (int i = 0; i < len;) {
-            char ch = pattern.charAt(i);
-            i++;
-            if (ch == '\'') {
-                if (i < len && pattern.charAt(i) == '\'') {
-                    if (!isFiller) {
-                        result.add(new Pattern(sb.toString(), isFiller));
-                        sb = new StringBuilder();
-                        isFiller = true;
-                    }
-                    sb.append(ch);
-                    i++;
-                } else {
-                    if (isQuoteBegun) {
-                        result.add(new Pattern(sb.toString(), true, true));
-                        sb = new StringBuilder();
-                        isQuoteBegun = false;
-                    } else {
-                        if (sb.length() > 0) {
-                            result.add(new Pattern(sb.toString(), isFiller));
-                            sb = new StringBuilder();
-                        }
-                        isQuoteBegun = true;
-                        isFiller = true;
-                    }
-                }
-            } else if (Character.isLetter(ch) || Character.isDigit(ch)) {
-                if (isFiller && !isQuoteBegun) {
-                    result.add(new Pattern(sb.toString(), isFiller));
-                    sb = new StringBuilder();
-                    isFiller = false;
-                }
-                sb.append(ch);
-            } else {
-                if (!isFiller) {
-                    result.add(new Pattern(sb.toString(), isFiller));
-                    sb = new StringBuilder();
-                    isFiller = true;
-                }
-                sb.append(ch);
-            }
+        List<Pattern.Base> list = datePatternMap.get(pattern);
+        Pattern[] result = new Pattern[list.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = new Pattern(list.get(i));
         }
 
-        if (sb.length() > 0) {
-            result.add(new Pattern(sb.toString(), isFiller));
-        }
-        return result.toArray(new Pattern[result.size()]);
+        return result;
     }
 
     @Override
@@ -248,15 +286,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 
     @Override
     public String getDatePatternWithLongYear(String pattern) throws UnifyException {
-        Pattern[] subPatterns = splitDatePattern(pattern);
-        for (int i = 0; i < subPatterns.length; i++) {
-            Pattern subPattern = subPatterns[i];
-            if (!subPattern.isFiller() && subPattern.getPattern().charAt(0) == 'y') {
-                subPatterns[i] = new Pattern("yyyy", false);
-                break;
-            }
-        }
-        return reconstructDatePattern(subPatterns);
+        return longYearDatePatternMap.get(pattern);
     }
 
     @Override

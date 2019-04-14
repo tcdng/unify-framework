@@ -17,6 +17,7 @@ package com.tcdng.unify.core;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
 
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.UserPlatform;
@@ -86,7 +87,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             return new RequestContext(null,
-                    new SessionContext(ApplicationUtils.generateSessionContextId(), "http://localhost", "/default",
+                    new SessionContext(ApplicationUtils.generateSessionContextId(), Locale.getDefault(), "http://localhost", "/default",
                             inetAddress.getHostName(), inetAddress.getHostAddress(), null, null, UserPlatform.DEFAULT));
         } catch (UnknownHostException e) {
         }

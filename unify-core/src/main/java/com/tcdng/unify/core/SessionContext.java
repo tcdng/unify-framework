@@ -55,10 +55,10 @@ public class SessionContext extends Context {
 
     private Date lastAccessTime;
 
-    public SessionContext(String id, String uriBase, String contextPath, String remoteHost, String remoteAddress,
+    public SessionContext(String id, Locale locale, String uriBase, String contextPath, String remoteHost, String remoteAddress,
             String remoteUser, String remoteViewer, UserPlatform platform) {
         this.id = id;
-        this.locale = Locale.getDefault();
+        this.locale = locale;
         this.uriBase = uriBase;
         this.contextPath = contextPath;
         this.remoteHost = remoteHost;

@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.http;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
@@ -39,8 +41,8 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     public HttpUserSession(String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
             String remoteUser, String remoteViewer, UserPlatform platform) {
-        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), uriBase, contextPath,
-                remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
+        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), Locale.getDefault(), uriBase,
+                contextPath, remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
     }
 
     @Override
