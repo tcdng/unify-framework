@@ -89,8 +89,6 @@ public class UnifyContainer {
 
     public static final String DEFAULT_APPLICATION_BANNER = "banner/banner.txt";
 
-    public static final String DEFAULT_APPLICATION_LOCALE = "en-US";
-
     public static final short DEFAULT_COMMAND_PORT = 4242;
 
     public static final int DEFAULT_APPLICATION_QUERY_LIMIT = 10000;
@@ -1352,11 +1350,11 @@ public class UnifyContainer {
 
     public Locale getApplicationLocale() throws UnifyException {
         String languageTag = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOCALE);
-        if (StringUtils.isBlank(languageTag)) {
-            languageTag = DEFAULT_APPLICATION_LOCALE;
+        if (!StringUtils.isBlank(languageTag)) {
+            Locale.forLanguageTag(languageTag);
         }
 
-        return Locale.forLanguageTag(languageTag);
+        return Locale.getDefault();
     }
 
     private void checkStarted() throws UnifyException {
