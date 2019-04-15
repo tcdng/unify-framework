@@ -32,6 +32,8 @@ import com.tcdng.unify.core.util.ApplicationUtils;
 @Component(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER)
 public class RequestContextManagerImpl extends AbstractUnifyComponent implements RequestContextManager {
 
+    private static Locale applicationLocale;
+    
     private static final ThreadLocal<ThreadRequestContextInfo> requestContextThreadLocal =
             new ThreadLocal<ThreadRequestContextInfo>() {
 
@@ -75,7 +77,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
 
     @Override
     protected void onInitialize() throws UnifyException {
-
+        applicationLocale = getApplicationLocale();
     }
 
     @Override
@@ -87,7 +89,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             return new RequestContext(null,
-                    new SessionContext(ApplicationUtils.generateSessionContextId(), Locale.getDefault(), "http://localhost", "/default",
+                    new SessionContext(ApplicationUtils.generateSessionContextId(), applicationLocale, "http://localhost", "/default",
                             inetAddress.getHostName(), inetAddress.getHostAddress(), null, null, UserPlatform.DEFAULT));
         } catch (UnknownHostException e) {
         }

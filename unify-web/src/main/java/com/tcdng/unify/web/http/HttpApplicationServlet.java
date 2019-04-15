@@ -18,6 +18,7 @@ package com.tcdng.unify.web.http;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -77,6 +78,8 @@ public class HttpApplicationServlet extends HttpServlet {
     private UserSessionManager userSessionManager;
 
     private UplComponentWriterManager uplComponentWriterManager;
+    
+    private Locale applicationLocale;
 
     private String contextPath;
 
@@ -123,6 +126,7 @@ public class HttpApplicationServlet extends HttpServlet {
                 UnifyContainerConfig ucc = uccb.build();
                 unifyContainer = new UnifyContainer();
                 unifyContainer.startup(uce, ucc);
+                this.applicationLocale = unifyContainer.getApplicationLocale();
                 requestContextManager = (RequestContextManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
                 httpRequestHandler = (HttpRequestHandler) unifyContainer
@@ -150,9 +154,10 @@ public class HttpApplicationServlet extends HttpServlet {
         super.destroy();
     }
 
-    public void setup(UnifyWebInterface webInterface, RequestContextManager requestContextManager,
+    public void setup(Locale applicationLocale, UnifyWebInterface webInterface, RequestContextManager requestContextManager,
             HttpRequestHandler applicationController, UserSessionManager userSessionManager,
             UplComponentWriterManager uplComponentWriterManager) {
+        this.applicationLocale = applicationLocale;
         this.webInterface = webInterface;
         this.requestContextManager = requestContextManager;
         this.httpRequestHandler = applicationController;
@@ -304,7 +309,7 @@ public class HttpApplicationServlet extends HttpServlet {
         }
 
         UserPlatform platform = detectRequestPlatform(request);
-        HttpUserSession userSession = new HttpUserSession(uriBase, contextPath, request.getRemoteHost(),
+        HttpUserSession userSession = new HttpUserSession(applicationLocale, uriBase, contextPath, request.getRemoteHost(),
                 remoteIpAddress, request.getRemoteUser(),
                 (String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER), platform);
         userSession.getSessionContext().setAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,

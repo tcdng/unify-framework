@@ -63,7 +63,7 @@ public abstract class AbstractEmbeddedWebServer extends AbstractHttpWebInterface
 
     protected HttpApplicationServlet createHttpServlet() throws UnifyException {
         HttpApplicationServlet httpApplicationServlet = new HttpApplicationServlet(true); // Embedded
-        httpApplicationServlet.setup(this,
+        httpApplicationServlet.setup(getApplicationLocale(), this,
                 (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER),
                 (HttpRequestHandler) getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER),
                 (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER),

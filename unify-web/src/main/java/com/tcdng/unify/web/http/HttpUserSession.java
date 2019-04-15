@@ -39,9 +39,9 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     private SessionContext sessionContext;
 
-    public HttpUserSession(String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
+    public HttpUserSession(Locale locale, String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
             String remoteUser, String remoteViewer, UserPlatform platform) {
-        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), Locale.getDefault(), uriBase,
+        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), locale, uriBase,
                 contextPath, remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
     }
 
