@@ -143,6 +143,16 @@ public class ApplicationContext extends Context {
     }
 
     /**
+     * Sets the application locale.
+     * 
+     * @param applicationLocale
+     *            the locale to set
+     */
+    public void setApplicationLocale(Locale applicationLocale) {
+        this.applicationLocale = applicationLocale;
+    }
+
+    /**
      * Gets the application line separator.
      * 
      * @return the application line separator
