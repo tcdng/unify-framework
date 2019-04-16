@@ -23,6 +23,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Java locale list command.
@@ -43,6 +44,8 @@ public class JavaLocaleListCommand extends AbstractZeroParamsListCommand {
             for (Locale availLocale : Locale.getAvailableLocales()) {
                 javaLocaleList.add(new ListData(availLocale.toLanguageTag(), availLocale.getDisplayName(locale)));
             }
+            
+            DataUtils.sort(javaLocaleList, ListData.class, "listDescription", true);
         }
 
         return javaLocaleList;

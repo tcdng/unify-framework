@@ -1351,7 +1351,7 @@ public class UnifyContainer {
     public Locale getApplicationLocale() throws UnifyException {
         String languageTag = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOCALE);
         if (!StringUtils.isBlank(languageTag)) {
-            Locale.forLanguageTag(languageTag);
+            return Locale.forLanguageTag(languageTag);
         }
 
         return Locale.getDefault();
