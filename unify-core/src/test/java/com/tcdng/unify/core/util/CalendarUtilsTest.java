@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -79,5 +80,39 @@ public class CalendarUtilsTest {
         assertEquals(2, difference.getHours());
         assertEquals(2, difference.getMinutes());
         assertEquals(0, difference.getSeconds());
+    }
+    
+    @Test
+    public void testGetRawUTCOffset() throws Exception {
+        Long rawOffset = CalendarUtils.getRawOffset(null);
+        assertNull(rawOffset);
+        
+        rawOffset = CalendarUtils.getRawOffset("Africa/Luanda");
+        assertNull(rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("00:00");
+        assertEquals(Long.valueOf(0), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+00:00");
+        assertEquals(Long.valueOf(0), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+01:00");
+        assertEquals(Long.valueOf(1 * 60 * 60 * 1000), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+02:00");
+        assertEquals(Long.valueOf(2 * 60 * 60 * 1000), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+02:45");
+        assertEquals(Long.valueOf((2 * 60 + 45)* 60 * 1000), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("-02:00");
+        assertEquals(Long.valueOf(-(2 * 60 * 60 * 1000)), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("-03:30");
+        assertEquals(Long.valueOf(-((3 * 60 + 30) * 60 * 1000)), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("-09:30");
+        assertEquals(Long.valueOf(-((9 * 60 + 30) * 60 * 1000)), rawOffset);
+        System.out.println(rawOffset);
     }
 }

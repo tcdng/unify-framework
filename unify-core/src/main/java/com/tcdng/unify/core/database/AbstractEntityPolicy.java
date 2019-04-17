@@ -26,6 +26,21 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractEntityPolicy extends AbstractUnifyComponent implements EntityPolicy {
 
+    private boolean setNow;
+
+    public AbstractEntityPolicy() {
+        this(false);
+    }
+
+    public AbstractEntityPolicy(boolean setNow) {
+        this.setNow = setNow;
+    }
+
+    @Override
+    public boolean isSetNow() {
+        return setNow;
+    }
+
     @Override
     protected void onInitialize() throws UnifyException {
 

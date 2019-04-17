@@ -19,36 +19,28 @@ import java.util.Date;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.AbstractEntityPolicy;
 import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.system.SequenceNumberService;
 
 /**
- * Convenient base class for sequenced entity policies IDs.
+ * User session tracking entity.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("sequencedentity-policy")
-public class SequencedEntityPolicy extends AbstractEntityPolicy {
+@Component("usersessiontracking-entitypolicy")
+public class UserSessionTrackingPolicy extends AbstractEntityPolicy {
 
-    @Configurable
-    private SequenceNumberService sequenceNumberService;
-
-    public SequencedEntityPolicy(boolean setNow) {
-        super(setNow);
-    }
-
-    public SequencedEntityPolicy() {
-
+    public UserSessionTrackingPolicy() {
+        super(true);
     }
 
     @Override
     public Object preCreate(Entity record, Date now) throws UnifyException {
-        Long id = sequenceNumberService.getCachedBlockNextSequenceNumber(record.getClass().getName());
-        ((AbstractSequencedEntity) record).setId(id);
-        return id;
+        UserSessionTracking userSessionTracking = (UserSessionTracking) record;
+        userSessionTracking.setCreateTime(now);
+        userSessionTracking.setLastAccessTime(now);
+        return userSessionTracking.getId();
     }
 
     @Override

@@ -52,8 +52,8 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateNowSql() throws UnifyException {
-        return "VALUES CURRENT_TIMESTAMP";
+    public String generateUTCTimestampSql() throws UnifyException {
+        return "VALUES TIMESTAMPADD(SQL_TSI_MINUTE, -EXTRACT(TIMEZONE_MINUTE FROM CURRENT_TIMESTAMP), TIMESTAMPADD(SQL_TSI_HOUR, -EXTRACT(TIMEZONE_HOUR FROM CURRENT_TIMESTAMP), CURRENT_TIMESTAMP))";
     }
 
     @Override

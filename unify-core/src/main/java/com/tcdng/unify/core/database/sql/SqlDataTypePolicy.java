@@ -72,10 +72,12 @@ public interface SqlDataTypePolicy {
      *            the data index
      * @param data
      *            the data to set
+     * @param utcOffset
+     *            UTC offset for timestamp type
      * @throws Exception
      *             if an error occurs
      */
-    void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception;
+    void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception;
 
     /**
      * Executes resultset getter using supplied column name.
@@ -86,11 +88,13 @@ public interface SqlDataTypePolicy {
      *            the result type
      * @param column
      *            tthe result column
+     * @param utcOffset
+     *            UTC offset for timestamp type
      * @return the result value
      * @throws Exception
      *             if an error occurs
      */
-    Object executeGetResult(Object rs, Class<?> type, String column) throws Exception;
+    Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception;
 
     /**
      * Executes resultset getter using supplied column index.
@@ -101,9 +105,11 @@ public interface SqlDataTypePolicy {
      *            the result type
      * @param index
      *            the result column index
+     * @param utcOffset
+     *            UTC offset for timestamp type
      * @return the result value
      * @throws Exception
      *             if an error occurs
      */
-    Object executeGetResult(Object rs, Class<?> type, int index) throws Exception;
+    Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception;
 }

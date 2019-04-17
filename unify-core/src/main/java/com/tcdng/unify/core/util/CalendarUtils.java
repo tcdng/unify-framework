@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -54,6 +55,31 @@ public final class CalendarUtils {
 
     }
 
+    public static Long getRawOffset(String timeZoneInterval) {
+        if (timeZoneInterval != null) {
+            int cIndex = timeZoneInterval.indexOf(':');
+            if (cIndex > 0) {
+                int hIndex = 0;
+                char ch = timeZoneInterval.charAt(0);
+                if (ch == '+' || ch == '-') {
+                    hIndex = 1;
+                }
+
+                String hours = timeZoneInterval.substring(hIndex, cIndex);
+                String minutes = timeZoneInterval.substring(cIndex + 1);
+                if (ch == '-') {
+                    return -TimeUnit.MINUTES
+                            .toMillis((TimeUnit.HOURS.toMinutes(Long.parseLong(hours)) + Long.parseLong(minutes)));
+                }
+
+                return TimeUnit.MINUTES
+                        .toMillis((TimeUnit.HOURS.toMinutes(Long.parseLong(hours)) + Long.parseLong(minutes)));
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Tests if supplied date is within calendar.
      * 
@@ -74,13 +100,6 @@ public final class CalendarUtils {
         String month = MonthInYear.byJavaCalendarIndex(cal.get(Calendar.MONTH)).code();
         return CalendarUtils.isEmptyOrInclusive(weekdays, weekDay) && CalendarUtils.isEmptyOrInclusive(days, day)
                 && CalendarUtils.isEmptyOrInclusive(months, month);
-    }
-
-    /**
-     * Returns the current midnight date.
-     */
-    public static Date getCurrentMidnightDate() {
-        return CalendarUtils.getMidnightDate(new Date());
     }
 
     /**
@@ -107,6 +126,7 @@ public final class CalendarUtils {
         if (date == null) {
             return null;
         }
+
         Calendar cal = Calendar.getInstance(locale);
         cal.setTime(date);
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -187,6 +207,8 @@ public final class CalendarUtils {
     /**
      * Calculates now plus offset.
      * 
+     * @param now
+     *            now
      * @param unit
      *            the offset unit
      * @param offsetCount
@@ -195,19 +217,21 @@ public final class CalendarUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static Date getNowWithFrequencyOffset(FrequencyUnit unit, int offsetCount) throws UnifyException {
-        return new Date(new Date().getTime() + CalendarUtils.getMilliSecondsByFrequency(unit, offsetCount));
+    public static Date getNowWithFrequencyOffset(Date now, FrequencyUnit unit, int offsetCount) throws UnifyException {
+        return new Date(now.getTime() + CalendarUtils.getMilliSecondsByFrequency(unit, offsetCount));
     }
 
     /**
      * Gets now plus offset.
      * 
+     * @param now
+     *            now
      * @param offset
      *            the offset in milliseconds
      * @return the calculated time
      */
-    public static Date getNowWithOffset(long offset) {
-        return new Date(new Date().getTime() + offset);
+    public static Date getNowWithOffset(Date now, long offset) {
+        return new Date(now.getTime() + offset);
     }
 
     /**

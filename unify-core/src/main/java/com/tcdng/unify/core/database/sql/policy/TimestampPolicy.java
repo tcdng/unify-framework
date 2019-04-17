@@ -25,12 +25,12 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * Time data type SQL policy.
+ * Timestamp type SQL policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TimePolicy implements SqlDataTypePolicy {
+public class TimestampPolicy implements SqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
@@ -45,28 +45,28 @@ public class TimePolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.TIMESTAMP);
         } else {
-            ((PreparedStatement) pstmt).setTimestamp(index, new Timestamp(((Date) data).getTime()));
+            ((PreparedStatement) pstmt).setTimestamp(index, new Timestamp(((Date) data).getTime() - utcOffset));
         }
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         Timestamp timestamp = ((ResultSet) rs).getTimestamp(column);
         if (timestamp != null) {
-            return new Date(timestamp.getTime());
+            return new Date(timestamp.getTime() + utcOffset);
         }
         return null;
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Timestamp timestamp = ((ResultSet) rs).getTimestamp(index);
         if (timestamp != null) {
-            return new Date(timestamp.getTime());
+            return new Date(timestamp.getTime() + utcOffset);
         }
         return null;
     }

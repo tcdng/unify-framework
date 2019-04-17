@@ -57,7 +57,7 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
         } else {
@@ -66,7 +66,7 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         String string = ((ResultSet) rs).getString(column);
         if (string != null) {
             return getResult(string);
@@ -75,7 +75,7 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         String string = ((ResultSet) rs).getString(index);
         if (string != null) {
             return getResult(string);

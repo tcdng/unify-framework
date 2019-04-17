@@ -40,8 +40,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateNowSql() throws UnifyException {
-        return "SELECT CURRENT_TIMESTAMP";
+    public String generateUTCTimestampSql() throws UnifyException {
+        return "SELECT GETUTCDATE()";
     }
 
     @Override

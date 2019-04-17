@@ -46,7 +46,7 @@ public class ClobPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
         if (data == null || ((String) data).length() == 0) {
             ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
         } else {
@@ -55,7 +55,7 @@ public class ClobPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         Clob clob = ((ResultSet) rs).getClob(column);
         if (clob != null) {
             return clob.getSubString(1, (int) clob.length());
@@ -64,7 +64,7 @@ public class ClobPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Clob clob = ((ResultSet) rs).getClob(index);
         if (clob != null) {
             return clob.getSubString(1, (int) clob.length());

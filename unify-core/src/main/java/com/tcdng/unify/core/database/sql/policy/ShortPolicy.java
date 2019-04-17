@@ -36,7 +36,7 @@ public class ShortPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.SMALLINT);
         } else {
@@ -52,7 +52,7 @@ public class ShortPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         Object object = ((ResultSet) rs).getShort(column);
         if (((ResultSet) rs).wasNull()) {
             return null;
@@ -61,7 +61,7 @@ public class ShortPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Object object = ((ResultSet) rs).getShort(index);
         if (((ResultSet) rs).wasNull()) {
             return null;

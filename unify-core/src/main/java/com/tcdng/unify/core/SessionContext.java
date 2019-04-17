@@ -55,10 +55,13 @@ public class SessionContext extends Context {
 
     private Date lastAccessTime;
 
-    public SessionContext(String id, Locale locale, String uriBase, String contextPath, String remoteHost, String remoteAddress,
-            String remoteUser, String remoteViewer, UserPlatform platform) {
+    private long timeZoneOffset;
+
+    public SessionContext(String id, Locale locale, long timeZoneOffset, String uriBase, String contextPath,
+            String remoteHost, String remoteAddress, String remoteUser, String remoteViewer, UserPlatform platform) {
         this.id = id;
         this.locale = locale;
+        this.timeZoneOffset = timeZoneOffset;
         this.uriBase = uriBase;
         this.contextPath = contextPath;
         this.remoteHost = remoteHost;
@@ -131,7 +134,15 @@ public class SessionContext extends Context {
         return lastAccessTime;
     }
 
-    public void accessed() {
-        this.lastAccessTime = new Date();
+    public void setLastAccessTime(Date lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
+    }
+
+    public long getTimeZoneOffset() {
+        return timeZoneOffset;
+    }
+
+    public void setTimeZoneOffset(long timeZoneOffset) {
+        this.timeZoneOffset = timeZoneOffset;
     }
 }

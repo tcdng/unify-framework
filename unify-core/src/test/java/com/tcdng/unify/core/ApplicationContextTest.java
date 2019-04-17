@@ -18,6 +18,9 @@ package com.tcdng.unify.core;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +36,8 @@ public class ApplicationContextTest {
 
     @Before
     public void setup() throws Exception {
-        applicationContext = new ApplicationContext(null, null, "\n");
+        applicationContext =
+                new ApplicationContext(null, Locale.getDefault(), TimeZone.getDefault().getRawOffset(), "\n");
     }
 
     @Test

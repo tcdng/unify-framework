@@ -43,7 +43,7 @@ public class CharacterPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.CHAR);
         } else {
@@ -52,7 +52,7 @@ public class CharacterPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         String result = ((ResultSet) rs).getString(column);
         if (result != null) {
             return result.charAt(0);
@@ -61,7 +61,7 @@ public class CharacterPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         String result = ((ResultSet) rs).getString(index);
         if (result != null) {
             return result.charAt(0);
