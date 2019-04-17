@@ -37,7 +37,7 @@ public class ApplicationContextTest {
     @Before
     public void setup() throws Exception {
         applicationContext =
-                new ApplicationContext(null, Locale.getDefault(), TimeZone.getDefault().getRawOffset(), "\n");
+                new ApplicationContext(null, Locale.getDefault(), TimeZone.getDefault(), "\n");
     }
 
     @Test

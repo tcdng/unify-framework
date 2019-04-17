@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.LocaleType;
@@ -1240,14 +1241,14 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Gets application time zone raw offset
+     * Gets application time zone
      * 
-     * @return the application time zone raw offset
+     * @return the application time zone
      * @throws UnifyException
      *             if an error occurs
      */
-    protected long getApplicationTimeZoneRawOffset() throws UnifyException {
-        return unifyComponentContext.getApplicationTimeZoneRawOffset();
+    protected TimeZone getApplicationTimeZone() throws UnifyException {
+        return unifyComponentContext.getApplicationTimeZone();
     }
 
     /**

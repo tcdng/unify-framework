@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.http;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -39,9 +40,9 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     private SessionContext sessionContext;
 
-    public HttpUserSession(Locale locale, long timeZoneRawOffset, String uriBase, String contextPath, String remoteHost,
+    public HttpUserSession(Locale locale, TimeZone timeZone, String uriBase, String contextPath, String remoteHost,
             String remoteIpAddress, String remoteUser, String remoteViewer, UserPlatform platform) {
-        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), locale, timeZoneRawOffset,
+        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), locale, timeZone,
                 uriBase, contextPath, remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
     }
 

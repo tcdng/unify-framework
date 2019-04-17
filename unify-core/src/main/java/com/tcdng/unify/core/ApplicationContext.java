@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.constant.TriState;
 import com.tcdng.unify.core.data.Context;
@@ -41,17 +42,17 @@ public class ApplicationContext extends Context {
     private UnifyContainer container;
 
     private Locale applicationLocale;
+    
+    private TimeZone timeZone;
 
     private String lineSeparator;
 
     private Map<String, RoleAttributes> roleAttributes;
-    
-    private long timeZoneOffset;
 
-    public ApplicationContext(UnifyContainer container, Locale applicationLocale, long timeZoneOffset, String lineSeparator) {
+    public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone, String lineSeparator) {
         this.container = container;
         this.applicationLocale = applicationLocale;
-        this.timeZoneOffset = timeZoneOffset;
+        this.timeZone = timeZone;
         this.lineSeparator = lineSeparator;
         this.roleAttributes = new HashMap<String, RoleAttributes>();
     }
@@ -135,8 +136,8 @@ public class ApplicationContext extends Context {
         return applicationLocale;
     }
 
-    public long getTimeZoneOffset() {
-        return timeZoneOffset;
+    public TimeZone getTimeZone() {
+        return timeZone;
     }
 
     public String getLineSeparator() {

@@ -283,7 +283,7 @@ public class UnifyContainer {
         }
 
         String lineSeparator = System.getProperty("line.separator");
-        applicationContext = new ApplicationContext(this, getApplicationLocale(), getApplicationTimeZoneRawOffset(),
+        applicationContext = new ApplicationContext(this, getApplicationLocale(), getApplicationTimeZone(),
                 lineSeparator != null ? lineSeparator : "\n");
         long startTimeMillis = System.currentTimeMillis();
         initializeContainerMessages();
@@ -1358,13 +1358,13 @@ public class UnifyContainer {
         return Locale.getDefault();
     }
 
-    public long getApplicationTimeZoneRawOffset() throws UnifyException {
+    public TimeZone getApplicationTimeZone() throws UnifyException {
         String timeZone = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TIMEZONE);
         if (!StringUtils.isBlank(timeZone)) {
-            return TimeZone.getTimeZone(timeZone).getRawOffset();
+            return TimeZone.getTimeZone(timeZone);
         }
 
-        return TimeZone.getDefault().getRawOffset();
+        return TimeZone.getDefault();
     }
 
     private void checkStarted() throws UnifyException {

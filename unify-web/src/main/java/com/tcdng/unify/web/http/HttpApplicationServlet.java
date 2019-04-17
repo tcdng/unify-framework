@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -81,9 +82,9 @@ public class HttpApplicationServlet extends HttpServlet {
 
     private Locale applicationLocale;
 
-    private String contextPath;
+    private TimeZone applicationTimeZone;
 
-    private long applicationTimeZoneRawOffset;
+    private String contextPath;
 
     private boolean embedded;
 
@@ -129,7 +130,7 @@ public class HttpApplicationServlet extends HttpServlet {
                 unifyContainer = new UnifyContainer();
                 unifyContainer.startup(uce, ucc);
                 applicationLocale = unifyContainer.getApplicationLocale();
-                applicationTimeZoneRawOffset = unifyContainer.getApplicationTimeZoneRawOffset();
+                applicationTimeZone = unifyContainer.getApplicationTimeZone();
                 requestContextManager = (RequestContextManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
                 httpRequestHandler = (HttpRequestHandler) unifyContainer
@@ -157,11 +158,11 @@ public class HttpApplicationServlet extends HttpServlet {
         super.destroy();
     }
 
-    public void setup(Locale applicationLocale, long applicationTimeZoneRawOffset, UnifyWebInterface webInterface,
+    public void setup(Locale applicationLocale, TimeZone applicationTimeZone, UnifyWebInterface webInterface,
             RequestContextManager requestContextManager, HttpRequestHandler applicationController,
             UserSessionManager userSessionManager, UplComponentWriterManager uplComponentWriterManager) {
         this.applicationLocale = applicationLocale;
-        this.applicationTimeZoneRawOffset = applicationTimeZoneRawOffset;
+        this.applicationTimeZone = applicationTimeZone;
         this.webInterface = webInterface;
         this.requestContextManager = requestContextManager;
         this.httpRequestHandler = applicationController;
@@ -313,7 +314,7 @@ public class HttpApplicationServlet extends HttpServlet {
         }
 
         UserPlatform platform = detectRequestPlatform(request);
-        HttpUserSession userSession = new HttpUserSession(applicationLocale, applicationTimeZoneRawOffset, uriBase,
+        HttpUserSession userSession = new HttpUserSession(applicationLocale, applicationTimeZone, uriBase,
                 contextPath, request.getRemoteHost(), remoteIpAddress, request.getRemoteUser(),
                 (String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER), platform);
         userSession.getSessionContext().setAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,

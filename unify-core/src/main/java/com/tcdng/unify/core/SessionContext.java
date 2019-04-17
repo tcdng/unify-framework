@@ -17,6 +17,7 @@ package com.tcdng.unify.core;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.data.Context;
@@ -37,6 +38,8 @@ public class SessionContext extends Context {
 
     private Locale locale;
 
+    private TimeZone timeZone;
+
     private String id;
 
     private String uriBase;
@@ -55,13 +58,13 @@ public class SessionContext extends Context {
 
     private Date lastAccessTime;
 
-    private long timeZoneOffset;
-
-    public SessionContext(String id, Locale locale, long timeZoneOffset, String uriBase, String contextPath,
+    private boolean useDaylightSavings;
+    
+    public SessionContext(String id, Locale locale, TimeZone timeZone, String uriBase, String contextPath,
             String remoteHost, String remoteAddress, String remoteUser, String remoteViewer, UserPlatform platform) {
         this.id = id;
         this.locale = locale;
-        this.timeZoneOffset = timeZoneOffset;
+        this.timeZone = timeZone;
         this.uriBase = uriBase;
         this.contextPath = contextPath;
         this.remoteHost = remoteHost;
@@ -138,11 +141,27 @@ public class SessionContext extends Context {
         this.lastAccessTime = lastAccessTime;
     }
 
-    public long getTimeZoneOffset() {
-        return timeZoneOffset;
+    public TimeZone getTimeZone() {
+        return timeZone;
     }
 
-    public void setTimeZoneOffset(long timeZoneOffset) {
-        this.timeZoneOffset = timeZoneOffset;
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public boolean isUseDaylightSavings() {
+        return useDaylightSavings;
+    }
+
+    public void setUseDaylightSavings(boolean useDaylightSavings) {
+        this.useDaylightSavings = useDaylightSavings;
+    }
+
+    public long getTimeZoneOffset() {
+        if (useDaylightSavings) {
+            return timeZone.getRawOffset() + timeZone.getDSTSavings();
+        }
+
+        return timeZone.getRawOffset();
     }
 }

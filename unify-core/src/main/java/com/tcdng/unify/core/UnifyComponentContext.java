@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.list.ListManager;
 import com.tcdng.unify.core.logging.Logger;
@@ -340,14 +341,14 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Gets application time zone raw offset
+     * Gets application time zone
      * 
-     * @return the application time zone raw offset
+     * @return the application time zone
      * @throws UnifyException
      *             if an error occurs
      */
-    protected long getApplicationTimeZoneRawOffset() throws UnifyException {
-        return applicationContext.getTimeZoneOffset();
+    protected TimeZone getApplicationTimeZone() throws UnifyException {
+        return applicationContext.getTimeZone();
     }
 
     /**

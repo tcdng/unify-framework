@@ -18,6 +18,7 @@ package com.tcdng.unify.core;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.UserPlatform;
@@ -34,7 +35,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
 
     private static Locale applicationLocale;
 
-    private static long applicationTimeZoneRawOffset;
+    private static TimeZone applicationTimeZone;
 
     private static final ThreadLocal<ThreadRequestContextInfo> requestContextThreadLocal =
             new ThreadLocal<ThreadRequestContextInfo>() {
@@ -80,7 +81,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
     @Override
     protected void onInitialize() throws UnifyException {
         applicationLocale = getApplicationLocale();
-        applicationTimeZoneRawOffset = getApplicationTimeZoneRawOffset();
+        applicationTimeZone = getApplicationTimeZone();
     }
 
     @Override
@@ -93,7 +94,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
             InetAddress inetAddress = InetAddress.getLocalHost();
             return new RequestContext(null,
                     new SessionContext(ApplicationUtils.generateSessionContextId(), applicationLocale,
-                            applicationTimeZoneRawOffset, "http://localhost", "/default", inetAddress.getHostName(),
+                            applicationTimeZone, "http://localhost", "/default", inetAddress.getHostName(),
                             inetAddress.getHostAddress(), null, null, UserPlatform.DEFAULT));
         } catch (UnknownHostException e) {
         }
