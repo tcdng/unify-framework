@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.util.Date;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
@@ -38,4 +40,22 @@ public interface BusinessService extends UnifyComponent {
      *             if an error occurs
      */
     DatabaseTransactionManager tm() throws UnifyException;
+
+    /**
+     * Returns the today's date.
+     * 
+     * @return the midnight date
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Date getToday() throws UnifyException;
+
+    /**
+     * Returns the current UTC timestamp based on current session.
+     * 
+     * @return now
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Date getNow() throws UnifyException;
 }

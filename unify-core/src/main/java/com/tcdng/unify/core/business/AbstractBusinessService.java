@@ -15,17 +15,20 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
+import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
  * An abstract base class that implements the basic requirements of a business
@@ -45,6 +48,18 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     @Override
     public DatabaseTransactionManager tm() throws UnifyException {
         return db.getTransactionManager();
+    }
+
+    @Transactional
+    @Override
+    public Date getToday() throws UnifyException {
+        return CalendarUtils.getMidnightDate(db().getNow());
+    }
+
+    @Transactional
+    @Override
+    public Date getNow() throws UnifyException {
+        return db().getNow();
     }
 
     @Override
