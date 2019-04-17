@@ -551,9 +551,9 @@ public interface DatabaseSession {
     List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
 
     /**
-     * Gets the current timestamp of session data source.
+     * Gets the current timestamp in UTC of data source based on session time zone.
      * 
-     * @return the timestamp
+     * @return the UTC timestamp
      * @throws UnifyException
      *             if an error occurs
      */

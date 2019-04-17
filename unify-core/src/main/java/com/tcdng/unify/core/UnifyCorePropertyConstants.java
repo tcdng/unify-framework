@@ -31,6 +31,8 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_LOCALE = "application.locale";
 
+    String APPLICATION_TIMEZONE = "application.timezone";
+
     String APPLICATION_CONTAINER_TOCONSOLE = "application.container.toconsole";
 
     String APPLICATION_BOOT = "application.boot.component";

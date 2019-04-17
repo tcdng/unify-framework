@@ -20,6 +20,7 @@ import java.util.Date;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Id;
+import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
 
 /**
@@ -28,6 +29,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Policy("usersessiontracking-entitypolicy")
 @Table("UNUSERSESSION")
 public class UserSessionTracking extends AbstractSystemEntity {
 

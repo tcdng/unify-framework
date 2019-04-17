@@ -1240,6 +1240,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Gets application time zone raw offset
+     * 
+     * @return the application time zone raw offset
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected long getApplicationTimeZoneRawOffset() throws UnifyException {
+        return unifyComponentContext.getApplicationTimeZoneRawOffset();
+    }
+
+    /**
      * Gets the application banner ASCII text
      * 
      * @return the application banner text as a list of strings

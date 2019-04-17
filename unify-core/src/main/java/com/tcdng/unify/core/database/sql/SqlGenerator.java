@@ -529,12 +529,12 @@ public interface SqlGenerator extends UnifyComponent {
     String generateTestSql() throws UnifyException;
 
     /**
-     * Generates connection current timestamp SQL. Generates SQL is expected to
+     * Generates connection current UTC timestamp SQL. Generates SQL is expected to
      * select the current timestamp.
      * 
      * @return the current timestamp SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateNowSql() throws UnifyException;
+    String generateUTCTimestampSql() throws UnifyException;
 }

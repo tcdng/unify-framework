@@ -45,10 +45,13 @@ public class ApplicationContext extends Context {
     private String lineSeparator;
 
     private Map<String, RoleAttributes> roleAttributes;
+    
+    private long timeZoneOffset;
 
-    public ApplicationContext(UnifyContainer container, Locale applicationLocale, String lineSeparator) {
+    public ApplicationContext(UnifyContainer container, Locale applicationLocale, long timeZoneOffset, String lineSeparator) {
         this.container = container;
         this.applicationLocale = applicationLocale;
+        this.timeZoneOffset = timeZoneOffset;
         this.lineSeparator = lineSeparator;
         this.roleAttributes = new HashMap<String, RoleAttributes>();
     }
@@ -124,39 +127,18 @@ public class ApplicationContext extends Context {
         return Collections.emptySet();
     }
 
-    /**
-     * Returns the application banner ASCII text
-     * 
-     * @return if an error occurs
-     */
     public List<String> getApplicationBanner() throws UnifyException {
         return container.getApplicationBanner();
     }
 
-    /**
-     * Gets the application locale.
-     * 
-     * @return the application locale
-     */
     public Locale getApplicationLocale() {
         return applicationLocale;
     }
 
-    /**
-     * Sets the application locale.
-     * 
-     * @param applicationLocale
-     *            the locale to set
-     */
-    public void setApplicationLocale(Locale applicationLocale) {
-        this.applicationLocale = applicationLocale;
+    public long getTimeZoneOffset() {
+        return timeZoneOffset;
     }
 
-    /**
-     * Gets the application line separator.
-     * 
-     * @return the application line separator
-     */
     public String getLineSeparator() {
         return lineSeparator;
     }

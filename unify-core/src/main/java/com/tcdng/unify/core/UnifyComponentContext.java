@@ -331,12 +331,23 @@ public class UnifyComponentContext {
     /**
      * Gets application locale
      * 
-     * @return the application local
+     * @return the application locale
      * @throws UnifyException
      *             if an error occurs
      */
     protected Locale getApplicationLocale() throws UnifyException {
         return applicationContext.getApplicationLocale();
+    }
+
+    /**
+     * Gets application time zone raw offset
+     * 
+     * @return the application time zone raw offset
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected long getApplicationTimeZoneRawOffset() throws UnifyException {
+        return applicationContext.getTimeZoneOffset();
     }
 
     /**

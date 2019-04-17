@@ -635,9 +635,9 @@ public interface Database extends UnifyComponent {
     List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
 
     /**
-     * Gets the current timestamp of database.
+     * Gets the current UTC timestamp of database based on session time zone.
      * 
-     * @return the timestamp
+     * @return the UTC timestamp
      * @throws UnifyException
      *             if an error occurs
      */

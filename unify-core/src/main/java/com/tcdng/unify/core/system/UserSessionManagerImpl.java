@@ -91,9 +91,6 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         userSessionData.setRemoteAddress(sessionContext.getRemoteAddress());
         userSessionData.setRemoteUser(sessionContext.getRemoteUser());
         userSessionData.setNode(getNodeId());
-        Date createTime = new Date();
-        userSessionData.setCreateTime(createTime);
-        userSessionData.setLastAccessTime(createTime);
         db().create(userSessionData);
         userSessions.put(sessionContext.getId(), userSession);
     }
@@ -107,7 +104,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
 
     @Override
     public void updateCurrentSessionLastAccessTime() throws UnifyException {
-        getSessionContext().accessed();
+        getSessionContext().setLastAccessTime(db().getNow());
     }
 
     @Override
@@ -186,15 +183,15 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     @Transactional(TransactionAttribute.REQUIRES_NEW)
     public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
         // Update active session records and remove inactive ones
-        Date workingDt = new Date();
+        Date now = db().getNow();
         List<String> activeSessionList = new ArrayList<String>();
         int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
                 UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT);
         expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
-        Date expiryTime = CalendarUtils.getDateWithOffset(workingDt, -(expirationInSeconds * 1000));
+        Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
         for (UserSession userSession : userSessions.values()) {
             SessionContext sessionContext = userSession.getSessionContext();
-            if (expiryTime.before(sessionContext.getLastAccessTime())) {
+            if (sessionContext.getLastAccessTime() == null || expiryTime.before(sessionContext.getLastAccessTime())) {
                 activeSessionList.add(sessionContext.getId());
             } else {
                 userSessions.remove(sessionContext.getId());
@@ -203,7 +200,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
 
         if (!activeSessionList.isEmpty()) {
             db().updateAll(new UserSessionTrackingQuery().idAmongst(activeSessionList),
-                    new Update().add("node", getNodeId()).add("lastAccessTime", workingDt));
+                    new Update().add("node", getNodeId()).add("lastAccessTime", now));
         }
 
         if (grabClusterMasterLock()) {

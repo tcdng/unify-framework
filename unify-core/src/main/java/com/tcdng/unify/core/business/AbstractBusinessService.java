@@ -37,14 +37,14 @@ import com.tcdng.unify.core.task.TaskSetup;
 public abstract class AbstractBusinessService extends AbstractUnifyComponent implements BusinessService {
 
     @Configurable(ApplicationComponents.APPLICATION_DATABASE)
-    private Database database;
+    private Database db;
 
     @Configurable
     private TaskLauncher taskLauncher;
 
     @Override
     public DatabaseTransactionManager tm() throws UnifyException {
-        return database.getTransactionManager();
+        return db.getTransactionManager();
     }
 
     @Override
@@ -61,7 +61,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
      * Returns associated database
      */
     protected Database db() {
-        return database;
+        return db;
     }
 
     /**
@@ -106,10 +106,10 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     }
 
     protected void commit() throws UnifyException {
-        database.getTransactionManager().commit();
+        db.getTransactionManager().commit();
     }
 
     protected void setRollback() throws UnifyException {
-        database.getTransactionManager().setRollback();
+        db.getTransactionManager().setRollback();
     }
 }

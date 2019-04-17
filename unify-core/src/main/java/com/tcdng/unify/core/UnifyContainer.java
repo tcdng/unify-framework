@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -282,8 +283,8 @@ public class UnifyContainer {
         }
 
         String lineSeparator = System.getProperty("line.separator");
-        applicationContext =
-                new ApplicationContext(this, getApplicationLocale(), lineSeparator != null ? lineSeparator : "\n");
+        applicationContext = new ApplicationContext(this, getApplicationLocale(), getApplicationTimeZoneRawOffset(),
+                lineSeparator != null ? lineSeparator : "\n");
         long startTimeMillis = System.currentTimeMillis();
         initializeContainerMessages();
         initializeContainerLogger();
@@ -1355,6 +1356,15 @@ public class UnifyContainer {
         }
 
         return Locale.getDefault();
+    }
+
+    public long getApplicationTimeZoneRawOffset() throws UnifyException {
+        String timeZone = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TIMEZONE);
+        if (!StringUtils.isBlank(timeZone)) {
+            return TimeZone.getTimeZone(timeZone).getRawOffset();
+        }
+
+        return TimeZone.getDefault().getRawOffset();
     }
 
     private void checkStarted() throws UnifyException {

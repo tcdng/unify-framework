@@ -39,10 +39,10 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     private SessionContext sessionContext;
 
-    public HttpUserSession(Locale locale, String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
-            String remoteUser, String remoteViewer, UserPlatform platform) {
-        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), locale, uriBase,
-                contextPath, remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
+    public HttpUserSession(Locale locale, long timeZoneRawOffset, String uriBase, String contextPath, String remoteHost,
+            String remoteIpAddress, String remoteUser, String remoteViewer, UserPlatform platform) {
+        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), locale, timeZoneRawOffset,
+                uriBase, contextPath, remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
     }
 
     @Override

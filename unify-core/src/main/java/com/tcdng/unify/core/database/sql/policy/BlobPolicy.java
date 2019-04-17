@@ -43,7 +43,7 @@ public class BlobPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
         } else {
@@ -52,7 +52,7 @@ public class BlobPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         Blob blob = ((ResultSet) rs).getBlob(column);
         if (blob != null) {
             return blob.getBytes(1, (int) blob.length());
@@ -61,7 +61,7 @@ public class BlobPolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Blob blob = ((ResultSet) rs).getBlob(index);
         if (blob != null) {
             return blob.getBytes(1, (int) blob.length());

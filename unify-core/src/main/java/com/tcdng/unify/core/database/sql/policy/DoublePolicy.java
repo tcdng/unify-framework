@@ -43,7 +43,7 @@ public class DoublePolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.DOUBLE);
         } else {
@@ -52,7 +52,7 @@ public class DoublePolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, String column) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         Object object = ((ResultSet) rs).getObject(column);
         if (object != null) {
             return ((ResultSet) rs).getDouble(column);
@@ -61,7 +61,7 @@ public class DoublePolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public Object executeGetResult(Object rs, Class<?> type, int index) throws Exception {
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Object object = ((ResultSet) rs).getObject(index);
         if (object != null) {
             return ((ResultSet) rs).getDouble(index);

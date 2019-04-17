@@ -52,8 +52,8 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateNowSql() throws UnifyException {
-        return "SELECT LOCALTIMESTAMP FROM DUAL";
+    public String generateUTCTimestampSql() throws UnifyException {
+        return "SELECT SYS_EXTRACT_UTC(SYSTIMESTAMP) FROM DUAL";
     }
 
     @Override
@@ -206,7 +206,7 @@ class OracleShortPolicy extends ShortPolicy {
 class OracleBlobPolicy extends BlobPolicy {
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset) throws Exception {
         if (data == null || ((byte[]) data).length == 0) {
             ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
         } else {
@@ -220,7 +220,7 @@ class OracleBlobPolicy extends BlobPolicy {
 class OracleClobPolicy extends ClobPolicy {
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset) throws Exception {
         if (data == null || ((String) data).isEmpty()) {
             ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
         } else {
