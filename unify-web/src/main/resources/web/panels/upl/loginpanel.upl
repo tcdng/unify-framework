@@ -8,13 +8,13 @@
     section:$d{!ui-section components:$c{languageField nameField passwordField tokenField loginMsgPanel}}
 
 !ui-select:languageField caption:$m{loginpanel.language} binding:$g{languageBinding}
-    list:$f{languageList} blankOption:$s{} required:true
+    list:$f{languageList} blankOption:$s{}
     eventHandler:$d{!ui-event event:onchange action:$c{languageAct}}
 !ui-name:nameField caption:$m{loginpanel.username} binding:$g{loginNameBinding}
-    case:$f{loginNameCase} focus:true required:true
+    case:$f{loginNameCase} focus:true
     eventHandler:$d{!ui-event event:onenter action:$c{loginAct}}
 !ui-password:passwordField caption:$m{loginpanel.password} binding:$g{loginPasswordBinding} 
-    eventHandler:$d{!ui-event event:onenter action:$c{loginAct}} required:true
+    eventHandler:$d{!ui-event event:onenter action:$c{loginAct}}
 !ui-password:tokenField caption:$m{loginpanel.token} binding:$g{loginTokenBinding} 
     eventHandler:$d{!ui-event event:onenter action:$c{loginAct}}
 !ui-panel:loginMsgPanel styleClass:$e{lpmessagepanel} components:$c{loginMsg}
