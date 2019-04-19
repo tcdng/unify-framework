@@ -47,6 +47,16 @@ public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatc
     }
 
     @Override
+    public boolean detectPreferredBean() throws UnifyException {
+        return false;
+    }
+
+    @Override
+    public Class<?> getPreferredBean() throws UnifyException {
+        return null;
+    }
+
+    @Override
     public void close() {
         IOUtils.close(reader);
         reader = null;

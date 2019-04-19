@@ -46,6 +46,27 @@ public interface BatchFileReader extends UnifyComponent {
     void open(BatchFileReadConfig batchFileReadConfig, Object... file) throws UnifyException;
 
     /**
+     * Detects if there is a preferred bean for reader instance. Utilized after
+     * {@link #open(BatchFileReadConfig, Object...)} when information about batch
+     * file would have been known and reader can suggest a preferred bean for
+     * creating the {@link #readNextRecord(ValueStore)} value store.
+     * 
+     * @return a true value if there is a preferred bean, otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean detectPreferredBean() throws UnifyException;
+
+    /**
+     * Gets preferred bean for reader instance.
+     * 
+     * @return a preferred bean if any, otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Class<?> getPreferredBean() throws UnifyException;
+
+    /**
      * Reads next record from batch.
      * 
      * @param recordStore

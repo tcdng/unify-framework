@@ -88,6 +88,16 @@ public class XMLBatchFileReader extends AbstractBatchFileReader {
     }
 
     @Override
+    public boolean detectPreferredBean() throws UnifyException {
+        return false;
+    }
+
+    @Override
+    public Class<?> getPreferredBean() throws UnifyException {
+        return null;
+    }
+
+    @Override
     public void close() {
         if (batchFileSAXReader != null) {
             batchFileSAXReader.stop();
