@@ -455,4 +455,20 @@ public class StringUtilsTest {
         assertEquals("adj", token.getToken());
         assertTrue(token.isParam());
     }
+    
+    @Test
+    public void testFirstNonBlank() throws Exception {
+        assertNull(StringUtils.getFirstNonBlank());
+        assertNull(StringUtils.getFirstNonBlank((String) null));
+        assertNull(StringUtils.getFirstNonBlank(""));
+        assertNull(StringUtils.getFirstNonBlank("", (String) null));
+        assertNull(StringUtils.getFirstNonBlank("  "));
+        assertEquals("Red", StringUtils.getFirstNonBlank("Red"));
+        assertEquals("Orange", StringUtils.getFirstNonBlank("Orange", (String) null));
+        assertEquals("Yellow", StringUtils.getFirstNonBlank(" ", "Yellow", (String) null));
+        assertEquals("Green", StringUtils.getFirstNonBlank(" ", "Green"));
+        assertEquals("Blue", StringUtils.getFirstNonBlank(" ", "Blue", "Green"));
+        assertEquals("Indigo", StringUtils.getFirstNonBlank("Indigo", "Blue", "Green"));
+        assertEquals("Violet", StringUtils.getFirstNonBlank((String) null, "  ", "Violet"));
+    }
 }

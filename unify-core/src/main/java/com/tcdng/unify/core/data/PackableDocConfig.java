@@ -79,16 +79,6 @@ public class PackableDocConfig {
         return fieldConfigs.size();
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{name=\"").append(name).append("\", fieldConfigs=\n");
-        for (Map.Entry<String, FieldConfig> entry : fieldConfigs.entrySet()) {
-            sb.append(entry.getValue()).append("\n");
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-
     public static class FieldConfig {
 
         private String name;
@@ -161,17 +151,6 @@ public class PackableDocConfig {
 
         public boolean isArray() {
             return type.isArray();
-        }
-
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("{name=\"").append(name).append("\", type=\"").append(type).append("\", presetLen=\"")
-                    .append(presetLen).append("\"");
-            if (packableDocConfig != null) {
-                sb.append("\n").append(packableDocConfig);
-            }
-            sb.append("}");
-            return sb.toString();
         }
     }
 }

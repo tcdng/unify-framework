@@ -545,6 +545,16 @@ public final class StringUtils {
 
         return "";
     }
+    
+    public static String getFirstNonBlank(String... values) {
+        for(String val: values) {
+            if(!StringUtils.isBlank(val)) {
+                return val;
+            }
+        }
+        
+        return null;
+    }
 
     public static List<StringToken> breakdownParameterizedString(String string) {
         if (StringUtils.isBlank(string)) {
