@@ -2,12 +2,13 @@
 !ui-loginpanel layout:$d{!ui-vertical} components:$c{headerPanel mainPanel loginActionPanel}
     formCaptionSuffix:$s{:} loginNameCase:upper loginMessageStyleClass:$e{lpmessage}
     languageList:$s{javalocalelist}
+    languagePath:$n{/noResult}
    
 !ui-panel:headerPanel layout:$f{headerLayout} components:$f{headerComponentList}
 !ui-form:mainPanel captionSuffix:$f{formCaptionSuffix}
     section:$d{!ui-section components:$c{languageField nameField passwordField tokenField loginMsgPanel}}
 
-!ui-select:languageField caption:$m{loginpanel.language} binding:$g{languageBinding}
+!ui-select:languageField caption:$m{loginpanel.language} binding:$f{languageBinding}
     list:$f{languageList} blankOption:$s{}
     eventHandler:$d{!ui-event event:onchange action:$c{languageAct}}
 !ui-name:nameField caption:$m{loginpanel.username} binding:$g{loginNameBinding}
@@ -24,4 +25,4 @@
 !ui-button:loginBtn caption:$m{button.login} eventHandler:$d{!ui-event event:onclick action:$c{loginAct}}
 
 !ui-post:loginAct path:$g{loginPath} components:$c{mainPanel}
-!ui-post:languageAct path:$g{languagePath} components:$c{mainPanel}
+!ui-post:languageAct path:$f{languagePath} components:$c{mainPanel}
