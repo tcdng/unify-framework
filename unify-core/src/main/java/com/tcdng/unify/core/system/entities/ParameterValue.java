@@ -32,7 +32,7 @@ public class ParameterValue extends AbstractSystemSequencedEntity {
     @ForeignKey(ParameterValues.class)
     private Long parameterValuesId;
 
-    @Column
+    @Column(length = 64)
     private String paramKey;
 
     @Column(length = 128, nullable = true)

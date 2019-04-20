@@ -32,10 +32,10 @@ public class ParameterDef extends AbstractSequencedEntity {
     @ForeignKey(ParametersDef.class)
     private Long parametersDefId;
 
-    @Column(length = 48)
+    @Column(length = 64)
     private String name;
 
-    @Column(length = 64)
+    @Column(length = 96)
     private String description;
 
     @Column(length = 128)
