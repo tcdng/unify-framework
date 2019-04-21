@@ -131,7 +131,7 @@ public interface ObjectStreamer extends UnifyComponent {
      *            the object to write
      * @throws UnifyException
      *             if an error occurs
-     * @return String the string result
+     * @return Object the object result
      */
-    String marshal(Object object) throws UnifyException;
+    Object marshal(Object object) throws UnifyException;
 }

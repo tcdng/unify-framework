@@ -38,13 +38,13 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallParams;
 import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 
 /**
- * Default implementation of a remote call client.
+ * Default implementation of a remote client.
  * 
  * @author Lateef
  * @since 1.0
  */
-@Component(WebApplicationComponents.APPLICATION_REMOTECALLCLIENT)
-public class RemoteCallClientImpl extends AbstractUnifyComponent implements RemoteCallClient {
+@Component(WebApplicationComponents.APPLICATION_REMOTECLIENT)
+public class RemoteClientImpl extends AbstractUnifyComponent implements RemoteClient {
 
     @Configurable
     private XMLObjectStreamer xmlObjectStreamer;
@@ -52,9 +52,12 @@ public class RemoteCallClientImpl extends AbstractUnifyComponent implements Remo
     @Configurable
     private JSONObjectStreamer jsonObjectStreamer;
 
+    @Configurable
+    private RemoteMessageStreamer taggedByteArrayStreamer;
+
     private FactoryMaps<String, String, RemoteCallSetup> preferences;
 
-    public RemoteCallClientImpl() {
+    public RemoteClientImpl() {
         preferences = new FactoryMaps<String, String, RemoteCallSetup>() {
 
             @Override
@@ -68,6 +71,11 @@ public class RemoteCallClientImpl extends AbstractUnifyComponent implements Remo
     @Override
     public void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
         setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.JSON, StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public void setupMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
+        setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.TAGGED_MESSAGE, null);
     }
 
     @Override
@@ -111,6 +119,11 @@ public class RemoteCallClientImpl extends AbstractUnifyComponent implements Remo
     }
 
     @Override
+    public TaggedRemoteMessageAck sendMessage(String remoteAppURL, TaggedRemoteMessage remoteMessage) throws UnifyException {
+        return remoteCall(TaggedRemoteMessageAck.class, remoteAppURL, remoteMessage);
+    }
+
+    @Override
     public <T extends RemoteCallResult> T remoteCall(Class<T> resultType, String remoteAppURL, RemoteCallParams param)
             throws UnifyException {
         T result = null;
@@ -130,6 +143,8 @@ public class RemoteCallClientImpl extends AbstractUnifyComponent implements Remo
             ObjectStreamer streamer = jsonObjectStreamer;
             if (RemoteCallFormat.XML.equals(remoteCallSetup.getFormat())) {
                 streamer = xmlObjectStreamer;
+            } else if (RemoteCallFormat.TAGGED_MESSAGE.equals(remoteCallSetup.getFormat())) {
+                streamer = taggedByteArrayStreamer;
             }
 
             // Establish connection
@@ -139,7 +154,9 @@ public class RemoteCallClientImpl extends AbstractUnifyComponent implements Remo
             conn.setRequestMethod("POST");
             conn.setUseCaches(false);
             conn.setRequestProperty("Content-Type", remoteCallSetup.getFormat().mimeType().template());
-            conn.setRequestProperty("Accept-Charset", charset.name());
+            if (charset != null) {
+                conn.setRequestProperty("Accept-Charset", charset.name());
+            }
             conn.connect();
 
             // Stream remote call parameter out

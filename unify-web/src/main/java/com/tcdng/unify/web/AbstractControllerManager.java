@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -88,6 +89,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     @Configurable
     private JSONObjectStreamer jsonObjectStreamer;
+
+    @Configurable
+    private RemoteMessageStreamer remoteMessageStreamer;
 
     private Map<String, String> actionToControllerNameMap;
 
@@ -281,7 +285,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
             SessionContext sessionContext = getSessionContext();
             if (controller.isSecured() && !sessionContext.isUserLoggedIn()) {
-                String forceLogout = (String) sessionContext.removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
+                String forceLogout =
+                        (String) sessionContext.removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
                 if (forceLogout != null) {
                     throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout), request.getPath());
                 }
@@ -294,17 +299,20 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 ((PlainController) controller).execute(request, response);
             } else if (ControllerType.REMOTECALL_CONTROLLER.equals(type)) {
                 RemoteCallController remoteCallController = (RemoteCallController) controller;
-                String reqBody = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
                 RemoteCallFormat remoteCallFormat =
                         (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-                String responseString =
-                        executeRemoteCall(remoteCallController, remoteCallFormat, request.getPath(), reqBody);
+                Object reqBody = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+                Object respBody = executeRemoteCall(remoteCallController, remoteCallFormat, request.getPath(), reqBody);
                 response.setContentType(remoteCallFormat.mimeType().template());
                 if (request.getCharset() != null) {
                     response.setCharacterEncoding(request.getCharset().name());
                 }
 
-                response.getWriter().write(responseString);
+                if (remoteCallFormat.stringFormat()) {
+                    response.getWriter().write((String) respBody);
+                } else {
+                    response.getOutputStream().write((byte[]) respBody);
+                }
             } else if (ControllerType.RESOURCE_CONTROLLER.equals(type)) {
                 ResourceController resourceController = (ResourceController) controller;
                 if (!resourceController.isReadOnly()) {
@@ -410,9 +418,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         defaultResultMap.put(ResultMappingConstants.NONE,
                 new Result(new PageControllerResponse[] { hintUserResponse, refreshMenuResponse }));
 
-        defaultResultMap.put(ResultMappingConstants.INDEX,
-                new Result(MimeType.TEXT_HTML, new PageControllerResponse[] {
-                        (PageControllerResponse) getUplComponent(defaultLocale, "!loaddocumentresponse", false) }));
+        defaultResultMap.put(ResultMappingConstants.INDEX, new Result(MimeType.TEXT_HTML, new PageControllerResponse[] {
+                (PageControllerResponse) getUplComponent(defaultLocale, "!loaddocumentresponse", false) }));
 
         defaultResultMap.put(ResultMappingConstants.OPEN,
                 new Result(new PageControllerResponse[] {
@@ -552,20 +559,28 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         return null;
     }
 
-    protected String executeRemoteCall(RemoteCallController remoteCallController, RemoteCallFormat remoteCallFormat,
-            String remoteHandler, String remoteParam) throws UnifyException {
-        String respObj = null;
+    protected Object executeRemoteCall(RemoteCallController remoteCallController, RemoteCallFormat remoteCallFormat,
+            String remoteHandler, Object remoteParam) throws UnifyException {
+        Object respObj = null;
         String methodCode = null;
         ObjectStreamer streamer = jsonObjectStreamer;
         if (RemoteCallFormat.XML.equals(remoteCallFormat)) {
             streamer = xmlObjectStreamer;
+        } else if (RemoteCallFormat.TAGGED_MESSAGE.equals(remoteCallFormat)) {
+            streamer = remoteMessageStreamer;
         }
 
         RemoteCallHandler handler = null;
         try {
             RemoteCallControllerInfo rbbInfo = remoteCallControllerInfoMap.get(remoteCallController.getName());
             handler = rbbInfo.getRemoteCallHandler(remoteHandler);
-            RemoteCallParams param = streamer.unmarshal(handler.getParamType(), remoteParam);
+            RemoteCallParams param = null;
+            if (remoteCallFormat.stringFormat()) {
+                param = streamer.unmarshal(handler.getParamType(), (String) remoteParam);
+            } else {
+                param = streamer.unmarshal(handler.getParamType(), new ByteArrayInputStream((byte[]) remoteParam));
+            }
+
             methodCode = handler.getMethodCode();
             if (handler.isRestricted() && rbbInfo.isRemoteCallGate()) {
                 RemoteCallGate gate = (RemoteCallGate) getComponent(rbbInfo.getRemoteCallGateName());

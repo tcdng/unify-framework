@@ -131,9 +131,13 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
         RemoteCallFormat remoteCallFormat = RemoteCallFormat.fromContentType(contentType);
         if (remoteCallFormat != null) {
             try {
-                String reqBody = new String(IOUtils.readAll(request.getInputStream()), charset);
-                result.put(RequestParameterConstants.REMOTE_CALL_BODY, reqBody);
                 result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
+                byte[] reqBody = IOUtils.readAll(request.getInputStream());
+                if (RemoteCallFormat.TAGGED_MESSAGE.equals(remoteCallFormat)) {
+                    result.put(RequestParameterConstants.REMOTE_CALL_BODY, reqBody);
+                } else {
+                    result.put(RequestParameterConstants.REMOTE_CALL_BODY, new String(reqBody, charset));
+                }
             } catch (IOException e) {
                 throwOperationErrorException(e);
             }

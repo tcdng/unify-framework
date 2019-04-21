@@ -27,7 +27,9 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum RemoteCallFormat implements EnumConst {
 
-    JSON("JSON", MimeType.APPLICATION_JSON), XML("XML", MimeType.APPLICATION_XML);
+    JSON("JSON", MimeType.APPLICATION_JSON),
+    XML("XML", MimeType.APPLICATION_XML),
+    TAGGED_MESSAGE("TAGGED_MESSAGE", MimeType.APPLICATION_OCTETSTREAM);
 
     private String code;
 
@@ -47,6 +49,10 @@ public enum RemoteCallFormat implements EnumConst {
         return this.code;
     }
 
+    public boolean stringFormat() {
+        return JSON.equals(this) || XML.equals(this);
+    }
+    
     public static RemoteCallFormat fromCode(String code) {
         return EnumUtils.fromCode(RemoteCallFormat.class, code);
     }
@@ -63,6 +69,10 @@ public enum RemoteCallFormat implements EnumConst {
 
             if (contentType.startsWith(XML.mimeType.template())) {
                 return XML;
+            }
+
+            if (contentType.equals(TAGGED_MESSAGE.mimeType.template())) {
+                return TAGGED_MESSAGE;
             }
         }
 

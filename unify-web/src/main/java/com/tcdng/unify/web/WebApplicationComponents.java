@@ -37,7 +37,7 @@ public interface WebApplicationComponents {
 
     String APPLICATION_PAGEMANAGER = "application-pagemanager";
 
-    String APPLICATION_REMOTECALLCLIENT = "application-remotecallclient";
+    String APPLICATION_REMOTECLIENT = "application-remoteclient";
 
     String APPLICATION_RESPONSEWRITER = "application-responsewriter";
 
