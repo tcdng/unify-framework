@@ -24,6 +24,8 @@ package com.tcdng.unify.web;
  */
 public class TaggedMessageResult extends RemoteCallResult {
 
+    public static final TaggedMessageResult SUCCESS =  new TaggedMessageResult();
+    
     public TaggedMessageResult(String methodCode, String errorCode, String errorMsg) {
         super(methodCode, errorCode, errorMsg);
     }
