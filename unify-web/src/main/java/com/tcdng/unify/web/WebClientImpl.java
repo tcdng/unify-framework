@@ -53,7 +53,7 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     private JSONObjectStreamer jsonObjectStreamer;
 
     @Configurable
-    private RemoteMessageStreamer taggedByteArrayStreamer;
+    private TaggedMessageStreamer taggedByteArrayStreamer;
 
     private FactoryMaps<String, String, RemoteCallSetup> preferences;
 
@@ -119,8 +119,8 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     }
 
     @Override
-    public TaggedRemoteMessageAck sendMessage(String remoteAppURL, TaggedRemoteMessage remoteMessage) throws UnifyException {
-        return remoteCall(TaggedRemoteMessageAck.class, remoteAppURL, remoteMessage);
+    public TaggedMessageResult sendMessage(String remoteAppURL, TaggedMessageParams remoteMessage) throws UnifyException {
+        return remoteCall(TaggedMessageResult.class, remoteAppURL, remoteMessage);
     }
 
     @Override

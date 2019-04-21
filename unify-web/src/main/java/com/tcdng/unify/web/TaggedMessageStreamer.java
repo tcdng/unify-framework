@@ -13,23 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.stream.ObjectStreamer;
+
 /**
- * Tagged remote message acknowledgement.
+ * Tagged message streamer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedRemoteMessageAck extends RemoteCallResult {
-
-    public TaggedRemoteMessageAck(String methodCode, String errorCode, String errorMsg) {
-        super(methodCode, errorCode, errorMsg);
-    }
-
-    public TaggedRemoteMessageAck() {
-
-    }
+public interface TaggedMessageStreamer extends ObjectStreamer {
 
 }

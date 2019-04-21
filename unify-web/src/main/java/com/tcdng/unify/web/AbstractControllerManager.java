@@ -91,7 +91,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     private JSONObjectStreamer jsonObjectStreamer;
 
     @Configurable
-    private RemoteMessageStreamer remoteMessageStreamer;
+    private TaggedMessageStreamer remoteMessageStreamer;
 
     private Map<String, String> actionToControllerNameMap;
 

@@ -32,20 +32,20 @@ import com.tcdng.unify.core.data.TaggedMessage;
 import com.tcdng.unify.core.stream.AbstractObjectStreamer;
 
 /**
- * Tagged byte array streamer.
+ * Tagged message streamer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("remotemessage-streamer")
-public class RemoteMessageStreamerImpl extends AbstractObjectStreamer implements RemoteMessageStreamer {
+@Component("taggedmessage-streamer")
+public class TaggedMessageStreamerImpl extends AbstractObjectStreamer implements TaggedMessageStreamer {
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
         try {
             ObjectInputStream ois = new ObjectInputStream(inputStream);
-            if (TaggedRemoteMessage.class.equals(type)) {
+            if (TaggedMessageParams.class.equals(type)) {
                 String clientAppCode = (String) ois.readObject();
                 String methodCode = (String) ois.readObject();
                 String tag = (String) ois.readObject();
@@ -56,14 +56,14 @@ public class RemoteMessageStreamerImpl extends AbstractObjectStreamer implements
                     ois.readFully(message);
                 }
 
-                TaggedRemoteMessage rm = new TaggedRemoteMessage(methodCode, new TaggedMessage(tag, message));
-                rm.setClientAppCode(clientAppCode);
-                return (T) rm;
-            } else if (TaggedRemoteMessageAck.class.equals(type)) {
+                TaggedMessageParams tmParams = new TaggedMessageParams(methodCode, new TaggedMessage(tag, message));
+                tmParams.setClientAppCode(clientAppCode);
+                return (T) tmParams;
+            } else if (TaggedMessageResult.class.equals(type)) {
                 String methodCode = (String) ois.readObject();
                 String errorCode = (String) ois.readObject();
                 String errorMsg = (String) ois.readObject();
-                return (T) new TaggedRemoteMessageAck(methodCode, errorCode, errorMsg);
+                return (T) new TaggedMessageResult(methodCode, errorCode, errorMsg);
             } else {
                 throwOperationErrorException(new RuntimeException("Unsupported stream object type - " + type));
             }
@@ -90,12 +90,12 @@ public class RemoteMessageStreamerImpl extends AbstractObjectStreamer implements
     public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-            if (TaggedRemoteMessage.class.equals(object.getClass())) {
-                TaggedRemoteMessage rm = (TaggedRemoteMessage) object;
-                oos.writeObject((String) rm.getClientAppCode());
-                oos.writeObject((String) rm.methodCode());
+            if (TaggedMessageParams.class.equals(object.getClass())) {
+                TaggedMessageParams tmParams = (TaggedMessageParams) object;
+                oos.writeObject((String) tmParams.getClientAppCode());
+                oos.writeObject((String) tmParams.methodCode());
 
-                TaggedMessage tm = rm.getTaggedMessage();
+                TaggedMessage tm = tmParams.getTaggedMessage();
                 oos.writeObject((String) tm.getTag());
                 byte[] message = tm.getMessage();
                 int length = 0;
@@ -107,8 +107,8 @@ public class RemoteMessageStreamerImpl extends AbstractObjectStreamer implements
                 if (length > 0) {
                     oos.write(message);
                 }
-            } else if (TaggedRemoteMessageAck.class.equals(object.getClass())) {
-                TaggedRemoteMessageAck rma = (TaggedRemoteMessageAck) object;
+            } else if (TaggedMessageResult.class.equals(object.getClass())) {
+                TaggedMessageResult rma = (TaggedMessageResult) object;
                 oos.writeObject(rma.getMethodCode());
                 oos.writeObject(rma.getErrorCode());
                 oos.writeObject(rma.getErrorMsg());

@@ -19,16 +19,16 @@ package com.tcdng.unify.web;
 import com.tcdng.unify.core.data.TaggedMessage;
 
 /**
- * Tagged remote message.
+ * Tagged message remote call parameters.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedRemoteMessage extends RemoteCallParams {
+public class TaggedMessageParams extends RemoteCallParams {
 
     private TaggedMessage taggedMessage;
 
-    public TaggedRemoteMessage(String methodCode, TaggedMessage taggedMessage) {
+    public TaggedMessageParams(String methodCode, TaggedMessage taggedMessage) {
         super(methodCode);
         this.taggedMessage = taggedMessage;
     }

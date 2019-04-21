@@ -115,7 +115,7 @@ public interface WebClient extends UnifyComponent {
      *             if setup with application and code is unknown is unknown. If an
      *             error occurs
      */
-    TaggedRemoteMessageAck sendMessage(String remoteAppURL, TaggedRemoteMessage remoteMessage) throws UnifyException;
+    TaggedMessageResult sendMessage(String remoteAppURL, TaggedMessageParams remoteMessage) throws UnifyException;
 
     /**
      * Executes a remote call.
