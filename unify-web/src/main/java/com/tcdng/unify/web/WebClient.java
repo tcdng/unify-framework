@@ -21,15 +21,15 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * Remote call client
+ * Web client
  * 
  * @author Lateef
  * @since 1.0
  */
-public interface RemoteCallClient extends UnifyComponent {
+public interface WebClient extends UnifyComponent {
 
     /**
-     * Setup remote call.
+     * Setup remote call using default JSON format and UTF-8 character set.
      * 
      * @param remoteAppURL
      *            the remote application URL
@@ -39,6 +39,18 @@ public interface RemoteCallClient extends UnifyComponent {
      *             if setup already exists. If an error occurs
      */
     void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
+
+    /**
+     * Setup remote call for messaging.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param methodCode
+     *            the method code
+     * @throws UnifyException
+     *             if setup already exists. If an error occurs
+     */
+    void setupMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
 
     /**
      * Setup remote call.
@@ -90,6 +102,20 @@ public interface RemoteCallClient extends UnifyComponent {
      *             if an error occurs
      */
     void clearRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException;
+
+    /**
+     * Sends a message to remote server.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param remoteMessage
+     *            the remote message to send
+     * @return the message acknowledgment
+     * @throws UnifyException
+     *             if setup with application and code is unknown is unknown. If an
+     *             error occurs
+     */
+    TaggedRemoteMessageAck sendMessage(String remoteAppURL, TaggedRemoteMessage remoteMessage) throws UnifyException;
 
     /**
      * Executes a remote call.
