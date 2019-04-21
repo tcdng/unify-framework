@@ -42,7 +42,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PackableDocumentTest extends AbstractUnifyComponentTest {
+public class PackableDocTest extends AbstractUnifyComponentTest {
 
     private PackableDocConfig custDocConfig;
 
