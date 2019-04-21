@@ -38,13 +38,13 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallParams;
 import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 
 /**
- * Default implementation of a remote client.
+ * Default implementation of a web client.
  * 
  * @author Lateef
  * @since 1.0
  */
-@Component(WebApplicationComponents.APPLICATION_REMOTECLIENT)
-public class RemoteClientImpl extends AbstractUnifyComponent implements RemoteClient {
+@Component(WebApplicationComponents.APPLICATION_WEBCLIENT)
+public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
 
     @Configurable
     private XMLObjectStreamer xmlObjectStreamer;
@@ -57,7 +57,7 @@ public class RemoteClientImpl extends AbstractUnifyComponent implements RemoteCl
 
     private FactoryMaps<String, String, RemoteCallSetup> preferences;
 
-    public RemoteClientImpl() {
+    public WebClientImpl() {
         preferences = new FactoryMaps<String, String, RemoteCallSetup>() {
 
             @Override

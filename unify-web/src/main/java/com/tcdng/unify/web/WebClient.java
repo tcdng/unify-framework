@@ -21,12 +21,12 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * Remote client
+ * Web client
  * 
  * @author Lateef
  * @since 1.0
  */
-public interface RemoteClient extends UnifyComponent {
+public interface WebClient extends UnifyComponent {
 
     /**
      * Setup remote call using default JSON format and UTF-8 character set.
