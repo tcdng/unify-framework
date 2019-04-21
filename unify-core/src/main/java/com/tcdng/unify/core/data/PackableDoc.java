@@ -16,7 +16,6 @@
 package com.tcdng.unify.core.data;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,20 +67,7 @@ public class PackableDoc implements Serializable {
 
     public PackableDoc preset() throws UnifyException {
         for (FieldConfig fc : config.getFieldConfigs()) {
-            if (fc.isArray()) {
-                Class<?> type = fc.getType().getComponentType();
-                if (!byte.class.equals(type)) {
-                    int len = fc.getPresetLength();
-                    Object arr = Array.newInstance(type, len);
-                    if (fc.isComplex()) {
-                        for (int i = 0; i < len; i++) {
-                            Array.set(arr, i, new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
-                        }
-                    }
-
-                    values.put(fc.getName(), arr);
-                }
-            } else if (fc.isComplex()) {
+            if (fc.isComplex()) {
                 values.put(fc.getName(), new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
             }
         }
@@ -267,7 +253,7 @@ public class PackableDoc implements Serializable {
                 if (fc.isComplex()) {
                     Object val = values.get(fc.getName());
                     if (val != null) {
-                        if (fc.isArray()) {
+                        if (val.getClass().isArray()) {
                             PackableDoc[] pd = (PackableDoc[]) val;
                             for (int i = 0; i < pd.length; i++) {
                                 if (pd[i] != null) {
@@ -307,8 +293,7 @@ public class PackableDoc implements Serializable {
         Object val = pd.values.get(fMapping.getDocFieldName());
         if (val != null) {
             if (fMapping.isComplex()) {
-                FieldConfig fc = pd.config.getFieldConfig(fMapping.getDocFieldName());
-                if (fc.isArray()) {
+                if (val.getClass().isArray()) {
                     PackableDoc[] pdArray = (PackableDoc[]) val;
                     Object[] beans = new Object[pdArray.length];
                     for (int i = 0; i < pdArray.length; i++) {
@@ -326,13 +311,13 @@ public class PackableDoc implements Serializable {
         return val;
     }
 
-    private void writeFieldObject(FieldMapping fMapping, PackableDoc pd, Object value) throws UnifyException {
+    private void writeFieldObject(FieldMapping fMapping, PackableDoc pd, Object val) throws UnifyException {
         FieldConfig fc = pd.config.getFieldConfig(fMapping.getDocFieldName());
-        if (value != null) {
+        if (val != null) {
             if (fc.isComplex()) {
                 PackableDocConfig fpdConfig = fc.getPackableDocConfig();
-                if (fc.isArray()) {
-                    Object[] beans = DataUtils.convert(Object[].class, value, null);
+                if (val.getClass().isArray()) {
+                    Object[] beans = DataUtils.convert(Object[].class, val, null);
                     PackableDoc[] fpd = new PackableDoc[beans.length];
                     for (int i = 0; i < beans.length; i++) {
                         if (beans[i] != null) {
@@ -343,11 +328,11 @@ public class PackableDoc implements Serializable {
                     pd.values.put(fc.getName(), fpd);
                 } else {
                     PackableDoc fpd = new PackableDoc(fpdConfig, auditable);
-                    fpd.readFrom(fMapping.getPackableDocRWConfig(), value);
+                    fpd.readFrom(fMapping.getPackableDocRWConfig(), val);
                     pd.values.put(fc.getName(), fpd);
                 }
             } else {
-                pd.values.put(fc.getName(), DataUtils.convert(fc.getType(), value, null));
+                pd.values.put(fc.getName(), DataUtils.convert(fc.getType(), val, null));
             }
         } else {
             pd.values.put(fc.getName(), null);

@@ -33,7 +33,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PackableDocumentValueStoreTest extends AbstractUnifyComponentTest {
+public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
 
     private PackableDocConfig custDocConfig;
 

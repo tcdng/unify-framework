@@ -87,45 +87,23 @@ public class PackableDocConfig {
 
         private PackableDocConfig packableDocConfig;
 
-        private int presetLen;
-
-        public FieldConfig(String name, Class<?> type) throws UnifyException {
+        public FieldConfig(String name, Class<?> type) {
             this.name = name;
             this.type = type;
         }
 
-        public FieldConfig(String name, DataType type) throws UnifyException {
-            this(name, type, false, 0);
-        }
-
-        public FieldConfig(String name, DataType type, boolean array, int presetLen) throws UnifyException {
+        public FieldConfig(String name, DataType type) {
             this.name = name;
-            this.type = type.javaClass(array);
-            this.presetLen = presetLen;
-            if (this.presetLen < 0) {
-                this.presetLen = 0;
-            }
+            this.type = type.javaClass();
         }
 
         public FieldConfig(String name, FieldConfig... fieldConfigs) {
-            this(name, false, 0, fieldConfigs);
-        }
-
-        public FieldConfig(String name, boolean array, int presetLen, FieldConfig... fieldConfigs) {
-            this(name, false, presetLen, Arrays.asList(fieldConfigs));
+            this(name, Arrays.asList(fieldConfigs));
         }
 
         public FieldConfig(String name, List<FieldConfig> fieldConfigList) {
-            this(name, false, 0, fieldConfigList);
-        }
-
-        public FieldConfig(String name, boolean array, int presetLen, List<FieldConfig> fieldConfigList) {
             this.name = name;
-            this.type = DataType.COMPLEX.javaClass(array);
-            this.presetLen = presetLen;
-            if (this.presetLen < 0) {
-                this.presetLen = 0;
-            }
+            this.type = DataType.COMPLEX.javaClass();
             this.packableDocConfig = new PackableDocConfig(name, fieldConfigList);
         }
 
@@ -137,20 +115,12 @@ public class PackableDocConfig {
             return type;
         }
 
-        public int getPresetLength() {
-            return presetLen;
-        }
-
         public PackableDocConfig getPackableDocConfig() {
             return packableDocConfig;
         }
 
         public boolean isComplex() {
             return packableDocConfig != null;
-        }
-
-        public boolean isArray() {
-            return type.isArray();
         }
     }
 }
