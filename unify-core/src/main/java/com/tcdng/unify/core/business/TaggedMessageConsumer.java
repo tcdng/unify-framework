@@ -14,37 +14,27 @@
  * the License.
  */
 
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.core.business;
+
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.TaggedMessage;
 
 /**
- * Tagged message.
+ * Tagged message consumer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedMessage {
+public interface TaggedMessageConsumer extends UnifyComponent {
 
-    private String consumer;
-
-    private String tag;
-
-    private byte[] message;
-
-    public TaggedMessage(String consumer, String tag, byte[] message) {
-        this.consumer = consumer;
-        this.tag = tag;
-        this.message = message;
-    }
-
-    public String getConsumer() {
-        return consumer;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public byte[] getMessage() {
-        return message;
-    }
+    /**
+     * Consumes a tagged message.
+     * 
+     * @param taggedMessage
+     *            the tagged message
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void consume(TaggedMessage taggedMessage) throws UnifyException;
 }

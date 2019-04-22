@@ -14,37 +14,27 @@
  * the License.
  */
 
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.core.business;
+
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Tagged message.
+ * Convenient base class for a tagged message consumer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedMessage {
+public abstract class AbstractTaggedMessageConsumer extends AbstractUnifyComponent implements TaggedMessageConsumer {
 
-    private String consumer;
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-    private String tag;
-
-    private byte[] message;
-
-    public TaggedMessage(String consumer, String tag, byte[] message) {
-        this.consumer = consumer;
-        this.tag = tag;
-        this.message = message;
     }
 
-    public String getConsumer() {
-        return consumer;
+    @Override
+    protected void onTerminate() throws UnifyException {
+
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public byte[] getMessage() {
-        return message;
-    }
 }

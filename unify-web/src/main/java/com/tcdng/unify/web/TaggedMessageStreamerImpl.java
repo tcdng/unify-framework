@@ -48,6 +48,7 @@ public class TaggedMessageStreamerImpl extends AbstractObjectStreamer implements
             if (TaggedMessageParams.class.equals(type)) {
                 String clientAppCode = (String) ois.readObject();
                 String methodCode = (String) ois.readObject();
+                String consumer = (String) ois.readObject();
                 String tag = (String) ois.readObject();
                 int length = ois.readInt();
                 byte[] message = null;
@@ -56,7 +57,7 @@ public class TaggedMessageStreamerImpl extends AbstractObjectStreamer implements
                     ois.readFully(message);
                 }
 
-                TaggedMessageParams tmParams = new TaggedMessageParams(methodCode, new TaggedMessage(tag, message));
+                TaggedMessageParams tmParams = new TaggedMessageParams(methodCode, new TaggedMessage(consumer, tag, message));
                 tmParams.setClientAppCode(clientAppCode);
                 return (T) tmParams;
             } else if (TaggedMessageResult.class.equals(type)) {
@@ -96,6 +97,7 @@ public class TaggedMessageStreamerImpl extends AbstractObjectStreamer implements
                 oos.writeObject((String) tmParams.methodCode());
 
                 TaggedMessage tm = tmParams.getTaggedMessage();
+                oos.writeObject((String) tm.getConsumer());
                 oos.writeObject((String) tm.getTag());
                 byte[] message = tm.getMessage();
                 int length = 0;
