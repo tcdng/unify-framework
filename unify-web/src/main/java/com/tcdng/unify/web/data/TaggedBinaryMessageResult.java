@@ -14,23 +14,25 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.data;
+
+import com.tcdng.unify.web.RemoteCallResult;
 
 /**
- * Tagged remote message remote call result.
+ * Tagged binary message remote call result.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedMessageResult extends RemoteCallResult {
+public class TaggedBinaryMessageResult extends RemoteCallResult {
 
-    public static final TaggedMessageResult SUCCESS =  new TaggedMessageResult();
+    public static final TaggedBinaryMessageResult SUCCESS =  new TaggedBinaryMessageResult();
     
-    public TaggedMessageResult(String methodCode, String errorCode, String errorMsg) {
+    public TaggedBinaryMessageResult(String methodCode, String errorCode, String errorMsg) {
         super(methodCode, errorCode, errorMsg);
     }
 
-    public TaggedMessageResult() {
+    public TaggedBinaryMessageResult() {
 
     }
 

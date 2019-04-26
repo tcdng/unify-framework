@@ -13,28 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.web.data;
 
-package com.tcdng.unify.core.business;
-
-import com.tcdng.unify.core.UnifyComponent;
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.TaggedBinaryMessage;
+import com.tcdng.unify.core.stream.ObjectStreamer;
 
 /**
- * Tagged message consumer.
+ * Tagged XML message streamer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TaggedMessageConsumer extends UnifyComponent {
+public interface TaggedXmlMessageStreamer extends ObjectStreamer {
 
-    /**
-     * Consumes a tagged message.
-     * 
-     * @param taggedMessage
-     *            the tagged message
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void consume(TaggedBinaryMessage taggedMessage) throws UnifyException;
 }

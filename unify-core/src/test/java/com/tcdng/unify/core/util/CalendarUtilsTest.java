@@ -113,6 +113,5 @@ public class CalendarUtilsTest {
 
         rawOffset = CalendarUtils.getRawOffset("-09:30");
         assertEquals(Long.valueOf(-((9 * 60 + 30) * 60 * 1000)), rawOffset);
-        System.out.println(rawOffset);
     }
 }

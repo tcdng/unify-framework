@@ -14,26 +14,26 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.data;
 
-import com.tcdng.unify.core.data.TaggedMessage;
+import com.tcdng.unify.web.RemoteCallResult;
 
 /**
- * Tagged message remote call parameters.
+ * Tagged XML message remote call result.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedMessageParams extends RemoteCallParams {
+public class TaggedXmlMessageResult extends RemoteCallResult {
 
-    private TaggedMessage taggedMessage;
-
-    public TaggedMessageParams(String methodCode, TaggedMessage taggedMessage) {
-        super(methodCode);
-        this.taggedMessage = taggedMessage;
+    public static final TaggedXmlMessageResult SUCCESS =  new TaggedXmlMessageResult();
+    
+    public TaggedXmlMessageResult(String methodCode, String errorCode, String errorMsg) {
+        super(methodCode, errorCode, errorMsg);
     }
 
-    public TaggedMessage getTaggedMessage() {
-        return taggedMessage;
+    public TaggedXmlMessageResult() {
+
     }
+
 }

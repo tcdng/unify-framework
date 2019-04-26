@@ -133,7 +133,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             try {
                 result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
                 byte[] reqBody = IOUtils.readAll(request.getInputStream());
-                if (RemoteCallFormat.TAGGED_MESSAGE.equals(remoteCallFormat)) {
+                if (RemoteCallFormat.TAGGED_BINARYMESSAGE.equals(remoteCallFormat)) {
                     result.put(RequestParameterConstants.REMOTE_CALL_BODY, reqBody);
                 } else {
                     result.put(RequestParameterConstants.REMOTE_CALL_BODY, new String(reqBody, charset));

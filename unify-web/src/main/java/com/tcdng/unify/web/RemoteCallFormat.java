@@ -29,7 +29,8 @@ public enum RemoteCallFormat implements EnumConst {
 
     JSON("JSON", MimeType.APPLICATION_JSON),
     XML("XML", MimeType.APPLICATION_XML),
-    TAGGED_MESSAGE("TAGGED_MESSAGE", MimeType.APPLICATION_OCTETSTREAM);
+    TAGGED_BINARYMESSAGE("TAGGED_BINARYMESSAGE", MimeType.APPLICATION_OCTETSTREAM),
+    TAGGED_XMLMESSAGE("TAGGED_XMLMESSAGE", MimeType.APPLICATION_XML);
 
     private String code;
 
@@ -52,7 +53,7 @@ public enum RemoteCallFormat implements EnumConst {
     public boolean stringFormat() {
         return JSON.equals(this) || XML.equals(this);
     }
-    
+
     public static RemoteCallFormat fromCode(String code) {
         return EnumUtils.fromCode(RemoteCallFormat.class, code);
     }
@@ -71,8 +72,8 @@ public enum RemoteCallFormat implements EnumConst {
                 return XML;
             }
 
-            if (contentType.equals(TAGGED_MESSAGE.mimeType.template())) {
-                return TAGGED_MESSAGE;
+            if (contentType.equals(TAGGED_BINARYMESSAGE.mimeType.template())) {
+                return TAGGED_BINARYMESSAGE;
             }
         }
 

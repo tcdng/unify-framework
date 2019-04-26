@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +61,8 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.SystemInfoConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.data.TaggedBinaryMessageStreamer;
+import com.tcdng.unify.web.data.TaggedXmlMessageStreamer;
 import com.tcdng.unify.web.ui.BindingInfo;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
@@ -91,7 +94,12 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     private JSONObjectStreamer jsonObjectStreamer;
 
     @Configurable
-    private TaggedMessageStreamer remoteMessageStreamer;
+    private TaggedBinaryMessageStreamer taggedBinaryMessageStreamer;
+
+    @Configurable
+    private TaggedXmlMessageStreamer taggedXmlMessageStreamer;
+
+    private Map<RemoteCallFormat, ObjectStreamer> objectStreamers;
 
     private Map<String, String> actionToControllerNameMap;
 
@@ -115,7 +123,6 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     public AbstractControllerManager() {
         actionToControllerNameMap = new ConcurrentHashMap<String, String>();
-        defaultResultMap = new HashMap<String, Result>();
         skipOnPopulateSet = new HashSet<String>();
 
         pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>() {
@@ -406,6 +413,16 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     @Override
     protected void onInitialize() throws UnifyException {
+        // Object streamer mappings
+        objectStreamers = new HashMap<RemoteCallFormat, ObjectStreamer>();
+        objectStreamers.put(RemoteCallFormat.JSON, jsonObjectStreamer);
+        objectStreamers.put(RemoteCallFormat.XML, xmlObjectStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_BINARYMESSAGE, taggedBinaryMessageStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_XMLMESSAGE, taggedXmlMessageStreamer);
+        objectStreamers = Collections.unmodifiableMap(objectStreamers);
+
+        // Default result mappings
+        defaultResultMap = new HashMap<String, Result>();
         Locale defaultLocale = Locale.getDefault();
         commonUtilitiesControllerName =
                 getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_COMMON_UTILITIES,
@@ -486,6 +503,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
         defaultResultMap.put(ResultMappingConstants.VALIDATION_ERROR, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!validationerrorresponse", false) }));
+        defaultResultMap = Collections.unmodifiableMap(defaultResultMap);
     }
 
     @Override
@@ -563,13 +581,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             String remoteHandler, Object remoteParam) throws UnifyException {
         Object respObj = null;
         String methodCode = null;
-        ObjectStreamer streamer = jsonObjectStreamer;
-        if (RemoteCallFormat.XML.equals(remoteCallFormat)) {
-            streamer = xmlObjectStreamer;
-        } else if (RemoteCallFormat.TAGGED_MESSAGE.equals(remoteCallFormat)) {
-            streamer = remoteMessageStreamer;
-        }
 
+        ObjectStreamer streamer = objectStreamers.get(remoteCallFormat);
         RemoteCallHandler handler = null;
         try {
             RemoteCallControllerInfo rbbInfo = remoteCallControllerInfoMap.get(remoteCallController.getName());
@@ -766,7 +779,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         UnifyConfigUtils.resolveConfigurationOverrides(resultMap, categoryList);
 
         resultMap.putAll(defaultResultMap); // Set result mappings that can
-                                            // not be overriden
+                                            // not be overridden
 
         // Set page name bindings
         Map<String, BindingInfo> pageNamePropertyBindingMap = new HashMap<String, BindingInfo>();

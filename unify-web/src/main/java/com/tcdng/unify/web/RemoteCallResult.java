@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
@@ -44,7 +45,7 @@ public abstract class RemoteCallResult {
         return methodCode;
     }
 
-    @XmlElement
+    @XmlAttribute
     public void setMethodCode(String methodCode) {
         this.methodCode = methodCode;
     }
@@ -53,7 +54,7 @@ public abstract class RemoteCallResult {
         return errorCode;
     }
 
-    @XmlElement
+    @XmlAttribute
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }

@@ -19,6 +19,8 @@ import java.nio.charset.Charset;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.data.TaggedBinaryMessageParams;
+import com.tcdng.unify.web.data.TaggedBinaryMessageResult;
 
 /**
  * Web client
@@ -41,7 +43,7 @@ public interface WebClient extends UnifyComponent {
     void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
 
     /**
-     * Setup remote call for messaging.
+     * Setup remote call for binary messaging.
      * 
      * @param remoteAppURL
      *            the remote application URL
@@ -50,7 +52,19 @@ public interface WebClient extends UnifyComponent {
      * @throws UnifyException
      *             if setup already exists. If an error occurs
      */
-    void setupMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
+    void setupBinaryMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
+
+    /**
+     * Setup remote call for XML messaging.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param methodCode
+     *            the method code
+     * @throws UnifyException
+     *             if setup already exists. If an error occurs
+     */
+    void setupXmlMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException;
 
     /**
      * Setup remote call.
@@ -115,7 +129,7 @@ public interface WebClient extends UnifyComponent {
      *             if setup with application and code is unknown is unknown. If an
      *             error occurs
      */
-    TaggedMessageResult sendMessage(String remoteAppURL, TaggedMessageParams remoteMessage) throws UnifyException;
+    TaggedBinaryMessageResult sendMessage(String remoteAppURL, TaggedBinaryMessageParams remoteMessage) throws UnifyException;
 
     /**
      * Executes a remote call.

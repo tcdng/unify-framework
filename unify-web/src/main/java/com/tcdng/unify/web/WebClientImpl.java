@@ -21,6 +21,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -32,6 +35,10 @@ import com.tcdng.unify.core.stream.ObjectStreamer;
 import com.tcdng.unify.core.stream.XMLObjectStreamer;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.NetworkUtils;
+import com.tcdng.unify.web.data.TaggedBinaryMessageParams;
+import com.tcdng.unify.web.data.TaggedBinaryMessageResult;
+import com.tcdng.unify.web.data.TaggedBinaryMessageStreamer;
+import com.tcdng.unify.web.data.TaggedXmlMessageStreamer;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryPathConstants;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryRemoteCallCodeConstants;
 import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallParams;
@@ -53,7 +60,12 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     private JSONObjectStreamer jsonObjectStreamer;
 
     @Configurable
-    private TaggedMessageStreamer taggedByteArrayStreamer;
+    private TaggedBinaryMessageStreamer taggedBinaryMessageStreamer;
+
+    @Configurable
+    private TaggedXmlMessageStreamer taggedXmlMessageStreamer;
+
+    private Map<RemoteCallFormat, ObjectStreamer> objectStreamers;
 
     private FactoryMaps<String, String, RemoteCallSetup> preferences;
 
@@ -74,8 +86,13 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     }
 
     @Override
-    public void setupMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
-        setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.TAGGED_MESSAGE, null);
+    public void setupBinaryMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
+        setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.TAGGED_BINARYMESSAGE, null);
+    }
+
+    @Override
+    public void setupXmlMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
+        setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.TAGGED_XMLMESSAGE, null);
     }
 
     @Override
@@ -119,20 +136,21 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     }
 
     @Override
-    public TaggedMessageResult sendMessage(String remoteAppURL, TaggedMessageParams remoteMessage) throws UnifyException {
-        return remoteCall(TaggedMessageResult.class, remoteAppURL, remoteMessage);
+    public TaggedBinaryMessageResult sendMessage(String remoteAppURL, TaggedBinaryMessageParams remoteMessage)
+            throws UnifyException {
+        return remoteCall(TaggedBinaryMessageResult.class, remoteAppURL, remoteMessage);
     }
 
     @Override
     public <T extends RemoteCallResult> T remoteCall(Class<T> resultType, String remoteAppURL, RemoteCallParams param)
             throws UnifyException {
         T result = null;
-        if (!preferences.isKey(remoteAppURL, param.methodCode())) {
+        if (!preferences.isKey(remoteAppURL, param.getMethodCode())) {
             throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_CLIENT_SETUP_CODE_UNKNOWN, remoteAppURL,
-                    param.methodCode());
+                    param.getMethodCode());
         }
 
-        RemoteCallSetup remoteCallSetup = preferences.get(remoteAppURL, param.methodCode());
+        RemoteCallSetup remoteCallSetup = preferences.get(remoteAppURL, param.getMethodCode());
         param.setClientAppCode(getApplicationCode());
         OutputStream out = null;
         InputStream in = null;
@@ -140,12 +158,7 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
             Charset charset = remoteCallSetup.getCharset();
 
             // Choose streamer based on format
-            ObjectStreamer streamer = jsonObjectStreamer;
-            if (RemoteCallFormat.XML.equals(remoteCallSetup.getFormat())) {
-                streamer = xmlObjectStreamer;
-            } else if (RemoteCallFormat.TAGGED_MESSAGE.equals(remoteCallSetup.getFormat())) {
-                streamer = taggedByteArrayStreamer;
-            }
+            ObjectStreamer streamer = objectStreamers.get(remoteCallSetup.getFormat());
 
             // Establish connection
             HttpURLConnection conn = (HttpURLConnection) new URL(remoteCallSetup.getTargetURL()).openConnection();
@@ -183,6 +196,13 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
 
     @Override
     protected void onInitialize() throws UnifyException {
+        // Object streamer mappings
+        objectStreamers = new HashMap<RemoteCallFormat, ObjectStreamer>();
+        objectStreamers.put(RemoteCallFormat.JSON, jsonObjectStreamer);
+        objectStreamers.put(RemoteCallFormat.XML, xmlObjectStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_BINARYMESSAGE, taggedBinaryMessageStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_XMLMESSAGE, taggedXmlMessageStreamer);
+        objectStreamers = Collections.unmodifiableMap(objectStreamers);
 
     }
 

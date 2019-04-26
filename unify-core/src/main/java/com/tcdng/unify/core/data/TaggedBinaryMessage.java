@@ -17,12 +17,12 @@
 package com.tcdng.unify.core.data;
 
 /**
- * Tagged message.
+ * Tagged binary message.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedMessage {
+public class TaggedBinaryMessage {
 
     private String consumer;
 
@@ -30,7 +30,7 @@ public class TaggedMessage {
 
     private byte[] message;
 
-    public TaggedMessage(String consumer, String tag, byte[] message) {
+    public TaggedBinaryMessage(String consumer, String tag, byte[] message) {
         this.consumer = consumer;
         this.tag = tag;
         this.message = message;

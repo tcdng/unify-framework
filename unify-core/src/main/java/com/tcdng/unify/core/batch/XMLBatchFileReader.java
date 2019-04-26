@@ -30,11 +30,11 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Parameters;
-import com.tcdng.unify.core.data.SAXParserPool;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ThreadUtils;
+import com.tcdng.unify.core.util.XmlUtils;
 
 /**
  * XML batch file reader.
@@ -74,8 +74,6 @@ public class XMLBatchFileReader extends AbstractBatchFileReader {
         }
     };
 
-    private static SAXParserPool saxParserPool;
-
     private BatchFileSAXReader batchFileSAXReader;
 
     @Override
@@ -112,18 +110,6 @@ public class XMLBatchFileReader extends AbstractBatchFileReader {
     @Override
     public boolean skipNextRecord() throws UnifyException {
         return batchFileSAXReader.skipRecord();
-    }
-
-    private static SAXParserPool getSAXParserPool() {
-        if (saxParserPool == null) {
-            synchronized (XMLBatchFileReader.class) {
-                if (saxParserPool == null) {
-                    saxParserPool = new SAXParserPool();
-                }
-            }
-        }
-
-        return saxParserPool;
     }
 
     private class BatchFileSAXReader extends DefaultHandler implements Runnable {
@@ -167,18 +153,17 @@ public class XMLBatchFileReader extends AbstractBatchFileReader {
 
         @Override
         public void run() {
+            SAXParser saxParser = null;
             try {
-                SAXParser saxParser = XMLBatchFileReader.getSAXParserPool().borrowObject();
-                try {
-                    saxParser.parse(inputStream, this);
-                } finally {
-                    XMLBatchFileReader.getSAXParserPool().returnObject(saxParser);
-                }
-            } catch (XMLSAXException e) {
-
+                saxParser = XmlUtils.borrowSAXParser();
+                saxParser.parse(inputStream, this);
             } catch (Exception e) {
                 logError(e);
             } finally {
+                if (saxParser != null) {
+                    XmlUtils.restoreSAXParser(saxParser);
+                }
+                
                 IOUtils.close(inputStream);
             }
         }

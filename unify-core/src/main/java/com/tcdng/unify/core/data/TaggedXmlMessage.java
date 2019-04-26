@@ -13,16 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.stream.ObjectStreamer;
+package com.tcdng.unify.core.data;
 
 /**
- * Tagged message streamer.
+ * Tagged XML message.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TaggedMessageStreamer extends ObjectStreamer {
+public class TaggedXmlMessage {
 
+    private String tag;
+
+    private String consumer;
+   
+    private String message;
+
+    public TaggedXmlMessage(String tag, String consumer, String message) {
+        this.tag = tag;
+        this.consumer = consumer;
+        this.message = message;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public String getConsumer() {
+        return consumer;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
