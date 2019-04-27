@@ -16,25 +16,25 @@
 
 package com.tcdng.unify.core.business;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.TaggedXmlMessage;
 
 /**
- * Convenient base class for a tagged message consumer.
+ * Tagged XML message consumer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTaggedMessageConsumer extends AbstractUnifyComponent implements TaggedMessageConsumer {
+public interface TaggedXmlMessageConsumer extends UnifyComponent {
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-
-    }
-
-    @Override
-    protected void onTerminate() throws UnifyException {
-
-    }
-
+    /**
+     * Consumes a tagged XML message.
+     * 
+     * @param taggedMessage
+     *            the tagged message
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void consume(TaggedXmlMessage xmlMessage) throws UnifyException;
 }
