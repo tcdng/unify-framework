@@ -101,6 +101,80 @@ public class TaggedBinaryMessageStreamerTest extends AbstractUnifyComponentTest 
         assertTrue(Arrays.equals(message, extMessage));
     }
 
+    @Test
+    public void testMarshallTaggedBinaryMessageResultBlank() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer().marshal(new TaggedBinaryMessageResult(), baos);
+        byte[] marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+    }
+
+    @Test
+    public void testMarshallTaggedBinaryMessageResult() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer().marshal(new TaggedBinaryMessageResult("methodOne", null, null), baos);
+        byte[] marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+
+        baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer().marshal(new TaggedBinaryMessageResult("methodOne", "error2", null), baos);
+        marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+
+        baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer()
+                .marshal(new TaggedBinaryMessageResult("methodOne", "error2", "There was an error"), baos);
+        marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+    }
+
+    @Test
+    public void testUnmarshallTaggedBinaryMessageResultBlank() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer().marshal(new TaggedBinaryMessageResult(), baos);
+        byte[] marshalled = baos.toByteArray();
+        TaggedBinaryMessageResult result = getTaggedBinaryMessageStreamer().unmarshal(TaggedBinaryMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertNull(result.getMethodCode());
+        assertNull(result.getErrorCode());
+        assertNull(result.getErrorMsg());
+    }
+
+    @Test
+    public void testUnmarshallTaggedBinaryMessageResult() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer().marshal(new TaggedBinaryMessageResult("methodOne", null, null), baos);
+        byte[] marshalled = baos.toByteArray();
+        TaggedBinaryMessageResult result = getTaggedBinaryMessageStreamer().unmarshal(TaggedBinaryMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertEquals("methodOne", result.getMethodCode());
+        assertNull(result.getErrorCode());
+        assertNull(result.getErrorMsg());
+
+        baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer().marshal(new TaggedBinaryMessageResult("methodOne", "error2", null), baos);
+        marshalled = baos.toByteArray();
+        result = getTaggedBinaryMessageStreamer().unmarshal(TaggedBinaryMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertEquals("methodOne", result.getMethodCode());
+        assertEquals("error2", result.getErrorCode());
+        assertNull(result.getErrorMsg());
+
+        baos = new ByteArrayOutputStream();
+        getTaggedBinaryMessageStreamer()
+                .marshal(new TaggedBinaryMessageResult("methodOne", "error2", "There was an error"), baos);
+        marshalled = baos.toByteArray();
+        result = getTaggedBinaryMessageStreamer().unmarshal(TaggedBinaryMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertEquals("methodOne", result.getMethodCode());
+        assertEquals("error2", result.getErrorCode());
+        assertEquals("There was an error", result.getErrorMsg());
+    }
+
     protected TaggedBinaryMessageStreamer getTaggedBinaryMessageStreamer() throws Exception {
         return (TaggedBinaryMessageStreamer) getComponent("taggedbinarymessage-streamer");
     }

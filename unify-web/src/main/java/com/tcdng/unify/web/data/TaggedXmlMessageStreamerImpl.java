@@ -305,10 +305,6 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
 
             if ("TaggedXmlMessageResult".equals(qName)) {
                 methodCode = attributes.getValue("methodCode");
-                if (StringUtils.isBlank(methodCode)) {
-                    throw new SAXException("Missing 'methodCode' attribute");
-                }
-
                 errorCode = attributes.getValue("errorCode");
                 errorMsg = attributes.getValue("errorMsg");
             } else {

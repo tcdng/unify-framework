@@ -44,7 +44,7 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
     }
 
     @Test
-    public void testMarshallTaggedXmlMessageParamsBlankBinary() throws Exception {
+    public void testMarshallTaggedXmlMessageParamsBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         getTaggedXmlMessageStreamer()
                 .marshal(new TaggedXmlMessageParams("methodName", new TaggedXmlMessage("tag", "consumer", null)), baos);
@@ -99,6 +99,80 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
         assertNotNull(extXml);
         assertEquals("<Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>",
                 extXml);
+    }
+
+    @Test
+    public void testMarshallTaggedXmlMessageResultBlank() throws Exception {
+        StringWriter sw = new StringWriter();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult(), sw);
+        assertEquals("<TaggedXmlMessageResult></TaggedXmlMessageResult>", sw.toString());
+    }
+
+    @Test
+    public void testMarshallTaggedXmlMessageResult() throws Exception {
+        StringWriter sw = new StringWriter();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", null, null), sw);
+        assertEquals("<TaggedXmlMessageResult methodCode = \"methodOne\"></TaggedXmlMessageResult>", sw.toString());
+
+        sw = new StringWriter();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", null), sw);
+        assertEquals(
+                "<TaggedXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"></TaggedXmlMessageResult>",
+                sw.toString());
+
+        sw = new StringWriter();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", "There was an error"),
+                sw);
+        assertEquals(
+                "<TaggedXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"><errorMsg>There was an error</errorMsg></TaggedXmlMessageResult>",
+                sw.toString());
+    }
+
+    @Test
+    public void testUnmarshallTaggedXmlMessageResultBlank() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult(), baos);
+        byte[] marshalled = baos.toByteArray();
+        TaggedXmlMessageResult result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertNull(result.getMethodCode());
+        assertNull(result.getErrorCode());
+        assertNull(result.getErrorMsg());
+    }
+
+    @Test
+    public void testUnmarshallTaggedXmlMessageResult() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", null, null), baos);
+        byte[] marshalled = baos.toByteArray();
+        TaggedXmlMessageResult result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertEquals("methodOne", result.getMethodCode());
+        assertNull(result.getErrorCode());
+        assertNull(result.getErrorMsg());
+
+        baos = new ByteArrayOutputStream();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", null), baos);
+        marshalled = baos.toByteArray();
+        result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertEquals("methodOne", result.getMethodCode());
+        assertEquals("error2", result.getErrorCode());
+        assertNull(result.getErrorMsg());
+
+        baos = new ByteArrayOutputStream();
+        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", "There was an error"),
+                baos);
+        marshalled = baos.toByteArray();
+        result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(result);
+        assertEquals("methodOne", result.getMethodCode());
+        assertEquals("error2", result.getErrorCode());
+        assertEquals("There was an error", result.getErrorMsg());
     }
 
     protected TaggedXmlMessageStreamer getTaggedXmlMessageStreamer() throws Exception {
