@@ -38,6 +38,8 @@ import com.tcdng.unify.core.util.NetworkUtils;
 import com.tcdng.unify.web.data.TaggedBinaryMessageParams;
 import com.tcdng.unify.web.data.TaggedBinaryMessageResult;
 import com.tcdng.unify.web.data.TaggedBinaryMessageStreamer;
+import com.tcdng.unify.web.data.TaggedXmlMessageParams;
+import com.tcdng.unify.web.data.TaggedXmlMessageResult;
 import com.tcdng.unify.web.data.TaggedXmlMessageStreamer;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryPathConstants;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryRemoteCallCodeConstants;
@@ -92,7 +94,7 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
 
     @Override
     public void setupXmlMessagingRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
-        setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.TAGGED_XMLMESSAGE, null);
+        setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.TAGGED_XMLMESSAGE, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -136,9 +138,15 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     }
 
     @Override
-    public TaggedBinaryMessageResult sendMessage(String remoteAppURL, TaggedBinaryMessageParams remoteMessage)
+    public TaggedBinaryMessageResult sendBinaryMessage(String remoteAppURL, TaggedBinaryMessageParams params)
             throws UnifyException {
-        return remoteCall(TaggedBinaryMessageResult.class, remoteAppURL, remoteMessage);
+        return remoteCall(TaggedBinaryMessageResult.class, remoteAppURL, params);
+    }
+
+    @Override
+    public TaggedXmlMessageResult sendXmlMessage(String remoteAppURL, TaggedXmlMessageParams params)
+            throws UnifyException {
+        return remoteCall(TaggedXmlMessageResult.class, remoteAppURL, params);
     }
 
     @Override

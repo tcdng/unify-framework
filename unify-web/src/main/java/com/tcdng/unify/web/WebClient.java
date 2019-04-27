@@ -21,6 +21,8 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.data.TaggedBinaryMessageParams;
 import com.tcdng.unify.web.data.TaggedBinaryMessageResult;
+import com.tcdng.unify.web.data.TaggedXmlMessageParams;
+import com.tcdng.unify.web.data.TaggedXmlMessageResult;
 
 /**
  * Web client
@@ -118,18 +120,33 @@ public interface WebClient extends UnifyComponent {
     void clearRemoteCallSetup(String remoteAppURL, String methodCode) throws UnifyException;
 
     /**
-     * Sends a message to remote server.
+     * Sends a binary message to remote server.
      * 
      * @param remoteAppURL
      *            the remote application URL
-     * @param remoteMessage
-     *            the remote message to send
+     * @param params
+     *            the message to send
      * @return the message acknowledgment
      * @throws UnifyException
      *             if setup with application and code is unknown is unknown. If an
      *             error occurs
      */
-    TaggedBinaryMessageResult sendMessage(String remoteAppURL, TaggedBinaryMessageParams remoteMessage) throws UnifyException;
+    TaggedBinaryMessageResult sendBinaryMessage(String remoteAppURL, TaggedBinaryMessageParams params)
+            throws UnifyException;
+
+    /**
+     * Sends a XML message to remote server.
+     * 
+     * @param remoteAppURL
+     *            the remote application URL
+     * @param params
+     *            the message to send
+     * @return the message acknowledgment
+     * @throws UnifyException
+     *             if setup with application and code is unknown is unknown. If an
+     *             error occurs
+     */
+    TaggedXmlMessageResult sendXmlMessage(String remoteAppURL, TaggedXmlMessageParams params) throws UnifyException;
 
     /**
      * Executes a remote call.
