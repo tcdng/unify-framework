@@ -18,6 +18,7 @@ package com.tcdng.unify.core;
 import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -88,18 +89,6 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
         return unifyComponentContext;
     }
 
-    protected String getApplicationCode() throws UnifyException {
-        return unifyComponentContext.getInstanceCode();
-    }
-
-    protected String getApplicationName() throws UnifyException {
-        return unifyComponentContext.getInstanceName();
-    }
-
-    protected String getDeploymentVersion() throws UnifyException {
-        return unifyComponentContext.getDeploymentVersion();
-    }
-
     /**
      * Sends a message to the application container.
      * 
@@ -112,6 +101,39 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected void sendCommand(String command, String... params) throws UnifyException {
         unifyComponentContext.sendCommand(command, params);
+    }
+
+    /**
+     * Gets the container application code.
+     * 
+     * @return the application code
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getApplicationCode() throws UnifyException {
+        return unifyComponentContext.getInstanceCode();
+    }
+
+    /**
+     * Gets the container application name.
+     * 
+     * @return the application name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getApplicationName() throws UnifyException {
+        return unifyComponentContext.getInstanceName();
+    }
+
+    /**
+     * Gets the container deployment version.
+     * 
+     * @return the deployment version
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getDeploymentVersion() throws UnifyException {
+        return unifyComponentContext.getDeploymentVersion();
     }
 
     /**
@@ -1309,6 +1331,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected boolean releaseClusterLock(String lockName) throws UnifyException {
         return unifyComponentContext.releaseClusterLock(lockName);
+    }
+
+    /**
+     * Resolves UTC based on supplied timestamp and current session.
+     * 
+     * @param timestamp
+     *            the timestamp to use
+     * @return the resolved UTC as milliseconds since January 1, 1970 00:00:00
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected long resolveUTC(Date timestamp) throws UnifyException {
+        return timestamp.getTime() - getSessionContext().getTimeZoneOffset();
     }
 
     /**
