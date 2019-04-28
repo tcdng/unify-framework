@@ -368,6 +368,24 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
+    public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
+        return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
+                sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+                sqlDataSourceDialect.prepareMinStatement(sqlFieldInfo.getColumn(), query), false);
+    }
+
+    @Override
+    public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
+        return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
+                sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+                sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getColumn(), query), false);
+    }
+
+    @Override
     public void populateListOnly(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
         try {

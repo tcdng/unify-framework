@@ -62,6 +62,8 @@ public class SqlStatementPools {
                     case CREATE:
                         return new CreateSqlStatementInfoPool();
                     case COUNT:
+                    case MIN:
+                    case MAX:
                         break;
                     case DELETE:
                         break;

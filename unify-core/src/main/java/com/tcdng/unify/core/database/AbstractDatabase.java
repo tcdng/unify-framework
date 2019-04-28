@@ -282,6 +282,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+    public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+        return getDatabaseSession().min(fieldClass, fieldName, query);
+    }
+
+    @Override
+    public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+        return getDatabaseSession().max(fieldClass, fieldName, query);
+    }
+
+    @Override
     public <T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query)
             throws UnifyException {
         return getDatabaseSession().valueSet(fieldClass, fieldName, query);

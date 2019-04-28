@@ -410,6 +410,34 @@ public interface Database extends UnifyComponent {
     <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
     /**
+     * Returns the minimum value of a record field by criteria.
+     * 
+     * @param fieldClass
+     *            the field type
+     * @param fieldName
+     *            the field name
+     * @param query
+     *            the query used to identify the record
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+
+    /**
+     * Returns the maximum value of a record field by criteria.
+     * 
+     * @param fieldClass
+     *            the field type
+     * @param fieldName
+     *            the field name
+     * @param query
+     *            the query used to identify the record
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+
+    /**
      * Returns a set of values of a particular field for all record that match
      * supplied criteria. The field, which can be a list-only field, must be
      * selected in the criteria object.

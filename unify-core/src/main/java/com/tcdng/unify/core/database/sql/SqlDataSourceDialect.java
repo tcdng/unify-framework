@@ -282,6 +282,34 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     SqlStatement prepareCountStatement(Query<? extends Entity> query) throws UnifyException;
 
     /**
+     * Prepares select min statement.
+     * 
+     * @param columnName
+     *            the value column.
+     * 
+     * @param query
+     *            the record criteria
+     * @return the count statement.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlStatement prepareMinStatement(String columnName, Query<? extends Entity> query) throws UnifyException;
+
+    /**
+     * Prepares select max statement.
+     * 
+     * @param columnName
+     *            the value column.
+     * 
+     * @param query
+     *            the record criteria
+     * @return the count statement.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlStatement prepareMaxStatement(String columnName, Query<? extends Entity> query) throws UnifyException;
+
+    /**
      * Prepares an aggregate field statement.
      * 
      * @param aggregateType

@@ -35,5 +35,7 @@ public enum SqlStatementType {
     DELETE,
     DELETE_BY_PK,
     DELETE_BY_PK_VERSION,
-    COUNT
+    COUNT,
+    MIN,
+    MAX
 }

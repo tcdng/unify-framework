@@ -860,6 +860,26 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
+    public SqlStatement prepareMinStatement(String columnName, Query<? extends Entity> query) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
+        List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+        StringBuilder minSql = new StringBuilder();
+        minSql.append("SELECT MIN(").append(columnName).append(") FROM ").append(sqlEntityInfo.getView());
+        appendWhereClause(minSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
+        return new SqlStatement(sqlEntityInfo, SqlStatementType.MIN, minSql.toString(), parameterInfoList);
+    }
+
+    @Override
+    public SqlStatement prepareMaxStatement(String columnName, Query<? extends Entity> query) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
+        List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+        StringBuilder maxSql = new StringBuilder();
+        maxSql.append("SELECT MAX(").append(columnName).append(") FROM ").append(sqlEntityInfo.getView());
+        appendWhereClause(maxSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
+        return new SqlStatement(sqlEntityInfo, SqlStatementType.MAX, maxSql.toString(), parameterInfoList);
+    }
+
+    @Override
     public SqlStatement[] prepareDataSourceInitStatements() throws UnifyException {
         return createDataSourceInitStatements();
     }

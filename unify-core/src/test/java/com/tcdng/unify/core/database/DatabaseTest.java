@@ -240,6 +240,92 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testGetMinValueEmptyCriteria() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertEquals(Double.valueOf(15.00),
+                    db.min(Double.class, "price", new FruitQuery().ignoreEmptyCriteria(true)));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testGetMinValueWithCriteria() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertEquals(Double.valueOf(20.00), db.min(Double.class, "price", new FruitQuery().like("name", "app")));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testGetMinValueNoMatchRecords() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertNull(db.min(Double.class, "price", new FruitQuery().equals("name", "tangerine")));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testGetMaxValueEmptyCriteria() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertEquals(Double.valueOf(60.00),
+                    db.max(Double.class, "price", new FruitQuery().ignoreEmptyCriteria(true)));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testGetMaxValueWithCriteria() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertEquals(Double.valueOf(45.00), db.max(Double.class, "price", new FruitQuery().notLike("name", "app")));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testGetMaxValueNoMatchRecords() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertNull(db.max(Double.class, "price", new FruitQuery().equals("name", "tangerine")));
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
     public void testCreateRecord() throws Exception {
         db.getTransactionManager().beginTransaction();
         try {
@@ -653,6 +739,126 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(banana);
             Fruit foundFruit = db.find(new FruitQuery().equals("color", "yellow"));
             assertEquals(banana, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordByMin() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").min("price"));
+            assertEquals(apple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordByMinNoCriteria() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            Fruit foundFruit = db.find(new FruitQuery().min("price"));
+            assertEquals(apple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test(expected = UnifyException.class)
+    public void testFindRecordByMinMultipleResult() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            db.create(new Fruit("pineapple", "cyan", 20.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").min("price"));
+            assertEquals(apple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test(expected = UnifyException.class)
+    public void testFindRecordByMinNoCriteriaMultipleResult() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 20.00));
+            Fruit foundFruit = db.find(new FruitQuery().min("price"));
+            assertEquals(apple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordByMax() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
+            db.create(pineapple);
+            db.create(new Fruit("banana", "yellow", 45.00));
+            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").max("price"));
+            assertEquals(pineapple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordByMaxNoCriteria() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
+            db.create(pineapple);
+            db.create(new Fruit("banana", "yellow", 45.00));
+            Fruit foundFruit = db.find(new FruitQuery().max("price"));
+            assertEquals(pineapple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test(expected = UnifyException.class)
+    public void testFindRecordByMaxMultipleResult() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 60.00));
+            Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
+            db.create(pineapple);
+            db.create(new Fruit("banana", "yellow", 45.00));
+            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").max("price"));
+            assertEquals(pineapple, foundFruit);
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
+    @Test(expected = UnifyException.class)
+    public void testFindRecordByMaxNoCriteriaMultipleResult() throws Exception {
+        db.getTransactionManager().beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
+            db.create(pineapple);
+            db.create(new Fruit("banana", "yellow", 60.00));
+            Fruit foundFruit = db.find(new FruitQuery().max("price"));
+            assertEquals(pineapple, foundFruit);
         } finally {
             db.getTransactionManager().endTransaction();
         }
@@ -1541,7 +1747,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.getTransactionManager().endTransaction();
         }
     }
-    
+
     @Test
     public void testUpdateRecordByIdUsingUpdate() throws Exception {
         db.getTransactionManager().beginTransaction();
