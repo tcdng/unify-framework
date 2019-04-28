@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web.data;
+package com.tcdng.unify.web.remotecall;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,13 +44,13 @@ import com.tcdng.unify.core.util.XmlUtils;
 import com.tcdng.unify.web.util.HtmlUtils;
 
 /**
- * Tagged XML message streamer.
+ * Remote call XML message streamer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("taggedxmlmessage-streamer")
-public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer implements TaggedXmlMessageStreamer {
+@Component("rc-xmlmessagestreamer")
+public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer implements RemoteCallXmlMessageStreamer {
 
     @Override
     public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
@@ -80,13 +80,14 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
     public void marshal(Object object, Writer writer) throws UnifyException {
         SAXParser saxParser = null;
         try {
-            if (TaggedXmlMessageParams.class.equals(object.getClass())) {
+            if (PushXmlMessageParams.class.equals(object.getClass())) {
                 saxParser = XmlUtils.borrowSAXParser();
-                TaggedXmlMessageParams params = (TaggedXmlMessageParams) object;
+                PushXmlMessageParams params = (PushXmlMessageParams) object;
                 TaggedXmlMessage msg = params.getTaggedMessage();
-                writer.write("<TaggedXmlMessageParams");
+                writer.write("<PushXmlMessage");
                 writeAttribute(writer, "methodCode", params.getMethodCode());
                 writeAttribute(writer, "clientAppCode", params.getClientAppCode());
+                writeAttribute(writer, "destination", params.getDestination());
                 if (msg != null) {
                     writeAttribute(writer, "tag", msg.getTag());
                     writeAttribute(writer, "consumer", msg.getConsumer());
@@ -101,10 +102,10 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
                         writer.write(xml);
                     }
                 }
-                writer.write("</TaggedXmlMessageParams>");
-            } else if (TaggedXmlMessageResult.class.equals(object.getClass())) {
-                TaggedXmlMessageResult result = (TaggedXmlMessageResult) object;
-                writer.write("<TaggedXmlMessageResult");
+                writer.write("</PushXmlMessage>");
+            } else if (PushXmlMessageResult.class.equals(object.getClass())) {
+                PushXmlMessageResult result = (PushXmlMessageResult) object;
+                writer.write("<PushXmlMessageResult");
                 writeAttribute(writer, "methodCode", result.getMethodCode());
                 writeAttribute(writer, "errorCode", result.getErrorCode());
                 writer.write(">");
@@ -113,7 +114,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
                     writer.write(HtmlUtils.getStringWithHtmlEscape(result.getErrorMsg()));
                     writer.write("</errorMsg>");
                 }
-                writer.write("</TaggedXmlMessageResult>");
+                writer.write("</PushXmlMessageResult>");
             } else {
                 throwOperationErrorException(
                         new RuntimeException("Unsupported stream object type - " + object.getClass()));
@@ -142,12 +143,12 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
         SAXParser saxParser = null;
         try {
             saxParser = XmlUtils.borrowSAXParser();
-            if (TaggedXmlMessageParams.class.equals(type)) {
-                TaggedXmlMessageParamsReader readerHandler = new TaggedXmlMessageParamsReader();
+            if (PushXmlMessageParams.class.equals(type)) {
+                PushXmlMessageParamsReader readerHandler = new PushXmlMessageParamsReader();
                 saxParser.parse(inputSource, readerHandler);
                 return (T) readerHandler.getParams();
-            } else if (TaggedXmlMessageResult.class.equals(type)) {
-                TaggedXmlMessageResultReader readerHandler = new TaggedXmlMessageResultReader();
+            } else if (PushXmlMessageResult.class.equals(type)) {
+                PushXmlMessageResultReader readerHandler = new PushXmlMessageResultReader();
                 saxParser.parse(inputSource, readerHandler);
                 return (T) readerHandler.getResult();
             } else {
@@ -182,7 +183,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
         }
     }
 
-    private class TaggedXmlMessageParamsReader extends DefaultHandler {
+    private class PushXmlMessageParamsReader extends DefaultHandler {
 
         private StringBuilder sb;
 
@@ -190,26 +191,28 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
 
         private String clientAppCode;
 
+        private String destination;
+
         private String tag;
 
         private String consumer;
 
         private Stack<String> track;
 
-        private TaggedXmlMessageParams params;
+        private PushXmlMessageParams params;
 
-        public TaggedXmlMessageParamsReader() {
+        public PushXmlMessageParamsReader() {
             track = new Stack<String>();
         }
 
-        public TaggedXmlMessageParams getParams() {
+        public PushXmlMessageParams getParams() {
             return params;
         }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes)
                 throws SAXException {
-            if ("TaggedXmlMessageParams".equals(qName)) {
+            if ("PushXmlMessage".equals(qName)) {
                 if (track.size() != 0) {
                     throw new SAXException("Bad tagged XML message params structure!");
                 }
@@ -219,6 +222,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
                     throw new SAXException("Missing 'methodCode' attribute");
                 }
 
+                destination = attributes.getValue("destination");
                 clientAppCode = attributes.getValue("clientAppCode");
 
                 tag = attributes.getValue("tag");
@@ -237,7 +241,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
                 try {
                     // Append attributes
                     int len = attributes.getLength();
-                    for(int i = 0;  i < len; i++) {
+                    for (int i = 0; i < len; i++) {
                         writeAttribute(sb, attributes.getQName(i), attributes.getValue(i));
                     }
                 } catch (IOException e) {
@@ -257,8 +261,8 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             track.pop();
-            if ("TaggedXmlMessageParams".equals(qName)) {
-                if (track.size() != 0 && !"TaggedXmlMessage".equals(qName)) {
+            if ("PushXmlMessage".equals(qName)) {
+                if (track.size() != 0) {
                     throw new SAXException("Bad tagged XML message structure!");
                 }
 
@@ -266,7 +270,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
                 if (StringUtils.isBlank(xml)) {
                     xml = null;
                 }
-                params = new TaggedXmlMessageParams(methodCode, clientAppCode,
+                params = new PushXmlMessageParams(methodCode, clientAppCode, destination,
                         new TaggedXmlMessage(tag, consumer, xml));
             } else {
                 sb.append("</").append(qName);
@@ -276,7 +280,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
 
     }
 
-    private class TaggedXmlMessageResultReader extends DefaultHandler {
+    private class PushXmlMessageResultReader extends DefaultHandler {
 
         private String methodCode;
 
@@ -286,13 +290,13 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
 
         private Stack<String> track;
 
-        private TaggedXmlMessageResult result;
+        private PushXmlMessageResult result;
 
-        public TaggedXmlMessageResultReader() {
+        public PushXmlMessageResultReader() {
             track = new Stack<String>();
         }
 
-        public TaggedXmlMessageResult getResult() {
+        public PushXmlMessageResult getResult() {
             return result;
         }
 
@@ -303,7 +307,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
                 throw new SAXException("Unexpected elements!");
             }
 
-            if ("TaggedXmlMessageResult".equals(qName)) {
+            if ("PushXmlMessageResult".equals(qName)) {
                 methodCode = attributes.getValue("methodCode");
                 errorCode = attributes.getValue("errorCode");
                 errorMsg = attributes.getValue("errorMsg");
@@ -327,7 +331,7 @@ public class TaggedXmlMessageStreamerImpl extends AbstractObjectStreamer impleme
         public void endElement(String uri, String localName, String qName) throws SAXException {
             track.pop();
             if (track.size() == 0) {
-                result = new TaggedXmlMessageResult(methodCode, errorCode, errorMsg);
+                result = new PushXmlMessageResult(methodCode, errorCode, errorMsg);
             }
         }
 

@@ -13,16 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.data;
 
-import com.tcdng.unify.core.stream.ObjectStreamer;
+package com.tcdng.unify.web.remotecall;
 
 /**
- * Tagged XML message streamer.
+ * Pull tagged binary message remote call parameters.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TaggedXmlMessageStreamer extends ObjectStreamer {
+public class PullBinaryMessageParams extends RemoteCallParams {
+
+    private String source;
+
+    public PullBinaryMessageParams(String methodCode, String clientAppCode, String source) {
+        super(methodCode, clientAppCode);
+        this.source = source;
+    }
+
+    public PullBinaryMessageParams() {
+
+    }
+
+    public String getSource() {
+        return source;
+    }
 
 }

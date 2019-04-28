@@ -13,30 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.discovery.gem.data;
+package com.tcdng.unify.web.remotecall;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.tcdng.unify.web.remotecall.RemoteCallResult;
+import com.tcdng.unify.core.stream.ObjectStreamer;
 
 /**
- * Discover remote call result.
+ * Remote call XML message streamer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@XmlRootElement
-public class DiscoverRemoteCallResult extends RemoteCallResult {
+public interface RemoteCallXmlMessageStreamer extends ObjectStreamer {
 
-    private APIDiscoveryRemoteCallInfo remoteCallInfo;
-
-    public APIDiscoveryRemoteCallInfo getRemoteCallInfo() {
-        return remoteCallInfo;
-    }
-
-    @XmlElement(required = true)
-    public void setRemoteCallInfo(APIDiscoveryRemoteCallInfo remoteCallInfo) {
-        this.remoteCallInfo = remoteCallInfo;
-    }
 }

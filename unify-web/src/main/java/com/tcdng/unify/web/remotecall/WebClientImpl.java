@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.remotecall;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,12 +35,8 @@ import com.tcdng.unify.core.stream.ObjectStreamer;
 import com.tcdng.unify.core.stream.XMLObjectStreamer;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.NetworkUtils;
-import com.tcdng.unify.web.data.TaggedBinaryMessageParams;
-import com.tcdng.unify.web.data.TaggedBinaryMessageResult;
-import com.tcdng.unify.web.data.TaggedBinaryMessageStreamer;
-import com.tcdng.unify.web.data.TaggedXmlMessageParams;
-import com.tcdng.unify.web.data.TaggedXmlMessageResult;
-import com.tcdng.unify.web.data.TaggedXmlMessageStreamer;
+import com.tcdng.unify.web.UnifyWebErrorConstants;
+import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryPathConstants;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryRemoteCallCodeConstants;
 import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallParams;
@@ -62,10 +58,10 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     private JSONObjectStreamer jsonObjectStreamer;
 
     @Configurable
-    private TaggedBinaryMessageStreamer taggedBinaryMessageStreamer;
+    private RemoteCallBinaryMessageStreamer remoteCallBinaryMessageStreamer;
 
     @Configurable
-    private TaggedXmlMessageStreamer taggedXmlMessageStreamer;
+    private RemoteCallXmlMessageStreamer remoteCallXmlMessageStreamer;
 
     private Map<RemoteCallFormat, ObjectStreamer> objectStreamers;
 
@@ -138,15 +134,15 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     }
 
     @Override
-    public TaggedBinaryMessageResult sendBinaryMessage(String remoteAppURL, TaggedBinaryMessageParams params)
+    public PushBinaryMessageResult sendBinaryMessage(String remoteAppURL, PushBinaryMessageParams params)
             throws UnifyException {
-        return remoteCall(TaggedBinaryMessageResult.class, remoteAppURL, params);
+        return remoteCall(PushBinaryMessageResult.class, remoteAppURL, params);
     }
 
     @Override
-    public TaggedXmlMessageResult sendXmlMessage(String remoteAppURL, TaggedXmlMessageParams params)
+    public PushXmlMessageResult sendXmlMessage(String remoteAppURL, PushXmlMessageParams params)
             throws UnifyException {
-        return remoteCall(TaggedXmlMessageResult.class, remoteAppURL, params);
+        return remoteCall(PushXmlMessageResult.class, remoteAppURL, params);
     }
 
     @Override
@@ -208,10 +204,9 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
         objectStreamers = new HashMap<RemoteCallFormat, ObjectStreamer>();
         objectStreamers.put(RemoteCallFormat.JSON, jsonObjectStreamer);
         objectStreamers.put(RemoteCallFormat.XML, xmlObjectStreamer);
-        objectStreamers.put(RemoteCallFormat.TAGGED_BINARYMESSAGE, taggedBinaryMessageStreamer);
-        objectStreamers.put(RemoteCallFormat.TAGGED_XMLMESSAGE, taggedXmlMessageStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_BINARYMESSAGE, remoteCallBinaryMessageStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_XMLMESSAGE, remoteCallXmlMessageStreamer);
         objectStreamers = Collections.unmodifiableMap(objectStreamers);
-
     }
 
     @Override

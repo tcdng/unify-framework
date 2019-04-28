@@ -13,16 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.remotecall;
 
 import java.nio.charset.Charset;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.data.TaggedBinaryMessageParams;
-import com.tcdng.unify.web.data.TaggedBinaryMessageResult;
-import com.tcdng.unify.web.data.TaggedXmlMessageParams;
-import com.tcdng.unify.web.data.TaggedXmlMessageResult;
 
 /**
  * Web client
@@ -131,7 +127,7 @@ public interface WebClient extends UnifyComponent {
      *             if setup with application and code is unknown is unknown. If an
      *             error occurs
      */
-    TaggedBinaryMessageResult sendBinaryMessage(String remoteAppURL, TaggedBinaryMessageParams params)
+    PushBinaryMessageResult sendBinaryMessage(String remoteAppURL, PushBinaryMessageParams params)
             throws UnifyException;
 
     /**
@@ -146,7 +142,7 @@ public interface WebClient extends UnifyComponent {
      *             if setup with application and code is unknown is unknown. If an
      *             error occurs
      */
-    TaggedXmlMessageResult sendXmlMessage(String remoteAppURL, TaggedXmlMessageParams params) throws UnifyException;
+    PushXmlMessageResult sendXmlMessage(String remoteAppURL, PushXmlMessageParams params) throws UnifyException;
 
     /**
      * Executes a remote call.

@@ -18,6 +18,8 @@ package com.tcdng.unify.web;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.tcdng.unify.web.remotecall.RemoteCallParams;
+
 /**
  * Test account detail parameters.
  * 

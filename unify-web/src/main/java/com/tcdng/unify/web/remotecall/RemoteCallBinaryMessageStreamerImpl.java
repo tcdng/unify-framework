@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web.data;
+package com.tcdng.unify.web.remotecall;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,22 +32,24 @@ import com.tcdng.unify.core.data.TaggedBinaryMessage;
 import com.tcdng.unify.core.stream.AbstractObjectStreamer;
 
 /**
- * Tagged binary message streamer.
+ * Remote call tagged binary message streamer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("taggedbinarymessage-streamer")
-public class TaggedBinaryMessageStreamerImpl extends AbstractObjectStreamer implements TaggedBinaryMessageStreamer {
+@Component("rc-binarymessagestreamer")
+public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
+        implements RemoteCallBinaryMessageStreamer {
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
         try {
             ObjectInputStream ois = new ObjectInputStream(inputStream);
-            if (TaggedBinaryMessageParams.class.equals(type)) {
+            if (PushBinaryMessageParams.class.equals(type)) {
                 String clientAppCode = (String) ois.readObject();
                 String methodCode = (String) ois.readObject();
+                String destination = (String) ois.readObject();
                 String consumer = (String) ois.readObject();
                 String tag = (String) ois.readObject();
                 int length = ois.readInt();
@@ -57,14 +59,13 @@ public class TaggedBinaryMessageStreamerImpl extends AbstractObjectStreamer impl
                     ois.readFully(message);
                 }
 
-                TaggedBinaryMessageParams tmParams = new TaggedBinaryMessageParams(methodCode, new TaggedBinaryMessage(tag, consumer, message));
-                tmParams.setClientAppCode(clientAppCode);
-                return (T) tmParams;
-            } else if (TaggedBinaryMessageResult.class.equals(type)) {
+                return (T) new PushBinaryMessageParams(methodCode, clientAppCode, destination,
+                        new TaggedBinaryMessage(tag, consumer, message));
+            } else if (PushBinaryMessageResult.class.equals(type)) {
                 String methodCode = (String) ois.readObject();
                 String errorCode = (String) ois.readObject();
                 String errorMsg = (String) ois.readObject();
-                return (T) new TaggedBinaryMessageResult(methodCode, errorCode, errorMsg);
+                return (T) new PushBinaryMessageResult(methodCode, errorCode, errorMsg);
             } else {
                 throwOperationErrorException(new RuntimeException("Unsupported stream object type - " + type));
             }
@@ -91,14 +92,15 @@ public class TaggedBinaryMessageStreamerImpl extends AbstractObjectStreamer impl
     public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-            if (TaggedBinaryMessageParams.class.equals(object.getClass())) {
-                TaggedBinaryMessageParams tmParams = (TaggedBinaryMessageParams) object;
-                oos.writeObject((String) tmParams.getClientAppCode());
-                oos.writeObject((String) tmParams.getMethodCode());
+            if (PushBinaryMessageParams.class.equals(object.getClass())) {
+                PushBinaryMessageParams tmParams = (PushBinaryMessageParams) object;
+                oos.writeObject(tmParams.getClientAppCode());
+                oos.writeObject(tmParams.getMethodCode());
+                oos.writeObject(tmParams.getDestination());
 
                 TaggedBinaryMessage tm = tmParams.getTaggedMessage();
-                oos.writeObject((String) tm.getConsumer());
-                oos.writeObject((String) tm.getTag());
+                oos.writeObject(tm.getConsumer());
+                oos.writeObject(tm.getTag());
                 byte[] message = tm.getMessage();
                 int length = 0;
                 if (message != null) {
@@ -109,8 +111,8 @@ public class TaggedBinaryMessageStreamerImpl extends AbstractObjectStreamer impl
                 if (length > 0) {
                     oos.write(message);
                 }
-            } else if (TaggedBinaryMessageResult.class.equals(object.getClass())) {
-                TaggedBinaryMessageResult rma = (TaggedBinaryMessageResult) object;
+            } else if (PushBinaryMessageResult.class.equals(object.getClass())) {
+                PushBinaryMessageResult rma = (PushBinaryMessageResult) object;
                 oos.writeObject(rma.getMethodCode());
                 oos.writeObject(rma.getErrorCode());
                 oos.writeObject(rma.getErrorMsg());

@@ -43,11 +43,11 @@ import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerManager;
-import com.tcdng.unify.web.RemoteCallFormat;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
+import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 
 /**
  * Default application HTTP request handler.

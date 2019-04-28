@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
+import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 import com.tcdng.unify.web.ui.Widget;
 
 /**

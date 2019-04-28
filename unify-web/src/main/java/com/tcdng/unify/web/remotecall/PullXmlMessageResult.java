@@ -13,24 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
 
-import javax.xml.bind.annotation.XmlRootElement;
+package com.tcdng.unify.web.remotecall;
+
+import com.tcdng.unify.core.data.TaggedXmlMessage;
 
 /**
- * Remote call error.
+ * Pull tagged XML message remote call result.
  * 
- * @author Lateef
+ * @author Lateef Ojulari
  * @since 1.0
  */
-@XmlRootElement
-public class RemoteCallError extends RemoteCallResult {
+public class PullXmlMessageResult extends RemoteCallResult {
 
-    public RemoteCallError(String methodCode, String errorCode, String errorMsg) {
+    private TaggedXmlMessage taggedMessage;
+
+    public PullXmlMessageResult(String methodCode, String errorCode, String errorMsg, TaggedXmlMessage taggedMessage) {
         super(methodCode, errorCode, errorMsg);
+        this.taggedMessage = taggedMessage;
     }
 
-    public RemoteCallError() {
+    public PullXmlMessageResult() {
 
     }
+
+    public TaggedXmlMessage getTaggedMessage() {
+        return taggedMessage;
+    }
+
 }

@@ -14,26 +14,31 @@
  * the License.
  */
 
-package com.tcdng.unify.web.data;
+package com.tcdng.unify.web.remotecall;
 
-import com.tcdng.unify.web.RemoteCallResult;
+import com.tcdng.unify.core.data.TaggedBinaryMessage;
 
 /**
- * Tagged XML message remote call result.
+ * Pull tagged binary message remote call result.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedXmlMessageResult extends RemoteCallResult {
+public class PullBinaryMessageResult extends RemoteCallResult {
 
-    public static final TaggedXmlMessageResult SUCCESS =  new TaggedXmlMessageResult();
-    
-    public TaggedXmlMessageResult(String methodCode, String errorCode, String errorMsg) {
+    private TaggedBinaryMessage taggedMessage;
+
+    public PullBinaryMessageResult(String methodCode, String errorCode, String errorMsg,
+            TaggedBinaryMessage taggedMessage) {
         super(methodCode, errorCode, errorMsg);
+        this.taggedMessage = taggedMessage;
     }
 
-    public TaggedXmlMessageResult() {
+    public PullBinaryMessageResult() {
 
     }
 
+    public TaggedBinaryMessage getTaggedMessage() {
+        return taggedMessage;
+    }
 }

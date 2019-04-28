@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web.data;
+package com.tcdng.unify.web.remotecall;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,25 +29,28 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.data.TaggedXmlMessage;
+import com.tcdng.unify.web.remotecall.PushXmlMessageParams;
+import com.tcdng.unify.web.remotecall.PushXmlMessageResult;
+import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
 
 /**
- * Tagged XML message streamer test.
+ * Remote call XML message streamer test.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
+public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testMarshallBlankTaggedXmlMessageParams() throws Exception {
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageParams(), new ByteArrayOutputStream());
+        getXmlMessageStreamer().marshal(new PushXmlMessageParams(), new ByteArrayOutputStream());
     }
 
     @Test
     public void testMarshallTaggedXmlMessageParamsBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getTaggedXmlMessageStreamer()
-                .marshal(new TaggedXmlMessageParams("methodName", new TaggedXmlMessage("tag", "consumer", null)), baos);
+        getXmlMessageStreamer()
+                .marshal(new PushXmlMessageParams("methodName", new TaggedXmlMessage("tag", "consumer", null)), baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
@@ -56,8 +59,8 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
     public void testMarshallTaggedXmlMessageParams() throws Exception {
         StringWriter sw = new StringWriter();
         String message = "<Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>";
-        getTaggedXmlMessageStreamer().marshal(
-                new TaggedXmlMessageParams("methodName", "appOne", new TaggedXmlMessage("tag", "consumer", message)),
+        getXmlMessageStreamer().marshal(
+                new PushXmlMessageParams("methodName", "appOne", new TaggedXmlMessage("tag", "consumer", message)),
                 sw);
         String marshalled = sw.toString();
         assertEquals(
@@ -68,9 +71,9 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
     @Test
     public void testUnmarshallTaggedXmlMessageParamsBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getTaggedXmlMessageStreamer()
-                .marshal(new TaggedXmlMessageParams("methodName", new TaggedXmlMessage("tag", "consumer", null)), baos);
-        TaggedXmlMessageParams tbmp = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageParams.class,
+        getXmlMessageStreamer()
+                .marshal(new PushXmlMessageParams("methodName", new TaggedXmlMessage("tag", "consumer", null)), baos);
+        PushXmlMessageParams tbmp = getXmlMessageStreamer().unmarshal(PushXmlMessageParams.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
         assertNull(tbmp.getClientAppCode());
@@ -85,7 +88,7 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testUnmarshallTaggedXmlMessageParams() throws Exception {
-        TaggedXmlMessageParams tbmp = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageParams.class,
+        PushXmlMessageParams tbmp = getXmlMessageStreamer().unmarshal(PushXmlMessageParams.class,
                 "<TaggedXmlMessageParams methodCode = \"methodName\" clientAppCode = \"appOne\" tag = \"tag\" consumer = \"consumer\"><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></TaggedXmlMessageParams>");
         assertNotNull(tbmp);
         assertEquals("appOne", tbmp.getClientAppCode());
@@ -104,24 +107,24 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
     @Test
     public void testMarshallTaggedXmlMessageResultBlank() throws Exception {
         StringWriter sw = new StringWriter();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult(), sw);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult(), sw);
         assertEquals("<TaggedXmlMessageResult></TaggedXmlMessageResult>", sw.toString());
     }
 
     @Test
     public void testMarshallTaggedXmlMessageResult() throws Exception {
         StringWriter sw = new StringWriter();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", null, null), sw);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", null, null), sw);
         assertEquals("<TaggedXmlMessageResult methodCode = \"methodOne\"></TaggedXmlMessageResult>", sw.toString());
 
         sw = new StringWriter();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", null), sw);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", null), sw);
         assertEquals(
                 "<TaggedXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"></TaggedXmlMessageResult>",
                 sw.toString());
 
         sw = new StringWriter();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", "There was an error"),
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", "There was an error"),
                 sw);
         assertEquals(
                 "<TaggedXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"><errorMsg>There was an error</errorMsg></TaggedXmlMessageResult>",
@@ -131,9 +134,9 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
     @Test
     public void testUnmarshallTaggedXmlMessageResultBlank() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult(), baos);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult(), baos);
         byte[] marshalled = baos.toByteArray();
-        TaggedXmlMessageResult result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+        PushXmlMessageResult result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
                 new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertNull(result.getMethodCode());
@@ -144,9 +147,9 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
     @Test
     public void testUnmarshallTaggedXmlMessageResult() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", null, null), baos);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", null, null), baos);
         byte[] marshalled = baos.toByteArray();
-        TaggedXmlMessageResult result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+        PushXmlMessageResult result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
                 new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertEquals("methodOne", result.getMethodCode());
@@ -154,9 +157,9 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
         assertNull(result.getErrorMsg());
 
         baos = new ByteArrayOutputStream();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", null), baos);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", null), baos);
         marshalled = baos.toByteArray();
-        result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+        result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
                 new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertEquals("methodOne", result.getMethodCode());
@@ -164,10 +167,10 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
         assertNull(result.getErrorMsg());
 
         baos = new ByteArrayOutputStream();
-        getTaggedXmlMessageStreamer().marshal(new TaggedXmlMessageResult("methodOne", "error2", "There was an error"),
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", "There was an error"),
                 baos);
         marshalled = baos.toByteArray();
-        result = getTaggedXmlMessageStreamer().unmarshal(TaggedXmlMessageResult.class,
+        result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
                 new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertEquals("methodOne", result.getMethodCode());
@@ -175,8 +178,8 @@ public class TaggedXmlMessageStreamerTest extends AbstractUnifyComponentTest {
         assertEquals("There was an error", result.getErrorMsg());
     }
 
-    protected TaggedXmlMessageStreamer getTaggedXmlMessageStreamer() throws Exception {
-        return (TaggedXmlMessageStreamer) getComponent("taggedxmlmessage-streamer");
+    protected RemoteCallXmlMessageStreamer getXmlMessageStreamer() throws Exception {
+        return (RemoteCallXmlMessageStreamer) getComponent("taggedxmlmessage-streamer");
     }
 
     @Override

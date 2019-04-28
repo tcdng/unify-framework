@@ -14,33 +14,35 @@
  * the License.
  */
 
-package com.tcdng.unify.web.data;
+package com.tcdng.unify.web.remotecall;
 
 import com.tcdng.unify.core.data.TaggedBinaryMessage;
-import com.tcdng.unify.web.RemoteCallParams;
 
 /**
- * Tagged binary message remote call parameters.
+ * Push tagged binary message remote call parameters.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedBinaryMessageParams extends RemoteCallParams {
+public class PushBinaryMessageParams extends RemoteCallParams {
+
+    private String destination;
 
     private TaggedBinaryMessage taggedMessage;
 
-    public TaggedBinaryMessageParams(String methodCode, String clientAppCode, TaggedBinaryMessage taggedMessage) {
+    public PushBinaryMessageParams(String methodCode, String clientAppCode, String destination,
+            TaggedBinaryMessage taggedMessage) {
         super(methodCode, clientAppCode);
+        this.destination = destination;
         this.taggedMessage = taggedMessage;
     }
 
-    public TaggedBinaryMessageParams(String methodCode, TaggedBinaryMessage taggedMessage) {
-        super(methodCode);
-        this.taggedMessage = taggedMessage;
+    public PushBinaryMessageParams() {
+
     }
 
-    public TaggedBinaryMessageParams() {
-
+    public String getDestination() {
+        return destination;
     }
 
     public TaggedBinaryMessage getTaggedMessage() {

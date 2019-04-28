@@ -14,33 +14,35 @@
  * the License.
  */
 
-package com.tcdng.unify.web.data;
+package com.tcdng.unify.web.remotecall;
 
 import com.tcdng.unify.core.data.TaggedXmlMessage;
-import com.tcdng.unify.web.RemoteCallParams;
 
 /**
- * Tagged XML message remote call parameters.
+ * Push tagged XML message remote call parameters.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TaggedXmlMessageParams extends RemoteCallParams {
+public class PushXmlMessageParams extends RemoteCallParams {
+
+    private String destination;
 
     private TaggedXmlMessage taggedMessage;
 
-    public TaggedXmlMessageParams(String methodCode, String clientAppCode, TaggedXmlMessage taggedMessage) {
+    public PushXmlMessageParams(String methodCode, String clientAppCode, String destination,
+            TaggedXmlMessage taggedMessage) {
         super(methodCode, clientAppCode);
+        this.destination = destination;
         this.taggedMessage = taggedMessage;
     }
 
-    public TaggedXmlMessageParams(String methodCode, TaggedXmlMessage taggedMessage) {
-        super(methodCode);
-        this.taggedMessage = taggedMessage;
+    public PushXmlMessageParams() {
+
     }
 
-    public TaggedXmlMessageParams() {
-
+    public String getDestination() {
+        return destination;
     }
 
     public TaggedXmlMessage getTaggedMessage() {

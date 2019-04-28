@@ -13,27 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.web.remotecall;
 
-package com.tcdng.unify.web.data;
-
-import com.tcdng.unify.web.RemoteCallResult;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Tagged binary message remote call result.
+ * Remote call error.
  * 
- * @author Lateef Ojulari
+ * @author Lateef
  * @since 1.0
  */
-public class TaggedBinaryMessageResult extends RemoteCallResult {
+@XmlRootElement
+public class RemoteCallError extends RemoteCallResult {
 
-    public static final TaggedBinaryMessageResult SUCCESS =  new TaggedBinaryMessageResult();
-    
-    public TaggedBinaryMessageResult(String methodCode, String errorCode, String errorMsg) {
+    public RemoteCallError(String methodCode, String errorCode, String errorMsg) {
         super(methodCode, errorCode, errorMsg);
     }
 
-    public TaggedBinaryMessageResult() {
+    public RemoteCallError() {
 
     }
-
 }

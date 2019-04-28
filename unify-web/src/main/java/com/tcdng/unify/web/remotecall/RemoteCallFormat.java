@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.remotecall;
 
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.EnumConst;

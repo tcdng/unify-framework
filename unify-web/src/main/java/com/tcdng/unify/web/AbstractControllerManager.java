@@ -61,8 +61,12 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.SystemInfoConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
-import com.tcdng.unify.web.data.TaggedBinaryMessageStreamer;
-import com.tcdng.unify.web.data.TaggedXmlMessageStreamer;
+import com.tcdng.unify.web.remotecall.RemoteCallError;
+import com.tcdng.unify.web.remotecall.RemoteCallFormat;
+import com.tcdng.unify.web.remotecall.RemoteCallParams;
+import com.tcdng.unify.web.remotecall.RemoteCallResult;
+import com.tcdng.unify.web.remotecall.RemoteCallBinaryMessageStreamer;
+import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
 import com.tcdng.unify.web.ui.BindingInfo;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
@@ -94,10 +98,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     private JSONObjectStreamer jsonObjectStreamer;
 
     @Configurable
-    private TaggedBinaryMessageStreamer taggedBinaryMessageStreamer;
+    private RemoteCallBinaryMessageStreamer remoteCallBinaryMessageStreamer;
 
     @Configurable
-    private TaggedXmlMessageStreamer taggedXmlMessageStreamer;
+    private RemoteCallXmlMessageStreamer remoteCallXmlMessageStreamer;
 
     private Map<RemoteCallFormat, ObjectStreamer> objectStreamers;
 
@@ -417,8 +421,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         objectStreamers = new HashMap<RemoteCallFormat, ObjectStreamer>();
         objectStreamers.put(RemoteCallFormat.JSON, jsonObjectStreamer);
         objectStreamers.put(RemoteCallFormat.XML, xmlObjectStreamer);
-        objectStreamers.put(RemoteCallFormat.TAGGED_BINARYMESSAGE, taggedBinaryMessageStreamer);
-        objectStreamers.put(RemoteCallFormat.TAGGED_XMLMESSAGE, taggedXmlMessageStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_BINARYMESSAGE, remoteCallBinaryMessageStreamer);
+        objectStreamers.put(RemoteCallFormat.TAGGED_XMLMESSAGE, remoteCallXmlMessageStreamer);
         objectStreamers = Collections.unmodifiableMap(objectStreamers);
 
         // Default result mappings

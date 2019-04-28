@@ -13,30 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.discovery.gem.data;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.tcdng.unify.web.remotecall.RemoteCallResult;
+package com.tcdng.unify.web.remotecall;
 
 /**
- * Discover remote call result.
+ * Push tagged binary message remote call result.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@XmlRootElement
-public class DiscoverRemoteCallResult extends RemoteCallResult {
+public class PushBinaryMessageResult extends RemoteCallResult {
 
-    private APIDiscoveryRemoteCallInfo remoteCallInfo;
-
-    public APIDiscoveryRemoteCallInfo getRemoteCallInfo() {
-        return remoteCallInfo;
+    public static final PushBinaryMessageResult SUCCESS =  new PushBinaryMessageResult();
+    
+    public PushBinaryMessageResult(String methodCode, String errorCode, String errorMsg) {
+        super(methodCode, errorCode, errorMsg);
     }
 
-    @XmlElement(required = true)
-    public void setRemoteCallInfo(APIDiscoveryRemoteCallInfo remoteCallInfo) {
-        this.remoteCallInfo = remoteCallInfo;
+    public PushBinaryMessageResult() {
+
     }
 }

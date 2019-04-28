@@ -24,11 +24,11 @@ import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.RemoteCallController;
-import com.tcdng.unify.web.RemoteCallParams;
-import com.tcdng.unify.web.RemoteCallResult;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.discovery.gem.data.APIDiscoveryRemoteCallInfo;
+import com.tcdng.unify.web.remotecall.RemoteCallParams;
+import com.tcdng.unify.web.remotecall.RemoteCallResult;
 
 /**
  * Default API discovery manager implementation.

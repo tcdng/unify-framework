@@ -13,16 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.data;
 
-import com.tcdng.unify.core.stream.ObjectStreamer;
+package com.tcdng.unify.web.remotecall;
 
 /**
- * Tagged binary message streamer.
+ * Push tagged XML message remote call result.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TaggedBinaryMessageStreamer extends ObjectStreamer {
+public class PushXmlMessageResult extends RemoteCallResult {
+
+    public static final PushXmlMessageResult SUCCESS =  new PushXmlMessageResult();
+
+    public PushXmlMessageResult(String methodCode, String errorCode, String errorMsg) {
+        super(methodCode, errorCode, errorMsg);
+    }
+
+    public PushXmlMessageResult() {
+
+    }
 
 }
