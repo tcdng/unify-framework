@@ -470,6 +470,32 @@ public class UnifyComponentContext {
     }
 
     /**
+     * Begins a cluster synchronization block with specified lock. Blocks until
+     * synchronization handle is obtained or an error occurs. Lock should be
+     * released by calling {@link #endLockedAccess(String)}.
+     * 
+     * @param lockName
+     *            the lock name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void beginClusterLock(String lockName) throws UnifyException {
+        applicationContext.getContainer().beginClusterLock(lockName);
+    }
+
+    /**
+     * Ends a cluster synchronization block for specified lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void endClusterLock(String lockName) throws UnifyException {
+        applicationContext.getContainer().endClusterLock(lockName);
+    }
+
+    /**
      * Tries to grab the cluster master synchronization lock.
      * 
      * @return a true value is lock is obtained otherwise false

@@ -30,18 +30,18 @@ public class TaggedBinaryMessage {
 
     private byte[] message;
 
-    public TaggedBinaryMessage(String consumer, String tag, byte[] message) {
-        this.consumer = consumer;
+    public TaggedBinaryMessage(String tag, String consumer, byte[] message) {
         this.tag = tag;
+        this.consumer = consumer;
         this.message = message;
-    }
-
-    public String getConsumer() {
-        return consumer;
     }
 
     public String getTag() {
         return tag;
+    }
+
+    public String getConsumer() {
+        return consumer;
     }
 
     public byte[] getMessage() {

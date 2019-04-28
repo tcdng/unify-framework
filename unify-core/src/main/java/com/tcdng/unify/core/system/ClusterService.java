@@ -45,7 +45,8 @@ public interface ClusterService extends BusinessService {
 
     /**
      * Begins a synchronization block with specified lock. Blocks until
-     * synchronization handle is obtained or an error occurs.
+     * synchronization handle is obtained or an error occurs. Lock should be release
+     * by calling {@link #endSynchronization(String)}.
      * 
      * @param lockName
      *            the lock name
@@ -55,7 +56,7 @@ public interface ClusterService extends BusinessService {
     void beginSynchronization(String lockName) throws UnifyException;
 
     /**
-     * Ends a synchronisation block for specified lock.
+     * Ends a synchronization block for specified lock.
      * 
      * @param lockName
      *            the lock name
@@ -75,7 +76,8 @@ public interface ClusterService extends BusinessService {
 
     /**
      * Tries to grab a cluster synchronization lock with specified name. Does not
-     * block.
+     * block.Lock should be release by calling
+     * {@link #releaseSynchronizationLock(String)}.
      * 
      * @param lockName
      *            the lock name
