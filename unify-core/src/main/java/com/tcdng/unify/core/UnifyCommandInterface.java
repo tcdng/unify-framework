@@ -15,10 +15,13 @@
  */
 package com.tcdng.unify.core;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.net.NetworkInterface;
-import com.tcdng.unify.core.net.NetworkInterfaceConfigType;
 
 /**
  * Unify command interface.
@@ -29,10 +32,7 @@ import com.tcdng.unify.core.net.NetworkInterfaceConfigType;
 @Component("unify-commandinterface")
 public class UnifyCommandInterface extends AbstractUnifyContainerInterface {
 
-    private static final String UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG = "unify-commandinterface-netconfig";
-
-    @Configurable
-    private NetworkInterface networkInterface;
+    private ListenerThread listenerThread;
 
     private int listeningPort;
 
@@ -43,25 +43,65 @@ public class UnifyCommandInterface extends AbstractUnifyContainerInterface {
 
     @Override
     protected void onStartServicingRequests() throws UnifyException {
-        networkInterface.startLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
+        if (listenerThread == null) {
+            try {
+                listenerThread = new ListenerThread();
+                listenerThread.start();
+            } catch (IOException e) {
+                throwOperationErrorException(e);
+            }
+        }
     }
 
     @Override
     protected void onStopServicingRequests() throws UnifyException {
-        networkInterface.stopLocalUnicastServer(UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG);
+        if (listenerThread != null) {
+            listenerThread.stopListener();
+            listenerThread = null;
+        }
     }
 
     @Override
     protected void onInitialize() throws UnifyException {
         listeningPort = getContainerSetting(short.class, UnifyCorePropertyConstants.APPLICATION_COMMAND_PORT,
                 UnifyContainer.DEFAULT_COMMAND_PORT);
-        networkInterface.configure(NetworkInterfaceConfigType.LOCAL_UNICAST_SERVER,
-                UNIFYCOMMANDINTERFACE_NETINTERFACECONFIG, "unify-commandinterface-comm", "localhost", listeningPort,
-                32);
+
     }
 
     @Override
     protected void onTerminate() throws UnifyException {
+
+    }
+
+    private class ListenerThread extends Thread {
+
+        private ServerSocket serverSocket;
+
+        private boolean runFlag;
+
+        public ListenerThread() throws IOException {
+            serverSocket = new ServerSocket(listeningPort);
+        }
+
+        public void stopListener() {
+            runFlag = false;
+        }
+
+        @Override
+        public void run() {
+            runFlag = true;
+            while (runFlag) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    String cmd = br.readLine();
+                    String param = br.readLine();
+                    sendCommand(cmd, param);
+                } catch (Exception e) {
+                    logError(e);
+                }
+            }
+        }
 
     }
 }
