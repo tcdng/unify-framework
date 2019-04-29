@@ -26,7 +26,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.net.NetworkSchemeType;
+import com.tcdng.unify.core.constant.NetworkSchemeType;
 import com.tcdng.unify.jetty.JettyApplicationComponents;
 import com.tcdng.unify.web.embedded.AbstractEmbeddedWebServer;
 

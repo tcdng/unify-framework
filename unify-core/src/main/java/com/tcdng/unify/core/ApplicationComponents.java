@@ -63,8 +63,6 @@ public interface ApplicationComponents {
 
     String APPLICATION_MESSAGES = "application-messages";
 
-    String APPLICATION_NETWORKINTERFACE = "application-networkinterface";
-
     String APPLICATION_PARAMETERSERVICE = "parameterservice";
 
     String APPLICATION_PROXYBUSINESSSERVICEGENERATOR = "application-proxybusinessservicegenerator";
