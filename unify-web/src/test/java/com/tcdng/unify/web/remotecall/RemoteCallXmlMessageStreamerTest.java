@@ -42,41 +42,43 @@ import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
 public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
-    public void testMarshallBlankTaggedXmlMessageParams() throws Exception {
+    public void testMarshallBlankPushXmlMessage() throws Exception {
         getXmlMessageStreamer().marshal(new PushXmlMessageParams(), new ByteArrayOutputStream());
     }
 
     @Test
-    public void testMarshallTaggedXmlMessageParamsBlankXml() throws Exception {
+    public void testMarshallPushXmlMessageParamsBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getXmlMessageStreamer()
-                .marshal(new PushXmlMessageParams("methodName", new TaggedXmlMessage("tag", "consumer", null)), baos);
+        getXmlMessageStreamer().marshal(
+                new PushXmlMessageParams("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
+                baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
 
     @Test
-    public void testMarshallTaggedXmlMessageParams() throws Exception {
+    public void testMarshallPushXmlMessageParams() throws Exception {
         StringWriter sw = new StringWriter();
         String message = "<Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>";
-        getXmlMessageStreamer().marshal(
-                new PushXmlMessageParams("methodName", "appOne", new TaggedXmlMessage("tag", "consumer", message)),
-                sw);
+        getXmlMessageStreamer().marshal(new PushXmlMessageParams("methodName", "appOne", "destination",
+                new TaggedXmlMessage("tag", "consumer", message)), sw);
         String marshalled = sw.toString();
         assertEquals(
-                "<TaggedXmlMessageParams methodCode = \"methodName\" clientAppCode = \"appOne\" tag = \"tag\" consumer = \"consumer\"><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></TaggedXmlMessageParams>",
+                "<PushXmlMessage methodCode = \"methodName\" clientAppCode = \"appOne\" destination = \"destination\" tag = \"tag\" consumer = \"consumer\"><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PushXmlMessage>",
                 marshalled);
     }
 
     @Test
-    public void testUnmarshallTaggedXmlMessageParamsBlankXml() throws Exception {
+    public void testUnmarshallPushXmlMessageParamsBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getXmlMessageStreamer()
-                .marshal(new PushXmlMessageParams("methodName", new TaggedXmlMessage("tag", "consumer", null)), baos);
+        getXmlMessageStreamer().marshal(
+                new PushXmlMessageParams("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
+                baos);
         PushXmlMessageParams tbmp = getXmlMessageStreamer().unmarshal(PushXmlMessageParams.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
         assertNull(tbmp.getClientAppCode());
+        assertNull(tbmp.getDestination());
         assertEquals("methodName", tbmp.getMethodCode());
 
         TaggedXmlMessage tbm = tbmp.getTaggedMessage();
@@ -87,11 +89,12 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     }
 
     @Test
-    public void testUnmarshallTaggedXmlMessageParams() throws Exception {
+    public void testUnmarshallPushXmlMessageParams() throws Exception {
         PushXmlMessageParams tbmp = getXmlMessageStreamer().unmarshal(PushXmlMessageParams.class,
-                "<TaggedXmlMessageParams methodCode = \"methodName\" clientAppCode = \"appOne\" tag = \"tag\" consumer = \"consumer\"><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></TaggedXmlMessageParams>");
+                "<PushXmlMessage methodCode = \"methodName\" destination = \"destination\" clientAppCode = \"appOne\" tag = \"tag\" consumer = \"consumer\"><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PushXmlMessage>");
         assertNotNull(tbmp);
         assertEquals("appOne", tbmp.getClientAppCode());
+        assertEquals("destination", tbmp.getDestination());
         assertEquals("methodName", tbmp.getMethodCode());
 
         TaggedXmlMessage tbm = tbmp.getTaggedMessage();
@@ -105,39 +108,38 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     }
 
     @Test
-    public void testMarshallTaggedXmlMessageResultBlank() throws Exception {
+    public void testMarshallPushXmlMessageResultBlank() throws Exception {
         StringWriter sw = new StringWriter();
         getXmlMessageStreamer().marshal(new PushXmlMessageResult(), sw);
-        assertEquals("<TaggedXmlMessageResult></TaggedXmlMessageResult>", sw.toString());
+        assertEquals("<PushXmlMessageResult></PushXmlMessageResult>", sw.toString());
     }
 
     @Test
-    public void testMarshallTaggedXmlMessageResult() throws Exception {
+    public void testMarshallPushXmlMessageResult() throws Exception {
         StringWriter sw = new StringWriter();
         getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", null, null), sw);
-        assertEquals("<TaggedXmlMessageResult methodCode = \"methodOne\"></TaggedXmlMessageResult>", sw.toString());
+        assertEquals("<PushXmlMessageResult methodCode = \"methodOne\"></PushXmlMessageResult>", sw.toString());
 
         sw = new StringWriter();
         getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", null), sw);
         assertEquals(
-                "<TaggedXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"></TaggedXmlMessageResult>",
+                "<PushXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"></PushXmlMessageResult>",
                 sw.toString());
 
         sw = new StringWriter();
-        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", "There was an error"),
-                sw);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", "There was an error"), sw);
         assertEquals(
-                "<TaggedXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"><errorMsg>There was an error</errorMsg></TaggedXmlMessageResult>",
+                "<PushXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"><errorMsg>There was an error</errorMsg></PushXmlMessageResult>",
                 sw.toString());
     }
 
     @Test
-    public void testUnmarshallTaggedXmlMessageResultBlank() throws Exception {
+    public void testUnmarshallPushXmlMessageResultBlank() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         getXmlMessageStreamer().marshal(new PushXmlMessageResult(), baos);
         byte[] marshalled = baos.toByteArray();
-        PushXmlMessageResult result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
-                new ByteArrayInputStream(marshalled));
+        PushXmlMessageResult result =
+                getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class, new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertNull(result.getMethodCode());
         assertNull(result.getErrorCode());
@@ -145,12 +147,12 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     }
 
     @Test
-    public void testUnmarshallTaggedXmlMessageResult() throws Exception {
+    public void testUnmarshallPushXmlMessageResult() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", null, null), baos);
         byte[] marshalled = baos.toByteArray();
-        PushXmlMessageResult result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
-                new ByteArrayInputStream(marshalled));
+        PushXmlMessageResult result =
+                getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class, new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertEquals("methodOne", result.getMethodCode());
         assertNull(result.getErrorCode());
@@ -159,19 +161,16 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
         baos = new ByteArrayOutputStream();
         getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", null), baos);
         marshalled = baos.toByteArray();
-        result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
-                new ByteArrayInputStream(marshalled));
+        result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class, new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertEquals("methodOne", result.getMethodCode());
         assertEquals("error2", result.getErrorCode());
         assertNull(result.getErrorMsg());
 
         baos = new ByteArrayOutputStream();
-        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", "There was an error"),
-                baos);
+        getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", "There was an error"), baos);
         marshalled = baos.toByteArray();
-        result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class,
-                new ByteArrayInputStream(marshalled));
+        result = getXmlMessageStreamer().unmarshal(PushXmlMessageResult.class, new ByteArrayInputStream(marshalled));
         assertNotNull(result);
         assertEquals("methodOne", result.getMethodCode());
         assertEquals("error2", result.getErrorCode());
@@ -179,7 +178,7 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     }
 
     protected RemoteCallXmlMessageStreamer getXmlMessageStreamer() throws Exception {
-        return (RemoteCallXmlMessageStreamer) getComponent("taggedxmlmessage-streamer");
+        return (RemoteCallXmlMessageStreamer) getComponent("rc-xmlmessagestreamer");
     }
 
     @Override
