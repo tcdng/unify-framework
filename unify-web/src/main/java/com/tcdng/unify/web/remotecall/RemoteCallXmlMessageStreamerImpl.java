@@ -115,6 +115,43 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                     writer.write("</errorMsg>");
                 }
                 writer.write("</PushXmlMessageResult>");
+            } else if (PullXmlMessageParams.class.equals(object.getClass())) {
+                PullXmlMessageParams params = (PullXmlMessageParams) object;
+                writer.write("<PullXmlMessage");
+                writeAttribute(writer, "methodCode", params.getMethodCode());
+                writeAttribute(writer, "clientAppCode", params.getClientAppCode());
+                writeAttribute(writer, "source", params.getSource());
+                writer.write(">");
+                writer.write("</PullXmlMessage>");
+            } else if (PullXmlMessageResult.class.equals(object.getClass())) {
+                saxParser = XmlUtils.borrowSAXParser();
+                PullXmlMessageResult result = (PullXmlMessageResult) object;
+                writer.write("<PullXmlMessageResult");
+                writeAttribute(writer, "methodCode", result.getMethodCode());
+                writeAttribute(writer, "errorCode", result.getErrorCode());
+                TaggedXmlMessage msg = result.getTaggedMessage();
+                if (msg != null) {
+                    writeAttribute(writer, "tag", msg.getTag());
+                    writeAttribute(writer, "consumer", msg.getConsumer());
+                }
+                writer.write(">");
+
+                if (!StringUtils.isBlank(result.getErrorMsg())) {
+                    writer.write("<errorMsg>");
+                    writer.write(HtmlUtils.getStringWithHtmlEscape(result.getErrorMsg()));
+                    writer.write("</errorMsg>");
+                }
+
+                if (msg != null) {
+                    String xml = msg.getMessage();
+                    if (!StringUtils.isBlank(xml)) {
+                        // Validate
+                        InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+                        saxParser.parse(is, new DefaultHandler());
+                        writer.write(xml);
+                    }
+                }
+                writer.write("</PullXmlMessageResult>");
             } else {
                 throwOperationErrorException(
                         new RuntimeException("Unsupported stream object type - " + object.getClass()));
@@ -149,6 +186,14 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                 return (T) readerHandler.getParams();
             } else if (PushXmlMessageResult.class.equals(type)) {
                 PushXmlMessageResultReader readerHandler = new PushXmlMessageResultReader();
+                saxParser.parse(inputSource, readerHandler);
+                return (T) readerHandler.getResult();
+            } else if (PullXmlMessageParams.class.equals(type)) {
+                PullXmlMessageParamsReader readerHandler = new PullXmlMessageParamsReader();
+                saxParser.parse(inputSource, readerHandler);
+                return (T) readerHandler.getParams();
+            } else if (PullXmlMessageResult.class.equals(type)) {
+                PullXmlMessageResultReader readerHandler = new PullXmlMessageResultReader();
                 saxParser.parse(inputSource, readerHandler);
                 return (T) readerHandler.getResult();
             } else {
@@ -310,7 +355,6 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
             if ("PushXmlMessageResult".equals(qName)) {
                 methodCode = attributes.getValue("methodCode");
                 errorCode = attributes.getValue("errorCode");
-                errorMsg = attributes.getValue("errorMsg");
             } else {
                 if (track.size() == 0) {
                     throw new SAXException("Invalid root element!");
@@ -332,6 +376,164 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
             track.pop();
             if (track.size() == 0) {
                 result = new PushXmlMessageResult(methodCode, errorCode, errorMsg);
+            }
+        }
+
+    }
+
+    private class PullXmlMessageParamsReader extends DefaultHandler {
+
+        private String methodCode;
+
+        private String clientAppCode;
+
+        private String source;
+
+        private Stack<String> track;
+
+        private PullXmlMessageParams params;
+
+        public PullXmlMessageParamsReader() {
+            track = new Stack<String>();
+        }
+
+        public PullXmlMessageParams getParams() {
+            return params;
+        }
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes)
+                throws SAXException {
+            if (track.size() > 0) {
+                throw new SAXException("Unexpected elements!");
+            }
+
+            if ("PullXmlMessage".equals(qName)) {
+                methodCode = attributes.getValue("methodCode");
+                clientAppCode = attributes.getValue("clientAppCode");
+                source = attributes.getValue("source");
+            } else {
+                if (track.size() == 0) {
+                    throw new SAXException("Invalid root element!");
+                }
+            }
+
+            track.push(qName);
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException {
+
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            track.pop();
+            if (track.size() == 0) {
+                params = new PullXmlMessageParams(methodCode, clientAppCode, source);
+            }
+        }
+
+    }
+
+    private class PullXmlMessageResultReader extends DefaultHandler {
+
+        private StringBuilder sb;
+
+        private String methodCode;
+
+        private String errorCode;
+
+        private String errorMsg;
+
+        private String tag;
+
+        private String consumer;
+
+        private Stack<String> track;
+
+        private PullXmlMessageResult result;
+
+        public PullXmlMessageResultReader() {
+            track = new Stack<String>();
+        }
+
+        public PullXmlMessageResult getResult() {
+            return result;
+        }
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes)
+                throws SAXException {
+            if ("PullXmlMessageResult".equals(qName)) {
+                if (track.size() != 0) {
+                    throw new SAXException("Bad tagged XML message params structure!");
+                }
+
+                methodCode = attributes.getValue("methodCode");
+                if (StringUtils.isBlank(methodCode)) {
+                    throw new SAXException("Missing 'methodCode' attribute");
+                }
+
+                errorCode = attributes.getValue("errorCode");
+
+                tag = attributes.getValue("tag");
+                if (StringUtils.isBlank(tag)) {
+                    throw new SAXException("Missing 'tag' attribute");
+                }
+
+                consumer = attributes.getValue("consumer");
+                sb = new StringBuilder();
+            } else {
+                if (track.size() == 0) {
+                    throw new SAXException("Invalid root element!");
+                }
+
+                if (!"errorMsg".equals(qName)) {
+                    sb.append("<").append(qName);
+                    try {
+                        // Append attributes
+                        int len = attributes.getLength();
+                        for (int i = 0; i < len; i++) {
+                            writeAttribute(sb, attributes.getQName(i), attributes.getValue(i));
+                        }
+                    } catch (IOException e) {
+                        throw new SAXException(e);
+                    }
+                    sb.append(">");
+                }
+            }
+
+            track.push(qName);
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            if ("errorMsg".equals(track.peek())) {
+                errorMsg = new String(ch, start, length);
+            } else {
+                sb.append(new String(ch, start, length));
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            track.pop();
+            if ("PullXmlMessageResult".equals(qName)) {
+                if (track.size() != 0) {
+                    throw new SAXException("Bad tagged XML message structure!");
+                }
+
+                String xml = sb.toString();
+                if (StringUtils.isBlank(xml)) {
+                    xml = null;
+                }
+
+                result = new PullXmlMessageResult(methodCode, errorCode, errorMsg,
+                        new TaggedXmlMessage(tag, consumer, xml));
+            } else if (!"errorMsg".equals(qName)) {
+                sb.append("</").append(qName);
+                sb.append(">");
             }
         }
 

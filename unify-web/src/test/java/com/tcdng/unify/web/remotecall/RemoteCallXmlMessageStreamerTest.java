@@ -42,7 +42,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
 public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
-    public void testMarshallBlankPushXmlMessage() throws Exception {
+    public void testMarshallBlankPushXmlMessageParams() throws Exception {
         getXmlMessageStreamer().marshal(new PushXmlMessageParams(), new ByteArrayOutputStream());
     }
 
@@ -122,8 +122,7 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
 
         sw = new StringWriter();
         getXmlMessageStreamer().marshal(new PushXmlMessageResult("methodOne", "error2", null), sw);
-        assertEquals(
-                "<PushXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"></PushXmlMessageResult>",
+        assertEquals("<PushXmlMessageResult methodCode = \"methodOne\" errorCode = \"error2\"></PushXmlMessageResult>",
                 sw.toString());
 
         sw = new StringWriter();
@@ -175,6 +174,141 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
         assertEquals("methodOne", result.getMethodCode());
         assertEquals("error2", result.getErrorCode());
         assertEquals("There was an error", result.getErrorMsg());
+    }
+
+    @Test
+    public void testMarshallPullXmlMessageParamsBlank() throws Exception {
+        StringWriter sw = new StringWriter();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams(), sw);
+        assertEquals("<PullXmlMessage></PullXmlMessage>", sw.toString());
+    }
+
+    @Test
+    public void testMarshallPullXmlMessageParams() throws Exception {
+        StringWriter sw = new StringWriter();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams("methodOne", null, null), sw);
+        assertEquals("<PullXmlMessage methodCode = \"methodOne\"></PullXmlMessage>", sw.toString());
+
+        sw = new StringWriter();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams("methodOne", "appThree", null), sw);
+        assertEquals("<PullXmlMessage methodCode = \"methodOne\" clientAppCode = \"appThree\"></PullXmlMessage>",
+                sw.toString());
+
+        sw = new StringWriter();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams("methodOne", "appThree", "source"), sw);
+        assertEquals(
+                "<PullXmlMessage methodCode = \"methodOne\" clientAppCode = \"appThree\" source = \"source\"></PullXmlMessage>",
+                sw.toString());
+    }
+
+    @Test
+    public void testUnmarshallPullXmlMessageParamsBlank() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams(), baos);
+        byte[] marshalled = baos.toByteArray();
+        PullXmlMessageParams params =
+                getXmlMessageStreamer().unmarshal(PullXmlMessageParams.class, new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertNull(params.getMethodCode());
+        assertNull(params.getClientAppCode());
+        assertNull(params.getSource());
+    }
+
+    @Test
+    public void testUnmarshallPullXmlMessageParams() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams("methodOne", null, null), baos);
+        byte[] marshalled = baos.toByteArray();
+        PullXmlMessageParams params =
+                getXmlMessageStreamer().unmarshal(PullXmlMessageParams.class, new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertEquals("methodOne", params.getMethodCode());
+        assertNull(params.getClientAppCode());
+        assertNull(params.getSource());
+
+        baos = new ByteArrayOutputStream();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams("methodOne", "appN", null), baos);
+        marshalled = baos.toByteArray();
+        params = getXmlMessageStreamer().unmarshal(PullXmlMessageParams.class, new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertEquals("methodOne", params.getMethodCode());
+        assertEquals("appN", params.getClientAppCode());
+        assertNull(params.getSource());
+
+        baos = new ByteArrayOutputStream();
+        getXmlMessageStreamer().marshal(new PullXmlMessageParams("methodOne", "appN", "sourceA"), baos);
+        marshalled = baos.toByteArray();
+        params = getXmlMessageStreamer().unmarshal(PullXmlMessageParams.class, new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertEquals("methodOne", params.getMethodCode());
+        assertEquals("appN", params.getClientAppCode());
+        assertEquals("sourceA", params.getSource());
+    }
+
+    @Test
+    public void testMarshallBlankPullXmlMessageResult() throws Exception {
+        getXmlMessageStreamer().marshal(new PullXmlMessageResult(), new ByteArrayOutputStream());
+    }
+
+    @Test
+    public void testMarshallPullXmlMessageResultBlankXml() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getXmlMessageStreamer().marshal(
+                new PullXmlMessageResult("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
+                baos);
+        byte[] marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+    }
+
+    @Test
+    public void testMarshallPullXmlMessageResult() throws Exception {
+        StringWriter sw = new StringWriter();
+        String message = "<Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>";
+        getXmlMessageStreamer().marshal(new PullXmlMessageResult("methodName", "error20", "Some Error",
+                new TaggedXmlMessage("tag", "consumer", message)), sw);
+        String marshalled = sw.toString();
+        assertEquals(
+                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error20\" tag = \"tag\" consumer = \"consumer\"><errorMsg>Some Error</errorMsg><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>",
+                marshalled);
+    }
+
+    @Test
+    public void testUnmarshallPullXmlMessageResultBlankXml() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getXmlMessageStreamer().marshal(
+                new PullXmlMessageResult("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
+                baos);
+        PullXmlMessageResult tbmp = getXmlMessageStreamer().unmarshal(PullXmlMessageResult.class,
+                new ByteArrayInputStream(baos.toByteArray()));
+        assertNotNull(tbmp);
+        assertEquals("methodName", tbmp.getMethodCode());
+        assertNull(tbmp.getErrorCode());
+        assertNull(tbmp.getErrorMsg());
+
+        TaggedXmlMessage tbm = tbmp.getTaggedMessage();
+        assertNotNull(tbm);
+        assertEquals("consumer", tbm.getConsumer());
+        assertEquals("tag", tbm.getTag());
+        assertNull(tbm.getMessage());
+    }
+
+    @Test
+    public void testUnmarshallPullXmlMessageResult() throws Exception {
+        PullXmlMessageResult tbmp = getXmlMessageStreamer().unmarshal(PullXmlMessageResult.class,
+                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error10\" tag = \"tag\" consumer = \"consumer\"><errorMsg>Error Message!</errorMsg><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>");
+        assertNotNull(tbmp);
+        assertEquals("methodName", tbmp.getMethodCode());
+        assertEquals("error10", tbmp.getErrorCode());
+        assertEquals("Error Message!", tbmp.getErrorMsg());
+
+        TaggedXmlMessage tbm = tbmp.getTaggedMessage();
+        assertNotNull(tbm);
+        assertEquals("consumer", tbm.getConsumer());
+        assertEquals("tag", tbm.getTag());
+        String extXml = tbm.getMessage();
+        assertNotNull(extXml);
+        assertEquals("<Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>",
+                extXml);
     }
 
     protected RemoteCallXmlMessageStreamer getXmlMessageStreamer() throws Exception {
