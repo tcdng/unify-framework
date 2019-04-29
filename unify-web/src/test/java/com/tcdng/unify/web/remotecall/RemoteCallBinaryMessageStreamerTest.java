@@ -42,7 +42,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallBinaryMessageStreamer;
 public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentTest {
 
     @Test(expected = NullPointerException.class)
-    public void testMarshallBlankTaggedBinaryMessageParams() throws Exception {
+    public void testMarshallBlankPushBinaryMessageParams() throws Exception {
         getBinaryMessageStreamer().marshal(new PushBinaryMessageParams(), new ByteArrayOutputStream());
     }
 
@@ -180,6 +180,145 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
         assertEquals("methodOne", result.getMethodCode());
         assertEquals("error2", result.getErrorCode());
         assertEquals("There was an error", result.getErrorMsg());
+    }
+
+    @Test
+    public void testMarshallPullBinaryMessageParamsBlank() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams(), baos);
+        byte[] marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+    }
+
+    @Test
+    public void testMarshallPullBinaryMessageParams() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams("methodOne", null, null), baos);
+        byte[] marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+
+        baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams("methodOne", "appTwo", null), baos);
+        marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+
+        baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams("methodOne", "appTwo", "source"), baos);
+        marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+    }
+
+    @Test
+    public void testUnmarshallPullBinaryMessageParamsBlank() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams(), baos);
+        byte[] marshalled = baos.toByteArray();
+        PullBinaryMessageParams params = getBinaryMessageStreamer().unmarshal(PullBinaryMessageParams.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertNull(params.getMethodCode());
+        assertNull(params.getClientAppCode());
+        assertNull(params.getSource());
+    }
+
+    @Test
+    public void testUnmarshallPullBinaryMessageParams() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams("methodOne", null, null), baos);
+        byte[] marshalled = baos.toByteArray();
+        PullBinaryMessageParams params = getBinaryMessageStreamer().unmarshal(PullBinaryMessageParams.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertEquals("methodOne", params.getMethodCode());
+        assertNull(params.getClientAppCode());
+        assertNull(params.getSource());
+
+        baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams("methodOne", "appTwo", null), baos);
+        marshalled = baos.toByteArray();
+        params = getBinaryMessageStreamer().unmarshal(PullBinaryMessageParams.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertEquals("methodOne", params.getMethodCode());
+        assertEquals("appTwo", params.getClientAppCode());
+        assertNull(params.getSource());
+
+        baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageParams("methodOne", "appTwo", "source"), baos);
+        marshalled = baos.toByteArray();
+        params = getBinaryMessageStreamer().unmarshal(PullBinaryMessageParams.class,
+                new ByteArrayInputStream(marshalled));
+        assertNotNull(params);
+        assertEquals("methodOne", params.getMethodCode());
+        assertEquals("appTwo", params.getClientAppCode());
+        assertEquals("source", params.getSource());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testMarshallBlankPullBinaryMessageResult() throws Exception {
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageResult(), new ByteArrayOutputStream());
+    }
+
+    @Test
+    public void testMarshallPullBinaryMessageResultBlankBinary() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(
+                new PullBinaryMessageResult("methodName", null, null, new TaggedBinaryMessage("tag", "consumer", null)),
+                baos);
+        byte[] marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+    }
+
+    @Test
+    public void testMarshallPullBinaryMessageResult() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] message = new byte[] { 0x12, 0x02, 0x55, 0x00, 0x43 };
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageResult("methodName", "error1", "Error!",
+                new TaggedBinaryMessage("tag", "consumer", message)), baos);
+        byte[] marshalled = baos.toByteArray();
+        assertTrue(marshalled.length > 0);
+    }
+
+    @Test
+    public void testUnmarshallPullBinaryMessageResultBlankBinary() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        getBinaryMessageStreamer().marshal(
+                new PullBinaryMessageResult("methodName", null, null, new TaggedBinaryMessage("tag", "consumer", null)),
+                baos);
+        PullBinaryMessageResult tbmp = getBinaryMessageStreamer().unmarshal(PullBinaryMessageResult.class,
+                new ByteArrayInputStream(baos.toByteArray()));
+        assertNotNull(tbmp);
+        assertNull(tbmp.getErrorCode());
+        assertNull(tbmp.getErrorMsg());
+        assertEquals("methodName", tbmp.getMethodCode());
+
+        TaggedBinaryMessage tbm = tbmp.getTaggedMessage();
+        assertNotNull(tbm);
+        assertEquals("consumer", tbm.getConsumer());
+        assertEquals("tag", tbm.getTag());
+        assertNull(tbm.getMessage());
+    }
+
+    @Test
+    public void testUnmarshallPullBinaryMessageResult() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] message = new byte[] { 0x12, 0x02, 0x55, 0x00, 0x43 };
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageResult("methodName", "error1", "Error!",
+                new TaggedBinaryMessage("tag", "consumer", message)), baos);
+        PullBinaryMessageResult tbmp = getBinaryMessageStreamer().unmarshal(PullBinaryMessageResult.class,
+                new ByteArrayInputStream(baos.toByteArray()));
+        assertNotNull(tbmp);
+        assertEquals("methodName", tbmp.getMethodCode());
+        assertEquals("error1", tbmp.getErrorCode());
+        assertEquals("Error!", tbmp.getErrorMsg());
+
+        TaggedBinaryMessage tbm = tbmp.getTaggedMessage();
+        assertNotNull(tbm);
+        assertEquals("consumer", tbm.getConsumer());
+        assertEquals("tag", tbm.getTag());
+        byte[] extMessage = tbm.getMessage();
+        assertNotNull(extMessage);
+        assertTrue(Arrays.equals(message, extMessage));
     }
 
     protected RemoteCallBinaryMessageStreamer getBinaryMessageStreamer() throws Exception {

@@ -50,22 +50,24 @@ public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
                 String clientAppCode = (String) ois.readObject();
                 String methodCode = (String) ois.readObject();
                 String destination = (String) ois.readObject();
-                String consumer = (String) ois.readObject();
-                String tag = (String) ois.readObject();
-                int length = ois.readInt();
-                byte[] message = null;
-                if (length > 0) {
-                    message = new byte[length];
-                    ois.readFully(message);
-                }
-
                 return (T) new PushBinaryMessageParams(methodCode, clientAppCode, destination,
-                        new TaggedBinaryMessage(tag, consumer, message));
+                        readTaggedBinaryObject(ois));
             } else if (PushBinaryMessageResult.class.equals(type)) {
                 String methodCode = (String) ois.readObject();
                 String errorCode = (String) ois.readObject();
                 String errorMsg = (String) ois.readObject();
                 return (T) new PushBinaryMessageResult(methodCode, errorCode, errorMsg);
+            } else if (PullBinaryMessageParams.class.equals(type)) {
+                String clientAppCode = (String) ois.readObject();
+                String methodCode = (String) ois.readObject();
+                String source = (String) ois.readObject();
+                return (T) new PullBinaryMessageParams(methodCode, clientAppCode, source);
+            } else if (PullBinaryMessageResult.class.equals(type)) {
+                String methodCode = (String) ois.readObject();
+                String errorCode = (String) ois.readObject();
+                String errorMsg = (String) ois.readObject();
+
+                return (T) new PullBinaryMessageResult(methodCode, errorCode, errorMsg, readTaggedBinaryObject(ois));
             } else {
                 throwOperationErrorException(new RuntimeException("Unsupported stream object type - " + type));
             }
@@ -97,25 +99,23 @@ public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
                 oos.writeObject(tmParams.getClientAppCode());
                 oos.writeObject(tmParams.getMethodCode());
                 oos.writeObject(tmParams.getDestination());
-
-                TaggedBinaryMessage tm = tmParams.getTaggedMessage();
-                oos.writeObject(tm.getConsumer());
-                oos.writeObject(tm.getTag());
-                byte[] message = tm.getMessage();
-                int length = 0;
-                if (message != null) {
-                    length = message.length;
-                }
-
-                oos.writeInt(length);
-                if (length > 0) {
-                    oos.write(message);
-                }
+                writeTaggedBinaryObject(oos, tmParams.getTaggedMessage());
             } else if (PushBinaryMessageResult.class.equals(object.getClass())) {
                 PushBinaryMessageResult rma = (PushBinaryMessageResult) object;
                 oos.writeObject(rma.getMethodCode());
                 oos.writeObject(rma.getErrorCode());
                 oos.writeObject(rma.getErrorMsg());
+            } else if (PullBinaryMessageParams.class.equals(object.getClass())) {
+                PullBinaryMessageParams tmParams = (PullBinaryMessageParams) object;
+                oos.writeObject(tmParams.getClientAppCode());
+                oos.writeObject(tmParams.getMethodCode());
+                oos.writeObject(tmParams.getSource());
+            } else if (PullBinaryMessageResult.class.equals(object.getClass())) {
+                PullBinaryMessageResult rma = (PullBinaryMessageResult) object;
+                oos.writeObject(rma.getMethodCode());
+                oos.writeObject(rma.getErrorCode());
+                oos.writeObject(rma.getErrorMsg());
+                writeTaggedBinaryObject(oos, rma.getTaggedMessage());
             } else {
                 throwOperationErrorException(
                         new RuntimeException("Unsupported stream object type - " + object.getClass()));
@@ -137,6 +137,34 @@ public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         marshal(object, baos);
         return baos.toByteArray();
+    }
+
+    private TaggedBinaryMessage readTaggedBinaryObject(ObjectInputStream ois) throws Exception {
+        String consumer = (String) ois.readObject();
+        String tag = (String) ois.readObject();
+        int length = ois.readInt();
+        byte[] message = null;
+        if (length > 0) {
+            message = new byte[length];
+            ois.readFully(message);
+        }
+
+        return new TaggedBinaryMessage(tag, consumer, message);
+    }
+
+    private void writeTaggedBinaryObject(ObjectOutputStream oos, TaggedBinaryMessage tm) throws IOException {
+        oos.writeObject(tm.getConsumer());
+        oos.writeObject(tm.getTag());
+        byte[] message = tm.getMessage();
+        int length = 0;
+        if (message != null) {
+            length = message.length;
+        }
+
+        oos.writeInt(length);
+        if (length > 0) {
+            oos.write(message);
+        }
     }
 
 }
