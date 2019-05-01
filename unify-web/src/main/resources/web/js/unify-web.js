@@ -375,8 +375,6 @@ ux.refreshPageGlobals = function(resp) {
 		ux.cntSaveList = resp.pSaveList;
 	}
 
-	ux.cntSaveRemoteView = ux.remoteView;
-
 	if (resp.clearShortcuts) {
 		ux.shortcuts = [];
 	}
@@ -788,6 +786,12 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 	evp.uRole = rgp.pRemoteRoleCode;
 	evp.uBranch = rgp.pRemoteBranchCode;
 	evp.uGlobal = rgp.pRemoteGlobalFlag;
+	
+	// Resolve save path viewer
+	ux.cntSaveRemoteView = {};
+	ux.cntSaveRemoteView.view = evp.uViewer;
+	ux.cntSaveRemoteView.sessionID = evp.uSessionID;
+	
 	ux.postCommit(evp);
 }
 
@@ -1048,8 +1052,8 @@ ux.contentOpen  = function(uEv) {
 		path = ux.cntSavePath;
 		evp.uRef = ux.cntSaveList;
 		if (ux.cntSaveRemoteView) {
-			evp.uSessionID = ux.cntSaveRemoteView.sessionID;
 			evp.uViewer = ux.cntSaveRemoteView.view;
+			evp.uSessionID = ux.cntSaveRemoteView.sessionID;
 		}
 	}
 	
