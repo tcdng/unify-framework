@@ -3714,22 +3714,26 @@ ux.extractLabels = function(trgIdArr, upperCase) {
 
 ux.popupWireClear = function(rgp, btnId, trgArr) {
 	var clearBtn = _id(btnId);
-	if (rgp.pClearable) {
-		var evp = {};
-		evp.uRef = trgArr;
-		ux.attachEventHandler(clearBtn, "click", function(uEv) {
-			ux.clear(uEv);
-			ux.hidePopup(uEv);
-		}, evp);
-	} else {
-		clearBtn.disabled = true;
+	if (clearBtn) {
+		if (rgp.pClearable) {
+			var evp = {};
+			evp.uRef = trgArr;
+			ux.attachEventHandler(clearBtn, "click", function(uEv) {
+				ux.clear(uEv);
+				ux.hidePopup(uEv);
+			}, evp);
+		} else {
+			clearBtn.disabled = true;
+		}
 	}
 }
 
 ux.popupWireCancel = function(btnId) {
 	var cancelBtn = _id(btnId);
-	var evp = {};
-	ux.attachEventHandler(cancelBtn, "click", ux.hidePopup, evp);
+	if (clearBtn) {
+		var evp = {};
+		ux.attachEventHandler(cancelBtn, "click", ux.hidePopup, evp);
+	}
 }
 
 ux.setPatternValue = function(rgp) {
