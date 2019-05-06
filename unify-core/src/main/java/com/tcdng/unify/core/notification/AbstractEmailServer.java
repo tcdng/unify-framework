@@ -70,14 +70,21 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
                 }
 
                 if (authenticator != null || !StringUtils.isBlank(emailServerConfig.getAuthentication())) {
+                    System.out.println("@Scroll: emailServerConfig.getSecurityType() = " + emailServerConfig.getSecurityType());
+                    System.out.println("@Scroll: emailServerConfig.getHostPort() = " + emailServerConfig.getHostPort());
+
                     if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
                         if (emailServerConfig.getHostPort() != null) {
                             properties.put("mail.smtp.socketFactory.port", emailServerConfig.getHostPort());
                         }
+
+                        properties.put("mail.smtp.ssl.enable", "true");
+
                         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
                     } else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
                         properties.put("mail.smtp.starttls.enable", "true");
                     }
+
                     properties.put("mail.smtp.auth", "true");
                 }
 
