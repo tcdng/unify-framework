@@ -1385,9 +1385,13 @@ ux.dateTodayClickHandler = function(uEv) {
 
 ux.dateSetCurrent = function(id) {
 	var df = _id(id);
-	df.uDay = parseInt(_id("day_" + id).value);
-	df.uMonth = parseInt(_id("mon_" + id).value) - 1;
-	df.uYear = parseInt(_id("year_" + id).value);
+	if (df) {
+		if (_id("day_" + id)) {
+			df.uDay = parseInt(_id("day_" + id).value);
+			df.uMonth = parseInt(_id("mon_" + id).value) - 1;
+			df.uYear = parseInt(_id("year_" + id).value);
+		}
+	}
 }
 
 ux.dateSetupScroll = function(rgp, scrIdPrefix, valueIdPrefix, step) {
@@ -1434,6 +1438,10 @@ ux.dateScrollHandler = function(uEv) {
 
 ux.datePopulateCalendar = function(evp) {
 	var id = evp.uId;
+	if (!_id("mon_" + id)) {
+		return;
+	}
+
 	var month = parseInt(_id("mon_" + id).value) - 1;
 	var year = parseInt(_id("year_" + id).value);
 
