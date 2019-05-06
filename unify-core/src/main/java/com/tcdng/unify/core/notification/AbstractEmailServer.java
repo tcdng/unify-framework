@@ -70,9 +70,6 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
                 }
 
                 if (authenticator != null || !StringUtils.isBlank(emailServerConfig.getAuthentication())) {
-                    System.out.println("@Scroll: emailServerConfig.getSecurityType() = " + emailServerConfig.getSecurityType());
-                    System.out.println("@Scroll: emailServerConfig.getHostPort() = " + emailServerConfig.getHostPort());
-
                     if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
                         if (emailServerConfig.getHostPort() != null) {
                             properties.put("mail.smtp.socketFactory.port", emailServerConfig.getHostPort());
