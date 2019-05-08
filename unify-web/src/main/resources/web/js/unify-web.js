@@ -3738,7 +3738,7 @@ ux.popupWireClear = function(rgp, btnId, trgArr) {
 
 ux.popupWireCancel = function(btnId) {
 	var cancelBtn = _id(btnId);
-	if (clearBtn) {
+	if (cancelBtn) {
 		var evp = {};
 		ux.attachEventHandler(cancelBtn, "click", ux.hidePopup, evp);
 	}
