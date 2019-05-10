@@ -747,6 +747,20 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Sets a sticky attribute in current session.
+     * 
+     * @param name
+     *            the attribute name
+     * @param value
+     *            the attribute value to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void setSessionStickyAttribute(String name, Object value) throws UnifyException {
+        unifyComponentContext.getSessionContext().setStickyAttribute(name, value);
+    }
+
+    /**
      * Gets an attribute value from current session.
      * 
      * @param name

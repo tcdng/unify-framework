@@ -71,10 +71,10 @@ public class SessionContext extends Context {
         this.remoteAddress = remoteAddress;
         this.remoteUser = remoteUser;
         this.platform = platform;
-        this.lastAccessTime = new Date();
+//        this.lastAccessTime = new Date();
         this.remoteViewer = remoteViewer;
-        this.getAttributes().put(TRUE_ATTRIBUTE, Boolean.TRUE);
-        this.getAttributes().put(FALSE_ATTRIBUTE, Boolean.FALSE);
+        setAttribute(TRUE_ATTRIBUTE, Boolean.TRUE);
+        setAttribute(FALSE_ATTRIBUTE, Boolean.FALSE);
     }
 
     public UserToken getUserToken() {

@@ -307,17 +307,18 @@ public class HttpApplicationServlet extends HttpServlet {
             remoteIpAddress = request.getRemoteAddr();
         }
 
-        String uriBase = request.getScheme() + "://" + request.getServerName();
+        StringBuilder uriBase = new StringBuilder();
+        uriBase.append(request.getScheme()).append("://").append(request.getServerName());
         if (!(("http".equals(request.getScheme()) && request.getServerPort() == 80)
                 || ("https".equals(request.getScheme()) && request.getServerPort() == 443))) {
-            uriBase = uriBase + ":" + request.getServerPort();
+            uriBase.append(":").append(request.getServerPort());
         }
 
         UserPlatform platform = detectRequestPlatform(request);
-        HttpUserSession userSession = new HttpUserSession(applicationLocale, applicationTimeZone, uriBase,
+        HttpUserSession userSession = new HttpUserSession(applicationLocale, applicationTimeZone, uriBase.toString(),
                 contextPath, request.getRemoteHost(), remoteIpAddress, request.getRemoteUser(),
                 (String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER), platform);
-        userSession.getSessionContext().setAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
+        userSession.getSessionContext().setStickyAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
                 uplComponentWriterManager.getWriters(platform));
         userSession.setTransient(userSessionManager);
         return userSession;

@@ -44,7 +44,6 @@ import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.RequestContextUtil;
-import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
@@ -587,7 +586,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
-    public void reset() {
+    public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
+        this.writers = writers;
         if (buf == null || secordaryList == null || !buf.isEmpty() || !secordaryList.isEmpty()) {
             buf = new WebStringWriter(initialBufferCapacity);
             secordaryList = new ArrayList<WebStringWriter>();
@@ -599,12 +599,9 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         return buf.toString();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void onInitialize() throws UnifyException {
-        writers = (Map<Class<? extends UplComponent>, UplComponentWriter>) this
-                .getSessionAttribute(UnifyWebSessionAttributeConstants.UPLCOMPONENT_WRITERS);
-        reset();
+
     }
 
     @Override

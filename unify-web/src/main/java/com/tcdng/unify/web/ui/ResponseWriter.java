@@ -17,12 +17,15 @@ package com.tcdng.unify.web.ui;
 
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.NumberSymbols;
 import com.tcdng.unify.core.format.Pattern;
+import com.tcdng.unify.core.upl.UplComponent;
+import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.web.data.WebStringWriter;
 
 /**
@@ -459,6 +462,7 @@ public interface ResponseWriter extends UnifyComponent {
 
     /**
      * Resets this response writer for reuse.
+     * @param writers the writers to use
      */
-    void reset();
+    void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers);
 }
