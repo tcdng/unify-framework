@@ -1193,7 +1193,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * {@link Exception#getMessage()} is returned.
      * 
      * @param localeType
-     *            the locals type
+     *            the locale type
      * @param exception
      *            the exception to get message from. Can not be null.
      * @return the exception message
@@ -1207,6 +1207,22 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
                     err.getErrorParams());
         }
         return exception.getMessage();
+    }
+
+    /**
+     * Gets a message for an error.
+     * 
+     * @param localeType
+     *            the locale type
+     * @param err
+     *            the error object to get message for. Can not be null.
+     * @return the exception message
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getExceptionMessage(LocaleType localeType, UnifyError err) throws UnifyException {
+        return unifyComponentContext.getMessages().getMessage(getLocale(localeType), err.getErrorCode(),
+                err.getErrorParams());
     }
 
     /**
