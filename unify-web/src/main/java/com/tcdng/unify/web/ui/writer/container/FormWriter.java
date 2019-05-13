@@ -165,7 +165,7 @@ public class FormWriter extends AbstractContainerWriter {
         for (int i = 0; i < itemCount;) {
             writer.write("<td class=\"secColumn\" style=\"width:");
             writer.write(columnWidth);
-            writer.write("%\"><table style:\"width:100%;\">");
+            writer.write("%\"><table style=\"width:100%;\">");
             int row = 0;
             while (row < rows && i < itemCount) {
                 Widget widget = form.getWidgetByLongName(refList.get(i));
