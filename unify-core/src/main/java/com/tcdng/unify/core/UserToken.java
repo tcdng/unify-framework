@@ -23,17 +23,19 @@ package com.tcdng.unify.core;
  */
 public class UserToken {
 
-    private String roleCode;
-
     private String themePath;
 
     private String userLoginId;
 
     private String userName;
 
-    private Object userId;
+    private String roleCode;
 
-    private Object branchCode;
+    private String branchCode;
+
+    private String zoneCode;
+
+    private String departmentCode;
 
     private String ipAddress;
 
@@ -45,11 +47,10 @@ public class UserToken {
 
     private boolean remote;
 
-    public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchCode,
+    public UserToken(String userLoginId, String userName, String ipAddress, String branchCode,
             boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
         this.userLoginId = userLoginId;
         this.userName = userName;
-        this.userId = userId;
         this.branchCode = branchCode;
         this.ipAddress = ipAddress;
         this.globalAccess = globalAccess;
@@ -58,16 +59,8 @@ public class UserToken {
         this.remote = remote;
     }
 
-    public String getRoleCode() {
-        return roleCode;
-    }
-
     public String getThemePath() {
         return themePath;
-    }
-
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
     }
 
     public void setThemePath(String themePath) {
@@ -82,12 +75,32 @@ public class UserToken {
         return userName;
     }
 
-    public Object getUserId() {
-        return userId;
-    }
-
     public Object getBranchCode() {
         return branchCode;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getZoneCode() {
+        return zoneCode;
+    }
+
+    public void setZoneCode(String zoneCode) {
+        this.zoneCode = zoneCode;
+    }
+
+    public String getDepartmentCode() {
+        return departmentCode;
+    }
+
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
     }
 
     public String getIpAddress() {

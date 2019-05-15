@@ -264,7 +264,7 @@ public class HttpApplicationServlet extends HttpServlet {
                     String branchCode = request.getParameter(RequestParameterConstants.REMOTE_BRANCH_CODE);
                     boolean globalAccess =
                             Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
-                    UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(), null,
+                    UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(),
                             branchCode, globalAccess, true, true, true);
                     userToken.setRoleCode(roleCode);
                     userSession.getSessionContext().setUserToken(userToken);
