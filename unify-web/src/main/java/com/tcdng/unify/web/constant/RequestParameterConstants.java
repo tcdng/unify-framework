@@ -57,5 +57,7 @@ public interface RequestParameterConstants {
 
     String REMOTE_BRANCH_CODE = "req_bcd";
 
+    String REMOTE_ZONE_CODE = "req_zcd";
+
     String REMOTE_GLOBAL_ACCESS = "req_gac";
 }

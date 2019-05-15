@@ -47,10 +47,11 @@ public class UserToken {
 
     private boolean remote;
 
-    public UserToken(String userLoginId, String userName, String ipAddress, String branchCode,
+    public UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
             boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
         this.userLoginId = userLoginId;
         this.userName = userName;
+        this.zoneCode = zoneCode;
         this.branchCode = branchCode;
         this.ipAddress = ipAddress;
         this.globalAccess = globalAccess;
@@ -89,10 +90,6 @@ public class UserToken {
 
     public String getZoneCode() {
         return zoneCode;
-    }
-
-    public void setZoneCode(String zoneCode) {
-        this.zoneCode = zoneCode;
     }
 
     public String getDepartmentCode() {
