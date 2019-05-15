@@ -62,7 +62,12 @@ public class Customer extends AbstractDocument {
     }
 
     @Override
-    public Object getOwnerId() {
+    public String getBranchCode() {
+        return null;
+    }
+
+    @Override
+    public String getDepartmentCode() {
         return null;
     }
 

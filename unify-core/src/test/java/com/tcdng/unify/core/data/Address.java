@@ -51,7 +51,12 @@ public class Address extends AbstractDocument implements Serializable {
     }
 
     @Override
-    public Object getOwnerId() {
+    public String getBranchCode() {
+        return null;
+    }
+
+    @Override
+    public String getDepartmentCode() {
         return null;
     }
 
