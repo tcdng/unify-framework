@@ -76,7 +76,7 @@ public class UserToken {
         return userName;
     }
 
-    public Object getBranchCode() {
+    public String getBranchCode() {
         return branchCode;
     }
 
