@@ -140,8 +140,10 @@ public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
     }
 
     private TaggedBinaryMessage readTaggedBinaryObject(ObjectInputStream ois) throws Exception {
-        String consumer = (String) ois.readObject();
         String tag = (String) ois.readObject();
+        String branchCode = (String) ois.readObject();
+        String departmentCode = (String) ois.readObject();
+        String consumer = (String) ois.readObject();
         int length = ois.readInt();
         byte[] message = null;
         if (length > 0) {
@@ -149,12 +151,14 @@ public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
             ois.readFully(message);
         }
 
-        return new TaggedBinaryMessage(tag, consumer, message);
+        return new TaggedBinaryMessage(tag, branchCode, departmentCode, consumer, message);
     }
 
     private void writeTaggedBinaryObject(ObjectOutputStream oos, TaggedBinaryMessage tm) throws IOException {
-        oos.writeObject(tm.getConsumer());
         oos.writeObject(tm.getTag());
+        oos.writeObject(tm.getBranchCode());
+        oos.writeObject(tm.getDepartmentCode());
+        oos.writeObject(tm.getConsumer());
         byte[] message = tm.getMessage();
         int length = 0;
         if (message != null) {

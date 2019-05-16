@@ -26,18 +26,32 @@ public class TaggedXmlMessage {
 
     private String tag;
 
+    private String branchCode;
+
+    private String departmentCode;
+
     private String consumer;
-   
+
     private String message;
 
-    public TaggedXmlMessage(String tag, String consumer, String message) {
+    public TaggedXmlMessage(String tag, String branchCode, String departmentCode, String consumer, String message) {
         this.tag = tag;
+        this.branchCode = branchCode;
+        this.departmentCode = departmentCode;
         this.consumer = consumer;
         this.message = message;
     }
 
     public String getTag() {
         return tag;
+    }
+
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public String getDepartmentCode() {
+        return departmentCode;
     }
 
     public String getConsumer() {

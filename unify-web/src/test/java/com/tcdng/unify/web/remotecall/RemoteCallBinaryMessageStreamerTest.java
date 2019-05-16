@@ -49,9 +49,8 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
     @Test
     public void testMarshallPushBinaryMessageParamsBlankBinary() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getBinaryMessageStreamer().marshal(
-                new PushBinaryMessageParams("methodName", null, null, new TaggedBinaryMessage("tag", "consumer", null)),
-                baos);
+        getBinaryMessageStreamer().marshal(new PushBinaryMessageParams("methodName", null, null,
+                new TaggedBinaryMessage("tag", null, null, "consumer", null)), baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
@@ -61,7 +60,7 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] message = new byte[] { 0x12, 0x02, 0x55, 0x00, 0x43 };
         getBinaryMessageStreamer().marshal(new PushBinaryMessageParams("methodName", "appOne", "destination",
-                new TaggedBinaryMessage("tag", "consumer", message)), baos);
+                new TaggedBinaryMessage("tag", "branchCode", "departmentCode", "consumer", message)), baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
@@ -69,9 +68,8 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
     @Test
     public void testUnmarshallPushBinaryMessageParamsBlankBinary() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getBinaryMessageStreamer().marshal(
-                new PushBinaryMessageParams("methodName", null, null, new TaggedBinaryMessage("tag", "consumer", null)),
-                baos);
+        getBinaryMessageStreamer().marshal(new PushBinaryMessageParams("methodName", null, null,
+                new TaggedBinaryMessage("tag", "BN001", "DEPT003", "consumer", null)), baos);
         PushBinaryMessageParams tbmp = getBinaryMessageStreamer().unmarshal(PushBinaryMessageParams.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
@@ -81,8 +79,10 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
 
         TaggedBinaryMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);
-        assertEquals("consumer", tbm.getConsumer());
         assertEquals("tag", tbm.getTag());
+        assertEquals("BN001", tbm.getBranchCode());
+        assertEquals("DEPT003", tbm.getDepartmentCode());
+        assertEquals("consumer", tbm.getConsumer());
         assertNull(tbm.getMessage());
     }
 
@@ -91,7 +91,7 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] message = new byte[] { 0x12, 0x02, 0x55, 0x00, 0x43 };
         getBinaryMessageStreamer().marshal(new PushBinaryMessageParams("methodName", "appOne", "destination",
-                new TaggedBinaryMessage("tag", "consumer", message)), baos);
+                new TaggedBinaryMessage("tag", "BN001", "DEPT003", "consumer", message)), baos);
         PushBinaryMessageParams tbmp = getBinaryMessageStreamer().unmarshal(PushBinaryMessageParams.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
@@ -101,8 +101,10 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
 
         TaggedBinaryMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);
-        assertEquals("consumer", tbm.getConsumer());
         assertEquals("tag", tbm.getTag());
+        assertEquals("BN001", tbm.getBranchCode());
+        assertEquals("DEPT003", tbm.getDepartmentCode());
+        assertEquals("consumer", tbm.getConsumer());
         byte[] extMessage = tbm.getMessage();
         assertNotNull(extMessage);
         assertTrue(Arrays.equals(message, extMessage));
@@ -262,9 +264,8 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
     @Test
     public void testMarshallPullBinaryMessageResultBlankBinary() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getBinaryMessageStreamer().marshal(
-                new PullBinaryMessageResult("methodName", null, null, new TaggedBinaryMessage("tag", "consumer", null)),
-                baos);
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageResult("methodName", null, null,
+                new TaggedBinaryMessage("tag", null, null, "consumer", null)), baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
@@ -274,7 +275,7 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] message = new byte[] { 0x12, 0x02, 0x55, 0x00, 0x43 };
         getBinaryMessageStreamer().marshal(new PullBinaryMessageResult("methodName", "error1", "Error!",
-                new TaggedBinaryMessage("tag", "consumer", message)), baos);
+                new TaggedBinaryMessage("tag", "BN001", "DEPT003", "consumer", message)), baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
@@ -282,9 +283,8 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
     @Test
     public void testUnmarshallPullBinaryMessageResultBlankBinary() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getBinaryMessageStreamer().marshal(
-                new PullBinaryMessageResult("methodName", null, null, new TaggedBinaryMessage("tag", "consumer", null)),
-                baos);
+        getBinaryMessageStreamer().marshal(new PullBinaryMessageResult("methodName", null, null,
+                new TaggedBinaryMessage("tag", "BN001", "DEPT003", "consumer", null)), baos);
         PullBinaryMessageResult tbmp = getBinaryMessageStreamer().unmarshal(PullBinaryMessageResult.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
@@ -294,8 +294,10 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
 
         TaggedBinaryMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);
-        assertEquals("consumer", tbm.getConsumer());
         assertEquals("tag", tbm.getTag());
+        assertEquals("BN001", tbm.getBranchCode());
+        assertEquals("DEPT003", tbm.getDepartmentCode());
+        assertEquals("consumer", tbm.getConsumer());
         assertNull(tbm.getMessage());
     }
 
@@ -304,7 +306,7 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] message = new byte[] { 0x12, 0x02, 0x55, 0x00, 0x43 };
         getBinaryMessageStreamer().marshal(new PullBinaryMessageResult("methodName", "error1", "Error!",
-                new TaggedBinaryMessage("tag", "consumer", message)), baos);
+                new TaggedBinaryMessage("tag", "BN001", "DEPT003", "consumer", message)), baos);
         PullBinaryMessageResult tbmp = getBinaryMessageStreamer().unmarshal(PullBinaryMessageResult.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
@@ -314,8 +316,10 @@ public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentT
 
         TaggedBinaryMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);
-        assertEquals("consumer", tbm.getConsumer());
         assertEquals("tag", tbm.getTag());
+        assertEquals("BN001", tbm.getBranchCode());
+        assertEquals("DEPT003", tbm.getDepartmentCode());
+        assertEquals("consumer", tbm.getConsumer());
         byte[] extMessage = tbm.getMessage();
         assertNotNull(extMessage);
         assertTrue(Arrays.equals(message, extMessage));

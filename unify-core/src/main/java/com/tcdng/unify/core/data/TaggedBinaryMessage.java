@@ -24,16 +24,30 @@ package com.tcdng.unify.core.data;
  */
 public class TaggedBinaryMessage {
 
-    private String consumer;
-
     private String tag;
+
+    private String branchCode;
+
+    private String departmentCode;
+
+    private String consumer;
 
     private byte[] message;
 
-    public TaggedBinaryMessage(String tag, String consumer, byte[] message) {
+    public TaggedBinaryMessage(String tag, String branchCode, String departmentCode, String consumer, byte[] message) {
         this.tag = tag;
+        this.branchCode = branchCode;
+        this.departmentCode = departmentCode;
         this.consumer = consumer;
         this.message = message;
+    }
+
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public String getDepartmentCode() {
+        return departmentCode;
     }
 
     public String getTag() {

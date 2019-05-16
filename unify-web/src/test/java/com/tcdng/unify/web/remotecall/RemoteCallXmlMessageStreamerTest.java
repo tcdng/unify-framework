@@ -49,9 +49,8 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     @Test
     public void testMarshallPushXmlMessageParamsBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getXmlMessageStreamer().marshal(
-                new PushXmlMessageParams("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
-                baos);
+        getXmlMessageStreamer().marshal(new PushXmlMessageParams("methodName", null, null,
+                new TaggedXmlMessage("tag", null, null, "consumer", null)), baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
@@ -61,19 +60,18 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
         StringWriter sw = new StringWriter();
         String message = "<Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>";
         getXmlMessageStreamer().marshal(new PushXmlMessageParams("methodName", "appOne", "destination",
-                new TaggedXmlMessage("tag", "consumer", message)), sw);
+                new TaggedXmlMessage("tag", "BRN002", "DEPT125", "consumer", message)), sw);
         String marshalled = sw.toString();
         assertEquals(
-                "<PushXmlMessage methodCode = \"methodName\" clientAppCode = \"appOne\" destination = \"destination\" tag = \"tag\" consumer = \"consumer\"><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PushXmlMessage>",
+                "<PushXmlMessage methodCode = \"methodName\" clientAppCode = \"appOne\" destination = \"destination\" tag = \"tag\" branchCode = \"BRN002\" departmentCode = \"DEPT125\" consumer = \"consumer\"><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PushXmlMessage>",
                 marshalled);
     }
 
     @Test
     public void testUnmarshallPushXmlMessageParamsBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getXmlMessageStreamer().marshal(
-                new PushXmlMessageParams("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
-                baos);
+        getXmlMessageStreamer().marshal(new PushXmlMessageParams("methodName", null, null,
+                new TaggedXmlMessage("tag", null, "DEPT336", "consumer", null)), baos);
         PushXmlMessageParams tbmp = getXmlMessageStreamer().unmarshal(PushXmlMessageParams.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
@@ -83,15 +81,17 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
 
         TaggedXmlMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);
-        assertEquals("consumer", tbm.getConsumer());
         assertEquals("tag", tbm.getTag());
+        assertNull(tbm.getBranchCode());
+        assertEquals("DEPT336", tbm.getDepartmentCode());
+        assertEquals("consumer", tbm.getConsumer());
         assertNull(tbm.getMessage());
     }
 
     @Test
     public void testUnmarshallPushXmlMessageParams() throws Exception {
         PushXmlMessageParams tbmp = getXmlMessageStreamer().unmarshal(PushXmlMessageParams.class,
-                "<PushXmlMessage methodCode = \"methodName\" destination = \"destination\" clientAppCode = \"appOne\" tag = \"tag\" consumer = \"consumer\"><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PushXmlMessage>");
+                "<PushXmlMessage methodCode = \"methodName\" destination = \"destination\" clientAppCode = \"appOne\" tag = \"tag\" branchCode = \"BRN002\" consumer = \"consumer\"><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PushXmlMessage>");
         assertNotNull(tbmp);
         assertEquals("appOne", tbmp.getClientAppCode());
         assertEquals("destination", tbmp.getDestination());
@@ -99,8 +99,10 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
 
         TaggedXmlMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);
-        assertEquals("consumer", tbm.getConsumer());
         assertEquals("tag", tbm.getTag());
+        assertEquals("BRN002", tbm.getBranchCode());
+        assertNull(tbm.getDepartmentCode());
+        assertEquals("consumer", tbm.getConsumer());
         String extXml = tbm.getMessage();
         assertNotNull(extXml);
         assertEquals("<Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>",
@@ -253,9 +255,8 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     @Test
     public void testMarshallPullXmlMessageResultBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getXmlMessageStreamer().marshal(
-                new PullXmlMessageResult("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
-                baos);
+        getXmlMessageStreamer().marshal(new PullXmlMessageResult("methodName", null, null,
+                new TaggedXmlMessage("tag", null, null, "consumer", null)), baos);
         byte[] marshalled = baos.toByteArray();
         assertTrue(marshalled.length > 0);
     }
@@ -265,19 +266,18 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
         StringWriter sw = new StringWriter();
         String message = "<Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>";
         getXmlMessageStreamer().marshal(new PullXmlMessageResult("methodName", "error20", "Some Error",
-                new TaggedXmlMessage("tag", "consumer", message)), sw);
+                new TaggedXmlMessage("tag", "BRN002", "DEPT125", "consumer", message)), sw);
         String marshalled = sw.toString();
         assertEquals(
-                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error20\" tag = \"tag\" consumer = \"consumer\"><errorMsg>Some Error</errorMsg><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>",
+                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error20\" tag = \"tag\" branchCode = \"BRN002\" departmentCode = \"DEPT125\" consumer = \"consumer\"><errorMsg>Some Error</errorMsg><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>",
                 marshalled);
     }
 
     @Test
     public void testUnmarshallPullXmlMessageResultBlankXml() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getXmlMessageStreamer().marshal(
-                new PullXmlMessageResult("methodName", null, null, new TaggedXmlMessage("tag", "consumer", null)),
-                baos);
+        getXmlMessageStreamer().marshal(new PullXmlMessageResult("methodName", null, null,
+                new TaggedXmlMessage("tag", "BR-0001", "DEPR2D2", "consumer", null)), baos);
         PullXmlMessageResult tbmp = getXmlMessageStreamer().unmarshal(PullXmlMessageResult.class,
                 new ByteArrayInputStream(baos.toByteArray()));
         assertNotNull(tbmp);
@@ -287,8 +287,10 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
 
         TaggedXmlMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);
-        assertEquals("consumer", tbm.getConsumer());
         assertEquals("tag", tbm.getTag());
+        assertEquals("BR-0001", tbm.getBranchCode());
+        assertEquals("DEPR2D2", tbm.getDepartmentCode());
+        assertEquals("consumer", tbm.getConsumer());
         assertNull(tbm.getMessage());
     }
 

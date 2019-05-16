@@ -90,6 +90,8 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                 writeAttribute(writer, "destination", params.getDestination());
                 if (msg != null) {
                     writeAttribute(writer, "tag", msg.getTag());
+                    writeAttribute(writer, "branchCode", msg.getBranchCode());
+                    writeAttribute(writer, "departmentCode", msg.getDepartmentCode());
                     writeAttribute(writer, "consumer", msg.getConsumer());
                 }
                 writer.write(">");
@@ -132,6 +134,8 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                 TaggedXmlMessage msg = result.getTaggedMessage();
                 if (msg != null) {
                     writeAttribute(writer, "tag", msg.getTag());
+                    writeAttribute(writer, "branchCode", msg.getBranchCode());
+                    writeAttribute(writer, "departmentCode", msg.getDepartmentCode());
                     writeAttribute(writer, "consumer", msg.getConsumer());
                 }
                 writer.write(">");
@@ -240,6 +244,10 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
 
         private String tag;
 
+        private String branchCode;
+
+        private String departmentCode;
+
         private String consumer;
 
         private Stack<String> track;
@@ -275,6 +283,8 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                     throw new SAXException("Missing 'tag' attribute");
                 }
 
+                branchCode = attributes.getValue("branchCode");
+                departmentCode = attributes.getValue("departmentCode");
                 consumer = attributes.getValue("consumer");
                 sb = new StringBuilder();
             } else {
@@ -316,7 +326,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                     xml = null;
                 }
                 params = new PushXmlMessageParams(methodCode, clientAppCode, destination,
-                        new TaggedXmlMessage(tag, consumer, xml));
+                        new TaggedXmlMessage(tag, branchCode, departmentCode, consumer, xml));
             } else {
                 sb.append("</").append(qName);
                 sb.append(">");
@@ -448,6 +458,10 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
 
         private String tag;
 
+        private String branchCode;
+        
+        private String departmentCode;
+        
         private String consumer;
 
         private Stack<String> track;
@@ -482,6 +496,8 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                     throw new SAXException("Missing 'tag' attribute");
                 }
 
+                branchCode = attributes.getValue("branchCode");
+                departmentCode = attributes.getValue("departmentCode");
                 consumer = attributes.getValue("consumer");
                 sb = new StringBuilder();
             } else {
@@ -530,7 +546,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                 }
 
                 result = new PullXmlMessageResult(methodCode, errorCode, errorMsg,
-                        new TaggedXmlMessage(tag, consumer, xml));
+                        new TaggedXmlMessage(tag, branchCode, departmentCode, consumer, xml));
             } else if (!"errorMsg".equals(qName)) {
                 sb.append("</").append(qName);
                 sb.append(">");
