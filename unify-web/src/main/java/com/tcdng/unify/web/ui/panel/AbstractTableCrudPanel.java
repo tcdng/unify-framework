@@ -57,13 +57,13 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
 
     private boolean searchOnSwitchState;
 
-    public AbstractTableCrudPanel(Class<T> entityClass, String titleKey) {
-        this(entityClass, titleKey, false);
+    public AbstractTableCrudPanel(Class<T> entityClass, String title) {
+        this(entityClass, title, false);
     }
 
-    public AbstractTableCrudPanel(Class<T> entityClass, String titleKey, boolean searchOnSwitchState) {
+    public AbstractTableCrudPanel(Class<T> entityClass, String title, boolean searchOnSwitchState) {
         this.searchOnSwitchState = searchOnSwitchState;
-        crudData = new CrudData(entityClass, titleKey);
+        crudData = new CrudData(entityClass, title);
     }
 
     @Override
@@ -234,9 +234,9 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         }
 
         if (captionKey != null) {
-            String crudTypeTitleKey = crudData.getTitleKey();
-            if (crudTypeTitleKey != null) {
-                crudData.setCaption(getSessionMessage(captionKey, getSessionMessage(crudTypeTitleKey)));
+            String crudTypeTitle = crudData.getTitleKey();
+            if (crudTypeTitle != null) {
+                crudData.setCaption(getSessionMessage(captionKey, resolveSessionMessage(crudTypeTitle)));
             } else {
                 crudData.setCaption(getSessionMessage(captionKey));
             }
@@ -317,7 +317,7 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
 
         private Long parentId;
 
-        private String titleKey;
+        private String title;
 
         private String caption;
 
@@ -330,8 +330,8 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         private Query<T> query;
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
-        public CrudData(Class<T> entityClass, String titleKey) {
-            this.titleKey = titleKey;
+        public CrudData(Class<T> entityClass, String title) {
+            this.title = title;
             recordList = new ArrayList<T>();
             query = new Query(entityClass);
         }
@@ -345,7 +345,7 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         }
 
         public String getTitleKey() {
-            return titleKey;
+            return title;
         }
 
         public Query<T> getQuery() {

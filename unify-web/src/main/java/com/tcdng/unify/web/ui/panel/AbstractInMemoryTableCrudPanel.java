@@ -33,8 +33,8 @@ public abstract class AbstractInMemoryTableCrudPanel<T extends Entity> extends A
 
     private boolean populateListOnly;
 
-    public AbstractInMemoryTableCrudPanel(Class<T> entityClass, String titleKey, boolean populateListOnly) {
-        super(entityClass, titleKey);
+    public AbstractInMemoryTableCrudPanel(Class<T> entityClass, String title, boolean populateListOnly) {
+        super(entityClass, title);
         this.populateListOnly = populateListOnly;
     }
 
