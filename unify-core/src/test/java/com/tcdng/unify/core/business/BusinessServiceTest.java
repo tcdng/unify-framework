@@ -20,11 +20,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
+import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.Setting;
+import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceConfig;
+import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.database.sql.DynamicSqlDatabase;
+import com.tcdng.unify.core.database.sql.SqlUtils;
 
 /**
  * Business service tests.
@@ -144,14 +153,67 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         assertEquals(Double.valueOf(200000.00), loanDisbursement.getDisbursementAmount());
     }
 
+    @Test
+    public void testTransactionAcrossDynamicDatabase() throws Exception {
+        MockService mockService = (MockService) getComponent("mockservice");
+        Long accountId =
+                mockService.createAccountWithCreditCheck(new Account("001", "Sim"), BigDecimal.valueOf(102.60));
+        assertNotNull(accountId);
+
+        // Validate account record in application data source
+        Account account = mockService.findAccount(accountId);
+        assertNotNull(account);
+        assertEquals("001", account.getAccountNo());
+        assertEquals("Sim", account.getAccountName());
+
+        // Validate credit check record in third-party dynamic data source
+        DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                new Setting("dataSourceConfigName", MockService.CREDITCHECK_DATASOURCECONFIG));
+        assertNotNull(db);
+        db.getTransactionManager().beginTransaction();
+        try {
+            CreditCheck creditCheck = db.find(CreditCheck.class, "Sim");
+            assertNotNull(creditCheck);
+            assertEquals("Sim", creditCheck.getAccountName());
+            assertEquals("001", creditCheck.getAccountNo());
+            assertEquals(BigDecimal.valueOf(102.60), creditCheck.getLoanAmount());
+        } finally {
+            db.getTransactionManager().endTransaction();
+        }
+    }
+
     @Override
     protected void onSetup() throws Exception {
-
+        // Configure and create dynamic data source
+        DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig(MockService.CREDITCHECK_DATASOURCECONFIG,
+                "hsqldb-dialect", "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, 2, true));
+        Connection connection = dynamicSqlDataSourceManager.getConnection(MockService.CREDITCHECK_DATASOURCECONFIG);
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("CREATE TABLE CREDIT_CHECK (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
+                    + "ACCOUNT_NO VARCHAR(16) NOT NULL," + "LOAN_AMOUNT DECIMAL(14,2));");
+            connection.commit();
+        } finally {
+            SqlUtils.close(stmt);
+            dynamicSqlDataSourceManager.restoreConnection(MockService.CREDITCHECK_DATASOURCECONFIG, connection);
+        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void onTearDown() throws Exception {
+        // Clear application data soure records
         deleteAll(LoanDisbursement.class, LoanAccount.class, Account.class);
+
+        // Unconfigure and dynamic data source
+        DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
+                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
+        if (dynamicSqlDataSourceManager.isConfigured(MockService.CREDITCHECK_DATASOURCECONFIG)) {
+            dynamicSqlDataSourceManager.terminateAll();
+        }
+
     }
 }

@@ -150,6 +150,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
             stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE ACCOUNT_DETAILS (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
                     + "ACCOUNT_NO VARCHAR(16) NOT NULL," + "AVAILABLE_BAL DECIMAL(14,2));");
+            connection.commit();
         } finally {
             SqlUtils.close(stmt);
             dynamicSqlDataSourceManager.restoreConnection(TEST_CONFIG, connection);

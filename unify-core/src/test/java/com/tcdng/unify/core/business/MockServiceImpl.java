@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
@@ -79,5 +80,15 @@ public class MockServiceImpl extends AbstractBusinessService implements MockServ
     @Override
     public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
         return anotherMockService.findLoanAccount(loanAccountId);
+    }
+
+    @Override
+    public Long createAccountWithCreditCheck(Account account, BigDecimal loanAmount) throws UnifyException {
+        Long accountId = (Long) db().create(account);
+
+        // Talk to third party database
+        db(CREDITCHECK_DATASOURCECONFIG)
+                .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
+        return accountId;
     }
 }

@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
@@ -27,6 +28,8 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface MockService extends BusinessService {
 
+    String CREDITCHECK_DATASOURCECONFIG = "creditcheck-config";
+    
     String hello() throws UnifyException;
 
     int add(int a, int b) throws UnifyException;
@@ -42,4 +45,6 @@ public interface MockService extends BusinessService {
     Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException;
 
     LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
+
+    Long createAccountWithCreditCheck(Account account, BigDecimal loanAmount) throws UnifyException;
 }

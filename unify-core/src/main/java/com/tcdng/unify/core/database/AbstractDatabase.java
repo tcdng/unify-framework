@@ -424,10 +424,10 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
         }
 
         /**
-         * Creates a join
+         * Join database to transaction.
          * 
-         * @param dataSourceName
-         *            the data source name
+         * @param db
+         *            the database
          * @throws UnifyException
          *             if an error occurs
          */

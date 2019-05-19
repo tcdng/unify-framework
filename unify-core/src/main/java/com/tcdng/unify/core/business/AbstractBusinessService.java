@@ -84,19 +84,17 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     }
 
     /**
-     * Gets a database instance using data source with supplied name.
+     * Gets a database instance using data source with supplied configuration name.
      * 
-     * @param dataSourceName
-     *            the data source name. Data source must be already registered in
-     *            default application dynamic data source manager.
+     * @param dataSourceConfigName
+     *            the data source configuration name. Data source must be already
+     *            registered in default application dynamic data source manager.
      * @return the database instance
      * @throws UnifyException
-     *             if data source name equals
-     *             {@link ApplicationComponents#APPLICATION_DATASOURCE}. if an error
-     *             occurs
+     *             if an error occurs
      */
-    protected Database db(String dataSourceName) throws UnifyException {
-        return dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceName);
+    protected Database db(String dataSourceConfigName) throws UnifyException {
+        return dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceConfigName);
     }
 
     /**
