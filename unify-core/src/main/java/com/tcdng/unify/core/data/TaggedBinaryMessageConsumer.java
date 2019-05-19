@@ -13,14 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+
+package com.tcdng.unify.core.data;
+
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Default SQL database implementation.
+ * Tagged binary message consumer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SqlDatabaseImpl extends AbstractSqlDatabase {
+public interface TaggedBinaryMessageConsumer extends UnifyComponent {
 
+    /**
+     * Consumes a tagged binary message.
+     * 
+     * @param binaryMessage
+     *            the tagged message
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void consume(TaggedBinaryMessage binaryMessage) throws UnifyException;
 }

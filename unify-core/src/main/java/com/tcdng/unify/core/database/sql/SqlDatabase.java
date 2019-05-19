@@ -14,28 +14,16 @@
  * the License.
  */
 
-package com.tcdng.unify.core.business;
+package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.database.Database;
 
 /**
- * Convenient base class for a tagged binary message consumer.
+ * SQL database.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTaggedBinaryMessageConsumer extends AbstractUnifyComponent
-        implements TaggedBinaryMessageConsumer {
-
-    @Override
-    protected void onInitialize() throws UnifyException {
-
-    }
-
-    @Override
-    protected void onTerminate() throws UnifyException {
-
-    }
+public interface SqlDatabase extends Database {
 
 }

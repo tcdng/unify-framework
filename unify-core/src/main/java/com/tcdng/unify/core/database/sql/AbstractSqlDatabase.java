@@ -15,12 +15,25 @@
  */
 package com.tcdng.unify.core.database.sql;
 
+import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.database.AbstractDatabase;
+import com.tcdng.unify.core.database.DatabaseSession;
+
 /**
  * Default SQL database implementation.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SqlDatabaseImpl extends AbstractSqlDatabase {
+public abstract class AbstractSqlDatabase extends AbstractDatabase implements SqlDatabase {
 
+    @Configurable(ApplicationComponents.APPLICATION_SQLSTATEMENTEXECUTOR)
+    private SqlStatementExecutor sqlStatementExecutor;
+
+    @Override
+    protected DatabaseSession createDatabaseSession() throws UnifyException {
+        return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
+    }
 }

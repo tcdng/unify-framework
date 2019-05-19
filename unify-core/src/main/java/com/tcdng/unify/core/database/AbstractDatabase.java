@@ -394,7 +394,7 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
 
     }
 
-    protected DataSource getDataSource() {
+    protected DataSource getDataSource() throws UnifyException {
         return dataSource;
     }
 
@@ -410,9 +410,6 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
         throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_REQUIRED);
     }
 
-    /**
-     * The transactional call
-     */
     private static class TransactionalCall {
         private Map<String, DatabaseSession> databaseSessions;
         private Stack<DatabaseSession> sessionStack;
@@ -434,11 +431,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
          * @throws UnifyException
          *             if an error occurs
          */
-        public void join(AbstractDatabase pm) throws UnifyException {
-            DatabaseSession databaseSession = databaseSessions.get(pm.getDataSourceName());
+        public void join(AbstractDatabase db) throws UnifyException {
+            DatabaseSession databaseSession = databaseSessions.get(db.getDataSourceName());
             if (databaseSession == null) {
-                databaseSession = pm.createDatabaseSession();
-                databaseSessions.put(pm.getDataSourceName(), databaseSession);
+                databaseSession = db.createDatabaseSession();
+                databaseSessions.put(db.getDataSourceName(), databaseSession);
             }
             sessionStack.push(databaseSession);
         }

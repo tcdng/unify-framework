@@ -135,6 +135,20 @@ public abstract class AbstractUnifyComponentTest {
     }
 
     /**
+     * Returns a non-singleton component using supplied name and alternate settings.
+     * 
+     * @param name
+     *            the component name
+     * @param altSettings
+     *            the alternate settings
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected UnifyComponent getComponent(String name, Setting... altSettings) throws Exception {
+        return container.getComponent(name, altSettings);
+    }
+
+    /**
      * Returns a component using supplied name.
      * 
      * @param name

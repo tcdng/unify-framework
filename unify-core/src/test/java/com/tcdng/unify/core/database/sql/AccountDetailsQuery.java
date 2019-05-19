@@ -13,29 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.database.sql;
 
-package com.tcdng.unify.core.business;
-
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.database.Query;
 
 /**
- * Convenient base class for a tagged XML message consumer.
+ * Query object for test account details.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTaggedXmlMessageConsumer extends AbstractUnifyComponent
-        implements TaggedXmlMessageConsumer {
+public class AccountDetailsQuery extends Query<AccountDetails> {
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-
+    public AccountDetailsQuery() {
+        super(AccountDetails.class);
     }
-
-    @Override
-    protected void onTerminate() throws UnifyException {
-
-    }
-
 }

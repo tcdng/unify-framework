@@ -17,7 +17,6 @@ package com.tcdng.unify.core.report;
 
 import java.util.Map;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.DataSource;
@@ -36,7 +35,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public abstract class AbstractRecordReportProcessor extends AbstractReportProcessor {
 
-    @Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
+    @Configurable
     private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
     private Class<? extends Query<? extends Entity>> queryClass;

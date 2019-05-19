@@ -39,6 +39,10 @@ public interface ApplicationComponents {
 
     String APPLICATION_DEFAULTEMAILSERVER = "default-emailserver";
 
+    String APPLICATION_DYNAMICSQLDATABASE = "application-dynamicsqldatabase";
+
+    String APPLICATION_DYNAMICSQLDATABASEMANAGER = "application-dynamicsqldatabasemanager";
+
     String APPLICATION_DYNAMICSQLDATASOURCE = "application-dynamicsqldatasource";
 
     String APPLICATION_DYNAMICSQLDATASOURCEMANAGER = "application-dynamicsqldatasourcemanager";

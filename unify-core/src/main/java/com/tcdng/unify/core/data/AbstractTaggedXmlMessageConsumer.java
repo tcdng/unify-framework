@@ -14,27 +14,28 @@
  * the License.
  */
 
-package com.tcdng.unify.core.business;
+package com.tcdng.unify.core.data;
 
-import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.TaggedBinaryMessage;
 
 /**
- * Tagged binary message consumer.
+ * Convenient base class for a tagged XML message consumer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TaggedBinaryMessageConsumer extends UnifyComponent {
+public abstract class AbstractTaggedXmlMessageConsumer extends AbstractUnifyComponent
+        implements TaggedXmlMessageConsumer {
 
-    /**
-     * Consumes a tagged binary message.
-     * 
-     * @param binaryMessage
-     *            the tagged message
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void consume(TaggedBinaryMessage binaryMessage) throws UnifyException;
+    @Override
+    protected void onInitialize() throws UnifyException {
+
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
+    }
+
 }

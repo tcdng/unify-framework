@@ -13,28 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.database.sql;
 
-package com.tcdng.unify.core.business;
-
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.TaggedXmlMessage;
 
 /**
- * Tagged XML message consumer.
+ * Dynamic SQL database manager.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface TaggedXmlMessageConsumer extends UnifyComponent {
+public interface DynamicSqlDatabaseManager extends UnifyComponent {
 
     /**
-     * Consumes a tagged XML message.
+     * Gets a dynamic SQL database that uses data source with supplied name.
      * 
-     * @param taggedMessage
-     *            the tagged message
+     * @param dataSourceName
+     *            the data source name. Data source must be already registered in
+     *            default application dynamic data source manager.
+     * @return the dynamic SQL database
      * @throws UnifyException
-     *             if an error occurs
+     *             if data source name equals
+     *             {@link ApplicationComponents#APPLICATION_DATASOURCE}. if an error
+     *             occurs
      */
-    void consume(TaggedXmlMessage xmlMessage) throws UnifyException;
+    DynamicSqlDatabase getDynamicSqlDatabase(String dataSourceName) throws UnifyException;
 }

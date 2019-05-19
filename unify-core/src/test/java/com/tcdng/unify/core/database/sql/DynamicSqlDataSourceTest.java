@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
+package com.tcdng.unify.core.database.sql;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,23 +37,23 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
     @Test
     public void testDataSourceNotSingleton() throws Exception {
         DynamicSqlDataSource dsds1 =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         DynamicSqlDataSource dsds2 =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         assertFalse(dsds1 == dsds2);
     }
 
     @Test
     public void testNotConfiguredOnCreate() throws Exception {
         DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         assertFalse(dsds.isConfigured());
     }
 
     @Test
     public void testConfigure() throws Exception {
         DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         try {
             DynamicSqlDataSourceConfig config = getConfig(0);
             dsds.configure(config);
@@ -66,7 +66,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
     @Test(expected = UnifyException.class)
     public void testMultipleConfigure() throws Exception {
         DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         try {
             DynamicSqlDataSourceConfig config = getConfig(0);
             dsds.configure(config);
@@ -79,7 +79,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
     @Test
     public void testReconfigure() throws Exception {
         DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         try {
             DynamicSqlDataSourceConfig config = getConfig(0);
             dsds.configure(config);
@@ -93,7 +93,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
     @Test
     public void testReconfigureNotConfigured() throws Exception {
         DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
         try {
             DynamicSqlDataSourceConfig config = getConfig(0);
             boolean result = dsds.reconfigure(config);

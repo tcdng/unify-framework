@@ -869,6 +869,24 @@ public class UnifyContainer {
      *             If component is a singleton. If component instantiation error
      *             occurs.
      */
+    public UnifyComponent getComponent(String name, Setting... altSettings) throws UnifyException {
+        return getComponent(name, new UnifyComponentSettings(altSettings), null);
+    }
+
+    /**
+     * Gets a component by name using alternate settings. Applies to non-singletons
+     * only..
+     * 
+     * @param name
+     *            the component name
+     * @param altSettings
+     *            the alternate settings
+     * @return the component
+     * @throws UnifyException
+     *             if container is not started. If component with name is unknown.
+     *             If component is a singleton. If component instantiation error
+     *             occurs.
+     */
     public UnifyComponent getComponent(String name, UnifyComponentSettings altSettings) throws UnifyException {
         return getComponent(name, altSettings, null);
     }
