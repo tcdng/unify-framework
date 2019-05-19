@@ -41,7 +41,7 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 public @interface Table {
 
     /**
-     * The datasource that table belongs to. Defaults to
+     * The application data source that table belongs to. Defaults to
      * {@link ApplicationComponents#APPLICATION_DATASOURCE}
      */
     String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;

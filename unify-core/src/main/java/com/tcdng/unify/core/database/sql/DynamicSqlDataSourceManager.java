@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.DataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 
 /**
@@ -66,7 +65,7 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * Tests a runtime data source native query.
      * 
      * @param dynamicSqlDataSourceConfig
-     *            the datasource configuration.
+     *            the data source configuration.
      * @param query
      *            the native query object
      * @return the result count
@@ -184,7 +183,7 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    DataSource getDataSource(String configName) throws UnifyException;
+    SqlDataSource getDataSource(String configName) throws UnifyException;
 
     /**
      * Gets a connection object from configured data source connection pool.

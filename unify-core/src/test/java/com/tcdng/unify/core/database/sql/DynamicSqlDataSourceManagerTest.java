@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
+package com.tcdng.unify.core.database.sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

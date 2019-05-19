@@ -25,6 +25,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
+import com.tcdng.unify.core.database.sql.DynamicSqlDatabaseManager;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
@@ -41,6 +42,9 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 
     @Configurable(ApplicationComponents.APPLICATION_DATABASE)
     private Database db;
+
+    @Configurable
+    private DynamicSqlDatabaseManager dynamicSqlDatabaseManager;
 
     @Configurable
     private TaskLauncher taskLauncher;
@@ -73,10 +77,26 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     }
 
     /**
-     * Returns associated database
+     * Returns application database
      */
-    protected Database db() {
+    protected Database db() throws UnifyException {
         return db;
+    }
+
+    /**
+     * Gets a database instance using data source with supplied name.
+     * 
+     * @param dataSourceName
+     *            the data source name. Data source must be already registered in
+     *            default application dynamic data source manager.
+     * @return the database instance
+     * @throws UnifyException
+     *             if data source name equals
+     *             {@link ApplicationComponents#APPLICATION_DATASOURCE}. if an error
+     *             occurs
+     */
+    protected Database db(String dataSourceName) throws UnifyException {
+        return dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceName);
     }
 
     /**
@@ -107,8 +127,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
         return taskLauncher.launchTask(taskSetup);
     }
 
-    protected void addTaskMessage(TaskMonitor taskMonitor, String message, Object... params)
-            throws UnifyException {
+    protected void addTaskMessage(TaskMonitor taskMonitor, String message, Object... params) throws UnifyException {
         if (taskMonitor != null) {
             taskMonitor.addMessage(resolveSessionMessage(message, params));
         }

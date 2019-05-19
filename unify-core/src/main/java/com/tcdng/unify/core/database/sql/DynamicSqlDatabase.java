@@ -13,14 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.database.sql;
 
+
 /**
- * Default SQL database implementation.
+ * Dynamic SQL database.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SqlDatabaseImpl extends AbstractSqlDatabase {
+public interface DynamicSqlDatabase extends SqlDatabase {
 
 }

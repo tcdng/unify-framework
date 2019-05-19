@@ -43,7 +43,7 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
     @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
     private String defaultDatasource;
 
-    @Configurable(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
+    @Configurable
     private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
     @SuppressWarnings("unchecked")
