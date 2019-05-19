@@ -34,7 +34,7 @@ public abstract class AbstractDynamicSqlDatabase extends AbstractSqlDatabase imp
     private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
     @Configurable
-    private String dataSourceName;
+    private String dataSourceConfigName;
 
     @Override
     public String getDataSourceName() throws UnifyException {
@@ -43,7 +43,7 @@ public abstract class AbstractDynamicSqlDatabase extends AbstractSqlDatabase imp
 
     @Override
     protected DataSource getDataSource() throws UnifyException {
-        return dynamicSqlDataSourceManager.getDataSource(dataSourceName);
+        return dynamicSqlDataSourceManager.getDataSource(dataSourceConfigName);
     }
 
 }

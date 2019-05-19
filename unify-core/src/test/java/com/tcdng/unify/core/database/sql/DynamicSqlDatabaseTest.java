@@ -54,7 +54,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
     @Test(expected = UnifyException.class)
     public void testGetDynamicSqlDatabaseNoDatasourceConfigured() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
-                new Setting("dataSourceName", "mock-datasource"));
+                new Setting("dataSourceConfigName", "mock-datasource"));
         assertNotNull(db);
         db.getTransactionManager().beginTransaction();
         try {
@@ -67,7 +67,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
     @Test
     public void testCreateRecord() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
-                new Setting("dataSourceName", TEST_CONFIG));
+                new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
         db.getTransactionManager().beginTransaction();
         try {
@@ -81,7 +81,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
     @Test
     public void testFindRecordById() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
-                new Setting("dataSourceName", TEST_CONFIG));
+                new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
         db.getTransactionManager().beginTransaction();
         try {
@@ -101,7 +101,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
     @Test
     public void testUpdateRecordById() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
-                new Setting("dataSourceName", TEST_CONFIG));
+                new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
         db.getTransactionManager().beginTransaction();
         try {
@@ -124,7 +124,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
     @Test
     public void testDeleteRecordById() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
-                new Setting("dataSourceName", TEST_CONFIG));
+                new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
         db.getTransactionManager().beginTransaction();
         try {

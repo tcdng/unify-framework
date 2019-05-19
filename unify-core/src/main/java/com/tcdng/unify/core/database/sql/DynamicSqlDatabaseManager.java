@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -30,14 +29,12 @@ public interface DynamicSqlDatabaseManager extends UnifyComponent {
     /**
      * Gets a dynamic SQL database that uses data source with supplied name.
      * 
-     * @param dataSourceName
+     * @param dataSourceConfigName
      *            the data source name. Data source must be already registered in
      *            default application dynamic data source manager.
      * @return the dynamic SQL database
      * @throws UnifyException
-     *             if data source name equals
-     *             {@link ApplicationComponents#APPLICATION_DATASOURCE}. if an error
-     *             occurs
+     *             if an error occurs
      */
-    DynamicSqlDatabase getDynamicSqlDatabase(String dataSourceName) throws UnifyException;
+    DynamicSqlDatabase getDynamicSqlDatabase(String dataSourceConfigName) throws UnifyException;
 }

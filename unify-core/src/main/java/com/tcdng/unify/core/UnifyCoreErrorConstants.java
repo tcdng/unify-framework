@@ -933,9 +933,4 @@ public interface UnifyCoreErrorConstants {
      * Marked tree in chain mode.
      */
     String MARKEDTREE_IN_CHAIN = "UC_00E7";
-    
-    /**
-     * Attempt to create dynamic SQL database using application data source
-     */
-    String DYNAMICDATABASE_ATTEMPT_TO_USE_APPLICATIONDATASOURCE = "UC_00E8";
 }
