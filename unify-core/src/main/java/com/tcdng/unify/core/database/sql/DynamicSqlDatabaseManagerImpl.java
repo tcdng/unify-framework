@@ -19,7 +19,6 @@ package com.tcdng.unify.core.database.sql;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
@@ -39,22 +38,16 @@ public class DynamicSqlDatabaseManagerImpl extends AbstractUnifyComponent implem
         dynamicSqlDatabases = new FactoryMap<String, DynamicSqlDatabase>() {
 
             @Override
-            protected DynamicSqlDatabase create(String dataSourceName, Object... params) throws Exception {
-                // We put this here so we don have to do this check every time foe valid data source names.
-                if (ApplicationComponents.APPLICATION_DATASOURCE.equals(dataSourceName)) {
-                    throw new UnifyException(
-                            UnifyCoreErrorConstants.DYNAMICDATABASE_ATTEMPT_TO_USE_APPLICATIONDATASOURCE);
-                }
-
+            protected DynamicSqlDatabase create(String dataSourceConfigName, Object... params) throws Exception {
                 return (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
-                        new Setting("dataSourceName", dataSourceName));
+                        new Setting("dataSourceConfigName", dataSourceConfigName));
             }
         };
     }
 
     @Override
-    public DynamicSqlDatabase getDynamicSqlDatabase(String dataSourceName) throws UnifyException {
-        return dynamicSqlDatabases.get(dataSourceName);
+    public DynamicSqlDatabase getDynamicSqlDatabase(String dataSourceConfigName) throws UnifyException {
+        return dynamicSqlDatabases.get(dataSourceConfigName);
     }
 
     @Override
