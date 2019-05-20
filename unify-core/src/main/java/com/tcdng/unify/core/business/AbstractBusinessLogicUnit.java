@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.business;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStoreFactory;
@@ -32,6 +33,9 @@ public abstract class AbstractBusinessLogicUnit extends AbstractUnifyComponent i
     @Configurable
     private ValueStoreFactory valueStoreFactory;
 
+    @Configurable(ApplicationComponents.APPLICATION_DATABASE)
+    private Database db;
+    
     @Override
     protected void onInitialize() throws UnifyException {
 
@@ -46,7 +50,7 @@ public abstract class AbstractBusinessLogicUnit extends AbstractUnifyComponent i
         return valueStoreFactory;
     }
 
-    protected Database getDatabase(BusinessLogicInput input) throws UnifyException {
-        return (Database) getComponent(input.getDbName());
+    protected Database getDatabase() {
+        return db;
     }
 }

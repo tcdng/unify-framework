@@ -236,7 +236,7 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
             boolean isPlugin = pluginInfoList != null && !pluginInfoList.isEmpty();
             if (isPlugin) {
                 sb.append("\t\t\t").append(BusinessLogicInput.class.getCanonicalName()).append(" blin = new ")
-                        .append(BusinessLogicInput.class.getCanonicalName()).append("(null, tm().getName());\n");
+                        .append(BusinessLogicInput.class.getCanonicalName()).append("();\n");
                 for (int i = 0; i < parameterTypes.length; i++) {
                     sb.append("\t\t\tblin.setParameter(\"p").append(i).append("\", p").append(i).append(");\n");
                 }

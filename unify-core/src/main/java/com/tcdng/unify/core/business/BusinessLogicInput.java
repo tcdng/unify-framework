@@ -33,30 +33,19 @@ public class BusinessLogicInput {
 
     private TaskMonitor taskMonitor;
 
-    private String dbName;
-
     private Map<String, Object> parameters;
 
     public BusinessLogicInput() {
         this.parameters = new HashMap<String, Object>();
     }
 
-    public BusinessLogicInput(TaskMonitor taskMonitor, String dbName) {
+    public BusinessLogicInput(TaskMonitor taskMonitor) {
         this.taskMonitor = taskMonitor;
-        this.dbName = dbName;
         this.parameters = new HashMap<String, Object>();
-    }
-
-    public BusinessLogicInput(String pm) {
-        this(null, pm);
     }
 
     public TaskMonitor getTaskMonitor() {
         return taskMonitor;
-    }
-
-    public String getDbName() {
-        return dbName;
     }
 
     public void setParameters(Map<String, Object> parameters) {

@@ -44,6 +44,9 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     private Database db;
 
     @Configurable
+    private DatabaseTransactionManager databaseTransactionManager;
+    
+    @Configurable
     private DynamicSqlDatabaseManager dynamicSqlDatabaseManager;
 
     @Configurable
@@ -51,7 +54,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 
     @Override
     public DatabaseTransactionManager tm() throws UnifyException {
-        return db.getTransactionManager();
+        return databaseTransactionManager;
     }
 
     @Transactional
@@ -113,7 +116,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     protected BusinessLogicOutput executeBusinessLogic(TaskMonitor taskMonitor, String unitName,
             Map<String, Object> parameters) throws UnifyException {
         BusinessLogicUnit blu = (BusinessLogicUnit) getComponent(unitName);
-        BusinessLogicInput input = new BusinessLogicInput(taskMonitor, db().getName());
+        BusinessLogicInput input = new BusinessLogicInput(taskMonitor);
         input.setParameters(parameters);
 
         BusinessLogicOutput output = new BusinessLogicOutput();
@@ -132,10 +135,10 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     }
 
     protected void commit() throws UnifyException {
-        db.getTransactionManager().commit();
+        databaseTransactionManager.commit();
     }
 
     protected void setRollback() throws UnifyException {
-        db.getTransactionManager().setRollback();
+        databaseTransactionManager.setRollback();
     }
 }

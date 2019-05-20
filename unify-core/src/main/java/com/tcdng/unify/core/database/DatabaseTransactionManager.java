@@ -58,8 +58,31 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * Tests if transaction is open.
      * 
      * @return true is transaction is open
+     * @throws UnifyException
+     *             if an error occurs
      */
-    boolean isTransactionOpen();
+    boolean isTransactionOpen() throws UnifyException;
+
+    /**
+     * Joins a database to the current transaction.
+     * 
+     * @param db
+     *            the database instance to join
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void joinTransaction(Database db) throws UnifyException;
+
+    /**
+     * Returns the database session in current transaction.
+     * 
+     * @param db
+     *            the database which should be part of current transaction
+     * @return the database session
+     * @throws UnifyException
+     *             if supplied database is not part of current transaction
+     */
+    DatabaseSession getDatabaseSession(Database db) throws UnifyException;
 
     /**
      * Sets save point for transaction session.
@@ -83,7 +106,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void rollbackToSavepoint() throws UnifyException;
+    void rollbackToSavePoint() throws UnifyException;
 
     /**
      * Sets current transaction to roll back.

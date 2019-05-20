@@ -35,12 +35,11 @@ import com.tcdng.unify.core.operation.Update;
 public interface Database extends UnifyComponent {
 
     /**
-     * Returns the database transaction manager.
+     * Explicitly join current transaction in application database transaction manager.
      * 
-     * @throws UnifyException
-     *             if an error occurs
+     * @throws UnifyException if an error occurs
      */
-    DatabaseTransactionManager getTransactionManager() throws UnifyException;
+    void joinTransaction() throws UnifyException;
 
     /**
      * Returns the database manage data source name.
@@ -50,6 +49,16 @@ public interface Database extends UnifyComponent {
      */
     String getDataSourceName() throws UnifyException;
 
+    /**
+     * Creates a new database session.
+     * 
+     * @return the new database session
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    DatabaseSession createDatabaseSession() throws UnifyException;
+    
     /**
      * Finds record of specified type by id. List-only properties of returned object
      * are not populated. Child and child list properties are populated.

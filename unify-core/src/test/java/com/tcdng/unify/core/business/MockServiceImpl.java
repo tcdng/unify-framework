@@ -85,10 +85,31 @@ public class MockServiceImpl extends AbstractBusinessService implements MockServ
     @Override
     public Long createAccountWithCreditCheck(Account account, BigDecimal loanAmount) throws UnifyException {
         Long accountId = (Long) db().create(account);
-
         // Talk to third party database
         db(CREDITCHECK_DATASOURCECONFIG)
                 .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
+        return accountId;
+    }
+
+    @Override
+    public Long createAccountWithCreditCheckRollbackAfter(Account account, BigDecimal loanAmount)
+            throws UnifyException {
+        Long accountId = (Long) db().create(account);
+        // Talk to third party database
+        db(CREDITCHECK_DATASOURCECONFIG)
+                .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
+        setRollback();
+        return accountId;
+    }
+
+    @Override
+    public Long createAccountWithCreditCheckExceptionAfter(Account account, BigDecimal loanAmount)
+            throws UnifyException {
+        Long accountId = (Long) db().create(account);
+        // Talk to third party database
+        db(CREDITCHECK_DATASOURCECONFIG)
+                .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
+        throwOperationErrorException(new RuntimeException("Exception after"));
         return accountId;
     }
 }

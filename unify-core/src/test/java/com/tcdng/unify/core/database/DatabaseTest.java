@@ -54,11 +54,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
     private Office warehouseOffice = new Office("38, Warehouse Road Apapa", "+2345555555", 35);
 
+    private DatabaseTransactionManager tm;
+
     private Database db;
 
     @Test
     public void testAggregateSingle() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -99,13 +101,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(2, aggregate.getCount());
             assertEquals(20.00, aggregate.getValue());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testAggregateMultiple() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "cyan", 60.00, 3));
@@ -180,13 +182,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(2, priceAggregate.getCount());
             assertEquals(20.00, priceAggregate.getValue());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testAggregateCountDistinct() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("grape", "red", 25.00, 11));
@@ -219,13 +221,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("3", countAggregate.getValue());
 
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCountRecord() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -235,13 +237,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(2, db.countAll(new FruitQuery().lessEqual("price", 20.00)));
             assertEquals(1, db.countAll(new FruitQuery().likeBegin("name", "ban")));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testGetMinValueEmptyCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -250,13 +252,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(Double.valueOf(15.00),
                     db.min(Double.class, "price", new FruitQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testGetMinValueWithCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -264,13 +266,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(Double.valueOf(20.00), db.min(Double.class, "price", new FruitQuery().like("name", "app")));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testGetMinValueNoMatchRecords() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -278,13 +280,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
             assertNull(db.min(Double.class, "price", new FruitQuery().equals("name", "tangerine")));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testGetMaxValueEmptyCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -293,13 +295,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(Double.valueOf(60.00),
                     db.max(Double.class, "price", new FruitQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testGetMaxValueWithCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -307,13 +309,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(Double.valueOf(45.00), db.max(Double.class, "price", new FruitQuery().notLike("name", "app")));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testGetMaxValueNoMatchRecords() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -321,13 +323,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
             assertNull(db.max(Double.class, "price", new FruitQuery().equals("name", "tangerine")));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecord() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit fruitToCreate = new Fruit("apple", "red", 20.00);
             Long id = (Long) db.create(fruitToCreate);
@@ -342,13 +344,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             bingoOffice.setWorkDays(new String[] { "mon", "tue", "wed" });
 
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithArrayProperty() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Office bingoOffice = new Office("24, Parklane Apapa", "+2348888888", 20);
             bingoOffice.setWorkDays(new String[] { "mon", "tue", "wed" });
@@ -368,7 +370,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(originalDays[1], createdDays[1]);
             assertEquals(originalDays[2], createdDays[2]);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
@@ -376,120 +378,120 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
     public void testPersistenceAfterTransaction() throws Exception {
         Fruit apple = new Fruit("apple", "red", 20.00);
         Fruit banana = new Fruit("banana", "yellow", 45.00);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(apple);
             db.create(banana);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
 
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             List<Fruit> fruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("price"));
             assertEquals(2, fruitList.size());
             assertEquals(apple, fruitList.get(0));
             assertEquals(banana, fruitList.get(1));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testRollback() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 45.00));
-            db.getTransactionManager().setRollback();
+            tm.setRollback();
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
 
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             assertEquals(0, db.countAll(new FruitQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testRollbackToSavepoint() throws Exception {
         Fruit apple = new Fruit("apple", "red", 20.00);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(apple);
-            db.getTransactionManager().setSavePoint();
+            tm.setSavePoint();
 
             db.create(new Fruit("banana", "yellow", 45.00));
-            db.getTransactionManager().rollbackToSavepoint();
+            tm.rollbackToSavePoint();
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
 
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             List<Fruit> fruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true));
             assertEquals(1, fruitList.size());
             assertEquals(apple, fruitList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordById() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long id = (Long) db.create(new Fruit("apple", "red", 20.00));
             assertEquals(1, db.countAll(new FruitQuery().equals("id", id)));
             db.delete(Fruit.class, id);
             assertEquals(0, db.countAll(new FruitQuery().equals("id", id)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testDeleteRecordByIdWithInvalidId() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.delete(Fruit.class, 20L);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long id = (Long) db.create(new Fruit("apple", "red", 20.00));
             Fruit fruitData = db.find(Fruit.class, id);
             db.deleteByIdVersion(fruitData);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testDeleteRecordByIdVersionWithWrongVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long id = (Long) db.create(new Fruit("apple", "red", 20.00));
             Fruit fruitData = db.find(Fruit.class, id);
             fruitData.setVersion(20L);
             db.deleteByIdVersion(fruitData);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecord() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
@@ -501,13 +503,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordWithOrder() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
@@ -520,13 +522,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordWithListOnlyCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -543,13 +545,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testAuthorList.size());
             assertEquals(susan, testAuthorList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordsWithLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -568,13 +570,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("tampico", testFruitList.get(0).getName());
             assertEquals("strawberry", testFruitList.get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordsWithOffset() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -594,13 +596,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("banana", testFruitList.get(1).getName());
             assertEquals("avocado", testFruitList.get(2).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordsWithOffsetLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -625,13 +627,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("grape", testFruitList.get(6).getName());
             assertEquals("strawberry", testFruitList.get(7).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testOnDeleteCascade() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -654,61 +656,61 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testAuthorList.size());
             assertEquals(susan, testAuthorList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordById() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             Long id = (Long) db.create(apple);
             Fruit foundApple = db.find(Fruit.class, id);
             assertEquals(apple, foundApple);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindRecordByIdWithInvalidId() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.find(Fruit.class, 20L);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByIdVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             Long id = (Long) db.create(apple);
             Fruit foundApple = db.find(Fruit.class, id, 1L);
             assertEquals(apple, foundApple);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindRecordByIdVersionWithWrongVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long id = (Long) db.create(new Fruit("apple", "red", 20.00));
             db.find(Fruit.class, id, 20L);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordConstraint() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
 
@@ -725,13 +727,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("red", constraint.getColor());
             assertEquals(Double.valueOf(20.00), constraint.getPrice());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -740,13 +742,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().equals("color", "yellow"));
             assertEquals(banana, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByMin() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -755,13 +757,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().like("name", "app").min("price"));
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByMinNoCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -770,13 +772,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().min("price"));
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindRecordByMinMultipleResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -785,13 +787,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().like("name", "app").min("price"));
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindRecordByMinNoCriteriaMultipleResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -800,13 +802,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().min("price"));
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByMax() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
@@ -815,13 +817,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().like("name", "app").max("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByMaxNoCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
@@ -830,13 +832,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().max("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindRecordByMaxMultipleResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 60.00));
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
@@ -845,13 +847,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().like("name", "app").max("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindRecordByMaxNoCriteriaMultipleResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
@@ -860,13 +862,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(new FruitQuery().max("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteriaWithSelect() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -878,39 +880,39 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(Double.valueOf(60.00), foundFruit.getPrice());
             assertNull(foundFruit.getQuantity());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindRecordByCriteriaWithMultipleResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.find(new FruitQuery().like("name", "apple"));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteriaWithNoResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             assertNull(db.find(new FruitQuery().like("name", "zing")));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecords() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -923,13 +925,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(orange, testFruitList.get(0));
             assertEquals(apple, testFruitList.get(1));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithOrder() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -943,13 +945,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(apple, testFruitList.get(0));
             assertEquals(orange, testFruitList.get(1));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithSelect() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -975,13 +977,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNull(foundFruit.getPrice());
             assertEquals(Integer.valueOf(0), foundFruit.getQuantity());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllMapRecords() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -995,13 +997,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(orange, testFruitMap.get("orange"));
             assertEquals(apple, testFruitMap.get("apple"));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithAmongstSingle() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1013,13 +1015,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithAmongstMultiple() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1033,13 +1035,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(orange, testFruitList.get(0));
             assertEquals(apple, testFruitList.get(1));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testFindAllRecordsWithAmongstNone() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1051,13 +1053,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithCriteriaQueryLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -1078,13 +1080,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("orange", testFruitList.get(1).getName());
 
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithApplicationQueryLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -1108,13 +1110,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("pear", testFruitList.get(6).getName());
             assertEquals("avocado", testFruitList.get(7).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithNoQueryLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -1139,13 +1141,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("grape", testFruitList.get(8).getName());
             assertEquals("strawberry", testFruitList.get(9).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordById() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(parklaneOffice);
             Author author = new Author("Paul Horowitz", 72, Gender.MALE, BooleanType.FALSE, testOfficeId);
@@ -1161,13 +1163,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testPopulateListOnly() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long officeId = (Long) db.create(parklaneOffice);
             Author author = new Author();
@@ -1179,13 +1181,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("+2348888888", author.getOfficeTelephone());
             assertEquals("True", author.getRetiredDesc());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testPopulateListOnlyNullFk() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Author author = new Author();
             author.setOfficeId(null);
@@ -1196,25 +1198,25 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNull(author.getOfficeTelephone());
             assertNull(author.getRetiredDesc());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testListRecordByIdWithInvalidId() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, testOfficeId));
             db.list(Author.class, 20L);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByIdVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(warehouseOffice);
             Author author = new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId);
@@ -1230,25 +1232,25 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testListRecordByIdVersionWithWrongVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(warehouseOffice);
             db.create(new Author("Susan Bramer", 48, Gender.FEMALE, BooleanType.FALSE, testOfficeId));
             db.list(Author.class, testOfficeId, 20L);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(warehouseOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
@@ -1264,13 +1266,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithSelect() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(warehouseOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
@@ -1287,13 +1289,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNull(foundAuthor.getOfficeTelephone());
             assertNull(foundAuthor.getAge());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithListOnlyCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
@@ -1310,13 +1312,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testListRecordByCriteriaWithMultipleResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
@@ -1324,13 +1326,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, testOfficeId));
             db.list(new AuthorQuery().less("age", 60));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithNoResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long testOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
@@ -1338,13 +1340,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, testOfficeId));
             assertNull(db.list(new AuthorQuery().greater("age", 100)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecords() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -1378,13 +1380,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithOrder() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -1419,13 +1421,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithSelect() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -1460,13 +1462,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNull(foundAuthor.getOfficeAddress());
             assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllMapRecords() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -1500,13 +1502,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithCriteriaQueryLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -1527,13 +1529,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("orange", testFruitList.get(1).getName());
 
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithApplicationQueryLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -1557,13 +1559,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("pear", testFruitList.get(6).getName());
             assertEquals("avocado", testFruitList.get(7).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithNoQueryLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -1588,13 +1590,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("grape", testFruitList.get(8).getName());
             assertEquals("strawberry", testFruitList.get(9).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordWithListOnlyCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -1630,13 +1632,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordById() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1647,13 +1649,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(Fruit.class, apple.getId());
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordByIdWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -1673,13 +1675,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, reportParamList.size());
             assertEquals("resolutionDate", reportParamList.get(0).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateLeanRecordById() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1690,13 +1692,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(Fruit.class, apple.getId());
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateLeanRecordByIdWithBlankChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -1717,13 +1719,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", reportParamList.get(0).getName());
             assertEquals("endDate", reportParamList.get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateLeanRecordByIdWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -1744,13 +1746,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", reportParamList.get(0).getName());
             assertEquals("endDate", reportParamList.get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordByIdUsingUpdate() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             Long id = (Long) db.create(apple);
@@ -1761,13 +1763,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("green", foundFruit.getColor());
             assertEquals(Double.valueOf(20.00), foundFruit.getPrice());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testUpdateRecordByIdWithInvalidId() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1776,13 +1778,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             apple.setPrice(50.00);
             db.updateById(apple);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordByIdVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1793,13 +1795,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(Fruit.class, apple.getId());
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordByIdVersionWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -1819,13 +1821,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, reportParamList.size());
             assertEquals("resolutionDate", reportParamList.get(0).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateLeanRecordByIdVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1836,13 +1838,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Fruit foundFruit = db.find(Fruit.class, apple.getId());
             assertEquals(apple, foundFruit);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateLeanRecordByIdVersionWithBlankChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -1863,13 +1865,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", reportParamList.get(0).getName());
             assertEquals("endDate", reportParamList.get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateLeanRecordByIdVersionWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -1890,13 +1892,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", reportParamList.get(0).getName());
             assertEquals("endDate", reportParamList.get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testUpdateRecordByIdVersionWithWrongVersion() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -1905,13 +1907,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             apple.setVersion(10L); // Change Version
             db.updateByIdVersion(apple);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateAllRecord() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -1930,13 +1932,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("pineapple", testFruitList.get(3).getName());
             assertEquals(Double.valueOf(60.00), testFruitList.get(3).getPrice());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateAllRecordWithOrder() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
@@ -1956,13 +1958,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("pineapple", testFruitList.get(3).getName());
             assertEquals(Double.valueOf(60.00), testFruitList.get(3).getPrice());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateAllRecordWithListOnlyCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -1988,13 +1990,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("Paul Horowitz", testAuthorList.get(2).getName());
             assertEquals(Integer.valueOf(100), testAuthorList.get(2).getAge());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateAllRecordsWithLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -2031,13 +2033,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("strawberry", testFruitList.get(9).getName());
             assertEquals(Double.valueOf(4.50), testFruitList.get(9).getPrice());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateAllRecordsWithOffset() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -2074,13 +2076,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("strawberry", testFruitList.get(9).getName());
             assertEquals(Double.valueOf(99.99), testFruitList.get(9).getPrice());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateAllRecordsWithOffsetLimit() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("banana", "yellow", 35.00));
@@ -2117,13 +2119,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("strawberry", testFruitList.get(9).getName());
             assertEquals(Double.valueOf(4.50), testFruitList.get(9).getPrice());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithOnewayTransformation() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Date createDt = new Date();
             User user = new User("tiger", "scott", createDt);
@@ -2139,13 +2141,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertFalse(createDt.equals(createdUser.getCreateDt()));
             assertTrue(CalendarUtils.getMidnightDate(createDt).equals(createdUser.getCreateDt()));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordWithOnewayTransformationByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             User user = new User("tiger", "scott");
             db.create(user);
@@ -2158,13 +2160,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(fetchedUser.getPassword());
             assertFalse("scott".equals(fetchedUser.getPassword()));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordWithOnewayTransformationByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             User user = new User("tiger", "scott");
             db.create(user);
@@ -2177,13 +2179,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(fetchedUser.getPassword());
             assertFalse("scott".equals(fetchedUser.getPassword()));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordWithOnewayTransformation() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             User user = new User("tiger", "scott");
             Long id = (Long) db.create(user);
@@ -2196,13 +2198,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(fetchedUser.getName(), refetchedUser.getName());
             assertFalse(fetchedUser.getPassword().equals(refetchedUser.getPassword()));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordWithOnewayTransformationByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             User user = new User("tiger", "scott");
             Long id = (Long) db.create(user);
@@ -2216,13 +2218,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertFalse(fetchedUser.getPassword().equals(refetchedUser.getPassword()));
             assertFalse("tyler".equals(refetchedUser.getPassword()));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordWithOnewayTransformationByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             User user1 = new User("tiger", "scott");
             User user2 = new User("arnold", "brown");
@@ -2238,13 +2240,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             User fetchedUser = userList.get(0);
             assertEquals("tiger", fetchedUser.getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithTwowayTransformation() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             ServerConfig serverConfig = new ServerConfig("alan", "greenspan");
             Long id = (Long) db.create(serverConfig);
@@ -2258,13 +2260,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("greenspan", createdServerConfig.getPassword());
             assertEquals(serverConfig.getPassword(), createdServerConfig.getPassword());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordWithTwowayTransformationByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             ServerConfig serverConfig = new ServerConfig("alan", "greenspan");
             db.create(serverConfig);
@@ -2277,13 +2279,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(fetchedServerConfig.getPassword());
             assertEquals("greenspan", fetchedServerConfig.getPassword());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordWithTwowayTransformation() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             ServerConfig serverConfig = new ServerConfig("allan", "greenspan");
             Long id = (Long) db.create(serverConfig);
@@ -2296,13 +2298,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(fetchedServerConfig.getName(), refetchedServerConfig.getName());
             assertEquals(fetchedServerConfig.getPassword(), refetchedServerConfig.getPassword());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateRecordWithTwowayTransformationByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             ServerConfig serverConfig = new ServerConfig("alan", "greenspan");
             Long id = (Long) db.create(serverConfig);
@@ -2316,13 +2318,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertFalse(fetchedServerConfig.getPassword().equals(refetchedServerConfig.getPassword()));
             assertEquals("bluebridge", refetchedServerConfig.getPassword());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordWithTwowayTransformationByCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             ServerConfig serverConfig1 = new ServerConfig("alan", "greenspan");
             ServerConfig serverConfig2 = new ServerConfig("tom", "jones");
@@ -2338,13 +2340,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             ServerConfig fetchedServerConfig = serverConfigList.get(0);
             assertEquals("alan", fetchedServerConfig.getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithNoChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             Long id = (Long) db.create(report);
@@ -2354,13 +2356,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             int count = db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true));
             assertEquals(0, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithNullChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setParameters(null);
@@ -2371,13 +2373,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             int count = db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true));
             assertEquals(0, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportForm reportForm = new ReportForm("sampleEditor");
@@ -2391,13 +2393,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             int count = db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true));
             assertEquals(1, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate");
@@ -2413,13 +2415,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             int count = db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true));
             assertEquals(2, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateRecordWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate");
@@ -2452,13 +2454,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             count = db.countAll(new ReportParameterOptionsQuery().reportParameterId(rpEnd.getId()));
             assertEquals(1, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateMultipleRecordsWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
@@ -2475,13 +2477,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             count = db.countAll(new ReportParameterQuery().reportId(id2));
             assertEquals(1, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testCreateMultipleRecordsWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate");
@@ -2515,13 +2517,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             count = db.countAll(new ReportParameterOptionsQuery().reportParameterId(rpStaff.getId()));
             assertEquals(1, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindLeanRecordByIdWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("greenEditor"));
@@ -2534,13 +2536,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getReportForm());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindLeanRecordByIdWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
@@ -2554,13 +2556,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByIdWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("greenEditor"));
@@ -2574,13 +2576,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport.getReportForm());
             assertEquals("greenEditor", foundReport.getReportForm().getEditor());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByIdWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
@@ -2607,13 +2609,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNull(rParam.getReportDesc());
             assertNull(rParam.getScheduledDesc());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindLeanRecordByCriteriaWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("beanEditor"));
@@ -2626,13 +2628,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getReportForm());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindLeanRecordByCriteriaWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
@@ -2646,13 +2648,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteriaWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("beanEditor"));
@@ -2666,13 +2668,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport.getReportForm());
             assertEquals("beanEditor", foundReport.getReportForm().getEditor());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteriaWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
@@ -2699,13 +2701,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNull(rParam.getReportDesc());
             assertNull(rParam.getScheduledDesc());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteriaWithSelectChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("beanEditor"));
@@ -2719,13 +2721,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport.getReportForm());
             assertEquals("beanEditor", foundReport.getReportForm().getEditor());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteriaWithSelectChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
@@ -2752,13 +2754,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNull(rParam.getReportDesc());
             assertNull(rParam.getScheduledDesc());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByIdWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate", BooleanType.FALSE);
@@ -2807,13 +2809,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(rpo);
             assertEquals("title", rpo.getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindRecordByCriteriaWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate", BooleanType.FALSE);
@@ -2862,13 +2864,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(rpo);
             assertEquals("title", rpo.getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("editor10"));
@@ -2881,13 +2883,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(list.get(0).getReportForm());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -2900,13 +2902,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(list.get(0).getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate", BooleanType.FALSE);
@@ -2925,13 +2927,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(list.get(0).getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListLeanRecordByIdWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("cyanEditor"));
@@ -2944,13 +2946,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getReportForm());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListLeanRecordByIdWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -2963,13 +2965,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByIdWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("cyanEditor"));
@@ -2983,13 +2985,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport.getReportForm());
             assertEquals("cyanEditor", foundReport.getReportForm().getEditor());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByIdWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -3005,13 +3007,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", foundReport.getParameters().get(0).getName());
             assertEquals("endDate", foundReport.getParameters().get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListLeanRecordByCriteriaWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("grayEditor"));
@@ -3024,13 +3026,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getReportForm());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListLeanRecordByCriteriaWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -3043,13 +3045,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("grayEditor"));
@@ -3063,13 +3065,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport.getReportForm());
             assertEquals("grayEditor", foundReport.getReportForm().getEditor());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -3085,13 +3087,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", foundReport.getParameters().get(0).getName());
             assertEquals("endDate", foundReport.getParameters().get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithSelectChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("grayEditor"));
@@ -3105,13 +3107,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(foundReport.getReportForm());
             assertEquals("grayEditor", foundReport.getReportForm().getEditor());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithSelectChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -3127,13 +3129,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", foundReport.getParameters().get(0).getName());
             assertEquals("endDate", foundReport.getParameters().get(1).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByIdWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
 
             Report report = new Report("weeklyReport", "Weekly Report");
@@ -3184,13 +3186,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(rpo);
             assertEquals("title", rpo.getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListRecordByCriteriaWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
 
             Report report = new Report("weeklyReport", "Weekly Report");
@@ -3241,13 +3243,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(rpo);
             assertEquals("title", rpo.getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("blueEditor"));
@@ -3260,13 +3262,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(list.get(0).getReportForm());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -3279,13 +3281,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(list.get(0).getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate", BooleanType.FALSE);
@@ -3302,13 +3304,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             assertNull(list.get(0).getParameters());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testUpdateSingleFromMultipleRecordsWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate");
@@ -3390,13 +3392,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("Three", rpo.getName());
 
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdWithNoChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setParameters(new ArrayList<ReportParameter>());
@@ -3404,13 +3406,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.delete(Report.class, id);
             assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdWithNullChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setParameters(null);
@@ -3418,13 +3420,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             db.delete(Report.class, id);
             assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("sampleEditor"));
@@ -3433,13 +3435,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
             assertEquals(0, db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
@@ -3448,13 +3450,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
             assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate", BooleanType.FALSE);
@@ -3470,13 +3472,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
             assertEquals(0, db.countAll(new ReportParameterOptionsQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdVersionWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("sampleEditor"));
@@ -3486,13 +3488,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
             assertEquals(0, db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteRecordByIdVersionWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate"));
@@ -3503,13 +3505,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
             assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportForm reportForm = new ReportForm("sampleEditor");
@@ -3523,13 +3525,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             count = db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true));
             assertEquals(0, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate"));
@@ -3543,13 +3545,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             count = db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true));
             assertEquals(0, count);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteAllRecordWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate", BooleanType.FALSE);
@@ -3569,13 +3571,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
             assertEquals(0, db.countAll(new ReportParameterOptionsQuery().ignoreEmptyCriteria(true)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteSingleFromMultipleRecordsWithChild() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.setReportForm(new ReportForm("editor1"));
@@ -3597,13 +3599,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertNotNull(report.getReportForm());
             assertEquals("editor2", report.getReportForm().getEditor());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteSingleFromMultipleRecordsWithChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate"));
@@ -3626,13 +3628,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, report.getParameters().size());
             assertEquals("staffNo", report.getParameters().get(0).getName());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testDeleteSingleFromMultipleRecordsWithDeepChildList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Report report = new Report("weeklyReport", "Weekly Report");
             ReportParameter rpStart = new ReportParameter("startDate");
@@ -3671,13 +3673,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("title", rpo.getName());
 
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testValue() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "cyan", 60.00, 3));
@@ -3690,13 +3692,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             Double price = db.value(Double.class, "price", new FruitQuery().equals("name", "banana"));
             assertEquals(Double.valueOf(45.00), price);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test(expected = UnifyException.class)
     public void testListValueMultipleResult() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "cyan", 60.00, 3));
@@ -3705,13 +3707,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
             db.value(String.class, "color", new FruitQuery().like("name", "apple"));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testValueList() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "cyan", 60.00, 3));
@@ -3723,13 +3725,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertTrue(colorList.contains("red"));
             assertTrue(colorList.contains("cyan"));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testValueSet() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "cyan", 60.00, 3));
@@ -3743,13 +3745,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertTrue(nameSet.contains("pineapple"));
             assertTrue(nameSet.contains("banana"));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testValueMap() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "cyan", 60.00, 3));
@@ -3763,13 +3765,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(Double.valueOf(60.00), priceByFruit.get("pineapple"));
             assertEquals(Double.valueOf(45.00), priceByFruit.get("banana"));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testValueListMap() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "red", 60.00, 3));
@@ -3793,13 +3795,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, yellowFruits.size());
             assertTrue(yellowFruits.contains("banana"));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsMin() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 20.00);
             db.create(apple);
@@ -3813,13 +3815,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(apple, testFruitList.get(0));
             assertEquals(starApple, testFruitList.get(1));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsMinNoCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             Fruit banana = new Fruit("banana", "yellow", 15.00);
@@ -3831,13 +3833,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testFruitList.size());
             assertEquals(banana, testFruitList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsMin() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -3862,13 +3864,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsMinNoCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -3902,13 +3904,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsMax() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Fruit apple = new Fruit("apple", "red", 75.00);
             db.create(apple);
@@ -3921,13 +3923,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(1, testFruitList.size());
             assertEquals(apple, testFruitList.get(0));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testFindAllRecordsMaxNoCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             Fruit banana = new Fruit("banana", "yellow", 60.20);
@@ -3941,13 +3943,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals(banana, testFruitList.get(0));
             assertEquals(starApple, testFruitList.get(1));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsMax() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -3972,13 +3974,13 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("24, Parklane Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2348888888", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Test
     public void testListAllRecordsMaxNoCriteria() throws Exception {
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
@@ -4002,7 +4004,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("38, Warehouse Road Apapa", foundAuthor.getOfficeAddress());
             assertEquals("+2345555555", foundAuthor.getOfficeTelephone());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
@@ -4013,6 +4015,7 @@ public class DatabaseTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
+        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);;
         db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
     }
 

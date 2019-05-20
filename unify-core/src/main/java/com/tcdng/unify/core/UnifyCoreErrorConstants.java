@@ -933,4 +933,9 @@ public interface UnifyCoreErrorConstants {
      * Marked tree in chain mode.
      */
     String MARKEDTREE_IN_CHAIN = "UC_00E7";
+    
+    /**
+     * Database is not part of transaction.
+     */
+    String DATABASE_NOT_PART_OF_TRANSACTION = "UC_00E8";
 }

@@ -47,4 +47,8 @@ public interface MockService extends BusinessService {
     LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
 
     Long createAccountWithCreditCheck(Account account, BigDecimal loanAmount) throws UnifyException;
+
+    Long createAccountWithCreditCheckRollbackAfter(Account account, BigDecimal loanAmount) throws UnifyException;
+
+    Long createAccountWithCreditCheckExceptionAfter(Account account, BigDecimal loanAmount) throws UnifyException;
 }

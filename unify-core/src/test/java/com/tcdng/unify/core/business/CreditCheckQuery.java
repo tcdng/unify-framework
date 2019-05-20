@@ -13,14 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.business;
+
+import com.tcdng.unify.core.database.Query;
 
 /**
- * Default SQL database implementation.
+ * Credit check query.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SqlDatabaseImpl extends AbstractSqlDatabase {
+public class CreditCheckQuery extends Query<CreditCheck> {
+
+    public CreditCheckQuery() {
+        super(CreditCheck.class);
+    }
 
 }

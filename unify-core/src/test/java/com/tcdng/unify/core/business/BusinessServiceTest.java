@@ -30,9 +30,11 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
+import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceConfig;
 import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.database.sql.DynamicSqlDatabase;
+import com.tcdng.unify.core.database.sql.SqlDatabase;
 import com.tcdng.unify.core.database.sql.SqlUtils;
 
 /**
@@ -157,7 +159,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
     public void testTransactionAcrossDynamicDatabase() throws Exception {
         MockService mockService = (MockService) getComponent("mockservice");
         Long accountId =
-                mockService.createAccountWithCreditCheck(new Account("001", "Sim"), BigDecimal.valueOf(102.60));
+                mockService.createAccountWithCreditCheck(new Account("001", "Sim"), BigDecimal.valueOf(102.63));
         assertNotNull(accountId);
 
         // Validate account record in application data source
@@ -167,18 +169,90 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         assertEquals("Sim", account.getAccountName());
 
         // Validate credit check record in third-party dynamic data source
+        DatabaseTransactionManager dbTransactionManager =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", MockService.CREDITCHECK_DATASOURCECONFIG));
         assertNotNull(db);
-        db.getTransactionManager().beginTransaction();
+        dbTransactionManager.beginTransaction();
         try {
             CreditCheck creditCheck = db.find(CreditCheck.class, "Sim");
             assertNotNull(creditCheck);
             assertEquals("Sim", creditCheck.getAccountName());
             assertEquals("001", creditCheck.getAccountNo());
-            assertEquals(BigDecimal.valueOf(102.60), creditCheck.getLoanAmount());
+            assertEquals(BigDecimal.valueOf(102.63), creditCheck.getLoanAmount());
         } finally {
-            db.getTransactionManager().endTransaction();
+            dbTransactionManager.endTransaction();
+        }
+    }
+
+    @Test
+    public void testTransactionRollbackAcrossDynamicDatabase() throws Exception {
+        MockService mockService = (MockService) getComponent("mockservice");
+        mockService.createAccountWithCreditCheckRollbackAfter(new Account("001", "Sim"), BigDecimal.valueOf(102.63));
+
+        // Validate rollback
+        DatabaseTransactionManager dbTransactionManager =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
+        SqlDatabase appDb = (SqlDatabase) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        DynamicSqlDatabase dynDb =
+                (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                        new Setting("dataSourceConfigName", MockService.CREDITCHECK_DATASOURCECONFIG));
+        dbTransactionManager.beginTransaction();
+        try {
+            assertEquals(0, appDb.countAll(new AccountQuery().ignoreEmptyCriteria(true)));
+            assertEquals(0, dynDb.countAll(new CreditCheckQuery().ignoreEmptyCriteria(true)));
+        } finally {
+            dbTransactionManager.endTransaction();
+        }
+    }
+
+    @Test
+    public void testTransactionExceptionRollbackDuringAcrossDynamicDatabase() throws Exception {
+        try {
+            MockService mockService = (MockService) getComponent("mockservice");
+            mockService.createAccountWithCreditCheck(new Account("001", "Sim"), null);
+        } catch (Exception e) {
+        }
+
+        // Validate rollback
+        DatabaseTransactionManager dbTransactionManager =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
+        SqlDatabase appDb = (SqlDatabase) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        DynamicSqlDatabase dynDb =
+                (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                        new Setting("dataSourceConfigName", MockService.CREDITCHECK_DATASOURCECONFIG));
+        dbTransactionManager.beginTransaction();
+        try {
+            assertEquals(0, appDb.countAll(new AccountQuery().ignoreEmptyCriteria(true)));
+            assertEquals(0, dynDb.countAll(new CreditCheckQuery().ignoreEmptyCriteria(true)));
+        } finally {
+            dbTransactionManager.endTransaction();
+        }
+    }
+
+    @Test
+    public void testTransactionExceptionRollbackAfterAcrossDynamicDatabase() throws Exception {
+        try {
+            MockService mockService = (MockService) getComponent("mockservice");
+            mockService.createAccountWithCreditCheckExceptionAfter(new Account("001", "Sim"),
+                    BigDecimal.valueOf(102.63));
+        } catch (Exception e) {
+        }
+
+        // Validate rollback
+        DatabaseTransactionManager dbTransactionManager =
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
+        SqlDatabase appDb = (SqlDatabase) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        DynamicSqlDatabase dynDb =
+                (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                        new Setting("dataSourceConfigName", MockService.CREDITCHECK_DATASOURCECONFIG));
+        dbTransactionManager.beginTransaction();
+        try {
+            assertEquals(0, appDb.countAll(new AccountQuery().ignoreEmptyCriteria(true)));
+            assertEquals(0, dynDb.countAll(new CreditCheckQuery().ignoreEmptyCriteria(true)));
+        } finally {
+            dbTransactionManager.endTransaction();
         }
     }
 
@@ -194,7 +268,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE CREDIT_CHECK (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
-                    + "ACCOUNT_NO VARCHAR(16) NOT NULL," + "LOAN_AMOUNT DECIMAL(14,2));");
+                    + "ACCOUNT_NO VARCHAR(16) NOT NULL," + "LOAN_AMOUNT DECIMAL(14,2) NOT NULL);");
             connection.commit();
         } finally {
             SqlUtils.close(stmt);
