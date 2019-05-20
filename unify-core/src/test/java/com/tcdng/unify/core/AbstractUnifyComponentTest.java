@@ -289,24 +289,24 @@ public abstract class AbstractUnifyComponentTest {
     }
 
     protected Object createRecord(Entity record) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
-            return pm.create(record);
+            return db.create(record);
         } finally {
             tm.endTransaction();
         }
     }
 
     protected <T extends Entity> T findRecord(Class<T> clazz, Object id) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
-            return pm.list(clazz, id);
+            return db.list(clazz, id);
         } finally {
             tm.endTransaction();
         }
@@ -314,16 +314,16 @@ public abstract class AbstractUnifyComponentTest {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void deleteAll(Class<? extends Entity>... typeList) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
             for (Class<? extends Entity> type : typeList) {
                 if (AbstractSequencedEntity.class.isAssignableFrom(type)) {
-                    pm.deleteAll(new Query(type).greater("id", 0L));
+                    db.deleteAll(new Query(type).greater("id", 0L));
                 } else {
-                    pm.deleteAll(new Query(type).ignoreEmptyCriteria(true));
+                    db.deleteAll(new Query(type).ignoreEmptyCriteria(true));
                 }
             }
         } finally {
@@ -333,12 +333,12 @@ public abstract class AbstractUnifyComponentTest {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected int countAll(Class<? extends Entity> typeClass) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
-            return pm.countAll(new Query(typeClass).greater("id", 0L).ignoreEmptyCriteria(true));
+            return db.countAll(new Query(typeClass).greater("id", 0L).ignoreEmptyCriteria(true));
         } finally {
             tm.endTransaction();
         }

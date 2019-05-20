@@ -16,18 +16,13 @@
 package com.tcdng.unify.core.database;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.operation.Update;
@@ -39,136 +34,14 @@ import com.tcdng.unify.core.operation.Update;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractDatabase extends AbstractUnifyComponent implements Database, DatabaseTransactionManager {
+public abstract class AbstractDatabase extends AbstractUnifyComponent implements Database {
 
-    private static final ThreadLocal<Stack<TransactionalCall>> transactionsThreadLocal;
-
-    static {
-        transactionsThreadLocal = new ThreadLocal<Stack<TransactionalCall>>() {
-            @Override
-            protected Stack<TransactionalCall> initialValue() {
-                return new Stack<TransactionalCall>();
-            }
-        };
-    }
-
-    @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
-    private DataSource dataSource;
+    @Configurable
+    private DatabaseTransactionManager databaseTransactionManager;
 
     @Override
-    public DatabaseTransactionManager getTransactionManager() throws UnifyException {
-        return this;
-    }
-
-    @Override
-    public String getDataSourceName() throws UnifyException {
-        return dataSource.getName();
-    }
-
-    @Override
-    public void beginTransaction() throws UnifyException {
-        beginTransaction(TransactionAttribute.REQUIRES_NEW);
-    }
-
-    @Override
-    public void beginTransaction(TransactionAttribute txnType) throws UnifyException {
-        Stack<TransactionalCall> transactions = transactionsThreadLocal.get();
-        TransactionalCall transaction = null;
-        switch (txnType) {
-            case REQUIRED:
-                if (!transactions.isEmpty() && transactions.peek().isTransaction()) {
-                    transaction = transactions.peek();
-                } else {
-                    transaction = new TransactionalCall(true);
-                }
-                break;
-            case REQUIRES_NEW:
-                transaction = new TransactionalCall(true);
-                break;
-            case SUPPORTS:
-                if (!transactions.isEmpty()) {
-                    transaction = transactions.peek();
-                } else {
-                    transaction = new TransactionalCall(false);
-                }
-                break;
-            case MANDATORY:
-                if (!transactions.isEmpty()) {
-                    transaction = transactions.peek();
-                    if (!transaction.isTransaction()) {
-                        throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_REQUIRED);
-                    }
-                } else {
-                    throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_REQUIRED);
-                }
-                break;
-            case NEVER:
-                if (!transactions.isEmpty()) {
-                    transaction = transactions.peek();
-                    if (transaction.isTransaction()) {
-                        throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_NEVER_REQUIRED);
-                    }
-                } else {
-                    transaction = new TransactionalCall(false);
-                }
-                break;
-            case NOT_SUPPORTED:
-                transaction = new TransactionalCall(false);
-                break;
-        }
-
-        transaction.join(this);
-        transactions.push(transaction);
-    }
-
-    @Override
-    public void endTransaction() throws UnifyException {
-        try {
-            transactionsThreadLocal.get().pop().leave();
-            if (transactionsThreadLocal.get().isEmpty()) {
-                transactionsThreadLocal.remove();
-            }
-        } catch (RuntimeException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.TRANSACTION_IS_ALREADY_COMPLETED);
-        }
-    }
-
-    @Override
-    public boolean isTransactionOpen() {
-        if (!transactionsThreadLocal.get().isEmpty()) {
-            TransactionalCall tc = transactionsThreadLocal.get().peek();
-            return tc.isTransaction();
-        }
-        return false;
-    }
-
-    @Override
-    public void setRollback() throws UnifyException {
-        try {
-            transactionsThreadLocal.get().peek().setRollback();
-        } catch (RuntimeException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.TRANSACTION_IS_ALREADY_COMPLETED);
-        }
-    }
-
-    @Override
-    public void setSavePoint() throws UnifyException {
-        getDatabaseSession().setSavepoint();
-    }
-
-    @Override
-    public void clearSavePoint() throws UnifyException {
-        getDatabaseSession().clearSavepoint();
-    }
-
-    @Override
-    public void rollbackToSavepoint() throws UnifyException {
-        getDatabaseSession().rollbackToSavepoint();
-    }
-
-    @Override
-    public void commit() throws UnifyException {
-        transactionsThreadLocal.get().peek().commit();
+    public void joinTransaction() throws UnifyException {
+        databaseTransactionManager.joinTransaction(this);
     }
 
     @Override
@@ -393,124 +266,10 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     protected void onTerminate() throws UnifyException {
 
     }
-
-    protected DataSource getDataSource() throws UnifyException {
-        return dataSource;
-    }
-
-    protected abstract DatabaseSession createDatabaseSession() throws UnifyException;
-
+    
+    protected abstract DataSource getDataSource() throws UnifyException;
+    
     private DatabaseSession getDatabaseSession() throws UnifyException {
-        if (!transactionsThreadLocal.get().isEmpty()) {
-            TransactionalCall tc = transactionsThreadLocal.get().peek();
-            if (tc.isTransaction()) {
-                return (DatabaseSession) transactionsThreadLocal.get().peek().getDatabaseSession();
-            }
-        }
-        throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_REQUIRED);
-    }
-
-    private static class TransactionalCall {
-        private Map<String, DatabaseSession> databaseSessions;
-        private Stack<DatabaseSession> sessionStack;
-        private boolean transaction;
-        private boolean rollback;
-
-        public TransactionalCall(boolean transaction) {
-            this.transaction = transaction;
-            rollback = !transaction;
-            databaseSessions = new HashMap<String, DatabaseSession>();
-            sessionStack = new Stack<DatabaseSession>();
-        }
-
-        /**
-         * Creates a join
-         * 
-         * @param dataSourceName
-         *            the data source name
-         * @throws UnifyException
-         *             if an error occurs
-         */
-        public void join(AbstractDatabase db) throws UnifyException {
-            DatabaseSession databaseSession = databaseSessions.get(db.getDataSourceName());
-            if (databaseSession == null) {
-                databaseSession = db.createDatabaseSession();
-                databaseSessions.put(db.getDataSourceName(), databaseSession);
-            }
-            sessionStack.push(databaseSession);
-        }
-
-        /**
-         * Leaves transaction
-         * 
-         * @throws UnifyException
-         *             - If an error occurs
-         */
-        public void leave() throws UnifyException {
-            try {
-                sessionStack.pop();
-            } catch (RuntimeException e) {
-                throw new UnifyException(e, UnifyCoreErrorConstants.TRANSACTION_IS_ALREADY_COMPLETED);
-            }
-
-            // Assumes transaction has ended when session stack is empty
-            if (sessionStack.isEmpty()) {
-                commit(true);
-                databaseSessions.clear();
-            }
-        }
-
-        public void commit() throws UnifyException {
-            commit(false);
-        }
-
-        /**
-         * Gets the current database session
-         * 
-         * @throws UnifyException
-         *             - If an error occurs
-         */
-        public DatabaseSession getDatabaseSession() throws UnifyException {
-            try {
-                return sessionStack.peek();
-            } catch (RuntimeException e) {
-                throw new UnifyException(e, UnifyCoreErrorConstants.TRANSACTION_IS_ALREADY_COMPLETED);
-            }
-        }
-
-        /**
-         * Sets transaction to roll back. All sessions are rolled back at the end of
-         * transaction
-         */
-        public void setRollback() {
-            rollback = true;
-        }
-
-        /**
-         * @return the transaction
-         */
-        public boolean isTransaction() {
-            return transaction;
-        }
-
-        private void commit(boolean isClose) throws UnifyException {
-            for (DatabaseSession dataSourceSession : databaseSessions.values()) {
-                try {
-                    if (rollback) {
-                        dataSourceSession.rollback();
-                    } else {
-                        dataSourceSession.commit();
-                    }
-                } catch (Exception e) {
-                } finally {
-                    if (isClose) {
-                        try {
-                            dataSourceSession.close();
-                        } catch (Exception e) {
-                        }
-                    }
-                }
-            }
-        }
+        return databaseTransactionManager.getDatabaseSession(this);
     }
 }

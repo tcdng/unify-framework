@@ -31,6 +31,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_DATABASE = "application-database";
 
+    String APPLICATION_DATABASETRANSACTIONMANAGER = "application-databasetxnmanager";
+
     String APPLICATION_DATASOURCE = "application-datasource";
 
     String APPLICATION_DATASOURCEMANAGER = "application-datasourcemanager";

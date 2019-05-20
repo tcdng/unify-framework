@@ -28,6 +28,7 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.database.DatabaseTransactionManager;
 
 /**
  * Dynamic SQL database test.
@@ -39,15 +40,17 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
 
     private static final String TEST_CONFIG = "test-datasource";
 
+    private DatabaseTransactionManager tm;
+    
     @Test(expected = NullPointerException.class)
     public void testGetDynamicSqlDatabaseNoDatasourceSetting() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE);
         assertNotNull(db);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new AccountDetails("Bill Ray", "9200567689", BigDecimal.valueOf(5200.00)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
@@ -56,11 +59,11 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", "mock-datasource"));
         assertNotNull(db);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             db.create(new AccountDetails("Bill Ray", "9200567689", BigDecimal.valueOf(5200.00)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
@@ -69,12 +72,12 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             String id = (String) db.create(new AccountDetails("Bill Ray", "9200567689", BigDecimal.valueOf(5200.00)));
             assertEquals("Bill Ray", id);
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
@@ -83,7 +86,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             AccountDetails accountDetails = new AccountDetails("Bill Ray", "9200567689", BigDecimal.valueOf(5200.01));
             db.create(accountDetails);
@@ -94,7 +97,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("9200567689", foundAccountDetails.getAccountNo());
             assertEquals(BigDecimal.valueOf(5200.01), foundAccountDetails.getAvailBal());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
@@ -103,7 +106,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             AccountDetails accountDetails = new AccountDetails("Bill Ray", "9200567689", BigDecimal.valueOf(5200.00));
             db.create(accountDetails);
@@ -117,7 +120,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
             assertEquals("9200567444", foundAccountDetails.getAccountNo());
             assertEquals(BigDecimal.valueOf(150.45), foundAccountDetails.getAvailBal());
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
@@ -126,19 +129,22 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
-        db.getTransactionManager().beginTransaction();
+        tm.beginTransaction();
         try {
             String id = (String) db.create(new AccountDetails("Bill Ray", "9200567689", BigDecimal.valueOf(5200.00)));
             assertEquals(1, db.countAll(new AccountDetailsQuery().equals("accountName", id)));
             db.delete(AccountDetails.class, id);
             assertEquals(0, db.countAll(new AccountDetailsQuery().equals("accountName", id)));
         } finally {
-            db.getTransactionManager().endTransaction();
+            tm.endTransaction();
         }
     }
 
     @Override
     protected void onSetup() throws Exception {
+        // Get transaction manager
+        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);;
+        
         // Configure and create data source
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
@@ -150,6 +156,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
             stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE ACCOUNT_DETAILS (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
                     + "ACCOUNT_NO VARCHAR(16) NOT NULL," + "AVAILABLE_BAL DECIMAL(14,2));");
+            connection.commit();
         } finally {
             SqlUtils.close(stmt);
             dynamicSqlDataSourceManager.restoreConnection(TEST_CONFIG, connection);

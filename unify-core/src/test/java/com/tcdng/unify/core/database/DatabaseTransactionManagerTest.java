@@ -18,7 +18,6 @@ package com.tcdng.unify.core.database;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
@@ -36,11 +35,6 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
 public class DatabaseTransactionManagerTest extends AbstractUnifyComponentTest {
 
     private DatabaseTransactionManager tm;
-
-    @Before
-    public void setup() throws Exception {
-        tm = ((Database) getComponent(ApplicationComponents.APPLICATION_DATABASE)).getTransactionManager();
-    }
 
     @Test
     public void testBeginTransaction() throws Exception {
@@ -189,7 +183,7 @@ public class DatabaseTransactionManagerTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
-
+        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);;
     }
 
     @Override

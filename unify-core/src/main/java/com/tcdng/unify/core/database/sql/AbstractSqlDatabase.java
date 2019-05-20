@@ -33,7 +33,7 @@ public abstract class AbstractSqlDatabase extends AbstractDatabase implements Sq
     private SqlStatementExecutor sqlStatementExecutor;
 
     @Override
-    protected DatabaseSession createDatabaseSession() throws UnifyException {
+    public DatabaseSession createDatabaseSession() throws UnifyException {
         return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
     }
 }

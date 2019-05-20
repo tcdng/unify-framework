@@ -16,7 +16,10 @@
 package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.database.DataSource;
 
 /**
  * Default application SQL database.
@@ -25,6 +28,17 @@ import com.tcdng.unify.core.annotation.Component;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_DATABASE)
-public class DefaultApplicationSqlDatabaseImpl extends SqlDatabaseImpl {
+public class DefaultApplicationSqlDatabaseImpl extends AbstractSqlDatabase {
 
+    @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
+    private DataSource dataSource;
+
+    @Override
+    public String getDataSourceName() throws UnifyException {
+        return dataSource.getName();
+    }
+
+    protected DataSource getDataSource() throws UnifyException {
+        return dataSource;
+    }
 }

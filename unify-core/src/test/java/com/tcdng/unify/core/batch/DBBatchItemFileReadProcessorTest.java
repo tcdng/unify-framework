@@ -175,7 +175,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
     @Override
     protected void onSetup() throws Exception {
         db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
     }
 
     @SuppressWarnings({ "unchecked" })
