@@ -584,7 +584,11 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
         @Override
         public boolean isExceptions() {
-            return !exceptions.isEmpty();
+            if (logMessages) {
+                return !exceptions.isEmpty();
+            }
+
+            return false;
         }
 
         @Override
