@@ -227,6 +227,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
             }
             return map;
         }
+
         return Collections.emptyMap();
     }
 
