@@ -79,12 +79,12 @@ public interface SqlFieldSchemaInfo {
     /**
      * Returns the field default value.
      */
-    String getDefaultValue();
+    String getDefaultVal();
 
     /**
      * Returns if field has default value.
      */
-    boolean isWithDefaultValue();
+    boolean isWithDefaultVal();
 
     /**
      * Returns true if the field is a primary key otherwise false;

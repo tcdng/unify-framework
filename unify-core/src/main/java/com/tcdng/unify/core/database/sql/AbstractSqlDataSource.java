@@ -152,9 +152,6 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                     if (SqlUtils.isSupportedSqlType(sqlType)) {
                         Class<?> type = SqlUtils.getJavaType(sqlType);
                         String defaultVal = rs.getString("COLUMN_DEF");
-                        if (defaultVal != null && defaultVal.startsWith("'") && defaultVal.endsWith("'")) {
-                            defaultVal = defaultVal.substring(1, defaultVal.length() -1);
-                        }
                         String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");
                         int decimalDigits = decimalDigitsStr == null ? 0 : Integer.valueOf(decimalDigitsStr);
                         columnInfoList.add(new SqlColumnInfo(type, rs.getString("TYPE_NAME"),

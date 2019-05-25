@@ -19,8 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * Character data type SQL policy.
@@ -28,18 +27,11 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class CharacterPolicy implements SqlDataTypePolicy {
+public class CharacterPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("CHAR(").append(length).append(")");
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT '").append(defaultVal.charAt(0)).append("'");
-        }
+        sb.append(" CHAR(").append(length).append(")");
     }
 
     @Override
@@ -67,6 +59,11 @@ public class CharacterPolicy implements SqlDataTypePolicy {
             return result.charAt(0);
         }
         return null;
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "' '";
     }
 
     @Override

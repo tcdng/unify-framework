@@ -19,8 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * Double data type SQL policy.
@@ -28,18 +27,11 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DoublePolicy implements SqlDataTypePolicy {
+public class DoublePolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("FLOAT");
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT ").append(Double.valueOf(defaultVal));
-        }
+        sb.append(" FLOAT");
     }
 
     @Override
@@ -67,6 +59,11 @@ public class DoublePolicy implements SqlDataTypePolicy {
             return ((ResultSet) rs).getDouble(index);
         }
         return null;
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "0.0";
     }
 
     @Override

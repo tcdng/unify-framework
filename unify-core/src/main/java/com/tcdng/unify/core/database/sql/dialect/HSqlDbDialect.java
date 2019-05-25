@@ -18,17 +18,23 @@ package com.tcdng.unify.core.database.sql.dialect;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
 import com.tcdng.unify.core.database.sql.SqlUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * HSQLDB SQL dialect.
@@ -62,18 +68,77 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
-        if (format) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
+    public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            throws UnifyException {
+        if (sqlColumnAlterInfo.isAltered()) {
+            List<String> sqlList = new ArrayList<String>();
+            StringBuilder sb = new StringBuilder();
+            SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+            if (sqlColumnAlterInfo.isDataChange()) {
+                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+                if (format) {
+                    sb.append(getLineSeparator());
+                } else {
+                    sb.append(' ');
+                }
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+                sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                        sqlFieldSchemaInfo.getScale());
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
+            if (sqlColumnAlterInfo.isDefaultChange()) {
+                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+                if (format) {
+                    sb.append(getLineSeparator());
+                } else {
+                    sb.append(' ');
+                }
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumn()).append(" SET");
+                if (!sqlFieldSchemaInfo.isNullable() || sqlFieldSchemaInfo.isWithDefaultVal()) {
+                    sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                } else {
+                    sb.append(" DEFAULT NULL");
+                }
+
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
+            if (sqlColumnAlterInfo.isNullableChange()) {
+                if (!sqlFieldSchemaInfo.isNullable()) {
+                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getTable()).append(" SET ")
+                            .append(sqlFieldSchemaInfo.getColumn()).append(" = ");
+                    sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getColumn()).append(" IS NULL");
+                    sqlList.add(sb.toString());
+                    StringUtils.truncate(sb);
+                }
+
+                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+                if (format) {
+                    sb.append(getLineSeparator());
+                } else {
+                    sb.append(' ');
+                }
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+                if (sqlFieldSchemaInfo.isNullable()) {
+                    sb.append(" SET NULL");
+                } else {
+                    sb.append(" SET NOT NULL");
+                }
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
+            return sqlList;
         }
-        sb.append("ADD COLUMN ");
-        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
-        return sb.toString();
+
+        return Collections.emptyList();
     }
 
     @Override

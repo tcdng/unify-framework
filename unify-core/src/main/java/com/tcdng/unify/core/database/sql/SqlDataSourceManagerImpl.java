@@ -231,7 +231,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                         checkSqlColumnAltered(sqlDataSourceDialect, sqlfieldInfo, sqlColumnInfo);
                 if (columnAlterInfo.isAltered()) {
                     // Alter column
-                    columnUpdateSqlList.add(sqlDataSourceDialect.generateAlterColumn(sqlEntityInfo, sqlfieldInfo,
+                    columnUpdateSqlList.addAll(sqlDataSourceDialect.generateAlterColumn(sqlEntityInfo, sqlfieldInfo,
                             columnAlterInfo, formatSql));
                 }
             }
@@ -253,11 +253,11 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             SqlFieldInfo sqlfieldInfo, SqlColumnInfo columnInfo) throws UnifyException {
         boolean nullableChange = columnInfo.isNullable() != sqlfieldInfo.isNullable();
 
-        boolean defaultChange = !(((StringUtils.isBlank(columnInfo.getDefaultVal())
-                || SqlUtils.isDefaultConstant(columnInfo.getDefaultVal()))
-                && StringUtils.isBlank(sqlfieldInfo.getDefaultValue()))
+        boolean defaultChange = !(((StringUtils.isBlank(columnInfo.getDefaultVal()) || columnInfo.getDefaultVal()
+                .equals(sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType()).getAltDefault()))
+                && StringUtils.isBlank(sqlfieldInfo.getDefaultVal()))
                 || (columnInfo.getDefaultVal() != null
-                        && columnInfo.getDefaultVal().equals(sqlfieldInfo.getDefaultValue())));
+                        && columnInfo.getDefaultVal().equals(sqlfieldInfo.getDefaultVal())));
 
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
         boolean typeChange = columnInfo.getSqlType() != sqlDataTypePolicy.getSqlType();

@@ -55,6 +55,10 @@ public class SqlColumnAlterInfo {
         return lenChange;
     }
 
+    public boolean isDataChange() {
+        return typeChange || lenChange;
+    }
+    
     public boolean isAltered() {
         return nullableChange || defaultChange || typeChange || lenChange;
     }

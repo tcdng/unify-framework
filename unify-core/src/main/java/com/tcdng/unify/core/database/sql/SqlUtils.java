@@ -23,12 +23,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.database.Entity;
@@ -57,8 +54,6 @@ public final class SqlUtils {
     private static final int DEFAULT_STRING_LEN = 32;
     private static final int DEFAULT_STRINGARRAY_LEN = 256;
     private static final int DEFAULT_ENUMCONST_LEN = StaticReference.CODE_LENGTH;
-
-    private static final Set<String> defaultConstants;
 
     static {
         versionNoTypes = new ArrayList<Class<? extends Number>>();
@@ -90,8 +85,6 @@ public final class SqlUtils {
         sqlToJavaTypeMap.put(Types.TIMESTAMP, java.util.Date.class);
         sqlToJavaTypeMap.put(Types.TINYINT, Integer.class);
         sqlToJavaTypeMap.put(Types.VARCHAR, String.class);
-
-        defaultConstants = new HashSet<String>(Arrays.asList("0000-00-00 00:00:00"));
     };
 
     private SqlUtils() {
@@ -104,10 +97,6 @@ public final class SqlUtils {
 
     public static Class<?> getJavaType(int sqlType) {
         return sqlToJavaTypeMap.get(sqlType);
-    }
-
-    public static boolean isDefaultConstant(String defaultVal) {
-        return defaultConstants.contains(defaultVal);
     }
 
     public static Class<?> getEntityClass(Entity record) {

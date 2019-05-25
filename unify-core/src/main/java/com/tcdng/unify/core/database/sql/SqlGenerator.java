@@ -109,9 +109,9 @@ public interface SqlGenerator extends UnifyComponent {
      *            the old SQL record schema info
      * @param format
      *            indicates if SQL should be formatted
+     * @return generated SQL
      * @throws UnifyException
      *             if an error occurs
-     * @return generated SQL
      */
     String generateRenameTable(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlEntitySchemaInfo oldSqlEntitySchemaInfo,
             boolean format) throws UnifyException;
@@ -125,9 +125,9 @@ public interface SqlGenerator extends UnifyComponent {
      *            the field schema information
      * @param format
      *            indicates if SQL should be formatted
+     * @return generated SQL
      * @throws UnifyException
      *             if an error occurs
-     * @return generated SQL
      */
     String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException;
@@ -143,11 +143,11 @@ public interface SqlGenerator extends UnifyComponent {
      *            the alter information
      * @param format
      *            indicates if SQL should be formatted
+     * @return generated SQL
      * @throws UnifyException
      *             if an error occurs
-     * @return generated SQL
      */
-    String generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+    List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException;
 
     /**
@@ -159,9 +159,9 @@ public interface SqlGenerator extends UnifyComponent {
      *            the column information object
      * @param format
      *            indicates if SQL should be formatted
+     * @return generated SQL
      * @throws UnifyException
      *             if an error occurs
-     * @return generated SQL
      */
     String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo, boolean format)
             throws UnifyException;
@@ -177,9 +177,9 @@ public interface SqlGenerator extends UnifyComponent {
      *            the old SQL field schema info
      * @param format
      *            indicates if SQL should be formatted
+     * @return generated SQL
      * @throws UnifyException
      *             if an error occurs
-     * @return generated SQL
      */
     String generateRenameColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException;
@@ -193,9 +193,9 @@ public interface SqlGenerator extends UnifyComponent {
      *            the field schema information
      * @param format
      *            indicates if SQL should be formatted
+     * @return generated SQL
      * @throws UnifyException
      *             if an error occurs
-     * @return generated SQL
      */
     String generateDropColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException;

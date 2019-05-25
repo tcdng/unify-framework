@@ -19,8 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * Integer data type SQL policy.
@@ -28,11 +27,11 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class IntegerPolicy implements SqlDataTypePolicy {
+public class IntegerPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("INT");
+        sb.append(" INT");
     }
 
     @Override
@@ -41,13 +40,6 @@ public class IntegerPolicy implements SqlDataTypePolicy {
             ((PreparedStatement) pstmt).setNull(index, Types.INTEGER);
         } else {
             ((PreparedStatement) pstmt).setInt(index, ((Integer) data).intValue());
-        }
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT ").append(Integer.valueOf(defaultVal));
         }
     }
 
@@ -67,6 +59,11 @@ public class IntegerPolicy implements SqlDataTypePolicy {
             return null;
         }
         return object;
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "0";
     }
 
     @Override

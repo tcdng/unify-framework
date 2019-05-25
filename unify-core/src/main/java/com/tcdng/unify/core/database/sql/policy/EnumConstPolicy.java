@@ -21,7 +21,7 @@ import java.sql.Types;
 
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.database.StaticReference;
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 import com.tcdng.unify.core.util.EnumUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -31,19 +31,19 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @version 1.0
  */
-public class EnumConstPolicy implements SqlDataTypePolicy {
+public class EnumConstPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         if (length <= 0) {
             length = StaticReference.CODE_LENGTH;
         }
-        sb.append("VARCHAR(").append(length).append(')');
+        sb.append(" VARCHAR(").append(length).append(')');
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+    public void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal) {
         if (!StringUtils.isBlank(defaultVal)) {
             EnumConst val = EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) defaultVal);
             if (val == null) {
@@ -80,6 +80,11 @@ public class EnumConstPolicy implements SqlDataTypePolicy {
             return null;
         }
         return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
+    }
+
+    @Override
+    public String getAltDefault() {
+        return null;
     }
 
     @Override

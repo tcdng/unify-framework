@@ -19,8 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * Float data type SQL policy.
@@ -28,11 +27,11 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class FloatPolicy implements SqlDataTypePolicy {
+public class FloatPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("FLOAT");
+        sb.append(" FLOAT");
     }
 
     @Override
@@ -41,13 +40,6 @@ public class FloatPolicy implements SqlDataTypePolicy {
             ((PreparedStatement) pstmt).setNull(index, Types.FLOAT);
         } else {
             ((PreparedStatement) pstmt).setFloat(index, (Float) data);
-        }
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT ").append(Double.valueOf(defaultVal));
         }
     }
 
@@ -67,6 +59,11 @@ public class FloatPolicy implements SqlDataTypePolicy {
             return null;
         }
         return object;
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "0.0";
     }
 
     @Override

@@ -20,8 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * Big decimal data type SQL policy.
@@ -29,18 +28,11 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BigDecimalPolicy implements SqlDataTypePolicy {
+public class BigDecimalPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("DECIMAL(").append(precision).append(',').append(scale).append(')');
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT ").append(Double.valueOf(defaultVal));
-        }
+        sb.append(" DECIMAL(").append(precision).append(',').append(scale).append(')');
     }
 
     @Override
@@ -60,6 +52,11 @@ public class BigDecimalPolicy implements SqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         return ((ResultSet) rs).getBigDecimal(index);
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "0.0";
     }
 
     @Override

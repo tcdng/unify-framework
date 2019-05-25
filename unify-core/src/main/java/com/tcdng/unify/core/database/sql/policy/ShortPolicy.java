@@ -19,8 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * Short data type SQL policy.
@@ -28,11 +27,11 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ShortPolicy implements SqlDataTypePolicy {
+public class ShortPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("SMALLINT");
+        sb.append(" SMALLINT");
     }
 
     @Override
@@ -41,13 +40,6 @@ public class ShortPolicy implements SqlDataTypePolicy {
             ((PreparedStatement) pstmt).setNull(index, Types.SMALLINT);
         } else {
             ((PreparedStatement) pstmt).setShort(index, ((Short) data).shortValue());
-        }
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT ").append(Short.valueOf(defaultVal));
         }
     }
 
@@ -67,6 +59,11 @@ public class ShortPolicy implements SqlDataTypePolicy {
             return null;
         }
         return object;
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "0";
     }
 
     @Override

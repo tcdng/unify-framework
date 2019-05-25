@@ -50,20 +50,6 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
-        if (format) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
-        }
-        sb.append("ALTER COLUMN ").append(generateSqlType(sqlColumnInfo)).append(" NULL");
-        return sb.toString();
-    }
-
-    @Override
     protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
         if (offset > 0) {
             throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
@@ -109,6 +95,22 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
         }
         sb.append("ALTER COLUMN ");
         appendAlterTableColumnSQL(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
+        return sb.toString();
+    }
+
+    @Override
+    public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("ALTER COLUMN ");
+        appendTypeSql(sb, sqlColumnInfo);
+        sb.append(" NULL");
         return sb.toString();
     }
 
