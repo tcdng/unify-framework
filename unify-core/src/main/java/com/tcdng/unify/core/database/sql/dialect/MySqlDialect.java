@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+  * Copyright 2018-2019 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -88,7 +88,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
             sb.append(' ');
         }
         sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getColumn()).append(' ');
-        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
         return sb.toString();
     }
 
@@ -120,7 +120,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
                 sb.append(' ');
             }
             sb.append("MODIFY ");
-            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
             sqlList.add(sb.toString());
             StringUtils.truncate(sb);
             return sqlList;
