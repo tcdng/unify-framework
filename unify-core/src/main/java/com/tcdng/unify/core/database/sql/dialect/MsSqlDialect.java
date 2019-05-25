@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.dialect;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,8 @@ import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
+import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.policy.DatePolicy;
 import com.tcdng.unify.core.database.sql.policy.TimestampPolicy;
 import com.tcdng.unify.core.util.StringUtils;
@@ -92,6 +95,21 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
         return sb.toString();
     }
 
+
+    @Override
+    public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            boolean format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        if (format) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("ADD ");
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
+        return sb.toString();
+    }
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
@@ -176,6 +194,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
         setDataTypePolicy(ColumnType.TIMESTAMP, new MsSqlTimestampPolicy());
         setDataTypePolicy(ColumnType.DATE, new MsSqlDatePolicy());
+        setDataTypePolicy(ColumnType.BLOB, new MsSqlBlobPolicy());
+        setDataTypePolicy(ColumnType.CLOB, new MsSqlClobPolicy());
     }
 }
 
@@ -185,9 +205,13 @@ class MsSqlTimestampPolicy extends TimestampPolicy {
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" DATETIME");
     }
+
+    @Override
+    public int getSqlType() {
+        return Types.TIMESTAMP;
+    }
     
 }
-
 
 class MsSqlDatePolicy extends DatePolicy {
 
@@ -195,5 +219,29 @@ class MsSqlDatePolicy extends DatePolicy {
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" DATETIME");
     }
+
+    @Override
+    public int getSqlType() {
+        return Types.TIMESTAMP;
+    }
     
+}
+
+
+class MsSqlBlobPolicy extends BlobPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append(" VARBINARY(MAX)");
+    }
+
+}
+
+class MsSqlClobPolicy extends ClobPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append(" VARCHAR(MAX)");
+    }
+
 }

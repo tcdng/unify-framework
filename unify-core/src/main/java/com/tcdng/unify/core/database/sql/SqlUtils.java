@@ -83,6 +83,7 @@ public final class SqlUtils {
         sqlToJavaTypeMap.put(Types.SMALLINT, Integer.class);
         sqlToJavaTypeMap.put(Types.TIME, java.util.Date.class);
         sqlToJavaTypeMap.put(Types.TIMESTAMP, java.util.Date.class);
+        sqlToJavaTypeMap.put(Types.BINARY, java.util.Date.class);
         sqlToJavaTypeMap.put(Types.TINYINT, Integer.class);
         sqlToJavaTypeMap.put(Types.VARCHAR, String.class);
     };
