@@ -19,7 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class StringArrayPolicy implements SqlDataTypePolicy {
+public class StringArrayPolicy extends AbstractSqlDataTypePolicy {
 
     private Class<?> arrayClass;
 
@@ -47,13 +47,6 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
             length = 256;
         }
         sb.append("VARCHAR(").append(length).append(')');
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT '").append(defaultVal).append("'");
-        }
     }
 
     @Override
@@ -89,6 +82,11 @@ public class StringArrayPolicy implements SqlDataTypePolicy {
 
     private Object getResult(String data) throws Exception {
         return DataUtils.convert(arrayClass, StringUtils.getCommaSeparatedValues(data), null);
+    }
+
+    @Override
+    public String getAltDefault() {
+        return null;
     }
 
     @Override

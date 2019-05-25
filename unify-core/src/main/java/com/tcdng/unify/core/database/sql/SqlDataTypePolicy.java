@@ -24,6 +24,13 @@ package com.tcdng.unify.core.database.sql;
 public interface SqlDataTypePolicy {
 
     /**
+     * Gets the policy alternative default SQL string.
+     * 
+     * @return the alternative default
+     */
+    String getAltDefault();
+    
+    /**
      * Gets the java SQL data type.
      * 
      * @return the java SQL type value
@@ -52,16 +59,26 @@ public interface SqlDataTypePolicy {
     void appendTypeSql(StringBuilder sb, int length, int precision, int scale);
 
     /**
-     * Appends default value SQL
+     * Appends default SQL
      * 
      * @param sb
      *            the builder to append to
-     * @param type
-     *            the column type
+     * @param type the field type
      * @param defaultVal
-     *            the default value
+     *            the optional default value. If null or blank, Alternative default values are used.
      */
-    void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal);
+    void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal);
+
+    /**
+     * Appends default value
+     * 
+     * @param sb
+     *            the builder to append to
+     * @param type the field type
+     * @param defaultVal
+     *            the optional default value. If null or blank, Alternative default values are used.
+     */
+    void appendDefaultVal(StringBuilder sb, Class<?> type, String defaultVal);
 
     /**
      * Executes the setter of a prepared statement.

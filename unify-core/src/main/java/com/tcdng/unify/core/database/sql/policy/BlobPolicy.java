@@ -22,7 +22,7 @@ import java.sql.Types;
 
 import javax.sql.rowset.serial.SerialBlob;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * BLOB data type SQL policy.
@@ -30,15 +30,15 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BlobPolicy implements SqlDataTypePolicy {
+public class BlobPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("BLOB");
+        sb.append(" BLOB");
     }
 
     @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
+    public void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal) {
 
     }
 
@@ -66,6 +66,11 @@ public class BlobPolicy implements SqlDataTypePolicy {
         if (blob != null) {
             return blob.getBytes(1, (int) blob.length());
         }
+        return null;
+    }
+
+    @Override
+    public String getAltDefault() {
         return null;
     }
 

@@ -608,6 +608,12 @@ public final class StringUtils {
         return sb.toString();
     }
 
+    public static void truncate(StringBuilder sb) {
+        if (sb != null) {
+            sb.delete(0, sb.length());
+        }
+    }
+    
     public static class StringToken {
 
         private String token;

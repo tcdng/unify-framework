@@ -20,8 +20,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 
 import com.tcdng.unify.core.constant.EnumConst;
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
  * String data type SQL policy.
@@ -29,7 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class StringPolicy implements SqlDataTypePolicy {
+public class StringPolicy extends AbstractSqlDataTypePolicy {
 
     public static final int DEFAULT_LENGTH = 32;
 
@@ -38,14 +37,7 @@ public class StringPolicy implements SqlDataTypePolicy {
         if (length <= 0) {
             length = DEFAULT_LENGTH;
         }
-        sb.append("VARCHAR(").append(length).append(')');
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT '").append(defaultVal).append("'");
-        }
+        sb.append(" VARCHAR(").append(length).append(')');
     }
 
     @Override
@@ -69,6 +61,11 @@ public class StringPolicy implements SqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         return ((ResultSet) rs).getString(index);
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "' '";
     }
 
     @Override

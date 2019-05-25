@@ -20,9 +20,8 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
 
-import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 import com.tcdng.unify.core.util.CalendarUtils;
-import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Date data type SQL policy.
@@ -30,18 +29,11 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DatePolicy implements SqlDataTypePolicy {
+public class DatePolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("TIMESTAMP");
-    }
-
-    @Override
-    public void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal) {
-        if (!StringUtils.isBlank(defaultVal)) {
-            sb.append(" DEFAULT ").append(defaultVal);
-        }
+        sb.append(" TIMESTAMP");
     }
 
     @Override
@@ -62,6 +54,11 @@ public class DatePolicy implements SqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         return CalendarUtils.getMidnightDate(((ResultSet) rs).getDate(index));
+    }
+
+    @Override
+    public String getAltDefault() {
+        return "'0000-00-00 00:00:00'";
     }
 
     @Override

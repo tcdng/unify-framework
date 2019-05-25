@@ -295,7 +295,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             // Test for alter
             SqlColumnAlterInfo sqlColumnAlterInfo = checkSqlColumnAltered(sqlFieldSchemaInfo, oldSqlFieldSchemaInfo);
             if (sqlColumnAlterInfo.isAltered()) {
-                asb.append(generateAlterColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, sqlColumnAlterInfo, format));
+                for (String sql : generateAlterColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, sqlColumnAlterInfo,
+                        format)) {
+                    asb.append(sql);
+                }
             }
         }
         sb.append(rsb.toString());
@@ -343,7 +346,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 sb.append('\t');
             }
 
-            appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
         }
 
         if (format) {
@@ -377,23 +380,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(' ');
         }
-        sb.append("ADD ");
-        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
-        return sb.toString();
-    }
-
-    @Override
-    public String generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
-        if (format) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
-        }
-        sb.append("ALTER COLUMN ");
-        appendAlterTableColumnSQL(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
+        sb.append("ADD COLUMN ");
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
         return sb.toString();
     }
 
@@ -881,7 +869,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlStatement[] prepareDataSourceInitStatements() throws UnifyException {
-        return createDataSourceInitStatements();
+        List<SqlStatement> list = Collections.emptyList();
+        List<String> initSqlList = getDataSourceInitStatements();
+        if (!DataUtils.isBlank(initSqlList)) {
+            list = new ArrayList<SqlStatement>();
+            for (String sqlN : initSqlList) {
+                list.add(new SqlStatement(null, SqlStatementType.UPDATE, sqlN));
+            }
+        }
+
+        return list.toArray(new SqlStatement[list.size()]);
     }
 
     @Override
@@ -1298,27 +1295,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlDataTypePolicies.put(columnType, sqlDataTypePolicy);
     }
 
-    protected SqlStatement[] createDataSourceInitStatements(String... sql) {
-        List<SqlStatement> list = Collections.emptyList();
-        if (sql.length > 0) {
-            list = new ArrayList<SqlStatement>();
-            for (String sqlN : sql) {
-                list.add(new SqlStatement(null, SqlStatementType.UPDATE, sqlN));
-            }
-        }
-        return list.toArray(new SqlStatement[list.size()]);
+    protected List<String> getDataSourceInitStatements() {
+        return Collections.emptyList();
     }
 
-    protected void appendCreateTableColumnSQL(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo) {
-        sb.append(sqlFieldSchemaInfo.getColumn()).append(' ');
+    protected void appendCreateTableColumnSQLL(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            boolean onAlter) {
+        sb.append(sqlFieldSchemaInfo.getColumn());
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
         sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
                 sqlFieldSchemaInfo.getScale());
-        
-        if (sqlFieldSchemaInfo.isWithDefaultValue()) {
-            sqlDataTypePolicy.appendSpecifyDefaultValueSql(sb, sqlFieldSchemaInfo.getFieldType(),
-                    sqlFieldSchemaInfo.getDefaultValue());
-        }
 
         if (sqlFieldSchemaInfo.isPrimaryKey()) {
             sb.append(" PRIMARY KEY NOT NULL");
@@ -1329,32 +1315,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" NOT NULL");
         }
-    }
 
-    protected void appendAlterTableColumnSQL(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlColumnAlterInfo sqlColumnAlterInfo) {
-        sb.append(sqlFieldSchemaInfo.getColumn()).append(' ');
-        SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
-        sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
-                sqlFieldSchemaInfo.getScale());
-
-        if (sqlColumnAlterInfo.isDefaultChange() && sqlFieldSchemaInfo.isWithDefaultValue()) {
-            sqlDataTypePolicy.appendSpecifyDefaultValueSql(sb, sqlFieldSchemaInfo.getFieldType(),
-                    sqlFieldSchemaInfo.getDefaultValue());
-        }
-
-        if (sqlFieldSchemaInfo.isPrimaryKey()) {
-            sb.append(" PRIMARY KEY");
-        }
-
-        if (sqlColumnAlterInfo.isNullableChange()) {
-            if (sqlFieldSchemaInfo.isNullable()) {
-                if (appendNullOnTblCreate) {
-                    sb.append(" NULL");
-                }
-            } else {
-                sb.append(" NOT NULL");
-            }
+        if ((onAlter && !sqlFieldSchemaInfo.isNullable()) || sqlFieldSchemaInfo.isWithDefaultVal()) {
+            sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                    sqlFieldSchemaInfo.getDefaultVal());
         }
     }
 
@@ -1658,9 +1622,28 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return sb.toString().toUpperCase();
     }
 
-    protected String generateSqlType(SqlColumnInfo sqlColumnInfo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(sqlColumnInfo.getTypeName());
+    protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo)
+            throws UnifyException {
+        SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+        sb.append(sqlFieldSchemaInfo.getColumn());
+        sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                sqlFieldSchemaInfo.getScale());
+        if (!sqlFieldSchemaInfo.isNullable()) {
+            sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                    sqlFieldSchemaInfo.getDefaultVal());
+            sb.append(" NOT NULL");
+        } else {
+            if (sqlFieldSchemaInfo.isWithDefaultVal()) {
+                sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                        sqlFieldSchemaInfo.getDefaultVal());
+            }
+
+            sb.append(" NULL");
+        }
+    }
+
+    protected void appendTypeSql(StringBuilder sb, SqlColumnInfo sqlColumnInfo) {
+        sb.append(' ').append(sqlColumnInfo.getTypeName());
         if (sqlColumnInfo.getSize() > 0) {
             sb.append('(').append(sqlColumnInfo.getSize());
             if (sqlColumnInfo.getDecimalDigits() > 0) {
@@ -1668,7 +1651,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
             sb.append(')');
         }
-        return sb.toString();
     }
 
     protected SqlEntityInfo getSqlEntityInfo(Query<? extends Entity> query) throws UnifyException {
