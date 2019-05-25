@@ -46,7 +46,7 @@ public class StringArrayPolicy extends AbstractSqlDataTypePolicy {
         if (length <= 0) {
             length = 256;
         }
-        sb.append("VARCHAR(").append(length).append(')');
+        sb.append(" VARCHAR(").append(length).append(')');
     }
 
     @Override

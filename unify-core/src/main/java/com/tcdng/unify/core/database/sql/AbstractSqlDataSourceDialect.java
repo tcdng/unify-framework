@@ -346,7 +346,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 sb.append('\t');
             }
 
-            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, false);
         }
 
         if (format) {
@@ -381,7 +381,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             sb.append(' ');
         }
         sb.append("ADD COLUMN ");
-        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
         return sb.toString();
     }
 
@@ -1622,23 +1622,30 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return sb.toString().toUpperCase();
     }
 
-    protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo)
+    protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo, boolean alter)
             throws UnifyException {
         SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
         sb.append(sqlFieldSchemaInfo.getColumn());
         sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
                 sqlFieldSchemaInfo.getScale());
-        if (!sqlFieldSchemaInfo.isNullable()) {
-            sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
-                    sqlFieldSchemaInfo.getDefaultVal());
-            sb.append(" NOT NULL");
+        
+        if (sqlFieldSchemaInfo.isPrimaryKey()) {
+            sb.append(" PRIMARY KEY NOT NULL");
         } else {
-            if (sqlFieldSchemaInfo.isWithDefaultVal()) {
-                sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
-                        sqlFieldSchemaInfo.getDefaultVal());
-            }
+            if (!sqlFieldSchemaInfo.isNullable()) {
+                if (alter || sqlFieldSchemaInfo.isWithDefaultVal()) {
+                    sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                }
+                sb.append(" NOT NULL");
+            } else {
+                if (sqlFieldSchemaInfo.isWithDefaultVal()) {
+                    sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                }
 
-            sb.append(" NULL");
+                sb.append(" NULL");
+            }
         }
     }
 

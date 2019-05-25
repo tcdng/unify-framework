@@ -91,7 +91,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
             sb.append(' ');
         }
         sb.append("ADD ");
-        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
         return sb.toString();
     }
 
@@ -123,7 +123,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
                 sb.append(' ');
             }
             sb.append("MODIFY ");
-            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
             sqlList.add(sb.toString());
             StringUtils.truncate(sb);
             return sqlList;
