@@ -23,8 +23,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -167,7 +169,46 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                 restoreConnection(connection);
             }
         }
+
         return Collections.emptyList();
+    }
+
+    @Override
+    public Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException {
+        List<SqlColumnInfo> list = getColumnList(schemaName, tableName);
+        if (!list.isEmpty()) {
+            Map<String, SqlColumnInfo> map = new LinkedHashMap<String, SqlColumnInfo>();
+            for (SqlColumnInfo sqlColumnInfo : list) {
+                map.put(sqlColumnInfo.getColumnName(), sqlColumnInfo);
+            }
+            return map;
+        }
+
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public Set<String> getColumns(String schemaName, String tableName) throws UnifyException {
+        if (schemaName != null && tableName != null) {
+            Connection connection = getConnection();
+            ResultSet rs = null;
+            try {
+                Set<String> columnNames = new LinkedHashSet<String>();
+                rs = connection.getMetaData().getColumns(null, schemaName, tableName, null);
+                while (rs.next()) {
+                    columnNames.add(rs.getString("COLUMN_NAME").toUpperCase());
+                }
+                
+                return columnNames;
+            } catch (SQLException e) {
+                throwOperationErrorException(e);
+            } finally {
+                SqlUtils.close(rs);
+                restoreConnection(connection);
+            }
+        }
+
+        return Collections.emptySet();
     }
 
     @Override
@@ -215,20 +256,6 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         }
         logDebug("Native update [{0}] successfully tested.", nativeSql);
         return 0;
-    }
-
-    @Override
-    public Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException {
-        List<SqlColumnInfo> list = getColumnList(schemaName, tableName);
-        if (!list.isEmpty()) {
-            Map<String, SqlColumnInfo> map = new LinkedHashMap<String, SqlColumnInfo>();
-            for (SqlColumnInfo sqlColumnInfo : list) {
-                map.put(sqlColumnInfo.getColumnName(), sqlColumnInfo);
-            }
-            return map;
-        }
-
-        return Collections.emptyMap();
     }
 
     @Override
