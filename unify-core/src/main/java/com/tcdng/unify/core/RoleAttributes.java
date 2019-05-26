@@ -16,9 +16,10 @@
 package com.tcdng.unify.core;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Encapsulates role attributes.
@@ -45,24 +46,33 @@ public class RoleAttributes {
             Map<String, Set<String>> privilegeCodesByCategory, Set<String> stepCodes) {
         this.code = code;
         this.description = description;
-        this.controlledAccessPrivilegeSettings =
-                new HashMap<String, PrivilegeSettings>(controlledAccessPrivilegeSettings);
-        this.allAccessPrivileges = allAccessPrivileges;
+        this.controlledAccessPrivilegeSettings = DataUtils.unmodifiableMap(controlledAccessPrivilegeSettings);
+        this.allAccessPrivileges = DataUtils.unmodifiableSet(allAccessPrivileges);
         this.privilegeCodesByCategory = privilegeCodesByCategory;
         if (this.privilegeCodesByCategory != null) {
             for (Map.Entry<String, Set<String>> entry : this.privilegeCodesByCategory.entrySet()) {
                 this.privilegeCodesByCategory.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
             }
         }
-
-        if (stepCodes != null) {
-            this.stepCodes = Collections.unmodifiableSet(stepCodes);
-        }
+        this.privilegeCodesByCategory = DataUtils.unmodifiableMap(this.privilegeCodesByCategory);
+        this.stepCodes = DataUtils.unmodifiableSet(stepCodes);
     }
+    
+    public RoleAttributes(String code, String description, Set<String> allAccessPrivileges) {
+        this.code = code;
+        this.description = description;
+        this.allAccessPrivileges = DataUtils.unmodifiableSet(allAccessPrivileges);
+        this.controlledAccessPrivilegeSettings = Collections.emptyMap();
+        this.privilegeCodesByCategory = Collections.emptyMap();
+        this.stepCodes = Collections.emptySet();
+    }
+
 
     public RoleAttributes() {
         this.controlledAccessPrivilegeSettings = Collections.emptyMap();
         this.allAccessPrivileges = Collections.emptySet();
+        this.privilegeCodesByCategory = Collections.emptyMap();
+        this.stepCodes = Collections.emptySet();
     }
 
     public String getCode() {
@@ -74,11 +84,11 @@ public class RoleAttributes {
     }
 
     public PrivilegeSettings getControlledAccessPrivilegeSettings(String privilegeCode) {
-        return this.controlledAccessPrivilegeSettings.get(privilegeCode);
+        return controlledAccessPrivilegeSettings.get(privilegeCode);
     }
 
     public boolean isAllAccessPrivilege(String privilegeCode) {
-        return this.allAccessPrivileges.contains(privilegeCode);
+        return allAccessPrivileges.contains(privilegeCode);
     }
 
     public Set<String> getPrivilegeCodes(String privilegeCategoryCode) {
