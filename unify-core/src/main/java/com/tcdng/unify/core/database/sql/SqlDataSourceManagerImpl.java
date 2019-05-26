@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
@@ -172,24 +173,34 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             }
             SqlUtils.close(rs);
 
-            boolean isAltered = !tableUpdateSql.isEmpty();
+            boolean isTableNewOrAltered = !tableUpdateSql.isEmpty();
 
             // Manage view
             List<String> viewUpdateSQL = new ArrayList<String>();
             if (sqlEntityInfo.isViewable()) {
-                if (isAltered) {
-                    // Check if we have to drop view first
-                    rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getView(), null);
-                    if (rs.next()) {
-                        String tableType = rs.getString("TABLE_TYPE");
-                        if ("VIEW".equalsIgnoreCase(tableType)) {
-                            viewUpdateSQL.add(sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo));
-                        } else {
-                            throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
-                                    sqlDataSource.getName(), sqlEntityInfo.getView(), tableType);
-                        }
+                boolean isDropView = false;
+                rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getView(), null);
+                if (rs.next()) {
+                    isDropView = isTableNewOrAltered;
+                    String tableType = rs.getString("TABLE_TYPE");
+                    if (!"VIEW".equalsIgnoreCase(tableType)) {
+                        throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
+                                sqlDataSource.getName(), sqlEntityInfo.getView(), tableType);
                     }
-                    SqlUtils.close(rs);
+
+                    if (!isDropView) {
+                        // Check is list-only fields have changed
+                        isDropView = !matchViewColumns(sqlEntityInfo,
+                                sqlDataSource.getColumns(appSchema, sqlEntityInfo.getView()));
+                    }
+                }
+                SqlUtils.close(rs);
+
+                if (isTableNewOrAltered || isDropView) {
+                    // Check if we have to drop view first
+                    if (isDropView) {
+                        viewUpdateSQL.add(sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo));
+                    }
 
                     // Create view
                     viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, formatSql));
@@ -216,6 +227,16 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(rs);
             SqlUtils.close(pstmt);
         }
+    }
+
+    private boolean matchViewColumns(SqlEntityInfo sqlEntityInfo, Set<String> columnNames) {
+        for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getListFieldInfos()) {
+            if (!columnNames.contains(sqlfieldInfo.getColumn())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private List<String> generateColumnUpdateSql(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,

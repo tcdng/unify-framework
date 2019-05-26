@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.DataSource;
@@ -105,6 +106,20 @@ public interface SqlDataSource extends DataSource {
      *             if an error occurs
      */
     Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException;
+
+    /**
+     * Returns table column names..
+     * 
+     * @param schemaName
+     *            the schema name
+     * @param tableName
+     *            the table name
+     * @return set of column names. Empty set is returned if schemaName or
+     *         tableName is null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Set<String> getColumns(String schemaName, String tableName) throws UnifyException;
 
     /**
      * Executes supplied native query and returns rows.
