@@ -67,7 +67,7 @@ public class UniqueValidation extends AbstractPageValidation {
             StringBuilder sb = new StringBuilder();
             boolean appendSymbol = false;
             for (Widget widget : widgets) {
-                if (widget.isVisible()) {
+                if (widget.isVisible() || widget.isHidden()) {
                     DataTransferBlock transferBlock = dataTransfer.getDataTransferBlock(widget.getId());
                     if (transferBlock != null) {
                         Object value = transferBlock.getValue();
