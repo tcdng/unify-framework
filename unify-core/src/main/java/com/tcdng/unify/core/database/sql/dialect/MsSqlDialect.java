@@ -235,6 +235,11 @@ class MsSqlBlobPolicy extends BlobPolicy {
         sb.append(" VARBINARY(MAX)");
     }
 
+    @Override
+    public int getSqlType() {
+        return Types.LONGVARBINARY;
+    }
+
 }
 
 class MsSqlClobPolicy extends ClobPolicy {
@@ -242,6 +247,11 @@ class MsSqlClobPolicy extends ClobPolicy {
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" VARCHAR(MAX)");
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.LONGVARCHAR;
     }
 
 }
