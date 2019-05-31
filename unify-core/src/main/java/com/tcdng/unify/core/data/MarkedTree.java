@@ -127,6 +127,22 @@ public class MarkedTree<T> {
     }
 
     /**
+     * Gets the parent of a node at supplied mark.
+     * 
+     * @param mark
+     *            the mark of node to get parent
+     * @return the node if found otherwise null
+     */
+    public Node<T> getParentNode(Long mark) {
+        Node<T> nw = nodes.get(mark);
+        if (nw != null) {
+            return getParent(nw);
+        }
+
+        return null;
+    }
+
+    /**
      * Gets the current parent node in chained mode.
      * 
      * @return the parent node

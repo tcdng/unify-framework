@@ -212,6 +212,10 @@ public class TreeExplorer extends AbstractMultiControl {
         return tree.getRootNode();
     }
 
+    public Node<TreeItem> getParentNode(Long itemId) {
+        return tree.getParentNode(itemId);
+    }
+
     public Node<TreeItem> getNode(Long itemId) {
         return tree.getNode(itemId);
     }

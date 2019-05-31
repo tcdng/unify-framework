@@ -131,6 +131,10 @@ public class Tree {
         return markedTree.getChildNodes(parentItemId, matcher);
     }
 
+    public Node<TreeItem> getParentNode(Long itemId) {
+        return markedTree.getParentNode(itemId);
+    }
+    
     public List<TreeItem> getChildTreeItems(Long parentItemId) throws UnifyException {
         return markedTree.getChildItems(parentItemId);
     }
