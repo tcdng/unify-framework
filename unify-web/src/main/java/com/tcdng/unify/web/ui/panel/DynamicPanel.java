@@ -81,6 +81,10 @@ public class DynamicPanel extends AbstractPanel {
             panelNames.add(uniqueName);
         }
         setValueStore(standalonePanel);
+
+        //Set stand-alone panel container. Allows stand-alone panel to inherit container state where necessary.
+        standalonePanel.setContainer(this);
+
         return standalonePanel;
     }
 
