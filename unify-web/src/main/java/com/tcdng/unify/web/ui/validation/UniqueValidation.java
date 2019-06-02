@@ -81,7 +81,7 @@ public class UniqueValidation extends AbstractPageValidation {
                             }
 
                             String caption = widget.getUplAttribute(String.class, "caption");
-                            sb.append(caption).append(" = '").append(value).append('\'');
+                            sb.append(caption).append(" '").append(value).append('\'');
                             continue;
                         }
                     }
