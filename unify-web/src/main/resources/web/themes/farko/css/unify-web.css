@@ -134,7 +134,7 @@ z-index:400;}
 	padding:4px 4px; vertical-align:middle; margin-bottom:8px;}
 .ui-form .secLabel {vertical-align: top; padding-bottom:6px; padding-right: 12px;width:96px;}
 .ui-form .secInput {padding-bottom:6px;}
-.ui-form .secInputErr {display:none; padding:2px; background: #FCD0D0; color:#303030; font-size:8pt; font-weight:bold;}
+.ui-form .secInputErr {display:none; padding:2px; max-height:276px; background: #FCD0D0; color:#303030; font-size:8pt; font-weight:bold;}
 .ui-form .secInputReq {vertical-align: top; color: red; font-size:18px;width:8px;}
 .ui-form .secColumn {vertical-align: top; padding-right: 16px;}
 
@@ -489,7 +489,7 @@ z-index:400;}
 	padding:4px 4px; vertical-align:middle; margin-bottom:8px;}
 .ui-multidynamic .secLabel {vertical-align: top; padding-bottom:6px; padding-right: 12px;width:96px;}
 .ui-multidynamic .secInput {padding-bottom:6px;}
-.ui-multidynamic .secInputErr {display:none; padding:2px; background: #FCD0D0; color:#303030; font-size:8pt; font-weight:bold;}
+.ui-multidynamic .secInputErr {display:none; padding:2px; max-height:276px; background: #FCD0D0; color:#303030; font-size:8pt; font-weight:bold;}
 .ui-multidynamic .secInputReq {vertical-align: top; color: red; font-size:18px;width:8px;}
 .ui-multidynamic .secColumn {vertical-align: top; padding-right: 16px;}
 
