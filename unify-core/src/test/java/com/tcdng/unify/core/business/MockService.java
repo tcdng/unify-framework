@@ -51,4 +51,6 @@ public interface MockService extends BusinessService {
     Long createAccountWithCreditCheckRollbackAfter(Account account, BigDecimal loanAmount) throws UnifyException;
 
     Long createAccountWithCreditCheckExceptionAfter(Account account, BigDecimal loanAmount) throws UnifyException;
+    
+    String createBooking(Booking booking) throws UnifyException;
 }

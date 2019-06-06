@@ -112,4 +112,9 @@ public class MockServiceImpl extends AbstractBusinessService implements MockServ
         throwOperationErrorException(new RuntimeException("Exception after"));
         return accountId;
     }
+
+    @Override
+    public String createBooking(Booking booking) throws UnifyException {
+        return (String) db().create(booking);
+    }
 }
