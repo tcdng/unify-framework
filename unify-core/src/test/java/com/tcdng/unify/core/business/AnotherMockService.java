@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 
 /**
@@ -28,4 +30,6 @@ public interface AnotherMockService extends BusinessService {
     Long createLoanAccount(LoanAccount loanAccount) throws UnifyException;
 
     LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
+
+    List<LoanDisbursement> findLoanDisbursements(LoanDisbursementQuery query) throws UnifyException;
 }

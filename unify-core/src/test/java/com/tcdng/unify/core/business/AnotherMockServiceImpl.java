@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Transactional;
@@ -37,6 +39,11 @@ public class AnotherMockServiceImpl extends AbstractBusinessService implements A
     @Override
     public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
         return db().list(LoanAccount.class, loanAccountId);
+    }
+
+    @Override
+    public List<LoanDisbursement> findLoanDisbursements(LoanDisbursementQuery query) throws UnifyException {
+        return db().findAll(query);
     }
 
 }

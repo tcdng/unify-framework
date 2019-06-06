@@ -103,6 +103,7 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
                 break;
         }
 
+        transaction.start();
         transactions.push(transaction);
     }
 
@@ -189,7 +190,8 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
         private boolean autoJoin;
         private boolean transaction;
         private boolean rollback;
-
+        private int depth;
+        
         public TransactionalCall(boolean autoJoin, boolean transaction) {
             this.autoJoin = autoJoin;
             this.transaction = transaction;
@@ -220,9 +222,16 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
             return databaseSession;
         }
 
+        public void start() throws UnifyException {
+            depth++;
+        }
+
         public void end() throws UnifyException {
-            commit(true);
-            databaseSessions.clear();
+            boolean isClose = --depth == 0;
+            commit(isClose);
+            if (isClose) {
+                databaseSessions.clear();
+            }
         }
 
         public void setSavePoint() throws UnifyException {

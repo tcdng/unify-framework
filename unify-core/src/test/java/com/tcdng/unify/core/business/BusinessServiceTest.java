@@ -256,6 +256,13 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test
+    public void testCrossTransactionBoundarySessionManagement() throws Exception {
+        MockService mockService = (MockService) getComponent("mockservice");
+        String id = mockService.createBooking(new Booking("1002252443", BigDecimal.valueOf(10.52)));
+        assertEquals("1002252443", id);
+    }
+
     @Override
     protected void onSetup() throws Exception {
         // Configure and create dynamic data source
@@ -280,7 +287,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
     @Override
     protected void onTearDown() throws Exception {
         // Clear application data soure records
-        deleteAll(LoanDisbursement.class, LoanAccount.class, Account.class);
+        deleteAll(LoanDisbursement.class, LoanAccount.class, Account.class, Booking.class);
 
         // Unconfigure and dynamic data source
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
