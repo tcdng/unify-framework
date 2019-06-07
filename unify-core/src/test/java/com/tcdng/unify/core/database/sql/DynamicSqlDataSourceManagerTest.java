@@ -38,7 +38,7 @@ import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
  */
 public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest {
 
-    private static final String TEST_CONFIG = "test-config";
+    private static final String TEST_CONFIG = "test-config.PUBLIC";
 
     @Test
     public void testConfigureDataSource() throws Exception {
@@ -147,7 +147,7 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
 
     private DynamicSqlDataSourceConfig getConfig() {
         return new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect", "org.hsqldb.jdbcDriver",
-                "jdbc:hsqldb:mem:dyntest", "PUBLIC", null, null, 2, true);
+                "jdbc:hsqldb:mem:dyntest", null, null, 2, true);
     }
 
 }
