@@ -38,7 +38,7 @@ import com.tcdng.unify.core.database.DatabaseTransactionManager;
  */
 public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
 
-    private static final String TEST_CONFIG = "test-datasource";
+    private static final String TEST_CONFIG = "test-datasource.PUBLIC";
 
     private DatabaseTransactionManager tm;
     
@@ -149,7 +149,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
         dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect",
-                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", "PUBLIC", null, null, 2, true));
+                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, 2, true));
         Connection connection = dynamicSqlDataSourceManager.getConnection(TEST_CONFIG);
         Statement stmt = null;
         try {

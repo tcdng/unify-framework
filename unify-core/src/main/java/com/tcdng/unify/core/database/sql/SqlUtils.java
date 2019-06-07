@@ -27,11 +27,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.database.StaticReferenceQuery;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Provides utility methods for SQL manipulation.
@@ -44,6 +47,21 @@ public final class SqlUtils {
     private static final List<Class<? extends Number>> versionNoTypes;
 
     private static final Map<Integer, Class<?>> sqlToJavaTypeMap;
+
+    private static final FactoryMap<String, DataSourceNameParts> datasourceNameParts =
+            new FactoryMap<String, DataSourceNameParts>() {
+
+                @Override
+                protected DataSourceNameParts create(String dataSourceName, Object... params) throws Exception {
+                    String[] parts = StringUtils.dotSplit(dataSourceName);
+                    if (parts.length > 1) {
+                        return new DataSourceNameParts(parts[0], parts[1]);
+                    }
+
+                    return new DataSourceNameParts(parts[0], null);
+                }
+
+            };
 
     private static final int DEFAULT_CHARACTER_LEN = 1;
     private static final int DEFAULT_DECIMAL_PRECISION = 18;
@@ -90,6 +108,14 @@ public final class SqlUtils {
 
     private SqlUtils() {
 
+    }
+
+    public static DataSourceNameParts getDataSourceNameParts(String dataSourceName) throws UnifyException {
+        return datasourceNameParts.get(dataSourceName);
+    }
+
+    public static String getFullDataSourceName(String baseName, String schema) throws UnifyException {
+        return StringUtils.dotify(baseName, schema);
     }
 
     public static boolean isSupportedSqlType(int sqlType) {
@@ -374,5 +400,25 @@ public final class SqlUtils {
                 break;
         }
         return new SqlFieldDimensions(nLength, nPrecision, nScale);
+    }
+
+    public static class DataSourceNameParts {
+
+        private String baseName;
+
+        private String schema;
+
+        public DataSourceNameParts(String baseName, String schema) {
+            this.baseName = baseName;
+            this.schema = schema;
+        }
+
+        public String getBaseName() {
+            return baseName;
+        }
+
+        public String getSchema() {
+            return schema;
+        }
     }
 }

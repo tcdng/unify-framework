@@ -82,6 +82,20 @@ public final class StringUtils {
     }
 
     /**
+     * Split a string into tokens using the comma character.
+     * 
+     * @param string
+     *            the string to split
+     * @return the result tokens
+     */
+    public static String[] commaSplit(String string) {
+        if (string != null) {
+            return string.split(",");
+        }
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
      * Split a string into tokens using the dot character.
      * 
      * @param string

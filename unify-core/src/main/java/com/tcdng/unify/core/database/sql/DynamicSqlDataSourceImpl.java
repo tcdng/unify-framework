@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.database.DataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlUtils.DataSourceNameParts;
 
 /**
  * Dynamic SQL data source implementation.
@@ -38,6 +39,7 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
             throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED,
                     dynamicSqlDataSourceConfig.getName());
         }
+
         innerConfigure(dynamicSqlDataSourceConfig);
     }
 
@@ -67,9 +69,10 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
     }
 
     private void innerConfigure(DynamicSqlDataSourceConfig dataSourceConfig) throws UnifyException {
+        DataSourceNameParts nameParts = SqlUtils.getDataSourceNameParts(dataSourceConfig.getName());
         setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
         setDriver(dataSourceConfig.getDriver());
-        setAppSchema(dataSourceConfig.getSchema());
+        setAppSchema(nameParts.getSchema());
         setConnectionUrl(dataSourceConfig.getConnectionUrl());
         setUsername(dataSourceConfig.getDbUsername());
         setPassword(dataSourceConfig.getDbPassword());

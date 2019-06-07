@@ -28,7 +28,7 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface MockService extends BusinessService {
 
-    String CREDITCHECK_DATASOURCECONFIG = "creditcheck-config";
+    String CREDITCHECK_DATASOURCECONFIG = "creditcheck-config.PUBLIC";
     
     String hello() throws UnifyException;
 
