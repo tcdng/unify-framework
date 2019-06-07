@@ -365,6 +365,10 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         return sqlConnectionPool;
     }
 
+    protected void setAppSchema(String appSchema) {
+        this.appSchema = appSchema;
+    }
+
     protected void setDriver(String driver) {
         this.driver = driver;
     }
