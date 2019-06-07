@@ -69,6 +69,7 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
     private void innerConfigure(DynamicSqlDataSourceConfig dataSourceConfig) throws UnifyException {
         setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
         setDriver(dataSourceConfig.getDriver());
+        setAppSchema(dataSourceConfig.getSchema());
         setConnectionUrl(dataSourceConfig.getConnectionUrl());
         setUsername(dataSourceConfig.getDbUsername());
         setPassword(dataSourceConfig.getDbPassword());

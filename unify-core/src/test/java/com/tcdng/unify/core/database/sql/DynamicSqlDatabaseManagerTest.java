@@ -48,7 +48,7 @@ public class DynamicSqlDatabaseManagerTest extends AbstractUnifyComponentTest {
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
         dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect",
-                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, 2, true));
+                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", "PUBLIC", null, null, 2, true));
     }
 
     @Override
