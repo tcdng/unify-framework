@@ -32,7 +32,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
         @UplAttribute(name = "footerPanel", type = String.class),
         @UplAttribute(name = "menuPanel", type = String.class),
         @UplAttribute(name = "contentPanel", type = String.class),
-        @UplAttribute(name = "caption", type = String.class, defaultValue = "$m{application.title}"),
+        @UplAttribute(name = "caption", type = String.class),
         @UplAttribute(name = "favicon", type = String.class, defaultValue = "web/images/favicon.png") })
 public abstract class AbstractDocument extends AbstractPage implements Document {
 
