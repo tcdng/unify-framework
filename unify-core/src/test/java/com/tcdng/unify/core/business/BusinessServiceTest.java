@@ -34,6 +34,7 @@ import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceConfig;
 import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.database.sql.DynamicSqlDatabase;
+import com.tcdng.unify.core.database.sql.NameSqlDataSourceSchemaImpl;
 import com.tcdng.unify.core.database.sql.SqlDatabase;
 import com.tcdng.unify.core.database.sql.SqlUtils;
 
@@ -264,6 +265,12 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
     }
 
     @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        super.doAddSettingsAndDependencies();
+        addDependency("thirdparty-datasource", NameSqlDataSourceSchemaImpl.class, new Setting("appSchema", "PUBLIC"));
+    }
+
+    @Override
     protected void onSetup() throws Exception {
         // Configure and create dynamic data source
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
@@ -274,7 +281,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE CREDIT_CHECK (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
+            stmt.executeUpdate("CREATE TABLE PUBLIC.CREDIT_CHECK (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
                     + "ACCOUNT_NO VARCHAR(16) NOT NULL," + "LOAN_AMOUNT DECIMAL(14,2) NOT NULL);");
             connection.commit();
         } finally {

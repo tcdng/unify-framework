@@ -77,7 +77,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     private SqlConnectionPool sqlConnectionPool;
 
     @Override
-    public String getApplicationSchema() throws UnifyException {
+    public String getAppSchema() {
         return appSchema;
     }
 
@@ -363,10 +363,6 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     protected SqlConnectionPool getSqlConnectionPool() {
         return sqlConnectionPool;
-    }
-
-    protected void setAppSchema(String appSchema) {
-        this.appSchema = appSchema;
     }
 
     protected void setDriver(String driver) {
