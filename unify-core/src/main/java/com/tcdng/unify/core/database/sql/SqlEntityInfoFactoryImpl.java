@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Child;
@@ -68,7 +69,7 @@ import com.tcdng.unify.core.util.StringUtils;
 public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
     private static final String ENUM_TABLE_PREFIX = "RF";
-    
+
     @Configurable("true")
     private boolean sqlOrderColumns;
 
@@ -100,7 +101,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
 
                 if (EnumConst.class.isAssignableFrom(entityClass)) {
-                    String tableName = ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
+                    String tableName =
+                            ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
 
                     SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
                     Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
@@ -147,6 +149,16 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     viewName = tableName;
                 }
 
+                String schema = AnnotationUtils.getAnnotationString(ta.schema());
+                if (StringUtils.isBlank(schema)) {
+                    UnifyComponentConfig ucc = getComponentConfig(NameSqlDataSourceSchema.class, ta.datasource());
+                    if (ucc != null) {
+                        schema = (String) ucc.getSettings().getSettingValue("appSchema");
+                    }
+                }
+
+                String fullTableName = SqlUtils.generateFullSchemaElementName(schema, tableName);
+                
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
                 for (ForeignKeyOverride fkoa : ta.foreignKeyOverrides()) {
                     fkOverrideMap.put(fkoa.key(), fkoa);
@@ -459,6 +471,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     viewName = VIEW_PREFIX + tableName;
                 }
 
+                String fullViewName = SqlUtils.generateFullSchemaElementName(schema, viewName);
+                
                 // Process list-only fields
                 for (Map.Entry<Class<?>, List<Field>> entry : listOnlyFieldMap.entrySet()) {
                     for (Field field : entry.getValue()) {
@@ -604,7 +618,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 String tableAlias = "T" + (++tAliasCounter);
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
-                        entityPolicy, tableName, tableAlias, viewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
+                        entityPolicy, fullTableName, tableAlias, fullViewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
                         childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null);
                 return sqlEntityInfo;
             }

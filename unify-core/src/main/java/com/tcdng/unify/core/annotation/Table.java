@@ -46,6 +46,11 @@ public @interface Table {
      */
     String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 
+    /**
+     * Optional name of schema that table belongs to
+     */
+    String schema() default AnnotationConstants.NONE;
+    
     /** The name of the table when no other annotation method is set */
     String value() default AnnotationConstants.NONE;
 

@@ -125,7 +125,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         try {
             connection = databaseMetaData.getConnection();
             // Manage table
-            String appSchema = sqlDataSource.getApplicationSchema();
+            String appSchema = sqlDataSource.getAppSchema();
             List<String> tableUpdateSql = new ArrayList<String>();
             rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getTable(), null);
             if (rs.next()) {

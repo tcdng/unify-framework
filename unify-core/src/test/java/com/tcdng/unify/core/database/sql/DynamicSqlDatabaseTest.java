@@ -141,6 +141,12 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
     }
 
     @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        super.doAddSettingsAndDependencies();
+        addDependency("thirdparty-datasource", NameSqlDataSourceSchemaImpl.class, new Setting("appSchema", "PUBLIC"));
+    }
+
+    @Override
     protected void onSetup() throws Exception {
         // Get transaction manager
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);;
@@ -154,7 +160,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE ACCOUNT_DETAILS (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
+            stmt.executeUpdate("CREATE TABLE PUBLIC.ACCOUNT_DETAILS (" + "ACCOUNT_NM VARCHAR(48) NOT NULL PRIMARY KEY,"
                     + "ACCOUNT_NO VARCHAR(16) NOT NULL," + "AVAILABLE_BAL DECIMAL(14,2));");
             connection.commit();
         } finally {
