@@ -104,6 +104,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     String tableName =
                             ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
 
+                    String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
+                            ApplicationComponents.APPLICATION_DATASOURCE).getSettings().getSettingValue("appSchema");
+                    String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, tableName);
+
                     SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
                     Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
                     GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "code");
@@ -125,8 +129,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                     String tableAlias = "R" + (++rAliasCounter);
                     return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass,
-                            null, tableName, tableAlias, tableName, idFieldInfo, null, propertyInfoMap, null, null,
-                            null, null, null);
+                            null, tableName, schemaTableName, tableAlias, tableName, schemaTableName, idFieldInfo, null,
+                            propertyInfoMap, null, null, null, null, null);
                 }
 
                 ReflectUtils.assertAnnotation(entityClass, Table.class);
@@ -144,6 +148,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     tableName =
                             SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), sqlGenerationApplySpacing);
                 }
+
                 String viewName = AnnotationUtils.getAnnotationString(ta.view());
                 if (viewName == null) {
                     viewName = tableName;
@@ -157,8 +162,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     }
                 }
 
-                String fullTableName = SqlUtils.generateFullSchemaElementName(schema, tableName);
-                
+                String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, tableName);
+
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
                 for (ForeignKeyOverride fkoa : ta.foreignKeyOverrides()) {
                     fkOverrideMap.put(fkoa.key(), fkoa);
@@ -471,8 +476,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     viewName = VIEW_PREFIX + tableName;
                 }
 
-                String fullViewName = SqlUtils.generateFullSchemaElementName(schema, viewName);
-                
+                String schemaViewName = SqlUtils.generateFullSchemaElementName(schema, viewName);
+
                 // Process list-only fields
                 for (Map.Entry<Class<?>, List<Field>> entry : listOnlyFieldMap.entrySet()) {
                     for (Field field : entry.getValue()) {
@@ -617,9 +622,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
 
                 String tableAlias = "T" + (++tAliasCounter);
-                SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
-                        entityPolicy, fullTableName, tableAlias, fullViewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
-                        childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null);
+                SqlEntityInfo sqlEntityInfo =
+                        new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, entityPolicy, tableName,
+                                schemaTableName, tableAlias, viewName, schemaViewName, idFieldInfo, versionFieldInfo,
+                                propertyInfoMap, childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null);
                 return sqlEntityInfo;
             }
 

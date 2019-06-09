@@ -40,6 +40,11 @@ public interface SqlEntitySchemaInfo {
     String getTable();
 
     /**
+     * Returns the entity schema table name.
+     */
+    String getSchemaTableName();
+
+    /**
      * Returns the table alias.
      */
     String getTableAlias();
@@ -48,6 +53,11 @@ public interface SqlEntitySchemaInfo {
      * Returns the table view.
      */
     String getView();
+
+    /**
+     * Returns the entity schema view name.
+     */
+    String getSchemaViewName();
 
     /**
      * Returns true if entity is versioned.

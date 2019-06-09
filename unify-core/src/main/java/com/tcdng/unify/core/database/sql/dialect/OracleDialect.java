@@ -70,7 +70,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
@@ -84,7 +84,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
@@ -106,7 +106,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
             if (sqlColumnAlterInfo.isNullableChange()) {
                 if (!sqlFieldSchemaInfo.isNullable()) {
-                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getTable()).append(" SET ")
+                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
                             .append(sqlFieldSchemaInfo.getColumn()).append(" = ");
                     sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
                             sqlFieldSchemaInfo.getDefaultVal());
@@ -116,7 +116,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
                 }
             }
 
-            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
             if (format) {
                 sb.append(getLineSeparator());
             } else {
@@ -136,7 +136,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {

@@ -65,7 +65,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        String tableName = sqlRecordSchemaInfo.getTable();
+        String tableName = sqlRecordSchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
         if (format) {
             sb.append(getLineSeparator());
@@ -81,7 +81,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
@@ -103,7 +103,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
             if (sqlColumnAlterInfo.isNullableChange()) {
                 if (!sqlFieldSchemaInfo.isNullable()) {
-                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getTable()).append(" SET ")
+                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
                             .append(sqlFieldSchemaInfo.getColumn()).append(" = ");
                     sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
                             sqlFieldSchemaInfo.getDefaultVal());
@@ -113,7 +113,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
                 }
             }
 
-            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
             if (format) {
                 sb.append(getLineSeparator());
             } else {
@@ -133,7 +133,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
