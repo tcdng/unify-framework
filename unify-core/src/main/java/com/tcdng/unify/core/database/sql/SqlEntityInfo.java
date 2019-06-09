@@ -48,9 +48,13 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private String table;
 
+    private String schemaTableName;
+
     private String tableAlias;
 
     private String view;
+
+    private String schemaViewName;
 
     private SqlFieldInfo idFieldInfo;
 
@@ -83,7 +87,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     private List<Map<String, Object>> staticValueList;
 
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
-            EntityPolicy recordPolicy, String table, String tableAlias, String view, SqlFieldInfo idFieldInfo,
+            EntityPolicy recordPolicy, String table, String schemaTableName, String tableAlias, String view, String schemaViewName, SqlFieldInfo idFieldInfo,
             SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
@@ -93,8 +97,10 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.enumConstClass = enumConstClass;
         this.entityPolicy = recordPolicy;
         this.table = table;
+        this.schemaTableName = schemaTableName;
         this.tableAlias = tableAlias;
         this.view = view;
+        this.schemaViewName = schemaViewName;
         this.idFieldInfo = idFieldInfo;
         this.versionFieldInfo = versionFieldInfo;
         this.fieldInfoList = new ArrayList<SqlFieldInfo>();
@@ -182,6 +188,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     }
 
     @Override
+    public String getSchemaTableName() {
+        return schemaTableName;
+    }
+
+    @Override
     public String getTableAlias() {
         return tableAlias;
     }
@@ -189,6 +200,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public String getView() {
         return view;
+    }
+
+    @Override
+    public String getSchemaViewName() {
+        return schemaViewName;
     }
 
     @Override

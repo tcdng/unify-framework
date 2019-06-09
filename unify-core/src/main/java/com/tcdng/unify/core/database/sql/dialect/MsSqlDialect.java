@@ -90,8 +90,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     public String generateRenameTable(SqlEntitySchemaInfo sqlRecordSchemaInfo,
             SqlEntitySchemaInfo oldSqlRecordSchemaInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("sp_RENAME '").append(oldSqlRecordSchemaInfo.getTable()).append('.')
-                .append(sqlRecordSchemaInfo.getTable()).append("'");
+        sb.append("sp_RENAME '").append(oldSqlRecordSchemaInfo.getSchemaTableName()).append('.')
+                .append(sqlRecordSchemaInfo.getSchemaTableName()).append("'");
         return sb.toString();
     }
 
@@ -100,7 +100,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
@@ -122,7 +122,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
             if (sqlColumnAlterInfo.isNullableChange()) {
                 if (!sqlFieldSchemaInfo.isNullable()) {
-                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getTable()).append(" SET ")
+                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
                             .append(sqlFieldSchemaInfo.getColumn()).append(" = ");
                     sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
                             sqlFieldSchemaInfo.getDefaultVal());
@@ -132,7 +132,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
                 }
             }
 
-            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
             if (format) {
                 sb.append(getLineSeparator());
             } else {
@@ -152,7 +152,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
@@ -168,7 +168,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("sp_RENAME '").append(sqlRecordSchemaInfo.getTable()).append('.')
+        sb.append("sp_RENAME '").append(sqlRecordSchemaInfo.getSchemaTableName()).append('.')
                 .append(oldSqlFieldSchemaInfo.getColumn()).append("', '");
         sb.append(sqlFieldSchemaInfo.getColumn()).append("' , 'COLUMN'");
         return sb.toString();
@@ -178,7 +178,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
