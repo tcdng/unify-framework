@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database;
 import java.util.Collections;
 import java.util.Set;
 
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -27,6 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(name = "plainCommon", description = "Plain Common")
 public abstract class AbstractEntity implements Entity {
 
     @Override

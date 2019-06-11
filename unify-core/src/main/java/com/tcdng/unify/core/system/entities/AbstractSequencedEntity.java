@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system.entities;
 
 import com.tcdng.unify.core.annotation.Id;
 import com.tcdng.unify.core.annotation.Policy;
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.database.AbstractEntity;
 
 /**
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.database.AbstractEntity;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(name = "plainSequenced", description = "Plain Sequenced")
 @Policy("sequencedentity-policy")
 public abstract class AbstractSequencedEntity extends AbstractEntity implements SequencedEntity {
 
