@@ -56,6 +56,7 @@ ux.busyCounter = 0;
 ux.cntHintId = null
 ux.cntTabCloseId = null;
 ux.cntOpenPath = null;
+ux.cntSaveIsRemote = false;
 ux.cntSavePath = null;
 ux.cntSaveList = null;
 ux.cntSaveRemoteView = null;
@@ -1016,6 +1017,7 @@ ux.rigContentPanel = function(rgp) {
 	ux.cntHintId = rgp.pHintPanelId;
 	ux.cntTabCloseId = rgp.pCloseImgId;
 	ux.cntSavePath = rgp.pSavePath;
+	ux.cntSaveIsRemote = rgp.pSaveIsRem;
 
 	if (rgp.pImmURL) {
 		ux.postToPath(rgp.pImmURL);
@@ -1051,7 +1053,7 @@ ux.contentOpen  = function(uEv) {
 		ux.cntOpenPath = evp.uOpenPath;
 		path = ux.cntSavePath;
 		evp.uRef = ux.cntSaveList;
-		if (ux.cntSaveRemoteView) {
+		if (ux.cntSaveIsRemote && ux.cntSaveRemoteView) {
 			evp.uViewer = ux.cntSaveRemoteView.view;
 			evp.uSessionID = ux.cntSaveRemoteView.sessionID;
 		}

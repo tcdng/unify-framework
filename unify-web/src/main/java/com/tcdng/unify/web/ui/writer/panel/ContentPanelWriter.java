@@ -60,8 +60,10 @@ public class ContentPanelWriter extends AbstractPanelWriter {
             ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
             if (currentContentInfo.isRemoteSave()) {
                 writer.write(",\"pSavePath\":\"").write(currentContentInfo.getSavePath()).write("\"");
+                writer.write(",\"pSaveIsRem\":true");
             } else {
                 writer.write(",\"pSavePath\":\"").writeContextURL(currentContentInfo.getSavePath()).write("\"");
+                writer.write(",\"pSaveIsRem\":false");
             }
 
             writer.write(",\"pContent\":[");
