@@ -202,11 +202,15 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSG);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_PARAM);
 
+        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_VIEWER);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_ROLECD);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_SESSION_ID);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_USERLOGINID);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_USERNAME);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_VIEWER);
+        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_BRANCH_CODE);
+        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_ZONE_CODE);
+        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_GLOBAL_ACCESS);
+        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_COLOR_SCHEME);
     }
 
     @Override

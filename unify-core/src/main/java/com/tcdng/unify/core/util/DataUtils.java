@@ -268,6 +268,27 @@ public final class DataUtils {
     }
 
     /**
+     * Checks if two objects are equal.
+     * 
+     * @param a
+     *            the first object
+     * @param b
+     *            the second object
+     * @return a true value of both parameters are equal
+     */
+    public static boolean equals(Object a, Object b) {
+        if (a == b) {
+            return true;
+        }
+
+        if (a == null) {
+            return false;
+        }
+
+        return a.equals(b);
+    }
+
+    /**
      * Returns a concrete type for a collection type.
      * 
      * @param clazz
@@ -304,7 +325,7 @@ public final class DataUtils {
             }
             return ca.type();
         }
-        
+
         return DataUtils.getColumnType(field.getType());
     }
 

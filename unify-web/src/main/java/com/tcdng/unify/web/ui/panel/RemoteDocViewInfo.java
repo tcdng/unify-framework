@@ -25,18 +25,25 @@ public class RemoteDocViewInfo {
 
     private String pageTitle;
 
+    private String colorScheme;
+
     private String remoteDocUrl;
 
     private String remoteSaveUrl;
 
-    public RemoteDocViewInfo(String pageTitle, String remoteDocUrl, String remoteSaveUrl) {
+    public RemoteDocViewInfo(String pageTitle, String colorScheme, String remoteDocUrl, String remoteSaveUrl) {
         this.pageTitle = pageTitle;
+        this.colorScheme = colorScheme;
         this.remoteDocUrl = remoteDocUrl;
         this.remoteSaveUrl = remoteSaveUrl;
     }
 
     public String getPageTitle() {
         return pageTitle;
+    }
+
+    public String getColorScheme() {
+        return colorScheme;
     }
 
     public String getRemoteDocUrl() {

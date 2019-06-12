@@ -782,12 +782,13 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 	evp.uViewer = rgp.pWinPgNm;
 	evp.uSessionID = ux.remoteviewsessions[evp.uViewer];
 	evp.uURL = rgp.pRemoteURL;
-	evp.uLoginId = rgp.pRemoteLoginId;
-	evp.uUserName = rgp.pRemoteUserName;
-	evp.uRole = rgp.pRemoteRoleCode;
-	evp.uBranch = rgp.pRemoteBranchCode;
-	evp.uGlobal = rgp.pRemoteGlobalFlag;
-	
+	evp.uLoginId = rgp.pLoginId;
+	evp.uUserName = rgp.pUserName;
+	evp.uRole = rgp.pRoleCode;
+	evp.uBranch = rgp.pBranchCode;
+	evp.uGlobal = rgp.pGlobalFlag;
+	evp.uColor = rgp.pColorScheme;
+
 	// Resolve save path viewer
 	ux.cntSaveRemoteView = {};
 	ux.cntSaveRemoteView.view = evp.uViewer;
@@ -2922,7 +2923,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			pb.append("req_uid", evp.uLoginId);
 			pb.append("req_unm", evp.uUserName);
 			if (evp.uRole) {
-				pb.append("req_rcd", evp.uRole);
+				pb.append("req_rcd", evp.uRole); 
 			}
 			if (evp.uBranch) {
 				pb.append("req_bcd", evp.uBranch);
@@ -2930,17 +2931,23 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			if (evp.uGlobal) {
 				pb.append("req_gac", evp.uGlobal);
 			}
+			if (evp.uColor) {
+				pb.append("req_csm", evp.uColor);
+			}
 		} else {
 			pb += ("&req_uid=" + _enc(evp.uLoginId));
 			pb += ("&req_unm=" + _enc(evp.uUserName));
 			if (evp.uRole) {
-				param.value += ("&req_rcd=" + _enc(evp.uRole));
+				pb += ("&req_rcd=" + _enc(evp.uRole));
 			}
 			if (evp.uBranch) {
-				param.value += ("&req_bcd=" + _enc(evp.uBranch));
+				pb += ("&req_bcd=" + _enc(evp.uBranch));
 			}
 			if (evp.uGlobal) {
-				param.value += ("&req_gac=" + _enc(evp.uGlobal));
+				pb += ("&req_gac=" + _enc(evp.uGlobal));
+			}
+			if (evp.uColor) {
+				pb += ("&req_csm=" + _enc(evp.uColor));
 			}
 		}
 	}

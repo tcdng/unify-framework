@@ -45,6 +45,8 @@ import com.tcdng.unify.web.util.HtmlUtils;
 @Component("table-writer")
 public class TableWriter extends AbstractControlWriter {
 
+    private static final String SELECT_CLASSNAME_BASE = "tsel";
+
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         Table table = (Table) widget;
@@ -180,7 +182,7 @@ public class TableWriter extends AbstractControlWriter {
         writer.write(",\"pBaseIdx\":").write(table.getPageItemIndex());
         writer.write(",\"pSelectable\":").write(table.isRowSelectable());
         if (table.isRowSelectable()) {
-            writer.write(",\"pSelClassNm\":\"tselect\"");
+            writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
             writer.write(",\"pSelDepList\":");
             writer.writeJsonStringArray(table.getSelDependentList());
         }
@@ -400,7 +402,7 @@ public class TableWriter extends AbstractControlWriter {
                 writer.write("</tr>");
             }
         } else {
-            writer.write("<tr class=\"tnoitems\"><td");
+            writer.write("<tr class=\"tnoitems ").write(getSelectClassName()).write("\"><td");
             if (!table.isWindowed()) {
                 writer.write(" colspan = \"").write(table.getVisibleColumnCount()).write('"');
             }
@@ -409,7 +411,15 @@ public class TableWriter extends AbstractControlWriter {
             writer.write("</td></tr>");
         }
     }
-
+    
+    private String getSelectClassName() throws UnifyException {
+        if (!StringUtils.isBlank(getUserToken().getColorScheme())) {
+            return SELECT_CLASSNAME_BASE + getUserToken().getColorScheme();
+        }
+        
+        return SELECT_CLASSNAME_BASE;
+    }
+    
     private void writePaginationRow(ResponseWriter writer, Table table) throws UnifyException {
         writer.write("<table class=\"tpagn\" style=\"table-layout:fixed;width:100%;\"><tr>");
         writer.write("<td class=\"tpnavleft\">");

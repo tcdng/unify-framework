@@ -171,6 +171,10 @@ public class ContentPanel extends AbstractPanel {
             return respInfo;
         }
 
+        public String getColorScheme() {
+            return pathInfo.getColorScheme();
+        }
+        
         public String getOpenPath() {
             return pathInfo.getOpenPagePath();
         }

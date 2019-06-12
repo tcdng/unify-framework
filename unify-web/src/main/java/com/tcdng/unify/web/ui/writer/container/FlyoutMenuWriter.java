@@ -26,6 +26,7 @@ import com.tcdng.unify.core.ui.Menu;
 import com.tcdng.unify.core.ui.MenuItem;
 import com.tcdng.unify.core.ui.MenuItemSet;
 import com.tcdng.unify.core.ui.MenuSet;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.ui.Container;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -47,6 +48,10 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 
     private static final int DYNAMIC_CHILD_OFFSET = 10;
 
+    private static final String MENU_CATEGORY_CLASSBASE = "opcat";
+
+    private static final String MENUITEM_CATEGORY_CLASSBASE = "mcat";
+    
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         FlyoutMenu flyoutMenu = (FlyoutMenu) widget;
@@ -183,12 +188,21 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
             // Menu items
             int childIndex = DYNAMIC_CHILD_OFFSET;
             Menu menu = menuSet.getMenu(flyoutMenu.getCurrentSel());
+
+            String opcat = MENU_CATEGORY_CLASSBASE;
+            String mcat = MENUITEM_CATEGORY_CLASSBASE;
+            if (!StringUtils.isBlank(menu.getColorScheme())) {
+                String scheme = menu.getColorScheme();
+                opcat += scheme;
+                mcat += scheme;
+            }
+
             for (MenuItemSet menuItemSet : menu.getMenuItemSetList()) {
                 if (getPrivilegeSettings(menuItemSet.getPrivilege()).isVisible()) {
                     String menuId = flyoutMenu.getNamingIndexedId(childIndex++);
                     flyoutMenu.addMenuItem(menuId, menuItemSet);
                     writer.write("<li id=\"").write("win_" + menuId).write("\">");
-                    writer.write("<a class=\"option\" id=\"").write(menuId).write("\">");
+                    writer.write("<a class=\"option ").write(opcat).write("\" id=\"").write(menuId).write("\">");
                     writer.writeWithHtmlEscape(resolveSessionMessage(menuItemSet.getCaption()));
                     writer.write("</a>");
                     writer.write("</li>");
@@ -204,7 +218,8 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
                             if (getPrivilegeSettings(menuItem.getPrivilege()).isVisible()) {
                                 String menuItemId = flyoutMenu.getNamingIndexedId(childIndex++);
                                 flyoutMenu.addMenuItem(menuItemId, menuItem);
-                                psb.append("<li><a class=\"mitem\" id=\"").append(menuItemId).append("\">");
+                                psb.append("<li><a class=\"mitem ").append(mcat).append("\" id=\"").append(menuItemId)
+                                        .append("\">");
                                 HtmlUtils.writeStringWithHtmlEscape(psb, resolveSessionMessage(menuItem.getCaption()));
                                 psb.append("</a></li>");
                             }
