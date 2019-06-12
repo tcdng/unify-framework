@@ -281,7 +281,7 @@ public final class DataUtils {
             return true;
         }
 
-        if (b == null) {
+        if (a == null) {
             return false;
         }
 
