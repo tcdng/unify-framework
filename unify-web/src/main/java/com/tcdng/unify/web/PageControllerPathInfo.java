@@ -26,6 +26,8 @@ public class PageControllerPathInfo {
 
     private String id;
 
+    private String colorScheme;
+
     private String openPagePath;
 
     private String savePagePath;
@@ -34,9 +36,10 @@ public class PageControllerPathInfo {
 
     private boolean remoteSave;
 
-    public PageControllerPathInfo(String id, String openPagePath, String savePagePath, String closePagePath,
-            boolean remoteSave) {
+    public PageControllerPathInfo(String id, String colorScheme, String openPagePath, String savePagePath,
+            String closePagePath, boolean remoteSave) {
         this.id = id;
+        this.colorScheme = colorScheme;
         this.openPagePath = openPagePath;
         this.savePagePath = savePagePath;
         this.closePagePath = closePagePath;
@@ -45,6 +48,10 @@ public class PageControllerPathInfo {
 
     public String getId() {
         return id;
+    }
+
+    public String getColorScheme() {
+        return colorScheme;
     }
 
     public String getOpenPagePath() {

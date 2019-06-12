@@ -63,7 +63,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
 
             @Override
             protected PageControllerPathInfo create(String beanId, Object... params) throws Exception {
-                return new PageControllerPathInfo(beanId, beanId + "/openPage", beanId + "/savePage",
+                return new PageControllerPathInfo(beanId, null, beanId + "/openPage", beanId + "/savePage",
                         beanId + "/closePage", false);
             }
         };

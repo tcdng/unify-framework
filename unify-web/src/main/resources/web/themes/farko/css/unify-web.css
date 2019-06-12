@@ -101,10 +101,8 @@ z-index:400;}
 .ui-horizontalflyoutmenu .scroll:hover {background-color: #404040;}
 .ui-horizontalflyoutmenu .nav {list-style: none; position: relative; display: inline-table;}
 .ui-horizontalflyoutmenu .nav li {float: left;}
-.ui-horizontalflyoutmenu .option {display: block; width: 120px; margin: 0px 1px 0px 0px; padding: 3px 0px;
-    border: 1px solid #5970B2; background-color: #5970B2; color: #FFF; font-size:10pt;
+.ui-horizontalflyoutmenu .option {display: block; width: 120px; margin: 0px 1px 0px 0px; padding: 3px 0px; font-size:10pt;
     text-align: center; text-decoration: none; vertical-align: middle;}
-.ui-horizontalflyoutmenu .option:hover {background-color: #49A3FF;}
 .ui-horizontalflyoutmenu .mselect {width: 120px; margin-right: 4px;}
 
 .ui-verticalflyoutmenu {display:block; height:100%; background-color: #F0F0F0;padding:4px;}
@@ -112,11 +110,22 @@ z-index:400;}
 .ui-verticalflyoutmenu .scroll:hover {background-color: #404040;}
 .ui-verticalflyoutmenu .nav {list-style: none; position: relative; display: inline-table; width:100%;}
 .ui-verticalflyoutmenu .nav li {}
-.ui-verticalflyoutmenu .option {display: block; margin: 0px 0px 2px 0px; padding: 8px 2px;
-    border: 1px solid #5970B2; background-color: #5970B2; color: #FFF; font-size:10pt;
+.ui-verticalflyoutmenu .option {display: block; margin: 0px 0px 2px 0px; padding: 8px 2px; font-size:10pt;
     text-decoration: none;}
-.ui-verticalflyoutmenu .option:hover {background-color: #49A3FF;}
 .ui-verticalflyoutmenu .mselect {width:100%; margin-bottom: 6px;}
+
+.opcat {border: 1px solid #5970B2; background-color: #5970B2; color: #FFF;}
+.opcat:hover {background-color: #49A3FF;}
+.opcatred {border: 1px solid #C03333; background-color: #C03333; color: #FFF;}
+.opcatred:hover {background-color: #D04343;}
+.opcatblue {border: 1px solid #3378C0; background-color: #3378C0; color: #FFF;}
+.opcatblue:hover {background-color: #4388D0;}
+.opcatgreen {border: 1px solid #33C078; background-color: #33C078; color: #FFF;}
+.opcatgreen:hover {background-color: #43D088;}
+.opcatorange {border: 1px solid #C07833; background-color: #C07833; color: #FFF;}
+.opcatorange:hover {background-color: #D08843;}
+.opcatgray {border: 1px solid #787878; background-color: #787878; color: #FFF;}
+.opcatgray:hover {background-color: #888888;}
 
 .flyoutmenu-popup {position: fixed; visibility: hidden; width: auto; z-index: 300;}
 .flyoutmenu-popup ul {list-style: none; padding: 0; position: absolute; top: 100%;
@@ -124,7 +133,19 @@ z-index:400;}
 .flyoutmenu-popup ul li {float: none; position: relative;}
 .flyoutmenu-popup .mitem {display: block; width: auto; margin: 0; padding: 8px 10px; font-size:10pt;
     background-color: #F0F0F0; color: #000; text-align: left; text-decoration: none; white-space: nowrap;}
-.flyoutmenu-popup .mitem:hover {background-color: #49A3FF; color: #FFF;}
+
+.mcat {}
+.mcat:hover {background-color: #49A3FF; color: #FFF;}
+.mcatred {}
+.mcatred:hover {background-color: #D04343; color: #FFF;}
+.mcatblue {}
+.mcatblue:hover {background-color: #4388D0; color: #FFF;}
+.mcatgreen {}
+.mcatgreen:hover {background-color: #43D088; color: #FFF;}
+.mcatorange {}
+.mcatorange:hover {background-color: #D08843; color: #FFF;}
+.mcatgray {}
+.mcatgray:hover {background-color: #888888; color: #FFF;}
 
 /** Form */
 .ui-form {}
@@ -181,7 +202,13 @@ z-index:400;}
 .ui-contentpanel .cptab li a {display: block; text-decoration: none;}
 .ui-contentpanel .cptab .cpactive {border:solid 1px #C0C0C0; margin-bottom: -1px; border-bottom:solid 1px #FFF !important;}
 .ui-contentpanel .cptab .cpactive a {float:left; font-size:12px; padding: 8px; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpremote {margin:3px; padding:4px; border:2px solid #AFAFEC; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpremote {margin:3px; padding:4px;}
+.ui-contentpanel .cptab .cpactive .cpcat {border: 2px solid #5970B2; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpcatblue {border: 2px solid #3378C0; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpcatgreen {border: 2px solid #33C078; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpcatorange {border: 2px solid #C07833; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpcatgray {border: 2px solid #787878; color: #454545;}
 .ui-contentpanel .cptab .cpactive img {float:right; padding:9px 6px; width:10px; height:10px; cursor:pointer;}
 .ui-contentpanel .cptab .cpinactive {border:solid 1px #D0D0D0; margin-top: 4px; background-color: #E0E0E0; border-bottom: none !important; cursor:pointer;}
 .ui-contentpanel .cptab .cpinactive:hover {background-color: #D0D0D0;}
@@ -577,8 +604,13 @@ z-index:400;}
 .ui-simplecrudtable .ttable .tfixed {table-layout:fixed;width:100%;border-left:0px;}
 .ui-simplecrudtable .todd {background-color: #FFF;}
 .ui-simplecrudtable .teven {background-color: #FFFFE0;}
-.ui-simplecrudtable .tselect {background-color: #5970B2; color: #FFF;}
-.ui-simplecrudtable .tnoitems {background-color: #5970B2; color: #FFF;	text-align: center;}
+.ui-simplecrudtable .tnoitems {text-align: center; height:30px;}
+.ui-simplecrudtable .tsel {background-color: #5970B2; color: #FFF;}
+.ui-simplecrudtable .tselred {background-color: #C03333; color: #FFF;}
+.ui-simplecrudtable .tselblue {background-color: #3378C0; color: #FFF;}
+.ui-simplecrudtable .tselgreen {background-color: #33C078; color: #FFF;}
+.ui-simplecrudtable .tselorange {background-color: #C07833; color: #FFF;}
+.ui-simplecrudtable .tselgray {background-color: #787878; color: #FFF;}
 .ui-simplecrudtable .taction {width:16px; height:16px; margin-right:4px; cursor:pointer;}
 
 /** Span */
@@ -607,8 +639,13 @@ z-index:400;}
 .ui-table .todd:hover {background-color: #D0E0F0;}
 .ui-table .teven {background-color: #FFFFE0;}
 .ui-table .teven:hover {background-color: #D0E0F0;}
-.ui-table .tselect {background-color: #5970B2; color: #FFF;}
-.ui-table .tnoitems {background-color: #5970B2; color: #FFF;	text-align: center;}
+.ui-table .tnoitems {text-align: center; height:30px;}
+.ui-table .tsel {background-color: #5970B2; color: #FFF;}
+.ui-table .tselred {background-color: #C03333; color: #FFF;}
+.ui-table .tselblue {background-color: #3378C0; color: #FFF;}
+.ui-table .tselgreen {background-color: #33C078; color: #FFF;}
+.ui-table .tselorange {background-color: #C07833; color: #FFF;}
+.ui-table .tselgray {background-color: #787878; color: #FFF;}
 .ui-table .tpagn {background-color: #ECECEC;}
 .ui-table .tpagn span {display: inline-block;}
 .ui-table .tpselect {width: 60px;}

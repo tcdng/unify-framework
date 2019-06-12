@@ -41,6 +41,8 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 @Component("contentpanel-writer")
 public class ContentPanelWriter extends AbstractPanelWriter {
 
+    private static final String CPREMOTE_CATEGORYBASE = "cpcat";
+    
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         ContentPanel contentPanel = (ContentPanel) widget;
@@ -165,7 +167,12 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
                 writer.write("><div><a ");
                 if (page.getUplAttribute(boolean.class, "remote")) {
-                    writer.write("class=\"cpremote\"");
+                    String cpcat = CPREMOTE_CATEGORYBASE;
+                    if (!StringUtils.isBlank(contentInfo.getColorScheme())) {
+                        cpcat = CPREMOTE_CATEGORYBASE + contentInfo.getColorScheme();
+                    }
+
+                    writer.write("class=\"cpremote ").write(cpcat).write("\"");
                 }
 
                 writer.write(" id=\"").write(contentPanel.getTabItemId(i)).write("\">");

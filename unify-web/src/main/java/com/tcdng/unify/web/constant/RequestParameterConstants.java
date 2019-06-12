@@ -60,4 +60,6 @@ public interface RequestParameterConstants {
     String REMOTE_ZONE_CODE = "req_zcd";
 
     String REMOTE_GLOBAL_ACCESS = "req_gac";
+
+    String REMOTE_COLOR_SCHEME = "req_csm";
 }

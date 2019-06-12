@@ -30,11 +30,14 @@ public class Menu {
 
     private String caption;
 
+    private String colorScheme;
+
     private List<MenuItemSet> menuItemSetList;
 
-    public Menu(String privilege, String caption, List<MenuItemSet> menuItemSetList) {
+    public Menu(String privilege, String caption, String colorScheme, List<MenuItemSet> menuItemSetList) {
         this.privilege = privilege;
         this.caption = caption;
+        this.colorScheme = colorScheme;
         this.menuItemSetList = Collections.unmodifiableList(menuItemSetList);
     }
 
@@ -44,6 +47,10 @@ public class Menu {
 
     public String getCaption() {
         return caption;
+    }
+
+    public String getColorScheme() {
+        return colorScheme;
     }
 
     public List<MenuItemSet> getMenuItemSetList() {

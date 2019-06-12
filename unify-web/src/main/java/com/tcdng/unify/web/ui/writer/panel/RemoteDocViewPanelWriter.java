@@ -19,9 +19,11 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
+import com.tcdng.unify.web.ui.panel.RemoteDocViewInfo;
 import com.tcdng.unify.web.ui.panel.RemoteDocViewPanel;
 import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 
@@ -41,21 +43,25 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
         writer.write("ux.loadRemoteDocViewPanel({");
         writer.write("\"pId\":\"").write(remoteDocViewPanel.getId()).write('"');
         writer.write(",\"pWinPgNm\":\"").write(getResponseControllerWinId()).write("\"");
-        writer.write(",\"pRemoteURL\":\"").write(remoteDocViewPanel.getRemoteDocViewInfo().getRemoteDocUrl())
-                .write("\"");
+        RemoteDocViewInfo remoteDocViewInfo = remoteDocViewPanel.getRemoteDocViewInfo();
+        writer.write(",\"pRemoteURL\":\"").write(remoteDocViewInfo.getRemoteDocUrl()).write("\"");
 
         UserToken userToken = getUserToken();
-        writer.write(",\"pRemoteLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
-        writer.write(",\"pRemoteUserName\":\"").write(userToken.getUserName()).write("\"");
-        if (userToken.getRoleCode() != null) {
-            writer.write(",\"pRemoteRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
+        writer.write(",\"pLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
+        writer.write(",\"pUserName\":\"").write(userToken.getUserName()).write("\"");
+        if (!StringUtils.isBlank(userToken.getRoleCode())) {
+            writer.write(",\"pRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
         }
 
-        if (userToken.getBranchCode() != null) {
-            writer.write(",\"pRemoteBranchCode\":\"").write(userToken.getBranchCode()).write("\"");
+        if (!StringUtils.isBlank(userToken.getBranchCode())) {
+            writer.write(",\"pBranchCode\":\"").write(userToken.getBranchCode()).write("\"");
         }
 
-        writer.write(",\"pRemoteGlobalFlag\":").write(userToken.isGlobalAccess());
+        if (!StringUtils.isBlank(remoteDocViewInfo.getColorScheme())) {
+            writer.write(",\"pColorScheme\":\"").write(remoteDocViewInfo.getColorScheme()).write("\"");
+        }
+
+        writer.write(",\"pGlobalFlag\":").write(userToken.isGlobalAccess());
         writer.write("});");
     }
 

@@ -37,6 +37,8 @@ public class UserToken {
 
     private String departmentCode;
 
+    private String colorScheme;
+
     private String ipAddress;
 
     private boolean globalAccess;
@@ -48,11 +50,12 @@ public class UserToken {
     private boolean remote;
 
     public UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
-            boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+            String colorScheme, boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
         this.userLoginId = userLoginId;
         this.userName = userName;
         this.zoneCode = zoneCode;
         this.branchCode = branchCode;
+        this.colorScheme = colorScheme;
         this.ipAddress = ipAddress;
         this.globalAccess = globalAccess;
         this.reservedUser = reservedUser;
@@ -90,6 +93,10 @@ public class UserToken {
 
     public String getZoneCode() {
         return zoneCode;
+    }
+
+    public String getColorScheme() {
+        return colorScheme;
     }
 
     public String getDepartmentCode() {
