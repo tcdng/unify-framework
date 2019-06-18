@@ -65,7 +65,7 @@ public class GridLayoutWriter extends AbstractTabularLayoutWriter {
 
         if (columnIndex > 0) {
             while (columnIndex++ < columns) {
-                writer.write("<div class=\"lcell\">&nbsp;</div>");
+                writer.write("<div class=\"lcellm\">&nbsp;</div>");
             }
             writer.write("</div>");
         }
@@ -102,7 +102,7 @@ public class GridLayoutWriter extends AbstractTabularLayoutWriter {
 
         if (columnIndex > 0) {
             while (columnIndex++ < columns) {
-                writer.write("<div class=\"lcell\">&nbsp;</div>");
+                writer.write("<div class=\"lcellm\">&nbsp;</div>");
             }
             writer.write("</div>");
         }
