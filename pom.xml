@@ -37,19 +37,6 @@
 		<module>unify-xchart</module>
 	</modules>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype Nexus Snapshots</name>
-			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<name>Nexus Release Repository</name>
-			<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
-
 	<scm>
 		<connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>
 		<developerConnection>scm:git:ssh://github.com:tcdng/unify-framework.git</developerConnection>
@@ -58,7 +45,32 @@
 
 	<profiles>
 		<profile>
-			<id>deploy-artifacts</id>
+			<id>deploy-artifacts-local</id>
+			<activation>
+				<property>
+					<name>repoDeployModeLocal</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<repository>
+					<id>nexus-local</id>
+					<name>maven-releases</name>
+					<url>http://192.168.56.1:8081/repository/maven-releases/</url>
+				</repository>
+				<snapshotRepository>
+					<id>nexus-local</id>
+					<name>maven-snapshots</name>
+					<url>http://192.168.56.1:8081/repository/maven-snapshots/</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>deploy-artifacts-sonatype</id>
 			<activation>
 				<property>
 					<name>repoDeployMode</name>
@@ -120,6 +132,18 @@
 					</plugin>
 				</plugins>
 			</build>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>sonatype-nexus-snapshots</id>
+					<name>Sonatype Nexus Snapshots</name>
+					<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>sonatype-nexus-staging</id>
+					<name>Nexus Release Repository</name>
+					<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
 		</profile>
 	</profiles>
 
