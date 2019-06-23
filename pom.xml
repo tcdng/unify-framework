@@ -45,31 +45,6 @@
 
 	<profiles>
 		<profile>
-			<id>deploy-artifacts-local</id>
-			<activation>
-				<property>
-					<name>repoDeployModeLocal</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-				</plugins>
-			</build>
-			<distributionManagement>
-				<repository>
-					<id>nexus-local</id>
-					<name>maven-releases</name>
-					<url>http://192.168.56.1:8081/repository/maven-releases/</url>
-				</repository>
-				<snapshotRepository>
-					<id>nexus-local</id>
-					<name>maven-snapshots</name>
-					<url>http://192.168.56.1:8081/repository/maven-snapshots/</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-		<profile>
 			<id>deploy-artifacts-sonatype</id>
 			<activation>
 				<property>
