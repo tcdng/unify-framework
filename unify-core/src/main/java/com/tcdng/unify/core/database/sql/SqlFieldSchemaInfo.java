@@ -39,7 +39,12 @@ public interface SqlFieldSchemaInfo {
     /**
      * Returns the field column name.
      */
-    String getColumn();
+    String getColumnName();
+
+    /**
+     * Returns the field preferred column name.
+     */
+    String getPreferredColumnName();
 
     /**
      * Returns the constraint name.

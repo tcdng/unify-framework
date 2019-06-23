@@ -46,7 +46,7 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
         String preOp = (String) criteria.getPreOp();
         if (sqlEntityInfo != null) {
-            preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
+            preOp = sqlEntityInfo.getListFieldInfo(preOp).getPreferredColumnName();
         }
         translate(sql, sqlEntityInfo.getTableAlias(), preOp, criteria.getPostOp(), null);
     }
@@ -66,7 +66,7 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
             SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) criteria.getPreOp());
         sql.append("(");
-        sql.append(sqlFieldInfo.getColumn()).append(opSql).append("?");
+        sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
         sql.append(")");
         if (sqlFieldInfo.isTransformed()) {
             parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),

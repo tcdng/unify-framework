@@ -82,7 +82,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
                 } else {
                     sb.append(' ');
                 }
-                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
                 sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
                         sqlFieldSchemaInfo.getScale());
                 sqlList.add(sb.toString());
@@ -96,7 +96,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
                 } else {
                     sb.append(' ');
                 }
-                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumn()).append(" SET");
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" SET");
                 if (!sqlFieldSchemaInfo.isNullable() || sqlFieldSchemaInfo.isWithDefaultVal()) {
                     sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
                             sqlFieldSchemaInfo.getDefaultVal());
@@ -111,10 +111,10 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
             if (sqlColumnAlterInfo.isNullableChange()) {
                 if (!sqlFieldSchemaInfo.isNullable()) {
                     sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
-                            .append(sqlFieldSchemaInfo.getColumn()).append(" = ");
+                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
                     sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
                             sqlFieldSchemaInfo.getDefaultVal());
-                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getColumn()).append(" IS NULL");
+                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
                     sqlList.add(sb.toString());
                     StringUtils.truncate(sb);
                 }
@@ -125,7 +125,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
                 } else {
                     sb.append(' ');
                 }
-                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
                 if (sqlFieldSchemaInfo.isNullable()) {
                     sb.append(" SET NULL");
                 } else {

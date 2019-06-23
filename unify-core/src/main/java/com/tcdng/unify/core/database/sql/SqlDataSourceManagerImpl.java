@@ -127,22 +127,22 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             // Manage table
             String appSchema = sqlDataSource.getAppSchema();
             List<String> tableUpdateSql = new ArrayList<String>();
-            rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getTable(), null);
+            rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getTableName(), null);
             if (rs.next()) {
                 // Table exists. Check for updates
                 String tableType = rs.getString("TABLE_TYPE");
                 if ("TABLE".equalsIgnoreCase(tableType)) {
                     Map<String, SqlColumnInfo> columnMap =
-                            sqlDataSource.getColumnMap(appSchema, sqlEntityInfo.getTable());
+                            sqlDataSource.getColumnMap(appSchema, sqlEntityInfo.getTableName());
                     List<String> columnUpdateSql =
                             generateColumnUpdateSql(sqlDataSourceDialect, sqlEntityInfo, columnMap);
                     tableUpdateSql.addAll(columnUpdateSql);
                 } else {
                     throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
-                            sqlDataSource.getName(), sqlEntityInfo.getTable(), tableType);
+                            sqlDataSource.getName(), sqlEntityInfo.getTableName(), tableType);
                 }
             } else {
-                logInfo("Creating datasource table {0}...", sqlEntityInfo.getTable());
+                logInfo("Creating datasource table {0}...", sqlEntityInfo.getTableName());
 
                 // Create table with constraints and indexes
                 tableUpdateSql.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, formatSql));
@@ -179,19 +179,19 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             List<String> viewUpdateSQL = new ArrayList<String>();
             if (sqlEntityInfo.isViewable()) {
                 boolean isDropView = false;
-                rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getView(), null);
+                rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getViewName(), null);
                 if (rs.next()) {
                     isDropView = isTableNewOrAltered;
                     String tableType = rs.getString("TABLE_TYPE");
                     if (!"VIEW".equalsIgnoreCase(tableType)) {
                         throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
-                                sqlDataSource.getName(), sqlEntityInfo.getView(), tableType);
+                                sqlDataSource.getName(), sqlEntityInfo.getViewName(), tableType);
                     }
 
                     if (!isDropView) {
                         // Check is list-only fields have changed
                         isDropView = !matchViewColumns(sqlEntityInfo,
-                                sqlDataSource.getColumns(appSchema, sqlEntityInfo.getView()));
+                                sqlDataSource.getColumns(appSchema, sqlEntityInfo.getViewName()));
                     }
                 }
                 SqlUtils.close(rs);
@@ -231,7 +231,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
     private boolean matchViewColumns(SqlEntityInfo sqlEntityInfo, Set<String> columnNames) {
         for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getListFieldInfos()) {
-            if (!columnNames.contains(sqlfieldInfo.getColumn())) {
+            if (!columnNames.contains(sqlfieldInfo.getColumnName())) {
                 return false;
             }
         }
@@ -243,7 +243,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             Map<String, SqlColumnInfo> columnInfos) throws UnifyException {
         List<String> columnUpdateSqlList = new ArrayList<String>();
         for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getFieldInfos()) {
-            SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumn());
+            SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName());
             if (sqlColumnInfo == null) {
                 // New column
                 columnUpdateSqlList.add(sqlDataSourceDialect.generateAddColumn(sqlEntityInfo, sqlfieldInfo, formatSql));

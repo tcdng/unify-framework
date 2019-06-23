@@ -87,7 +87,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
         } else {
             sb.append(' ');
         }
-        sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getColumn()).append(' ');
+        sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getPreferredColumnName()).append(' ');
         appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
         return sb.toString();
     }
@@ -104,10 +104,10 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
             if (sqlColumnAlterInfo.isNullableChange()) {
                 if (!sqlFieldSchemaInfo.isNullable()) {
                     sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
-                            .append(sqlFieldSchemaInfo.getColumn()).append(" = ");
+                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
                     sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
                             sqlFieldSchemaInfo.getDefaultVal());
-                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getColumn()).append(" IS NULL");
+                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
                     sqlList.add(sb.toString());
                     StringUtils.truncate(sb);
                 }

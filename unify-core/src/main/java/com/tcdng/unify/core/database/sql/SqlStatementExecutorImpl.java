@@ -545,7 +545,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     @SuppressWarnings("unchecked")
     private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs, long timeZoneOffset) throws Exception {
-        Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(), sqlResult.getColumn(),
+        Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(), sqlResult.getColumnName(),
                 timeZoneOffset);
         if (sqlResult.isTransformed()) {
             value = ((Transformer<Object, Object>) sqlResult.getTransformer()).reverseTransform(value);

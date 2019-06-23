@@ -157,7 +157,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                         String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");
                         int decimalDigits = decimalDigitsStr == null ? 0 : Integer.valueOf(decimalDigitsStr);
                         columnInfoList.add(new SqlColumnInfo(type, rs.getString("TYPE_NAME"),
-                                rs.getString("COLUMN_NAME").toUpperCase(), defaultVal, sqlType,
+                                rs.getString("COLUMN_NAME"), defaultVal, sqlType,
                                 rs.getInt("COLUMN_SIZE"), decimalDigits, "YES".equals(rs.getString("IS_NULLABLE"))));
                     }
                 }
