@@ -908,7 +908,7 @@ public class UnifyContainer {
     /**
      * Begins a synchronization block with specified lock. Blocks until
      * synchronization handle is obtained or an error occurs. Lock should be
-     * released by calling {@link #endLockedAccess(String)}.
+     * released by calling {@link #endClusterLock(String)}.
      * 
      * @param lockName
      *            the lock name

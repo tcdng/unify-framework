@@ -49,8 +49,6 @@ public interface SequenceNumberService extends BusinessService {
      * 
      * @param sequenceName
      *            the sequence name
-     * @param date
-     *            the date
      * @throws UnifyException
      *             if an error occurs
      */

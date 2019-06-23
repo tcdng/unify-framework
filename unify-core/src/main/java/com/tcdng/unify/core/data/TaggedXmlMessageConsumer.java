@@ -30,8 +30,8 @@ public interface TaggedXmlMessageConsumer extends UnifyComponent {
     /**
      * Consumes a tagged XML message.
      * 
-     * @param taggedMessage
-     *            the tagged message
+     * @param xmlMessage
+     *            the tagged XML message
      * @throws UnifyException
      *             if an error occurs
      */

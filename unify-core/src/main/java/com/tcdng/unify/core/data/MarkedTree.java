@@ -576,8 +576,6 @@ public class MarkedTree<T> {
      * Updates root node and all descendants that are matched by supplied matcher
      * using supplied update policy.
      * 
-     * @param startMark
-     *            the start mark
      * @param matcher
      *            the matcher
      * @param updater

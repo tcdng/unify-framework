@@ -224,7 +224,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     /**
      * Sets up a response that shows a message box with default info icon and OK
      * button. {@link MessageBox} value of the session attribute
-     * {@link JacklynSessionAttributeConstants#MESSAGEBOX}.
+     * {@link UnifyWebSessionAttributeConstants#MESSAGEBOX}.
      * 
      * @param message
      *            the message to display
@@ -240,7 +240,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     /**
      * Sets up a response that shows a message box with default info icon and OK
      * button. {@link MessageBox} value of the session attribute
-     * {@link JacklynSessionAttributeConstants#MESSAGEBOX}.
+     * {@link UnifyWebSessionAttributeConstants#MESSAGEBOX}.
      * 
      * @param message
      *            the message to display
@@ -258,7 +258,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     /**
      * Sets up a response that shows a message box with default info icon and OK
      * button. {@link MessageBox} value of the session attribute
-     * {@link JacklynSessionAttributeConstants#MESSAGEBOX}.
+     * {@link UnifyWebSessionAttributeConstants#MESSAGEBOX}.
      * 
      * @param caption
      *            the message caption
@@ -277,7 +277,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     /**
      * Sets up a response that shows a message box. The message box is backed by the
      * {@link MessageBox} value of the session attribute
-     * {@link JacklynSessionAttributeConstants#MESSAGEBOX}.
+     * {@link UnifyWebSessionAttributeConstants#MESSAGEBOX}.
      * 
      * @param messageIcon
      *            the message icon of enumeration type {@link MessageIcon}
