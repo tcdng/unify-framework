@@ -33,6 +33,14 @@ import com.tcdng.unify.web.ui.Control;
         @UplAttribute(name = "sortable", type = boolean.class), @UplAttribute(name = "space", type = boolean.class) })
 public class GroupControl extends AbstractMultiControl implements Control {
 
+    private String dataGroupId;
+
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        dataGroupId = getPrefixedId("data_");
+    }
+
     @Override
     public boolean isFocus() throws UnifyException {
         return false;
@@ -41,6 +49,17 @@ public class GroupControl extends AbstractMultiControl implements Control {
     @Override
     public void updateState() throws UnifyException {
 
+    }
+
+    @Override
+    public void addPageAliases() throws UnifyException {
+        if (isContainerEditable()) {
+            addPageAlias(getDataGroupId());
+        }
+    }
+
+    public String getDataGroupId() {
+        return dataGroupId;
     }
 
     public boolean isSpace() throws UnifyException {
