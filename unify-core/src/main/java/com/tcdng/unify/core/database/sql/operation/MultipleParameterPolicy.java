@@ -50,7 +50,7 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
         String preOp = (String) criteria.getPreOp();
         if (sqlEntityInfo != null) {
-            preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
+            preOp = sqlEntityInfo.getListFieldInfo(preOp).getPreferredColumnName();
         }
         translate(sql, sqlEntityInfo.getTableAlias(), preOp, criteria.getPostOp(), null);
     }
@@ -122,7 +122,7 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
             }
 
             if (i == 0) {
-                sql.append(sqlFieldInfo.getColumn()).append(opSql).append("(");
+                sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("(");
             } else {
                 sql.append(", ");
             }

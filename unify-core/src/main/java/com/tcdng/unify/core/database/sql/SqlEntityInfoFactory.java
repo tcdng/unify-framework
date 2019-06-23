@@ -29,6 +29,14 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
     String VIEW_PREFIX = "V_";
 
     /**
+     * Sets the factory SQL data source dialect.
+     * 
+     * @param sqlDataSourceDialect
+     *            the dialect to set
+     */
+    void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect);
+
+    /**
      * Returns the SQL entity information for a entity type.
      * 
      * @param entityClass

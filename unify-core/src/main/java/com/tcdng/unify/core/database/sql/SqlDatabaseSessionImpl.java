@@ -373,7 +373,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                sqlDataSourceDialect.prepareMinStatement(sqlFieldInfo.getColumn(), query), false);
+                sqlDataSourceDialect.prepareMinStatement(sqlFieldInfo.getPreferredColumnName(), query), false);
     }
 
     @Override
@@ -382,7 +382,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getColumn(), query), false);
+                sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getPreferredColumnName(), query), false);
     }
 
     @Override

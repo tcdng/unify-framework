@@ -322,6 +322,14 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
             throws UnifyException;
 
     /**
+     * Returns the preferred name for dialect.
+     * 
+     * @param name
+     *            the name
+     */
+    String getPreferredName(String name);
+
+    /**
      * Gets the maximum number of values the data source would accept for
      * multi-value conditions.
      * 

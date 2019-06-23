@@ -41,7 +41,7 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException {
         String preOp = (String) criteria.getPreOp();
         if (sqlEntityInfo != null) {
-            preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
+            preOp = sqlEntityInfo.getListFieldInfo(preOp).getPreferredColumnName();
         }
         translate(sql, sqlEntityInfo.getTableAlias(), preOp, null, null);
     }
@@ -59,7 +59,7 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
             SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) criteria.getPreOp());
         sql.append("(");
-        sql.append(sqlFieldInfo.getColumn()).append(opSql);
+        sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);
         sql.append(")");
     }
 

@@ -43,7 +43,7 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
         Object[] values = (Object[]) criteria.getPostOp();
         String preOp = (String) criteria.getPreOp();
         if (sqlEntityInfo != null) {
-            preOp = sqlEntityInfo.getListFieldInfo(preOp).getColumn();
+            preOp = sqlEntityInfo.getListFieldInfo(preOp).getPreferredColumnName();
         }
         translate(sql, sqlEntityInfo.getTableAlias(), preOp, values[0], values[1]);
     }
@@ -63,7 +63,7 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
             SqlEntityInfo sqlEntityInfo, final Criteria criteria) throws UnifyException {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) criteria.getPreOp());
         sql.append("(");
-        sql.append(sqlFieldInfo.getColumn()).append(opSql).append("? AND ?");
+        sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("? AND ?");
         sql.append(")");
         Object[] values = (Object[]) criteria.getPostOp();
         Object value1 = convertType(sqlFieldInfo, values[0]);

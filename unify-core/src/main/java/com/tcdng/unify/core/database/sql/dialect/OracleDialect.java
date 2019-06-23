@@ -76,7 +76,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
         } else {
             sb.append(' ');
         }
-        sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+        sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
         return sb.toString();
     }
 
@@ -107,10 +107,10 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
             if (sqlColumnAlterInfo.isNullableChange()) {
                 if (!sqlFieldSchemaInfo.isNullable()) {
                     sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
-                            .append(sqlFieldSchemaInfo.getColumn()).append(" = ");
+                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
                     sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
                             sqlFieldSchemaInfo.getDefaultVal());
-                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getColumn()).append(" IS NULL");
+                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
                     sqlList.add(sb.toString());
                     StringUtils.truncate(sb);
                 }

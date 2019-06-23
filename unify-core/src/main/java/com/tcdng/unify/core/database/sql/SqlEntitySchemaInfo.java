@@ -37,7 +37,12 @@ public interface SqlEntitySchemaInfo {
     /**
      * Returns the entity table name.
      */
-    String getTable();
+    String getTableName();
+
+    /**
+     * Returns the preferred table name.
+     */
+    String getPreferredTableName();
 
     /**
      * Returns the entity schema table name.
@@ -52,7 +57,12 @@ public interface SqlEntitySchemaInfo {
     /**
      * Returns the table view.
      */
-    String getView();
+    String getViewName();
+
+    /**
+     * Returns the preferred view name.
+     */
+    String getPreferredViewName();
 
     /**
      * Returns the entity schema view name.

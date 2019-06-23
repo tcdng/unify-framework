@@ -46,13 +46,17 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private EntityPolicy entityPolicy;
 
-    private String table;
+    private String tableName;
+
+    private String preferredTableName;
 
     private String schemaTableName;
 
     private String tableAlias;
 
-    private String view;
+    private String viewName;
+
+    private String preferredViewName;
 
     private String schemaViewName;
 
@@ -87,8 +91,9 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     private List<Map<String, Object>> staticValueList;
 
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
-            EntityPolicy recordPolicy, String table, String schemaTableName, String tableAlias, String view, String schemaViewName, SqlFieldInfo idFieldInfo,
-            SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
+            EntityPolicy recordPolicy, String tableName, String preferredTableName, String schemaTableName,
+            String tableAlias, String viewName, String preferredViewName, String schemaViewName,
+            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList) {
@@ -96,10 +101,12 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
         this.entityPolicy = recordPolicy;
-        this.table = table;
+        this.tableName = tableName;
+        this.preferredTableName = preferredTableName;
         this.schemaTableName = schemaTableName;
         this.tableAlias = tableAlias;
-        this.view = view;
+        this.viewName = viewName;
+        this.preferredViewName = preferredViewName;
         this.schemaViewName = schemaViewName;
         this.idFieldInfo = idFieldInfo;
         this.versionFieldInfo = versionFieldInfo;
@@ -183,8 +190,13 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     }
 
     @Override
-    public String getTable() {
-        return table;
+    public String getTableName() {
+        return tableName;
+    }
+
+    @Override
+    public String getPreferredTableName() {
+        return preferredTableName;
     }
 
     @Override
@@ -198,8 +210,13 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     }
 
     @Override
-    public String getView() {
-        return view;
+    public String getViewName() {
+        return viewName;
+    }
+
+    @Override
+    public String getPreferredViewName() {
+        return preferredViewName;
     }
 
     @Override
@@ -229,7 +246,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     public Map<String, String> getListColumnsByFieldNames() {
         Map<String, String> map = new HashMap<String, String>();
         for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoByName.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().getColumn());
+            map.put(entry.getKey(), entry.getValue().getPreferredColumnName());
         }
         return map;
     }
@@ -237,7 +254,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     public Map<String, SqlFieldInfo> getFieldInfoByColumnNames() {
         Map<String, SqlFieldInfo> map = new HashMap<String, SqlFieldInfo>();
         for (SqlFieldInfo entry : fieldInfoByName.values()) {
-            map.put(entry.getColumn(), entry);
+            map.put(entry.getColumnName(), entry);
         }
         return map;
     }
@@ -334,7 +351,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     @Override
     public List<Map<String, Object>> getStaticValueList() {
-        return this.staticValueList;
+        return staticValueList;
     }
 
     void expandOnDeleteCascade(OnDeleteCascadeInfo onDeleteCascadeInfo) {
@@ -350,7 +367,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     public SqlFieldInfo getListFieldInfo(String name) throws UnifyException {
         SqlFieldInfo sqlFieldInfo = listFieldInfoByName.get(name);
         if (sqlFieldInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTFIELDINFO_NOT_FOUND, this.entityClass, name);
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTFIELDINFO_NOT_FOUND, entityClass, name);
         }
         return sqlFieldInfo;
     }
@@ -364,14 +381,14 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     }
 
     public boolean isViewable() {
-        return !this.table.equals(this.view);
+        return !tableName.equals(viewName);
     }
 
     public boolean isEnumConst() {
-        return this.enumConstClass != null;
+        return enumConstClass != null;
     }
 
     public boolean testTrueFieldNamesOnly(final Collection<String> fieldNames) {
-        return this.fieldInfoByName.keySet().containsAll(fieldNames);
+        return fieldInfoByName.keySet().containsAll(fieldNames);
     }
 }

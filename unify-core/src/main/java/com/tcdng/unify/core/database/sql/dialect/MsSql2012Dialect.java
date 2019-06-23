@@ -29,6 +29,11 @@ import com.tcdng.unify.core.constant.SqlDialectConstants;
 public class MsSql2012Dialect extends MsSqlDialect {
 
     @Override
+    public String getPreferredName(String name) {
+        return "[" + name + "]";
+    }
+
+    @Override
     protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
         return false;
     }

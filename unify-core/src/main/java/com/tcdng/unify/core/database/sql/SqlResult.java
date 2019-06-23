@@ -44,8 +44,8 @@ public class SqlResult {
         return sqlFieldInfo.getFieldType();
     }
 
-    public String getColumn() {
-        return sqlFieldInfo.getColumn();
+    public String getColumnName() {
+        return sqlFieldInfo.getColumnName();
     }
 
     public String getName() {
