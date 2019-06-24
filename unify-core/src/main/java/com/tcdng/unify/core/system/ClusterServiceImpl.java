@@ -112,6 +112,15 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
     }
 
     @Override
+    public boolean isWithSynchronizationLock(String lockName) throws UnifyException {
+        if (isClusterMode()) {
+            String lockOwnerId = getLockOwnerId(true);
+            return db().countAll(new ClusterLockQuery().lockName(lockName).currentOwner(lockOwnerId)) > 0;
+        }
+        return true;
+    }
+
+    @Override
     public boolean releaseSynchronizationLock(String lockName) throws UnifyException {
         if (isClusterMode()) {
             return releaseDbLock(lockName, true);
@@ -187,23 +196,23 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         String lockOwnerId = getLockOwnerId(nodeOnly);
         logDebug("Attempt by [{0}] to hold lock [{1}]...", lockOwnerId, lockName);
         ClusterLockQuery query = new ClusterLockQuery().lockName(lockName);
-        ClusterLock clusterLockData = db().find(query);
-        if (clusterLockData == null) {
+        ClusterLock clusterLock = db().find(query);
+        if (clusterLock == null) {
             try {
-                clusterLockData = new ClusterLock();
-                clusterLockData.setLockName(lockName);
-                clusterLockData.setCurrentOwner(lockOwnerId);
-                clusterLockData.setExpiryTime(getNewLockExpirationDate());
-                clusterLockData.setLockCount(Integer.valueOf(1));
-                db().create(clusterLockData);
+                clusterLock = new ClusterLock();
+                clusterLock.setLockName(lockName);
+                clusterLock.setCurrentOwner(lockOwnerId);
+                clusterLock.setExpiryTime(getNewLockExpirationDate());
+                clusterLock.setLockCount(Integer.valueOf(1));
+                db().create(clusterLock);
                 successfulLock = true;
             } catch (Exception e) {
             }
         } else {
-            if (lockOwnerId.equals(clusterLockData.getCurrentOwner())) {
+            if (lockOwnerId.equals(clusterLock.getCurrentOwner())) {
                 successfulLock = db().updateAll(query.currentOwner(lockOwnerId),
                         new Update().add("expiryTime", getNewLockExpirationDate()).add("lockCount",
-                                clusterLockData.getLockCount() + 1)) > 0;
+                                clusterLock.getLockCount() + 1)) > 0;
             } else {
                 successfulLock = db().updateAll(query.expiredOrFree(db().getNow()),
                         new Update().add("currentOwner", lockOwnerId).add("expiryTime", getNewLockExpirationDate())
