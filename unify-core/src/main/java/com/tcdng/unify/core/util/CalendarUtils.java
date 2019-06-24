@@ -80,13 +80,13 @@ public final class CalendarUtils {
 
         return null;
     }
-    
+
     public static int getDaysInMonth(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return CalendarUtils.getDaysInMonth(cal);
     }
-    
+
     public static int getDaysInMonth(Calendar cal) {
         switch (cal.get(Calendar.MONTH)) {
             case Calendar.JANUARY:
@@ -106,7 +106,7 @@ public final class CalendarUtils {
                 return (cal.get(Calendar.YEAR) % 4 == 0) ? 29 : 28;
             default:
                 throw new IllegalArgumentException();
-        }        
+        }
     }
 
     /**
@@ -256,6 +256,22 @@ public final class CalendarUtils {
     }
 
     /**
+     * Returns the date time-of-day offset.
+     * 
+     * @param date
+     * @return the time of day offset
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static long getTimeOfDayOffset(Date date) throws UnifyException {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return CalendarUtils.getMilliSecondsByFrequency(FrequencyUnit.HOUR, cal.get(Calendar.HOUR_OF_DAY))
+                + CalendarUtils.getMilliSecondsByFrequency(FrequencyUnit.MINUTE, cal.get(Calendar.MINUTE))
+                + CalendarUtils.getMilliSecondsByFrequency(FrequencyUnit.SECOND, cal.get(Calendar.SECOND));
+    }
+
+    /**
      * Calculates now plus offset.
      * 
      * @param now
@@ -329,14 +345,16 @@ public final class CalendarUtils {
      * @see FrequencyUnit
      */
     public static long getMilliSecondsByFrequency(FrequencyUnit unit, int frequency) throws UnifyException {
-        if (FrequencyUnit.SECOND.equals(unit)) {
-            return frequency * 1000;
-        } else if (FrequencyUnit.MINUTE.equals(unit)) {
-            return frequency * 60 * 1000;
-        } else if (FrequencyUnit.HOUR.equals(unit)) {
-            return frequency * 60 * 60 * 1000;
+        switch (unit) {
+            case HOUR:
+                return frequency * 60 * 60 * 1000;
+            case MINUTE:
+                return frequency * 60 * 1000;
+            case SECOND:
+                return frequency * 1000;
+            default:
+                throw new UnifyException(UnifyCoreErrorConstants.INVALID_FREQUENCY_UNIT, unit);
         }
-        throw new UnifyException(UnifyCoreErrorConstants.INVALID_FREQUENCY_UNIT, unit);
     }
 
     /**
@@ -464,7 +482,7 @@ public final class CalendarUtils {
                 if (eIndex > maxIndex) {
                     break;
                 }
-                
+
                 if (index <= eIndex) {
                     return eIndex;
                 }
