@@ -23,20 +23,45 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("staticdayinweeklist")
 public enum DayInWeek implements EnumConst {
 
-    SUNDAY("Sun"), MONDAY("Mon"), TUESDAY("Tue"), WEDNESDAY("Wed"), THURSDAY("Thu"), FRIDAY("Fri"), SATURDAY("Sat");
+    SUNDAY("Sun", 1),
+    MONDAY("Mon", 2),
+    TUESDAY("Tue", 3),
+    WEDNESDAY("Wed", 4),
+    THURSDAY("Thu", 5),
+    FRIDAY("Fri", 6),
+    SATURDAY("Sat", 7);
 
     private static final DayInWeek[] BY_CALENDAR_INDEX =
             { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY };
 
     private final String code;
 
-    private DayInWeek(String code) {
+    private final int javaIndex;
+
+    private DayInWeek(String code, int javaIndex) {
         this.code = code;
+        this.javaIndex = javaIndex;
     }
 
     @Override
     public String code() {
-        return this.code;
+        return code;
+    }
+
+    public int javaCalendarIndex() {
+        return javaIndex;
+    }
+
+    public static int[] getJavaCalendarIndexes(String[] daysInWeek) {
+        int[] indexes = null;
+        if (daysInWeek != null) {
+            indexes = new int[daysInWeek.length];
+            for (int i = 0; i < daysInWeek.length; i++) {
+                indexes[i] = DayInWeek.fromCode(daysInWeek[i]).javaIndex;
+            }
+        }
+
+        return indexes;
     }
 
     public static DayInWeek byJavaCalendarIndex(int index) {
