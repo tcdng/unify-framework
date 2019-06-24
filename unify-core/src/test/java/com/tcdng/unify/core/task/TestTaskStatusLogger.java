@@ -35,9 +35,4 @@ public class TestTaskStatusLogger extends AbstractTaskStatusLogger {
 
     }
 
-    @Override
-    public void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception) {
-
-    }
-
 }

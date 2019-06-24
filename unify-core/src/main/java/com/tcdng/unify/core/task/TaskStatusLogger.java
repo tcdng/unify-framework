@@ -44,16 +44,4 @@ public interface TaskStatusLogger extends UnifyComponent {
      *            the exception to log
      */
     void logTaskException(Exception e);
-
-    /**
-     * Logs a critical task failure.
-     * 
-     * @param taskName
-     *            the task name
-     * @param parameters
-     *            the task parameters
-     * @param exception
-     *            the cause exception if any
-     */
-    void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception);
 }
