@@ -123,7 +123,7 @@ public class CalendarUtilsTest {
         Calendar cal2 = Calendar.getInstance();
 
         cal1.set(Calendar.DAY_OF_YEAR, 1);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, null, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(cal1.get(Calendar.DAY_OF_YEAR) + 1, cal2.get(Calendar.DAY_OF_YEAR));
@@ -137,7 +137,7 @@ public class CalendarUtilsTest {
 
         int daysInYear = cal1.getActualMaximum(Calendar.DAY_OF_YEAR);
         cal1.set(Calendar.DAY_OF_YEAR, daysInYear);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, null, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(1, cal2.get(Calendar.DAY_OF_YEAR));
@@ -151,7 +151,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DATE, 1);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, null, new String[] { "Jan" }, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Jan" }, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(cal1.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
@@ -166,7 +166,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DATE, 31);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, null, new String[] { "Jan", "Feb" }, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Jan", "Feb" }, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.FEBRUARY, cal2.get(Calendar.MONTH));
@@ -181,7 +181,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DATE, 31);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, null, new String[] { "Jan", "Jun" }, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Jan", "Jun" }, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.JUNE, cal2.get(Calendar.MONTH));
@@ -196,7 +196,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JUNE);
         cal1.set(Calendar.DATE, 30);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, null, new String[] { "Feb", "Jun" }, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Feb", "Jun" }, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.FEBRUARY, cal2.get(Calendar.MONTH));
@@ -211,7 +211,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        Date nextDt = CalendarUtils.nextEligibleDate(new String[] { "Mon", "Tue" }, null, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(new String[] { "Mon", "Tue" }, null, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.TUESDAY, cal2.get(Calendar.DAY_OF_WEEK));
@@ -224,7 +224,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        Date nextDt = CalendarUtils.nextEligibleDate(new String[] { "Mon" }, null, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(new String[] { "Mon" }, null, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.MONDAY, cal2.get(Calendar.DAY_OF_WEEK));
@@ -238,7 +238,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DATE, 1);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, new String[] { "1", "2" }, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "1", "2" }, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.JANUARY, cal2.get(Calendar.MONTH));
@@ -253,7 +253,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DATE, 1);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, new String[] { "1", "18", "22" }, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "1", "18", "22" }, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.JANUARY, cal2.get(Calendar.MONTH));
@@ -268,7 +268,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DATE, 25);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, new String[] { "2", "18", "22" }, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "2", "18", "22" }, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.FEBRUARY, cal2.get(Calendar.MONTH));
@@ -283,7 +283,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.DECEMBER);
         cal1.set(Calendar.DATE, 30);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, new String[] { "6", "18", "22" }, null, cal1.getTime());
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "6", "18", "22" }, null, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
         assertEquals(Calendar.JANUARY, cal2.get(Calendar.MONTH));
@@ -298,7 +298,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.JANUARY);
         cal1.set(Calendar.DATE, 25);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, new String[] { "4", "18", "22" },
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "4", "18", "22" },
                 new String[] { "Apr", "Jun" }, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);
@@ -314,7 +314,7 @@ public class CalendarUtilsTest {
 
         cal1.set(Calendar.MONTH, Calendar.DECEMBER);
         cal1.set(Calendar.DATE, 30);
-        Date nextDt = CalendarUtils.nextEligibleDate(null, new String[] { "6", "18", "22" },
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "6", "18", "22" },
                 new String[] { "May", "Jun" }, cal1.getTime());
         assertNotNull(nextDt);
         cal2.setTime(nextDt);

@@ -131,7 +131,7 @@ public final class CalendarUtils {
                 && CalendarUtils.isEmptyOrInclusive(months, month);
     }
 
-    public static Date nextEligibleDate(String[] weekdays, String[] days, String[] months, Date date)
+    public static Date getNextEligibleDate(String[] weekdays, String[] days, String[] months, Date date)
             throws UnifyException {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
