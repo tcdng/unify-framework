@@ -86,6 +86,17 @@ public interface ClusterService extends BusinessService {
      *             if an error occurs
      */
     boolean grabSynchronizationLock(String lockName) throws UnifyException;
+    
+    /**
+     * Checks if current node has a hold on a cluster synchronization lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @return a true value is lock is held otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isWithSynchronizationLock(String lockName) throws UnifyException;
 
     /**
      * Releases a cluster synchronization lock.

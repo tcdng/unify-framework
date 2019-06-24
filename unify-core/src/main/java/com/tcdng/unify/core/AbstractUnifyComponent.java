@@ -1377,6 +1377,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Checks if current node has a hold on a cluster synchronization lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @return a true value is lock is held otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected boolean isWithClusterLock(String lockName) throws UnifyException {
+        return unifyComponentContext.isWithClusterLock(lockName);
+    }
+
+    /**
      * Releases a synchronization lock.
      * 
      * @param lockName

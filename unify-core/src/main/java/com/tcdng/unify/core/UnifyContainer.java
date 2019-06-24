@@ -957,6 +957,19 @@ public class UnifyContainer {
     }
 
     /**
+     * Checks if current node has a hold on a cluster synchronization lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @return a true value is lock is held otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public boolean isWithClusterLock(String lockName) throws UnifyException {
+        return clusterService.isWithSynchronizationLock(lockName);
+    }
+
+    /**
      * Releases a cluster synchronization lock.
      * 
      * @param lockName
