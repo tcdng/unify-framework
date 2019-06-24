@@ -23,35 +23,54 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("staticmonthinyearlist")
 public enum MonthInYear implements EnumConst {
 
-    JANUARY("Jan"),
-    FEBRUARY("Feb"),
-    MARCH("Mar"),
-    APRIL("Apr"),
-    MAY("May"),
-    JUNE("Jun"),
-    JULY("Jul"),
-    AUGUST("Aug"),
-    SEPTEMBER("Sep"),
-    OCTOBER("Oct"),
-    NOVEMBER("Nov"),
-    DECEMBER("Dec");
+    JANUARY("Jan", 0),
+    FEBRUARY("Feb", 1),
+    MARCH("Mar", 2),
+    APRIL("Apr", 3),
+    MAY("May", 4),
+    JUNE("Jun", 5),
+    JULY("Jul", 6),
+    AUGUST("Aug", 7),
+    SEPTEMBER("Sep", 8),
+    OCTOBER("Oct", 9),
+    NOVEMBER("Nov", 10),
+    DECEMBER("Dec", 11);
 
     private static final MonthInYear[] BY_CALENDAR_INDEX =
             { JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER };
 
     private final String code;
 
-    private MonthInYear(String code) {
+    private final int javaIndex;
+
+    private MonthInYear(String code, int javaIndex) {
         this.code = code;
+        this.javaIndex = javaIndex;
     }
 
     @Override
     public String code() {
-        return this.code;
+        return code;
+    }
+
+    public int javaCalendarIndex() {
+        return javaIndex;
+    }
+
+    public static int[] getJavaCalendarIndexes(String[] monthsInYear) {
+        int[] indexes = null;
+        if (monthsInYear != null) {
+            indexes = new int[monthsInYear.length];
+            for (int i = 0; i < monthsInYear.length; i++) {
+                indexes[i] = MonthInYear.fromCode(monthsInYear[i]).javaIndex;
+            }
+        }
+
+        return indexes;
     }
 
     public static MonthInYear byJavaCalendarIndex(int index) {
-        return BY_CALENDAR_INDEX[index - 1];
+        return BY_CALENDAR_INDEX[index];
     }
 
     public static MonthInYear fromCode(String code) {

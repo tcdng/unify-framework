@@ -17,6 +17,7 @@ package com.tcdng.unify.core.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -79,6 +80,34 @@ public final class CalendarUtils {
 
         return null;
     }
+    
+    public static int getDaysInMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return CalendarUtils.getDaysInMonth(cal);
+    }
+    
+    public static int getDaysInMonth(Calendar cal) {
+        switch (cal.get(Calendar.MONTH)) {
+            case Calendar.JANUARY:
+            case Calendar.MARCH:
+            case Calendar.MAY:
+            case Calendar.JULY:
+            case Calendar.AUGUST:
+            case Calendar.OCTOBER:
+            case Calendar.DECEMBER:
+                return 31;
+            case Calendar.APRIL:
+            case Calendar.JUNE:
+            case Calendar.SEPTEMBER:
+            case Calendar.NOVEMBER:
+                return 30;
+            case Calendar.FEBRUARY:
+                return (cal.get(Calendar.YEAR) % 4 == 0) ? 29 : 28;
+            default:
+                throw new IllegalArgumentException();
+        }        
+    }
 
     /**
      * Tests if supplied date is within calendar.
@@ -100,6 +129,28 @@ public final class CalendarUtils {
         String month = MonthInYear.byJavaCalendarIndex(cal.get(Calendar.MONTH)).code();
         return CalendarUtils.isEmptyOrInclusive(weekdays, weekDay) && CalendarUtils.isEmptyOrInclusive(days, day)
                 && CalendarUtils.isEmptyOrInclusive(months, month);
+    }
+
+    public static Date nextEligibleDate(String[] weekdays, String[] days, String[] months, Date date)
+            throws UnifyException {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
+        cal.setTime(cal.getTime());
+
+        int[] eMonths = MonthInYear.getJavaCalendarIndexes(months);
+        CalendarUtils.nextEligibleMonth(eMonths, cal);
+
+        int[] eWeekDays = DayInWeek.getJavaCalendarIndexes(weekdays);
+        if (eWeekDays != null && eWeekDays.length > 0) {
+            CalendarUtils.nextEligibleDayOfWeek(eMonths, eWeekDays, cal);
+        } else {
+            int[] eDays = DataUtils.convert(int[].class, days, null);
+            if (eDays != null && eDays.length > 0) {
+                CalendarUtils.nextEligibleDay(eMonths, eDays, cal);
+            }
+        }
+        return cal.getTime();
     }
 
     /**
@@ -343,6 +394,86 @@ public final class CalendarUtils {
      */
     public static Date parseRfc822Date(String dateString) throws UnifyException {
         return CalendarUtils.parse(RFC822_DATEFORMAT, dateString);
+    }
+
+    private static boolean nextEligibleDayOfWeek(int[] eMonths, int[] eWeekDays, Calendar cal) {
+        int cWeekDay = cal.get(Calendar.DAY_OF_WEEK);
+        int eWeekDay = CalendarUtils.eligibleCalendarIndex(eWeekDays, cWeekDay, 7);
+        if (eWeekDay != cWeekDay) {
+            int daysOff = eWeekDay - cWeekDay;
+            if (daysOff < 0) {
+                daysOff += 7;
+            }
+
+            cal.add(Calendar.DATE, daysOff);
+            cal.setTime(cal.getTime());
+
+            if (CalendarUtils.nextEligibleMonth(eMonths, cal)) {
+                CalendarUtils.nextEligibleDayOfWeek(eMonths, eWeekDays, cal);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean nextEligibleDay(int[] eMonths, int[] eDays, Calendar cal) {
+        int maxDays = CalendarUtils.getDaysInMonth(cal);
+        int cDay = cal.get(Calendar.DAY_OF_MONTH);
+        int eDay = CalendarUtils.eligibleCalendarIndex(eDays, cDay, maxDays);
+        if (eDay != cDay) {
+            int daysOff = eDay - cDay;
+            if (daysOff < 0) {
+                daysOff = (maxDays - cDay) + eDay;
+            }
+
+            cal.add(Calendar.DATE, daysOff);
+            cal.setTime(cal.getTime());
+
+            if (CalendarUtils.nextEligibleMonth(eMonths, cal)) {
+                CalendarUtils.nextEligibleDay(eMonths, eDays, cal);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean nextEligibleMonth(int[] eMonths, Calendar cal) {
+        int cMonth = cal.get(Calendar.MONTH);
+        int eMonth = CalendarUtils.eligibleCalendarIndex(eMonths, cMonth, 11);
+        if (eMonth != cMonth) {
+            if (eMonth < cMonth) {
+                cal.add(Calendar.YEAR, 1);
+            }
+
+            cal.set(Calendar.MONTH, eMonth);
+            cal.set(Calendar.DATE, 1);
+            cal.setTime(cal.getTime());
+            return true;
+        }
+
+        return false;
+    }
+
+    private static int eligibleCalendarIndex(int[] indexes, int index, int maxIndex) {
+        if (indexes != null && indexes.length > 0) {
+            Arrays.sort(indexes);
+            for (int i = 0; i < indexes.length; i++) {
+                int eIndex = indexes[i];
+                if (eIndex > maxIndex) {
+                    break;
+                }
+                
+                if (index <= eIndex) {
+                    return eIndex;
+                }
+            }
+
+            return indexes[0];
+        }
+
+        return index;
     }
 
     private static boolean isEmptyOrInclusive(String[] values, String value) {
