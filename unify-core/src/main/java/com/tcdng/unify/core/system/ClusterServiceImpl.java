@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
@@ -64,9 +66,12 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 
     private List<String> dbLockList;
 
+    private Set<String> pseudoLocks;
+    
     public ClusterServiceImpl() {
         lockList = new ReentrantLockFactoryMap<String>();
         dbLockList = new ArrayList<String>();
+        pseudoLocks = new HashSet<String>();
     }
 
     @Override
@@ -108,6 +113,8 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         if (isClusterMode()) {
             return grabDbLock(lockName, true);
         }
+        
+        pseudoLocks.add(lockName);
         return true;
     }
 
@@ -117,7 +124,8 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
             String lockOwnerId = getLockOwnerId(true);
             return db().countAll(new ClusterLockQuery().lockName(lockName).currentOwner(lockOwnerId)) > 0;
         }
-        return true;
+
+        return pseudoLocks.contains(lockName);
     }
 
     @Override
@@ -125,7 +133,8 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         if (isClusterMode()) {
             return releaseDbLock(lockName, true);
         }
-        return true;
+        
+        return pseudoLocks.remove(lockName);
     }
 
     @Override
