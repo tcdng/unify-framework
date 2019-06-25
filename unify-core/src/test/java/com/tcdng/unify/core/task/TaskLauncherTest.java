@@ -32,7 +32,7 @@ public class TaskLauncherTest extends AbstractUnifyComponentTest {
         while (!monitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, monitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
         assertEquals("Elmer Fudd", monitor.getTaskOutput(0).getResult(String.class, "message"));
     }
 
@@ -45,7 +45,7 @@ public class TaskLauncherTest extends AbstractUnifyComponentTest {
         while (!monitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, monitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
         assertEquals(Integer.valueOf(250000),
                 monitor.getTaskOutput(0).getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
     }
@@ -58,7 +58,7 @@ public class TaskLauncherTest extends AbstractUnifyComponentTest {
         while (!monitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, monitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
         assertEquals(Integer.valueOf(0),
                 monitor.getTaskOutput(0).getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
     }

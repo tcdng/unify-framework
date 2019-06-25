@@ -83,12 +83,12 @@ public class TaskMonitorInfo {
             case CANCELED:
             case FAILED:
                 return FAIL;
-            case COMPLETED:
+            case SUCCESSFUL:
                 if (taskMonitor.isExceptions()) {
                     return ERROR;
                 }
                 return PASS;
-            case INITIALISED:
+            case INITIALIZED:
             default:
                 return BUSY;
         }

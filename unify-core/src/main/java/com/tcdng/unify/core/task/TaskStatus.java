@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("taskstatuslist")
 public enum TaskStatus implements EnumConst {
 
-    INITIALISED("I"), RUNNING("R"), COMPLETED("C"), CANCELED("X"), FAILED("F"), ABORTED("A"), CRITICAL("T");
+    INITIALIZED("I"), RUNNING("R"), SUCCESSFUL("S"), CANCELED("X"), FAILED("F"), ABORTED("A"), CRITICAL("T");
 
     private final String code;
 

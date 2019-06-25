@@ -437,7 +437,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                         tasks[i].execute(taskMonitor, taskInfo.getTaskInput(), taskInfo.getTaskOutput());
 
                         if (!taskMonitor.isCanceled()) {
-                            removeTask(taskInfo, TaskStatus.COMPLETED, periodic);
+                            removeTask(taskInfo, TaskStatus.SUCCESSFUL, periodic);
                         }
                     }
 
@@ -517,7 +517,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
             this.taskID = taskID;
             this.taskInput = taskInput;
             this.taskOutput = taskOutput;
-            taskStatus = TaskStatus.INITIALISED;
+            taskStatus = TaskStatus.INITIALIZED;
         }
 
         public TaskStatus getTaskStatus() {
@@ -600,7 +600,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
         public boolean isPending() {
             if (!canceled) {
                 TaskStatus taskStatus = taskInfoList.get(taskInfoList.size() - 1).getTaskStatus();
-                return TaskStatus.INITIALISED.equals(taskStatus) || TaskStatus.RUNNING.equals(taskStatus);
+                return TaskStatus.INITIALIZED.equals(taskStatus) || TaskStatus.RUNNING.equals(taskStatus);
             }
 
             return false;
@@ -614,7 +614,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
         @Override
         public boolean isDone() {
             TaskStatus taskStatus = taskInfoList.get(taskInfoList.size() - 1).getTaskStatus();
-            return TaskStatus.COMPLETED.equals(taskStatus) || TaskStatus.CANCELED.equals(taskStatus)
+            return TaskStatus.SUCCESSFUL.equals(taskStatus) || TaskStatus.CANCELED.equals(taskStatus)
                     || TaskStatus.FAILED.equals(taskStatus) || TaskStatus.ABORTED.equals(taskStatus);
         }
 
