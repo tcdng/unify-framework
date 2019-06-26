@@ -48,12 +48,12 @@ import com.tcdng.unify.web.ui.ListParamType;
 public class MoneyField extends AbstractListPopupTextField {
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
         int scale = getUplAttribute(int.class, "scale");
         numberFormatter.setScale(scale);
 
-        super.onPageInitialize();
+        super.onPageConstruct();
     }
 
     @Override

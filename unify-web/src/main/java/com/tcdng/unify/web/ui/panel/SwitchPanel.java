@@ -41,8 +41,8 @@ public class SwitchPanel extends AbstractPanel {
     private boolean firstSwitch;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         firstSwitch = true;
         switchHandlerName = getUplAttribute(String.class, "switchHandler");
         for (String longName : getLayoutWidgetLongNames()) {

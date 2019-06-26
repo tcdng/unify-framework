@@ -38,8 +38,8 @@ public class ShiftButtons extends AbstractMultiControl {
     private Control shiftBottomCtrl;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         shiftTopCtrl = addInternalChildControl(
                 "!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
                 false);

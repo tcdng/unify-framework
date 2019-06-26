@@ -46,8 +46,8 @@ public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image hintBinding:caption");
     }
 

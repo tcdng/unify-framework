@@ -479,11 +479,11 @@ public interface Widget extends UplComponent {
     void addPageAliases() throws UnifyException;
 
     /**
-     * Executed on page initialization. Called by framework after all component
-     * properties have been set and containing page is initialized.
+     * Executed on page construction. Called by framework after all component
+     * properties have been set and containing page is constructed.
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    void onPageInitialize() throws UnifyException;
+    void onPageConstruct() throws UnifyException;
 }

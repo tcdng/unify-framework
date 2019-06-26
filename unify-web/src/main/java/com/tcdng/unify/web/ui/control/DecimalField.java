@@ -34,11 +34,11 @@ import com.tcdng.unify.core.format.NumberFormatter;
 public class DecimalField extends IntegerField {
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
         int scale = getUplAttribute(int.class, "scale");
         numberFormatter.setScale(scale);
 
-        super.onPageInitialize();
+        super.onPageConstruct();
     }
 }

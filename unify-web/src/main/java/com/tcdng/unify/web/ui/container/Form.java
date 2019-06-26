@@ -51,8 +51,8 @@ public class Form extends AbstractContainer {
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
 
         Section[] sections = getUplAttribute(Section[].class, "section");
         formSections = new FormSection[sections.length];

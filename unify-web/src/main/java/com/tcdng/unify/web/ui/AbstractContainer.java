@@ -246,7 +246,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         int childIndex = internalControls.size();
         String childId = WidgetUtils.getChildId(getId(), control.getId(), childIndex);
         control.setId(childId);
-        control.onPageInitialize();
+        control.onPageConstruct();
         control.setContainer(getContainer());
         setWidgetValueBeanToThis(control);
         internalControls.put(childId, control);

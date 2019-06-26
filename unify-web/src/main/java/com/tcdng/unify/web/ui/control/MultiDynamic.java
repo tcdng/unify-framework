@@ -41,7 +41,7 @@ public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.Val
     private DynamicField valueCtrl;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         valueCtrl = (DynamicField) addInternalChildControl("!ui-dynamic binding:value descriptorBinding:editor");
     }
 

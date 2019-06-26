@@ -115,7 +115,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     private String dataGroupId;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         viewIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:viewIndex");
         if (isPagination()) {
             currentPageCtrl = (Control) addInternalChildControl("!ui-hidden binding:currentPage");
