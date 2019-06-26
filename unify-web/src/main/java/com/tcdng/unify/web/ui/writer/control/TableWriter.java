@@ -22,7 +22,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.EventHandler;
 import com.tcdng.unify.web.ui.PushType;
@@ -52,7 +51,11 @@ public class TableWriter extends AbstractControlWriter {
         Table table = (Table) widget;
         table.pageCalculations();
         writer.write("<div");
-        writeTagStyleClass(writer, table);
+        if (table.isContentEllipsis()) {
+            writeTagStyleClass(writer, table, "ui-table-cellipsis");
+        } else {
+            writeTagStyleClass(writer, table);
+        }        
         writeTagStyle(writer, table);
         writer.write(">");
         if (table.isWindowed()) {
@@ -154,16 +157,16 @@ public class TableWriter extends AbstractControlWriter {
         for (; index < lastIndex; index++) {
             ValueStore itemValueStore = writeRowList.get(index).getItemValueStore();
 
-            for (AbstractMultiControl.ChildControlInfo childControlInfo : table.getChildControlInfos()) {
-                if (childControlInfo.isExternal()) {
-                    Control control = childControlInfo.getControl();
+            for (Column column : table.getColumnList()) {
+                if (column.isVisible()) {
+                    Control control = column.getControl();
                     control.setValueStore(itemValueStore);
                     writer.writeBehaviour(control);
                 }
             }
         }
 
-        // Row behaviour if any
+        // Row behavior if any
         EventHandler[] rowEventHandlers = table.getUplAttribute(EventHandler[].class, "rowEventHandler");
         if (rowEventHandlers != null) {
             for (EventHandler rowEventHandler : rowEventHandlers) {
@@ -270,13 +273,19 @@ public class TableWriter extends AbstractControlWriter {
             table.incrementVisibleColumnCount();
         }
 
+        boolean isHeaderEllipsis = table.isHeaderEllipsis();
         for (Column column : table.getColumnList()) {
             if (column.isVisible()) {
                 Control control = column.getControl();
                 writer.write("<th");
                 writeTagStyleClass(writer, "tth");
                 writeTagStyle(writer, HtmlUtils.extractStyleAttribute(control.getColumnStyle(), "width"));
-                writer.write("><span style=\"vertical-align:middle;\">");
+                if (isHeaderEllipsis) {
+                    writer.write("><span class=\"theadtitle theadellipsis\">");
+                } else {
+                    writer.write("><span class=\"theadtitle\">");
+                }
+
                 String caption = control.getCaption();
                 if (caption != null) {
                     writer.write(caption);
@@ -286,7 +295,7 @@ public class TableWriter extends AbstractControlWriter {
 
                 if (column.isSortable()) {
                     writer.write(
-                            "</span>&nbsp;&nbsp;<span style=\"display:inline-block;width:18px;vertical-align:middle;\">");
+                            "</span>&nbsp;&nbsp;<span class=\"theadwdg\">");
                     Control imageCtrl = null;
                     if (column.isAscending()) {
                         imageCtrl = table.getAscImageCtrl();

@@ -41,16 +41,19 @@ import com.tcdng.unify.web.ui.EventHandler;
  * @since 1.0
  */
 @Component("ui-table")
-@UplAttributes({ @UplAttribute(name = "bodyStyle", type = String.class),
+@UplAttributes({
+        @UplAttribute(name = "bodyStyle", type = String.class),
         @UplAttribute(name = "selectBinding", type = String.class),
         @UplAttribute(name = "contentDependentList", type = UplElementReferences.class),
-        @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "multiSelDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "multiSelect", type = boolean.class),
         @UplAttribute(name = "pagination", type = boolean.class),
+        @UplAttribute(name = "rowSelectable", type = boolean.class),
         @UplAttribute(name = "serialNumbers", type = boolean.class),
         @UplAttribute(name = "windowed", type = boolean.class),
-        @UplAttribute(name = "rowSelectable", type = boolean.class),
-        @UplAttribute(name = "multiSelect", type = boolean.class),
+        @UplAttribute(name = "headerEllipsis", type = boolean.class),
+        @UplAttribute(name = "contentEllipsis", type = boolean.class),
         @UplAttribute(name = "rowEventHandler", type = EventHandler[].class) })
 public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
@@ -202,6 +205,14 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public boolean isSortable() throws UnifyException {
         return sortable;
+    }
+
+    public boolean isHeaderEllipsis() throws UnifyException {
+        return getUplAttribute(boolean.class, "headerEllipsis");
+    }
+
+    public boolean isContentEllipsis() throws UnifyException {
+        return getUplAttribute(boolean.class, "contentEllipsis");
     }
 
     public String getDataGroupId() {

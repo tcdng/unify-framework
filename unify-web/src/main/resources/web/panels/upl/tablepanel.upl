@@ -8,4 +8,6 @@
     windowed:$f{tableWindowed} pagination:$f{tablePagination}
     multiSelect:$f{tableMultiSelect} multiSelDependentList:$f{tableMultiSelDependentList}
     sortable:$f{tableSortable}
+    headerEllipsis:$f{tableHeaderEllipsis}
+    contentEllipsis:$f{tableContentEllipsis}
     binding:$f{tableBinding} components:$f{tableColumnList}
