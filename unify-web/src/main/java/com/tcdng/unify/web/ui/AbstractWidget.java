@@ -319,7 +319,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
 
     }
 

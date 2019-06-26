@@ -37,8 +37,8 @@ public class TimeField extends AbstractTimeField {
     private DateTimeFormat[] dateTimeFormat;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
 
         Pattern[] pattern = super.getPattern();
         dateTimeFormat = new DateTimeFormat[pattern.length];

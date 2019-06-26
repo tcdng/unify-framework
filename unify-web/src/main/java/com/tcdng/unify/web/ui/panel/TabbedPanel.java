@@ -42,8 +42,8 @@ public class TabbedPanel extends SwitchPanel {
     private String activeTabId;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         setComponentValueBeanToThis("selectedTabId");
         for (String longName : getLayoutWidgetLongNames()) {
             Widget widget = getWidgetByLongName(longName);

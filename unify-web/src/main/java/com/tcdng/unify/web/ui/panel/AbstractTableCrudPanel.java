@@ -67,8 +67,8 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         setFormMode(FORMMODE.CREATE, null);
     }
 

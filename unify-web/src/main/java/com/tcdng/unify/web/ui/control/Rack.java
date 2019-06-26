@@ -42,14 +42,14 @@ public class Rack extends Table {
     private int shiftDirection;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         StringBuilder sb = new StringBuilder(
                 "!ui-shiftbuttons  caption:$m{table.rack.shift} columnStyle:$s{width:100px;} style:$s{text-align:center;}");
         appendUplAttribute(sb, "binding");
         shiftCtrl = (ShiftButtons) addExternalChildControl(sb.toString());
         shiftDirectionCtrl = (Control) addInternalChildControl("!ui-hidden binding:shiftDirection");
 
-        super.onPageInitialize();
+        super.onPageConstruct();
     }
 
     @Override

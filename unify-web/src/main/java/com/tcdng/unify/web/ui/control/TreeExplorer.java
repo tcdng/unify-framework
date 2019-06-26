@@ -71,7 +71,7 @@ public class TreeExplorer extends AbstractMultiControl {
     private Tree tree;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         eventTypeCtrl = (Control) addInternalChildControl("!ui-hidden binding:eventType");
         menuCodeCtrl = (Control) addInternalChildControl("!ui-hidden binding:menuCode");
         selectedItemIdsCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedItemIds");

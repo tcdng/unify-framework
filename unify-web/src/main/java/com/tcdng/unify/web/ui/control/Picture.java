@@ -38,7 +38,7 @@ public class Picture extends AbstractMultiControl {
     private UploadedFile[] uploadedFile;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         fileControl = (Control) addInternalChildControl(
                 "!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");
         StringBuilder sb = new StringBuilder();

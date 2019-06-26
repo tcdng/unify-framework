@@ -39,8 +39,8 @@ public class AccordionPanel extends AbstractPanel {
     private boolean collapsed;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         currentSelCtrl = (Control) addInternalControl("!ui-hidden binding:currentSel");
     }
 

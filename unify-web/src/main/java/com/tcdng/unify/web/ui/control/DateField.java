@@ -41,8 +41,8 @@ public class DateField extends AbstractTimeField {
     private String[] longMonthList;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
 
         // Preset date-time format for month and pattern aliases
         Formatter<?> formatter = getFormatter();

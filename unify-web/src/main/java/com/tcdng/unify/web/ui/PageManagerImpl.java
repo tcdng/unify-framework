@@ -298,6 +298,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         String spLongName = uplDocumentAttributes.getLongName();
         String id = getPageName(spLongName);
 
+        // Construct
         StandalonePanelContext ctx =
                 new StandalonePanelContext(standalonePanelInfoByNameMap.get(locale, name, uplDocumentAttributes));
         StandalonePanelInfo standalonePanelInfo = ctx.getStandalonePanelInfo();
@@ -337,11 +338,11 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
             }
         }
 
-        // Perform page initialization
+        // Perform page on construction
         for (Widget widget : ctx.getWidgets()) {
-            widget.onPageInitialize();
+            widget.onPageConstruct();
         }
-        standalonePanel.onPageInitialize();
+        standalonePanel.onPageConstruct();
 
         return standalonePanel;
     }

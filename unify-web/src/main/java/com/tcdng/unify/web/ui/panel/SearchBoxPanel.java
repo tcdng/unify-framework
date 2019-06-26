@@ -47,8 +47,8 @@ public class SearchBoxPanel extends AbstractPanel {
     private List<?> resultList;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         setComponentValueBeanToThis("filter");
         setComponentValueBeanToThis("searchResultTablePanel");
     }

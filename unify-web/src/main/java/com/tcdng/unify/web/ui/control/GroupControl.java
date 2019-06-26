@@ -36,8 +36,8 @@ public class GroupControl extends AbstractMultiControl implements Control {
     private String dataGroupId;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         dataGroupId = getPrefixedId("data_");
     }
 

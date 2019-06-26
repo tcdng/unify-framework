@@ -33,11 +33,11 @@ import com.tcdng.unify.core.format.NumberFormatter;
 public class IntegerField extends AbstractNumberField {
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
         numberFormatter.setPrecision(getUplAttribute(int.class, "precision"));
         numberFormatter.setGroupingUsed(getUplAttribute(boolean.class, "useGrouping"));
 
-        super.onPageInitialize();
+        super.onPageConstruct();
     }
 }
