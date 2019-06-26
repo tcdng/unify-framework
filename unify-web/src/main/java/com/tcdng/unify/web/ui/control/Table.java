@@ -166,7 +166,9 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public void reset() throws UnifyException {
         currentPage = 0;
         for (Column column : getColumnList()) {
-            column.setAscending(true);
+            if (column.isVisible()) {
+                column.setAscending(true);
+            }
         }
     }
 
@@ -376,6 +378,15 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public void setColumnIndex(int columnIndex) {
         this.columnIndex = columnIndex;
+    }
+
+    public void setColumnVisible(String shortName, boolean visible) throws UnifyException {
+        for(Column column: getColumnList()) {
+            if (shortName.equals(column.getShortName())) {
+                column.setVisible(visible);
+                break;
+            }
+        }
     }
 
     public boolean isSortDirection() {
@@ -643,10 +654,6 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             this.control = control;
         }
 
-        public Control getControl() {
-            return control;
-        }
-
         @Override
         public boolean isSortable() throws UnifyException {
             return control.getUplAttribute(boolean.class, "sortable");
@@ -664,6 +671,22 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         @Override
         public String getFieldName() throws UnifyException {
             return control.getBinding();
+        }
+
+        public Control getControl() {
+            return control;
+        }
+        
+        public String getShortName() throws UnifyException {
+            return control.getShortName();
+        }
+        
+        public void setVisible(boolean visible) {
+            control.setVisible(visible);
+        }
+        
+        public boolean isVisible() throws UnifyException {
+            return control.isVisible();
         }
     }
 
