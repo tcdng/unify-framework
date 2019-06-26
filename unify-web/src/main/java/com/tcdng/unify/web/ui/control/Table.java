@@ -41,16 +41,19 @@ import com.tcdng.unify.web.ui.EventHandler;
  * @since 1.0
  */
 @Component("ui-table")
-@UplAttributes({ @UplAttribute(name = "bodyStyle", type = String.class),
+@UplAttributes({
+        @UplAttribute(name = "bodyStyle", type = String.class),
         @UplAttribute(name = "selectBinding", type = String.class),
         @UplAttribute(name = "contentDependentList", type = UplElementReferences.class),
-        @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "multiSelDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "multiSelect", type = boolean.class),
         @UplAttribute(name = "pagination", type = boolean.class),
+        @UplAttribute(name = "rowSelectable", type = boolean.class),
         @UplAttribute(name = "serialNumbers", type = boolean.class),
         @UplAttribute(name = "windowed", type = boolean.class),
-        @UplAttribute(name = "rowSelectable", type = boolean.class),
-        @UplAttribute(name = "multiSelect", type = boolean.class),
+        @UplAttribute(name = "headerEllipsis", type = boolean.class),
+        @UplAttribute(name = "contentEllipsis", type = boolean.class),
         @UplAttribute(name = "rowEventHandler", type = EventHandler[].class) })
 public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
@@ -166,7 +169,9 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public void reset() throws UnifyException {
         currentPage = 0;
         for (Column column : getColumnList()) {
-            column.setAscending(true);
+            if (column.isVisible()) {
+                column.setAscending(true);
+            }
         }
     }
 
@@ -200,6 +205,14 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public boolean isSortable() throws UnifyException {
         return sortable;
+    }
+
+    public boolean isHeaderEllipsis() throws UnifyException {
+        return getUplAttribute(boolean.class, "headerEllipsis");
+    }
+
+    public boolean isContentEllipsis() throws UnifyException {
+        return getUplAttribute(boolean.class, "contentEllipsis");
     }
 
     public String getDataGroupId() {
@@ -376,6 +389,15 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public void setColumnIndex(int columnIndex) {
         this.columnIndex = columnIndex;
+    }
+
+    public void setColumnVisible(String shortName, boolean visible) throws UnifyException {
+        for(Column column: getColumnList()) {
+            if (shortName.equals(column.getShortName())) {
+                column.setVisible(visible);
+                break;
+            }
+        }
     }
 
     public boolean isSortDirection() {
@@ -643,10 +665,6 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             this.control = control;
         }
 
-        public Control getControl() {
-            return control;
-        }
-
         @Override
         public boolean isSortable() throws UnifyException {
             return control.getUplAttribute(boolean.class, "sortable");
@@ -664,6 +682,22 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         @Override
         public String getFieldName() throws UnifyException {
             return control.getBinding();
+        }
+
+        public Control getControl() {
+            return control;
+        }
+        
+        public String getShortName() throws UnifyException {
+            return control.getShortName();
+        }
+        
+        public void setVisible(boolean visible) {
+            control.setVisible(visible);
+        }
+        
+        public boolean isVisible() throws UnifyException {
+            return control.isVisible();
         }
     }
 

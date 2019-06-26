@@ -193,6 +193,31 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * 
      * @param writer
      *            the writer to use to write
+     * @param widget
+     *            the widget whose style class to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, String... extraClasses) throws UnifyException {
+        writer.write(" class=\"").write(widget.getStyleClass());
+        for(String extraClass: extraClasses) {
+            if (extraClass != null) {
+                writer.write(" ").write(extraClass);
+            }
+        }
+
+        String valStyleClass = widget.getStyleClassValue();
+        if (valStyleClass != null) {
+            writer.write(" ").write(valStyleClass);
+        }
+        writer.write("\"");
+    }
+
+    /**
+     * Writes tag class attribute.
+     * 
+     * @param writer
+     *            the writer to use to write
      * @param styleClass
      *            the styleClass to write
      * @throws UnifyException

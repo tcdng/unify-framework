@@ -22,7 +22,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.EventHandler;
 import com.tcdng.unify.web.ui.PushType;
@@ -52,7 +51,11 @@ public class TableWriter extends AbstractControlWriter {
         Table table = (Table) widget;
         table.pageCalculations();
         writer.write("<div");
-        writeTagStyleClass(writer, table);
+        if (table.isContentEllipsis()) {
+            writeTagStyleClass(writer, table, "ui-table-cellipsis");
+        } else {
+            writeTagStyleClass(writer, table);
+        }        
         writeTagStyle(writer, table);
         writer.write(">");
         if (table.isWindowed()) {
@@ -154,16 +157,16 @@ public class TableWriter extends AbstractControlWriter {
         for (; index < lastIndex; index++) {
             ValueStore itemValueStore = writeRowList.get(index).getItemValueStore();
 
-            for (AbstractMultiControl.ChildControlInfo childControlInfo : table.getChildControlInfos()) {
-                if (childControlInfo.isExternal()) {
-                    Control control = childControlInfo.getControl();
+            for (Column column : table.getColumnList()) {
+                if (column.isVisible()) {
+                    Control control = column.getControl();
                     control.setValueStore(itemValueStore);
                     writer.writeBehaviour(control);
                 }
             }
         }
 
-        // Row behaviour if any
+        // Row behavior if any
         EventHandler[] rowEventHandlers = table.getUplAttribute(EventHandler[].class, "rowEventHandler");
         if (rowEventHandlers != null) {
             for (EventHandler rowEventHandler : rowEventHandlers) {
@@ -270,33 +273,41 @@ public class TableWriter extends AbstractControlWriter {
             table.incrementVisibleColumnCount();
         }
 
+        boolean isHeaderEllipsis = table.isHeaderEllipsis();
         for (Column column : table.getColumnList()) {
-            Control control = column.getControl();
-            writer.write("<th");
-            writeTagStyleClass(writer, "tth");
-            writeTagStyle(writer, HtmlUtils.extractStyleAttribute(control.getColumnStyle(), "width"));
-            writer.write("><span style=\"vertical-align:middle;\">");
-            String caption = control.getCaption();
-            if (caption != null) {
-                writer.write(caption);
-            } else {
-                writer.writeHtmlFixedSpace();
-            }
-
-            if (column.isSortable()) {
-                writer.write(
-                        "</span>&nbsp;&nbsp;<span style=\"display:inline-block;width:18px;vertical-align:middle;\">");
-                Control imageCtrl = null;
-                if (column.isAscending()) {
-                    imageCtrl = table.getAscImageCtrl();
+            if (column.isVisible()) {
+                Control control = column.getControl();
+                writer.write("<th");
+                writeTagStyleClass(writer, "tth");
+                writeTagStyle(writer, HtmlUtils.extractStyleAttribute(control.getColumnStyle(), "width"));
+                if (isHeaderEllipsis) {
+                    writer.write("><span class=\"theadtitle theadellipsis\">");
                 } else {
-                    imageCtrl = table.getDescImageCtrl();
+                    writer.write("><span class=\"theadtitle\">");
                 }
-                writer.writeStructureAndContent(imageCtrl, imageCtrl.getPrefixedId(column.getFieldName() + '_'));
-                writer.write("</span>");
+
+                String caption = control.getCaption();
+                if (caption != null) {
+                    writer.write(caption);
+                } else {
+                    writer.writeHtmlFixedSpace();
+                }
+
+                if (column.isSortable()) {
+                    writer.write(
+                            "</span>&nbsp;&nbsp;<span class=\"theadwdg\">");
+                    Control imageCtrl = null;
+                    if (column.isAscending()) {
+                        imageCtrl = table.getAscImageCtrl();
+                    } else {
+                        imageCtrl = table.getDescImageCtrl();
+                    }
+                    writer.writeStructureAndContent(imageCtrl, imageCtrl.getPrefixedId(column.getFieldName() + '_'));
+                    writer.write("</span>");
+                }
+                writer.write("</th>");
+                table.incrementVisibleColumnCount();
             }
-            writer.write("</th>");
-            table.incrementVisibleColumnCount();
         }
         writer.write("</tr>");
     }
@@ -370,9 +381,9 @@ public class TableWriter extends AbstractControlWriter {
                 }
 
                 ValueStore itemValueStore = row.getItemValueStore();
-                for (AbstractMultiControl.ChildControlInfo childControlInfo : table.getChildControlInfos()) {
-                    if (childControlInfo.isExternal()) {
-                        Control control = childControlInfo.getControl();
+                for (Column column : table.getColumnList()) {
+                    if (column.isVisible()) {
+                        Control control = column.getControl();
                         control.setDisabled(isContainerDisabled);
                         control.setEditable(isContainerEditable);
                         control.setGroupId(dataGroupId);
@@ -411,15 +422,15 @@ public class TableWriter extends AbstractControlWriter {
             writer.write("</td></tr>");
         }
     }
-    
+
     private String getSelectClassName() throws UnifyException {
         if (!StringUtils.isBlank(getUserToken().getColorScheme())) {
             return SELECT_CLASSNAME_BASE + getUserToken().getColorScheme();
         }
-        
+
         return SELECT_CLASSNAME_BASE;
     }
-    
+
     private void writePaginationRow(ResponseWriter writer, Table table) throws UnifyException {
         writer.write("<table class=\"tpagn\" style=\"table-layout:fixed;width:100%;\"><tr>");
         writer.write("<td class=\"tpnavleft\">");
