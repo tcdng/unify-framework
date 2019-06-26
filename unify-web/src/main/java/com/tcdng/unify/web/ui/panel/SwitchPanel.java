@@ -17,6 +17,9 @@ package com.tcdng.unify.web.ui.panel;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.AbstractPanel;
 import com.tcdng.unify.web.ui.Widget;
 
@@ -28,11 +31,39 @@ import com.tcdng.unify.web.ui.Widget;
  * @since 1.0
  */
 @Component("ui-switchpanel")
+@UplAttributes({ @UplAttribute(name = "switchHandler", type = String.class) })
 public class SwitchPanel extends AbstractPanel {
 
     private String currentComponent;
 
+    private String switchHandlerName;
+
+    private boolean firstSwitch;
+
+    @Override
+    public void onPageInitialize() throws UnifyException {
+        super.onPageInitialize();
+        firstSwitch = true;
+        switchHandlerName = getUplAttribute(String.class, "switchHandler");
+        for (String longName : getLayoutWidgetLongNames()) {
+            Widget widget = getWidgetByLongName(longName);
+            if (!widget.isHidden()) {
+                currentComponent = widget.getShortName();
+                break;
+            }
+        }
+    }
+
     public void switchContent(String shortName) throws UnifyException {
+        boolean isSwitch = firstSwitch || !shortName.equals(currentComponent);
+        if (firstSwitch) {
+            firstSwitch = false;
+        }
+
+        if (isSwitch && !StringUtils.isBlank(switchHandlerName)) {
+            SwitchPanelHandler switchPanelHandler = (SwitchPanelHandler) getComponent(switchHandlerName);
+            switchPanelHandler.handleSwitch(shortName, getValueStore());
+        }
         currentComponent = shortName;
     }
 
@@ -41,18 +72,5 @@ public class SwitchPanel extends AbstractPanel {
             return getWidgetByShortName(currentComponent);
         }
         return null;
-    }
-
-    @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
-
-        for (String longName : getLayoutWidgetLongNames()) {
-            Widget widget = getWidgetByLongName(longName);
-            if (!widget.isHidden()) {
-                currentComponent = widget.getShortName();
-                break;
-            }
-        }
     }
 }
