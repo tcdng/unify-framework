@@ -35,8 +35,10 @@ public interface SwitchPanelHandler extends UnifyComponent {
      *            short name of the component switched to
      * @param valueStore
      *            the switch panel value store
+     * @param isNewSwitch
+     *            indicates of new tab component is switched to
      * @throws UnifyException
      *             if an error occurs
      */
-    void handleSwitch(String compShortName, ValueStore valueStore) throws UnifyException;
+    void handleSwitchContent(String compShortName, ValueStore valueStore, boolean isNewSwitch) throws UnifyException;
 }

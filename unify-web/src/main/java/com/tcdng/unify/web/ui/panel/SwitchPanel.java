@@ -36,15 +36,16 @@ public class SwitchPanel extends AbstractPanel {
 
     private String currentComponent;
 
-    private String switchHandlerName;
-
-    private boolean firstSwitch;
+    private SwitchPanelHandler switchPanelHandler;
 
     @Override
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
-        firstSwitch = true;
-        switchHandlerName = getUplAttribute(String.class, "switchHandler");
+        String switchHandlerName = getUplAttribute(String.class, "switchHandler");
+        if (!StringUtils.isBlank(switchHandlerName)) {
+            switchPanelHandler = (SwitchPanelHandler) getComponent(switchHandlerName);
+        }
+
         for (String longName : getLayoutWidgetLongNames()) {
             Widget widget = getWidgetByLongName(longName);
             if (!widget.isHidden()) {
@@ -55,15 +56,10 @@ public class SwitchPanel extends AbstractPanel {
     }
 
     public void switchContent(String shortName) throws UnifyException {
-        boolean isSwitch = firstSwitch || !shortName.equals(currentComponent);
-        if (firstSwitch) {
-            firstSwitch = false;
+        if (switchPanelHandler != null) {
+            switchPanelHandler.handleSwitchContent(shortName, getValueStore(), !shortName.equals(currentComponent));
         }
 
-        if (isSwitch && !StringUtils.isBlank(switchHandlerName)) {
-            SwitchPanelHandler switchPanelHandler = (SwitchPanelHandler) getComponent(switchHandlerName);
-            switchPanelHandler.handleSwitch(shortName, getValueStore());
-        }
         currentComponent = shortName;
     }
 
