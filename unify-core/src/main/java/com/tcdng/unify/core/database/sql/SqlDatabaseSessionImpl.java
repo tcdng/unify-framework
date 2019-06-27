@@ -463,7 +463,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
         try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
                     || (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
@@ -975,7 +975,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private int updateById(Entity record, boolean updateChild) throws UnifyException {
         int result;
         SqlStatement sqlStatement = null;
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         try {
             if (entityPolicy != null) {
@@ -1012,7 +1012,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private int updateByIdVersion(Entity record, boolean updateChild) throws UnifyException {
         int result;
         SqlStatement sqlStatement = null;
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         try {
             Object oldVersionNo = null;
