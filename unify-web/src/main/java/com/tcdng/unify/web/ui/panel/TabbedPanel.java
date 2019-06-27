@@ -57,6 +57,7 @@ public class TabbedPanel extends SwitchPanel {
     @Override
     @Action
     public void switchState() throws UnifyException {
+        super.switchState();
         String shortName = getWidgetByLongName(getPageManager().getLongName(activeTabId)).getShortName();
         switchContent(shortName);
     }
