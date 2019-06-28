@@ -31,6 +31,9 @@ public interface SwitchPanelHandler extends UnifyComponent {
     /**
      * Handles a switch.
      * 
+     * @param switchPanel
+     *            the calling switch panel
+     * 
      * @param compShortName
      *            short name of the component switched to
      * @param valueStore
@@ -40,5 +43,6 @@ public interface SwitchPanelHandler extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void handleSwitchContent(String compShortName, ValueStore valueStore, boolean isNewSwitch) throws UnifyException;
+    void handleSwitchContent(SwitchPanel switchPanel, String compShortName, ValueStore valueStore, boolean isNewSwitch)
+            throws UnifyException;
 }
