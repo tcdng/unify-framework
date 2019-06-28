@@ -38,11 +38,39 @@ public class PackableDocStore extends AbstractValueStore<PackableDoc> {
 
     @Override
     public boolean isGettable(String name) throws UnifyException {
+        if (name.startsWith(PackableDoc.RESERVED_EXT_FIELD)) {
+            int len = PackableDoc.RESERVED_EXT_FIELD.length();
+            if (name.length() == len) {
+                return true;
+            }
+
+            if (name.charAt(len) == '.') {
+                Object resrvExt = storage.getResrvExt();
+                if (resrvExt != null) {
+                    return ReflectUtils.isGettableField(resrvExt.getClass(), name.substring(len + 1));
+                }
+            }
+        }
+        
         return storage != null && storage.isField(name);
     }
 
     @Override
     public boolean isSettable(String name) throws UnifyException {
+        if (name.startsWith(PackableDoc.RESERVED_EXT_FIELD)) {
+            int len = PackableDoc.RESERVED_EXT_FIELD.length();
+            if (name.length() == len) {
+                return true;
+            }
+
+            if (name.charAt(len) == '.') {
+                Object resrvExt = storage.getResrvExt();
+                if (resrvExt != null) {
+                    return ReflectUtils.isSettableField(resrvExt.getClass(), name.substring(len + 1));
+                }
+            }
+        }
+        
         return storage != null && storage.isField(name);
     }
 

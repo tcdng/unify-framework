@@ -16,8 +16,10 @@
 package com.tcdng.unify.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -147,6 +149,38 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
         assertNotNull(acct);
         assertEquals("Bruce Banner", acct.getAccountNo());
         assertEquals(BigDecimal.ONE, acct.getBalance());
+    }
+
+    @Test
+    public void testReservedExtensionGettableNull() throws Exception {
+        PackableDocStore dvs = new PackableDocStore(new PackableDoc(custDocConfig, false));
+        assertTrue(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD));
+    }
+
+    @Test
+    public void testReservedExtensionGettable() throws Exception {
+        PackableDoc pd = new PackableDoc(custDocConfig, false);
+        pd.setResrvExt(new Account());
+        PackableDocStore dvs = new PackableDocStore(pd);
+        assertTrue(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD+ ".accountNo"));
+        assertTrue(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD+ ".balance"));
+        assertFalse(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD+ ".details"));
+    }
+
+    @Test
+    public void testReservedExtensionSettableNull() throws Exception {
+        PackableDocStore dvs = new PackableDocStore(new PackableDoc(custDocConfig, false));
+        assertTrue(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD));
+    }
+
+    @Test
+    public void testReservedExtensionSettable() throws Exception {
+        PackableDoc pd = new PackableDoc(custDocConfig, false);
+        pd.setResrvExt(new Account());
+        PackableDocStore dvs = new PackableDocStore(pd);
+        assertTrue(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD+ ".accountNo"));
+        assertTrue(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD+ ".balance"));
+        assertFalse(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD+ ".details"));
     }
 
     @Override
