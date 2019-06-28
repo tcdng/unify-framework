@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
@@ -92,6 +93,60 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
     public void testStoreNullDocument() throws Exception {
         PackableDocStore dvs = new PackableDocStore(null);
         dvs.store("line12", "Rabbids");
+    }
+
+    @Test
+    public void testRetrieveReservedExtensionNull() throws Exception {
+        PackableDocStore dvs = new PackableDocStore(new PackableDoc(custDocConfig, false));
+        assertNull(dvs.retrieve(PackableDoc.RESERVED_EXT_FIELD));
+    }
+
+    @Test
+    public void testRetrieveReservedExtension() throws Exception {
+        PackableDoc pd = new PackableDoc(custDocConfig, false);
+        pd.setResrvExt(new Account("Amos", BigDecimal.valueOf(25.45)));
+        
+        PackableDocStore dvs = new PackableDocStore(pd);
+        Account acct = (Account) dvs.retrieve(PackableDoc.RESERVED_EXT_FIELD);
+        assertNotNull(acct);
+        assertEquals("Amos", acct.getAccountNo());
+        assertEquals(BigDecimal.valueOf(25.45), acct.getBalance());
+    }
+
+    @Test
+    public void testRetrieveReservedExtensionNested() throws Exception {
+        PackableDoc pd = new PackableDoc(custDocConfig, false);
+        pd.setResrvExt(new Account("Amos", BigDecimal.valueOf(25.45)));
+        
+        PackableDocStore dvs = new PackableDocStore(pd);
+        assertEquals("Amos", dvs.retrieve(PackableDoc.RESERVED_EXT_FIELD + ".accountNo"));
+        assertEquals(BigDecimal.valueOf(25.45), dvs.retrieve(PackableDoc.RESERVED_EXT_FIELD + ".balance"));
+    }
+
+    @Test
+    public void testStoreReservedExtension() throws Exception {
+        PackableDoc pd = new PackableDoc(custDocConfig, false);
+
+        PackableDocStore dvs = new PackableDocStore(pd);
+        dvs.store(PackableDoc.RESERVED_EXT_FIELD, new Account("Ben", BigDecimal.TEN));
+        Account acct = (Account) pd.getResrvExt();
+        assertNotNull(acct);
+        assertEquals("Ben", acct.getAccountNo());
+        assertEquals(BigDecimal.TEN, acct.getBalance());
+    }
+
+    @Test
+    public void testStoreReservedExtensionNested() throws Exception {
+        PackableDoc pd = new PackableDoc(custDocConfig, false);
+        pd.setResrvExt(new Account());
+        
+        PackableDocStore dvs = new PackableDocStore(pd);
+        dvs.store(PackableDoc.RESERVED_EXT_FIELD + ".accountNo", "Bruce Banner");
+        dvs.store(PackableDoc.RESERVED_EXT_FIELD + ".balance", BigDecimal.ONE);
+        Account acct = (Account) pd.getResrvExt();
+        assertNotNull(acct);
+        assertEquals("Bruce Banner", acct.getAccountNo());
+        assertEquals(BigDecimal.ONE, acct.getBalance());
     }
 
     @Override
