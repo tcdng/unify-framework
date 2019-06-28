@@ -57,7 +57,8 @@ public class SwitchPanel extends AbstractPanel {
 
     public void switchContent(String shortName) throws UnifyException {
         if (switchPanelHandler != null) {
-            switchPanelHandler.handleSwitchContent(shortName, getValueStore(), !shortName.equals(currentComponent));
+            switchPanelHandler.handleSwitchContent(this, shortName, getValueStore(),
+                    !shortName.equals(currentComponent));
         }
 
         currentComponent = shortName;
