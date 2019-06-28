@@ -45,21 +45,19 @@ public class TabbedPanel extends SwitchPanel {
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
         setComponentValueBeanToThis("selectedTabId");
-        for (String longName : getLayoutWidgetLongNames()) {
-            Widget widget = getWidgetByLongName(longName);
-            if (!widget.isHidden()) {
-                activeTabId = widget.getId();
-                break;
-            }
-        }
+        setDefaultActive();
     }
 
     @Override
     @Action
     public void switchState() throws UnifyException {
         super.switchState();
-        String shortName = getWidgetByLongName(getPageManager().getLongName(activeTabId)).getShortName();
-        switchContent(shortName);
+        Widget widget = getWidgetByLongName(getPageManager().getLongName(activeTabId));
+        if (!widget.isVisible()) {
+            widget = setDefaultActive();
+        }
+
+        switchContent(widget.getShortName());
     }
 
     public TabPosition getTabPosition() throws UnifyException {
@@ -76,6 +74,19 @@ public class TabbedPanel extends SwitchPanel {
 
     public void setActiveTabId(String activeTabPageName) {
         activeTabId = activeTabPageName;
+    }
+    
+    private Widget setDefaultActive() throws UnifyException {
+        for (String longName : getLayoutWidgetLongNames()) {
+            Widget widget = getWidgetByLongName(longName);
+            if (!widget.isHidden() && widget.isVisible()) {
+                activeTabId = widget.getId();
+                return widget;
+            }
+        }
+        
+        // TODO Throw exception here; there must be at least on visible tab
+        return null;
     }
 
     public List<String> getActiveTabExpandedIdList() throws UnifyException {

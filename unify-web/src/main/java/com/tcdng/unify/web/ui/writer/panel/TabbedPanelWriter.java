@@ -57,7 +57,7 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
         List<String> captionIds = new ArrayList<String>();
         for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
             Widget tabWidget = tabbedPanel.getWidgetByLongName(longName);
-            if (!tabWidget.isHidden()) {
+            if (!tabWidget.isHidden() && tabWidget.isVisible()) {
                 captionIds.add(tabWidget.getPrefixedId("cap_"));
             }
         }
@@ -130,7 +130,7 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
         writer.write("<ul class=\"ttab\">");
         for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
             Widget widget = tabbedPanel.getWidgetByLongName(longName);
-            if (!widget.isHidden()) {
+            if (!widget.isHidden() && widget.isVisible()) {
                 writer.write("<li id=\"").write(widget.getPrefixedId("cap_")).write("\"");
                 if (widget == currentWidget) {
                     writer.write("class=\"tactive\"");
