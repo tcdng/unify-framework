@@ -42,16 +42,20 @@ public class PackableDoc implements Serializable {
 
     private static final long serialVersionUID = 8352270606932913113L;
 
+    public transient static final String RESERVED_EXT_FIELD = "resrvExt";
+
     private Map<String, Object> values;
 
     private transient PackableDocConfig config;
 
     private transient Map<String, Object> oldValues;
 
+    private transient Object resrvExt;
+
     private transient boolean auditable;
 
     private transient boolean changed;
-
+    
     public PackableDoc(PackableDocConfig config) {
         this(config, false);
     }
@@ -160,6 +164,14 @@ public class PackableDoc implements Serializable {
         return config;
     }
 
+    public Object getResrvExt() {
+        return resrvExt;
+    }
+
+    public void setResrvExt(Object resrvExt) {
+        this.resrvExt = resrvExt;
+    }
+
     public boolean isAuditable() {
         return auditable;
     }
@@ -181,6 +193,10 @@ public class PackableDoc implements Serializable {
     }
 
     public Object readFieldValue(String name) throws UnifyException {
+        if (RESERVED_EXT_FIELD.equals(name)) {
+            return resrvExt;
+        }
+        
         config.getFieldConfig(name);
         return values.get(name);
     }
@@ -209,6 +225,11 @@ public class PackableDoc implements Serializable {
     }
 
     public void writeFieldValue(String name, Object value, Formatter<?> formatter) throws UnifyException {
+        if (RESERVED_EXT_FIELD.equals(name)) {
+            resrvExt = value;
+            return;
+        }
+        
         FieldConfig fc = config.getFieldConfig(name);
         if (fc.isComplex()) {
             throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_FIELD_COMPLEX_DIRECT_WRITE, name);
@@ -234,7 +255,7 @@ public class PackableDoc implements Serializable {
     }
 
     public boolean isField(String name) {
-        return config.getFieldNames().contains(name);
+        return PackableDoc.RESERVED_EXT_FIELD.equals(name) || config.getFieldNames().contains(name);
     }
 
     public int getFieldCount() {

@@ -17,6 +17,8 @@ package com.tcdng.unify.core.data;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
  * Packable document value store.
@@ -46,11 +48,35 @@ public class PackableDocStore extends AbstractValueStore<PackableDoc> {
 
     @Override
     protected Object doRetrieve(String property) throws UnifyException {
+        if (property.startsWith(PackableDoc.RESERVED_EXT_FIELD)) {
+            int len = PackableDoc.RESERVED_EXT_FIELD.length();
+            if (property.length() == len) {
+                return storage.getResrvExt();
+            }
+
+            if (property.charAt(len) == '.') {
+                return ReflectUtils.findNestedBeanProperty(storage.getResrvExt(), property.substring(len + 1));
+            }
+        }
+
         return storage.readFieldValue(property);
     }
 
     @Override
     protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
+        if (property.startsWith(PackableDoc.RESERVED_EXT_FIELD)) {
+            int len = PackableDoc.RESERVED_EXT_FIELD.length();
+            if (property.length() == len) {
+                storage.setResrvExt(value);
+                return;
+            }
+
+            if (property.charAt(len) == '.') {
+                DataUtils.setNestedBeanProperty(storage.getResrvExt(), property.substring(len + 1), value, formatter);
+                return;
+            }
+        }
+
         storage.writeFieldValue(property, value, formatter);
     }
 

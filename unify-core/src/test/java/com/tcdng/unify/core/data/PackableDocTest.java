@@ -339,6 +339,18 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertNotNull(packedDocument);
     }
 
+    @Test
+    public void testSimplePackDocumentWithReservedExtension() throws Exception {
+        Customer customer = new Customer("Latsman", new Date(), BigDecimal.valueOf(20.0), 12,
+                new Address("24 Parklane", "Apapa Lagos"));
+        customer.setModeList(Arrays.asList("A", "B", "C"));
+        PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+        pDoc.readFrom(custDocRwConfig, customer);
+        pDoc.setResrvExt(new Account("Tiwuya Hedima", BigDecimal.valueOf(200000)));
+        byte[] packedDocument = pDoc.pack();
+        assertNotNull(packedDocument);
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void testSimpleUnpackDocument() throws Exception {
@@ -369,6 +381,23 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals(Date.class, unpackedDocument.getFieldType("birthDt"));
         assertEquals(Address.class, unpackedDocument.getFieldType("address"));
         assertEquals(List.class, unpackedDocument.getFieldType("modeList"));
+    }
+
+    @Test
+    public void testSimpleUnpackDocumentWithReservedExtension() throws Exception {
+        Date birthDt = new Date();
+        Address address = new Address("24 Parklane", "Apapa Lagos");
+        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address);
+        List<String> modeList = Arrays.asList("A", "B", "C");
+        customer.setModeList(modeList);
+
+        PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+        pDoc.readFrom(custDocRwConfig, customer);
+        pDoc.setResrvExt(new Account("Aromnde Abatuba", BigDecimal.valueOf(200000)));
+        byte[] packedDocument = pDoc.pack();
+        PackableDoc unpackedDocument = PackableDoc.unpack(custDocConfig, packedDocument, false);
+        assertNotNull(unpackedDocument);
+        assertNull(unpackedDocument.getResrvExt()); // Reserved extension should be transient
     }
 
     @Test
