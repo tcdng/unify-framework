@@ -44,7 +44,10 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.write("<!DOCTYPE html>");
         writer.write("<html ");
         writeTagAttributes(writer, document);
-        writer.write("><head>");
+        writer.write(">");
+        
+        // Head
+        writer.write("<head>");
         // Write title
         writer.write("<title>");
         String title = document.getUplAttribute(String.class, "caption");
@@ -96,8 +99,27 @@ public class DocumentWriter extends AbstractPageWriter {
                 writeJavascript(writer, script);
             }
         }
+        writer.write("</head>");
+        
+        // Body
+        writer.write("<body class=\"dBody\"");
+        String style = document.getStyle();
+        String backImageSrc = document.getBackImageSrc();
+        if (!StringUtils.isBlank(backImageSrc)) {
+            writer.write(" style=\"background: url('");
+            writer.writeFileImageContextURL(backImageSrc);
+            writer.write("') no-repeat;background-size:100% 100%;");
+            if (style != null) {
+                writer.write(style);
+            }
+            writer.write("\"");
+        } else {
+            if (style != null) {
+                writer.write(" style=\"").write(style).write("\"");
+            }
+        }
 
-        writer.write("</head><body class=\"dBody\">");
+        writer.write(">");
 
         // Popup base
         writer.write("<div id=\"").write(document.getPopupBaseId()).write("\" class=\"dcpopbase\">");
