@@ -84,14 +84,14 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
         }
 
         // Fix refresh panels bug #0001
-        // Check standalone panels
+        // Check stand-alone panels
         if (standalonePanels != null) {
             StandalonePanel panel = standalonePanels.get(longName);
             if (panel != null) {
                 return panel;
             }
             
-            // Check standalone panel widgets
+            // Check stand-alone panel widgets
             for(StandalonePanel standalonePanel: standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {
                     return (Panel) standalonePanel.getWidgetByLongName(longName);
@@ -148,7 +148,14 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
         if (isWidget(longName)) {
             return super.getWidgetByLongName(longName);
         }
-
+        
+        // Fix 30/09/19 Long name may be referring to stand-alone panel
+        StandalonePanel panel = standalonePanels.get(longName);
+        if (panel != null) {
+            return panel;
+        }
+        // End fix
+        
         if (standalonePanels != null) {
             for (StandalonePanel standalonePanel : standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {
