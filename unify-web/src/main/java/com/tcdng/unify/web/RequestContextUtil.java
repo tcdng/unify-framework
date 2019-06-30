@@ -373,14 +373,14 @@ public interface RequestContextUtil extends UnifyComponent {
      * Adds a user hint message to current request in {@link Hint.MODE#INFO} mode
      * using supplied message key and optional parameters.
      * 
-     * @param messageKey
-     *            the resource bundle message key
+     * @param message
+     *            the message to hint user
      * @param params
      *            the message parameters
      * @throws UnifyException
      *             if an error occurs
      */
-    void hintUser(String messageKey, Object... params) throws UnifyException;
+    void hintUser(String message, Object... params) throws UnifyException;
 
     /**
      * Adds a user hint message to current request using supplied hint mode, message
@@ -388,14 +388,14 @@ public interface RequestContextUtil extends UnifyComponent {
      * 
      * @param mode
      *            the hint mode
-     * @param messageKey
-     *            the resource bundle message key
+     * @param message
+     *            the message to hint user
      * @param params
      *            the message parameters
      * @throws UnifyException
      *             if an error occurs
      */
-    void hintUser(Hint.MODE mode, String messageKey, Object... params) throws UnifyException;
+    void hintUser(Hint.MODE mode, String message, Object... params) throws UnifyException;
 
     /**
      * Returns all user hints associated with current request.

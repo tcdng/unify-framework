@@ -349,19 +349,19 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void hintUser(String messageKey, Object... params) throws UnifyException {
-        hintUser(Hint.MODE.INFO, messageKey, params);
+    public void hintUser(String message, Object... params) throws UnifyException {
+        hintUser(Hint.MODE.INFO, message, params);
     }
 
     @Override
-    public void hintUser(Hint.MODE mode, String messageKey, Object... params) throws UnifyException {
+    public void hintUser(Hint.MODE mode, String message, Object... params) throws UnifyException {
         List<Hint> hintList = (List<Hint>) getRequestAttribute(USER_HINT_LIST);
         if (hintList == null) {
             hintList = new ArrayList<Hint>();
             setRequestAttribute(USER_HINT_LIST, hintList);
         }
 
-        hintList.add(new Hint(mode, resolveSessionMessage(messageKey, params)));
+        hintList.add(new Hint(mode, resolveSessionMessage(message, params)));
     }
 
     @Override
