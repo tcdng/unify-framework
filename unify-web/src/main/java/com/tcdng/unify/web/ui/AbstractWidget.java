@@ -319,6 +319,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
+    public boolean isSupportDisabled() {
+        return true;
+    }
+
+    @Override
     public void onPageConstruct() throws UnifyException {
 
     }
