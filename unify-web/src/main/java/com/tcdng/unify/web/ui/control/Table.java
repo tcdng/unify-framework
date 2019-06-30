@@ -432,6 +432,17 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return selectedRowCount;
     }
 
+    public Object getSelectedItem() throws UnifyException {
+        if(viewIndex >= 0) {
+            List<Row> rowList = getValueList();
+            if (rowList != null && viewIndex < rowList.size()) {
+                return rowList.get(viewIndex).getItemValueStore().getValueObject();
+            }            
+        }
+        
+        return null;
+    }
+    
     public Integer[] getSelectedRowIndexes() throws UnifyException {
         getValue();
         List<Row> rowList = getValueList();
