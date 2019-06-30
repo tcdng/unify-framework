@@ -22,6 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.ui.data.Hint.MODE;
 
 /**
  * Serves as the base class for a panel.
@@ -112,6 +113,36 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     @Override
     public String getLegend() throws UnifyException {
         return getUplAttribute(String.class, "legend");
+    }
+
+    /**
+     * Hints user in current request with supplied message in INFO mode.
+     * 
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            the message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void hintUser(String messageKey, Object... params) throws UnifyException {
+        getRequestContextUtil().hintUser(MODE.INFO, messageKey, params);
+    }
+
+    /**
+     * Hints user in current request with supplied message.
+     * 
+     * @param mode
+     *            the hint mode
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            the message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void hintUser(MODE mode, String messageKey, Object... params) throws UnifyException {
+        getRequestContextUtil().hintUser(mode, messageKey, params);
     }
 
     /**
