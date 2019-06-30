@@ -337,6 +337,7 @@ public class TableWriter extends AbstractControlWriter {
                 multiSelectCtrl.setGroupId(table.getSelectGroupId());
             }
 
+            boolean firstRowWrite = true;
             for (; index < lastIndex; index++) {
                 writer.write("<tr");
                 if (index % 2 == 0) {
@@ -351,7 +352,7 @@ public class TableWriter extends AbstractControlWriter {
                 int columnIndex = 0;
                 if (isSerialNo) {
                     writer.write("<td");
-                    writeTagStyleClass(writer, "thserialno ttd");
+                    writeTagStyleClass(writer, "thserialno");
                     if (table.isWindowed()) {
                         writeTagStyle(writer, "border-left:0px;");
                     }
@@ -370,7 +371,7 @@ public class TableWriter extends AbstractControlWriter {
                     multiSelectCtrl.setValueStore(row.getRowValueStore());
 
                     writer.write("<td");
-                    writeTagStyleClass(writer, "thselect ttd");
+                    writeTagStyleClass(writer, "thselect");
                     if (table.isWindowed() && columnIndex == 0) {
                         writeTagStyle(writer, "border-left:0px;");
                     }
@@ -390,19 +391,23 @@ public class TableWriter extends AbstractControlWriter {
 
                         control.setValueStore(itemValueStore);
                         writer.write("<td");
-                        writeTagStyleClass(writer, "ttd");
-                        String columnStyle = control.getColumnStyle();
-                        if (isWindowed) {
-                            writer.write(" style=\"");
-                            if (!StringUtils.isBlank(columnStyle)) {
-                                writer.write(columnStyle);
+                        // Optimization : Do not set class for each TD element. Set in CSS file only. 
+                        //writeTagStyleClass(writer, "ttd");
+                        // Optimization : write column style information for first row only
+                        if (firstRowWrite) {
+                            String columnStyle = control.getColumnStyle();
+                            if (isWindowed) {
+                                writer.write(" style=\"");
+                                if (!StringUtils.isBlank(columnStyle)) {
+                                    writer.write(columnStyle);
+                                }
+                                if (columnIndex == 0) {
+                                    writer.write("border-left:0px;");
+                                }
+                                writer.write("\"");
+                            } else {
+                                writeTagStyle(writer, columnStyle);
                             }
-                            if (columnIndex == 0) {
-                                writer.write("border-left:0px;");
-                            }
-                            writer.write("\"");
-                        } else {
-                            writeTagStyle(writer, columnStyle);
                         }
                         writer.write(">");
                         writer.writeStructureAndContent(control);
@@ -411,6 +416,8 @@ public class TableWriter extends AbstractControlWriter {
                     }
                 }
                 writer.write("</tr>");
+                
+                firstRowWrite = false;
             }
         } else {
             writer.write("<tr class=\"tnoitems ").write(getSelectClassName()).write("\"><td");
