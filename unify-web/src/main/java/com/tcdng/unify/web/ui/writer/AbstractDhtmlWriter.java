@@ -81,8 +81,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             writer.write(" title=\"").write(title).write("\"");
         }
 
-        if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
-            writer.write(" disabled");
+        if (widget.isSupportDisabled()) {
+            if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
+                writer.write(" disabled");
+            }
         }
 
         if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {

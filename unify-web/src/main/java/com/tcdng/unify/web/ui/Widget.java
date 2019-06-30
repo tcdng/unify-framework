@@ -466,6 +466,12 @@ public interface Widget extends UplComponent {
     boolean isSupportReadOnly();
 
     /**
+     * Returns true if component's rendered element supports HTML disabled attribute
+     * otherwise false. Subclasses should override this if necessary.
+     */
+    boolean isSupportDisabled();
+
+    /**
      * Returns true if this components caption is layout based.
      */
     boolean isLayoutCaption() throws UnifyException;

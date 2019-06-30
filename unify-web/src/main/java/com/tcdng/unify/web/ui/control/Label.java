@@ -48,6 +48,16 @@ public class Label extends AbstractFormattedControl {
         return getUplAttribute(boolean.class, "layoutCaption");
     }
 
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
+
+    @Override
+    public boolean isSupportDisabled() {
+        return false;
+    }
+
     public boolean isHtmlEscape() throws UnifyException {
         return getUplAttribute(boolean.class, "htmlEscape");
     }
