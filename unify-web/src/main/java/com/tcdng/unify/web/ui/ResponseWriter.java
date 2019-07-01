@@ -462,7 +462,24 @@ public interface ResponseWriter extends UnifyComponent {
 
     /**
      * Resets this response writer for reuse.
-     * @param writers the writers to use
+     * 
+     * @param writers
+     *            the writers to use
      */
     void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers);
+
+    /**
+     * Sets the response write table mode.
+     * 
+     * @param enabled
+     *            the value to set
+     */
+    void setTableMode(boolean enabled);
+
+    /**
+     * Tests if writing should use table mode.
+     * 
+     * @return a true value if table mode is set
+     */
+    boolean isTableMode();
 }

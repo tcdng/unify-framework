@@ -38,7 +38,11 @@ public class LabelWriter extends AbstractControlWriter {
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         Label label = (Label) widget;
         writer.write("<span");
-        writeTagAttributes(writer, label);
+        if (writer.isTableMode()) {
+            writeTagStyle(writer, label);
+        } else {
+            writeTagAttributes(writer, label);
+        }
         writer.write(">");
         String value = label.getStringValue();
         if (value != null) {

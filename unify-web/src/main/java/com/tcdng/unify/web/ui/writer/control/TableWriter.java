@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.writer.control;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
@@ -55,7 +56,7 @@ public class TableWriter extends AbstractControlWriter {
             writeTagStyleClass(writer, table, "ui-table-cellipsis");
         } else {
             writeTagStyleClass(writer, table);
-        }        
+        }
         writeTagStyle(writer, table);
         writer.write(">");
         if (table.isWindowed()) {
@@ -294,8 +295,7 @@ public class TableWriter extends AbstractControlWriter {
                 }
 
                 if (column.isSortable()) {
-                    writer.write(
-                            "</span>&nbsp;&nbsp;<span class=\"theadwdg\">");
+                    writer.write("</span>&nbsp;&nbsp;<span class=\"theadwdg\">");
                     Control imageCtrl = null;
                     if (column.isAscending()) {
                         imageCtrl = table.getAscImageCtrl();
@@ -337,7 +337,21 @@ public class TableWriter extends AbstractControlWriter {
                 multiSelectCtrl.setGroupId(table.getSelectGroupId());
             }
 
+            // Set column mode
+            for (Column column : table.getColumnList()) {
+                if (column.isVisible()) {
+                    Control control = column.getControl();
+                    control.setDisabled(isContainerDisabled);
+                    control.setEditable(isContainerEditable);
+                    control.setGroupId(dataGroupId);
+                }
+            }
+
+            // Write rows
             boolean firstRowWrite = true;
+            // Enter writer table mode. Column rendering will use table style if supported
+            // by column control.
+            writer.setTableMode(true);
             for (; index < lastIndex; index++) {
                 writer.write("<tr");
                 if (index % 2 == 0) {
@@ -352,9 +366,10 @@ public class TableWriter extends AbstractControlWriter {
                 int columnIndex = 0;
                 if (isSerialNo) {
                     writer.write("<td");
-                    writeTagStyleClass(writer, "thserialno");
                     if (table.isWindowed()) {
-                        writeTagStyle(writer, "border-left:0px;");
+                        writeTagStyleClass(writer, "thserialnol");
+                    } else {
+                        writeTagStyleClass(writer, "thserialno");
                     }
                     writer.write(">");
                     writer.write(index + 1); // Localization?
@@ -371,10 +386,12 @@ public class TableWriter extends AbstractControlWriter {
                     multiSelectCtrl.setValueStore(row.getRowValueStore());
 
                     writer.write("<td");
-                    writeTagStyleClass(writer, "thselect");
                     if (table.isWindowed() && columnIndex == 0) {
-                        writeTagStyle(writer, "border-left:0px;");
+                        writeTagStyleClass(writer, "thselectl");
+                    } else {
+                        writeTagStyleClass(writer, "thselect");
                     }
+                    
                     writer.write(">");
                     writer.writeStructureAndContent(multiSelectCtrl);
                     writer.write("</td>");
@@ -385,14 +402,10 @@ public class TableWriter extends AbstractControlWriter {
                 for (Column column : table.getColumnList()) {
                     if (column.isVisible()) {
                         Control control = column.getControl();
-                        control.setDisabled(isContainerDisabled);
-                        control.setEditable(isContainerEditable);
-                        control.setGroupId(dataGroupId);
-
                         control.setValueStore(itemValueStore);
                         writer.write("<td");
-                        // Optimization : Do not set class for each TD element. Set in CSS file only. 
-                        //writeTagStyleClass(writer, "ttd");
+                        // Optimization : Do not set class for each TD element. Set in CSS file only.
+                        // writeTagStyleClass(writer, "ttd");
                         // Optimization : write column style information for first row only
                         if (firstRowWrite) {
                             String columnStyle = control.getColumnStyle();
@@ -416,9 +429,12 @@ public class TableWriter extends AbstractControlWriter {
                     }
                 }
                 writer.write("</tr>");
-                
+
                 firstRowWrite = false;
             }
+            // Disable writer table mode
+            writer.setTableMode(false);
+
         } else {
             writer.write("<tr class=\"tnoitems ").write(getSelectClassName()).write("\"><td");
             if (!table.isWindowed()) {
@@ -431,8 +447,9 @@ public class TableWriter extends AbstractControlWriter {
     }
 
     private String getSelectClassName() throws UnifyException {
-        if (!StringUtils.isBlank(getUserToken().getColorScheme())) {
-            return SELECT_CLASSNAME_BASE + getUserToken().getColorScheme();
+        UserToken userToken = getUserToken();
+        if (userToken != null && !StringUtils.isBlank(userToken.getColorScheme())) {
+            return SELECT_CLASSNAME_BASE + userToken.getColorScheme();
         }
 
         return SELECT_CLASSNAME_BASE;

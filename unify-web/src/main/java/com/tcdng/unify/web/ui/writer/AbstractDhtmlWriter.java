@@ -200,9 +200,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, String... extraClasses) throws UnifyException {
+    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, String... extraClasses)
+            throws UnifyException {
         writer.write(" class=\"").write(widget.getStyleClass());
-        for(String extraClass: extraClasses) {
+        for (String extraClass : extraClasses) {
             if (extraClass != null) {
                 writer.write(" ").write(extraClass);
             }
