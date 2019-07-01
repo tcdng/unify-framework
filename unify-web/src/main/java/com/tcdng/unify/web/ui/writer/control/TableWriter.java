@@ -349,9 +349,9 @@ public class TableWriter extends AbstractControlWriter {
 
             // Write rows
             boolean firstRowWrite = true;
-            // Enter parent style mode. Column rendering will use table style if supported
+            // Enter writer table mode. Column rendering will use table style if supported
             // by column control.
-            writer.setParentStyleClassMode(true);
+            writer.setTableMode(true);
             for (; index < lastIndex; index++) {
                 writer.write("<tr");
                 if (index % 2 == 0) {
@@ -432,8 +432,8 @@ public class TableWriter extends AbstractControlWriter {
 
                 firstRowWrite = false;
             }
-            // Disable parent style mode
-            writer.setParentStyleClassMode(false);
+            // Disable writer table mode
+            writer.setTableMode(false);
 
         } else {
             writer.write("<tr class=\"tnoitems ").write(getSelectClassName()).write("\"><td");

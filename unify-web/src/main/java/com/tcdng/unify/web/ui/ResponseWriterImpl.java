@@ -77,7 +77,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     private Map<Class<? extends UplComponent>, UplComponentWriter> writers;
 
-    private boolean parentStyleClassMode;
+    private boolean tableMode;
     
     @Override
     public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
@@ -597,13 +597,13 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
-   public boolean isParentStyleClassMode() {
-        return parentStyleClassMode;
+   public boolean isTableMode() {
+        return tableMode;
     }
 
     @Override
-    public void setParentStyleClassMode(boolean parentStyleMode) {
-        this.parentStyleClassMode = parentStyleMode;
+    public void setTableMode(boolean parentStyleMode) {
+        this.tableMode = parentStyleMode;
     }
 
     @Override

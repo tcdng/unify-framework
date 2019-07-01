@@ -469,17 +469,17 @@ public interface ResponseWriter extends UnifyComponent {
     void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers);
 
     /**
-     * Sets the response write parent style class mode.
+     * Sets the response write table mode.
      * 
      * @param enabled
      *            the value to set
      */
-    void setParentStyleClassMode(boolean enabled);
+    void setTableMode(boolean enabled);
 
     /**
-     * Tests if writing should use parent style class.
+     * Tests if writing should use table mode.
      * 
-     * @return a true value if parent style class mode is set
+     * @return a true value if table mode is set
      */
-    boolean isParentStyleClassMode();
+    boolean isTableMode();
 }
