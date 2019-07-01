@@ -24,9 +24,11 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.AbstractValueStore;
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractValueListMultiControl;
@@ -151,7 +153,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             Control control = (Control) childControlInfo.getControl();
 
             if (childControlInfo.isExternal()) {
-                control.setValueStore(getValueList().get(childBlock.getItemIndex()).getItemValueStore());
+                control.setValueStore(getValueList().get(childBlock.getItemIndex()).getRowValueStore());
             } else {
                 if (control == multiSelectCtrl) {
                     control.setValueStore(getValueList().get(childBlock.getItemIndex()).getRowValueStore());
@@ -436,7 +438,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         if(viewIndex >= 0) {
             List<Row> rowList = getValueList();
             if (rowList != null && viewIndex < rowList.size()) {
-                return rowList.get(viewIndex).getItemValueStore().getValueObject();
+                return rowList.get(viewIndex).getItem(); 
             }            
         }
         
@@ -613,18 +615,18 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public class Row implements RowState {
 
-        private ValueStore rowValueStore;
+        private RowValueStore rowValueStore;
 
-        private ValueStore itemValueStore;
-
+        private Object item;
+        
         private boolean selected;
 
         public Row(Object item, int index) throws UnifyException {
-            rowValueStore = createValueStore(this, index);
-            itemValueStore = createValueStore(item, index);
+            this.item = item;
+            rowValueStore = new RowValueStore(this, index);
             String selectBinding = getUplAttribute(String.class, "selectBinding");
             if (selectBinding != null) {
-                selected = (Boolean) itemValueStore.retrieve(selectBinding);
+                selected = (Boolean) ReflectUtils.findNestedBeanProperty(item, selectBinding);
                 if (selected) {
                     selectedRowCount++;
                 }
@@ -636,17 +638,20 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             return selected;
         }
 
+        public Object getItem() {
+            return item;
+        }
+
+        public void setRowValueStore(RowValueStore rowValueStore) {
+            this.rowValueStore = rowValueStore;
+        }
+
         public void setIndex(int index) {
             rowValueStore.setDataIndex(index);
-            itemValueStore.setDataIndex(index);
         }
 
-        public ValueStore getRowValueStore() {
+        public RowValueStore getRowValueStore() {
             return rowValueStore;
-        }
-
-        public ValueStore getItemValueStore() {
-            return itemValueStore;
         }
 
         public void setSelected(boolean selected) throws UnifyException {
@@ -654,8 +659,9 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
                 this.selected = selected;
                 String selectBinding = getUplAttribute(String.class, "selectBinding");
                 if (selectBinding != null) {
-                    itemValueStore.store(selectBinding, selected);
+                    DataUtils.setNestedBeanProperty(item, selectBinding, selected);
                 }
+
                 if (selected) {
                     selectedRowCount++;
                 } else {
@@ -666,6 +672,58 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     }
 
+    public class RowValueStore extends AbstractValueStore<Row> {
+
+        private RowValueStore(Row row) {
+            this(row, -1);
+        }
+
+        private RowValueStore(Row row, int dataIndex) {
+            super(row, dataIndex);
+        }
+
+        @Override
+        public boolean isGettable(String name) throws UnifyException {
+            if ("selected".equals(name)) {
+                return true;
+            }
+
+            return ReflectUtils.isGettableField(storage.item.getClass(), name);
+        }
+
+        @Override
+        public boolean isSettable(String name) throws UnifyException {
+            if ("selected".equals(name)) {
+                return true;
+            }
+
+            return ReflectUtils.isSettableField(storage.item.getClass(), name);
+        }
+
+        @Override
+        protected Object doRetrieve(String property) throws UnifyException {
+            if ("selected".equals(property)) {
+                return storage.selected;
+            }
+            
+            return ReflectUtils.findNestedBeanProperty(storage.item, property);
+        }
+
+        @Override
+        protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
+            if ("selected".equals(property)) {
+                storage.setSelected(DataUtils.convert(Boolean.class, value, formatter));
+                return;
+            }
+            
+            DataUtils.setNestedBeanProperty(storage.item, property, value, formatter);
+        }
+
+        public Object getItem() {
+            return storage.item;
+        }
+    }
+    
     public class Column implements ColumnState {
 
         private Control control;
@@ -727,8 +785,8 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         @Override
         public int compare(Row row1, Row row2) {
             try {
-                return DataUtils.compareForSort((Comparable<Object>) row1.getItemValueStore().retrieve(property),
-                        (Comparable<Object>) row2.getItemValueStore().retrieve(property), ascending);
+                return DataUtils.compareForSort((Comparable<Object>) row1.getRowValueStore().retrieve(property),
+                        (Comparable<Object>) row2.getRowValueStore().retrieve(property), ascending);
             } catch (UnifyException e) {
             }
             return 0;
