@@ -32,6 +32,7 @@ import com.tcdng.unify.web.ui.control.ColumnState;
 import com.tcdng.unify.web.ui.control.Table;
 import com.tcdng.unify.web.ui.control.Table.Column;
 import com.tcdng.unify.web.ui.control.Table.Row;
+import com.tcdng.unify.web.ui.control.Table.RowValueStore;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 import com.tcdng.unify.web.util.HtmlUtils;
 
@@ -156,7 +157,7 @@ public class TableWriter extends AbstractControlWriter {
         int index = table.getPageItemIndex();
         int lastIndex = index + table.getPageItemCount();
         for (; index < lastIndex; index++) {
-            ValueStore itemValueStore = writeRowList.get(index).getItemValueStore();
+            ValueStore itemValueStore = writeRowList.get(index).getRowValueStore();
 
             for (Column column : table.getColumnList()) {
                 if (column.isVisible()) {
@@ -378,12 +379,13 @@ public class TableWriter extends AbstractControlWriter {
                 }
 
                 Row row = writeRowList.get(index);
+                RowValueStore rowValueStore = row.getRowValueStore();
                 if (isMultiSelect) {
                     if (row.isSelected()) {
                         table.incrementPageSelectedRowCount();
                     }
 
-                    multiSelectCtrl.setValueStore(row.getRowValueStore());
+                    multiSelectCtrl.setValueStore(rowValueStore);
 
                     writer.write("<td");
                     if (table.isWindowed() && columnIndex == 0) {
@@ -398,11 +400,10 @@ public class TableWriter extends AbstractControlWriter {
                     columnIndex++;
                 }
 
-                ValueStore itemValueStore = row.getItemValueStore();
                 for (Column column : table.getColumnList()) {
                     if (column.isVisible()) {
                         Control control = column.getControl();
-                        control.setValueStore(itemValueStore);
+                        control.setValueStore(rowValueStore);
                         writer.write("<td");
                         // Optimization : Do not set class for each TD element. Set in CSS file only.
                         // writeTagStyleClass(writer, "ttd");
