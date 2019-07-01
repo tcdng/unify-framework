@@ -77,6 +77,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     private Map<Class<? extends UplComponent>, UplComponentWriter> writers;
 
+    private boolean parentStyleClassMode;
+    
     @Override
     public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
         ((WidgetWriter) getWriter(component)).writeStructureAndContent(this, component);
@@ -592,6 +594,16 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             buf = new WebStringWriter(initialBufferCapacity);
             secordaryList = new ArrayList<WebStringWriter>();
         }
+    }
+
+    @Override
+   public boolean isParentStyleClassMode() {
+        return parentStyleClassMode;
+    }
+
+    @Override
+    public void setParentStyleClassMode(boolean parentStyleMode) {
+        this.parentStyleClassMode = parentStyleMode;
     }
 
     @Override

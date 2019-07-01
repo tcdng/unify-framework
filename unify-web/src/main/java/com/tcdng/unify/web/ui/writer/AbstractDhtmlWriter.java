@@ -93,6 +93,46 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     }
 
     /**
+     * Writes tag attributes id, name, style and title.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesInParentStyleClassMode(ResponseWriter writer, Widget widget)
+            throws UnifyException {
+        writer.write(" id=\"").write(widget.getId()).write("\"");
+
+        String groupId = widget.getGroupId();
+        if (groupId != null) {
+            writer.write(" name=\"").write(groupId).write("\"");
+        }
+
+        String style = widget.getStyle();
+        if (style != null) {
+            writer.write(" style=\"").write(style).write("\"");
+        }
+
+        String title = widget.getHint();
+        if (title != null) {
+            writer.write(" title=\"").write(title).write("\"");
+        }
+
+        if (widget.isSupportDisabled()) {
+            if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
+                writer.write(" disabled");
+            }
+        }
+
+        if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
+            writer.write(" readonly");
+        }
+    }
+
+    /**
      * Writes tag edit attributes
      * 
      * @param writer
@@ -200,9 +240,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, String... extraClasses) throws UnifyException {
+    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, String... extraClasses)
+            throws UnifyException {
         writer.write(" class=\"").write(widget.getStyleClass());
-        for(String extraClass: extraClasses) {
+        for (String extraClass : extraClasses) {
             if (extraClass != null) {
                 writer.write(" ").write(extraClass);
             }

@@ -462,7 +462,24 @@ public interface ResponseWriter extends UnifyComponent {
 
     /**
      * Resets this response writer for reuse.
-     * @param writers the writers to use
+     * 
+     * @param writers
+     *            the writers to use
      */
     void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers);
+
+    /**
+     * Sets the response write parent style class mode.
+     * 
+     * @param enabled
+     *            the value to set
+     */
+    void setParentStyleClassMode(boolean enabled);
+
+    /**
+     * Tests if writing should use parent style class.
+     * 
+     * @return a true value if parent style class mode is set
+     */
+    boolean isParentStyleClassMode();
 }
