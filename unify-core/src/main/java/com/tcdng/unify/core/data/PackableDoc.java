@@ -44,6 +44,8 @@ public class PackableDoc implements Serializable {
 
     public transient static final String RESERVED_EXT_FIELD = "resrvExt";
 
+    private Object id;
+    
     private Map<String, Object> values;
 
     private transient PackableDocConfig config;
@@ -162,6 +164,14 @@ public class PackableDoc implements Serializable {
 
     public PackableDocConfig getConfig() {
         return config;
+    }
+
+    public Object getId() {
+        return id;
+    }
+
+    public void setId(Object id) {
+        this.id = id;
     }
 
     public Object getResrvExt() {

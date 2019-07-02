@@ -340,6 +340,18 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testSimplePackDocumentWithId() throws Exception {
+        Customer customer = new Customer("Latsman", new Date(), BigDecimal.valueOf(20.0), 12,
+                new Address("24 Parklane", "Apapa Lagos"));
+        customer.setModeList(Arrays.asList("A", "B", "C"));
+        PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+        pDoc.setId(Long.valueOf(256L));
+        pDoc.readFrom(custDocRwConfig, customer);
+        byte[] packedDocument = pDoc.pack();
+        assertNotNull(packedDocument);
+    }
+
+    @Test
     public void testSimplePackDocumentWithReservedExtension() throws Exception {
         Customer customer = new Customer("Latsman", new Date(), BigDecimal.valueOf(20.0), 12,
                 new Address("24 Parklane", "Apapa Lagos"));
@@ -365,6 +377,40 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         byte[] packedDocument = pDoc.pack();
         PackableDoc unpackedDocument = PackableDoc.unpack(custDocConfig, packedDocument, false);
         assertNotNull(unpackedDocument);
+        assertEquals(6, unpackedDocument.getFieldCount());
+        assertEquals("Latsman", (String) unpackedDocument.readFieldValue("name"));
+        assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.readFieldValue("balance"));
+        assertEquals(birthDt, (Date) unpackedDocument.readFieldValue("birthDt"));
+        Address addressUnpacked = (Address) unpackedDocument.readFieldValue("address");
+        assertEquals("24 Parklane", addressUnpacked.getLine1());
+        assertEquals("Apapa Lagos", addressUnpacked.getLine2());
+        List<String> modeListUnpacked = (List<String>) unpackedDocument.readFieldValue("modeList");
+        assertEquals(modeList, modeListUnpacked);
+
+        assertEquals(String.class, unpackedDocument.getFieldType("name"));
+        assertEquals(BigDecimal.class, unpackedDocument.getFieldType("balance"));
+        assertEquals(Long.class, unpackedDocument.getFieldType("id"));
+        assertEquals(Date.class, unpackedDocument.getFieldType("birthDt"));
+        assertEquals(Address.class, unpackedDocument.getFieldType("address"));
+        assertEquals(List.class, unpackedDocument.getFieldType("modeList"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSimpleUnpackDocumentWithId() throws Exception {
+        Date birthDt = new Date();
+        Address address = new Address("24 Parklane", "Apapa Lagos");
+        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address);
+        List<String> modeList = Arrays.asList("A", "B", "C");
+        customer.setModeList(modeList);
+
+        PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+        pDoc.setId(Long.valueOf(1024L));
+        pDoc.readFrom(custDocRwConfig, customer);
+        byte[] packedDocument = pDoc.pack();
+        PackableDoc unpackedDocument = PackableDoc.unpack(custDocConfig, packedDocument, false);
+        assertNotNull(unpackedDocument);
+        assertEquals(Long.valueOf(1024L), pDoc.getId());
         assertEquals(6, unpackedDocument.getFieldCount());
         assertEquals("Latsman", (String) unpackedDocument.readFieldValue("name"));
         assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.readFieldValue("balance"));
