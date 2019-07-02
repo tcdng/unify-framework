@@ -33,6 +33,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.Entity;
@@ -1783,6 +1784,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             if (sqlFieldInfo.isTransformed()) {
                 value = ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(value);
             }
+
+            // Fix updates for enumerations that come different value type 01/07/19
+            if (EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldType()) && value != null
+                    && !value.getClass().equals(sqlFieldInfo.getFieldType())) {
+                value = DataUtils.convert(sqlFieldInfo.getFieldType(), value, null);
+            }
+            // End fix
+
             parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), value));
         }
         return updateParams.toString();
