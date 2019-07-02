@@ -56,7 +56,7 @@ public class PackableDoc implements Serializable {
 
     private transient boolean auditable;
 
-    private transient boolean changed;
+    private transient boolean updated;
     
     public PackableDoc(PackableDocConfig config) {
         this(config, false);
@@ -75,6 +75,7 @@ public class PackableDoc implements Serializable {
         for (FieldConfig fc : config.getFieldConfigs()) {
             if (fc.isComplex()) {
                 values.put(fc.getName(), new PackableDoc(fc.getPackableDocConfig(), auditable).preset());
+                updated = true;
             }
         }
 
@@ -186,12 +187,12 @@ public class PackableDoc implements Serializable {
         return auditable;
     }
 
-    public boolean isChanged() {
-        return changed;
+    public boolean isUpdated() {
+        return updated;
     }
 
-    public void setChanged(boolean changed) {
-        this.changed = changed;
+    public void clearUpdated() {
+        this.updated = false;
     }
 
     public Set<String> getFieldNames() {
@@ -245,8 +246,10 @@ public class PackableDoc implements Serializable {
             throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_FIELD_COMPLEX_DIRECT_WRITE, name);
         }
 
-        values.put(name, DataUtils.convert(fc.getType(), value, formatter));
-        changed = true;
+        Object oldValue = values.get(name);
+        Object newValue = DataUtils.convert(fc.getType(), value, formatter);
+        values.put(name, newValue);
+        updated |= !DataUtils.equals(oldValue, newValue);
     }
 
     public void writeFieldValue(PackableDocRWConfig rwConfig, String name, Object value) throws UnifyException {
@@ -275,7 +278,6 @@ public class PackableDoc implements Serializable {
     private void setup(PackableDocConfig config, boolean auditable) {
         this.config = config;
         this.auditable = auditable;
-        changed = false;
 
         for (FieldConfig fc : config.getFieldConfigs()) {
             if (!values.containsKey(fc.getName())) {
@@ -303,6 +305,8 @@ public class PackableDoc implements Serializable {
         if (auditable) {
             oldValues = new HashMap<String, Object>(values);
         }
+
+        updated = false;
     }
 
     private Object readObject(PackableDocRWConfig rwConfig, PackableDoc pd) throws UnifyException {
@@ -344,6 +348,8 @@ public class PackableDoc implements Serializable {
 
     private void writeFieldObject(FieldMapping fMapping, PackableDoc pd, Object val) throws UnifyException {
         FieldConfig fc = pd.config.getFieldConfig(fMapping.getDocFieldName());
+        Object oldValue = values.get(fc.getName());
+        Object newValue = null;
         if (val != null) {
             if (fc.isComplex()) {
                 PackableDocConfig fpdConfig = fc.getPackableDocConfig();
@@ -356,17 +362,19 @@ public class PackableDoc implements Serializable {
                             fpd[i].readFrom(fMapping.getPackableDocRWConfig(), beans[i]);
                         }
                     }
-                    pd.values.put(fc.getName(), fpd);
+
+                    newValue = fpd;
                 } else {
                     PackableDoc fpd = new PackableDoc(fpdConfig, auditable);
                     fpd.readFrom(fMapping.getPackableDocRWConfig(), val);
-                    pd.values.put(fc.getName(), fpd);
+                    newValue = fpd;
                 }
             } else {
-                pd.values.put(fc.getName(), DataUtils.convert(fc.getType(), val, null));
+                newValue = DataUtils.convert(fc.getType(), val, null);
             }
-        } else {
-            pd.values.put(fc.getName(), null);
         }
+        
+        pd.values.put(fc.getName(), newValue);
+        updated |= !DataUtils.equals(oldValue, newValue);
     }
 }

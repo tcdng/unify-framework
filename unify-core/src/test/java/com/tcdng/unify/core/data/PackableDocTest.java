@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -86,9 +87,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         Date birthDt = new Date();
         Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20, null);
         PackableDoc pDoc = new PackableDoc(xCustDocConfig, false);
+        assertFalse(pDoc.isUpdated());
         assertEquals(6, pDoc.getFieldCount());
 
         pDoc.readFrom(xCustDocRwConfig, customer);
+        assertTrue(pDoc.isUpdated());
         assertEquals("Amos Quito", pDoc.readFieldValue("name"));
         assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
         assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
@@ -118,9 +121,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         Address address = new Address("38 Warehouse Road", "Apapa Lagos");
         Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20, address);
         PackableDoc pDoc = new PackableDoc(xCustDocConfig, false);
+        assertFalse(pDoc.isUpdated());
         assertEquals(6, pDoc.getFieldCount());
 
         pDoc.readFrom(xCustDocRwConfig, customer);
+        assertTrue(pDoc.isUpdated());
         assertEquals("Amos Quito", pDoc.readFieldValue("name"));
         assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
         assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
@@ -165,9 +170,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         customer.setModeList(modeList);
 
         PackableDoc pDoc = new PackableDoc(xCustDocConfig, false);
+        assertFalse(pDoc.isUpdated());
         assertEquals(6, pDoc.getFieldCount());
 
         pDoc.readFrom(xCustDocRwConfig, customer);
+        assertTrue(pDoc.isUpdated());
         assertEquals(6, pDoc.getFieldCount());
         assertEquals("Amos Quito", pDoc.readFieldValue("name"));
         assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
@@ -215,19 +222,23 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test
     public void testWriteFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+        assertFalse(pDoc.isUpdated());
         pDoc.writeFieldValue("name", "Elmer Fudd");
         pDoc.writeFieldValue("id", 12);
         pDoc.writeFieldValue("birthDt", new Date());
         pDoc.writeFieldValue("address", new Address());
+        assertTrue(pDoc.isUpdated());
     }
 
     @Test
     public void testWriteComplexFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(xCustDocConfig, false);
+        assertFalse(pDoc.isUpdated());
         pDoc.writeFieldValue("name", "Elmer Fudd");
         pDoc.writeFieldValue("id", 12);
         pDoc.writeFieldValue("birthDt", new Date());
         pDoc.writeFieldValue(xCustDocRwConfig, "address", new Address("24 Parklane", "Apapa Lagos"));
+        assertTrue(pDoc.isUpdated());
     }
 
     // @Test
@@ -243,8 +254,10 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test
     public void testWriteFieldValueWithConversion() throws Exception {
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
+        assertFalse(pDoc.isUpdated());
         pDoc.writeFieldValue("id", "15");
         pDoc.writeFieldValue("purchases", new double[] { 100.2, 15.64, 75.42 });
+        assertTrue(pDoc.isUpdated());
     }
 
     @Test(expected = UnifyException.class)
