@@ -24,12 +24,12 @@ import java.util.Date;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
- * Timestamp type SQL policy.
+ * Timestamp (UTC) type SQL policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TimestampPolicy extends AbstractSqlDataTypePolicy {
+public class TimestampUTCPolicy extends AbstractSqlDataTypePolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
@@ -41,7 +41,7 @@ public class TimestampPolicy extends AbstractSqlDataTypePolicy {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.TIMESTAMP);
         } else {
-            ((PreparedStatement) pstmt).setTimestamp(index, new Timestamp(((Date) data).getTime()));
+            ((PreparedStatement) pstmt).setTimestamp(index, new Timestamp(((Date) data).getTime() - utcOffset));
         }
     }
 
@@ -49,7 +49,7 @@ public class TimestampPolicy extends AbstractSqlDataTypePolicy {
     public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
         Timestamp timestamp = ((ResultSet) rs).getTimestamp(column);
         if (timestamp != null) {
-            return new Date(timestamp.getTime());
+            return new Date(timestamp.getTime() + utcOffset);
         }
         return null;
     }
@@ -58,7 +58,7 @@ public class TimestampPolicy extends AbstractSqlDataTypePolicy {
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Timestamp timestamp = ((ResultSet) rs).getTimestamp(index);
         if (timestamp != null) {
-            return new Date(timestamp.getTime());
+            return new Date(timestamp.getTime() + utcOffset);
         }
         return null;
     }

@@ -35,7 +35,7 @@ public class ClusterNode extends AbstractSystemEntity implements Listable {
     @Id(length = 40)
     private String nodeId;
 
-    @Column(type = ColumnType.TIMESTAMP)
+    @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date lastHeartBeat;
 
     @Column(length = 64)

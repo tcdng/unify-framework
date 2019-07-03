@@ -35,6 +35,7 @@ import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.policy.DatePolicy;
 import com.tcdng.unify.core.database.sql.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -192,11 +193,26 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
 
+        setDataTypePolicy(ColumnType.TIMESTAMP_UTC, new MsSqlTimestampUTCPolicy());
         setDataTypePolicy(ColumnType.TIMESTAMP, new MsSqlTimestampPolicy());
         setDataTypePolicy(ColumnType.DATE, new MsSqlDatePolicy());
         setDataTypePolicy(ColumnType.BLOB, new MsSqlBlobPolicy());
         setDataTypePolicy(ColumnType.CLOB, new MsSqlClobPolicy());
     }
+}
+
+class MsSqlTimestampUTCPolicy extends TimestampUTCPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append(" DATETIME");
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.TIMESTAMP;
+    }
+    
 }
 
 class MsSqlTimestampPolicy extends TimestampPolicy {

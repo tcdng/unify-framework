@@ -46,6 +46,7 @@ public enum ColumnType implements EnumConst {
     LONG_ARRAY("LNA"),
     STRING("STR"),
     STRING_ARRAY("STA"),
+    TIMESTAMP_UTC("TSU"),
     TIMESTAMP("TSP"),
     ENUMCONST("ECT");
 

@@ -701,7 +701,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public Date getNow() throws UnifyException {
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, Date.class,
-                sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP), sqlDataSourceDialect.generateUTCTimestampSql(),
+                sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC), sqlDataSourceDialect.generateUTCTimestampSql(),
                 true);
     }
 
