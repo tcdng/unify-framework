@@ -80,6 +80,7 @@ import com.tcdng.unify.core.database.sql.policy.ShortPolicy;
 import com.tcdng.unify.core.database.sql.policy.StringArrayPolicy;
 import com.tcdng.unify.core.database.sql.policy.StringPolicy;
 import com.tcdng.unify.core.database.sql.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.operation.Criteria;
 import com.tcdng.unify.core.operation.Operator;
 import com.tcdng.unify.core.operation.Order;
@@ -156,6 +157,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlDataTypePolicies.put(ColumnType.LONG_ARRAY, new LongArrayPolicy());
         sqlDataTypePolicies.put(ColumnType.STRING, new StringPolicy());
         sqlDataTypePolicies.put(ColumnType.STRING_ARRAY, new StringArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.TIMESTAMP_UTC, new TimestampUTCPolicy());
         sqlDataTypePolicies.put(ColumnType.TIMESTAMP, new TimestampPolicy());
         sqlDataTypePolicies.put(ColumnType.ENUMCONST, new EnumConstPolicy());
 

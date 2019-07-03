@@ -37,7 +37,7 @@ public class ClusterLock extends AbstractSystemEntity {
     @Column(length = 128, nullable = true)
     private String currentOwner;
 
-    @Column(type = ColumnType.TIMESTAMP)
+    @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date expiryTime;
 
     @Column

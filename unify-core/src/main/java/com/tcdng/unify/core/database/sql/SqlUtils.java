@@ -387,7 +387,7 @@ public final class SqlUtils {
             case DATE:
             case DOUBLE:
             case FLOAT:
-            case TIMESTAMP:
+            case TIMESTAMP_UTC:
             default:
                 break;
         }

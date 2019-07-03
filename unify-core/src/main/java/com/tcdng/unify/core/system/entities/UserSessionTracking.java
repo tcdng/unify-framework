@@ -54,10 +54,10 @@ public class UserSessionTracking extends AbstractSystemEntity {
     @Column(length = 32)
     private String node;
 
-    @Column(type = ColumnType.TIMESTAMP)
+    @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date createTime;
 
-    @Column(type = ColumnType.TIMESTAMP)
+    @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date lastAccessTime;
 
     @Override
