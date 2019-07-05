@@ -13,18 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.annotation.Singleton;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import com.tcdng.unify.core.annotation.CallableDataType;
 
 /**
- * Abstract SQL entity information factory.
+ * Holds callable parameter information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
-public abstract class AbstractSqlEntityInfoFactory extends AbstractUnifyComponent implements SqlEntityInfoFactory {
+public class SqlCallableParamInfo extends SqlCallableFieldInfo {
 
+    private boolean input;
+
+    public SqlCallableParamInfo(CallableDataType dataType, String name, Field field, Method getter, Method setter,
+            boolean input) {
+        super(dataType, name, field, getter, setter);
+        this.input = input;
+    }
+
+    public boolean isInput() {
+        return input;
+    }
+
+    public boolean isOutput() {
+        return !input;
+    }
 }

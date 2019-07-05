@@ -938,4 +938,7 @@ public interface UnifyCoreErrorConstants {
      * Database is not part of transaction.
      */
     String DATABASE_NOT_PART_OF_TRANSACTION = "UC_00E8";
+
+    /** Callable result type information not found. Callable type = {0}, Result type = {1} */
+    String CALLABLE_RESULT_TYPE_NOT_FOUND = "UC_00E9";
 }

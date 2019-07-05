@@ -20,12 +20,12 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
- * Data type enumeration.
+ * Callable data type enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum DataType implements EnumConst {
+public enum CallableDataType implements EnumConst {
 
     AUTO(ColumnType.AUTO),
     CHARACTER(ColumnType.CHARACTER),
@@ -44,7 +44,7 @@ public enum DataType implements EnumConst {
 
     private final ColumnType columnType;
 
-    private DataType(ColumnType columnType) {
+    private CallableDataType(ColumnType columnType) {
         this.columnType = columnType;
     }
 
@@ -53,12 +53,12 @@ public enum DataType implements EnumConst {
         return columnType.code();
     }
 
-    public static DataType fromCode(String code) {
-        return EnumUtils.fromCode(DataType.class, code);
+    public static CallableDataType fromCode(String code) {
+        return EnumUtils.fromCode(CallableDataType.class, code);
     }
 
-    public static DataType fromName(String name) {
-        return EnumUtils.fromName(DataType.class, name);
+    public static CallableDataType fromName(String name) {
+        return EnumUtils.fromName(CallableDataType.class, name);
     }
 
 }

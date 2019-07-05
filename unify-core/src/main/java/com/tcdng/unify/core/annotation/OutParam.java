@@ -31,6 +31,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OutParam {
 
-    /** The field {@link DataType}. */
-    DataType value() default DataType.AUTO;
+    /** The field {@link CallableDataType}. */
+    CallableDataType value() default CallableDataType.AUTO;
 }

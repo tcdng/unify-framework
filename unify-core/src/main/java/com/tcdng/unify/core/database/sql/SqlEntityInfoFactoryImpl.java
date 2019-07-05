@@ -40,7 +40,6 @@ import com.tcdng.unify.core.annotation.Id;
 import com.tcdng.unify.core.annotation.Index;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Policy;
-import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.annotation.Version;
@@ -64,7 +63,6 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
 @Component(ApplicationComponents.APPLICATION_SQLENTITYINFOFACTORY)
 public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
