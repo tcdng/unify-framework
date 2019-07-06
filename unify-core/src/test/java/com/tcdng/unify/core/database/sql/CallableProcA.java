@@ -13,18 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.annotation.Callable;
 
 /**
- * Abstract SQL entity information factory.
+ * Test callable procedure with no parameters and no results.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
-public abstract class AbstractSqlEntityInfoFactory extends AbstractUnifyComponent implements SqlEntityInfoFactory {
+@Callable(procedure = "procedure_a")
+public class CallableProcA {
 
 }

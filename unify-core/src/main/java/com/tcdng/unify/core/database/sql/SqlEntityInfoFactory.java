@@ -46,4 +46,15 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
      *             if an error occurs
      */
     SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException;
+
+    /**
+     * Returns the SQL callable information for type.
+     * 
+     * @param callableClass
+     *            the callable type
+     * @return callable information for specified type.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlCallableInfo getSqlCallableInfo(Class<?> callableClass) throws UnifyException;
 }

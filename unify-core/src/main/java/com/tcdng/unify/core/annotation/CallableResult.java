@@ -13,18 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.annotation.Singleton;
+package com.tcdng.unify.core.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Abstract SQL entity information factory.
+ * Annotation that indicates a callable result.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
-public abstract class AbstractSqlEntityInfoFactory extends AbstractUnifyComponent implements SqlEntityInfoFactory {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CallableResult {
 
 }

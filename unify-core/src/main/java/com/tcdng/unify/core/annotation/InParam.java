@@ -13,18 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.annotation.Singleton;
+package com.tcdng.unify.core.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Abstract SQL entity information factory.
+ * Annotation that indicates a field is an input parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
-public abstract class AbstractSqlEntityInfoFactory extends AbstractUnifyComponent implements SqlEntityInfoFactory {
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface InParam {
 
+    /** The field {@link CallableDataType}. */
+    CallableDataType value() default CallableDataType.AUTO;
 }

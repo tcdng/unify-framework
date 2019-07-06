@@ -27,6 +27,9 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Callable;
+import com.tcdng.unify.core.annotation.CallableDataType;
+import com.tcdng.unify.core.annotation.CallableResult;
 import com.tcdng.unify.core.annotation.Child;
 import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
@@ -37,10 +40,12 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ForeignKeyOverride;
 import com.tcdng.unify.core.annotation.Id;
+import com.tcdng.unify.core.annotation.InParam;
 import com.tcdng.unify.core.annotation.Index;
 import com.tcdng.unify.core.annotation.ListOnly;
+import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.annotation.Policy;
-import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.annotation.Result;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.annotation.Version;
@@ -64,7 +69,6 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
 @Component(ApplicationComponents.APPLICATION_SQLENTITYINFOFACTORY)
 public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
@@ -79,6 +83,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     private SqlDataSourceDialect sqlDataSourceDialect;
 
     private FactoryMap<Class<?>, SqlEntityInfo> sqlEntityInfoMap;
+
+    private FactoryMap<Class<?>, SqlCallableInfo> sqlCallableInfoMap;
 
     private int tAliasCounter;
 
@@ -162,14 +168,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     viewName = tableName;
                 }
 
-                String schema = AnnotationUtils.getAnnotationString(ta.schema());
-                if (StringUtils.isBlank(schema)) {
-                    UnifyComponentConfig ucc = getComponentConfig(NameSqlDataSourceSchema.class, ta.datasource());
-                    if (ucc != null) {
-                        schema = (String) ucc.getSettings().getSettingValue("appSchema");
-                    }
-                }
-
+                String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()), ta.datasource());
                 String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
 
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
@@ -640,6 +639,83 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             }
 
         };
+
+        sqlCallableInfoMap = new FactoryMap<Class<?>, SqlCallableInfo>() {
+
+            @Override
+            protected SqlCallableInfo create(Class<?> callableClass, Object... params) throws Exception {
+                ReflectUtils.assertAnnotation(callableClass, Callable.class);
+                Callable ca = callableClass.getAnnotation(Callable.class);
+
+                String procedureName = ca.procedure();
+                String preferredProcedureName = sqlDataSourceDialect.getPreferredName(procedureName);
+                String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(ca.schema()), ca.datasource());
+                String schemaProcedureName = SqlUtils.generateFullSchemaElementName(schema, preferredProcedureName);
+
+                // Parameters
+                List<SqlCallableParamInfo> paramInfoList = null;
+                String paramStr = AnnotationUtils.getAnnotationString(ca.params());
+                if (!StringUtils.isBlank(paramStr)) {
+                    paramInfoList = new ArrayList<SqlCallableParamInfo>();
+                    String[] fieldNames = StringUtils.commaSplit(paramStr);
+                    for (String fieldName : fieldNames) {
+                        fieldName = fieldName.trim();
+                        Field field = ReflectUtils.getField(callableClass, fieldName);
+
+                        CallableDataType type = null;
+                        InParam ipa = field.getAnnotation(InParam.class);
+                        if (ipa != null) {
+                            type = resolveCallableDataType(ipa.value(), field);
+                        }
+
+                        OutParam opa = field.getAnnotation(OutParam.class);
+                        if (opa != null) {
+                            if (ipa != null) {
+                                throw new UnifyException(UnifyCoreErrorConstants.CALLABLE_FIELD_BOTH_INOUT, field);
+                            }
+
+                            type = resolveCallableDataType(opa.value(), field);
+                        }
+
+                        GetterSetterInfo getterSetterInfo =
+                                ReflectUtils.getGetterSetterInfo(callableClass, field.getName());
+
+                        paramInfoList.add(new SqlCallableParamInfo(type, fieldName, field, getterSetterInfo.getGetter(),
+                                getterSetterInfo.getSetter(), ipa != null));
+                    }
+                }
+
+                // Results
+                List<SqlCallableResultInfo> resultInfoList = null;
+                if (ca.results().length > 0) {
+                    resultInfoList = new ArrayList<SqlCallableResultInfo>();
+                    for (Class<?> resultClass : ca.results()) {
+                        ReflectUtils.assertAnnotation(resultClass, CallableResult.class);
+                        List<SqlCallableFieldInfo> fieldInfoList = new ArrayList<SqlCallableFieldInfo>();
+                        Class<?> searchClass = resultClass;
+                        do {
+                            Field[] fields = searchClass.getDeclaredFields();
+                            for (Field field : fields) {
+                                Result ra = field.getAnnotation(Result.class);
+                                if (ra != null) {
+                                    CallableDataType dataType = resolveCallableDataType(ra.value(), field);
+                                    GetterSetterInfo getterSetterInfo =
+                                            ReflectUtils.getGetterSetterInfo(resultClass, field.getName());
+                                    fieldInfoList.add(new SqlCallableFieldInfo(dataType, field.getName(), field,
+                                            getterSetterInfo.getGetter(), getterSetterInfo.getSetter()));
+                                }
+                            }
+                        } while ((searchClass = searchClass.getSuperclass()) != null);
+
+                        resultInfoList.add(new SqlCallableResultInfo(resultClass, fieldInfoList));
+                    }
+                }
+
+                return new SqlCallableInfo(callableClass, procedureName, preferredProcedureName, schemaProcedureName,
+                        paramInfoList, resultInfoList);
+            }
+
+        };
     }
 
     @Override
@@ -653,6 +729,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     }
 
     @Override
+    public SqlCallableInfo getSqlCallableInfo(Class<?> callableClass) throws UnifyException {
+        return sqlCallableInfoMap.get(callableClass);
+    }
+
+    @Override
     protected void onInitialize() throws UnifyException {
 
     }
@@ -660,6 +741,30 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     @Override
     protected void onTerminate() throws UnifyException {
 
+    }
+
+    private String getWorkingSchema(String schema, String dataSource) throws UnifyException {
+        if (StringUtils.isBlank(schema)) {
+            UnifyComponentConfig ucc = getComponentConfig(NameSqlDataSourceSchema.class, dataSource);
+            if (ucc != null) {
+                schema = (String) ucc.getSettings().getSettingValue("appSchema");
+            }
+        }
+
+        return schema;
+    }
+
+    private CallableDataType resolveCallableDataType(CallableDataType type, Field field) throws UnifyException {
+        if (CallableDataType.AUTO.equals(type)) {
+            ColumnType columnType = DataUtils.getColumnType(field.getType());
+            if (columnType == null) {
+                throw new UnifyException(UnifyCoreErrorConstants.CALLABLE_DATATYPE_UNSUPPORTED, field);
+            }
+
+            return CallableDataType.fromCode(columnType.code());
+        }
+
+        return type;
     }
 
     private ChildFieldInfo getChildFieldInfo(Class<?> parentClass, Field childField, Class<? extends Entity> childClass,

@@ -13,18 +13,42 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.annotation.Singleton;
+import java.util.Date;
+
+import com.tcdng.unify.core.annotation.CallableResult;
+import com.tcdng.unify.core.annotation.Result;
 
 /**
- * Abstract SQL entity information factory.
+ * Test callable result class.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
-public abstract class AbstractSqlEntityInfoFactory extends AbstractUnifyComponent implements SqlEntityInfoFactory {
+@CallableResult
+public class CallableResultA {
 
+    @Result
+    private String licenseNo;
+    
+    @Result
+    private Date expiryDt;
+
+    public String getLicenseNo() {
+        return licenseNo;
+    }
+
+    public void setLicenseNo(String licenseNo) {
+        this.licenseNo = licenseNo;
+    }
+
+    public Date getExpiryDt() {
+        return expiryDt;
+    }
+
+    public void setExpiryDt(Date expiryDt) {
+        this.expiryDt = expiryDt;
+    }
 }
