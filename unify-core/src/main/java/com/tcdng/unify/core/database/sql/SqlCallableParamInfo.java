@@ -31,10 +31,13 @@ public class SqlCallableParamInfo extends SqlCallableFieldInfo {
 
     private boolean input;
 
+    private boolean output;
+
     public SqlCallableParamInfo(CallableDataType dataType, String name, Field field, Method getter, Method setter,
-            boolean input) {
+            boolean input, boolean output) {
         super(dataType, name, field, getter, setter);
         this.input = input;
+        this.output = output;
     }
 
     public boolean isInput() {
@@ -42,6 +45,6 @@ public class SqlCallableParamInfo extends SqlCallableFieldInfo {
     }
 
     public boolean isOutput() {
-        return !input;
+        return output;
     }
 }

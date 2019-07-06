@@ -40,6 +40,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ForeignKeyOverride;
 import com.tcdng.unify.core.annotation.Id;
+import com.tcdng.unify.core.annotation.InOutParam;
 import com.tcdng.unify.core.annotation.InParam;
 import com.tcdng.unify.core.annotation.Index;
 import com.tcdng.unify.core.annotation.ListOnly;
@@ -663,25 +664,42 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         Field field = ReflectUtils.getField(callableClass, fieldName);
 
                         CallableDataType type = null;
+                        boolean isInput = false;
+                        boolean isOutput = false;
                         InParam ipa = field.getAnnotation(InParam.class);
                         if (ipa != null) {
                             type = resolveCallableDataType(ipa.value(), field);
+                            isInput = true;
                         }
 
                         OutParam opa = field.getAnnotation(OutParam.class);
                         if (opa != null) {
                             if (ipa != null) {
-                                throw new UnifyException(UnifyCoreErrorConstants.CALLABLE_FIELD_BOTH_INOUT, field);
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.CALLABLE_FIELD_MULTIPLE_PARAM_ANNOTATION, field);
                             }
 
                             type = resolveCallableDataType(opa.value(), field);
+                            isOutput = true;
+                        }
+
+                        InOutParam iopa = field.getAnnotation(InOutParam.class);
+                        if (iopa != null) {
+                            if (ipa != null || opa != null) {
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.CALLABLE_FIELD_MULTIPLE_PARAM_ANNOTATION, field);
+                            }
+
+                            type = resolveCallableDataType(iopa.value(), field);
+                            isInput = true;
+                            isOutput = true;
                         }
 
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(callableClass, field.getName());
 
                         paramInfoList.add(new SqlCallableParamInfo(type, fieldName, field, getterSetterInfo.getGetter(),
-                                getterSetterInfo.getSetter(), ipa != null));
+                                getterSetterInfo.getSetter(), isInput, isOutput));
                     }
                 }
 
