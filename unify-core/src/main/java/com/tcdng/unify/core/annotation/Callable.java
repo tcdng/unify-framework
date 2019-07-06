@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.constant.AnnotationConstants;
 
 /**
@@ -32,6 +33,17 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Callable {
+
+    /**
+     * The application data source that procedure belongs to. Defaults to
+     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
+     */
+    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
+
+    /**
+     * Optional name of schema that procedure belongs to
+     */
+    String schema() default AnnotationConstants.NONE;
 
     /**
      * The procedure name.

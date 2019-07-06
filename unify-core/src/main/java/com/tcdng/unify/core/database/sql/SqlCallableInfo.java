@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.sql;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -39,15 +40,18 @@ public class SqlCallableInfo {
 
     private String preferredProcedureName;
 
+    private String schemaProcedureName;
+
     private List<SqlCallableParamInfo> paramInfoList;
 
     private Map<Class<?>, SqlCallableResultInfo> resultInfoByType;
 
-    public SqlCallableInfo(Class<?> callableClass, String procedureName, String preferredProcedureName,
+    public SqlCallableInfo(Class<?> callableClass, String procedureName, String preferredProcedureName, String schemaProcedureName,
             List<SqlCallableParamInfo> paramInfoList, List<SqlCallableResultInfo> resultInfoList) {
         this.callableClass = callableClass;
         this.procedureName = procedureName;
         this.preferredProcedureName = preferredProcedureName;
+        this.schemaProcedureName = schemaProcedureName;
         this.paramInfoList = DataUtils.unmodifiableList(paramInfoList);
         this.resultInfoByType = Collections.emptyMap();
         if(!DataUtils.isBlank(resultInfoList)) {
@@ -72,14 +76,22 @@ public class SqlCallableInfo {
         return preferredProcedureName;
     }
 
+    public String getSchemaProcedureName() {
+        return schemaProcedureName;
+    }
+
     public List<SqlCallableParamInfo> getParamInfoList() {
         return paramInfoList;
     }
 
-    public Map<Class<?>, SqlCallableResultInfo> getResultInfoByType() {
-        return resultInfoByType;
+    public boolean isParams() {
+        return !paramInfoList.isEmpty();
     }
-
+    
+    public Collection<Class<?>> getResultTypes() {
+        return resultInfoByType.keySet();
+    }
+    
     public SqlCallableResultInfo getResultInfo(Class<?> type) throws UnifyException {
         SqlCallableResultInfo sqlCallableResultInfo = resultInfoByType.get(type);
         if (sqlCallableResultInfo == null) {
