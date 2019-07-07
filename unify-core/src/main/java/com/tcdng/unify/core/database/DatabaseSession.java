@@ -592,6 +592,26 @@ public interface DatabaseSession {
     Date getNow() throws UnifyException;
 
     /**
+     * Executes callable procedure with no results.
+     * 
+     * @param callableProc
+     *            the callable procedure object.
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    void execute(CallableProc callableProc) throws UnifyException;
+
+    /**
+     * Executes callable procedure with result lists.
+     * 
+     * @param callableProc
+     * @return list of result items
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<?>, List<?>> executeWithResults(CallableProc callableProc) throws UnifyException;
+
+    /**
      * Creates and sets a new save point on the session save point stack.
      * 
      * @throws UnifyException

@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.data.AggregateType;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
@@ -72,6 +73,16 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      *             if an error occurs
      */
     SqlEntityInfo getSqlEntityInfo(Class<?> clazz) throws UnifyException;
+
+    /**
+     * Returns the SQL callable information for a callable type.
+     * 
+     * @param clazz
+     *            the callable type
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> clazz) throws UnifyException;
 
     /**
      * Returns data source initialization statements.
@@ -322,6 +333,17 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
             throws UnifyException;
 
     /**
+     * Prepares an SQL callable statement.
+     * 
+     * @param callableProc
+     *            the callable procedure object
+     * @return the callable statement object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlCallableStatement prepareCallableStatement(CallableProc callableProc) throws UnifyException;
+
+    /**
      * Returns the preferred name for dialect.
      * 
      * @param name
@@ -358,6 +380,17 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      *             if an error occurs
      */
     void restoreStatement(SqlStatement sqlStatement) throws UnifyException;
+
+    /**
+     * Restores a callable statement info. This applies to implementations that
+     * maintain a statement info pool.
+     * 
+     * @param sqlCallableStatement
+     *            the statement info to restore
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void restoreCallableStatement(SqlCallableStatement sqlCallableStatement) throws UnifyException;
 
     /**
      * Gets the data source shutdown hook.

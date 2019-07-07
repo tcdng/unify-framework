@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.policy;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -61,6 +62,16 @@ public class StringPolicy extends AbstractSqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         return ((ResultSet) rs).getString(index);
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.VARCHAR);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        return ((CallableStatement) cstmt).getString(index);
     }
 
     @Override

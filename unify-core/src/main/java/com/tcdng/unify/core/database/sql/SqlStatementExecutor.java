@@ -23,6 +23,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.Aggregate;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 
 /**
@@ -249,4 +250,38 @@ public interface SqlStatementExecutor extends UnifyComponent {
      */
     List<Aggregate<?>> executeMultipleAggregateResultQuery(Connection connection,
             SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
+
+    /**
+     * Executes a callable statement.
+     * 
+     * @param connection
+     *            the database connection
+     * @param callableProc
+     *            the callable procedure object which may have its output parameter
+     *            fields set.
+     * @param sqlCallableStatement
+     *            the callable statement to execute
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void executeCallable(Connection connection, CallableProc callableProc, SqlCallableStatement sqlCallableStatement)
+            throws UnifyException;
+
+    /**
+     * Executes a callable statement with results.
+     * 
+     * @param connection
+     *            the database connection
+     * @param callableProc
+     *            the callable procedure object which may have its output parameter
+     *            fields set.
+     * @param sqlCallableStatement
+     *            the callable statement to execute
+     * @return map of result items by type
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<?>, List<?>> executeCallableWithResults(Connection connection, CallableProc callableProc,
+            SqlCallableStatement sqlCallableStatement) throws UnifyException;
+
 }

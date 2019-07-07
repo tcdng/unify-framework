@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.database.sql.policy;
 
 import java.sql.Blob;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -63,6 +64,20 @@ public class BlobPolicy extends AbstractSqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Blob blob = ((ResultSet) rs).getBlob(index);
+        if (blob != null) {
+            return blob.getBytes(1, (int) blob.length());
+        }
+        return null;
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.BLOB);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        Blob blob = ((CallableStatement) cstmt).getBlob(index);
         if (blob != null) {
             return blob.getBytes(1, (int) blob.length());
         }

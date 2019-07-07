@@ -33,6 +33,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
@@ -701,8 +702,28 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public Date getNow() throws UnifyException {
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, Date.class,
-                sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC), sqlDataSourceDialect.generateUTCTimestampSql(),
-                true);
+                sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC),
+                sqlDataSourceDialect.generateUTCTimestampSql(), true);
+    }
+
+    @Override
+    public void execute(CallableProc callableProc) throws UnifyException {
+        SqlCallableStatement sqlCallableStatement = sqlDataSourceDialect.prepareCallableStatement(callableProc);
+        try {
+            getSqlStatementExecutor().executeCallable(connection, callableProc, sqlCallableStatement);
+        } finally {
+            sqlDataSourceDialect.restoreCallableStatement(sqlCallableStatement);
+        }
+    }
+
+    @Override
+    public Map<Class<?>, List<?>> executeWithResults(CallableProc callableProc) throws UnifyException {
+        SqlCallableStatement sqlCallableStatement = sqlDataSourceDialect.prepareCallableStatement(callableProc);
+        try {
+            return getSqlStatementExecutor().executeCallableWithResults(connection, callableProc, sqlCallableStatement);
+        } finally {
+            sqlDataSourceDialect.restoreCallableStatement(sqlCallableStatement);
+        }
     }
 
     @Override

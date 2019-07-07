@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Result {
+public @interface ResultField {
 
     /** The field {@link CallableDataType}. */
     CallableDataType value() default CallableDataType.AUTO;

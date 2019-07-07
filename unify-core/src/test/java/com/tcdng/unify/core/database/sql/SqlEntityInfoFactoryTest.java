@@ -21,7 +21,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
@@ -48,15 +47,14 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
         assertEquals(CallableProcA.class, sqlCallableInfo.getCallableClass());
         assertEquals("procedure_a", sqlCallableInfo.getProcedureName());
         assertEquals("procedure_a", sqlCallableInfo.getPreferredProcedureName());
+        assertEquals("PUBLIC.procedure_a", sqlCallableInfo.getSchemaProcedureName());
         assertFalse(sqlCallableInfo.isParams());
 
         List<SqlCallableParamInfo> paramInfoList = sqlCallableInfo.getParamInfoList();
         assertNotNull(paramInfoList);
         assertTrue(paramInfoList.isEmpty());
 
-        Collection<Class<?>> resultTypes = sqlCallableInfo.getResultTypes();
-        assertNotNull(resultTypes);
-        assertTrue(resultTypes.isEmpty());
+        assertFalse(sqlCallableInfo.isResults());
     }
 
     @Test
@@ -66,6 +64,7 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
         assertEquals(CallableProcB.class, sqlCallableInfo.getCallableClass());
         assertEquals("procedure_b", sqlCallableInfo.getProcedureName());
         assertEquals("procedure_b", sqlCallableInfo.getPreferredProcedureName());
+        assertEquals("PUBLIC.procedure_b", sqlCallableInfo.getSchemaProcedureName());
         assertTrue(sqlCallableInfo.isParams());
 
         List<SqlCallableParamInfo> paramInfoList = sqlCallableInfo.getParamInfoList();
@@ -127,9 +126,7 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
         assertTrue(sqlCallableParamInfo.isOutput());
         assertFalse(sqlCallableParamInfo.isInput());
 
-        Collection<Class<?>> resultTypes = sqlCallableInfo.getResultTypes();
-        assertNotNull(resultTypes);
-        assertTrue(resultTypes.isEmpty());
+        assertFalse(sqlCallableInfo.isResults());
     }
 
     @Test
@@ -139,17 +136,17 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
         assertEquals(CallableProcC.class, sqlCallableInfo.getCallableClass());
         assertEquals("procedure_c", sqlCallableInfo.getProcedureName());
         assertEquals("procedure_c", sqlCallableInfo.getPreferredProcedureName());
+        assertEquals("PUBLIC.procedure_c", sqlCallableInfo.getSchemaProcedureName());
         assertFalse(sqlCallableInfo.isParams());
 
         List<SqlCallableParamInfo> paramInfoList = sqlCallableInfo.getParamInfoList();
         assertNotNull(paramInfoList);
         assertTrue(paramInfoList.isEmpty());
 
-        Collection<Class<?>> resultTypes = sqlCallableInfo.getResultTypes();
-        assertNotNull(resultTypes);
-        assertEquals(1, resultTypes.size());
+        List<SqlCallableResultInfo> resultInfoList = sqlCallableInfo.getResultInfoList();
+        assertNotNull(resultInfoList);
 
-        SqlCallableResultInfo sqlCallableResultInfo = sqlCallableInfo.getResultInfo(CallableResultA.class);
+        SqlCallableResultInfo sqlCallableResultInfo = resultInfoList.get(0);
         assertNotNull(sqlCallableResultInfo);
         assertEquals(CallableResultA.class, sqlCallableResultInfo.getCallableResultClass());
         List<SqlCallableFieldInfo> fieldInfoList = sqlCallableResultInfo.getFieldList();
@@ -182,6 +179,7 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
         assertEquals(CallableProcD.class, sqlCallableInfo.getCallableClass());
         assertEquals("procedure_d", sqlCallableInfo.getProcedureName());
         assertEquals("procedure_d", sqlCallableInfo.getPreferredProcedureName());
+        assertEquals("PUBLIC.procedure_d", sqlCallableInfo.getSchemaProcedureName());
         assertTrue(sqlCallableInfo.isParams());
 
         List<SqlCallableParamInfo> paramInfoList = sqlCallableInfo.getParamInfoList();
@@ -243,11 +241,10 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
         assertTrue(sqlCallableParamInfo.isOutput());
         assertFalse(sqlCallableParamInfo.isInput());
 
-        Collection<Class<?>> resultTypes = sqlCallableInfo.getResultTypes();
-        assertNotNull(resultTypes);
-        assertEquals(1, resultTypes.size());
+        List<SqlCallableResultInfo> resultInfoList = sqlCallableInfo.getResultInfoList();
+        assertNotNull(resultInfoList);
 
-        SqlCallableResultInfo sqlCallableResultInfo = sqlCallableInfo.getResultInfo(CallableResultA.class);
+        SqlCallableResultInfo sqlCallableResultInfo = resultInfoList.get(0);
         assertNotNull(sqlCallableResultInfo);
         assertEquals(CallableResultA.class, sqlCallableResultInfo.getCallableResultClass());
         List<SqlCallableFieldInfo> fieldInfoList = sqlCallableResultInfo.getFieldList();

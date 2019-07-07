@@ -36,6 +36,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.Query;
@@ -102,20 +103,22 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Configurable(ApplicationComponents.APPLICATION_SQLENTITYINFOFACTORY)
     private SqlEntityInfoFactory sqlEntityInfoFactory;
 
-    @Configurable("2000")
+    @Configurable("4000")
     private long getStatementInfoTimeout;
 
     @Configurable("1")
     private int minStatementInfo;
 
-    @Configurable("32")
+    @Configurable("64")
     private int maxStatementInfo;
 
     private DateFormat timestampFormat;
 
     private SqlCacheFactory sqlCacheFactory;
 
-    private SqlStatementInfoPoolMapFactory sqlStatementInfoPoolMapFactory;
+    private SqlStatementPoolsFactory sqlStatementPoolsFactory;
+
+    private SqlCallableStatementPools sqlCallableStatementPools;
 
     private Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies;
 
@@ -135,7 +138,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         this.appendNullOnTblCreate = appendNullOnTblCreate;
         timestampFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
         sqlCacheFactory = new SqlCacheFactory();
-        sqlStatementInfoPoolMapFactory = new SqlStatementInfoPoolMapFactory();
+        sqlStatementPoolsFactory = new SqlStatementPoolsFactory();
 
         sqlDataTypePolicies = new HashMap<ColumnType, SqlDataTypePolicy>();
         sqlDataTypePolicies.put(ColumnType.BLOB, new BlobPolicy());
@@ -182,6 +185,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlCriteriaPolicies.put(Operator.IS_NOT_NULL, new IsNotNullPolicy(this));
         sqlCriteriaPolicies.put(Operator.AND, new AndPolicy(this));
         sqlCriteriaPolicies.put(Operator.OR, new OrPolicy(this));
+
+        sqlCallableStatementPools = new SqlCallableStatementPools(sqlDataTypePolicies, getStatementInfoTimeout,
+                minStatementInfo, maxStatementInfo);
     }
 
     @Override
@@ -833,7 +839,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlEntityInfo getSqlEntityInfo(Class<?> clazz) throws UnifyException {
-        return (SqlEntityInfo) sqlEntityInfoFactory.getSqlEntityInfo(clazz);
+        return sqlEntityInfoFactory.getSqlEntityInfo(clazz);
+    }
+
+    @Override
+    public SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> clazz) throws UnifyException {
+        return sqlEntityInfoFactory.getSqlCallableInfo(clazz);
     }
 
     @Override
@@ -923,19 +934,19 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlStatement prepareCreateStatement(Entity record) throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(SqlUtils.getEntityClass(record))
-                .getSqlStatement(SqlStatementType.CREATE, record);
+        return sqlStatementPoolsFactory.get(SqlUtils.getEntityClass(record)).getSqlStatement(SqlStatementType.CREATE,
+                record);
     }
 
     @Override
     public SqlStatement prepareDeleteByPkStatement(Class<?> clazz, Object pk) throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(clazz).getSqlStatement(SqlStatementType.DELETE_BY_PK, pk);
+        return sqlStatementPoolsFactory.get(clazz).getSqlStatement(SqlStatementType.DELETE_BY_PK, pk);
     }
 
     @Override
     public SqlStatement prepareDeleteByPkVersionStatement(Class<?> clazz, Object pk, Object versionNo)
             throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(clazz).getSqlStatement(SqlStatementType.DELETE_BY_PK_VERSION, pk,
+        return sqlStatementPoolsFactory.get(clazz).getSqlStatement(SqlStatementType.DELETE_BY_PK_VERSION, pk,
                 versionNo);
     }
 
@@ -950,14 +961,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlStatement prepareFindByPkStatement(Class<?> clazz, Object pk) throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(clazz).getSqlStatement(SqlStatementType.FIND_BY_PK, pk);
+        return sqlStatementPoolsFactory.get(clazz).getSqlStatement(SqlStatementType.FIND_BY_PK, pk);
     }
 
     @Override
     public SqlStatement prepareFindByPkVersionStatement(Class<?> clazz, Object pk, Object versionNo)
             throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(clazz).getSqlStatement(SqlStatementType.FIND_BY_PK_VERSION, pk,
-                versionNo);
+        return sqlStatementPoolsFactory.get(clazz).getSqlStatement(SqlStatementType.FIND_BY_PK_VERSION, pk, versionNo);
     }
 
     @Override
@@ -1030,14 +1040,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlStatement prepareListByPkStatement(Class<?> clazz, Object pk) throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(clazz).getSqlStatement(SqlStatementType.LIST_BY_PK, pk);
+        return sqlStatementPoolsFactory.get(clazz).getSqlStatement(SqlStatementType.LIST_BY_PK, pk);
     }
 
     @Override
     public SqlStatement prepareListByPkVersionStatement(Class<?> clazz, Object pk, Object versionNo)
             throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(clazz).getSqlStatement(SqlStatementType.LIST_BY_PK_VERSION, pk,
-                versionNo);
+        return sqlStatementPoolsFactory.get(clazz).getSqlStatement(SqlStatementType.LIST_BY_PK_VERSION, pk, versionNo);
     }
 
     @Override
@@ -1206,13 +1215,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlStatement prepareUpdateByPkStatement(Entity record) throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(SqlUtils.getEntityClass(record))
+        return sqlStatementPoolsFactory.get(SqlUtils.getEntityClass(record))
                 .getSqlStatement(SqlStatementType.UPDATE_BY_PK, record);
     }
 
     @Override
     public SqlStatement prepareUpdateByPkVersionStatement(Entity record, Object oldVersionNo) throws UnifyException {
-        return sqlStatementInfoPoolMapFactory.get(SqlUtils.getEntityClass(record))
+        return sqlStatementPoolsFactory.get(SqlUtils.getEntityClass(record))
                 .getSqlStatement(SqlStatementType.UPDATE_BY_PK_VERSION, record, oldVersionNo);
     }
 
@@ -1246,6 +1255,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
+    public SqlCallableStatement prepareCallableStatement(CallableProc callableProc) throws UnifyException {
+        SqlCallableInfo sqlCallableInfo = sqlEntityInfoFactory.getSqlCallableInfo(callableProc.getClass());
+        return sqlCallableStatementPools.getSqlCallableStatement(sqlCallableInfo, callableProc);
+    }
+
+    @Override
     public String translateCriteria(Criteria query) throws UnifyException {
         StringBuilder sql = new StringBuilder();
         translateCriteria(sql, null, query);
@@ -1275,7 +1290,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public void restoreStatement(SqlStatement sqlStatement) throws UnifyException {
-        sqlStatementInfoPoolMapFactory.get(sqlStatement.getSqlEntityInfo().getKeyClass()).restore(sqlStatement);
+        sqlStatementPoolsFactory.get(sqlStatement.getSqlEntityInfo().getKeyClass()).restore(sqlStatement);
+    }
+
+    @Override
+    public void restoreCallableStatement(SqlCallableStatement sqlCallableStatement) throws UnifyException {
+        sqlCallableStatementPools.restore(sqlCallableStatement);
     }
 
     @Override
@@ -1724,6 +1744,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return 0;
     }
 
+    private class SqlStatementPoolsFactory extends FactoryMap<Class<?>, SqlStatementPools> {
+        @Override
+        protected SqlStatementPools create(Class<?> clazz, Object... params) throws Exception {
+            return new SqlStatementPools(sqlEntityInfoFactory.getSqlEntityInfo(clazz), sqlDataTypePolicies,
+                    sqlCacheFactory.get(clazz), getStatementInfoTimeout, minStatementInfo, maxStatementInfo);
+        }
+    };
+
     private SqlColumnAlterInfo checkSqlColumnAltered(SqlFieldSchemaInfo sqlFieldSchemaInfo,
             SqlFieldSchemaInfo oldSqlFieldSchemaInfo) throws UnifyException {
         boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
@@ -1803,14 +1831,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             throws UnifyException {
         sqlCriteriaPolicies.get(criteria.getOperator()).translate(sql, sqlEntityInfo, criteria);
     }
-
-    private class SqlStatementInfoPoolMapFactory extends FactoryMap<Class<?>, SqlStatementPools> {
-        @Override
-        protected SqlStatementPools create(Class<?> clazz, Object... params) throws Exception {
-            return new SqlStatementPools(sqlEntityInfoFactory.getSqlEntityInfo(clazz), sqlDataTypePolicies,
-                    sqlCacheFactory.get(clazz), getStatementInfoTimeout, minStatementInfo, maxStatementInfo);
-        }
-    };
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,
             ViewAliasInfo viewAliasInfo, Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap) {

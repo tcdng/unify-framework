@@ -60,7 +60,7 @@ public @interface Callable {
 
     /**
      * An array of result types returned by callable. Types must be annotated with
-     * {@link CallableResult} and must have fields annotated with {@link Result}.
+     * {@link CallableResult} and must have fields annotated with {@link ResultField}.
      */
     Class<?>[] results() default {};
 }

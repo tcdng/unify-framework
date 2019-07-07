@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database.sql;
 import java.util.Date;
 
 import com.tcdng.unify.core.annotation.CallableResult;
-import com.tcdng.unify.core.annotation.Result;
+import com.tcdng.unify.core.annotation.ResultField;
 
 /**
  * Test callable result class.
@@ -30,10 +30,10 @@ import com.tcdng.unify.core.annotation.Result;
 @CallableResult
 public class CallableResultA {
 
-    @Result
+    @ResultField
     private String licenseNo;
     
-    @Result
+    @ResultField
     private Date expiryDt;
 
     public String getLicenseNo() {

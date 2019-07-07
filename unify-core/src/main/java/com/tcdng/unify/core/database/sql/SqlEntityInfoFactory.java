@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.database.CallableProc;
 
 /**
  * SQL entity information factory.
@@ -56,5 +57,5 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlCallableInfo getSqlCallableInfo(Class<?> callableClass) throws UnifyException;
+    SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> callableClass) throws UnifyException;
 }
