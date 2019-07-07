@@ -17,7 +17,7 @@
 package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.annotation.Callable;
-import com.tcdng.unify.core.database.CallableProc;
+import com.tcdng.unify.core.database.AbstractCallableProc;
 
 /**
  * Test callable procedure with no parameters and no results.
@@ -26,6 +26,6 @@ import com.tcdng.unify.core.database.CallableProc;
  * @since 1.0
  */
 @Callable(procedure = "procedure_a")
-public class CallableProcA implements CallableProc {
+public class CallableProcA extends AbstractCallableProc {
 
 }

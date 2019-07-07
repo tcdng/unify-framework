@@ -32,14 +32,17 @@ public class SqlCallableStatement {
 
     private List<SqlParameter> parameterInfoList;
 
-    private Map<Class<?>, List<SqlCallableResult>> resultInfoListByType;
+    private Map<Class<?>, SqlCallableResult> resultInfoListByType;
 
-    public SqlCallableStatement(SqlCallableInfo sqlCallableInfo, String sql,
-            List<SqlParameter> parameterInfoList, Map<Class<?>, List<SqlCallableResult>> resultInfoListByType) {
+    private SqlDataTypePolicy returnTypePolicy;
+
+    public SqlCallableStatement(SqlCallableInfo sqlCallableInfo, String sql, List<SqlParameter> parameterInfoList,
+            Map<Class<?>, SqlCallableResult> resultInfoListByType, SqlDataTypePolicy returnTypePolicy) {
         this.sqlCallableInfo = sqlCallableInfo;
         this.sql = sql;
         this.parameterInfoList = parameterInfoList;
         this.resultInfoListByType = resultInfoListByType;
+        this.returnTypePolicy = returnTypePolicy;
     }
 
     public SqlCallableInfo getSqlCallableInfo() {
@@ -54,8 +57,12 @@ public class SqlCallableStatement {
         return parameterInfoList;
     }
 
-    public Map<Class<?>, List<SqlCallableResult>> getResultInfoListByType() {
+    public Map<Class<?>, SqlCallableResult> getResultInfoListByType() {
         return resultInfoListByType;
+    }
+
+    public SqlDataTypePolicy getReturnTypePolicy() {
+        return returnTypePolicy;
     }
 
     public String toString() {
@@ -79,4 +86,3 @@ public class SqlCallableStatement {
         return sb.toString();
     }
 }
-

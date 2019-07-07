@@ -24,4 +24,16 @@ package com.tcdng.unify.core.database;
  */
 public interface CallableProc {
 
+    /**
+     * Gets the callable procedure return value.
+     * @return the return value object.
+     */
+    Object getReturnValue();
+    
+    /**
+     * Sets the callable procedure return value.
+     * 
+     * @param returnValue the return value to set
+     */
+    void setReturnValue(Object returnValue);
 }

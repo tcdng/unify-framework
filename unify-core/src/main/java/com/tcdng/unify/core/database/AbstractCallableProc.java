@@ -14,18 +14,26 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
-
-import com.tcdng.unify.core.annotation.Callable;
-import com.tcdng.unify.core.database.AbstractCallableProc;
+package com.tcdng.unify.core.database;
 
 /**
- * Test callable procedure with no parameters and with results.
+ * Convenient abstract base class for callable procedures.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Callable(procedure = "procedure_c", results = {CallableResultA.class})
-public class CallableProcC extends AbstractCallableProc {
+public abstract class AbstractCallableProc implements CallableProc {
+
+    private Object returnValue;
+
+    @Override
+    public Object getReturnValue() {
+        return returnValue;
+    }
+
+    @Override
+    public void setReturnValue(Object returnValue) {
+        this.returnValue = returnValue;
+    }
 
 }

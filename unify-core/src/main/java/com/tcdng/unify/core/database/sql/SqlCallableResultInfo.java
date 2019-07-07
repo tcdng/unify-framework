@@ -32,9 +32,12 @@ public class SqlCallableResultInfo {
 
     private List<SqlCallableFieldInfo> fieldList;
 
-    public SqlCallableResultInfo(Class<?> callableResultClass, List<SqlCallableFieldInfo> fieldList) {
+    private boolean useIndexing;
+    
+    public SqlCallableResultInfo(Class<?> callableResultClass, List<SqlCallableFieldInfo> fieldList, boolean useIndexing) {
         this.callableResultClass = callableResultClass;
         this.fieldList = DataUtils.unmodifiableList(fieldList);
+        this.useIndexing = useIndexing;
     }
 
     public Class<?> getCallableResultClass() {
@@ -43,6 +46,10 @@ public class SqlCallableResultInfo {
 
     public List<SqlCallableFieldInfo> getFieldList() {
         return fieldList;
+    }
+
+    public boolean isUseIndexing() {
+        return useIndexing;
     }
 
 }

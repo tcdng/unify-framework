@@ -40,15 +40,18 @@ public class SqlCallableInfo {
 
     private List<SqlCallableResultInfo> resultInfoList;
 
+    private SqlCallableFieldInfo returnValueInfo;
+    
     public SqlCallableInfo(Class<?> callableClass, String procedureName, String preferredProcedureName,
             String schemaProcedureName, List<SqlCallableParamInfo> paramInfoList,
-            List<SqlCallableResultInfo> resultInfoList) {
+            List<SqlCallableResultInfo> resultInfoList, SqlCallableFieldInfo returnValueInfo) {
         this.callableClass = callableClass;
         this.procedureName = procedureName;
         this.preferredProcedureName = preferredProcedureName;
         this.schemaProcedureName = schemaProcedureName;
         this.paramInfoList = DataUtils.unmodifiableList(paramInfoList);
         this.resultInfoList = DataUtils.unmodifiableList(resultInfoList);
+        this.returnValueInfo = returnValueInfo;
     }
 
     public Class<?> getCallableClass() {
@@ -81,5 +84,13 @@ public class SqlCallableInfo {
 
     public boolean isResults() {
         return !resultInfoList.isEmpty();
+    }
+
+    public SqlCallableFieldInfo getReturnValueInfo() {
+        return returnValueInfo;
+    }
+
+    public boolean isWithReturn() {
+        return returnValueInfo != null;
     }
 }

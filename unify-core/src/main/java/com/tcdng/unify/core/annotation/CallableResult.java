@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Annotation that indicates a callable result.
  * 
@@ -31,4 +33,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CallableResult {
 
+    /**
+     * Comma-separated list of result fields. Field names are the names of fields of
+     * callable type that are annotated with {@link ResultField}. Order of field
+     * names in the list must match the order columns in the procedure result
+     * select. If this value is set, indexing is used in reading results otherwise
+     * field column names are used.
+     */
+    String fields() default AnnotationConstants.NONE;
 }

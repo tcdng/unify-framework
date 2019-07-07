@@ -13,9 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.database.sql;
 
-import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * SQL callable result object.
@@ -25,32 +26,20 @@ import java.lang.reflect.Method;
  */
 public class SqlCallableResult {
 
-    private SqlDataTypePolicy sqlDataTypePolicy;
+    private List<SqlCallableResultField> fieldList;
+    
+    private boolean useIndexing;
 
-    private SqlCallableFieldInfo sqlCallableFieldInfo;
-
-    public SqlCallableResult(SqlDataTypePolicy sqlDataTypePolicy, SqlCallableFieldInfo sqlCallableFieldInfo) {
-        this.sqlDataTypePolicy = sqlDataTypePolicy;
-        this.sqlCallableFieldInfo = sqlCallableFieldInfo;
+    public SqlCallableResult(List<SqlCallableResultField> fieldList, boolean useIndexing) {
+        this.fieldList = fieldList;
+        this.useIndexing = useIndexing;
     }
 
-    public SqlDataTypePolicy getSqlDataTypePolicy() {
-        return sqlDataTypePolicy;
+    public List<SqlCallableResultField> getFieldList() {
+        return fieldList;
     }
 
-    public Class<?> getType() {
-        return sqlCallableFieldInfo.getField().getType();
-    }
-
-    public String getName() {
-        return sqlCallableFieldInfo.getName();
-    }
-
-    public Method getGetter() {
-        return sqlCallableFieldInfo.getGetter();
-    }
-
-    public Method getSetter() {
-        return sqlCallableFieldInfo.getSetter();
+    public boolean isUseIndexing() {
+        return useIndexing;
     }
 }
