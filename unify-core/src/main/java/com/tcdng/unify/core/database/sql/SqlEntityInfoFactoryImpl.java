@@ -40,12 +40,13 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ForeignKeyOverride;
 import com.tcdng.unify.core.annotation.Id;
+import com.tcdng.unify.core.annotation.InOutParam;
 import com.tcdng.unify.core.annotation.InParam;
 import com.tcdng.unify.core.annotation.Index;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.annotation.Policy;
-import com.tcdng.unify.core.annotation.Result;
+import com.tcdng.unify.core.annotation.ResultField;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.annotation.Version;
@@ -53,6 +54,7 @@ import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.CycleDetector;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.StaticReference;
@@ -84,7 +86,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
     private FactoryMap<Class<?>, SqlEntityInfo> sqlEntityInfoMap;
 
-    private FactoryMap<Class<?>, SqlCallableInfo> sqlCallableInfoMap;
+    private FactoryMap<Class<? extends CallableProc>, SqlCallableInfo> sqlCallableInfoMap;
 
     private int tAliasCounter;
 
@@ -640,10 +642,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
         };
 
-        sqlCallableInfoMap = new FactoryMap<Class<?>, SqlCallableInfo>() {
+        sqlCallableInfoMap = new FactoryMap<Class<? extends CallableProc>, SqlCallableInfo>() {
 
             @Override
-            protected SqlCallableInfo create(Class<?> callableClass, Object... params) throws Exception {
+            protected SqlCallableInfo create(Class<? extends CallableProc> callableClass, Object... params)
+                    throws Exception {
                 ReflectUtils.assertAnnotation(callableClass, Callable.class);
                 Callable ca = callableClass.getAnnotation(Callable.class);
 
@@ -663,25 +666,42 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         Field field = ReflectUtils.getField(callableClass, fieldName);
 
                         CallableDataType type = null;
+                        boolean isInput = false;
+                        boolean isOutput = false;
                         InParam ipa = field.getAnnotation(InParam.class);
                         if (ipa != null) {
                             type = resolveCallableDataType(ipa.value(), field);
+                            isInput = true;
                         }
 
                         OutParam opa = field.getAnnotation(OutParam.class);
                         if (opa != null) {
                             if (ipa != null) {
-                                throw new UnifyException(UnifyCoreErrorConstants.CALLABLE_FIELD_BOTH_INOUT, field);
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.CALLABLE_FIELD_MULTIPLE_PARAM_ANNOTATION, field);
                             }
 
                             type = resolveCallableDataType(opa.value(), field);
+                            isOutput = true;
+                        }
+
+                        InOutParam iopa = field.getAnnotation(InOutParam.class);
+                        if (iopa != null) {
+                            if (ipa != null || opa != null) {
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.CALLABLE_FIELD_MULTIPLE_PARAM_ANNOTATION, field);
+                            }
+
+                            type = resolveCallableDataType(iopa.value(), field);
+                            isInput = true;
+                            isOutput = true;
                         }
 
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(callableClass, field.getName());
 
                         paramInfoList.add(new SqlCallableParamInfo(type, fieldName, field, getterSetterInfo.getGetter(),
-                                getterSetterInfo.getSetter(), ipa != null));
+                                getterSetterInfo.getSetter(), isInput, isOutput));
                     }
                 }
 
@@ -696,7 +716,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         do {
                             Field[] fields = searchClass.getDeclaredFields();
                             for (Field field : fields) {
-                                Result ra = field.getAnnotation(Result.class);
+                                ResultField ra = field.getAnnotation(ResultField.class);
                                 if (ra != null) {
                                     CallableDataType dataType = resolveCallableDataType(ra.value(), field);
                                     GetterSetterInfo getterSetterInfo =
@@ -729,7 +749,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     }
 
     @Override
-    public SqlCallableInfo getSqlCallableInfo(Class<?> callableClass) throws UnifyException {
+    public SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> callableClass) throws UnifyException {
         return sqlCallableInfoMap.get(callableClass);
     }
 

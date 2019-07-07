@@ -22,14 +22,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation that indicates a field is a result.
+ * Annotation that indicates a field is an input/output parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Result {
+public @interface InOutParam {
 
     /** The field {@link CallableDataType}. */
     CallableDataType value() default CallableDataType.AUTO;

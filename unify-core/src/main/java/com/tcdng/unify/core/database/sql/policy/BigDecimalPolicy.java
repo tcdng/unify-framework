@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.database.sql.policy;
 
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -52,6 +53,16 @@ public class BigDecimalPolicy extends AbstractSqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         return ((ResultSet) rs).getBigDecimal(index);
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.DECIMAL);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        return ((CallableStatement) cstmt).getBigDecimal(index);
     }
 
     @Override

@@ -53,6 +53,10 @@ public enum CallableDataType implements EnumConst {
         return columnType.code();
     }
 
+    public ColumnType columnType() {
+        return columnType;
+    }
+    
     public static CallableDataType fromCode(String code) {
         return EnumUtils.fromCode(CallableDataType.class, code);
     }

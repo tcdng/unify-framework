@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.policy;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -77,6 +78,21 @@ public class EnumConstPolicy extends AbstractSqlDataTypePolicy {
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Object object = ((ResultSet) rs).getString(index);
         if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.VARCHAR);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        Object object = ((CallableStatement) cstmt).getString(index);
+        if (((CallableStatement) cstmt).wasNull()) {
             return null;
         }
         return EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) object);

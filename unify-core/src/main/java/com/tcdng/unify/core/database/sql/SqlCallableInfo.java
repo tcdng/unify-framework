@@ -16,14 +16,8 @@
 
 package com.tcdng.unify.core.database.sql;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -44,24 +38,17 @@ public class SqlCallableInfo {
 
     private List<SqlCallableParamInfo> paramInfoList;
 
-    private Map<Class<?>, SqlCallableResultInfo> resultInfoByType;
+    private List<SqlCallableResultInfo> resultInfoList;
 
-    public SqlCallableInfo(Class<?> callableClass, String procedureName, String preferredProcedureName, String schemaProcedureName,
-            List<SqlCallableParamInfo> paramInfoList, List<SqlCallableResultInfo> resultInfoList) {
+    public SqlCallableInfo(Class<?> callableClass, String procedureName, String preferredProcedureName,
+            String schemaProcedureName, List<SqlCallableParamInfo> paramInfoList,
+            List<SqlCallableResultInfo> resultInfoList) {
         this.callableClass = callableClass;
         this.procedureName = procedureName;
         this.preferredProcedureName = preferredProcedureName;
         this.schemaProcedureName = schemaProcedureName;
         this.paramInfoList = DataUtils.unmodifiableList(paramInfoList);
-        this.resultInfoByType = Collections.emptyMap();
-        if(!DataUtils.isBlank(resultInfoList)) {
-            Map<Class<?>, SqlCallableResultInfo> map = new HashMap<Class<?>, SqlCallableResultInfo>();
-            for (SqlCallableResultInfo sqlCallableResultInfo: resultInfoList) {
-                map.put(sqlCallableResultInfo.getCallableResultClass(), sqlCallableResultInfo);
-            }
-            
-            this.resultInfoByType = DataUtils.unmodifiableMap(map);
-        }
+        this.resultInfoList = DataUtils.unmodifiableList(resultInfoList);
     }
 
     public Class<?> getCallableClass() {
@@ -87,17 +74,12 @@ public class SqlCallableInfo {
     public boolean isParams() {
         return !paramInfoList.isEmpty();
     }
-    
-    public Collection<Class<?>> getResultTypes() {
-        return resultInfoByType.keySet();
-    }
-    
-    public SqlCallableResultInfo getResultInfo(Class<?> type) throws UnifyException {
-        SqlCallableResultInfo sqlCallableResultInfo = resultInfoByType.get(type);
-        if (sqlCallableResultInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.CALLABLE_RESULT_TYPE_NOT_FOUND, callableClass, type);
-        }
 
-        return sqlCallableResultInfo;
+    public List<SqlCallableResultInfo> getResultInfoList() {
+        return resultInfoList;
+    }
+
+    public boolean isResults() {
+        return !resultInfoList.isEmpty();
     }
 }

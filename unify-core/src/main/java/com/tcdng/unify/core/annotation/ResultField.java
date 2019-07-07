@@ -14,41 +14,23 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.annotation;
 
-import java.util.Date;
-
-import com.tcdng.unify.core.annotation.CallableResult;
-import com.tcdng.unify.core.annotation.ResultField;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Test callable result class.
+ * Annotation that indicates a field is a result.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@CallableResult
-public class CallableResultA {
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ResultField {
 
-    @ResultField
-    private String licenseNo;
-    
-    @ResultField
-    private Date expiryDt;
-
-    public String getLicenseNo() {
-        return licenseNo;
-    }
-
-    public void setLicenseNo(String licenseNo) {
-        this.licenseNo = licenseNo;
-    }
-
-    public Date getExpiryDt() {
-        return expiryDt;
-    }
-
-    public void setExpiryDt(Date expiryDt) {
-        this.expiryDt = expiryDt;
-    }
+    /** The field {@link CallableDataType}. */
+    CallableDataType value() default CallableDataType.AUTO;
 }

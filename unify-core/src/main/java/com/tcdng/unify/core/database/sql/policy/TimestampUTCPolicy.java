@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.policy;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -57,6 +58,20 @@ public class TimestampUTCPolicy extends AbstractSqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Timestamp timestamp = ((ResultSet) rs).getTimestamp(index);
+        if (timestamp != null) {
+            return new Date(timestamp.getTime() + utcOffset);
+        }
+        return null;
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.TIMESTAMP);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        Timestamp timestamp = ((CallableStatement) cstmt).getTimestamp(index);
         if (timestamp != null) {
             return new Date(timestamp.getTime() + utcOffset);
         }

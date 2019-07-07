@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.policy;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -56,6 +57,20 @@ public class ShortPolicy extends AbstractSqlDataTypePolicy {
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Object object = ((ResultSet) rs).getShort(index);
         if (((ResultSet) rs).wasNull()) {
+            return null;
+        }
+        return object;
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.SMALLINT);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        Object object = ((CallableStatement) cstmt).getShort(index);
+        if (((CallableStatement) cstmt).wasNull()) {
             return null;
         }
         return object;

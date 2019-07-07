@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.policy;
 
+import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,6 +64,20 @@ public class ClobPolicy extends AbstractSqlDataTypePolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         Clob clob = ((ResultSet) rs).getClob(index);
+        if (clob != null) {
+            return clob.getSubString(1, (int) clob.length());
+        }
+        return null;
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.CLOB);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        Clob clob = ((CallableStatement) cstmt).getClob(index);
         if (clob != null) {
             return clob.getSubString(1, (int) clob.length());
         }

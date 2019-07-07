@@ -29,7 +29,7 @@ public interface SqlDataTypePolicy {
      * @return the alternative default
      */
     String getAltDefault();
-    
+
     /**
      * Gets the java SQL data type.
      * 
@@ -63,9 +63,11 @@ public interface SqlDataTypePolicy {
      * 
      * @param sb
      *            the builder to append to
-     * @param type the field type
+     * @param type
+     *            the field type
      * @param defaultVal
-     *            the optional default value. If null or blank, Alternative default values are used.
+     *            the optional default value. If null or blank, Alternative default
+     *            values are used.
      */
     void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal);
 
@@ -74,9 +76,11 @@ public interface SqlDataTypePolicy {
      * 
      * @param sb
      *            the builder to append to
-     * @param type the field type
+     * @param type
+     *            the field type
      * @param defaultVal
-     *            the optional default value. If null or blank, Alternative default values are used.
+     *            the optional default value. If null or blank, Alternative default
+     *            values are used.
      */
     void appendDefaultVal(StringBuilder sb, Class<?> type, String defaultVal);
 
@@ -97,7 +101,19 @@ public interface SqlDataTypePolicy {
     void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception;
 
     /**
-     * Executes resultset getter using supplied column name.
+     * Executes the register output parameter of a callable statement.
+     * 
+     * @param cstmt
+     *            the callable statement
+     * @param index
+     *            the data index
+     * @throws Exception
+     *             if an error occurs
+     */
+    void executeRegisterOutParameter(Object cstmt, int index) throws Exception;
+
+    /**
+     * Executes result set getter using supplied column name.
      * 
      * @param rs
      *            the result set
@@ -114,7 +130,7 @@ public interface SqlDataTypePolicy {
     Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception;
 
     /**
-     * Executes resultset getter using supplied column index.
+     * Executes result set getter using supplied column index.
      * 
      * @param rs
      *            the result set
@@ -129,4 +145,21 @@ public interface SqlDataTypePolicy {
      *             if an error occurs
      */
     Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception;
+
+    /**
+     * Executes callable statement output using supplied column index.
+     * 
+     * @param cstmt
+     *            the callable statement
+     * @param type
+     *            the result type
+     * @param index
+     *            the result column index
+     * @param utcOffset
+     *            UTC offset for timestamp type
+     * @return the result value
+     * @throws Exception
+     *             if an error occurs
+     */
+    Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception;
 }

@@ -35,9 +35,11 @@ import com.tcdng.unify.core.operation.Update;
 public interface Database extends UnifyComponent {
 
     /**
-     * Explicitly join current transaction in application database transaction manager.
+     * Explicitly join current transaction in application database transaction
+     * manager.
      * 
-     * @throws UnifyException if an error occurs
+     * @throws UnifyException
+     *             if an error occurs
      */
     void joinTransaction() throws UnifyException;
 
@@ -58,7 +60,7 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
      */
     DatabaseSession createDatabaseSession() throws UnifyException;
-    
+
     /**
      * Finds record of specified type by id. List-only properties of returned object
      * are not populated. Child and child list properties are populated.
@@ -679,4 +681,24 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
      */
     Date getNow() throws UnifyException;
+
+    /**
+     * Executes callable procedure with no results.
+     * 
+     * @param callableProc
+     *            the callable procedure object.
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    void execute(CallableProc callableProc) throws UnifyException;
+
+    /**
+     * Executes callable procedure with result lists.
+     * 
+     * @param callableProc
+     * @return list of result items
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<?>, List<?>> executeWithResults(CallableProc callableProc) throws UnifyException;
 }

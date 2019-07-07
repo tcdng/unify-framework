@@ -13,24 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database;
 
-import com.tcdng.unify.core.data.AbstractPool;
 
 /**
- * Pool object for storing reusable SQL statement objects.
+ * Interface required by all database procedures.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class SqlStatementPool extends AbstractPool<SqlStatement> {
+public interface CallableProc {
 
-    public SqlStatementPool(long getTimeout, int minObjects, int maxObjects) {
-        super(getTimeout, minObjects, maxObjects, true);
-    }
-
-    @Override
-    protected void destroyObject(SqlStatement object) {
-
-    }
 }

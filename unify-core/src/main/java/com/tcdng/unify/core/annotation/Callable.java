@@ -53,14 +53,14 @@ public @interface Callable {
     /**
      * Comma-separated list of procedure input/output parameters. Parameter names
      * are the names of fields of callable type that are annotated with
-     * {@link InParam} or {@link OutParam}. Order of parameter names in the list
+     * {@link InOutParam}, {@link InParam} or {@link OutParam}. Order of parameter names in the list
      * must match the order of parameters of the procedure.
      */
     String params() default AnnotationConstants.NONE;
 
     /**
      * An array of result types returned by callable. Types must be annotated with
-     * {@link CallableResult} and must have fields annotated with {@link Result}.
+     * {@link CallableResult} and must have fields annotated with {@link ResultField}.
      */
     Class<?>[] results() default {};
 }

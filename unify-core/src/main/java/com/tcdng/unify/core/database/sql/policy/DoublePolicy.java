@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.policy;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -57,6 +58,20 @@ public class DoublePolicy extends AbstractSqlDataTypePolicy {
         Object object = ((ResultSet) rs).getObject(index);
         if (object != null) {
             return ((ResultSet) rs).getDouble(index);
+        }
+        return null;
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.DOUBLE);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        Object object = ((CallableStatement) cstmt).getObject(index);
+        if (object != null) {
+            return ((CallableStatement) cstmt).getDouble(index);
         }
         return null;
     }
