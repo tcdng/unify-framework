@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Annotation that indicates a field is a result.
  * 
@@ -33,4 +35,7 @@ public @interface ResultField {
 
     /** The field {@link CallableDataType}. */
     CallableDataType value() default CallableDataType.AUTO;
+    
+    /** Optional SQl column name of result field.*/
+    String column() default AnnotationConstants.NONE;
 }

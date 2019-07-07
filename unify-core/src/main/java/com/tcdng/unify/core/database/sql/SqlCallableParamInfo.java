@@ -33,9 +33,9 @@ public class SqlCallableParamInfo extends SqlCallableFieldInfo {
 
     private boolean output;
 
-    public SqlCallableParamInfo(CallableDataType dataType, String name, Field field, Method getter, Method setter,
-            boolean input, boolean output) {
-        super(dataType, name, field, getter, setter);
+    public SqlCallableParamInfo(CallableDataType dataType, String name, String columnName, Field field, Method getter,
+            Method setter, boolean input, boolean output) {
+        super(dataType, name, columnName, field, getter, setter);
         this.input = input;
         this.output = output;
     }

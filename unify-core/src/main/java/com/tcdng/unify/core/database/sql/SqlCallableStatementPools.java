@@ -77,7 +77,7 @@ public class SqlCallableStatementPools {
 
         private String sql;
 
-        private Map<Class<?>, List<SqlCallableResult>> resultInfoListByTypes;
+        private Map<Class<?>, SqlCallableResult> resultInfoListByTypes;
 
         public SqlCallableStatementPool(SqlCallableInfo sqlCallableInfo) {
             super(getTimeout, minObjects, maxObjects);
@@ -102,7 +102,14 @@ public class SqlCallableStatementPools {
                 paramInfoList = Collections.unmodifiableList(paramInfoList);
             }
 
-            return new SqlCallableStatement(sqlCallableInfo, getSql(), paramInfoList, getResultInfoListByTypes());
+            SqlDataTypePolicy returnTypePolicy = null;
+            if (sqlCallableInfo.isWithReturn()) {
+                returnTypePolicy =
+                        sqlDataTypePolicies.get(sqlCallableInfo.getReturnValueInfo().getDataType().columnType());
+            }
+
+            return new SqlCallableStatement(sqlCallableInfo, getSql(), paramInfoList, getResultInfoListByTypes(),
+                    returnTypePolicy);
         }
 
         @Override
@@ -127,22 +134,23 @@ public class SqlCallableStatementPools {
 
         }
 
-        private Map<Class<?>, List<SqlCallableResult>> getResultInfoListByTypes() {
+        private Map<Class<?>, SqlCallableResult> getResultInfoListByTypes() {
             if (resultInfoListByTypes == null) {
-                synchronized(SqlCallableStatementPool.class) {
+                synchronized (SqlCallableStatementPool.class) {
                     if (resultInfoListByTypes == null) {
                         resultInfoListByTypes = Collections.emptyMap();
                         if (sqlCallableInfo.isResults()) {
-                            resultInfoListByTypes = new LinkedHashMap<Class<?>, List<SqlCallableResult>>();
+                            resultInfoListByTypes = new LinkedHashMap<Class<?>, SqlCallableResult>();
                             for (SqlCallableResultInfo sqlCallableResultInfo : sqlCallableInfo.getResultInfoList()) {
-                                List<SqlCallableResult> resultFieldList = new ArrayList<SqlCallableResult>();
+                                List<SqlCallableResultField> resultFieldList = new ArrayList<SqlCallableResultField>();
                                 for (SqlCallableFieldInfo sqlCallableFieldInfo : sqlCallableResultInfo.getFieldList()) {
-                                    resultFieldList.add(new SqlCallableResult(
+                                    resultFieldList.add(new SqlCallableResultField(
                                             sqlDataTypePolicies.get(sqlCallableFieldInfo.getDataType().columnType()),
                                             sqlCallableFieldInfo));
                                 }
 
-                                resultInfoListByTypes.put(sqlCallableResultInfo.getCallableResultClass(), resultFieldList);
+                                resultInfoListByTypes.put(sqlCallableResultInfo.getCallableResultClass(),
+                                        new SqlCallableResult(resultFieldList, sqlCallableResultInfo.isUseIndexing()));
                             }
 
                             resultInfoListByTypes = Collections.unmodifiableMap(resultInfoListByTypes);
@@ -156,10 +164,15 @@ public class SqlCallableStatementPools {
 
         private String getSql() {
             if (sql == null) {
-                synchronized(SqlCallableStatementPool.class) {
+                synchronized (SqlCallableStatementPool.class) {
                     if (sql == null) {
                         StringBuilder sb = new StringBuilder();
-                        sb.append("{call ");
+                        sb.append("{");
+                        if (sqlCallableInfo.isWithReturn()) {
+                            sb.append("? = ");
+                        }
+
+                        sb.append("call ");
                         sb.append(sqlCallableInfo.getSchemaProcedureName());
                         sb.append("(");
                         if (sqlCallableInfo.isParams()) {

@@ -527,7 +527,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
             cStmt.executeUpdate();
 
-            // Populate output parameters
+            // Populate output parameters. Based on recommendations do this after results.
             populateCallableOutParameters(cStmt, callableProc, sqlCallableStatement, timeZoneOffset);
         } catch (UnifyException e) {
             throw e;
@@ -550,23 +550,28 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
             boolean isResults = cStmt.execute();
 
-            // Populate output parameters
-            populateCallableOutParameters(cStmt, callableProc, sqlCallableStatement, timeZoneOffset);
-
             // Construct and populate results
-            Map<Class<?>, List<SqlCallableResult>> resultInfoMap = sqlCallableStatement.getResultInfoListByType();
+            Map<Class<?>, SqlCallableResult> resultInfoMap = sqlCallableStatement.getResultInfoListByType();
             if (isResults && resultInfoMap.size() > 0) {
                 Map<Class<?>, List<?>> results = new LinkedHashMap<Class<?>, List<?>>();
                 for (Class<?> resultClass : resultInfoMap.keySet()) {
-                    List<SqlCallableResult> sqlCallableResultList = resultInfoMap.get(resultClass);
+                    SqlCallableResult sqlCallableResult = resultInfoMap.get(resultClass);
                     List<Object> resultItemList = new ArrayList<Object>();
                     rs = cStmt.getResultSet();
                     while (rs.next()) {
                         Object item = resultClass.newInstance();
-                        int index = 0;
-                        for (SqlCallableResult sqlCallableResult : sqlCallableResultList) {
-                            sqlCallableResult.getSetter().invoke(item, sqlCallableResult.getSqlDataTypePolicy()
-                                    .executeGetResult(rs, sqlCallableResult.getType(), ++index, timeZoneOffset));
+                        if (sqlCallableResult.isUseIndexing()) {
+                            int index = 0;
+                            for (SqlCallableResultField resultField : sqlCallableResult.getFieldList()) {
+                                resultField.getSetter().invoke(item, resultField.getSqlDataTypePolicy()
+                                        .executeGetResult(rs, resultField.getType(), ++index, timeZoneOffset));
+                            }
+                        } else {
+                            for (SqlCallableResultField resultField : sqlCallableResult.getFieldList()) {
+                                resultField.getSetter().invoke(item,
+                                        resultField.getSqlDataTypePolicy().executeGetResult(rs, resultField.getType(),
+                                                resultField.getColumnName(), timeZoneOffset));
+                            }
                         }
 
                         resultItemList.add(item);
@@ -578,6 +583,10 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
                 return results;
             }
+
+            // Populate output parameters. Based on recommendations do this after results.
+            populateCallableOutParameters(cStmt, callableProc, sqlCallableStatement, timeZoneOffset);
+
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -624,16 +633,20 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             long timeZoneOffset) throws Exception {
         logDebug("Preparing SQl: callable statement = {0}", sqlCallableStatement);
         CallableStatement cStmt = connection.prepareCall(sqlCallableStatement.getSql());
-        int index = 0;
+        int sqlIndex = 0;
+        if (sqlCallableStatement.getSqlCallableInfo().isWithReturn()) {
+            ++sqlIndex;
+        }
+        
         for (SqlParameter sqlParameter : sqlCallableStatement.getParameterInfoList()) {
-            index++;
+            ++sqlIndex;
             if (sqlParameter.isInput()) {
                 Object value = sqlParameter.getValue();
-                sqlParameter.getSqlTypePolicy().executeSetPreparedStatement(cStmt, index, value, timeZoneOffset);
+                sqlParameter.getSqlTypePolicy().executeSetPreparedStatement(cStmt, sqlIndex, value, timeZoneOffset);
             }
 
             if (sqlParameter.isOutput()) {
-                sqlParameter.getSqlTypePolicy().executeRegisterOutParameter(cStmt, index);
+                sqlParameter.getSqlTypePolicy().executeRegisterOutParameter(cStmt, sqlIndex);
             }
         }
         return cStmt;
@@ -685,13 +698,27 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     private void populateCallableOutParameters(CallableStatement cStmt, CallableProc callableProc,
             SqlCallableStatement sqlCallableStatement, long timeZoneOffset) throws Exception {
+        // Clear results if any left
+        while (cStmt.getMoreResults())
+            ;
+
+        // Return value if any
+        SqlCallableInfo sqlCallableInfo = sqlCallableStatement.getSqlCallableInfo();
+        int sqlIndex = 0;
+        if (sqlCallableInfo.isWithReturn()) {
+            SqlCallableFieldInfo returnValueInfo = sqlCallableInfo.getReturnValueInfo();
+            Object val = sqlCallableStatement.getReturnTypePolicy().executeGetOutput(cStmt,
+                    returnValueInfo.getField().getType(), ++sqlIndex, timeZoneOffset);
+            returnValueInfo.getSetter().invoke(callableProc, val);
+        }
+
+        // Populate out parameters
         int index = 0;
         for (SqlParameter sqlParameter : sqlCallableStatement.getParameterInfoList()) {
             if (sqlParameter.isOutput()) {
-                SqlCallableParamInfo sqlCallableParamInfo =
-                        sqlCallableStatement.getSqlCallableInfo().getParamInfoList().get(index);
+                SqlCallableParamInfo sqlCallableParamInfo = sqlCallableInfo.getParamInfoList().get(index++);
                 Object val = sqlParameter.getSqlTypePolicy().executeGetOutput(cStmt,
-                        sqlCallableParamInfo.getField().getType(), ++index, timeZoneOffset);
+                        sqlCallableParamInfo.getField().getType(), ++sqlIndex, timeZoneOffset);
                 sqlCallableParamInfo.getSetter().invoke(callableProc, val);
             }
         }

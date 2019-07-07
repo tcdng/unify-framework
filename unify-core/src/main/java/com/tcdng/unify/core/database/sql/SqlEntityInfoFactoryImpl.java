@@ -700,8 +700,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(callableClass, field.getName());
 
-                        paramInfoList.add(new SqlCallableParamInfo(type, fieldName, field, getterSetterInfo.getGetter(),
-                                getterSetterInfo.getSetter(), isInput, isOutput));
+                        paramInfoList.add(new SqlCallableParamInfo(type, fieldName, null, field,
+                                getterSetterInfo.getGetter(), getterSetterInfo.getSetter(), isInput, isOutput));
                     }
                 }
 
@@ -712,27 +712,56 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     for (Class<?> resultClass : ca.results()) {
                         ReflectUtils.assertAnnotation(resultClass, CallableResult.class);
                         List<SqlCallableFieldInfo> fieldInfoList = new ArrayList<SqlCallableFieldInfo>();
-                        Class<?> searchClass = resultClass;
-                        do {
-                            Field[] fields = searchClass.getDeclaredFields();
-                            for (Field field : fields) {
-                                ResultField ra = field.getAnnotation(ResultField.class);
-                                if (ra != null) {
-                                    CallableDataType dataType = resolveCallableDataType(ra.value(), field);
-                                    GetterSetterInfo getterSetterInfo =
-                                            ReflectUtils.getGetterSetterInfo(resultClass, field.getName());
-                                    fieldInfoList.add(new SqlCallableFieldInfo(dataType, field.getName(), field,
-                                            getterSetterInfo.getGetter(), getterSetterInfo.getSetter()));
-                                }
+                        CallableResult cra = resultClass.getAnnotation(CallableResult.class);
+                        String fieldsStr = AnnotationUtils.getAnnotationString(cra.fields());
+                        boolean useIndexing = !StringUtils.isBlank(fieldsStr);
+                        if (useIndexing) {
+                            String[] fieldNames = StringUtils.commaSplit(fieldsStr);
+                            for (String fieldName : fieldNames) {
+                                fieldName = fieldName.trim();
+                                Field field = ReflectUtils.getField(resultClass, fieldName);
+                                addSqlCallableFieldInfo(fieldInfoList, resultClass, field);
                             }
-                        } while ((searchClass = searchClass.getSuperclass()) != null);
 
-                        resultInfoList.add(new SqlCallableResultInfo(resultClass, fieldInfoList));
+                        } else {
+                            Class<?> searchClass = resultClass;
+                            do {
+                                Field[] fields = searchClass.getDeclaredFields();
+                                for (Field field : fields) {
+                                    addSqlCallableFieldInfo(fieldInfoList, resultClass, field);
+                                }
+                            } while ((searchClass = searchClass.getSuperclass()) != null);
+                        }
+
+                        resultInfoList.add(new SqlCallableResultInfo(resultClass, fieldInfoList, useIndexing));
                     }
                 }
 
+                SqlCallableFieldInfo returnValueInfo = null;
+                CallableDataType returnDataType = ca.returnType();
+                if (returnDataType != null) {
+                    GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(callableClass, "returnValue");
+                    returnValueInfo = new SqlCallableFieldInfo(returnDataType, "returnValue", null, null,
+                            getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+                }
+
                 return new SqlCallableInfo(callableClass, procedureName, preferredProcedureName, schemaProcedureName,
-                        paramInfoList, resultInfoList);
+                        paramInfoList, resultInfoList, returnValueInfo);
+            }
+
+            private void addSqlCallableFieldInfo(List<SqlCallableFieldInfo> fieldInfoList, Class<?> resultClass,
+                    Field field) throws UnifyException {
+                ResultField ra = field.getAnnotation(ResultField.class);
+                if (ra != null) {
+                    CallableDataType dataType = resolveCallableDataType(ra.value(), field);
+                    GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(resultClass, field.getName());
+                    String columnName = AnnotationUtils.getAnnotationString(ra.column());
+                    if (StringUtils.isBlank(columnName)) {
+                        columnName = SqlUtils.generateSchemaElementName(field.getName(), true);
+                    }
+                    fieldInfoList.add(new SqlCallableFieldInfo(dataType, field.getName(), columnName, field,
+                            getterSetterInfo.getGetter(), getterSetterInfo.getSetter()));
+                }
             }
 
         };

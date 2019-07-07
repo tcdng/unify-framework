@@ -23,7 +23,8 @@ import com.tcdng.unify.core.annotation.Callable;
 import com.tcdng.unify.core.annotation.CallableDataType;
 import com.tcdng.unify.core.annotation.InParam;
 import com.tcdng.unify.core.annotation.OutParam;
-import com.tcdng.unify.core.database.CallableProc;
+import com.tcdng.unify.core.database.AbstractCallableProc;
+
 
 /**
  * Test callable procedure with parameters and results.
@@ -35,7 +36,7 @@ import com.tcdng.unify.core.database.CallableProc;
         procedure = "procedure_d",
         params = "itemId, startDt, endDt, accountName, balance",
         results = { CallableResultA.class })
-public class CallableProcD implements CallableProc {
+public class CallableProcD extends AbstractCallableProc {
 
     @InParam
     private Integer itemId;

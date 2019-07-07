@@ -63,4 +63,9 @@ public @interface Callable {
      * {@link CallableResult} and must have fields annotated with {@link ResultField}.
      */
     Class<?>[] results() default {};
+    
+    /**
+     * Callable return type that indicates callable has a return value. Applies only to non-AUTO values.
+     */
+    CallableDataType returnType() default CallableDataType.AUTO;
 }

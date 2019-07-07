@@ -13,65 +13,48 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.tcdng.unify.core.database.sql;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.tcdng.unify.core.annotation.CallableDataType;
-
 /**
- * Holds callable field information.
+ * SQL callable result field object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SqlCallableFieldInfo {
+public class SqlCallableResultField {
 
-    private CallableDataType dataType;
+    private SqlDataTypePolicy sqlDataTypePolicy;
 
-    private String name;
+    private SqlCallableFieldInfo sqlCallableFieldInfo;
 
-    private String columnName;
-
-    private Field field;
-
-    private Method getter;
-
-    private Method setter;
-
-    public SqlCallableFieldInfo(CallableDataType dataType, String name, String columnName, Field field, Method getter,
-            Method setter) {
-        this.dataType = dataType;
-        this.name = name;
-        this.columnName = columnName;
-        this.field = field;
-        this.getter = getter;
-        this.setter = setter;
+    public SqlCallableResultField(SqlDataTypePolicy sqlDataTypePolicy, SqlCallableFieldInfo sqlCallableFieldInfo) {
+        this.sqlDataTypePolicy = sqlDataTypePolicy;
+        this.sqlCallableFieldInfo = sqlCallableFieldInfo;
     }
 
-    public CallableDataType getDataType() {
-        return dataType;
+    public SqlDataTypePolicy getSqlDataTypePolicy() {
+        return sqlDataTypePolicy;
+    }
+
+    public Class<?> getType() {
+        return sqlCallableFieldInfo.getField().getType();
     }
 
     public String getName() {
-        return name;
+        return sqlCallableFieldInfo.getName();
     }
 
     public String getColumnName() {
-        return columnName;
-    }
-
-    public Field getField() {
-        return field;
+        return sqlCallableFieldInfo.getColumnName();
     }
 
     public Method getGetter() {
-        return getter;
+        return sqlCallableFieldInfo.getGetter();
     }
 
     public Method getSetter() {
-        return setter;
+        return sqlCallableFieldInfo.getSetter();
     }
 }
