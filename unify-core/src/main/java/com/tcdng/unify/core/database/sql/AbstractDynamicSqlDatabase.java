@@ -42,7 +42,7 @@ public abstract class AbstractDynamicSqlDatabase extends AbstractSqlDatabase imp
     }
 
     @Override
-    protected DataSource getDataSource() throws UnifyException {
+    public DataSource getDataSource() throws UnifyException {
         return dynamicSqlDataSourceManager.getDataSource(dataSourceConfigName);
     }
 

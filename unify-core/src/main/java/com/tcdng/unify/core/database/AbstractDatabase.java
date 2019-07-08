@@ -258,13 +258,13 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
-    public void execute(CallableProc callableProc) throws UnifyException {
-        getDatabaseSession().execute(callableProc);
+    public void executeCallable(CallableProc callableProc) throws UnifyException {
+        getDatabaseSession().executeCallable(callableProc);
     }
 
     @Override
-    public Map<Class<?>, List<?>> executeWithResults(CallableProc callableProc) throws UnifyException {
-        return getDatabaseSession().executeWithResults(callableProc);
+    public Map<Class<?>, List<?>> executeCallableWithResults(CallableProc callableProc) throws UnifyException {
+        return getDatabaseSession().executeCallableWithResults(callableProc);
     }
 
     @Override
@@ -276,8 +276,6 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     protected void onTerminate() throws UnifyException {
 
     }
-
-    protected abstract DataSource getDataSource() throws UnifyException;
 
     private DatabaseSession getDatabaseSession() throws UnifyException {
         return databaseTransactionManager.getDatabaseSession(this);

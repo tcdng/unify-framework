@@ -29,6 +29,11 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.annotation.CallableDataType;
 import com.tcdng.unify.core.constant.SqlDialectConstants;
+import com.tcdng.unify.core.database.CallableProcA;
+import com.tcdng.unify.core.database.CallableProcB;
+import com.tcdng.unify.core.database.CallableProcC;
+import com.tcdng.unify.core.database.CallableProcD;
+import com.tcdng.unify.core.database.CallableResultA;
 
 /**
  * SQL entity info factory tests.
@@ -228,7 +233,7 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
         assertNotNull(sqlCallableParamInfo.getGetter());
         assertNotNull(sqlCallableParamInfo.getSetter());
         assertTrue(sqlCallableParamInfo.isOutput());
-        assertFalse(sqlCallableParamInfo.isInput());
+        assertTrue(sqlCallableParamInfo.isInput());
 
         sqlCallableParamInfo = paramInfoList.get(4);
         assertNotNull(sqlCallableParamInfo);

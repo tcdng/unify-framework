@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database;
 
 import com.tcdng.unify.core.annotation.Callable;
 import com.tcdng.unify.core.database.AbstractCallableProc;
