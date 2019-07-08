@@ -599,7 +599,7 @@ public interface DatabaseSession {
      * @throws UnifyException
      *             if an error occurs.
      */
-    void execute(CallableProc callableProc) throws UnifyException;
+    void executeCallable(CallableProc callableProc) throws UnifyException;
 
     /**
      * Executes callable procedure with result lists.
@@ -609,7 +609,7 @@ public interface DatabaseSession {
      * @throws UnifyException
      *             if an error occurs
      */
-    Map<Class<?>, List<?>> executeWithResults(CallableProc callableProc) throws UnifyException;
+    Map<Class<?>, List<?>> executeCallableWithResults(CallableProc callableProc) throws UnifyException;
 
     /**
      * Creates and sets a new save point on the session save point stack.

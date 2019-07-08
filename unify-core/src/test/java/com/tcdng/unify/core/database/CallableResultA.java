@@ -14,12 +14,14 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database;
 
 import java.util.Date;
 
 import com.tcdng.unify.core.annotation.CallableResult;
+import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ResultField;
+import com.tcdng.unify.core.annotation.Table;
 
 /**
  * Test callable result class.
@@ -27,14 +29,26 @@ import com.tcdng.unify.core.annotation.ResultField;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Table(name = "LICENSE")
 @CallableResult
-public class CallableResultA {
+public class CallableResultA extends AbstractTestEntity {
 
+    @Column
     @ResultField
     private String licenseNo;
-    
+
+    @Column
     @ResultField
     private Date expiryDt;
+
+    public CallableResultA(String licenseNo, Date expiryDt) {
+        this.licenseNo = licenseNo;
+        this.expiryDt = expiryDt;
+    }
+
+    public CallableResultA() {
+
+    }
 
     public String getLicenseNo() {
         return licenseNo;

@@ -38,7 +38,8 @@ public class DefaultApplicationSqlDatabaseImpl extends AbstractSqlDatabase {
         return dataSource.getName();
     }
 
-    protected DataSource getDataSource() throws UnifyException {
+    @Override
+    public DataSource getDataSource() throws UnifyException {
         return dataSource;
     }
 }

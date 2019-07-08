@@ -739,7 +739,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 SqlCallableFieldInfo returnValueInfo = null;
                 CallableDataType returnDataType = ca.returnType();
-                if (returnDataType != null) {
+                if (!CallableDataType.AUTO.equals(returnDataType)) {
                     GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(callableClass, "returnValue");
                     returnValueInfo = new SqlCallableFieldInfo(returnDataType, "returnValue", null, null,
                             getterSetterInfo.getGetter(), getterSetterInfo.getSetter());

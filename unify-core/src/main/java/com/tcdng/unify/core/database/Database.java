@@ -35,13 +35,11 @@ import com.tcdng.unify.core.operation.Update;
 public interface Database extends UnifyComponent {
 
     /**
-     * Explicitly join current transaction in application database transaction
-     * manager.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
+     * Gets the database dataSource.
+     * @return the dataSource
+     * @throws UnifyException if an error occurs
      */
-    void joinTransaction() throws UnifyException;
+    DataSource getDataSource() throws UnifyException;
 
     /**
      * Returns the database manage data source name.
@@ -50,6 +48,15 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
      */
     String getDataSourceName() throws UnifyException;
+
+    /**
+     * Explicitly join current transaction in application database transaction
+     * manager.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void joinTransaction() throws UnifyException;
 
     /**
      * Creates a new database session.
@@ -690,7 +697,7 @@ public interface Database extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs.
      */
-    void execute(CallableProc callableProc) throws UnifyException;
+    void executeCallable(CallableProc callableProc) throws UnifyException;
 
     /**
      * Executes callable procedure with result lists.
@@ -700,5 +707,5 @@ public interface Database extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Map<Class<?>, List<?>> executeWithResults(CallableProc callableProc) throws UnifyException;
+    Map<Class<?>, List<?>> executeCallableWithResults(CallableProc callableProc) throws UnifyException;
 }

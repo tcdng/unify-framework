@@ -14,29 +14,26 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.tcdng.unify.core.annotation.Callable;
 import com.tcdng.unify.core.annotation.CallableDataType;
 import com.tcdng.unify.core.annotation.InParam;
-import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.database.AbstractCallableProc;
 
-
 /**
- * Test callable procedure with parameters and results.
+ * Test callable procedure with parameters, results and return.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Callable(
-        procedure = "procedure_d",
-        params = "itemId, startDt, endDt, accountName, balance",
-        results = { CallableResultA.class })
-public class CallableProcD extends AbstractCallableProc {
+        procedure = "procedure_e",
+        params = "itemId, startDt, endDt, accountName",
+        returnType = CallableDataType.STRING)
+public class CallableProcE extends AbstractCallableProc {
 
     @InParam
     private Integer itemId;
@@ -47,11 +44,15 @@ public class CallableProcD extends AbstractCallableProc {
     @InParam
     private Date endDt;
 
-    @OutParam
+    @InParam
     private String accountName;
 
-    @OutParam
-    private BigDecimal balance;
+    public CallableProcE(Integer itemId, Date startDt, Date endDt, String accountName) {
+        this.itemId = itemId;
+        this.startDt = startDt;
+        this.endDt = endDt;
+        this.accountName = accountName;
+    }
 
     public Integer getItemId() {
         return itemId;
@@ -83,14 +84,6 @@ public class CallableProcD extends AbstractCallableProc {
 
     public void setAccountName(String accountName) {
         this.accountName = accountName;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
     }
 
 }

@@ -707,7 +707,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public void execute(CallableProc callableProc) throws UnifyException {
+    public void executeCallable(CallableProc callableProc) throws UnifyException {
         SqlCallableStatement sqlCallableStatement = sqlDataSourceDialect.prepareCallableStatement(callableProc);
         try {
             getSqlStatementExecutor().executeCallable(connection, callableProc, sqlCallableStatement);
@@ -717,7 +717,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public Map<Class<?>, List<?>> executeWithResults(CallableProc callableProc) throws UnifyException {
+    public Map<Class<?>, List<?>> executeCallableWithResults(CallableProc callableProc) throws UnifyException {
         SqlCallableStatement sqlCallableStatement = sqlDataSourceDialect.prepareCallableStatement(callableProc);
         try {
             return getSqlStatementExecutor().executeCallableWithResults(connection, callableProc, sqlCallableStatement);

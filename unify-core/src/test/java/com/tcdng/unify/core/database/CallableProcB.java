@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -48,6 +48,12 @@ public class CallableProcB  extends AbstractCallableProc {
 
     @OutParam
     private BigDecimal balance;
+
+    public CallableProcB(Integer itemId, Date startDt, Date endDt) {
+        this.itemId = itemId;
+        this.startDt = startDt;
+        this.endDt = endDt;
+    }
 
     public Integer getItemId() {
         return itemId;

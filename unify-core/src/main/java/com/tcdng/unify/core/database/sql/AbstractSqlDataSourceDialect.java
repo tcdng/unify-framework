@@ -185,9 +185,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlCriteriaPolicies.put(Operator.IS_NOT_NULL, new IsNotNullPolicy(this));
         sqlCriteriaPolicies.put(Operator.AND, new AndPolicy(this));
         sqlCriteriaPolicies.put(Operator.OR, new OrPolicy(this));
-
-        sqlCallableStatementPools = new SqlCallableStatementPools(sqlDataTypePolicies, getStatementInfoTimeout,
-                minStatementInfo, maxStatementInfo);
     }
 
     @Override
@@ -1311,6 +1308,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     protected void onInitialize() throws UnifyException {
         sqlEntityInfoFactory.setSqlDataSourceDialect(this);
+        sqlCallableStatementPools = new SqlCallableStatementPools(sqlDataTypePolicies, getStatementInfoTimeout,
+                minStatementInfo, maxStatementInfo);
         terminationSql = ";";
         newLineSql = getLineSeparator();
     }

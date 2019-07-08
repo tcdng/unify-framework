@@ -80,7 +80,7 @@ public class SqlCallableStatementPools {
         private Map<Class<?>, SqlCallableResult> resultInfoListByTypes;
 
         public SqlCallableStatementPool(SqlCallableInfo sqlCallableInfo) {
-            super(getTimeout, minObjects, maxObjects);
+            super(getTimeout, minObjects, maxObjects, true);
             this.sqlCallableInfo = sqlCallableInfo;
         }
 
