@@ -73,6 +73,7 @@ import com.tcdng.unify.core.upl.UplElementAttributes;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.ImageUtils;
 import com.tcdng.unify.core.util.NameUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -246,6 +247,7 @@ public class UnifyContainer {
             throw new UnifyException(UnifyCoreErrorConstants.CONTAINER_ALREADY_INITIALIZED);
         }
 
+        // Environment
         unifyContainerEnvironment = uce;
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
@@ -274,6 +276,9 @@ public class UnifyContainer {
                     String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE)));
         }
 
+        // Initialize utilities
+        ImageUtils.scanForPlugins();
+        
         // Banner
         List<String> banner = getApplicationBanner();
         if (!banner.isEmpty()) {
