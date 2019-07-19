@@ -27,12 +27,19 @@ import javax.imageio.ImageIO;
  * 
  * @author Lateef Ojulari
  */
-public class ImageUtils {
+public final class ImageUtils {
 
     private ImageUtils() {
-
+        
     }
 
+    /**
+     * Scans for plugins.
+     */
+    public static void scanForPlugins() {
+        ImageIO.scanForPlugins();
+    }
+    
     /**
      * Converts image to JPEG image
      * 
