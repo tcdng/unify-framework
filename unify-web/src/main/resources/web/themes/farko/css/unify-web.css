@@ -129,7 +129,7 @@ z-index:400;}
 
 .flyoutmenu-popup {position: fixed; visibility: hidden; width: auto; z-index: 300;}
 .flyoutmenu-popup ul {list-style: none; padding: 0; position: absolute; top: 100%;
-    border: 1px solid #808080;}
+    border: 1px solid #808080; min-width: 160px;}
 .flyoutmenu-popup ul li {float: none; position: relative;}
 .flyoutmenu-popup .mitem {display: block; width: auto; margin: 0; padding: 8px 10px; font-size:10pt;
     background-color: #F0F0F0; color: #000; text-align: left; text-decoration: none; white-space: nowrap;}
