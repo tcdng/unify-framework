@@ -726,6 +726,42 @@ public class IOUtils {
     }
 
     /**
+     * Lists file names in supplied folder.
+     * 
+     * @param folder
+     *            the folder to list
+     * @return list of file names in folder
+     */
+    public static String[] listFolderFilenames(String folder) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.list();
+        }
+
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
+     * Lists file names in supplied folder using a filename filter.
+     * 
+     * @param folder
+     *            the folder to list
+     * @param filenameFilter
+     *            the filename filter
+     * @return list of file names in folder
+     */
+    public static String[] listFolderFilenames(String folder, FilenameFilter filenameFilter) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.list(filenameFilter);
+        }
+
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
      * Lists files in supplied folder.
      * 
      * @param folder
