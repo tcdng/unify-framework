@@ -20,6 +20,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -48,7 +49,9 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class IOUtils {
 
-    private static int BUFFER_SIZE = 1024 * 4;
+    private static final int BUFFER_SIZE = 1024 * 4;
+
+    private static final File[] ZEROLEN_FILES = new File[0];
 
     private IOUtils() {
 
@@ -694,6 +697,13 @@ public class IOUtils {
         return path + fileSeparator + filename;
     }
 
+    /**
+     * Conforms supplied path to system format.
+     * 
+     * @param path
+     *            the path to conform
+     * @return the conformed path
+     */
     public static String conformFilePath(String path) {
         String fileSeparator = System.getProperty("file.separator");
         path = IOUtils.conform(fileSeparator, path);
@@ -713,6 +723,61 @@ public class IOUtils {
     public static boolean isFile(String absoluteFilename) {
         File file = new File(absoluteFilename);
         return file.isFile();
+    }
+
+    /**
+     * Lists files in supplied folder.
+     * 
+     * @param folder
+     *            the folder to list
+     * @return list of files in folder
+     */
+    public static File[] listFolderFiles(String folder) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.listFiles();
+        }
+
+        return ZEROLEN_FILES;
+    }
+
+    /**
+     * Lists files in supplied folder using a filename filter.
+     * 
+     * @param folder
+     *            the folder to list
+     * @param filenameFilter
+     *            the filename filter
+     * @return list of files in folder
+     */
+    public static File[] listFolderFiles(String folder, FilenameFilter filenameFilter) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.listFiles(filenameFilter);
+        }
+
+        return ZEROLEN_FILES;
+    }
+
+    /**
+     * Lists files in supplied folder using a file filter.
+     * 
+     * @param folder
+     *            the folder to list
+     * @param fileFilter
+     *            the file filter
+     * @return list of files in folder
+     */
+    public static File[] listFolderFiles(String folder, FileFilter fileFilter) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.listFiles(fileFilter);
+        }
+
+        return ZEROLEN_FILES;
     }
 
     /**
