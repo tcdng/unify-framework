@@ -110,6 +110,21 @@ public final class StringUtils {
     }
 
     /**
+     * Split a string into tokens using supplied separator.
+     * 
+     * @param string
+     *            the string to split
+     * @param separator the separator
+     * @return the result tokens
+     */
+    public static String[] split(String string, String separator) {
+        if (string != null) {
+            return string.split(separator);
+        }
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
      * Concatenates a set of string value of objects using dot.
      * 
      * @param objects
