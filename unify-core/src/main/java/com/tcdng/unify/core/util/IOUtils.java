@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,9 +46,9 @@ import com.tcdng.unify.core.UnifyException;
  * 
  * @author Lateef Ojulari
  */
-public final class IOUtils {
+public class IOUtils {
 
-    private static final int BUFFER_SIZE = 1024 * 4;
+    private static int BUFFER_SIZE = 1024 * 4;
 
     private IOUtils() {
 
@@ -767,6 +768,85 @@ public final class IOUtils {
         bw.flush();
         bw.close();
         return baos.toByteArray();
+    }
+
+    /**
+     * Gets a new instance of a custom file name filter.
+     * 
+     * @param prefixes
+     *            the file name prefixes
+     * @param extensions
+     *            the file name extensions
+     * @return the custom file name filter
+     */
+    public static CustomFilenameFilter getCustomFilenameFilter(String prefixes, String extensions) {
+        return new CustomFilenameFilter(prefixes, extensions, "");
+    }
+
+    /**
+     * Gets a new instance of a custom file name filter.
+     * 
+     * @param prefixes
+     *            the file name prefixes
+     * @param extensions
+     *            the file name extensions
+     * @param signatures
+     *            the body signatures
+     * @return the custom file name filter
+     */
+    public static CustomFilenameFilter getCustomFilenameFilter(String prefixes, String extensions, String signatures) {
+        return new CustomFilenameFilter(prefixes, extensions, signatures);
+    }
+
+    public static class CustomFilenameFilter implements FilenameFilter {
+
+        private static String SEPERATOR = ",";
+
+        private String[] prefixList;
+
+        private String[] extensionList;
+
+        private String[] signatureList;
+
+        private CustomFilenameFilter(String prefixes, String extensions, String signatures) {
+            prefixList = StringUtils.split(prefixes.toLowerCase(), SEPERATOR);
+            extensionList = StringUtils.split(extensions.toLowerCase(), SEPERATOR);
+            signatureList = StringUtils.split(signatures.toLowerCase(), SEPERATOR);
+        }
+
+        @Override
+        public boolean accept(File dir, String filename) {
+            return accept(filename);
+        }
+
+        protected boolean accept(String filename) {
+            String lowerFileName = filename.toLowerCase();
+            boolean signaturePass = true;
+            for (String signature : signatureList) {
+                if ((signaturePass = (lowerFileName.indexOf(signature) >= 0))) {
+                    break;
+                }
+            }
+            if (signaturePass) {
+                boolean prefixPass = true;
+                for (String prefix : prefixList) {
+                    if (prefixPass = lowerFileName.startsWith(prefix)) {
+                        break;
+                    }
+                }
+                if (prefixPass) {
+                    boolean extensionPass = true;
+                    for (String extension : extensionList) {
+                        if (extensionPass = lowerFileName.endsWith(extension)) {
+                            break;
+                        }
+                    }
+                    return extensionPass;
+                }
+            }
+            return false;
+        }
+
     }
 
     private static String conformJarSeparator(String filename) {
