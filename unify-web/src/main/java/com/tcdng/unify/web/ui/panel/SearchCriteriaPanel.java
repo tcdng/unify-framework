@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.panel;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.web.ui.AbstractPanel;
@@ -29,4 +30,11 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 @UplBinding("web/panels/upl/searchcriteriapanel.upl")
 public class SearchCriteriaPanel extends AbstractPanel {
 
+    public void showActionButtons() throws UnifyException {
+        setVisible("buttonPanel", true);
+    }
+
+    public void hideActionButtons() throws UnifyException {
+        setVisible("buttonPanel", false);
+    }
 }
