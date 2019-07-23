@@ -15,6 +15,12 @@
  */
 package com.tcdng.unify.core.stream;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.charset.Charset;
+
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * XML object read/write.
  * 
@@ -23,4 +29,66 @@ package com.tcdng.unify.core.stream;
  */
 public interface XMLObjectStreamer extends ObjectStreamer {
 
+    /**
+     * Reads an object from supplied input stream.
+     * 
+     * @param type
+     *            object type
+     * @param inputStream
+     *            input stream to read from
+     * @param charset
+     *            character set
+     * @param ignoreNameSpaces
+     *            ignore name spaces flag
+     * @return read object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset, boolean ignoreNameSpaces)
+            throws UnifyException;
+
+    /**
+     * Reads an object from supplied input stream.
+     * 
+     * @param type
+     *            object type
+     * @param inputStream
+     *            input stream to read from
+     * @param ignoreNameSpaces
+     *            ignore name spaces flag
+     * @return read object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T unmarshal(Class<T> type, InputStream inputStream, boolean ignoreNameSpaces) throws UnifyException;
+
+    /**
+     * Reads an object from supplied reader.
+     * 
+     * @param type
+     *            object type
+     * @param reader
+     *            reader to read from
+     * @param ignoreNameSpaces
+     *            ignore name spaces flag
+     * @return read object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T unmarshal(Class<T> type, Reader reader, boolean ignoreNameSpaces) throws UnifyException;
+
+    /**
+     * Reads an object from supplied string.
+     * 
+     * @param type
+     *            object type
+     * @param string
+     *            string to read
+     * @param ignoreNameSpaces
+     *            ignore name spaces flag
+     * @return read object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T unmarshal(Class<T> type, String string, boolean ignoreNameSpaces) throws UnifyException;
 }

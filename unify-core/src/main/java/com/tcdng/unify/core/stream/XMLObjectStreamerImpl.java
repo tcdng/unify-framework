@@ -29,6 +29,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.util.StreamReaderDelegate;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
@@ -80,7 +84,6 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
                 return (T) unmarshaller.unmarshal(new InputStreamReader(inputStream, charset));
             }
         } catch (JAXBException e) {
-            e.printStackTrace();
             throwOperationErrorException(e);
         } finally {
             jaxbContextPools.get(type).getUnmarshallerPool().returnObject(unmarshaller);
@@ -105,6 +108,66 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
     @Override
     public <T> T unmarshal(Class<T> type, String string) throws UnifyException {
         return unmarshal(type, new StringReader(string));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset, boolean ignoreNameSpaces)
+            throws UnifyException {
+        Unmarshaller unmarshaller = jaxbContextPools.get(type).getUnmarshallerPool().borrowObject();
+        try {
+            if (ignoreNameSpaces) {
+                if (charset == null) {
+                    return (T) unmarshaller.unmarshal(getSkipNamespaceXMLReader(inputStream));
+                } else {
+                    return (T) unmarshaller
+                            .unmarshal(getSkipNamespaceXMLReader(new InputStreamReader(inputStream, charset)));
+                }
+            }
+
+            if (charset == null) {
+                return (T) unmarshaller.unmarshal(inputStream);
+            } else {
+                return (T) unmarshaller.unmarshal(new InputStreamReader(inputStream, charset));
+            }
+        } catch (JAXBException e) {
+            throwOperationErrorException(e);
+        } catch (XMLStreamException e) {
+            throwOperationErrorException(e);
+        } finally {
+            jaxbContextPools.get(type).getUnmarshallerPool().returnObject(unmarshaller);
+        }
+        return null;
+    }
+
+    @Override
+    public <T> T unmarshal(Class<T> type, InputStream inputStream, boolean ignoreNameSpaces) throws UnifyException {
+        return unmarshal(type, inputStream, null, ignoreNameSpaces);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T unmarshal(Class<T> type, Reader reader, boolean ignoreNameSpaces) throws UnifyException {
+        Unmarshaller unmarshaller = jaxbContextPools.get(type).getUnmarshallerPool().borrowObject();
+        try {
+            if (ignoreNameSpaces) {
+                return (T) unmarshaller.unmarshal(getSkipNamespaceXMLReader(reader));
+            }
+
+            return (T) unmarshaller.unmarshal(reader);
+        } catch (JAXBException e) {
+            throwOperationErrorException(e);
+        } catch (XMLStreamException e) {
+            throwOperationErrorException(e);
+        } finally {
+            jaxbContextPools.get(type).getUnmarshallerPool().returnObject(unmarshaller);
+        }
+        return null;
+    }
+
+    @Override
+    public <T> T unmarshal(Class<T> type, String string, boolean ignoreNameSpaces) throws UnifyException {
+        return unmarshal(type, new StringReader(string), ignoreNameSpaces);
     }
 
     @Override
@@ -219,5 +282,30 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
 
         }
 
+    }
+
+    private class SkipNamespaceXMLReader extends StreamReaderDelegate {
+
+        public SkipNamespaceXMLReader(XMLStreamReader reader) {
+            super(reader);
+        }
+
+        @Override
+        public String getAttributeNamespace(int index) {
+            return "";
+        }
+
+        @Override
+        public String getNamespaceURI() {
+            return "";
+        }
+    }
+
+    private SkipNamespaceXMLReader getSkipNamespaceXMLReader(InputStream inputStream) throws XMLStreamException {
+        return new SkipNamespaceXMLReader(XMLInputFactory.newInstance().createXMLStreamReader(inputStream));
+    }
+
+    private SkipNamespaceXMLReader getSkipNamespaceXMLReader(Reader reader) throws XMLStreamException {
+        return new SkipNamespaceXMLReader(XMLInputFactory.newInstance().createXMLStreamReader(reader));
     }
 }
