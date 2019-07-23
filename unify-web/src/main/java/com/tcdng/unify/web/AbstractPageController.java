@@ -295,6 +295,10 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      */
     protected String showMessageBox(MessageIcon messageIcon, MessageMode messageMode, String caption, String message,
             String actionPath) throws UnifyException {
+        if (StringUtils.isBlank(actionPath)) {
+            actionPath = "/hidePopup";
+        }
+
         setSessionAttribute(UnifyWebSessionAttributeConstants.MESSAGEBOX,
                 new MessageBox(messageIcon, messageMode, caption, message, getName() + actionPath));
         return "showapplicationmessage";
