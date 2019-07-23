@@ -193,6 +193,9 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                         isDropView = !matchViewColumns(sqlEntityInfo,
                                 sqlDataSource.getColumns(appSchema, sqlEntityInfo.getViewName()));
                     }
+                } else {
+                    // Force creation of view
+                    isTableNewOrAltered = true;
                 }
                 SqlUtils.close(rs);
 
