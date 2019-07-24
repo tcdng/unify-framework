@@ -69,6 +69,9 @@ public @interface ForeignKey {
      */
     boolean enforce() default true;
 
+    /** Specifies the column default value */
+    String defaultVal() default AnnotationConstants.NONE;
+
     /** Column position */
     int position() default DefaultColumnPositionConstants.FK_POSITION;
 }
