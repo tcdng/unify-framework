@@ -319,6 +319,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         // Process foreign key
                         if (fka != null) {
                             position = fka.position();
+                            defaultVal = AnnotationUtils.getAnnotationString(fka.defaultVal());
 
                             if (loa != null || clda != null || cla != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
