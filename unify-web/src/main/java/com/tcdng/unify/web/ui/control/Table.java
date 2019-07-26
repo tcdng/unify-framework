@@ -29,6 +29,7 @@ import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractValueListMultiControl;
@@ -764,6 +765,8 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
         private Control control;
 
+        private String strippedStyle;
+
         private boolean ascending;
 
         public Column(Control control) {
@@ -803,6 +806,27 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
         public boolean isVisible() throws UnifyException {
             return control.isVisible();
+        }
+
+        public String getStrippedStyle() throws UnifyException {
+            if (strippedStyle == null) {
+                String style = control.getColumnStyle();
+                int index = 0;
+                if (!StringUtils.isBlank(style) && (index = style.indexOf("width:")) >= 0) {
+                    int endIndex = style.indexOf(';', index);
+                    if (endIndex > index) {
+                        return strippedStyle = (style.substring(0, index) + style.substring(endIndex + 1)).trim();
+                    }
+                }
+
+                strippedStyle = "";
+            }
+
+            return strippedStyle;
+        }
+
+        public boolean isWithStrippedStyle() throws UnifyException {
+            return !StringUtils.isBlank(getStrippedStyle());
         }
     }
 

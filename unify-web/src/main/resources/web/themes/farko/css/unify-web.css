@@ -623,9 +623,9 @@ z-index:400;}
 .ui-table {height:100%;}
 .ui-table .twin {border: 1px solid #A9A9A9;}
 .ui-table .thserialno {width: 32px !important;}
-.ui-table .thserialnol {width: 32px !important; border-left:0px;}
+.ui-table .thserialnol {width: 32px !important; border-left:0px !important;}
 .ui-table .thselect {width: 16px; text-align: center;}
-.ui-table .thselectl {width: 16px; text-align: center; border-left:0px;}
+.ui-table .thselectl {width: 16px; text-align: center; border-left:0px !important;}
 .ui-table .thframe {border-collapse: collapse; background-color: #ECECEC; vertical-align: middle;}
 .ui-table .thead {border: 0px; border-collapse: collapse; background-color: #ECECEC; vertical-align: middle;}
 .ui-table .thead th {border-right: 1px solid #A9A9A9; padding: 2px; font-weight: normal;}
