@@ -1,6 +1,6 @@
 //Table Panel UPL
 !ui-tablepanel layout:$d{!ui-vertical} components:$c{contentTbl}
-    tableStyleClass:$e{ui-table}
+    tableStyleClass:$e{ui-table} tableMultiSelectCheckboxes:true
     
 !ui-table:contentTbl bodyStyle:$f{tableBodyStyle} serialNumbers:$f{tableSerialNumbers} styleClass:$f{tableStyleClass}
     rowSelectable:$f{tableRowSelectable} selDependentList:$f{tableSelDependentList}
