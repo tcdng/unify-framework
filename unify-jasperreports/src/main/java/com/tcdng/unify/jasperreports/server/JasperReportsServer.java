@@ -166,6 +166,16 @@ public class JasperReportsServer extends AbstractReportServer {
                     getUnifyComponentContext().getWorkingPath());
 
             JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
+            if (report.getPageWidth() > 0) {
+                jasperDesign.setPageWidth(report.getPageWidth());
+                jasperDesign.setColumnWidth(
+                        report.getPageWidth() - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin());
+            }
+
+            if (report.getPageHeight() > 0) {
+                jasperDesign.setPageHeight(report.getPageHeight());
+            }
+
             jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
             if (!report.isBeanCollection()) {
                 String query = null;
