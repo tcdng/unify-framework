@@ -2473,6 +2473,8 @@ ux.tableMultiRowClickHandler =  function(uEv) {
 						ux.tableMultiRowSelect(selBox, rigTbl, true, false);
 					}
 				}
+
+				ux.tableDisableMultiSelElements(rigTbl);
 			}
 		}
 	}
