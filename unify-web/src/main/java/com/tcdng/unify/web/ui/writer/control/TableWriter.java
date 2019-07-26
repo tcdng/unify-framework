@@ -269,8 +269,17 @@ public class TableWriter extends AbstractControlWriter {
             table.incrementVisibleColumnCount();
         }
 
-        if (table.isMultiSelect()) {
-            writer.write("<th class=\"thselect tth\">");
+        boolean isMultiSelect = table.isMultiSelect();
+        boolean isShowMultiSelectCheckboxes = table.isShowMultiSelectCheckboxes();
+        boolean isHideMultiSelectBorder = isMultiSelect && !isShowMultiSelectCheckboxes;
+
+        if (isMultiSelect) {
+            if (isShowMultiSelectCheckboxes) {
+                writer.write("<th class=\"thselect tth\">");
+            } else {
+                writer.write("<th class=\"thselectx\">");
+            }
+
             Control multiSelectCtrl = table.getMultiSelectCtrl();
             multiSelectCtrl.setValueStore(null);
             multiSelectCtrl.setGroupId(null);
@@ -285,7 +294,13 @@ public class TableWriter extends AbstractControlWriter {
                 Control control = column.getControl();
                 writer.write("<th");
                 writeTagStyleClass(writer, "tth");
-                writeTagStyle(writer, HtmlUtils.extractStyleAttribute(control.getColumnStyle(), "width"));
+                String columnStyle = HtmlUtils.extractStyleAttribute(control.getColumnStyle(), "width");
+                if (isHideMultiSelectBorder) {
+                    columnStyle += "border-left:0px;";
+                    isHideMultiSelectBorder = false;
+                }
+                writeTagStyle(writer, columnStyle);
+
                 if (isHeaderEllipsis) {
                     writer.write("><span class=\"theadtitle theadellipsis\">");
                 } else {
@@ -330,6 +345,8 @@ public class TableWriter extends AbstractControlWriter {
             boolean isMultiSelect = table.isMultiSelect();
             boolean isContainerDisabled = table.isContainerDisabled();
             boolean isContainerEditable = table.isContainerEditable();
+            boolean isShowMultiSelectCheckboxes = table.isShowMultiSelectCheckboxes();
+            boolean isHideMultiSelectBorder = isMultiSelect && !isShowMultiSelectCheckboxes;
 
             String dataGroupId = null;
             if (isContainerEditable) {
@@ -393,16 +410,21 @@ public class TableWriter extends AbstractControlWriter {
                     multiSelectCtrl.setValueStore(rowValueStore);
 
                     writer.write("<td");
-                    if (table.isWindowed() && columnIndex == 0) {
-                        writeTagStyleClass(writer, "thselectl");
+                    if (isShowMultiSelectCheckboxes) {
+                        if (table.isWindowed() && columnIndex == 0) {
+                            writeTagStyleClass(writer, "thselectl");
+                        } else {
+                            writeTagStyleClass(writer, "thselect");
+                        }
+                        columnIndex++;
                     } else {
-                        writeTagStyleClass(writer, "thselect");
+                        writeTagStyleClass(writer, "thselectx");
+                        columnIndex = 0;
                     }
                     
                     writer.write(">");
                     writer.writeStructureAndContent(multiSelectCtrl);
                     writer.write("</td>");
-                    columnIndex++;
                 }
 
                 for (Column column : table.getColumnList()) {
@@ -419,7 +441,7 @@ public class TableWriter extends AbstractControlWriter {
                             columnStyle = column.getStrippedStyle();
                         }
                         
-                        if (isWindowed) {
+                        if (isWindowed || isHideMultiSelectBorder) {
                             writer.write(" style=\"");
                             if (!StringUtils.isBlank(columnStyle)) {
                                 writer.write(columnStyle);
