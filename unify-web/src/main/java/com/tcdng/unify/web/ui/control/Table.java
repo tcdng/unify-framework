@@ -50,6 +50,7 @@ import com.tcdng.unify.web.ui.EventHandler;
         @UplAttribute(name = "multiSelDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "multiSelect", type = boolean.class),
+        @UplAttribute(name = "multiSelectCheckboxes", type = boolean.class, defaultValue = "true"),
         @UplAttribute(name = "pagination", type = boolean.class),
         @UplAttribute(name = "rowSelectable", type = boolean.class),
         @UplAttribute(name = "serialNumbers", type = boolean.class),
@@ -197,6 +198,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return getUplAttribute(boolean.class, "multiSelect");
     }
 
+    public boolean isShowMultiSelectCheckboxes() throws UnifyException {
+        return getUplAttribute(boolean.class, "multiSelectCheckboxes");
+    }
+    
     public boolean isWindowed() throws UnifyException {
         return getUplAttribute(boolean.class, "windowed") || isPagination();
     }
