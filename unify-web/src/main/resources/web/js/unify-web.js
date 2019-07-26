@@ -15,7 +15,7 @@
  */
 
 /**
- * Unify Framework Javascript.
+ * Unify Framework Javascript functions.
  * 
  * @author Lateef Ojulari
  * @since 1.0
@@ -2289,7 +2289,7 @@ ux.rigTable = function(rgp) {
 
 		var evp = {};
 		evp.uRigTbl = tblToRig;
-		evp.uSelBoxes = selBoxes;
+		tblToRig.uSelBoxes = selBoxes;
 		ux.attachEventHandler(_id(rgp.pSelAllId),
 				"click", ux.tableSelAllClick, evp);
 		
@@ -2298,9 +2298,16 @@ ux.rigTable = function(rgp) {
 			var tRow = tblToRig.rows[i + rowOffset];
 			selBox.uRowClass = tRow.className;
 			selBox.uRow = tRow; 
-			tRow.uSelBox = selBox;// Watch Cyclic
+			selBox.uIndex = i;
+			
+			// Wire handlers
 			ux.attachEventHandler(selBox, "click", ux.tableMultiSelClick,
 					evp);
+			var evpRw = {};
+			evpRw.uRigTbl = tblToRig;
+			evpRw.uSelBox = selBox;
+			ux.attachEventHandler(tRow, "click", ux.tableMultiRowClickHandler,
+					evpRw);
 			
 			// Highlight already selected from back-end
 			if (selBox.checked == true) {
@@ -2410,7 +2417,7 @@ ux.tableSelAllClick = function(uEv) {
 		}
 		
 		// Update visuals for rows
-		var selBoxes = uEv.evp.uSelBoxes;
+		var selBoxes = rigTbl.uSelBoxes;
 		if (selBoxes) {
 			if (selAllBox.checked ==  true) {
 				for (var i = 0; i < selBoxes.length; i++) {
@@ -2434,9 +2441,9 @@ ux.tableSelAllClick = function(uEv) {
 
 ux.tableMultiSelClick = function(uEv) {
 	var selBox = uEv.uTrg;
-	if (selBox.type == "checkbox") {
-		var evp = uEv.evp;
-		var rigTbl = evp.uRigTbl;
+	if (selBox) {
+		var rigTbl = uEv.evp.uRigTbl;
+		rigTbl.uLastSelClick = null;
 		if (selBox.checked == true) {
 			selBox.uRow.className = rigTbl.uSelCls;
 			rigTbl.uVisibleSel++;
@@ -2445,6 +2452,74 @@ ux.tableMultiSelClick = function(uEv) {
 			rigTbl.uVisibleSel--;
 		}
 		ux.tableDisableMultiSelElements(rigTbl);
+	}
+	
+	uEv.uSelClick = true;
+}
+
+ux.tableMultiRowClickHandler =  function(uEv) {
+	if (!uEv.uSelClick) {
+		var tRow = uEv.uTrg;
+		if (tRow) {
+			if (!(uEv.shiftKey && uEv.ctrlKey)) {
+				var rigTbl = uEv.evp.uRigTbl;
+				var selBox = uEv.evp.uSelBox;
+				if (uEv.ctrlKey) {
+					ux.tableMultiRowSelect(selBox, rigTbl, false, false);
+				} else {
+					if (uEv.shiftKey) {
+						ux.tableMultiRowSelect(selBox, rigTbl, false, true);
+					} else {
+						ux.tableMultiRowSelect(selBox, rigTbl, true, false);
+					}
+				}
+			}
+		}
+	}
+}
+
+ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
+	if (selBox != rigTbl.uLastSelClick && selBox.checked != true) {
+		selBox.checked = true;
+		selBox.uRow.className = rigTbl.uSelCls;
+		rigTbl.uVisibleSel++;
+		
+		if (wideSelect && rigTbl.uLastSelClick) {
+			var start = selBox.uIndex;
+			var end = rigTbl.uLastSelClick.uIndex;
+			if (start > end) {
+				var temp = start;
+				start = end;
+				end = temp;
+			}
+			
+			var selBoxes = rigTbl.uSelBoxes;
+			for (var i = start; i <= end; i++) {
+				var cSelBox = selBoxes[i];
+				if (cSelBox.checked != true) {
+					cSelBox.checked = true;
+					cSelBox.uRow.className = rigTbl.uSelCls;
+					rigTbl.uVisibleSel++;
+				}
+			}
+		}
+		
+		rigTbl.uLastSelClick = selBox;
+	}
+
+	if (uncheckOthers) {
+		var selBoxes = rigTbl.uSelBoxes;
+		for(var i = 0; i < selBoxes.length; i++) {
+			var unSelBox = selBoxes[i];
+			if (unSelBox.checked == true) {
+				if (unSelBox != selBox) {
+					unSelBox.checked = false;
+					unSelBox.uRow.className = unSelBox.uRowClass;
+				}
+			}
+		}
+		
+		rigTbl.uVisibleSel = 1;
 	}
 }
 
@@ -4337,7 +4412,7 @@ ux.attachEventHandler(window, "resize", function() {
 			UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY);
 }, {});
 
-/** Initialisation */
+/** Initialization */
 ux.init();
 
 /** Types */
