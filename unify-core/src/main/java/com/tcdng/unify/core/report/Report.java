@@ -72,6 +72,10 @@ public class Report {
 
     private int detailHeight;
 
+    private int pageWidth;
+
+    private int pageHeight;
+    
     private String summationLegend;
 
     private String groupSummationLegend;
@@ -89,7 +93,7 @@ public class Report {
     private Report(String code, String title, String template, String processor, String dataSource, String query,
             Collection<?> beanCollection, ReportTable table, List<ReportTableJoin> joins, List<ReportColumn> columns,
             List<ReportColumnFilter> filters, ReportFormat format, ReportLayout layout,
-            ReportParameters reportParameters, String columnFontName, int columnFontSize, int columnHeaderHeight,
+            ReportParameters reportParameters, int pageWidth, int pageHeight, String columnFontName, int columnFontSize, int columnHeaderHeight,
             int detailHeight, String summationLegend, String groupSummationLegend, boolean dynamicDataSource,
             boolean printColumnNames, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
         this.code = code;
@@ -108,6 +112,8 @@ public class Report {
         this.reportParameters = reportParameters;
         this.columnFontName = columnFontName;
         this.columnFontSize = columnFontSize;
+        this.pageWidth = pageWidth;
+        this.pageHeight = pageHeight;
         this.columnHeaderHeight = columnHeaderHeight;
         this.detailHeight = detailHeight;
         this.summationLegend = summationLegend;
@@ -177,6 +183,14 @@ public class Report {
 
     public int getColumnFontSize() {
         return columnFontSize;
+    }
+
+    public int getPageWidth() {
+        return pageWidth;
+    }
+
+    public int getPageHeight() {
+        return pageHeight;
     }
 
     public int getColumnHeaderHeight() {
@@ -309,6 +323,10 @@ public class Report {
 
         private int columnHeaderHeight;
 
+        private int pageWidth;
+
+        private int pageHeight;
+
         private int detailHeight;
 
         private String summationLegend;
@@ -393,6 +411,16 @@ public class Report {
 
         public Builder columnFontSize(int columnFontSize) {
             this.columnFontSize = columnFontSize;
+            return this;
+        }
+
+        public Builder pageWidth(int pageWidth) {
+            this.pageWidth = pageWidth;
+            return this;
+        }
+
+        public Builder pageHeight(int pageHeight) {
+            this.pageHeight = pageHeight;
             return this;
         }
 
@@ -518,7 +546,7 @@ public class Report {
         public Report build() throws UnifyException {
             Report report = new Report(code, title, template, processor, dataSource, query, beanCollection, table,
                     Collections.unmodifiableList(joins), columns, filters, format, layout,
-                    new ReportParameters(parameters), columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
+                    new ReportParameters(parameters), pageWidth, pageHeight, columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
                     summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames, underlineRows,
                     shadeOddRows, landscape);
             return report;
