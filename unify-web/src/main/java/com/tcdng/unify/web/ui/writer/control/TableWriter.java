@@ -210,6 +210,10 @@ public class TableWriter extends AbstractControlWriter {
 
         writer.write(",\"pMultiSel\":").write(table.isMultiSelect());
         if (table.isMultiSelect()) {
+            if (!table.isRowSelectable()) {
+                writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
+            }
+
             writer.write(",\"pSelAllId\":\"").write(table.getSelectAllId()).write('"');
             writer.write(",\"pSelGrpId\":\"").write(table.getSelectGroupId()).write('"');
             writer.write(",\"pVisibleSel\":").write(table.getPageSelectedRowCount());
@@ -349,6 +353,7 @@ public class TableWriter extends AbstractControlWriter {
             }
 
             // Write rows
+            String columnStyle = null;
             boolean firstRowWrite = true;
             // Enter writer table mode. Column rendering will use table style if supported
             // by column control.
@@ -409,20 +414,24 @@ public class TableWriter extends AbstractControlWriter {
                         // writeTagStyleClass(writer, "ttd");
                         // Optimization : write column style information for first row only
                         if (firstRowWrite) {
-                            String columnStyle = control.getColumnStyle();
-                            if (isWindowed) {
-                                writer.write(" style=\"");
-                                if (!StringUtils.isBlank(columnStyle)) {
-                                    writer.write(columnStyle);
-                                }
-                                if (columnIndex == 0) {
-                                    writer.write("border-left:0px;");
-                                }
-                                writer.write("\"");
-                            } else {
-                                writeTagStyle(writer, columnStyle);
-                            }
+                            columnStyle = control.getColumnStyle();
+                        } else {
+                            columnStyle = column.getStrippedStyle();
                         }
+                        
+                        if (isWindowed) {
+                            writer.write(" style=\"");
+                            if (!StringUtils.isBlank(columnStyle)) {
+                                writer.write(columnStyle);
+                            }
+                            if (columnIndex == 0) {
+                                writer.write("border-left:0px;");
+                            }
+                            writer.write("\"");
+                        } else {
+                            writeTagStyle(writer, columnStyle);
+                        }
+                        
                         writer.write(">");
                         writer.writeStructureAndContent(control);
                         writer.write("</td>");
