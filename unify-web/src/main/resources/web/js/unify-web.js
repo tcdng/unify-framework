@@ -2200,7 +2200,8 @@ ux.rigTable = function(rgp) {
 		ux.registerResizeFunc(id, ux.tableResizeHeight, rgp);
 	}
 
-	if (tblToRig.rows && rgp.pSelectable) {
+	var selectable = rgp.pSelectable && !rgp.pMultiSel;
+	if (tblToRig.rows && selectable) {
 		tblToRig.uIdxId = rgp.pIdxCtrlId;
 		tblToRig.uBaseIdx = rgp.pBaseIdx;
 		tblToRig.uSelCls = rgp.pSelClassNm;
@@ -2268,34 +2269,46 @@ ux.rigTable = function(rgp) {
 	}
 
 	if (rgp.pMultiSel) {
+		tblToRig.uSelCls = rgp.pSelClassNm;
 		tblToRig.uVisibleSel = rgp.pVisibleSel;
 		tblToRig.uHiddenSel = rgp.pHiddenSel;
 		tblToRig.uMultiSelDepList = rgp.pMultiSelDepList;
 		tblToRig.uItemCount = rgp.pItemCount;
 		tblToRig.uSelAllId = rgp.pSelAllId;
 
+		// Disable dependencies if required
 		ux.setDisabledById(tblToRig.uMultiSelDepList,
 				(tblToRig.uVisibleSel + tblToRig.uHiddenSel) <= 0);
 
+		// Rig select/ de-select all
+		var selBoxes = _name(rgp.pSelGrpId);
+		var rowOffset = 1;
+		if (rgp.pWindowed) {
+			rowOffset = 0;
+		}
+
 		var evp = {};
 		evp.uRigTbl = tblToRig;
-		ux.attachEventHandler(_id(rgp.pSelAllId), "click",
-				ux.tableSelAllClick, evp);
-
-		evp = {};
-		evp.uRef = [ rgp.pSelGrpId ];
+		evp.uSelBoxes = selBoxes;
 		ux.attachEventHandler(_id(rgp.pSelAllId),
-				"click", ux.setAllChecked, evp);
-
-		var selBoxes = _name(rgp.pSelGrpId);
+				"click", ux.tableSelAllClick, evp);
+		
 		for (var i = 0; i < selBoxes.length; i++) {
-			evp = {};
-			evp.uRigTbl = tblToRig;
-			ux.attachEventHandler(selBoxes[i], "click", ux.tableMultiSelClick,
+			var selBox = selBoxes[i];
+			var tRow = tblToRig.rows[i + rowOffset];
+			selBox.uRowClass = tRow.className;
+			selBox.uRow = tRow; 
+			tRow.uSelBox = selBox;// Watch Cyclic
+			ux.attachEventHandler(selBox, "click", ux.tableMultiSelClick,
 					evp);
+			
+			// Highlight already selected from back-end
+			if (selBox.checked == true) {
+				tRow.className = tblToRig.uSelCls;
+			}
 		}
 	}
-
+	
 	if (rgp.pSortable) {
 		if (rgp.pSortColList) {
 			for (var i = 0; i < rgp.pSortColList.length; i++) {
@@ -2345,7 +2358,7 @@ ux.rigTable = function(rgp) {
 			ux.fireEvent(tblToRig.rows[viewIndex], "click", true);
 		}
 	} else {
-		if (rgp.pSelectable) {
+		if (selectable) {
 			if (tblToRig.uFirstRow) {
 				ux.fireEvent(tblToRig.uFirstRow, "click", true);
 			}
@@ -2386,15 +2399,35 @@ ux.tableSortClickHandler = function(uEv) {
 }
 
 ux.tableSelAllClick = function(uEv) {
-	var selBox = uEv.uTrg;
-	if (selBox.type == "checkbox") {
-		var evp = uEv.evp;
-		var rigTbl = evp.uRigTbl;
-		if (selBox.checked == true) {
+	var selAllBox = uEv.uTrg;
+	if (selAllBox) {
+		var rigTbl = uEv.evp.uRigTbl;
+		// Update table values
+		if (selAllBox.checked == true) {
 			rigTbl.uVisibleSel = rigTbl.uItemCount;
 		} else {
 			rigTbl.uVisibleSel = 0;
 		}
+		
+		// Update visuals for rows
+		var selBoxes = uEv.evp.uSelBoxes;
+		if (selBoxes) {
+			if (selAllBox.checked ==  true) {
+				for (var i = 0; i < selBoxes.length; i++) {
+					var selBox = selBoxes[i];
+					selBox.checked = selAllBox.checked;
+					selBox.uRow.className = rigTbl.uSelCls;
+				}
+			} else {
+				for (var i = 0; i < selBoxes.length; i++) {
+					var selBox = selBoxes[i];
+					selBox.checked = selAllBox.checked;
+					selBox.uRow.className = selBox.uRowClass;
+				}
+			}
+		}
+		
+		// Update dependencies
 		ux.tableDisableMultiSelElements(rigTbl);
 	}
 }
@@ -2405,8 +2438,10 @@ ux.tableMultiSelClick = function(uEv) {
 		var evp = uEv.evp;
 		var rigTbl = evp.uRigTbl;
 		if (selBox.checked == true) {
+			selBox.uRow.className = rigTbl.uSelCls;
 			rigTbl.uVisibleSel++;
 		} else {
+			selBox.uRow.className = selBox.uRowClass;
 			rigTbl.uVisibleSel--;
 		}
 		ux.tableDisableMultiSelElements(rigTbl);

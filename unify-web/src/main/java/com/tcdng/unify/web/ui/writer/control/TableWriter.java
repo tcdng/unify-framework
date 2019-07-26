@@ -210,6 +210,10 @@ public class TableWriter extends AbstractControlWriter {
 
         writer.write(",\"pMultiSel\":").write(table.isMultiSelect());
         if (table.isMultiSelect()) {
+            if (!table.isRowSelectable()) {
+                writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
+            }
+
             writer.write(",\"pSelAllId\":\"").write(table.getSelectAllId()).write('"');
             writer.write(",\"pSelGrpId\":\"").write(table.getSelectGroupId()).write('"');
             writer.write(",\"pVisibleSel\":").write(table.getPageSelectedRowCount());
