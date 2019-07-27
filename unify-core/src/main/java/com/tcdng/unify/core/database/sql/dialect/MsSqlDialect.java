@@ -47,6 +47,10 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(name = SqlDialectConstants.MSSQL, description = "$m{sqldialect.mssqldb}")
 public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
+    public MsSqlDialect() {
+        super(false); // useCallableFunctionMode
+    }
+
     @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT CURRENT_TIMESTAMP";

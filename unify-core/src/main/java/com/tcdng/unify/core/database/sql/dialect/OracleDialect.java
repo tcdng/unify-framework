@@ -51,6 +51,10 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(name = SqlDialectConstants.ORACLE, description = "$m{sqldialect.oracledb}")
 public class OracleDialect extends AbstractSqlDataSourceDialect {
 
+    public OracleDialect() {
+        super(false); // useCallableFunctionMode
+    }
+
     @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT 1 FROM DUAL";

@@ -44,13 +44,16 @@ public class SqlCallableStatementPools {
     private int minObjects;
 
     private int maxObjects;
+    
+    private boolean functionMode;
 
     public SqlCallableStatementPools(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies, long getTimeout,
-            int minObjects, int maxObjects) {
+            int minObjects, int maxObjects, boolean functionMode) {
         this.sqlDataTypePolicies = sqlDataTypePolicies;
         this.getTimeout = getTimeout;
         this.minObjects = minObjects;
         this.maxObjects = maxObjects;
+        this.functionMode = functionMode;
 
         this.poolMap = new FactoryMap<SqlCallableInfo, SqlCallableStatementPool>() {
 
@@ -109,7 +112,7 @@ public class SqlCallableStatementPools {
             }
 
             return new SqlCallableStatement(sqlCallableInfo, getSql(), paramInfoList, getResultInfoListByTypes(),
-                    returnTypePolicy);
+                    returnTypePolicy, functionMode);
         }
 
         @Override
@@ -168,7 +171,7 @@ public class SqlCallableStatementPools {
                     if (sql == null) {
                         StringBuilder sb = new StringBuilder();
                         sb.append("{");
-                        if (sqlCallableInfo.isWithReturn()) {
+                        if (sqlCallableInfo.isWithReturn() && !functionMode) {
                             sb.append("? = ");
                         }
 
