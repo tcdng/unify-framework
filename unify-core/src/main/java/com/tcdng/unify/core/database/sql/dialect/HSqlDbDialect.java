@@ -47,6 +47,10 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
     private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
 
+    public HSqlDbDialect() {
+        super(true); // useCallableFunctionMode
+    }
+
     @Override
     public int getMaxClauseValues() {
         return -1;

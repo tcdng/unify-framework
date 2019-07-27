@@ -128,13 +128,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private String newLineSql;
 
+    private boolean useCallableFunctionMode;
+
     private boolean appendNullOnTblCreate;
 
-    public AbstractSqlDataSourceDialect() {
-        this(false);
+    public AbstractSqlDataSourceDialect(boolean useCallableFunctionMode) {
+        this(useCallableFunctionMode, false);
     }
 
-    public AbstractSqlDataSourceDialect(boolean appendNullOnTblCreate) {
+    public AbstractSqlDataSourceDialect(boolean useCallableFunctionMode, boolean appendNullOnTblCreate) {
+        this.useCallableFunctionMode = useCallableFunctionMode;
         this.appendNullOnTblCreate = appendNullOnTblCreate;
         timestampFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
         sqlCacheFactory = new SqlCacheFactory();
@@ -1309,7 +1312,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected void onInitialize() throws UnifyException {
         sqlEntityInfoFactory.setSqlDataSourceDialect(this);
         sqlCallableStatementPools = new SqlCallableStatementPools(sqlDataTypePolicies, getStatementInfoTimeout,
-                minStatementInfo, maxStatementInfo);
+                minStatementInfo, maxStatementInfo, useCallableFunctionMode);
         terminationSql = ";";
         newLineSql = getLineSeparator();
     }

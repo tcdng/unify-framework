@@ -36,13 +36,16 @@ public class SqlCallableStatement {
 
     private SqlDataTypePolicy returnTypePolicy;
 
+    private boolean functionMode;
+    
     public SqlCallableStatement(SqlCallableInfo sqlCallableInfo, String sql, List<SqlParameter> parameterInfoList,
-            Map<Class<?>, SqlCallableResult> resultInfoListByType, SqlDataTypePolicy returnTypePolicy) {
+            Map<Class<?>, SqlCallableResult> resultInfoListByType, SqlDataTypePolicy returnTypePolicy, boolean functionMode) {
         this.sqlCallableInfo = sqlCallableInfo;
         this.sql = sql;
         this.parameterInfoList = parameterInfoList;
         this.resultInfoListByType = resultInfoListByType;
         this.returnTypePolicy = returnTypePolicy;
+        this.functionMode = functionMode;
     }
 
     public SqlCallableInfo getSqlCallableInfo() {
@@ -63,6 +66,14 @@ public class SqlCallableStatement {
 
     public SqlDataTypePolicy getReturnTypePolicy() {
         return returnTypePolicy;
+    }
+
+    public boolean isWithReturn() {
+        return returnTypePolicy != null;
+    }
+    
+    public boolean isFunctionMode() {
+        return functionMode;
     }
 
     public String toString() {
