@@ -2201,7 +2201,7 @@ ux.rigTable = function(rgp) {
 	}
 
 	var selectable = rgp.pSelectable && !rgp.pMultiSel;
-	if (tblToRig.rows && selectable) {
+	if (tblToRig.rows && (selectable || rgp.pShiftable)) {
 		tblToRig.uIdxId = rgp.pIdxCtrlId;
 		tblToRig.uBaseIdx = rgp.pBaseIdx;
 		tblToRig.uSelCls = rgp.pSelClassNm;
@@ -2303,11 +2303,13 @@ ux.rigTable = function(rgp) {
 			// Wire handlers
 			ux.attachEventHandler(selBox, "click", ux.tableMultiSelClick,
 					evp);
-			var evpRw = {};
-			evpRw.uRigTbl = tblToRig;
-			evpRw.uSelBox = selBox;
-			ux.attachEventHandler(tRow, "click", ux.tableMultiRowClickHandler,
-					evpRw);
+			if (!rgp.pShiftable) {
+				var evpRw = {};
+				evpRw.uRigTbl = tblToRig;
+				evpRw.uSelBox = selBox;
+				ux.attachEventHandler(tRow, "click", ux.tableMultiRowClickHandler,
+						evpRw);
+			}
 			
 			// Highlight already selected from back-end
 			if (selBox.checked == true) {
@@ -2362,6 +2364,7 @@ ux.rigTable = function(rgp) {
 			if (rgp.pWindowed) {
 				viewIndex--;
 			}
+			
 			ux.fireEvent(tblToRig.rows[viewIndex], "click", true);
 		}
 	} else {
