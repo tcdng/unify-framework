@@ -89,11 +89,16 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
 
     @Override
     public Map<String, ParameterDef> findParameterDefinitionsByName(String name) throws UnifyException {
-        Map<String, ParameterDef> map = new LinkedHashMap<String, ParameterDef>();
-        for (ParameterDef pd : db().find(new ParametersDefQuery().typeName(name)).getParameterDefs()) {
-            map.put(pd.getName(), pd);
+        ParametersDef pdd = db().find(new ParametersDefQuery().typeName(name));
+        if (pdd != null && !pdd.isEmpty()) {
+            Map<String, ParameterDef> map = new LinkedHashMap<String, ParameterDef>();
+            for (ParameterDef pd : pdd.getParameterDefs()) {
+                map.put(pd.getName(), pd);
+            }
+            return map;
         }
-        return map;
+        
+        return Collections.emptyMap();
     }
 
     @Override

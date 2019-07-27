@@ -53,4 +53,7 @@ public class ParametersDef extends AbstractSystemSequencedEntity {
         this.parameterDefs = parameterDefs;
     }
 
+    public boolean isEmpty() {
+        return parameterDefs == null || parameterDefs.isEmpty();
+    }
 }
