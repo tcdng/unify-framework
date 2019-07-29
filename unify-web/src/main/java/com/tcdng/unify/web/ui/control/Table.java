@@ -46,6 +46,9 @@ import com.tcdng.unify.web.ui.EventHandler;
 @Component("ui-table")
 @UplAttributes({ @UplAttribute(name = "bodyStyle", type = String.class),
         @UplAttribute(name = "selectBinding", type = String.class),
+        @UplAttribute(name = "summarySrc", type = String.class),
+        @UplAttribute(name = "summaryProcList", type = String[].class),
+        @UplAttribute(name = "summaryDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "contentDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "multiSelDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
@@ -118,6 +121,8 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     private List<String> multiSelDependentList;
 
+    private List<String> summaryDependentList;
+
     private String dataGroupId;
 
     @Override
@@ -186,6 +191,14 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return getUplAttribute(String.class, "bodyStyle");
     }
 
+    public String getSummarySrc() throws UnifyException {
+        return getUplAttribute(String.class, "summarySrc");
+    }
+
+    public String[] getSummaryProcList() throws UnifyException {
+        return getUplAttribute(String[].class, "summaryProcList");
+    }
+    
     public boolean isPagination() throws UnifyException {
         return getUplAttribute(boolean.class, "pagination");
     }
@@ -201,7 +214,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public boolean isShowMultiSelectCheckboxes() throws UnifyException {
         return getUplAttribute(boolean.class, "multiSelectCheckboxes");
     }
-    
+
     public boolean isWindowed() throws UnifyException {
         return getUplAttribute(boolean.class, "windowed") || isPagination();
     }
@@ -248,6 +261,18 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             }
         }
         return selDependentList;
+    }
+
+    public List<String> getSummaryDependentList() throws UnifyException {
+        if (summaryDependentList == null) {
+            UplElementReferences uer = getUplAttribute(UplElementReferences.class, "summaryDependentList");
+            if (uer != null) {
+                summaryDependentList = getPageManager().getPageNames(uer.getLongNames());
+            } else {
+                summaryDependentList = Collections.emptyList();
+            }
+        }
+        return summaryDependentList;
     }
 
     public List<String> getMultiSelDependentList() throws UnifyException {
@@ -811,6 +836,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
         public boolean isVisible() throws UnifyException {
             return control.isVisible();
+        }
+
+        public boolean isColumnSelectSummary() throws UnifyException {
+            return control.getColumnSelectSummary();
         }
 
         public String getStrippedStyle() throws UnifyException {

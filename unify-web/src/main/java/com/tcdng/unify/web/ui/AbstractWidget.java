@@ -42,6 +42,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
         @UplAttribute(name = "caption", type = String.class),
         @UplAttribute(name = "captionBinding", type = String.class),
         @UplAttribute(name = "columnStyle", type = String.class),
+        @UplAttribute(name = "columnSelectSummary", type = boolean.class),
         @UplAttribute(name = "hint", type = String.class),
         @UplAttribute(name = "hintBinding", type = String.class),
         @UplAttribute(name = "readOnly", type = boolean.class, defaultValue = "false"),
@@ -128,6 +129,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     @Override
     public String getColumnStyle() throws UnifyException {
         return getUplAttribute(String.class, "columnStyle");
+    }
+
+    @Override
+    public boolean getColumnSelectSummary() throws UnifyException {
+        return getUplAttribute(boolean.class, "columnSelectSummary");
     }
 
     @Override

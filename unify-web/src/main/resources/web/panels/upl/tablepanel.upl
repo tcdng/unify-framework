@@ -12,3 +12,7 @@
     headerEllipsis:$f{tableHeaderEllipsis}
     contentEllipsis:$f{tableContentEllipsis}
     binding:$f{tableBinding} components:$f{tableColumnList}
+    summarySrc:$f{tableSummarySrc}
+    summaryProcList:$f{tableSummaryProcList}
+    summaryDependentList:$f{tableSummaryDependentList} 
+    

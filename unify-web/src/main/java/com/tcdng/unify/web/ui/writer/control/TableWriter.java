@@ -176,6 +176,10 @@ public class TableWriter extends AbstractControlWriter {
             }
         }
 
+        // Get summary
+        if (table.isMultiSelect()) {
+        }
+
         // Append table rigging
         writer.write("ux.rigTable({");
         writer.write("\"pId\":\"").write(table.getId()).write('"');
@@ -210,6 +214,7 @@ public class TableWriter extends AbstractControlWriter {
 
         writer.write(",\"pMultiSel\":").write(table.isMultiSelect());
         if (table.isMultiSelect()) {
+            // Normal multi-select details
             if (!table.isRowSelectable()) {
                 writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
             }
@@ -220,6 +225,40 @@ public class TableWriter extends AbstractControlWriter {
             writer.write(",\"pHiddenSel\":").write(table.getSelectedRows() - table.getPageSelectedRowCount());
             writer.write(",\"pMultiSelDepList\":");
             writer.writeJsonStringArray(table.getMultiSelDependentList());
+
+            // Summary columns
+            int summaryColIndex = 1; // Because of multi-select column
+            if (table.isSerialNumbers()) {
+                summaryColIndex++;
+            }
+
+            String summarySrc = table.getSummarySrc();
+            if (!StringUtils.isBlank(summarySrc)) {
+                writer.write(",\"pSumSrc\":\"").write(summarySrc).write('"');
+                writer.write(",\"pSumProcList\":");
+                writer.writeJsonStringArray((Object[]) table.getSummaryProcList());
+                writer.write(",\"pSumDepList\":");
+                writer.writeJsonStringArray(table.getSummaryDependentList());
+            }
+
+            writer.write(",\"pSumColList\":[");
+            boolean appendSym = false;
+            for (Column column : table.getColumnList()) {
+                if (column.isVisible()) {
+                    if (column.isColumnSelectSummary()) {
+                        Control control = column.getControl();
+                        if (appendSym) {
+                            writer.write(',');
+                        } else {
+                            appendSym = true;
+                        }
+                        writer.write("{\"idx\":").write(summaryColIndex);
+                        writer.write(",\"nm\":\"").write(control.getShortName()).write("\"}");
+                    }
+                    summaryColIndex++;
+                }
+            }
+            writer.write(']');
         }
 
         boolean shiftable = table.getShiftDirectionId() != null;
@@ -244,10 +283,12 @@ public class TableWriter extends AbstractControlWriter {
             for (int i = 0; i < columnStates.size(); i++) {
                 ColumnState columnState = columnStates.get(i);
                 if (columnState.isSortable()) {
-                    if (appendSym)
+                    if (appendSym) {
                         writer.write(',');
-                    else
+                    } else {
                         appendSym = true;
+                    }
+
                     writer.write('{');
                     writer.write("\"idx\":").write(i);
                     writer.write(",\"ascend\":").write(columnState.isAscending());
@@ -421,7 +462,7 @@ public class TableWriter extends AbstractControlWriter {
                         writeTagStyleClass(writer, "thselectx");
                         columnIndex = 0;
                     }
-                    
+
                     writer.write(">");
                     writer.writeStructureAndContent(multiSelectCtrl);
                     writer.write("</td>");
@@ -440,7 +481,7 @@ public class TableWriter extends AbstractControlWriter {
                         } else {
                             columnStyle = column.getStrippedStyle();
                         }
-                        
+
                         if (isWindowed || isHideMultiSelectBorder) {
                             writer.write(" style=\"");
                             if (!StringUtils.isBlank(columnStyle)) {
@@ -453,7 +494,7 @@ public class TableWriter extends AbstractControlWriter {
                         } else {
                             writeTagStyle(writer, columnStyle);
                         }
-                        
+
                         writer.write(">");
                         writer.writeStructureAndContent(control);
                         writer.write("</td>");

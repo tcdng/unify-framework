@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 The Code Department
+ * Copyright 2018-2019 The Code Department
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,10 +65,11 @@ ux.remoteView = null;
 ux.shortcuts = [];
 ux.pagenamealiases = [];
 ux.delayedpanelposting = [];
-ux.resizefunctions = {};
 ux.remoteviewsessions = [];
 
-ux.confirmStore = {};
+ux.resizefunctions = {};
+ux.confirmstore = {};
+ux.extensionregistry = {};
 
 ux.lastUserActTime=0;
 
@@ -84,6 +85,20 @@ function _name_0(name) {
 }
 function _enc(value) {
 	return encodeURIComponent(value);
+}
+
+function _proc(name) {
+	var i = name.indexOf('.');
+	if (i > 0) {
+		return ux.extensionregistry[name.substring(0, i)][name.substring(i + 1)];
+	}
+	
+	return ux.extensionregistry["ux"][name];
+}
+
+/** Extensions */
+ux.registerExtension = function(extLiteral, extObj) {
+	ux.extensionregistry[extLiteral] = extObj;
 }
 
 /** Basic * */
@@ -150,11 +165,11 @@ ux.respHandler = {
 
 	firePreConfirmHdl : function(resp) {
 		if (resp.fire) {
-			if (ux.confirmStore.handler) {
-				var handler = ux.confirmStore.handler;
-				var normEvt = ux.confirmStore.normEvt;
-				normEvt.evp = ux.confirmStore.evp;
-				ux.confirmStore = {};
+			if (ux.confirmstore.handler) {
+				var handler = ux.confirmstore.handler;
+				var normEvt = ux.confirmstore.normEvt;
+				normEvt.evp = ux.confirmstore.evp;
+				ux.confirmstore = {};
 				handler(normEvt);
 			}
 		}
@@ -2275,6 +2290,17 @@ ux.rigTable = function(rgp) {
 		tblToRig.uMultiSelDepList = rgp.pMultiSelDepList;
 		tblToRig.uItemCount = rgp.pItemCount;
 		tblToRig.uSelAllId = rgp.pSelAllId;
+		tblToRig.uSumColList = rgp.pSumColList;
+		tblToRig.uSumSrc = rgp.pSumSrc;
+		tblToRig.uSumDepList = rgp.pSumDepList;
+		if (rgp.pSumProcList) {
+			var procList = rgp.pSumProcList;
+			var sumProcs = [];
+			for(var i = 0; i < procList.length; i++) {
+				sumProcs[i] = _proc(procList[i]);
+			}
+			tblToRig.uSumProcs = sumProcs;
+		}
 
 		// Disable dependencies if required
 		ux.setDisabledById(tblToRig.uMultiSelDepList,
@@ -2316,6 +2342,9 @@ ux.rigTable = function(rgp) {
 				tRow.className = tblToRig.uSelCls;
 			}
 		}
+		
+		// Fire summary proc
+		ux.tableSummaryProc(tblToRig);
 	}
 	
 	if (rgp.pSortable) {
@@ -2439,10 +2468,14 @@ ux.tableSelAllClick = function(uEv) {
 		
 		// Update dependencies
 		ux.tableDisableMultiSelElements(rigTbl);
+		
+		// Fire summary
+		ux.tableSummaryProc(rigTbl);
 	}
 }
 
 ux.tableMultiSelClick = function(uEv) {
+	var changed = false;
 	var selBox = uEv.uTrg;
 	if (selBox) {
 		var rigTbl = uEv.evp.uRigTbl;
@@ -2454,10 +2487,17 @@ ux.tableMultiSelClick = function(uEv) {
 			selBox.uRow.className = selBox.uRowClass;
 			rigTbl.uVisibleSel--;
 		}
+
+		changed = true;
 		ux.tableDisableMultiSelElements(rigTbl);
 	}
 	
 	uEv.uSelClick = true;
+	
+	if (changed) {
+		// Fire summary
+		ux.tableSummaryProc(rigTbl);
+	}
 }
 
 ux.tableMultiRowClickHandler =  function(uEv) {
@@ -2484,6 +2524,7 @@ ux.tableMultiRowClickHandler =  function(uEv) {
 }
 
 ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
+	var changed = false;
 	if (selBox != rigTbl.uLastSelClick && selBox.checked != true) {
 		selBox.checked = true;
 		selBox.uRow.className = rigTbl.uSelCls;
@@ -2510,6 +2551,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 		}
 		
 		rigTbl.uLastSelClick = selBox;
+		changed = true;
 	}
 
 	if (uncheckOthers) {
@@ -2520,11 +2562,72 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 				if (unSelBox != selBox) {
 					unSelBox.checked = false;
 					unSelBox.uRow.className = unSelBox.uRowClass;
+					changed = true;
 				}
 			}
 		}
 		
 		rigTbl.uVisibleSel = 1;
+	}
+	
+	if (changed) {
+		// Fire summary
+		ux.tableSummaryProc(rigTbl);
+	}
+}
+
+ux.tableSummaryProc = function(rigTbl) {
+	// No need to perform summary if there are no handlers or targets
+	if (!rigTbl.uSumProcs || !rigTbl.uSumDepList) {		
+		return;
+	}
+
+	var sumProcs = rigTbl.uSumProcs
+	var sumDeps = rigTbl.uSumDepList
+	var procLen = sumProcs.length;
+	if (procLen > sumDeps.length) {
+		procLen = sumDeps.length;
+	}
+	
+	if (procLen == 0) {
+		return;
+	}
+	
+	// Do summary
+	var sumCols = rigTbl.uSumColList;
+	var selBoxes = rigTbl.uSelBoxes;
+	
+	//Initialize
+	var summary = {};
+	for (var i = 0; i < sumCols.length; i++) {
+		summary[sumCols[i].nm] = 0.0;
+	}
+	
+	// Do calculations
+	for(var i = 0; i < selBoxes.length; i++) {
+		if (selBoxes[i].checked == true) {
+			for (var j = 0; j < sumCols.length; j++) {
+				var sumCol = sumCols[j];
+				// Get cell value and add
+				var cVal = 0.0;
+				var cell = selBoxes[i].uRow.cells[sumCol.idx];
+				if (cell) {
+					var cnt = cell.innerHTML;
+					if (cnt.charAt(0) == '<') {
+						var sIndex = cnt.indexOf(">");
+						cnt = cnt.substring(sIndex + 1, cnt.indexOf("<", sIndex));
+					}
+					cVal = parseFloat(cnt.replace(",", ""));
+				}
+				summary[sumCol.nm] = cVal + summary[sumCol.nm];
+			}
+		}
+	}
+
+	// Fire summary handlers
+	var src =rigTbl.uSumSrc;
+	for(var i = 0; i < sumProcs.length; i++) {
+		sumProcs[i](sumDeps[i], src, summary);
 	}
 }
 
@@ -3909,9 +4012,13 @@ var menuContextOff = false;
 
 ux.init = function() {
 	ux.resizeTimeout = null;
+	// Set document keydown handler
 	var evp = {};
 	ux.attachEventHandler(document, "keydown", ux.documentKeydownHandler,
 					evp);
+	
+	// Register self as extension
+	ux.registerExtension("ux", ux);
 }
 
 ux.disableWinContextMenu = function() {
@@ -4116,16 +4223,16 @@ ux.attachEventHandler = function(domObject, eventName, handler, evp) {
 ux.handleOrConfirmRedirect = function(event, handler, evp) {
 	if (evp.uConf) {
 		// Store action
-		ux.confirmStore.handler = handler;
-		ux.confirmStore.normEvt = ux.normaliseEvent(event, evp);
-		ux.confirmStore.evp = evp;
+		ux.confirmstore.handler = handler;
+		ux.confirmstore.normEvt = ux.normaliseEvent(event, evp);
+		ux.confirmstore.evp = evp;
 
 		// Execute confirmation redirect
 		var evPrmConf = {};
 		evPrmConf.uURL = evp.uConfURL;
 		evPrmConf.uConfMsg = evp.uConf;
 		evPrmConf.uViewer = evp.uViewer;
-		var hiddenElem = _id(ux.confirmStore.normEvt.uTrg.id + "_a");
+		var hiddenElem = _id(ux.confirmstore.normEvt.uTrg.id + "_a");
 		if (hiddenElem) {
 			evPrmConf.uConfPrm = hiddenElem.value;
 		}
