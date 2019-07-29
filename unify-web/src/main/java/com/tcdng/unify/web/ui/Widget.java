@@ -148,6 +148,14 @@ public interface Widget extends UplComponent {
     String getColumnStyle() throws UnifyException;
 
     /**
+     * Check if widget is marked for column summary.
+     * 
+     * @return a true value if marked otherwise false
+     * @throws UnifyException if an error occurs
+     */
+    boolean getColumnSelectSummary() throws UnifyException;
+    
+    /**
      * Returns widget hint.
      * 
      * @throws UnifyException
