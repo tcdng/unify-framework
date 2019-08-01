@@ -91,10 +91,8 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write(",\"pTodayClass\":\"ctoday\"");
         writer.write(",\"pClearable\":").write(dateField.isClearable());
         writer.write(",\"pPadLeft\":true");
-        writer.write(",\"pShortDayNm\":");
-        writer.writeJsonStringArray((Object[]) dateField.getShortDayList());
-        writer.write(",\"pLongMonthNm\":");
-        writer.writeJsonStringArray((Object[]) dateField.getLongMonthList());
+        writer.write(",\"pShortDayNm\":").writeJsonArray(dateField.getShortDayList());
+        writer.write(",\"pLongMonthNm\":").writeJsonArray(dateField.getLongMonthList());
         writer.write(",\"pPattern\":");
         writer.writeJsonPatternObject(dateField.getPattern());
         writer.write("});");

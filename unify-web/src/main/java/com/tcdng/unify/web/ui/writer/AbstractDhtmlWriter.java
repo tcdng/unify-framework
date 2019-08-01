@@ -608,8 +608,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
                 UplElementReferences uer = pageAction.getUplAttribute(UplElementReferences.class, "refresh");
                 if (uer != null) {
-                    writer.write(",\"uRefreshPnls\":");
-                    writer.writeJsonStringArray(pageManager.getPageNames(uer.getLongNames()));
+                    writer.write(",\"uRefreshPnls\":").writeJsonArray(pageManager.getPageNames(uer.getLongNames()));
                 } else {
                     writer.write(",\"uRefreshPnls\":[\"");
                     if (targetPgNm == dynamicPanelPgNm) {
@@ -622,18 +621,15 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
 
             List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
-            writer.write(",\"uRef\":");
-            writer.writeJsonStringArray(componentList);
+            writer.write(",\"uRef\":").writeJsonArray(componentList);
 
             List<String> valueComponentList = pageManager.getValueReferences(pageAction.getId());
-            writer.write(",\"uVRef\":");
-            writer.writeJsonStringArray(valueComponentList);
+            writer.write(",\"uVRef\":").writeJsonArray(valueComponentList);
 
             if (pageAction.isUplAttribute("valueList")) {
                 String[] valueList = pageAction.getUplAttribute(String[].class, "valueList");
                 if (valueList != null) {
-                    writer.write(",\"uVal\":");
-                    writer.writeJsonStringArray((Object[]) valueList);
+                    writer.write(",\"uVal\":").writeJsonArray(valueList);
                 }
             }
 
@@ -671,8 +667,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 }
             }
         } else if (refPageNames != null) {
-            writer.write(",\"uRef\":");
-            writer.writeJsonStringArray((Object[]) refPageNames);
+            writer.write(",\"uRef\":").writeJsonArray(refPageNames);
         } else if (!StringUtils.isBlank(refObject)) {
             writer.write(",\"uRef\":").write(refObject);
         } else if (path != null) {

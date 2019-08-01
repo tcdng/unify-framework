@@ -15,14 +15,10 @@
  */
 package com.tcdng.unify.web.ui.data;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -31,6 +27,7 @@ import com.tcdng.unify.core.data.MarkedTree;
 import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemMatcher;
 import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
 import com.tcdng.unify.core.data.MarkedTree.Node;
+import com.tcdng.unify.web.ui.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
 
 /**
  * Tree object.
@@ -44,33 +41,29 @@ public class Tree {
 
     private static final TreeItemCollapser collapseChildPolicy = new TreeItemCollapser();
 
-    private Map<String, TreeItemCategory> categories;
+    private TreeTypeInfo typeInfo;
 
     private MarkedTree<TreeItem> markedTree;
-
-    private List<TreeMenuItem> menuList;
 
     private List<Long> selectedItemIdList;
 
     private Queue<TreeEvent> eventQueue;
 
-    private Tree(List<TreeMenuItem> menuList, Map<String, TreeItemCategory> categories,
-            MarkedTree<TreeItem> markedTree) {
-        this.menuList = menuList;
-        this.categories = categories;
+    private Tree(TreeTypeInfo typeInfo, MarkedTree<TreeItem> markedTree) {
+        this.typeInfo = typeInfo;
         this.markedTree = markedTree;
         selectedItemIdList = Collections.emptyList();
         eventQueue = new LinkedList<TreeEvent>();
     }
 
-    public Long addTreeItem(Long parentItemId, String categoryName, Object item) throws UnifyException {
-        TreeItemCategory categoryInfo = categories.get(categoryName);
-        if (categoryInfo == null) {
+    public Long addTreeItem(Long parentItemId, String itemTypeCode, Object item) throws UnifyException {
+        TreeItemTypeInfo treeItemTypeInfo = typeInfo.getTreeItemTypeInfo(itemTypeCode);
+        if (treeItemTypeInfo == null) {
             throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-                    "Unknown category [" + categoryName + "].");
+                    "Unknown tree item type code [" + itemTypeCode + "].");
         }
 
-        Long itemId = markedTree.addChild(parentItemId, new TreeItem(categoryInfo, item));
+        Long itemId = markedTree.addChild(parentItemId, new TreeItem(treeItemTypeInfo, item));
         markedTree.updateParentNodes(itemId, expandChildPolicy); // Expand parents
         return itemId;
     }
@@ -85,14 +78,6 @@ public class Tree {
 
     public boolean isTreePolicy() {
         return markedTree.isTreePolicy();
-    }
-
-    public TreeItemCategory getTreeCategory(String name) {
-        return categories.get(name);
-    }
-
-    public Collection<TreeItemCategory> getTreeCategories() {
-        return categories.values();
     }
 
     public Node<TreeItem> getRootNode() {
@@ -134,7 +119,7 @@ public class Tree {
     public Node<TreeItem> getParentNode(Long itemId) {
         return markedTree.getParentNode(itemId);
     }
-    
+
     public List<TreeItem> getChildTreeItems(Long parentItemId) throws UnifyException {
         return markedTree.getChildItems(parentItemId);
     }
@@ -161,12 +146,20 @@ public class Tree {
         return markedTree.size();
     }
 
-    public List<TreeMenuItem> getMenuList() {
-        return menuList;
+    public TreeItemTypeInfo getTreeItemTypeInfo(String itemTypeCode) {
+        return typeInfo.getTreeItemTypeInfo(itemTypeCode);
     }
 
-    public boolean isMenuList() {
-        return menuList != null && !menuList.isEmpty();
+    public Collection<ExtendedTreeItemTypeInfo> getExtendedTreeItemTypeInfos() {
+        return typeInfo.getExtendedTreeItemTypeInfos();
+    }
+
+    public List<TreeMenuItemInfo> getMenuItemInfoList() {
+        return typeInfo.getMenuItemInfoList();
+    }
+
+    public boolean isMenuItemList() {
+        return typeInfo.isMenuItemList();
     }
 
     public void setSelectedItems(List<Long> selectedItemIdList) {
@@ -183,7 +176,7 @@ public class Tree {
         return selectedItemIdList;
     }
 
-    public void registerEvent(EventType type, String menuCode) {
+    public void registerEvent(TreeEventType type, String menuCode) {
         eventQueue.offer(new TreeEvent(type, menuCode, selectedItemIdList));
     }
 
@@ -219,64 +212,23 @@ public class Tree {
         return false;
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
+    public static Builder newBuilder(TreeTypeInfo typeInfo) {
+        return new Builder(typeInfo);
     }
 
     public static class Builder {
 
-        private Map<String, TreeMenuItem> menuList;
-
-        private Map<String, TreeItemCategory> categories;
+        private TreeTypeInfo typeInfo;
 
         private MarkedTree<TreeItem> markedTree;
 
-        private Builder() {
-            menuList = new LinkedHashMap<String, TreeMenuItem>();
-            markedTree = new MarkedTree<TreeItem>(new TreeItem());
-            categories = new HashMap<String, TreeItemCategory>();
-        }
-
-        public Builder addCategory(TreeItemCategory treeCategory) throws UnifyException {
-            if (categories.containsKey(treeCategory.getName())) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-                        "Category with name [" + treeCategory.getName() + "] exists.");
-            }
-
-            categories.put(treeCategory.getName(), treeCategory);
-            return this;
-        }
-
-        public Builder addTreeItem(String categoryName, Object item) throws UnifyException {
-            if (!categories.containsKey(categoryName)) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-                        "Unknown category [" + categoryName + "].");
-            }
-
-            markedTree.add(new TreeItem(categories.get(categoryName), item));
-            return this;
+        private Builder(TreeTypeInfo typeInfo) {
+            this.typeInfo = typeInfo;
+            this.markedTree = new MarkedTree<TreeItem>(new TreeItem());
         }
 
         public Node<TreeItem> getLastNode() {
             return markedTree.getChainLast();
-        }
-
-        public boolean isCategory(String name) {
-            return categories.containsKey(name);
-        }
-
-        public Builder addMenuItem(String code, String caption) throws UnifyException {
-            return addMenuItem(code, caption, false);
-        }
-
-        public Builder addMenuItem(String code, String caption, boolean separator) throws UnifyException {
-            if (menuList.containsKey(code)) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
-                        "Menu item with code [" + code + "] exists.");
-            }
-
-            menuList.put(code, new TreeMenuItem(code, caption, true, separator));
-            return this;
         }
 
         public boolean descend() throws UnifyException {
@@ -289,8 +241,7 @@ public class Tree {
 
         public Tree build() throws UnifyException {
             markedTree.setChain(false); // Enter unchained mode
-            return new Tree(Collections.unmodifiableList(new ArrayList<TreeMenuItem>(menuList.values())), categories,
-                    markedTree);
+            return new Tree(typeInfo, markedTree);
         }
     }
 

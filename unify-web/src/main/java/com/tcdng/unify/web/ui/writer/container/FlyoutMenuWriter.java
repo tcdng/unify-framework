@@ -87,8 +87,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
         }
 
         writer.write('"');
-        writer.write(",\"pMenuWinId\":");
-        writer.writeJsonStringArray(menuWinIdList.toArray());
+        writer.write(",\"pMenuWinId\":").writeJsonArray(menuWinIdList);
         writer.write(",\"pNavId\":\"").write(flyoutMenu.getNavId()).write("\"");
         writer.write(",\"pSliderId\":\"").write(flyoutMenu.getSliderId()).write("\"");
         writer.write(",\"pSliderWinId\":\"").write(flyoutMenu.getSliderWinId()).write("\"");

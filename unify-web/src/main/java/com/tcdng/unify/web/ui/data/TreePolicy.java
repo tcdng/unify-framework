@@ -39,5 +39,5 @@ public interface TreePolicy extends MarkedTreePolicy<TreeItem> {
      * @throws UnifyException
      *             if an error occurs
      */
-    String getTreeItemCaption(TreeItemCategory category, Object item) throws UnifyException;
+    String getTreeItemCaption(TreeItemTypeInfo category, Object item) throws UnifyException;
 }

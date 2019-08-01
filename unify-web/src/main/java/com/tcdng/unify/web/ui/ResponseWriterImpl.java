@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,7 +79,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     private Map<Class<? extends UplComponent>, UplComponentWriter> writers;
 
     private boolean tableMode;
-    
+
     @Override
     public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
         ((WidgetWriter) getWriter(component)).writeStructureAndContent(this, component);
@@ -155,42 +156,55 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
-    public ResponseWriter writeJsonStringArray(Object... valueArray) throws UnifyException {
-        buf.append('[');
-        if (valueArray != null) {
-            boolean appendSym = false;
-            for (Object value : valueArray) {
-                if (appendSym) {
-                    buf.append(',');
-                } else {
-                    appendSym = true;
-                }
-                if (value == null) {
-                    buf.append(value);
-                } else {
-                    writeJsonQuote(String.valueOf(value));
-                }
-            }
-        }
-        buf.append(']');
-        return this;
+    public ResponseWriter writeJsonArray(String... stringArr) throws UnifyException {
+        return writeJsonArray((Object[]) stringArr, true);
     }
 
     @Override
-    public ResponseWriter writeJsonStringArray(List<?> valueList) throws UnifyException {
+    public ResponseWriter writeJsonArray(Integer... intArr) throws UnifyException {
+        return writeJsonArray((Object[]) intArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Long... longArr) throws UnifyException {
+        return writeJsonArray((Object[]) longArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(BigDecimal... bigArr) throws UnifyException {
+        return writeJsonArray((Object[]) bigArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Double... doubleArr) throws UnifyException {
+        return writeJsonArray((Object[]) doubleArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Boolean... boolArr) throws UnifyException {
+        return writeJsonArray((Object[]) boolArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Collection<?> col) throws UnifyException {
         buf.append('[');
-        if (valueList != null) {
+        if (col != null) {
             boolean appendSym = false;
-            for (Object value : valueList) {
+            for (Object val : col) {
                 if (appendSym) {
                     buf.append(',');
                 } else {
                     appendSym = true;
                 }
-                if (value == null) {
-                    buf.append(value);
+
+                if (val == null) {
+                    buf.append(val);
                 } else {
-                    writeJsonQuote(String.valueOf(value));
+                    if (val instanceof Number || val instanceof Boolean) {
+                        buf.append(val);
+                    } else {
+                        writeJsonQuote(String.valueOf(val));
+                    }
                 }
             }
         }
@@ -287,8 +301,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
                 }
                 buf.append("{\"pn\":\"").append(entry.getKey()).append("\",");
                 buf.append("\"aliases\":");
-                Collection<String> stringCol = entry.getValue();
-                writeJsonStringArray(stringCol.toArray(new Object[stringCol.size()]));
+                writeJsonArray(entry.getValue());
                 buf.append('}');
             }
         }
@@ -597,7 +610,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
-   public boolean isTableMode() {
+    public boolean isTableMode() {
         return tableMode;
     }
 
@@ -643,6 +656,40 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         } catch (UnsupportedEncodingException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.UTIL_ERROR);
         }
+    }
+    
+    private ResponseWriter writeJsonArray(Object[] arr, boolean quote) throws UnifyException {
+        buf.append('[');
+        if (arr != null) {
+            if (quote) {
+                boolean appendSym = false;
+                for (Object val : arr) {
+                    if (appendSym) {
+                        buf.append(',');
+                    } else {
+                        appendSym = true;
+                    }
+                    if (val == null) {
+                        buf.append(val);
+                    } else {
+                        writeJsonQuote(String.valueOf(val));
+                    }
+                }
+            } else {
+                boolean appendSym = false;
+                for (Object val : arr) {
+                    if (appendSym) {
+                        buf.append(',');
+                    } else {
+                        appendSym = true;
+                    }
+                    
+                    buf.append(val);
+                }
+            }
+        }
+        buf.append(']');
+        return this;
     }
 
     private void appendRangeOption(String pattern, int range) {
