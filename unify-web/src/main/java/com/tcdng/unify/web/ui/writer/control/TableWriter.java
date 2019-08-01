@@ -192,8 +192,7 @@ public class TableWriter extends AbstractControlWriter {
         writer.write(",\"pSelectable\":").write(table.isRowSelectable());
         if (table.isRowSelectable()) {
             writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
-            writer.write(",\"pSelDepList\":");
-            writer.writeJsonStringArray(table.getSelDependentList());
+            writer.write(",\"pSelDepList\":").writeJsonArray(table.getSelDependentList());
         }
         writer.write(",\"pWindowed\":").write(table.isWindowed());
         writer.write(",\"pPagination\":").write(table.isPagination());
@@ -208,8 +207,7 @@ public class TableWriter extends AbstractControlWriter {
         }
 
         if (table.getPageItemCount() <= 0) {
-            writer.write(",\"pConDepList\":");
-            writer.writeJsonStringArray(table.getContentDependentList());
+            writer.write(",\"pConDepList\":").writeJsonArray(table.getContentDependentList());
         }
 
         writer.write(",\"pMultiSel\":").write(table.isMultiSelect());
@@ -223,8 +221,7 @@ public class TableWriter extends AbstractControlWriter {
             writer.write(",\"pSelGrpId\":\"").write(table.getSelectGroupId()).write('"');
             writer.write(",\"pVisibleSel\":").write(table.getPageSelectedRowCount());
             writer.write(",\"pHiddenSel\":").write(table.getSelectedRows() - table.getPageSelectedRowCount());
-            writer.write(",\"pMultiSelDepList\":");
-            writer.writeJsonStringArray(table.getMultiSelDependentList());
+            writer.write(",\"pMultiSelDepList\":").writeJsonArray(table.getMultiSelDependentList());
 
             // Summary columns
             int summaryColIndex = 1; // Because of multi-select column
@@ -235,10 +232,8 @@ public class TableWriter extends AbstractControlWriter {
             String summarySrc = table.getSummarySrc();
             if (!StringUtils.isBlank(summarySrc)) {
                 writer.write(",\"pSumSrc\":\"").write(summarySrc).write('"');
-                writer.write(",\"pSumProcList\":");
-                writer.writeJsonStringArray((Object[]) table.getSummaryProcList());
-                writer.write(",\"pSumDepList\":");
-                writer.writeJsonStringArray(table.getSummaryDependentList());
+                writer.write(",\"pSumProcList\":").writeJsonArray(table.getSummaryProcList());
+                writer.write(",\"pSumDepList\":").writeJsonArray(table.getSummaryDependentList());
             }
 
             writer.write(",\"pSumColList\":[");

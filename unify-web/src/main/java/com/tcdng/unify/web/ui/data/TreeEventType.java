@@ -20,19 +20,27 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
- * User interface event type.
+ * Tree event type.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EventType implements EnumConst {
+public enum TreeEventType implements EnumConst {
 
-    MOUSE_CLICK("MCL"), MOUSE_DBLCLICK("MDC"), MOUSE_RIGHTCLICK("RCL"), MOUSE_MENUCLICK("MUL");
+    TREEITEM_CLICK("TCL", 0x0001),
+    TREEITEM_RIGHTCLICK("TRC", 0x0002),
+    TREEITEM_DBCLICK("TDC", 0x0004),
+    TREEITEM_DRAG("TDG", 0x0008),
+    TREEITEM_DROP("TDP", 0x0010),
+    MENUITEM_CLICK("MCL", 0x0020);
 
     private final String code;
 
-    private EventType(String code) {
+    private final int flag;
+
+    private TreeEventType(String code, int flag) {
         this.code = code;
+        this.flag = flag;
     }
 
     @Override
@@ -40,11 +48,15 @@ public enum EventType implements EnumConst {
         return this.code;
     }
 
-    public static EventType fromCode(String code) {
-        return EnumUtils.fromCode(EventType.class, code);
+    public int flag() {
+        return this.flag;
     }
 
-    public static EventType fromName(String name) {
-        return EnumUtils.fromName(EventType.class, name);
+    public static TreeEventType fromCode(String code) {
+        return EnumUtils.fromCode(TreeEventType.class, code);
+    }
+
+    public static TreeEventType fromName(String name) {
+        return EnumUtils.fromName(TreeEventType.class, name);
     }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.web.ui.data.TreeMenuItem;
+import com.tcdng.unify.web.ui.data.TreeMenuItemInfo;
 
 /**
  * Tree utilities.
@@ -33,13 +33,13 @@ public final class TreeUtils {
 
     }
 
-    public static boolean isAnyMenuItemVisible(List<TreeMenuItem> menuList, Set<String> hidden) {
+    public static boolean isAnyMenuItemVisible(List<TreeMenuItemInfo> menuList, Set<String> hidden) {
         if (!DataUtils.isBlank(menuList)) {
             if (hidden == null) {
                 return true;
             }
 
-            for (TreeMenuItem menuItem : menuList) {
+            for (TreeMenuItemInfo menuItem : menuList) {
                 if (!hidden.contains(menuItem.getCode())) {
                     return true;
                 }

@@ -17,26 +17,23 @@
 package com.tcdng.unify.web.ui.data;
 
 /**
- * Tree menu item.
+ * Tree menu item information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TreeMenuItem {
+public class TreeMenuItemInfo {
 
     private String code;
 
     private String caption;
+    
+    private int groupIndex;
 
-    private boolean showOnMultiple;
-
-    private boolean separator;
-
-    public TreeMenuItem(String code, String caption, boolean showOnMultiple, boolean separator) {
+    public TreeMenuItemInfo(String code, String caption, int groupIndex) {
         this.code = code;
         this.caption = caption;
-        this.separator = separator;
-        this.showOnMultiple = showOnMultiple;
+        this.groupIndex = groupIndex;
     }
 
     public String getCode() {
@@ -47,11 +44,7 @@ public class TreeMenuItem {
         return caption;
     }
 
-    public boolean isShowOnMultiple() {
-        return showOnMultiple;
-    }
-
-    public boolean isSeparator() {
-        return separator;
+    public int getGroupIndex() {
+        return groupIndex;
     }
 }

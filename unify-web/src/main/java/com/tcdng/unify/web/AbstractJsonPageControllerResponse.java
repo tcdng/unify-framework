@@ -55,8 +55,7 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
     private void appendOnSaveList(ResponseWriter writer) throws UnifyException {
         List<String> saveList = getRequestContextUtil().getOnSaveContentWidgets();
         if (!DataUtils.isBlank(saveList)) {
-            writer.write(",\"pSaveList\":");
-            writer.writeJsonStringArray(saveList);
+            writer.write(",\"pSaveList\":").writeJsonArray(saveList);
         }
     }
 }

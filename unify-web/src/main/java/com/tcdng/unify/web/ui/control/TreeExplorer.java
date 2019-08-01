@@ -30,13 +30,14 @@ import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
-import com.tcdng.unify.web.ui.data.EventType;
-import com.tcdng.unify.web.ui.data.TreeEvent;
 import com.tcdng.unify.web.ui.data.Tree;
-import com.tcdng.unify.web.ui.data.TreePolicy;
-import com.tcdng.unify.web.ui.data.TreeItemCategory;
+import com.tcdng.unify.web.ui.data.TreeEvent;
+import com.tcdng.unify.web.ui.data.TreeEventType;
 import com.tcdng.unify.web.ui.data.TreeItem;
-import com.tcdng.unify.web.ui.data.TreeMenuItem;
+import com.tcdng.unify.web.ui.data.TreeItemTypeInfo;
+import com.tcdng.unify.web.ui.data.TreeMenuItemInfo;
+import com.tcdng.unify.web.ui.data.TreePolicy;
+import com.tcdng.unify.web.ui.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
 
 /**
  * Represents a tree explorer control.
@@ -60,7 +61,7 @@ public class TreeExplorer extends AbstractMultiControl {
 
     private Control selectedCtrlIdCtrl;
 
-    private EventType eventType;
+    private TreeEventType eventType;
 
     private String menuCode;
 
@@ -112,7 +113,7 @@ public class TreeExplorer extends AbstractMultiControl {
     public void setTree(Tree tree) throws UnifyException {
         this.tree = tree;
         this.tree.setTreePolicy(
-                (MarkedTreePolicy<TreeItem>) getComponent(this.getUplAttribute(String.class, "treeRule")));
+                (MarkedTreePolicy<TreeItem>) getComponent(getUplAttribute(String.class, "treeRule")));
     }
 
     public TreePolicy getTreePolicy() {
@@ -134,6 +135,18 @@ public class TreeExplorer extends AbstractMultiControl {
     public String getTreeEventPath() throws UnifyException {
         return getUplAttribute(String.class, "treeEventPath");
     }
+    
+    public String getMenuId() throws UnifyException {
+        return getPrefixedId("m_");
+    }
+    
+    public String getMenuBaseId() throws UnifyException {
+        return getPrefixedId("mb_");
+    }
+    
+    public String getMenuSeperatorId() throws UnifyException {
+        return getPrefixedId("sp_");
+    }
 
     public Control getEventTypeCtrl() {
         return eventTypeCtrl;
@@ -151,11 +164,11 @@ public class TreeExplorer extends AbstractMultiControl {
         return selectedCtrlIdCtrl;
     }
 
-    public EventType getEventType() {
+    public TreeEventType getEventType() {
         return eventType;
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(TreeEventType eventType) {
         this.eventType = eventType;
     }
 
@@ -196,16 +209,12 @@ public class TreeExplorer extends AbstractMultiControl {
         return getPrefixedId("cap_");
     }
 
-    public Long addTreeItem(Long parentItemId, String categoryName, Object item) throws UnifyException {
-        return tree.addTreeItem(parentItemId, categoryName, item);
+    public Long addTreeItem(Long parentItemId, String itemTypeCode, Object item) throws UnifyException {
+        return tree.addTreeItem(parentItemId, itemTypeCode, item);
     }
 
-    public TreeItemCategory getTreeCategory(String name) {
-        return tree.getTreeCategory(name);
-    }
-
-    public Collection<TreeItemCategory> getTreeCategories() {
-        return tree.getTreeCategories();
+    public TreeItemTypeInfo getTreeItemTypeInfo(String itemTypeCode) {
+        return tree.getTreeItemTypeInfo(itemTypeCode);
     }
 
     public Node<TreeItem> getRootNode() {
@@ -236,12 +245,16 @@ public class TreeExplorer extends AbstractMultiControl {
         return tree.itemCount();
     }
 
-    public List<TreeMenuItem> getMenuList() {
-        return tree.getMenuList();
+    public Collection<ExtendedTreeItemTypeInfo> getExtendedTreeItemTypeInfos() {
+        return tree.getExtendedTreeItemTypeInfos();
     }
 
-    public boolean hasMenuList() {
-        return tree.isMenuList();
+    public List<TreeMenuItemInfo> getMenuItemInfoList() {
+        return tree.getMenuItemInfoList();
+    }
+
+    public boolean hasMenu() {
+        return tree.isMenuItemList();
     }
 
     public TreeEvent getEvent() {

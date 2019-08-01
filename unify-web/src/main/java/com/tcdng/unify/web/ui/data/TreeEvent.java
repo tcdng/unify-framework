@@ -26,19 +26,19 @@ import java.util.List;
  */
 public class TreeEvent {
 
-    private EventType type;
+    private TreeEventType type;
 
     private String menuCode;
 
     private List<Long> itemIdList;
 
-    public TreeEvent(EventType type, String menuCode, List<Long> itemIdList) {
+    public TreeEvent(TreeEventType type, String menuCode, List<Long> itemIdList) {
         this.type = type;
         this.menuCode = menuCode;
         this.itemIdList = itemIdList;
     }
 
-    public EventType getType() {
+    public TreeEventType getType() {
         return type;
     }
 

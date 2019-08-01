@@ -48,11 +48,9 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
         writer.writeCommandURL();
         writer.write('"');
         writer.write(",\"pActTabId\":\"").write(tabbedPanel.getActiveTabId()).write('"');
-        writer.write(",\"pActTabIdList\":");
-        writer.writeJsonStringArray(tabbedPanel.getActiveTabExpandedIdList());
+        writer.write(",\"pActTabIdList\":").writeJsonArray(tabbedPanel.getActiveTabExpandedIdList());
         writer.write(",\"pSelTabId\":\"").write(tabbedPanel.getSelectedTabId()).write('"');
-        writer.write(",\"pTabIdList\":");
-        writer.writeJsonStringArray(tabbedPanel.getTabIds());
+        writer.write(",\"pTabIdList\":").writeJsonArray(tabbedPanel.getTabIds());
         writer.write(",\"pTabCapIdList\":");
         List<String> captionIds = new ArrayList<String>();
         for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
@@ -61,7 +59,7 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
                 captionIds.add(tabWidget.getPrefixedId("cap_"));
             }
         }
-        writer.writeJsonStringArray(captionIds);
+        writer.writeJsonArray(captionIds);
         writer.write("});");
     }
 

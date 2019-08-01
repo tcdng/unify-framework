@@ -22,24 +22,24 @@
  */
 var ux = {};
 
-var UNIFY_SHIFT = 0x0100;
-var UNIFY_CTRL = 0x0200;
-var UNIFY_ALT = 0x0400;
+const UNIFY_SHIFT = 0x0100;
+const UNIFY_CTRL = 0x0200;
+const UNIFY_ALT = 0x0400;
 
-var UNIFY_RIGHT_BUTTON = 0x02;
+const UNIFY_RIGHT_BUTTON = 0x02;
 
-var UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
+const UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 
-var UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
-var UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
-var UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
-var UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
-var UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
-var UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
-var UNIFY_TREEDOUBLECLICK_DELAY = 250; // .25 seconds.
-var UNIFY_LASTUSERACT_EFFECT_PERIOD = 180000; // 3 minutes.
+const UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
+const UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
+const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
+const UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
+const UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
+const UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
+const UNIFY_TREEDOUBLECLICK_DELAY = 250; // .25 seconds.
+const UNIFY_LASTUSERACT_EFFECT_PERIOD = 180000; // 3 minutes.
 
-var UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
+const UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 
 ux.docPath = "";
 ux.docPopupBaseId = null;
@@ -2801,112 +2801,135 @@ ux.timeScrollHandler = function(uEv) {
 }
 
 /** Tree */
-var TREE_CLICK = 0;
-var TREE_DBLCLICK = 1;
-var TREE_RTCLICK = 2;
-var TREE_MENUCLICK = 3;
+const TREEITEM_CLICK = {code:'TCL', mask:0x0001};
+const TREEITEM_RIGHTCLICK = {code:'TRC', mask:0x0002};
+const TREEITEM_DBCLICK = {code:'TDC', mask:0x0004};
+const TREEITEM_DRAG = {code:'TDG"', mask:0x0008};
+const TREEITEM_DROP = {code:'TDP', mask:0x0010};
+const MENUITEM_CLICK = {code:'MCL', mask:0x0020};
 
-var treeDataMap = {};
+Object.freeze(TREEITEM_CLICK);
+Object.freeze(TREEITEM_RIGHTCLICK);
+Object.freeze(TREEITEM_DBCLICK);
+Object.freeze(TREEITEM_DRAG);
+Object.freeze(TREEITEM_DROP);
+Object.freeze(MENUITEM_CLICK);
+
+const TREE_PARENT_FLAG = 0x0001;
+const TREE_EXPANDED_FLAG = 0x0002;
+
+ux.treedatamap = {};
 
 ux.rigTreeExplorer = function(rgp) {
 	var id = rgp.pId;
+	var tevp = {};
+	tevp.uId = rgp.pId;
+	tevp.uPanels = [ rgp.pContId ];
+	tevp.uCmd = rgp.pId + "->executeEventPath";
+	tevp.uSelItemId = rgp.pSelItemId;
+	tevp.uEventTypeId = rgp.pEventTypeId;
+	tevp.uMenuCodeCtrlId = rgp.pMenuCodeCtrlId;
+	tevp.uSel = rgp.pSel;
+	tevp.uNorm = rgp.pNorm;
+	tevp.uLblBase = rgp.pLblBase;
+	tevp.uItemList = rgp.pItemList;
+	tevp.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];
+	if(rgp.pEventRef) {
+		tevp.uRef = tevp.uRef.concat(rgp.pEventRef);
+	}
 	var selList = [];
-	if (rgp.pItemList) {
-		var pItemList = rgp.pItemList;
-		var selObj = _id(rgp.pSelItemId);
-		var evpEq = {};
-		evpEq.uPanels = [ rgp.pContId ];
-		evpEq.uRef = [ rgp.pSelItemId, rgp.pEventTypeId ];
-		if(rgp.pEventRef) {
-			evpEq.uRef = evpEq.uRef.concat(rgp.pEventRef);
-		}
-
-		for (var i = 0; i < pItemList.length; i++) {
-			var itemInfo = pItemList[i];
-			if (itemInfo.parent) {
-				var evp = ux.newEvPrm(rgp);
-				evp.uPanels = [ rgp.pContId ];
-				evp.uRef = [ rgp.pSelCtrlId ];
-				evp.uSelCtrlId = rgp.pSelCtrlId;
-				evp.uIdx = itemInfo.idx;
-				if (itemInfo.expanded) {
-					evp.uCmd = id + "->collapse";
-				} else {
-					evp.uCmd = id + "->expand";
-				}
-				ux.attachEventHandler(_id(rgp.pCtrlBase + itemInfo.idx),
-						"click", ux.treeCtrlImageClickHandler, evp);
-			}
-
-			var tElem = _id(rgp.pLblBase + itemInfo.idx);
-			var evp = ux.treeNewEvPrm(rgp, evpEq, pItemList, i, TREE_CLICK);
-			ux.attachEventHandler(tElem, "click", ux.treeDelayItemClickHandler, evp);
-
-			evp = ux.treeNewEvPrm(rgp, evpEq, pItemList, i, TREE_DBLCLICK);
-			ux.attachEventHandler(tElem, "dblclick", ux.treeItemClickHandler, evp);
-				
-			evp = ux.treeNewEvPrm(rgp, evpEq, pItemList, i, TREE_RTCLICK);
-			ux.attachEventHandler(tElem, "rtclick", ux.treeItemClickHandler, evp);
-			
-			if (selObj.options[i].selected) {
-				selList.push(i);
-			}
-		}
-	}
 	
+	// Wire menu
 	if(rgp.pMenu) {
-		ux.rigTreeExplorerMenu(rgp, rgp.pMenu);
+		tevp.uMenu = rgp.pMenu;
+		var menu = rgp.pMenu;
+		for(var i = 0; i < menu.items.length; i++) {
+			var menuItem = menu.items[i];
+			var evp = ux.newEvPrm(rgp);
+			evp.uMenuCode = menuItem.code;
+			evp.uPanels = tevp.uPanels;
+			evp.uCmd = tevp.uCmd;
+			evp.uRef = tevp.uRef;
+			evp.uTevp = tevp;
+			ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
+		}
 	}
 	
-	if(rgp.pMenus) {
-		for(var i = 0; i < rgp.pMenus.length; i++) {
-			ux.rigTreeExplorerMenu(rgp, rgp.pMenus[i]);
+	var pItemTypeList = rgp.pItemTypeList;
+	if (pItemTypeList) {
+		// Setup
+		var typeMap = {};
+		for(var i = 0; i < pItemTypeList.length; i++) {
+			var type = pItemTypeList[i];
+			typeMap[type.code] = type;
+		}
+		
+		// Wire tree items
+		if (rgp.pItemList) {
+			var pItemList = rgp.pItemList;
+			var selObj = _id(rgp.pSelItemId);
+			for (var i = 0; i < pItemList.length; i++) {
+				var itemInfo = pItemList[i];
+				if ((itemInfo.flags & TREE_PARENT_FLAG) > 0) {
+					var evp = ux.newEvPrm(rgp);
+					evp.uPanels = [ rgp.pContId ];
+					evp.uRef = [ rgp.pSelCtrlId ];
+					evp.uSelCtrlId = rgp.pSelCtrlId;
+					evp.uIdx = itemInfo.idx;
+					if ((itemInfo.flags & TREE_EXPANDED_FLAG) > 0) {
+						evp.uCmd = id + "->collapse";
+					} else {
+						evp.uCmd = id + "->expand";
+					}
+					ux.attachEventHandler(_id(rgp.pCtrlBase + itemInfo.idx),
+							"click", ux.treeCtrlImageClickHandler, evp);
+				}
+
+				var tElem = _id(rgp.pLblBase + itemInfo.idx);
+				var typeInfo = typeMap[itemInfo.type];
+				var evp = ux.newEvPrm(rgp);
+				evp.uVisualIdx = i;
+				evp.uFrameId = tevp.uLblBase + tevp.uItemList[i].idx;
+				evp.uPanels = tevp.uPanels;
+				evp.uCmd = tevp.uCmd;
+				evp.uRef = tevp.uRef;
+				evp.uTypeInfo = typeInfo;
+				evp.uTevp = tevp;	
+
+				if ((typeInfo.flags & TREEITEM_CLICK.mask) > 0) {
+					ux.attachEventHandler(tElem, "click", ux.treeItemClickHandler, evp);
+				}
+				
+				if ((typeInfo.flags & TREEITEM_DBCLICK.mask) > 0) {
+					ux.attachEventHandler(tElem, "dblclick", ux.treeItemDbClickHandler, evp);
+				}
+
+				if ((typeInfo.flags & TREEITEM_RIGHTCLICK.mask) > 0) {
+					ux.attachEventHandler(tElem, "rtclick", ux.treeItemRightClickHandler, evp);
+				}
+
+				if (selObj.options[i].selected) {
+					selList.push(i);
+				}
+			}
 		}
 	}
 	
 	var treeData = {};
 	treeData.selList = selList;
 	treeData.lastSelIdx = -1;
-	treeDataMap[id] = treeData;
-	
+	ux.treedatamap[id] = treeData;	
 	ux.disableWinContextMenu();
-}
-
-ux.rigTreeExplorerMenu = function(rgp, menu) {
-	var evpEq = {};
-	evpEq.uPanels = [ rgp.pContId ];
-	evpEq.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];
-	if(rgp.pEventRef) {
-		evpEq.uRef = evpEq.uRef.concat(rgp.pEventRef);
-	}
-
-	for(var i = 0; i < menu.items.length; i++) {
-		var menuItem = menu.items[i];
-		var evp = ux.treeMenuEvPrm(rgp, evpEq, menuItem, TREE_MENUCLICK);
-		ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
-	}
-}
-
-ux.treeMenuEvPrm = function(rgp, evpEq, menuItem, eventCodeIdx) {
-	var evp = ux.newEvPrm(rgp);
-	evp.uPanels = evpEq.uPanels;
-	evp.uRef = evpEq.uRef;
-	evp.uEventTypeId = rgp.pEventTypeId;
-	evp.uMenuCodeCtrlId = rgp.pMenuCodeCtrlId;
-	evp.uEvCode = rgp.pEventCode[eventCodeIdx];
-	evp.uMenuCode = menuItem.code;
-	evp.uCmd = rgp.pId + "->executeEventPath";
-	return evp;
 }
 
 ux.treeMenuClickHandler = function(uEv) {
 	var evp = uEv.evp;
-	var tElem = _id(evp.uEventTypeId);
+	var tElem = _id(evp.uTevp.uEventTypeId);
 	if(tElem) {
-		tElem.value = evp.uEvCode;
+		tElem.value = MENUITEM_CLICK.code;
 	}
 
-	var mElem = _id(evp.uMenuCodeCtrlId);
+	var mElem = _id(evp.uTevp.uMenuCodeCtrlId);
 	if(mElem) {
 		mElem.value = evp.uMenuCode;
 	}
@@ -2915,54 +2938,21 @@ ux.treeMenuClickHandler = function(uEv) {
 	ux.post(uEv);
 }
 
-ux.treeNewEvPrm = function(rgp, evpEq, pItemList, visualIdx, eventCodeIdx) {
-	var evp = ux.newEvPrm(rgp);
-	evp.uPanels = evpEq.uPanels;
-	evp.uRef = evpEq.uRef;
-	evp.uSelItemId = rgp.pSelItemId;
-	evp.uEventTypeId = rgp.pEventTypeId;
-	evp.uSel = rgp.pSel;
-	evp.uNorm = rgp.pNorm;
-	evp.uVisualIdx = visualIdx;
-	evp.uItemList = pItemList;
-	evp.uLblBase = rgp.pLblBase;
-	evp.uFrameId = rgp.pLblBase + pItemList[visualIdx].idx;
-	evp.uEvCodeIdx = eventCodeIdx;
-	evp.uEvCode = rgp.pEventCode[eventCodeIdx];
-	if (rgp.pMenu) {
-		evp.uPopupId = rgp.pMenu.popupId;
-	}
-	
-	evp.uId = rgp.pId;
-	evp.uCmd = rgp.pId + "->executeEventPath";
-	return evp;
-}
-
-ux.treeCtrlImageClickHandler = function(uEv) {
-	var evp = uEv.evp;
-	var tSelCtrlElem = _id(evp.uSelCtrlId);
-	if (tSelCtrlElem) {
-		tSelCtrlElem.value = evp.uIdx;
-	}
-
-	ux.post(uEv);
-}
-
-ux.treeDelayItemClickHandler = function(uEv) {
-	var treeData = treeDataMap[uEv.evp.uId];
-	if (treeData.timeoutId) {
-		window.clearTimeout(treeData.timeoutId);
-	}
-
-	treeData.uEv = uEv;
-	treeData.evp = uEv.evp;
-	treeData.evp.mCoord = ux.getExactPointerCoordinates(uEv);
-	treeData.timeoutId = window.setTimeout("ux.treeItemEventHandler(\""+ uEv.evp.uId + "\");"
-			, UNIFY_TREEDOUBLECLICK_DELAY); 
-}
-
 ux.treeItemClickHandler = function(uEv) {
-	var treeData = treeDataMap[uEv.evp.uId];
+	ux.treeItemEventHandler(uEv, TREEITEM_CLICK.code, true);
+}
+
+ux.treeItemDbClickHandler = function(uEv) {
+	ux.treeItemEventHandler(uEv, TREEITEM_DBCLICK.code, false);
+}
+
+ux.treeItemRightClickHandler = function(uEv) {
+	ux.treeItemEventHandler(uEv, TREEITEM_RIGHTCLICK.code, false);
+}
+
+ux.treeItemEventHandler = function(uEv, eventCode, delay) {
+	var id = uEv.evp.uTevp.uId
+	var treeData = ux.treedatamap[id];
 	if (treeData.timeoutId) {
 		window.clearTimeout(treeData.timeoutId);
 		treeData.timeoutId = null;
@@ -2970,16 +2960,22 @@ ux.treeItemClickHandler = function(uEv) {
 
 	treeData.uEv = uEv;
 	treeData.evp = uEv.evp;
-	treeData.evp.mCoord = ux.getExactPointerCoordinates(uEv);
-	ux.treeItemEventHandler(uEv.evp.uId); 
+	treeData.eventCode = eventCode;
+	treeData.uLoc = ux.getExactPointerCoordinates(uEv);
+	if (delay) {
+		treeData.timeoutId = window.setTimeout("ux.treeItemProcessEvent(\""+ id + "\");"
+				, UNIFY_TREEDOUBLECLICK_DELAY); 
+	} else {
+		ux.treeItemProcessEvent(id); 
+	}
 }
 
-ux.treeItemEventHandler = function(treeId) {
-	var treeData = treeDataMap[treeId];	
+ux.treeItemProcessEvent = function(treeId) {
+	var treeData = ux.treedatamap[treeId];	
 	var evp = treeData.evp;
-	var itemInfo = evp.uItemList[evp.uVisualIdx];
+	var itemInfo = evp.uTevp.uItemList[evp.uVisualIdx];
 	
-	if (evp.uEvCodeIdx == TREE_CLICK) {
+	if (treeData.eventCode == TREEITEM_CLICK.code) {
 		if (treeData.uEv.ctrlKey) {
 			ux.treeSelectItem(evp, false, true);
 		} else if (treeData.uEv.shiftKey) {
@@ -2990,43 +2986,55 @@ ux.treeItemEventHandler = function(treeId) {
 			}
 		} else {
 			ux.treeSelectItem(evp, true, false);
-			if(itemInfo.pClick) {
-				ux.treeSendCommand(treeData);
-			}
-		}
-	} else if (evp.uEvCodeIdx == TREE_DBLCLICK) {
-		ux.treeSelectItem(evp, true, false);
-		if(itemInfo.pDblClick) {
 			ux.treeSendCommand(treeData);
 		}
-
-	} else if (evp.uEvCodeIdx == TREE_RTCLICK) {
-		var selObj = _id(evp.uSelItemId);
-		if (!selObj.options[evp.uVisualIdx].selected) {
+	} else {
+		if (treeData.eventCode == TREEITEM_DBCLICK.code) {
 			ux.treeSelectItem(evp, true, false);
-		}
+			ux.treeSendCommand(treeData);
+		} else {
+			if (treeData.eventCode == TREEITEM_RIGHTCLICK.code) {
+				var selObj = _id(evp.uTevp.uSelItemId);
+				if (!selObj.options[evp.uVisualIdx].selected) {
+					ux.treeSelectItem(evp, true, false);
+				}
+	
+				if (evp.uTevp.uMenu) {
+					var showMenu = false;
+					// Hide all menu items
+					var menu = evp.uTevp.uMenu;
+					ux.setDisplayModeByName(menu.sepId, "none");
+					
+					// Show menu items based on tree item type
+					var typeInfo= evp.uTypeInfo;
+					if (typeInfo.menu && typeInfo.menu.length > 0) {
+						var gIndex = -1;
+						for(var i = 0; i < typeInfo.menu.length; i++) {
+							var mitem = menu.items[typeInfo.menu[i]];
+							var miElem = _id(mitem.id);
+							if (gIndex >= 0 && gIndex != mitem.grpIdx) {
+								miElem.className = menu.sepCls;
+							} else {
+								miElem.className = menu.normCls;
+							}
+							miElem.style.display = "block";
+							gIndex = mitem.grpIdx;
+						}
+						showMenu = true;
+					}
 
-		var showMenu = false;
-		var popupId = itemInfo.popupId;
-		for (var j = 0; j < treeData.selList.length; j++) {
-			var i = treeData.selList[j];
-			if (popupId != evp.uItemList[i].popupId) {
-				popupId = evp.uPopupId;
-				showMenu = true;
-				break;
-			}
-		}
-		
-		if (showMenu || itemInfo.pRtClick) {
-			if (popupId) {
-				var openPrm = {};
-				openPrm.popupId = popupId;
-				openPrm.relFrameId = evp.uFrameId;
-				openPrm.stayOpenForMillSec = -1;
-				openPrm.forceReopen = true;
-				openPrm.uTrg = treeData.uEv.uTrg;
-				openPrm.mCoord = evp.mCoord;
-				ux.doOpenPopup(openPrm);
+					if (showMenu) {
+						// Show menu
+						var openPrm = {};
+						openPrm.popupId = menu.id;
+						openPrm.relFrameId = evp.uFrameId;
+						openPrm.stayOpenForMillSec = -1;
+						openPrm.forceReopen = true;
+						openPrm.uTrg = treeData.uEv.uTrg;
+						openPrm.uLoc = treeData.uLoc;
+						ux.doOpenPopup(openPrm);
+					}
+				}
 			}
 		}
 	}
@@ -3035,14 +3043,24 @@ ux.treeItemEventHandler = function(treeId) {
 	treeData.evp = null;
 }
 
+ux.treeCtrlImageClickHandler = function(uEv) {
+	var evp = uEv.evp;
+	var tSelCtrlElem = _id(evp.uSelCtrlId);
+	if (tSelCtrlElem) {
+		tSelCtrlElem.value = evp.uIdx;
+	}
+	ux.post(uEv);
+}
+
 ux.treeSelectItem = function(evp, single, toggle) {
 	var i = evp.uVisualIdx;
-	treeDataMap[evp.uId].lastSelIdx = i;
+	var tevp = evp.uTevp;
+	ux.treedatamap[tevp.uId].lastSelIdx = i;
 	if (single) {
 		ux.treeSelectItemRange(evp, i, i);
 	} else{
-		var tElem = _id(evp.uLblBase + evp.uItemList[i].idx)
-		var selObj = _id(evp.uSelItemId);
+		var tElem = _id(tevp.uLblBase + tevp.uItemList[i].idx)
+		var selObj = _id(tevp.uSelItemId);
 		if (toggle) {
 			if(selObj.options[i].selected) {
 				ux.treeSelect(evp, tElem, selObj, i, false);
@@ -3062,9 +3080,10 @@ ux.treeSelectItemRange = function(evp, start, end) {
 		start = temp;
 	}
 
-	var selObj = _id(evp.uSelItemId);
-	for(var i = 0; i < evp.uItemList.length; i++) {
-		var tElem = _id(evp.uLblBase + evp.uItemList[i].idx)
+	var tevp = evp.uTevp;
+	var selObj = _id(tevp.uSelItemId);
+	for(var i = 0; i < tevp.uItemList.length; i++) {
+		var tElem = _id(tevp.uLblBase + tevp.uItemList[i].idx)
 		if(i >= start && i <= end) {
 			ux.treeSelect(evp, tElem, selObj, i, true);
 		} else {
@@ -3075,9 +3094,9 @@ ux.treeSelectItemRange = function(evp, start, end) {
 
 ux.treeSendCommand = function(treeData) {
 	var evp = treeData.evp;
-	var tTypeElem = _id(evp.uEventTypeId);
+	var tTypeElem = _id(evp.uTevp.uEventTypeId);
 	if(tTypeElem) {
-		tTypeElem.value = evp.uEvCode;
+		tTypeElem.value = treeData.eventCode;
 	}
 
 	var uEv = treeData.uEv;
@@ -3086,7 +3105,8 @@ ux.treeSendCommand = function(treeData) {
 }
 
 ux.treeSelect = function(evp, tElem, selObj, i, select) {
-	var treeData = treeDataMap[evp.uId];
+	var tevp = evp.uTevp;
+	var treeData = ux.treedatamap[tevp.uId];
 	var j = treeData.selList.indexOf(i);
 	if (j >= 0) {
 		if(!select) {
@@ -3097,12 +3117,11 @@ ux.treeSelect = function(evp, tElem, selObj, i, select) {
 	}
 
 	if (select) {
-		tElem.className = evp.uSel;
+		tElem.className = tevp.uSel;
 	} else {
-		tElem.className = evp.uNorm;
+		tElem.className = tevp.uNorm;
 	}
 	selObj.options[i].selected = select;
-
 }
 
 /** ************************* PARAMETERS ********************************** */
@@ -3411,11 +3430,15 @@ ux.setDisabledById = function(ids, disabled) {
 ux.setDisplayModeByNames = function(names, mode) {
 	if (names) {
 		for (var i = 0; i < names.length; i++) {
-			var elems = _name(names[i]);
-			for (var j = 0; j < elems.length; j++) {
-				elems[j].style.display = mode;
-			}
+			ux.setDisplayModeByName(names[i], mode);
 		}
+	}
+}
+
+ux.setDisplayModeByName = function(name, mode) {
+	var elems = _name(name);
+	for (var j = 0; j < elems.length; j++) {
+		elems[j].style.display = mode;
 	}
 }
 
@@ -3471,11 +3494,6 @@ ux.listKeydownHit = function(sCom) {
 }
 
 ux.listKeydownEnter = function(sCom) {
-	/*
-	 * if(sCom.uIndexes && sCom.uIndexes.length > 0) { sCom.uSelHandler(sCom,
-	 * sCom.uIndexes[0], true); } else { sCom.uSelHandler(sCom, sCom.uOldSelIdx,
-	 * true); }
-	 */
 	sCom.uSelHandler(sCom, sCom.uOldSelIdx, true);
 	ux.hidePopup(null);
 }
@@ -4066,24 +4084,24 @@ ux.findParent = function(domObject, tagName) {
 }
 
 /** Drag and drop */
-var dragElem = null;
-var dragElemPos = {
+ux.dragElem = null;
+ux.dragElemPos = {
 	x : 0,
 	y : 0
 };
-var dragPointerPos = {
+ux.dragPointerPos = {
 	x : 0,
 	y : 0
 };
 
 ux.dragDropEngage = function(ev) {
 	var evp = ev.evp;
-	dragElem = _id(evp.uTargetPnlId);
-	dragElemPos = {
-		x : parseInt(dragElem.style.left),
-		y : parseInt(dragElem.style.top)
+	ux.dragElem = _id(evp.uTargetPnlId);
+	ux.dragElemPos = {
+		x : parseInt(ux.dragElem.style.left),
+		y : parseInt(ux.dragElem.style.top)
 	};
-	dragPointerPos = ux.getPointerCoordinates(ev);
+	ux.dragPointerPos = ux.getPointerCoordinates(ev);
 	ux.attachDirectEventHandler(document, "mouseup", ux.dragDropDisengage);
 	ux.attachDirectEventHandler(document, "mousemove", ux.dragDropAction);
 }
@@ -4095,12 +4113,12 @@ ux.dragDropDisengage = function(ev) {
 
 ux.dragDropAction = function(ev) {
 	var newPointerPos = ux.getPointerCoordinates(ev);
-	var x = dragElemPos.x + newPointerPos.x - dragPointerPos.x
-	var y = dragElemPos.y + newPointerPos.y - dragPointerPos.y
+	var x = ux.dragElemPos.x + newPointerPos.x - ux.dragPointerPos.x
+	var y = ux.dragElemPos.y + newPointerPos.y - ux.dragPointerPos.y
 
 	// Restrict to view port
 	var viewRect = ux.getWindowRect();
-	var dragElemRect = ux.boundingRect(dragElem);
+	var dragElemRect = ux.boundingRect(ux.dragElem);
 
 	var xFar = x + dragElemRect.width;
 	if (xFar > viewRect.right)
@@ -4114,8 +4132,8 @@ ux.dragDropAction = function(ev) {
 	if (y < viewRect.top)
 		y = viewRect.top;
 
-	dragElem.style.left = x + "px";
-	dragElem.style.top = y + "px";
+	ux.dragElem.style.left = x + "px";
+	ux.dragElem.style.top = y + "px";
 }
 
 /** Coordinates and sizes */
@@ -4164,11 +4182,11 @@ ux.getExactPointerCoordinates = function(ev) {
 }
 
 ux.getRelPointerCoordinates = function(ev) {
-	var mCoord = ux.getExactPointerCoordinates(ev);
+	var uLoc = ux.getExactPointerCoordinates(ev);
 	var tCoord = ux.getElementPosition(ev.uTrg);
 	return {
-		x : mCoord.x = tCoord.x,
-		y : mCoord.y = tCoord.y
+		x : uLoc.x = tCoord.x,
+		y : uLoc.y = tCoord.y
 	};
 }
 
@@ -4425,9 +4443,9 @@ ux.doOpenPopup = function(openPrm) {
 			var frameRect = ux.boundingRect(_id(openPrm.relFrameId));
 			var x = frameRect.left;
 			var y = frameRect.bottom;
-			if (openPrm.mCoord) {
-				x = openPrm.mCoord.x;
-				y = openPrm.mCoord.y;
+			if (openPrm.uLoc) {
+				x = openPrm.uLoc.x;
+				y = openPrm.uLoc.y;
 			}
 			
 			ux.popCurr.style.left = x + 'px';
@@ -4529,8 +4547,8 @@ ux.init();
 
 /** Types */
 // Transformation
-var DEFAULT_TRANSFORMATION_STEP_RATE = 20;
-var LINEAR_TRANSLATION = 0;
+const DEFAULT_TRANSFORMATION_STEP_RATE = 20;
+const LINEAR_TRANSLATION = 0;
 
 function Transformation(element, stepRate) {
 	var thisInst = this;

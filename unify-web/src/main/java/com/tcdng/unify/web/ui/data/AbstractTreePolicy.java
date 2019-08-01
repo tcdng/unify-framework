@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.StringUtils;
 public abstract class AbstractTreePolicy extends AbstractUnifyComponent implements TreePolicy {
 
     @Override
-    public String getTreeItemCaption(TreeItemCategory category, Object item) throws UnifyException {
+    public String getTreeItemCaption(TreeItemTypeInfo category, Object item) throws UnifyException {
         String itemCaptionKey = category.getItemCaptionKey();
         if (StringUtils.isBlank(itemCaptionKey)) {
             return String.valueOf(item);
@@ -40,9 +40,10 @@ public abstract class AbstractTreePolicy extends AbstractUnifyComponent implemen
 
     @Override
     public int addDecision(TreeItem siblingItem, TreeItem childItem) {
-        if (childItem.getLevel() < siblingItem.getLevel()) {
+        if (childItem.getBuoyancy() < siblingItem.getBuoyancy()) {
             return -1;
         }
+
         return 0;
     }
 

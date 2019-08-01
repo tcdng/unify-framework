@@ -16,7 +16,8 @@
 package com.tcdng.unify.web.ui;
 
 import java.io.Writer;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
@@ -170,22 +171,72 @@ public interface ResponseWriter extends UnifyComponent {
     /**
      * Writes a JSON string array.
      * 
-     * @param valueArray
-     *            the array values which are converted to strings
+     * @param stringArr
+     *            the string array to write
      * @throws UnifyException
      *             if an error occurs
      */
-    ResponseWriter writeJsonStringArray(Object... valueArray) throws UnifyException;
+    ResponseWriter writeJsonArray(String... stringArr) throws UnifyException;
 
     /**
-     * Writes a JSON string array.
+     * Writes a JSON integer array.
      * 
-     * @param valueList
-     *            the value list which are converted to strings
+     * @param intArr
+     *            the integer array to write
      * @throws UnifyException
      *             if an error occurs
      */
-    ResponseWriter writeJsonStringArray(List<?> valueList) throws UnifyException;
+    ResponseWriter writeJsonArray(Integer... intArr) throws UnifyException;
+
+    /**
+     * Writes a JSON long array.
+     * 
+     * @param longArr
+     *            the long array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Long... longArr) throws UnifyException;
+
+    /**
+     * Writes a JSON big decimal array.
+     * 
+     * @param bigArr
+     *            the big decimal array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(BigDecimal... bigArr) throws UnifyException;
+
+    /**
+     * Writes a JSON double array.
+     * 
+     * @param doubleArr
+     *            the double array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Double... doubleArr) throws UnifyException;
+
+    /**
+     * Writes a JSON boolean array.
+     * 
+     * @param boolArr
+     *            the boolean array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Boolean... boolArr) throws UnifyException;
+
+    /**
+     * Writes a JSON array form a collection of objects.
+     * 
+     * @param col
+     *            the collection of objects to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Collection<?> col) throws UnifyException;
 
     /**
      * Writes a JSON pattern object.
