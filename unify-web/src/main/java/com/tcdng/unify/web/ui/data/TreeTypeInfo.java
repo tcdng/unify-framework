@@ -61,6 +61,10 @@ public class TreeTypeInfo {
         
         return null;
     }
+
+    public boolean isTreeItemType(String code) {
+        return treeItemTypeInfos.containsKey(code);
+    }
     
     public List<Integer> getMenuItemSequence(String itemTypeCode) {
         ExtendedTreeItemTypeInfo in = treeItemTypeInfos.get(itemTypeCode);

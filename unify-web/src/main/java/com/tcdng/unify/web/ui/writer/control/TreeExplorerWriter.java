@@ -131,6 +131,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
 
         if (treeExplorer.hasMenu()) {
             String menuId = treeExplorer.getMenuId();
+            String sepId = treeExplorer.getMenuSeperatorId();
             writer.write(",\"pMenu\":");
             writer.write("{\"id\":\"").write(menuId).write('"');
             writer.write(",\"normCls\":\"mnrm\"");
@@ -146,7 +147,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
                     appendSym = true;
                 }
 
-                writer.write("{\"id\":\"").write(menuId + i).write('"');
+                writer.write("{\"id\":\"").write(sepId + i).write('"');
                 writer.write(",\"code\":\"").write(menuItem.getCode()).write('"');
                 writer.write(",\"grpIdx\":").write(menuItem.getGroupIndex());
                 writer.write("}");
@@ -223,7 +224,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
                 writer.write("\" class=\"tnorm\">");
             }
 
-            TreeItemTypeInfo treeItemTypeInfo = treeItem.getCategory();
+            TreeItemTypeInfo treeItemTypeInfo = treeItem.getTypeInfo();
             writeFileImageHtmlElement(writer, treeItemTypeInfo.getIcon(), null, "timg", null);
             writer.write("<span class=\"titem\">");
             if (isTreePolicy) {
@@ -250,7 +251,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         Node<TreeItem> ch = node.getChild();
         do {
             TreeItem treeItem = ch.getItem();
-            TreeItemTypeInfo treeItemCategoryInfo = treeItem.getCategory();
+            TreeItemTypeInfo treeItemTypeInfo = treeItem.getTypeInfo();
             if (appendSym) {
                 writer.write(",");
             } else {
@@ -258,7 +259,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
             }
 
             writer.write("{\"idx\":").write(ch.getMark());
-            writer.write(",\"type\":\"").write(treeItemCategoryInfo.getCode()).write('"');
+            writer.write(",\"type\":\"").write(treeItemTypeInfo.getCode()).write('"');
             int flags = 0;
             if (ch.isParent()) {
                 flags |= PARENT_FLAG;

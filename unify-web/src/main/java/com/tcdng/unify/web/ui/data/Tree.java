@@ -227,6 +227,16 @@ public class Tree {
             this.markedTree = new MarkedTree<TreeItem>(new TreeItem());
         }
 
+        public Builder addTreeItem(String type, Object item) throws UnifyException {
+            if (!typeInfo.isTreeItemType(type)) {
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                        "Unknown category [" + type + "].");
+            }
+            
+            markedTree.add(new TreeItem(typeInfo.getTreeItemTypeInfo(type), item));            
+            return this;
+        }
+        
         public Node<TreeItem> getLastNode() {
             return markedTree.getChainLast();
         }

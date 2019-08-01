@@ -117,17 +117,29 @@ public class TreeItemTypeInfo {
             return this;
         }
 
-        public Builder listenTo(TreeEventType eventType) {
-            eventFlags |= eventType.flag();
+        public Builder listenTo(TreeEventType... eventTypes) {
+            for (TreeEventType eventType : eventTypes) {
+                eventFlags |= eventType.flag();
+            }
+
             return this;
         }
 
-        public Builder requiresMenuItem(String code) throws UnifyException {
+        public Builder useMenuItems(String... codes) throws UnifyException {
+            for (String code : codes) {
+                useMenuItem(code);
+            }
+
+            return this;
+        }
+
+        public Builder useMenuItem(String code) throws UnifyException {
             if (menuCodeList == null) {
                 menuCodeList = new ArrayList<String>();
             }
 
             menuCodeList.add(code);
+            listenTo(TreeEventType.TREEITEM_RIGHTCLICK);
             return this;
         }
 

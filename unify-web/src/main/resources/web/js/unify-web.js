@@ -2802,11 +2802,11 @@ ux.timeScrollHandler = function(uEv) {
 
 /** Tree */
 const TREEITEM_CLICK = {code:'TCL', mask:0x0001};
-const TREEITEM_RIGHTCLICK = {code:'TRC', mask:0x0002);
-const TREEITEM_DBCLICK = {code:'TDC', mask:0x0004);
-const TREEITEM_DRAG = {code:'TDG"', mask:0x0008);
-const TREEITEM_DROP = {code:'TDP', mask:0x0010);
-const MENUITEM_CLICK = {code:'MCL', mask:0x0020);
+const TREEITEM_RIGHTCLICK = {code:'TRC', mask:0x0002};
+const TREEITEM_DBCLICK = {code:'TDC', mask:0x0004};
+const TREEITEM_DRAG = {code:'TDG"', mask:0x0008};
+const TREEITEM_DROP = {code:'TDP', mask:0x0010};
+const MENUITEM_CLICK = {code:'MCL', mask:0x0020};
 
 Object.freeze(TREEITEM_CLICK);
 Object.freeze(TREEITEM_RIGHTCLICK);
@@ -2823,8 +2823,8 @@ ux.treedatamap = {};
 ux.rigTreeExplorer = function(rgp) {
 	var id = rgp.pId;
 	var tevp = {};
-	tevp.uPanels = [ rgp.pContId ];
 	tevp.uId = rgp.pId;
+	tevp.uPanels = [ rgp.pContId ];
 	tevp.uCmd = rgp.pId + "->executeEventPath";
 	tevp.uSelItemId = rgp.pSelItemId;
 	tevp.uEventTypeId = rgp.pEventTypeId;
@@ -2832,7 +2832,7 @@ ux.rigTreeExplorer = function(rgp) {
 	tevp.uSel = rgp.pSel;
 	tevp.uNorm = rgp.pNorm;
 	tevp.uLblBase = rgp.pLblBase;
-	tevp.uItemList = pItemList;
+	tevp.uItemList = rgp.pItemList;
 	tevp.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];
 	if(rgp.pEventRef) {
 		tevp.uRef = tevp.uRef.concat(rgp.pEventRef);
@@ -2847,6 +2847,9 @@ ux.rigTreeExplorer = function(rgp) {
 			var menuItem = menu.items[i];
 			var evp = ux.newEvPrm(rgp);
 			evp.uMenuCode = menuItem.code;
+			evp.uPanels = tevp.uPanels;
+			evp.uCmd = tevp.uCmd;
+			evp.uRef = tevp.uRef;
 			evp.uTevp = tevp;
 			ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
 		}
@@ -2886,9 +2889,12 @@ ux.rigTreeExplorer = function(rgp) {
 				var typeInfo = typeMap[itemInfo.type];
 				var evp = ux.newEvPrm(rgp);
 				evp.uVisualIdx = i;
-				evp.uFrameId = tevp.pLblBase + tevp.uItemList[i].idx;
-				evp.uTevp = tevp;	
+				evp.uFrameId = tevp.uLblBase + tevp.uItemList[i].idx;
+				evp.uPanels = tevp.uPanels;
+				evp.uCmd = tevp.uCmd;
+				evp.uRef = tevp.uRef;
 				evp.uTypeInfo = typeInfo;
+				evp.uTevp = tevp;	
 
 				if ((typeInfo.flags & TREEITEM_CLICK.mask) > 0) {
 					ux.attachEventHandler(tElem, "click", ux.treeItemClickHandler, evp);
@@ -2945,28 +2951,29 @@ ux.treeItemRightClickHandler = function(uEv) {
 }
 
 ux.treeItemEventHandler = function(uEv, eventCode, delay) {
-	var treeData = ux.treedatamap[uEv.evp.uId];
+	var id = uEv.evp.uTevp.uId
+	var treeData = ux.treedatamap[id];
 	if (treeData.timeoutId) {
 		window.clearTimeout(treeData.timeoutId);
 		treeData.timeoutId = null;
 	}
 
 	treeData.uEv = uEv;
-	treeData.eventCode = eventCode;
 	treeData.evp = uEv.evp;
-	treeData.evp.mCoord = ux.getExactPointerCoordinates(uEv);
+	treeData.eventCode = eventCode;
+	treeData.uLoc = ux.getExactPointerCoordinates(uEv);
 	if (delay) {
-		treeData.timeoutId = window.setTimeout("ux.treeItemProcessEvent(\""+ uEv.evp.uId + "\");"
+		treeData.timeoutId = window.setTimeout("ux.treeItemProcessEvent(\""+ id + "\");"
 				, UNIFY_TREEDOUBLECLICK_DELAY); 
 	} else {
-		ux.treeItemProcessEvent(uEv.evp.uId); 
+		ux.treeItemProcessEvent(id); 
 	}
 }
 
 ux.treeItemProcessEvent = function(treeId) {
 	var treeData = ux.treedatamap[treeId];	
 	var evp = treeData.evp;
-	var itemInfo = evp.uItemList[evp.uVisualIdx];
+	var itemInfo = evp.uTevp.uItemList[evp.uVisualIdx];
 	
 	if (treeData.eventCode == TREEITEM_CLICK.code) {
 		if (treeData.uEv.ctrlKey) {
@@ -3024,7 +3031,7 @@ ux.treeItemProcessEvent = function(treeId) {
 						openPrm.stayOpenForMillSec = -1;
 						openPrm.forceReopen = true;
 						openPrm.uTrg = treeData.uEv.uTrg;
-						openPrm.mCoord = evp.mCoord;
+						openPrm.uLoc = treeData.uLoc;
 						ux.doOpenPopup(openPrm);
 					}
 				}
@@ -3047,11 +3054,11 @@ ux.treeCtrlImageClickHandler = function(uEv) {
 
 ux.treeSelectItem = function(evp, single, toggle) {
 	var i = evp.uVisualIdx;
-	ux.treedatamap[evp.uId].lastSelIdx = i;
+	var tevp = evp.uTevp;
+	ux.treedatamap[tevp.uId].lastSelIdx = i;
 	if (single) {
 		ux.treeSelectItemRange(evp, i, i);
 	} else{
-		var tevp = evp.uTevp;
 		var tElem = _id(tevp.uLblBase + tevp.uItemList[i].idx)
 		var selObj = _id(tevp.uSelItemId);
 		if (toggle) {
@@ -3087,9 +3094,9 @@ ux.treeSelectItemRange = function(evp, start, end) {
 
 ux.treeSendCommand = function(treeData) {
 	var evp = treeData.evp;
-	var tTypeElem = _id(evp.uEventTypeId);
+	var tTypeElem = _id(evp.uTevp.uEventTypeId);
 	if(tTypeElem) {
-		tTypeElem.value = evp.uEvCode;
+		tTypeElem.value = treeData.eventCode;
 	}
 
 	var uEv = treeData.uEv;
@@ -3098,7 +3105,8 @@ ux.treeSendCommand = function(treeData) {
 }
 
 ux.treeSelect = function(evp, tElem, selObj, i, select) {
-	var treeData = ux.treedatamap[evp.uId];
+	var tevp = evp.uTevp;
+	var treeData = ux.treedatamap[tevp.uId];
 	var j = treeData.selList.indexOf(i);
 	if (j >= 0) {
 		if(!select) {
@@ -3109,9 +3117,9 @@ ux.treeSelect = function(evp, tElem, selObj, i, select) {
 	}
 
 	if (select) {
-		tElem.className = evp.uTevp.uSel;
+		tElem.className = tevp.uSel;
 	} else {
-		tElem.className = evp.uTevp.uNorm;
+		tElem.className = tevp.uNorm;
 	}
 	selObj.options[i].selected = select;
 }
@@ -3486,11 +3494,6 @@ ux.listKeydownHit = function(sCom) {
 }
 
 ux.listKeydownEnter = function(sCom) {
-	/*
-	 * if(sCom.uIndexes && sCom.uIndexes.length > 0) { sCom.uSelHandler(sCom,
-	 * sCom.uIndexes[0], true); } else { sCom.uSelHandler(sCom, sCom.uOldSelIdx,
-	 * true); }
-	 */
 	sCom.uSelHandler(sCom, sCom.uOldSelIdx, true);
 	ux.hidePopup(null);
 }
@@ -4115,15 +4118,15 @@ ux.dragDropAction = function(ev) {
 
 	// Restrict to view port
 	var viewRect = ux.getWindowRect();
-	var ux.dragElemRect = ux.boundingRect(ux.dragElem);
+	var dragElemRect = ux.boundingRect(ux.dragElem);
 
-	var xFar = x + ux.dragElemRect.width;
+	var xFar = x + dragElemRect.width;
 	if (xFar > viewRect.right)
 		x -= (xFar - viewRect.right);
 	if (x < viewRect.left)
 		x = viewRect.left;
 
-	var yFar = y + ux.dragElemRect.height;
+	var yFar = y + dragElemRect.height;
 	if (yFar > viewRect.bottom)
 		y -= (yFar - viewRect.bottom);
 	if (y < viewRect.top)
@@ -4179,11 +4182,11 @@ ux.getExactPointerCoordinates = function(ev) {
 }
 
 ux.getRelPointerCoordinates = function(ev) {
-	var mCoord = ux.getExactPointerCoordinates(ev);
+	var uLoc = ux.getExactPointerCoordinates(ev);
 	var tCoord = ux.getElementPosition(ev.uTrg);
 	return {
-		x : mCoord.x = tCoord.x,
-		y : mCoord.y = tCoord.y
+		x : uLoc.x = tCoord.x,
+		y : uLoc.y = tCoord.y
 	};
 }
 
@@ -4440,9 +4443,9 @@ ux.doOpenPopup = function(openPrm) {
 			var frameRect = ux.boundingRect(_id(openPrm.relFrameId));
 			var x = frameRect.left;
 			var y = frameRect.bottom;
-			if (openPrm.mCoord) {
-				x = openPrm.mCoord.x;
-				y = openPrm.mCoord.y;
+			if (openPrm.uLoc) {
+				x = openPrm.uLoc.x;
+				y = openPrm.uLoc.y;
 			}
 			
 			ux.popCurr.style.left = x + 'px';

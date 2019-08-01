@@ -113,7 +113,7 @@ public class TreeExplorer extends AbstractMultiControl {
     public void setTree(Tree tree) throws UnifyException {
         this.tree = tree;
         this.tree.setTreePolicy(
-                (MarkedTreePolicy<TreeItem>) getComponent(this.getUplAttribute(String.class, "treeRule")));
+                (MarkedTreePolicy<TreeItem>) getComponent(getUplAttribute(String.class, "treeRule")));
     }
 
     public TreePolicy getTreePolicy() {

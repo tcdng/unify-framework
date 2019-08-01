@@ -24,14 +24,14 @@ package com.tcdng.unify.web.ui.data;
  */
 public class TreeItem {
 
-    private TreeItemTypeInfo category;
+    private TreeItemTypeInfo typeInfo;
 
     private Object content;
 
     private boolean expanded;
 
-    public TreeItem(TreeItemTypeInfo category, Object content) {
-        this.category = category;
+    public TreeItem(TreeItemTypeInfo typeInfo, Object content) {
+        this.typeInfo = typeInfo;
         this.content = content;
     }
 
@@ -39,16 +39,16 @@ public class TreeItem {
 
     }
 
-    public TreeItemTypeInfo getCategory() {
-        return category;
+    public TreeItemTypeInfo getTypeInfo() {
+        return typeInfo;
     }
 
     public void setCategory(TreeItemTypeInfo category) {
-        this.category = category;
+        this.typeInfo = category;
     }
 
     public int getBuoyancy() {
-        return category.getBuoyancy();
+        return typeInfo.getBuoyancy();
     }
 
     public Object getContent() {
