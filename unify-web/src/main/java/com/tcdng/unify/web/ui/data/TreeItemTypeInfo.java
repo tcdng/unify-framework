@@ -38,17 +38,20 @@ public class TreeItemTypeInfo {
 
     private List<String> menuCodeList;
 
+    private List<String> acceptDropList;
+
     private int eventFlags;
 
     private int buoyancy;
 
-    private TreeItemTypeInfo(String code, String icon, String itemCaptionKey, List<String> menuCodeList, int eventFlags,
-            int buoyancy) {
+    private TreeItemTypeInfo(String code, String icon, String itemCaptionKey, List<String> menuCodeList,
+            List<String> acceptDropList, int eventFlags, int buoyancy) {
         this.code = code;
         this.icon = icon;
         this.itemCaptionKey = itemCaptionKey;
         this.eventFlags = eventFlags;
         this.menuCodeList = menuCodeList;
+        this.acceptDropList = acceptDropList;
         this.buoyancy = buoyancy;
     }
 
@@ -72,6 +75,18 @@ public class TreeItemTypeInfo {
         return menuCodeList != null && !menuCodeList.isEmpty();
     }
 
+    public List<String> getAcceptDropList() {
+        return acceptDropList;
+    }
+
+    public boolean isAcceptDropList() {
+        return acceptDropList != null && !acceptDropList.isEmpty();
+    }
+
+    public boolean isDraggable() {
+        return (eventFlags & TreeEventType.TREEITEM_DRAG.flag()) > 0;
+    }
+    
     public int getEventFlags() {
         return eventFlags;
     }
@@ -91,6 +106,8 @@ public class TreeItemTypeInfo {
         private String icon;
 
         private String itemCaptionKey;
+
+        private List<String> acceptDropList;
 
         private List<String> menuCodeList;
 
@@ -143,9 +160,26 @@ public class TreeItemTypeInfo {
             return this;
         }
 
+        public Builder acceptDrops(String... typeCodes) throws UnifyException {
+            for (String typeCode : typeCodes) {
+                acceptDrop(typeCode);
+            }
+
+            return this;
+        }
+
+        public Builder acceptDrop(String typeCode) throws UnifyException {
+            if (acceptDropList == null) {
+                acceptDropList = new ArrayList<String>();
+            }
+
+            acceptDropList.add(typeCode);
+            return this;
+        }
+
         public TreeItemTypeInfo build() {
             return new TreeItemTypeInfo(code, icon, itemCaptionKey, DataUtils.unmodifiableList(menuCodeList),
-                    eventFlags, buoyancy);
+                    DataUtils.unmodifiableList(acceptDropList), eventFlags, buoyancy);
         }
     }
 }
