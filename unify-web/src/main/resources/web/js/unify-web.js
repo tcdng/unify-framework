@@ -744,14 +744,14 @@ ux.setCheckedPatternValue = function(prm) {
 		if (prm.chkIds && prm.fillValues) {
 			var chkIds = prm.chkIds;
 			var fillValues = prm.fillValues;
-			var appendSym = false;
+			var sym = false;
 			for (var i = 0; i < chkIds.length; i++) {
 				var elem = _id(chkIds[i]);
 				if (elem && elem.checked) {
-					if (appendSym) {
+					if (sym) {
 						patternValue += ",";
 					} else {
-						appendSym = true;
+						sym = true;
 					}
 					patternValue += fillValues[i];
 				}
@@ -2818,53 +2818,72 @@ Object.freeze(MENUITEM_CLICK);
 const TREE_PARENT_FLAG = 0x0001;
 const TREE_EXPANDED_FLAG = 0x0002;
 
-ux.treedatamap = {};
+ux.treedatmap = {};
+ux.treeDatCreate = function(rgp) {
+	var tdat = {};
+	tdat.uId = rgp.pId;
+	tdat.uPanels = [ rgp.pContId ];
+	tdat.uCmd = rgp.pId + "->executeEventPath";
+	tdat.uSelItemId = rgp.pSelItemId;
+	tdat.uDropTrgItemId = rgp.pDropTrgItemId;
+	tdat.uDropSrcId = rgp.pDropSrcId;
+	tdat.uDropSrcItemId = rgp.pDropSrcItemId;
+	tdat.uEventTypeId = rgp.pEventTypeId;
+	tdat.uMenuCodeCtrlId = rgp.pMenuCodeCtrlId;
+	tdat.uSel = rgp.pSel;
+	tdat.uNorm = rgp.pNorm;
+	tdat.uLblBase = rgp.pLblBase;
+	tdat.uItemList = rgp.pItemList;
+	tdat.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pDropTrgItemId, rgp.pDropSrcId, rgp.pDropSrcItemId, rgp.pMenuCodeCtrlId ];
+	if(rgp.pEventRef) {
+		tdat.uRef = tdat.uRef.concat(rgp.pEventRef);
+	}
+	tdat.uMenu = rgp.pMenu;
+	tdat.uLastSelIdx = -1;
+	ux.treedatmap[tdat.uId] = tdat;
+	return tdat;
+}
+
+ux.getTreeDat = function(evp) {
+	return ux.treedatmap[evp.uId];
+}
+
+ux.newTreeEvPrm = function(rgp) {
+	var evp = ux.newEvPrm(rgp);
+	var tdat = ux.treedatmap[rgp.pId]
+	evp.uId = tdat.uId;
+	evp.uPanels = tdat.uPanels;
+	evp.uCmd = tdat.uCmd;
+	evp.uRef = tdat.uRef;
+	return evp;
+}
 
 ux.rigTreeExplorer = function(rgp) {
-	var id = rgp.pId;
-	var tevp = {};
-	tevp.uId = rgp.pId;
-	tevp.uPanels = [ rgp.pContId ];
-	tevp.uCmd = rgp.pId + "->executeEventPath";
-	tevp.uSelItemId = rgp.pSelItemId;
-	tevp.uEventTypeId = rgp.pEventTypeId;
-	tevp.uMenuCodeCtrlId = rgp.pMenuCodeCtrlId;
-	tevp.uSel = rgp.pSel;
-	tevp.uNorm = rgp.pNorm;
-	tevp.uLblBase = rgp.pLblBase;
-	tevp.uItemList = rgp.pItemList;
-	tevp.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];
-	if(rgp.pEventRef) {
-		tevp.uRef = tevp.uRef.concat(rgp.pEventRef);
-	}
+	var tdat = ux.treeDatCreate(rgp);
 	var selList = [];
 	
 	// Wire menu
 	if(rgp.pMenu) {
-		tevp.uMenu = rgp.pMenu;
 		var menu = rgp.pMenu;
 		for(var i = 0; i < menu.items.length; i++) {
 			var menuItem = menu.items[i];
-			var evp = ux.newEvPrm(rgp);
+			var evp = ux.newTreeEvPrm(rgp);
 			evp.uMenuCode = menuItem.code;
-			evp.uPanels = tevp.uPanels;
-			evp.uCmd = tevp.uCmd;
-			evp.uRef = tevp.uRef;
-			evp.uTevp = tevp;
 			ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
 		}
 	}
 	
+	// Wire tree items
 	var pItemTypeList = rgp.pItemTypeList;
 	if (pItemTypeList) {
-		// Setup
+		// Do setup
 		var typeMap = {};
 		for(var i = 0; i < pItemTypeList.length; i++) {
 			var type = pItemTypeList[i];
 			typeMap[type.code] = type;
 		}
 		
-		// Wire tree items
+		// Do wire tree items
 		if (rgp.pItemList) {
 			var pItemList = rgp.pItemList;
 			var selObj = _id(rgp.pSelItemId);
@@ -2885,17 +2904,14 @@ ux.rigTreeExplorer = function(rgp) {
 							"click", ux.treeCtrlImageClickHandler, evp);
 				}
 
-				var tElem = _id(rgp.pLblBase + itemInfo.idx);
+				var evp = ux.newTreeEvPrm(rgp);
 				var typeInfo = typeMap[itemInfo.type];
-				var evp = ux.newEvPrm(rgp);
-				evp.uVisualIdx = i;
-				evp.uFrameId = tevp.uLblBase + tevp.uItemList[i].idx;
-				evp.uPanels = tevp.uPanels;
-				evp.uCmd = tevp.uCmd;
-				evp.uRef = tevp.uRef;
+				evp.uFrameId = rgp.pLblBase + itemInfo.idx;
+				evp.uIdx = itemInfo.idx;
 				evp.uTypeInfo = typeInfo;
-				evp.uTevp = tevp;	
+				evp.uVisualIdx = i;
 
+				var tElem = _id(evp.uFrameId);
 				if ((typeInfo.flags & TREEITEM_CLICK.mask) > 0) {
 					ux.attachEventHandler(tElem, "click", ux.treeItemClickHandler, evp);
 				}
@@ -2908,6 +2924,15 @@ ux.rigTreeExplorer = function(rgp) {
 					ux.attachEventHandler(tElem, "rtclick", ux.treeItemRightClickHandler, evp);
 				}
 
+				if ((typeInfo.flags & TREEITEM_DRAG.mask) > 0) {
+					ux.attachEventHandler(tElem, "dragstart", ux.treeItemDragStartHandler, evp);
+				}
+
+				if ((typeInfo.flags & TREEITEM_DROP.mask) > 0) {
+					ux.attachEventHandler(tElem, "dragover", ux.treeItemDragOverHandler, evp);
+					ux.attachEventHandler(tElem, "drop", ux.treeItemDropHandler, evp);
+				}
+
 				if (selObj.options[i].selected) {
 					selList.push(i);
 				}
@@ -2915,23 +2940,20 @@ ux.rigTreeExplorer = function(rgp) {
 		}
 	}
 	
-	var treeData = {};
-	treeData.selList = selList;
-	treeData.lastSelIdx = -1;
-	ux.treedatamap[id] = treeData;	
+	tdat.selList = selList;
 	ux.disableWinContextMenu();
 }
 
 ux.treeMenuClickHandler = function(uEv) {
-	var evp = uEv.evp;
-	var tElem = _id(evp.uTevp.uEventTypeId);
-	if(tElem) {
-		tElem.value = MENUITEM_CLICK.code;
+	var tdat = ux.getTreeDat(uEv.evp);
+	var elem = _id(tdat.uEventTypeId);
+	if(elem) {
+		elem.value = MENUITEM_CLICK.code;
 	}
 
-	var mElem = _id(evp.uTevp.uMenuCodeCtrlId);
-	if(mElem) {
-		mElem.value = evp.uMenuCode;
+	elem = _id(tdat.uMenuCodeCtrlId);
+	if(elem) {
+		elem.value = uEv.evp.uMenuCode;
 	}
 
 	ux.hidePopup(null);
@@ -2939,31 +2961,82 @@ ux.treeMenuClickHandler = function(uEv) {
 }
 
 ux.treeItemClickHandler = function(uEv) {
-	ux.treeItemEventHandler(uEv, TREEITEM_CLICK.code, true);
+	ux.treeItemClickEventHandler(uEv, TREEITEM_CLICK.code, true);
 }
 
 ux.treeItemDbClickHandler = function(uEv) {
-	ux.treeItemEventHandler(uEv, TREEITEM_DBCLICK.code, false);
+	ux.treeItemClickEventHandler(uEv, TREEITEM_DBCLICK.code, false);
 }
 
 ux.treeItemRightClickHandler = function(uEv) {
-	ux.treeItemEventHandler(uEv, TREEITEM_RIGHTCLICK.code, false);
+	ux.treeItemClickEventHandler(uEv, TREEITEM_RIGHTCLICK.code, false);
 }
 
-ux.treeItemEventHandler = function(uEv, eventCode, delay) {
-	var id = uEv.evp.uTevp.uId
-	var treeData = ux.treedatamap[id];
-	if (treeData.timeoutId) {
-		window.clearTimeout(treeData.timeoutId);
-		treeData.timeoutId = null;
+ux.treeItemDragStartHandler = function(uEv) {
+	var srctdat = ux.getTreeDat(uEv.evp);
+	srctdat.dragitems = [uEv.evp]; // TODO Handle multi-select
+	uEv.dataTransfer.setData("srcTreeId", srctdat.uId);
+	uEv.dataTransfer.dropEffect = "move";
+}
+
+ux.treeItemDragOverHandler = function(uEv) {
+	if (ux.treeItemAcceptDropLoad(uEv)) {
+		uEv.dataTransfer.dropEffect = "move";
+	}
+}
+
+ux.treeItemDropHandler = function(uEv) {
+	var srctdat = ux.treeItemAcceptDropLoad(uEv);
+	if (srctdat) {
+		var trgtdat = ux.getTreeDat(uEv.evp);
+
+		// Send command to target
+		_id(trgtdat.uEventTypeId).value = TREEITEM_DROP.code;
+		_id(trgtdat.uDropTrgItemId).value = trgtdat.id;
+		_id(trgtdat.uDropSrcId).value = srctdat.id;
+		var srcIds = ''; var sym = false;
+		for(var i = 0; i < srctdat.dragitems.length; i++) {
+			if (sym) {
+				srcIds += ',';
+			} else {
+				sym = true;
+			}
+			srcIds += srctdat.dragitems[i].uIdx;
+		}
+		_id(trgtdat.uDropSrcItemId).value = srcIds;
+		
+		ux.post(uEv);
+	}
+}
+
+ux.treeItemAcceptDropLoad = function(uEv) {
+	var accept = uEv.evp.uTypeInfo.acceptdrop;
+	if (accept && accept.length > 0) {
+		var srctdat = ux.treedatmap[uEv.dataTransfer.getData("srcTreeId")];
+		for(var i = 0; i < srctdat.dragitems.length; i++) {
+			if (!accept.includes(srctdat.dragitems[i].uTypeInfo.code)) {
+				return null;
+			}
+		}
+		uEv.preventDefault();
+		return srctdat;
+	}
+	return null;
+}
+
+ux.treeItemClickEventHandler = function(uEv, eventCode, delay) {
+	var tdat = ux.getTreeDat(uEv.evp);
+	if (tdat.timeoutId) {
+		window.clearTimeout(tdat.timeoutId);
+		tdat.timeoutId = null;
 	}
 
-	treeData.uEv = uEv;
-	treeData.evp = uEv.evp;
-	treeData.eventCode = eventCode;
-	treeData.uLoc = ux.getExactPointerCoordinates(uEv);
+	tdat.uEv = uEv;
+	tdat.evp = uEv.evp;
+	tdat.eventCode = eventCode;
+	tdat.uLoc = ux.getExactPointerCoordinates(uEv);
 	if (delay) {
-		treeData.timeoutId = window.setTimeout("ux.treeItemProcessEvent(\""+ id + "\");"
+		tdat.timeoutId = window.setTimeout("ux.treeItemProcessEvent(\""+ id + "\");"
 				, UNIFY_TREEDOUBLECLICK_DELAY); 
 	} else {
 		ux.treeItemProcessEvent(id); 
@@ -2971,38 +3044,37 @@ ux.treeItemEventHandler = function(uEv, eventCode, delay) {
 }
 
 ux.treeItemProcessEvent = function(treeId) {
-	var treeData = ux.treedatamap[treeId];	
-	var evp = treeData.evp;
-	var itemInfo = evp.uTevp.uItemList[evp.uVisualIdx];
-	
-	if (treeData.eventCode == TREEITEM_CLICK.code) {
-		if (treeData.uEv.ctrlKey) {
+	var tdat = ux.treedatmap[treeId];	
+	var evp = tdat.evp;
+	var itemInfo = tdat.uItemList[evp.uVisualIdx];
+	if (tdat.eventCode == TREEITEM_CLICK.code) {
+		if (tdat.uEv.ctrlKey) {
 			ux.treeSelectItem(evp, false, true);
-		} else if (treeData.uEv.shiftKey) {
-			if (treeData.selList.length > 0 && treeData.lastSelIdx >= 0) {
-				ux.treeSelectItemRange(evp, treeData.lastSelIdx, evp.uVisualIdx);
+		} else if (tdat.uEv.shiftKey) {
+			if (tdat.selList.length > 0 && tdat.uLastSelIdx >= 0) {
+				ux.treeSelectItemRange(evp, tdat.uLastSelIdx, evp.uVisualIdx);
 			} else {
 				ux.treeSelectItem(evp, true, false);
 			}
 		} else {
 			ux.treeSelectItem(evp, true, false);
-			ux.treeSendCommand(treeData);
+			ux.treeSendCommand(tdat);
 		}
 	} else {
-		if (treeData.eventCode == TREEITEM_DBCLICK.code) {
+		if (tdat.eventCode == TREEITEM_DBCLICK.code) {
 			ux.treeSelectItem(evp, true, false);
-			ux.treeSendCommand(treeData);
+			ux.treeSendCommand(tdat);
 		} else {
-			if (treeData.eventCode == TREEITEM_RIGHTCLICK.code) {
-				var selObj = _id(evp.uTevp.uSelItemId);
+			if (tdat.eventCode == TREEITEM_RIGHTCLICK.code) {
+				var selObj = _id(tdat.uSelItemId);
 				if (!selObj.options[evp.uVisualIdx].selected) {
 					ux.treeSelectItem(evp, true, false);
 				}
 	
-				if (evp.uTevp.uMenu) {
+				if (tdat.uMenu) {
 					var showMenu = false;
 					// Hide all menu items
-					var menu = evp.uTevp.uMenu;
+					var menu = tdat.uMenu;
 					ux.setDisplayModeByName(menu.sepId, "none");
 					
 					// Show menu items based on tree item type
@@ -3030,8 +3102,8 @@ ux.treeItemProcessEvent = function(treeId) {
 						openPrm.relFrameId = evp.uFrameId;
 						openPrm.stayOpenForMillSec = -1;
 						openPrm.forceReopen = true;
-						openPrm.uTrg = treeData.uEv.uTrg;
-						openPrm.uLoc = treeData.uLoc;
+						openPrm.uTrg = tdat.uEv.uTrg;
+						openPrm.uLoc = tdat.uLoc;
 						ux.doOpenPopup(openPrm);
 					}
 				}
@@ -3039,8 +3111,8 @@ ux.treeItemProcessEvent = function(treeId) {
 		}
 	}
 
-	treeData.uEv = null;
-	treeData.evp = null;
+	tdat.uEv = null;
+	tdat.evp = null;
 }
 
 ux.treeCtrlImageClickHandler = function(uEv) {
@@ -3053,14 +3125,14 @@ ux.treeCtrlImageClickHandler = function(uEv) {
 }
 
 ux.treeSelectItem = function(evp, single, toggle) {
+	var tdat = ux.getTreeDat(evp);
 	var i = evp.uVisualIdx;
-	var tevp = evp.uTevp;
-	ux.treedatamap[tevp.uId].lastSelIdx = i;
+	tdat.uLastSelIdx = i;
 	if (single) {
 		ux.treeSelectItemRange(evp, i, i);
 	} else{
-		var tElem = _id(tevp.uLblBase + tevp.uItemList[i].idx)
-		var selObj = _id(tevp.uSelItemId);
+		var tElem = _id(tdat.uLblBase + tdat.uItemList[i].idx)
+		var selObj = _id(tdat.uSelItemId);
 		if (toggle) {
 			if(selObj.options[i].selected) {
 				ux.treeSelect(evp, tElem, selObj, i, false);
@@ -3080,10 +3152,10 @@ ux.treeSelectItemRange = function(evp, start, end) {
 		start = temp;
 	}
 
-	var tevp = evp.uTevp;
-	var selObj = _id(tevp.uSelItemId);
-	for(var i = 0; i < tevp.uItemList.length; i++) {
-		var tElem = _id(tevp.uLblBase + tevp.uItemList[i].idx)
+	var tdat = ux.getTreeDat(evp);
+	var selObj = _id(tdat.uSelItemId);
+	for(var i = 0; i < tdat.uItemList.length; i++) {
+		var tElem = _id(tdat.uLblBase + tdat.uItemList[i].idx)
 		if(i >= start && i <= end) {
 			ux.treeSelect(evp, tElem, selObj, i, true);
 		} else {
@@ -3092,34 +3164,33 @@ ux.treeSelectItemRange = function(evp, start, end) {
 	}
 }
 
-ux.treeSendCommand = function(treeData) {
-	var evp = treeData.evp;
-	var tTypeElem = _id(evp.uTevp.uEventTypeId);
-	if(tTypeElem) {
-		tTypeElem.value = treeData.eventCode;
+ux.treeSendCommand = function(tdat) {
+	var evp = tdat.evp;
+	var elem = _id(tdat.uEventTypeId);
+	if(elem) {
+		elem.value = tdat.eventCode;
 	}
 
-	var uEv = treeData.uEv;
+	var uEv = tdat.uEv;
 	uEv.evp = evp;
 	ux.post(uEv);
 }
 
 ux.treeSelect = function(evp, tElem, selObj, i, select) {
-	var tevp = evp.uTevp;
-	var treeData = ux.treedatamap[tevp.uId];
-	var j = treeData.selList.indexOf(i);
+	var tdat = ux.getTreeDat(evp);
+	var j = tdat.selList.indexOf(i);
 	if (j >= 0) {
 		if(!select) {
-			treeData.selList = treeData.selList.splice(j + 1, 1);
+			tdat.selList = tdat.selList.splice(j + 1, 1);
 		}
 	} else if (select) {
-		treeData.selList.push(i);
+		tdat.selList.push(i);
 	}
 
 	if (select) {
-		tElem.className = tevp.uSel;
+		tElem.className = tdat.uSel;
 	} else {
-		tElem.className = tevp.uNorm;
+		tElem.className = tdat.uNorm;
 	}
 	selObj.options[i].selected = select;
 }

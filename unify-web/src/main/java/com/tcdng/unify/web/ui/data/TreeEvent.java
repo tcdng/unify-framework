@@ -31,11 +31,25 @@ public class TreeEvent {
     private String menuCode;
 
     private List<Long> itemIdList;
+    
+    private Long dropTrgItemId;
+    
+    private String srcLongName;
+    
+    private List<Long> srcItemIdList;
 
     public TreeEvent(TreeEventType type, String menuCode, List<Long> itemIdList) {
         this.type = type;
         this.menuCode = menuCode;
         this.itemIdList = itemIdList;
+    }
+
+    public TreeEvent(TreeEventType type, List<Long> itemIdList, Long dropTrgItemId, String srcLongName, List<Long> srcItemIdList) {
+        this.type = type;
+        this.itemIdList = itemIdList;
+        this.dropTrgItemId = dropTrgItemId;
+        this.srcLongName = srcLongName;
+        this.srcItemIdList = srcItemIdList;
     }
 
     public TreeEventType getType() {
@@ -48,5 +62,21 @@ public class TreeEvent {
 
     public List<Long> getItemIds() {
         return itemIdList;
+    }
+
+    public List<Long> getItemIdList() {
+        return itemIdList;
+    }
+
+    public Long getDropTrgItemId() {
+        return dropTrgItemId;
+    }
+
+    public String getSrcLongName() {
+        return srcLongName;
+    }
+
+    public List<Long> getSrcItemIdList() {
+        return srcItemIdList;
     }
 }

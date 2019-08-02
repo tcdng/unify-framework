@@ -176,8 +176,13 @@ public class Tree {
         return selectedItemIdList;
     }
 
-    public void registerEvent(TreeEventType type, String menuCode) {
-        eventQueue.offer(new TreeEvent(type, menuCode, selectedItemIdList));
+    public void registerEvent(TreeEventType eventType, String menuCode) {
+        eventQueue.offer(new TreeEvent(eventType, menuCode, selectedItemIdList));
+    }
+
+    public void registerEvent(TreeEventType eventType, Long dropTrgItemId, String srcLongName,
+            List<Long> srcItemIdList) {
+        eventQueue.offer(new TreeEvent(eventType, selectedItemIdList, dropTrgItemId, srcLongName, srcItemIdList));
     }
 
     public TreeEvent getEvent() {
@@ -232,11 +237,11 @@ public class Tree {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                         "Unknown category [" + type + "].");
             }
-            
-            markedTree.add(new TreeItem(typeInfo.getTreeItemTypeInfo(type), item));            
+
+            markedTree.add(new TreeItem(typeInfo.getTreeItemTypeInfo(type), item));
             return this;
         }
-        
+
         public Node<TreeItem> getLastNode() {
             return markedTree.getChainLast();
         }

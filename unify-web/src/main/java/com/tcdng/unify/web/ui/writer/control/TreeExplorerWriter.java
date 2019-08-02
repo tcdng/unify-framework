@@ -78,6 +78,9 @@ public class TreeExplorerWriter extends AbstractControlWriter {
 
         writer.writeStructureAndContent(treeExplorer.getMenuCodeCtrl());
         writer.writeStructureAndContent(treeExplorer.getSelectedCtrlIdCtrl());
+        writer.writeStructureAndContent(treeExplorer.getDropTrgItemIdCtrl());
+        writer.writeStructureAndContent(treeExplorer.getDropSrcIdCtrl());
+        writer.writeStructureAndContent(treeExplorer.getDropSrcItemIdsCtrl());
         writer.writeStructureAndContent(treeExplorer.getEventTypeCtrl());
         writer.write("</div>");
 
@@ -116,6 +119,9 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         writer.write('"');
         writer.write(",\"pSelCtrlId\":\"").write(treeExplorer.getSelectedCtrlIdCtrl().getId()).write('"');
         writer.write(",\"pSelItemId\":\"").write(treeExplorer.getSelectedItemIdsCtrl().getId()).write('"');
+        writer.write(",\"pDropTrgItemId\":\"").write(treeExplorer.getDropTrgItemIdCtrl().getId()).write('"');
+        writer.write(",\"pDropSrcId\":\"").write(treeExplorer.getDropSrcIdCtrl().getId()).write('"');
+        writer.write(",\"pDropSrcItemId\":\"").write(treeExplorer.getDropSrcItemIdsCtrl().getId()).write('"');
         writer.write(",\"pMenuCodeCtrlId\":\"").write(treeExplorer.getMenuCodeCtrl().getId()).write('"');
         writer.write(",\"pEventTypeId\":\"").write(treeExplorer.getEventTypeCtrl().getId()).write('"');
         writer.write(",\"pSel\": \"tsel\"");
@@ -159,16 +165,18 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         // Write item type information
         boolean appendSym = false;
         writer.write(",\"pItemTypeList\":[");
-        for (ExtendedTreeItemTypeInfo typeInfo : treeExplorer.getExtendedTreeItemTypeInfos()) {
+        for (ExtendedTreeItemTypeInfo extTypeInfo : treeExplorer.getExtendedTreeItemTypeInfos()) {
             if (appendSym) {
                 writer.write(",");
             } else {
                 appendSym = true;
             }
 
-            writer.write("{\"code\":\"").write(typeInfo.getTreeItemTypeInfo().getCode()).write("\"");
-            writer.write(",\"flags\":").write(typeInfo.getTreeItemTypeInfo().getEventFlags());
-            writer.write(",\"menu\":").writeJsonArray(typeInfo.getMenuSequence());
+            TreeItemTypeInfo typeInfo = extTypeInfo.getTreeItemTypeInfo();
+            writer.write("{\"code\":\"").write(typeInfo.getCode()).write("\"");
+            writer.write(",\"flags\":").write(typeInfo.getEventFlags());
+            writer.write(",\"acceptdrop\":").writeJsonArray(typeInfo.getAcceptDropList());
+            writer.write(",\"menu\":").writeJsonArray(extTypeInfo.getMenuSequence());
             writer.write("}");
         }
         writer.write("]");
@@ -193,6 +201,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         boolean isTreePolicy = tree.hasTreePolicy();
         do {
             TreeItem treeItem = ch.getItem();
+            TreeItemTypeInfo treeItemTypeInfo = treeItem.getTypeInfo();
             Long itemId = ch.getMark();
             visibleItemIds.add(itemId);
 
@@ -219,12 +228,17 @@ public class TreeExplorerWriter extends AbstractControlWriter {
             // TODO In future implement dynamic renderer
             writer.write("<span id=\"").write(captionIdBase).write(itemId);
             if (selectedItemIds.contains(itemId)) {
-                writer.write("\" class=\"tsel\">");
+                writer.write("\" class=\"tsel\"");
             } else {
-                writer.write("\" class=\"tnorm\">");
+                writer.write("\" class=\"tnorm\"");
             }
 
-            TreeItemTypeInfo treeItemTypeInfo = treeItem.getTypeInfo();
+            if (treeItemTypeInfo.isDraggable()) {
+                writer.write(" draggable=\"true\">");
+            } else {
+                writer.write(">");
+            }
+
             writeFileImageHtmlElement(writer, treeItemTypeInfo.getIcon(), null, "timg", null);
             writer.write("<span class=\"titem\">");
             if (isTreePolicy) {

@@ -26,6 +26,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
 import com.tcdng.unify.core.data.MarkedTree.Node;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
@@ -61,6 +62,12 @@ public class TreeExplorer extends AbstractMultiControl {
 
     private Control selectedCtrlIdCtrl;
 
+    private Control dropTrgItemIdCtrl;
+
+    private Control dropSrcIdCtrl;
+
+    private Control dropSrcItemIdsCtrl;
+
     private TreeEventType eventType;
 
     private String menuCode;
@@ -68,6 +75,12 @@ public class TreeExplorer extends AbstractMultiControl {
     private List<Long> singleSelectedItemId;
 
     private Long selectedCtrlId;
+
+    private Long dropTrgItemId;
+
+    private String dropSrcId;
+
+    private String dropSrcItemIds;
 
     private Tree tree;
 
@@ -77,6 +90,9 @@ public class TreeExplorer extends AbstractMultiControl {
         menuCodeCtrl = (Control) addInternalChildControl("!ui-hidden binding:menuCode");
         selectedItemIdsCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedItemIds");
         selectedCtrlIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedCtrlId");
+        dropTrgItemIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:dropTrgItemId");
+        dropSrcIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:dropSrcId");
+        dropSrcItemIdsCtrl = (Control) addInternalChildControl("!ui-hidden binding:dropSrcItemIds");
         singleSelectedItemId = new ArrayList<Long>(1);
         singleSelectedItemId.add(null);
     }
@@ -86,6 +102,9 @@ public class TreeExplorer extends AbstractMultiControl {
         addPageAlias(menuCodeCtrl);
         addPageAlias(selectedItemIdsCtrl);
         addPageAlias(selectedCtrlIdCtrl);
+        addPageAlias(dropTrgItemIdCtrl);
+        addPageAlias(dropSrcIdCtrl);
+        addPageAlias(dropSrcItemIdsCtrl);
         addPageAlias(eventTypeCtrl);
     }
 
@@ -99,11 +118,20 @@ public class TreeExplorer extends AbstractMultiControl {
         tree.expand(selectedCtrlId);
     }
 
+    @SuppressWarnings("unchecked")
     @Action
     public void executeEventPath() throws UnifyException {
         String treeEventPath = getTreeEventPath();
         if (!StringUtils.isBlank(treeEventPath)) {
-            tree.registerEvent(eventType, menuCode);
+            if (TreeEventType.TREEITEM_DROP.equals(eventType)) {
+                String srcLongName = getPageManager().getLongName(dropSrcId);
+                List<Long> srcItemIdList =
+                        DataUtils.convert(List.class, Long.class, StringUtils.commaSplit(dropSrcItemIds), null);
+                tree.registerEvent(eventType, dropTrgItemId, srcLongName, srcItemIdList);
+            } else {
+                tree.registerEvent(eventType, menuCode);
+            }
+
             getRequestContextUtil().setCommandResponsePath(treeEventPath);
             menuCode = null;
         }
@@ -112,8 +140,7 @@ public class TreeExplorer extends AbstractMultiControl {
     @SuppressWarnings("unchecked")
     public void setTree(Tree tree) throws UnifyException {
         this.tree = tree;
-        this.tree.setTreePolicy(
-                (MarkedTreePolicy<TreeItem>) getComponent(getUplAttribute(String.class, "treeRule")));
+        this.tree.setTreePolicy((MarkedTreePolicy<TreeItem>) getComponent(getUplAttribute(String.class, "treeRule")));
     }
 
     public TreePolicy getTreePolicy() {
@@ -135,15 +162,15 @@ public class TreeExplorer extends AbstractMultiControl {
     public String getTreeEventPath() throws UnifyException {
         return getUplAttribute(String.class, "treeEventPath");
     }
-    
+
     public String getMenuId() throws UnifyException {
         return getPrefixedId("m_");
     }
-    
+
     public String getMenuBaseId() throws UnifyException {
         return getPrefixedId("mb_");
     }
-    
+
     public String getMenuSeperatorId() throws UnifyException {
         return getPrefixedId("sp_");
     }
@@ -164,12 +191,48 @@ public class TreeExplorer extends AbstractMultiControl {
         return selectedCtrlIdCtrl;
     }
 
+    public Control getDropTrgItemIdCtrl() {
+        return dropTrgItemIdCtrl;
+    }
+
+    public Control getDropSrcIdCtrl() {
+        return dropSrcIdCtrl;
+    }
+
+    public Control getDropSrcItemIdsCtrl() {
+        return dropSrcItemIdsCtrl;
+    }
+
     public TreeEventType getEventType() {
         return eventType;
     }
 
     public void setEventType(TreeEventType eventType) {
         this.eventType = eventType;
+    }
+
+    public Long getDropTrgItemId() {
+        return dropTrgItemId;
+    }
+
+    public void setDropTrgItemId(Long dropTrgItemId) {
+        this.dropTrgItemId = dropTrgItemId;
+    }
+
+    public String getDropSrcId() {
+        return dropSrcId;
+    }
+
+    public void setDropSrcId(String dropSrcId) {
+        this.dropSrcId = dropSrcId;
+    }
+
+    public String getDropSrcItemIds() {
+        return dropSrcItemIds;
+    }
+
+    public void setDropSrcItemIds(String dropSrcItemIds) {
+        this.dropSrcItemIds = dropSrcItemIds;
     }
 
     public String getMenuCode() {
