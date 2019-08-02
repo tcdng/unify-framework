@@ -711,12 +711,14 @@ z-index:400;}
 .ui-treeexplorer .tnorm:hover {background-color:#E6EBF9;}
 .ui-treeexplorer .titem {display:inline-block;padding:2px; vertical-align: top;}
 .ui-treeexplorer .timg {height:18px;width:18px;}
+.ui-treeexplorer .ticon {margin-left:3px;height:18px;width:18px;}
+.ui-treeexplorer .ticond {border-left:3px solid #AAAAAA;height:18px;width:18px;}
 .ui-treeexplorer .tindent {display:inline-block;height:18px;width:18px;padding:0px;}
 
 .tree-popup {position: absolute; visibility: hidden; width: auto; z-index: 300;
 	background-color: #F0F0F0;}
 .tree-popup ul {list-style: none; padding: 2px; position: absolute; top: 100%;
-    border: 1px solid #808080; background-color: #F0F0F0;}
+    border: 1px solid #808080; background-color: #F0F0F0;min-width:120px;}
 .tree-popup ul li {float: none; position: relative;}
 .tree-popup .msep {border-top:1px solid #AAA; padding-top:4px;margin-top:4px;}
 .tree-popup .mnrm {}

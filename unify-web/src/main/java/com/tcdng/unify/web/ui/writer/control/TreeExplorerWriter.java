@@ -126,8 +126,11 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         writer.write(",\"pEventTypeId\":\"").write(treeExplorer.getEventTypeCtrl().getId()).write('"');
         writer.write(",\"pSel\": \"tsel\"");
         writer.write(",\"pNorm\":\"tnorm\"");
+        writer.write(",\"pIco\": \"ticon\"");
+        writer.write(",\"pIcod\":\"ticond\"");
         writer.write(",\"pCtrlBase\":\"").write(treeExplorer.getControlImgIdBase()).write('"');
         writer.write(",\"pLblBase\":\"").write(treeExplorer.getCaptionIdBase()).write('"');
+        writer.write(",\"pIconBase\":\"").write(treeExplorer.getIconIdBase()).write('"');
 
         // Added to be able to push values on tree event
         List<String> pageNames = getPageManager().getExpandedReferences(treeExplorer.getId());
@@ -197,6 +200,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         String expandedSrc = tree.getExpandedIcon();
         String ctrlIdBase = tree.getControlImgIdBase();
         String captionIdBase = tree.getCaptionIdBase();
+        String iconIdBase = tree.getIconIdBase();
         int chIndent = indent + 1;
         boolean isTreePolicy = tree.hasTreePolicy();
         do {
@@ -239,7 +243,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
                 writer.write(">");
             }
 
-            writeFileImageHtmlElement(writer, treeItemTypeInfo.getIcon(), null, "timg", null);
+            writeFileImageHtmlElement(writer, treeItemTypeInfo.getIcon(), iconIdBase + itemId, "ticon", null);
             writer.write("<span class=\"titem\">");
             if (isTreePolicy) {
                 writer.writeWithHtmlEscape(
@@ -273,6 +277,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
             }
 
             writer.write("{\"idx\":").write(ch.getMark());
+            writer.write(",\"pidx\":").write(node.getMark());
             writer.write(",\"type\":\"").write(treeItemTypeInfo.getCode()).write('"');
             int flags = 0;
             if (ch.isParent()) {

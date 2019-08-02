@@ -268,6 +268,10 @@ public class TreeExplorer extends AbstractMultiControl {
         return getPrefixedId("ctrl_");
     }
 
+    public String getIconIdBase() throws UnifyException {
+        return getPrefixedId("icon_");
+    }
+
     public String getCaptionIdBase() throws UnifyException {
         return getPrefixedId("cap_");
     }
