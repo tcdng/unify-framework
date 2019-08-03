@@ -2930,6 +2930,7 @@ ux.rigTreeExplorer = function(rgp) {
 
 				if ((flags & TREEITEM_DRAG.mask) > 0) {
 					ux.attachEventHandler(elm, "dragstart", ux.treeItemDragStartHandler, evp);
+					ux.attachEventHandler(elm, "dragexit", ux.treeItemDragExitHandler, evp);
 				}
 
 				if ((flags & TREEITEM_DROP.mask) > 0) {
@@ -3002,6 +3003,10 @@ ux.treeItemDragStartHandler = function(uEv) {
 	uEv.dataTransfer.dropEffect = "move";
 }
 
+ux.treeItemDragExitHandler = function(uEv) {
+	ux.srcTreeId = null;
+}
+
 ux.treeItemDragEnterHandler = function(uEv) {
 	if (ux.treeItemAcceptDropLoad(uEv)) {
 
@@ -3048,7 +3053,6 @@ ux.treeItemDropHandler = function(uEv) {
 		}
 		_id(trgtdat.uDropSrcItemId).value = srcIds;
 		
-		ux.srcTreeId = null;
 		ux.post(uEv);
 	}
 }
