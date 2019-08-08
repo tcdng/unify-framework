@@ -97,6 +97,19 @@ public interface ControllerManager extends UnifyComponent {
     void executeController(ClientRequest request, ClientResponse response) throws UnifyException;
 
     /**
+     * Executes a controller action.
+     * 
+     * @param controllerName
+     *            the controller name
+     * @param actionName
+     *            the action name
+     * @return the action string
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String executeController(String controllerName, String actionName) throws UnifyException;
+
+    /**
      * Populates the property of a controller.
      * 
      * @param controllerName
