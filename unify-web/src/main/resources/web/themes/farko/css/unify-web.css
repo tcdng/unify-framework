@@ -70,6 +70,9 @@ z-index:400;}
 
 .ui-unordered {}
 
+.ui-shadedlist {width:100%;font-weight:bold; color:#000;}
+.ui-shadedlist .slcap {width:20%; padding:2px;background-color:#ECECEC;}
+.ui-shadedlist .slcnt {padding:2px;background-color:#ECECEC;}
 
 /********************* CONTAINERS ***************************/
 /** Document */
@@ -264,6 +267,9 @@ z-index:400;}
 
 /** Search criteria panel */
 .ui-searchcriteriapanel {border:1px solid #A9A9A9; background-color: #FFF;}
+
+/** Shaded list panel */
+.ui-shadedlistpanel {border:1px solid #A9A9A9; background-color: #FFF;}
 
 /** Table CRUD panel*/
 .ui-tablecrudpanel {}
