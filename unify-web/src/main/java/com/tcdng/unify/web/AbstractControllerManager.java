@@ -414,6 +414,12 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     }
 
     @Override
+    public String executeController(String controllerName, String actionName) throws UnifyException {
+        Controller controller = getController(controllerName);
+        return executePageCall((PageController) controller, actionName);
+    }
+
+    @Override
     public void populateController(String controllerName, String property, Object value) throws UnifyException {
         Controller controller = getController(controllerName);
         DataUtils.setNestedBeanProperty(controller, property, value);

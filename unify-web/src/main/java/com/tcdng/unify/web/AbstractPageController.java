@@ -344,28 +344,26 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     }
 
     /**
-     * Writes value to another page controller in current session.
+     * Fires action of a page controller in current session.
      * 
      * @param controllerName
-     *            the target controller
-     * @param propertyName
-     *            the controller property to set
-     * @param value
-     *            the value to set
+     *            the target controller name
+     * @param actionName
+     *            the controller action to fire
+     * @result the action result mapping
      * @throws UnifyException
      *             if an error occurs
      */
-    @Deprecated
-    protected void writeValueTo(String controllerName, String propertyName, Object value) throws UnifyException {
-        ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
-                .populateController(controllerName, propertyName, value);
+    protected String fireControllerAction(String controllerName, String actionName) throws UnifyException {
+        return ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
+                .executeController(controllerName, actionName);
     }
 
     /**
-     * Writes value to another page controller in current session.
+     * Writes value to another page controller's property in current session.
      * 
      * @param controllerName
-     *            the target controller
+     *            the target controller name
      * @param propertyName
      *            the controller property to set
      * @param value
@@ -373,7 +371,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void populate(String controllerName, String propertyName, Object value) throws UnifyException {
+    protected void writeControllerProperty(String controllerName, String propertyName, Object value) throws UnifyException {
         ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
                 .populateController(controllerName, propertyName, value);
     }
