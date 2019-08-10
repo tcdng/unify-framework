@@ -478,14 +478,17 @@ public class TableWriter extends AbstractControlWriter {
                         }
 
                         if (isWindowed || isHideMultiSelectBorder) {
-                            writer.write(" style=\"");
-                            if (!StringUtils.isBlank(columnStyle)) {
-                                writer.write(columnStyle);
-                            }
                             if (columnIndex == 0) {
-                                writer.write("border-left:0px;");
+                                writer.write(" style=\"border-left:0px;");
+                                if (!StringUtils.isBlank(columnStyle)) {
+                                    writer.write(columnStyle);
+                                }
+                                writer.write("\"");
+                            } else {
+                                if (!StringUtils.isBlank(columnStyle)) {
+                                    writer.write(" style=\"").write(columnStyle).write("\"");
+                                }
                             }
-                            writer.write("\"");
                         } else {
                             writeTagStyle(writer, columnStyle);
                         }
