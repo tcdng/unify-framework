@@ -77,6 +77,14 @@ public interface Section extends UplComponent {
     boolean isBinding() throws UnifyException;
 
     /**
+     * Returns true if section does not display widgets captions
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isWidgetCaptionless() throws UnifyException;
+
+    /**
      * Returns the section hidden attribute
      * 
      * @throws UnifyException
