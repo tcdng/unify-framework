@@ -160,6 +160,7 @@ public class FormWriter extends AbstractContainerWriter {
             rows++;
         }
 
+        boolean isWidgetCaptionless = section.isWidgetCaptionless();
         RequestContextUtil requestContextUtil = getRequestContextUtil();
         int columnWidth = 100 / columns;
         for (int i = 0; i < itemCount;) {
@@ -184,26 +185,28 @@ public class FormWriter extends AbstractContainerWriter {
                         caption = widget.getUplAttribute(String.class, "caption");
                     }
 
-                    writer.write("<td class=\"secLabel\">");
-                    if (caption != null) {
-                        writer.writeWithHtmlEscape(caption);
-                        if (captionSuffix != null) {
-                            writer.write(captionSuffix);
+                    if (!isWidgetCaptionless) {
+                        writer.write("<td class=\"secLabel\">");
+                        if (caption != null) {
+                            writer.writeWithHtmlEscape(caption);
+                            if (captionSuffix != null) {
+                                writer.write(captionSuffix);
+                            }
                         }
-                    }
-                    writer.write("</td>");
+                        writer.write("</td>");
 
-                    writer.write("<td class=\"secInputReq\">");
-                    if (widget instanceof Control) {
-                        if (((Control) widget).getRequired().isTrue()) {
-                            writer.write("<span>").write(form.getUplAttribute(String.class, "requiredSymbol"))
-                                    .write("</span>");
+                        writer.write("<td class=\"secInputReq\">");
+                        if (widget instanceof Control) {
+                            if (((Control) widget).getRequired().isTrue()) {
+                                writer.write("<span>").write(form.getUplAttribute(String.class, "requiredSymbol"))
+                                        .write("</span>");
+                            }
+
+                            // Add to save list
+                            requestContextUtil.addOnSaveContentWidget(widget.getId());
                         }
-
-                        // Add to save list
-                        requestContextUtil.addOnSaveContentWidget(widget.getId());
+                        writer.write("</td>");
                     }
-                    writer.write("</td>");
 
                     writer.write("<td class=\"secInput\"><div>");
                     writer.writeStructureAndContent(widget);

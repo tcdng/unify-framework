@@ -35,6 +35,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
         @UplAttribute(name = "binding", type = String.class),
         @UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true),
         @UplAttribute(name = "privilege", type = String.class),
+        @UplAttribute(name = "widgetCaptionless", type = boolean.class, defaultValue = "false"),
         @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false") })
 public class SectionImpl extends AbstractUplComponent implements Section {
 
@@ -66,6 +67,11 @@ public class SectionImpl extends AbstractUplComponent implements Section {
     @Override
     public List<String> getReferences() throws UnifyException {
         return getUplAttribute(UplElementReferences.class, "components").getLongNames();
+    }
+
+    @Override
+    public boolean isWidgetCaptionless() throws UnifyException {
+        return getUplAttribute(boolean.class, "widgetCaptionless");
     }
 
     @Override
