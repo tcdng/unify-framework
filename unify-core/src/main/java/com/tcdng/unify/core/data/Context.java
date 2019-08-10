@@ -56,8 +56,9 @@ public abstract class Context {
     }
 
     public Object removeAttribute(String name) {
-        Attribute attr = attributes.remove(name);
-        if (attr != null) {
+        Attribute attr = attributes.get(name);
+        if (attr != null && !attr.isSticky()) {
+            attributes.remove(name);
             return attr.getValue();
         }
 
@@ -66,12 +67,15 @@ public abstract class Context {
 
     public void removeAttributes(String... names) {
         for (String name : names) {
-            attributes.remove(name);
+            Attribute attr = attributes.get(name);
+            if (attr != null && !attr.isSticky()) {
+                attributes.remove(name);
+            }
         }
     }
 
-    public void clearAttributes() {
-        // Clear non-sticky items
+    public void removeAllAttributes() {
+        // Remove non-sticky attributes
         if (!attributes.isEmpty()) {
             Iterator<Map.Entry<String, Attribute>> iterator = attributes.entrySet().iterator();
             while (iterator.hasNext()) {
