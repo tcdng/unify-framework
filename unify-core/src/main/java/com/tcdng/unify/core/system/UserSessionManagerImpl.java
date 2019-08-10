@@ -224,7 +224,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
             db().updateAll(new UserSessionTrackingQuery().id(sessionContext.getId()),
                     new Update().add("userLoginId", null).add("userName", null));
             sessionContext.setUserToken(null);
-            sessionContext.clearAttributes();
+            sessionContext.removeAllAttributes();
         }
     }
 

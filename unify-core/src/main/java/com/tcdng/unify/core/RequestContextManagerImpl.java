@@ -67,7 +67,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
     public void unloadRequestContext() {
         RequestContext requestContext = requestContextThreadLocal.get().getRequestContext();
         if (requestContext != null) {
-            requestContext.clearAttributes();
+            requestContext.removeAllAttributes();
         }
 
         requestContextThreadLocal.remove();
