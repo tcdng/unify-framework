@@ -191,21 +191,35 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     }
 
     /**
-     * Writes tag class attribute.
+     * Writes tag class attribute with extra classes.
      * 
      * @param writer
      *            the writer to use to write
      * @param widget
      *            the widget whose style class to write
+     * @param extraLeading
+     *            indicates extra classes should be leading
+     * @param extraClasses
+     *            the extra classes to write
      * @throws UnifyException
      *             if an error occurs
      */
-    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, String... extraClasses)
-            throws UnifyException {
-        writer.write(" class=\"").write(widget.getStyleClass());
-        for (String extraClass : extraClasses) {
-            if (extraClass != null) {
-                writer.write(" ").write(extraClass);
+    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, boolean extraLeading,
+            String... extraClasses) throws UnifyException {
+        writer.write(" class=\"");
+        if (extraLeading) {
+            for (String extraClass : extraClasses) {
+                if (extraClass != null) {
+                    writer.write(extraClass).write(" ");
+                }
+            }
+            writer.write(widget.getStyleClass());
+        } else {
+            writer.write(widget.getStyleClass());
+            for (String extraClass : extraClasses) {
+                if (extraClass != null) {
+                    writer.write(" ").write(extraClass);
+                }
             }
         }
 

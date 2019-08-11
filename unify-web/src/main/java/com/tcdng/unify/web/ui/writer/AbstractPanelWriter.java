@@ -74,7 +74,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
         String backImageSrc = panel.getBackImageSrc();
         if (!StringUtils.isBlank(backImageSrc)) {
             writeTagId(writer, panel);
-            writeTagStyleClass(writer, panel);
+            writeTagStyleClass(writer, panel, true, "ui-panel");
             writer.write(" style=\"background: url('");
             writer.writeFileImageContextURL(backImageSrc);
             writer.write("') no-repeat;background-size:100% 100%;");
