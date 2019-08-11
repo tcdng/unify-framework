@@ -54,7 +54,7 @@ public class TableWriter extends AbstractControlWriter {
         table.pageCalculations();
         writer.write("<div");
         if (table.isContentEllipsis()) {
-            writeTagStyleClass(writer, table, "ui-table-cellipsis");
+            writeTagStyleClass(writer, table, false, "ui-table-cellipsis");
         } else {
             writeTagStyleClass(writer, table);
         }
