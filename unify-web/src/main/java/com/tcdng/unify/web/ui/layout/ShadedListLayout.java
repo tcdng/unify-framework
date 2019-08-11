@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.web.ui.layout;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
@@ -28,8 +29,13 @@ import com.tcdng.unify.web.ui.AbstractLayout;
  * @since 1.0
  */
 @Component("ui-shadedlist")
-@UplAttributes({ @UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "true"),
-        @UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
+@UplAttributes({
+    @UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "true"),
+    @UplAttribute(name = "inlineMode", type = boolean.class, defaultValue = "false"),
+    @UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
 public class ShadedListLayout extends AbstractLayout {
 
+    public boolean isInlineMode() throws UnifyException {
+        return getUplAttribute(boolean.class, "inlineMode");
+    }
 }

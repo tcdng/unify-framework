@@ -45,23 +45,51 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
         writeTagStyleClass(writer, shadedListLayout.getStyleClass());
         writeTagStyle(writer, shadedListLayout.getStyle());
         writer.write(">");
-        for (String longName : container.getLayoutWidgetLongNames()) {
-            Widget widget = container.getWidgetByLongName(longName);
-            if (widget.isVisible()) {
-                writer.write("<tr>");
-                if (shadedListLayout.isShowCaption()) {
-                    writer.write("<td class=\"slcap\">");
-                    if (!StringUtils.isBlank(widget.getCaption())) {
-                        writer.write(widget.getCaption());
-                        writer.writeNotNull(shadedListLayout.getCaptionSuffix());
+        if (shadedListLayout.isInlineMode()) {
+            writer.write("<tr>");
+            int colWidth =100;
+            int itemCount = container.getLayoutWidgetLongNames().size();
+            if (itemCount > 0) {
+                colWidth = colWidth / itemCount;
+            }
+            
+            for (String longName : container.getLayoutWidgetLongNames()) {
+                writer.write("<td class=\"islbase\" style=\"width:").write(colWidth).write("%;\">");
+                Widget widget = container.getWidgetByLongName(longName);
+                if (widget.isVisible()) {
+                    writer.write("<span class=\"islcap\">");
+                    String caption = widget.getCaption();
+                    if (!StringUtils.isBlank(caption)) {
+                        writer.write(caption);
+                        if(caption.charAt(caption.length() - 1) != '?') {
+                            writer.writeNotNull(shadedListLayout.getCaptionSuffix());
+                        }
                     }
-                    writer.write("</td>");
+                    writer.write("</span>");
+                    writer.writeStructureAndContent(widget);
                 }
-                
-                writer.write("<td class=\"slcnt\">");
-                writer.writeStructureAndContent(widget);
                 writer.write("</td>");
-                writer.write("</tr>");
+            }
+            writer.write("</tr>");
+        } else {
+            for (String longName : container.getLayoutWidgetLongNames()) {
+                Widget widget = container.getWidgetByLongName(longName);
+                if (widget.isVisible()) {
+                    writer.write("<tr>");
+                    if (shadedListLayout.isShowCaption()) {
+                        writer.write("<td class=\"slcap\">");
+                        if (!StringUtils.isBlank(widget.getCaption())) {
+                            writer.write(widget.getCaption());
+                            writer.writeNotNull(shadedListLayout.getCaptionSuffix());
+                        }
+                        writer.write("</td>");
+                    }
+                    
+                    writer.write("<td class=\"slcnt\">");
+                    writer.writeStructureAndContent(widget);
+                    writer.write("</td>");
+                    writer.write("</tr>");
+                }
             }
         }
         writer.write("</table>");

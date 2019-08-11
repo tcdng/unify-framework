@@ -70,9 +70,11 @@ z-index:400;}
 
 .ui-unordered {}
 
-.ui-shadedlist {width:100%;font-weight:bold; color:#000;}
-.ui-shadedlist .slcap {width:20%; padding:2px;background-color:#ECECEC;}
-.ui-shadedlist .slcnt {padding:2px;background-color:#ECECEC;}
+.ui-shadedlist {width:100%;color:#000;}
+.ui-shadedlist .slcap {width:20%; padding:2px;font-weight:bold;font-size:10pt;background-color:#DCDCDC;}
+.ui-shadedlist .slcnt {padding:2px;background-color:#DCDCDC;}
+.ui-shadedlist .islbase {padding:2px;background-color:#DCDCDC;}
+.ui-shadedlist .islcap {padding-right:4px;font-weight:bold;font-size:10pt;}
 
 /********************* CONTAINERS ***************************/
 /** Document */
