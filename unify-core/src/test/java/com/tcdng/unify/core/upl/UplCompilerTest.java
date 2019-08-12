@@ -492,6 +492,18 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testCompileWithAllAncestorAttributeExtension() throws Exception {
+        UplDocumentAttributes uplDocumentAttributes =
+                uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumentk");
+
+        // Assert attribute extension
+        UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName("test-upldocumentk.fifthId");
+
+        TestElementA inlineUea = uea.getAttributeValue(TestElementA.class, "user");
+        assertEquals("Dax", inlineUea.getUplAttribute(String.class, "name"));
+    }
+
+    @Test
     public void testCompileAttributeWithMultipleInlineMultiline() throws Exception {
         UplDocumentAttributes uplDocumentAttributes =
                 uplCompiler.compileComponentDocuments(Locale.getDefault(), "test-upldocumentc-m");
