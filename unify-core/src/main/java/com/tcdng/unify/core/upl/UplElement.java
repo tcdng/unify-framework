@@ -304,7 +304,11 @@ public class UplElement implements UplElementAttributes {
         }
 
         for (String attribute : uplElement.getAttributeNames()) {
-            if (!uplAttributes.containsKey(attribute)) {
+            // Fix attribute merge 12/08/18
+            // Attribute values should be updated both ways with those of this element having preference
+            if (uplAttributes.containsKey(attribute)) {
+                uplElement.setAttributeValue(attribute, uplAttributes.get(attribute));
+            } else {
                 uplAttributes.put(attribute, uplElement.getAttributeValue(attribute));
             }
         }
