@@ -61,6 +61,11 @@ public enum ColumnType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return AUTO.code;
+    }
+
     public static ColumnType fromCode(String code) {
         return EnumUtils.fromCode(ColumnType.class, code);
     }

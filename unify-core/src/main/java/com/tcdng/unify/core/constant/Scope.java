@@ -38,6 +38,11 @@ public enum Scope implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return SESSION.code;
+    }
+
     public static Scope fromCode(String code) {
         return EnumUtils.fromCode(Scope.class, code);
     }

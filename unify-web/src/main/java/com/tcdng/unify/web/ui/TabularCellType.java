@@ -46,6 +46,11 @@ public enum TabularCellType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return MIDDLE.code;
+    }
+
     public String styleClass() {
         return styleClass;
     }

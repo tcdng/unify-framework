@@ -58,6 +58,11 @@ public enum DataType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return STRING.code;
+    }
+
     public Class<?> javaClass() {
         return javaClass;
     }

@@ -54,6 +54,11 @@ public enum FileAttachmentType implements EnumConst {
         return code;
     }
 
+    @Override
+    public String defaultCode() {
+        return TEXT.code;
+    }
+
     public String extensions() {
         return extensions;
     }

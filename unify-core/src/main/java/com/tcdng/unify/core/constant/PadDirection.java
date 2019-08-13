@@ -40,6 +40,11 @@ public enum PadDirection implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return RIGHT.code;
+    }
+
     public static PadDirection fromCode(String code) {
         return EnumUtils.fromCode(PadDirection.class, code);
     }

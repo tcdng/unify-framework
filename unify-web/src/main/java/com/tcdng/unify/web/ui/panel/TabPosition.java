@@ -39,6 +39,11 @@ public enum TabPosition implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return TOP.code;
+    }
+
     public static TabPosition fromCode(String code) {
         return EnumUtils.fromCode(TabPosition.class, code);
     }

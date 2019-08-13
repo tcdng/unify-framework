@@ -37,6 +37,11 @@ public enum VAlignType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return MIDDLE.code;
+    }
+
     public static VAlignType fromCode(String code) {
         return EnumUtils.fromCode(VAlignType.class, code);
     }

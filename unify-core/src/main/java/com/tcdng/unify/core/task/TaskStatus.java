@@ -41,6 +41,11 @@ public enum TaskStatus implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return INITIALIZED.code;
+    }
+
     public static TaskStatus fromCode(String code) {
         return EnumUtils.fromCode(TaskStatus.class, code);
     }

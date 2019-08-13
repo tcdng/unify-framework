@@ -40,6 +40,11 @@ public enum FrequencyUnit implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return SECOND.code;
+    }
+
     public static FrequencyUnit fromCode(String code) {
         return EnumUtils.fromCode(FrequencyUnit.class, code);
     }

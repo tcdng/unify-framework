@@ -40,6 +40,11 @@ public enum MessageResult implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return OK.code;
+    }
+
     public static MessageResult fromCode(String code) {
         return EnumUtils.fromCode(MessageResult.class, code);
     }
