@@ -34,10 +34,15 @@ public final class EnumUtils {
                 @Override
                 protected EnumConstMap create(Class<? extends EnumConst> key, Object... params) throws Exception {
                     Map<String, EnumConst> map = new HashMap<String, EnumConst>();
+                    String defaultCode = null;
                     for (EnumConst enumConst : key.getEnumConstants()) {
                         map.put(enumConst.code(), enumConst);
+                        if (defaultCode == null) {
+                            defaultCode = enumConst.defaultCode();
+                        }
                     }
-                    return new EnumConstMap(key);
+
+                    return new EnumConstMap(key, defaultCode);
                 }
             };
 
@@ -63,19 +68,32 @@ public final class EnumUtils {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T extends EnumConst> T getDefault(Class<T> clazz) {
+        try {
+            return (T) enumConstMap.get(clazz).getDefaultConst();
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
     private static class EnumConstMap {
 
         private Map<String, EnumConst> mapByCode;
 
         private Map<String, EnumConst> mapByName;
 
-        public EnumConstMap(Class<? extends EnumConst> key) {
+        private EnumConst defaultConst;
+
+        public EnumConstMap(Class<? extends EnumConst> key, String defaultCode) {
             mapByCode = new HashMap<String, EnumConst>();
             mapByName = new HashMap<String, EnumConst>();
             for (EnumConst enumConst : key.getEnumConstants()) {
                 mapByCode.put(enumConst.code(), enumConst);
                 mapByName.put(enumConst.name().toLowerCase(), enumConst);
             }
+
+            this.defaultConst = mapByCode.get(defaultCode);
         }
 
         public EnumConst getByCode(String code) {
@@ -84,6 +102,10 @@ public final class EnumUtils {
 
         public EnumConst getByName(String name) {
             return mapByName.get(name.toLowerCase());
+        }
+
+        public EnumConst getDefaultConst() {
+            return defaultConst;
         }
     }
 }
