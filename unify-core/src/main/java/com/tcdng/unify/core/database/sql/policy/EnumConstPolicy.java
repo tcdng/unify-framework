@@ -45,20 +45,18 @@ public class EnumConstPolicy extends AbstractSqlDataTypePolicy {
     @SuppressWarnings("unchecked")
     @Override
     public void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal) {
+        EnumConst val= null;
         if (!StringUtils.isBlank(defaultVal)) {
-            EnumConst val= null;
-            if (!StringUtils.isBlank(defaultVal)) {
-                val = EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) defaultVal);
-                if (val == null) {
-                    val = EnumUtils.fromName((Class<? extends EnumConst>) type, (String) defaultVal);
-                }
-            }
-            
+            val = EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) defaultVal);
             if (val == null) {
-                val = EnumUtils.getDefault((Class<? extends EnumConst>) type);
+                val = EnumUtils.fromName((Class<? extends EnumConst>) type, (String) defaultVal);
             }
-            sb.append(" DEFAULT '").append(val.code()).append("'");
         }
+        
+        if (val == null) {
+            val = EnumUtils.getDefault((Class<? extends EnumConst>) type);
+        }
+        sb.append(" DEFAULT '").append(val.code()).append("'");
     }
 
     @Override
