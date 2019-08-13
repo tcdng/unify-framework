@@ -51,6 +51,11 @@ public enum SimpleDataType implements EnumConst {
         return type.code();
     }
 
+    @Override
+    public String defaultCode() {
+        return type.defaultCode();
+    }
+
     public DataType type() {
         return type;
     }

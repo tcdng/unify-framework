@@ -53,6 +53,11 @@ public enum MonthInYear implements EnumConst {
         return code;
     }
 
+    @Override
+    public String defaultCode() {
+        return JANUARY.code;
+    }
+
     public int javaCalendarIndex() {
         return javaIndex;
     }

@@ -40,6 +40,11 @@ public enum TestColorType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return RED.code;
+    }
+
     public static TestColorType fromCode(String code) {
         return EnumUtils.fromCode(TestColorType.class, code);
     }

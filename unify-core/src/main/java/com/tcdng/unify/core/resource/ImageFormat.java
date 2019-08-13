@@ -53,6 +53,11 @@ public enum ImageFormat implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return WILDCARD.code;
+    }
+
     public static ImageFormat fromCode(String code) {
         return EnumUtils.fromCode(ImageFormat.class, code);
     }

@@ -53,6 +53,11 @@ public enum ReportFormat implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return PDF.code;
+    }
+
     public static ReportFormat fromCode(String code) {
         return EnumUtils.fromCode(ReportFormat.class, code);
     }

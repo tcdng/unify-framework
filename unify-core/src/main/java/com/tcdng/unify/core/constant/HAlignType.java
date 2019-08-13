@@ -37,6 +37,11 @@ public enum HAlignType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return LEFT.code;
+    }
+
     public static HAlignType fromCode(String code) {
         return EnumUtils.fromCode(HAlignType.class, code);
     }

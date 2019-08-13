@@ -59,6 +59,11 @@ public enum FilterConditionType implements EnumConst {
         return code;
     }
 
+    @Override
+    public String defaultCode() {
+        return EQUALS.code;
+    }
+
     public Operator operator() {
         return operator;
     }

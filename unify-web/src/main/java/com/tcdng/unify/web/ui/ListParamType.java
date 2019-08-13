@@ -40,6 +40,11 @@ public enum ListParamType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return CONTROL.code;
+    }
+
     public static ListParamType fromCode(String code) {
         return EnumUtils.fromCode(ListParamType.class, code);
     }

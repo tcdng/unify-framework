@@ -41,6 +41,11 @@ public enum NetworkSecurityType implements EnumConst {
         return code;
     }
 
+    @Override
+    public String defaultCode() {
+        return SSL.code;
+    }
+
     public static NetworkSecurityType fromCode(String code) {
         return EnumUtils.fromCode(NetworkSecurityType.class, code);
     }

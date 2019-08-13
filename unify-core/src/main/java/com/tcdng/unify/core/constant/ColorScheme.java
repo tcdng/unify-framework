@@ -40,6 +40,11 @@ public enum ColorScheme implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return GRAY.code;
+    }
+
     public static ColorScheme fromCode(String code) {
         return EnumUtils.fromCode(ColorScheme.class, code);
     }

@@ -41,6 +41,11 @@ public enum BinaryLogicType implements EnumConst {
         return code;
     }
 
+    @Override
+    public String defaultCode() {
+        return AND.code;
+    }
+
     public static BinaryLogicType fromCode(String code) {
         return EnumUtils.fromCode(BinaryLogicType.class, code);
     }

@@ -40,6 +40,11 @@ public enum TaggedMessageType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return XML.code;
+    }
+
     public static TaggedMessageType fromCode(String code) {
         return EnumUtils.fromCode(TaggedMessageType.class, code);
     }
