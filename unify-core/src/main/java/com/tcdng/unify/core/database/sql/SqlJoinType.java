@@ -45,6 +45,11 @@ public enum SqlJoinType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return LEFT.code;
+    }
+
     public String sql() {
         return sql;
     }

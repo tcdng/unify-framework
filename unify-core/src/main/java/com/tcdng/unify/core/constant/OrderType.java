@@ -42,6 +42,11 @@ public enum OrderType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return ASCENDING.code;
+    }
+
     public static OrderType fromCode(String code) {
         return EnumUtils.fromCode(OrderType.class, code);
     }

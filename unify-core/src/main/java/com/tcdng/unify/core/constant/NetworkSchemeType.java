@@ -41,6 +41,11 @@ public enum NetworkSchemeType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return HTTP.code;
+    }
+
     public static NetworkSchemeType fromCode(String code) {
         return EnumUtils.fromCode(NetworkSchemeType.class, code);
     }

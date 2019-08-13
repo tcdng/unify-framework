@@ -44,6 +44,11 @@ public enum FieldDelimiterType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return COMMA.code;
+    }
+
     public char getCharacter() {
         return ch;
     }

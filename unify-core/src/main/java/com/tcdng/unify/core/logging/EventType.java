@@ -59,6 +59,11 @@ public enum EventType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return MISCELLANEOUS.code;
+    }
+
     public String colorMode() {
         return this.colorMode;
     }

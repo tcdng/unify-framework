@@ -42,6 +42,11 @@ public enum BooleanType implements EnumConst {
         return code;
     }
 
+    @Override
+    public String defaultCode() {
+        return FALSE.code;
+    }
+
     public static BooleanType fromCode(String code) {
         return EnumUtils.fromCode(BooleanType.class, code);
     }

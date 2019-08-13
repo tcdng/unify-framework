@@ -44,6 +44,11 @@ public enum SqlTableType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return TABLE.code;
+    }
+
     public boolean isView() {
         return view;
     }

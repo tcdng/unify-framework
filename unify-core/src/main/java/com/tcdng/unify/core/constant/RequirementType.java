@@ -42,6 +42,11 @@ public enum RequirementType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return NONE.code;
+    }
+
     public static RequirementType fromCode(String code) {
         return EnumUtils.fromCode(RequirementType.class, code);
     }

@@ -41,6 +41,11 @@ public enum ConstraintAction implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return SKIP.code;
+    }
+
     public static ConstraintAction fromCode(String code) {
         return EnumUtils.fromCode(ConstraintAction.class, code);
     }

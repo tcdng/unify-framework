@@ -42,6 +42,11 @@ public enum Gender implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return OTHER.code;
+    }
+
     public static Gender fromCode(String code) {
         return EnumUtils.fromCode(Gender.class, code);
     }

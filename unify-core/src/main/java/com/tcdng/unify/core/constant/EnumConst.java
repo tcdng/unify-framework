@@ -26,4 +26,6 @@ public interface EnumConst {
     String code();
 
     String name();
+
+    String defaultCode();
 }

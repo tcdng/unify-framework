@@ -50,6 +50,11 @@ public enum RemoteCallFormat implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return JSON.code;
+    }
+
     public boolean stringFormat() {
         return JSON.equals(this) || XML.equals(this);
     }

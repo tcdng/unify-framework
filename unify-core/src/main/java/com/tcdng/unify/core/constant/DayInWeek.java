@@ -48,6 +48,11 @@ public enum DayInWeek implements EnumConst {
         return code;
     }
 
+    @Override
+    public String defaultCode() {
+        return SUNDAY.code;
+    }
+
     public int javaCalendarIndex() {
         return javaIndex;
     }

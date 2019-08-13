@@ -38,6 +38,11 @@ public enum UserPlatform implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return DEFAULT.code;
+    }
+
     public static UserPlatform fromCode(String code) {
         return EnumUtils.fromCode(UserPlatform.class, code);
     }

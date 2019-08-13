@@ -48,6 +48,11 @@ public enum TreeEventType implements EnumConst {
         return this.code;
     }
 
+    @Override
+    public String defaultCode() {
+        return TREEITEM_CLICK.code;
+    }
+
     public int flag() {
         return this.flag;
     }
