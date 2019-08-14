@@ -128,12 +128,6 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
         return taskLauncher.launchTask(taskSetup);
     }
 
-    protected void addTaskMessage(TaskMonitor taskMonitor, String message, Object... params) throws UnifyException {
-        if (taskMonitor != null) {
-            taskMonitor.addMessage(resolveSessionMessage(message, params));
-        }
-    }
-
     protected void commit() throws UnifyException {
         databaseTransactionManager.commit();
     }
