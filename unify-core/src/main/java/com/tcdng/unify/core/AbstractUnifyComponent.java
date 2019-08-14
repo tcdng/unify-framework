@@ -33,6 +33,7 @@ import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.logging.LoggingLevel;
+import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.TokenUtils;
@@ -1223,6 +1224,25 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     protected String getExceptionMessage(LocaleType localeType, UnifyError err) throws UnifyException {
         return unifyComponentContext.getMessages().getMessage(getLocale(localeType), err.getErrorCode(),
                 err.getErrorParams());
+    }
+
+    /**
+     * Adds a message to supplied task monitor. Resolves message if supplied as a
+     * message token.
+     * 
+     * @param taskMonitor
+     *            the task monitor to add message to
+     * @param message
+     *            the message to add
+     * @param params
+     *            optional message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void addTaskMessage(TaskMonitor taskMonitor, String message, Object... params) throws UnifyException {
+        if (taskMonitor != null) {
+            taskMonitor.addMessage(resolveSessionMessage(message, params));
+        }
     }
 
     /**
