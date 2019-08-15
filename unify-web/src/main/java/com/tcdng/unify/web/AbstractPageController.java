@@ -350,7 +350,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      *            the target controller name
      * @param actionName
      *            the controller action to fire
-     * @result the action result mapping
+     * @return the action result mapping
      * @throws UnifyException
      *             if an error occurs
      */
