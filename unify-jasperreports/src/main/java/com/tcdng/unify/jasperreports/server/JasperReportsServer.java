@@ -166,6 +166,10 @@ public class JasperReportsServer extends AbstractReportServer {
                     getUnifyComponentContext().getWorkingPath());
 
             JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
+            if (ReportFormat.XLS.equals(report.getFormat()) || ReportFormat.XLSX.equals(report.getFormat())) {
+                jasperDesign.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
+            }
+
             if (report.getPageWidth() > 0) {
                 jasperDesign.setPageWidth(report.getPageWidth());
                 jasperDesign.setColumnWidth(
@@ -265,7 +269,7 @@ public class JasperReportsServer extends AbstractReportServer {
         sxmrc.setRemoveEmptySpaceBetweenColumns(true);
         sxmrc.setRemoveEmptySpaceBetweenRows(true);
         sxmrc.setWhitePageBackground(false);
-        sxmrc.setDetectCellType(true);
+        // sxmrc.setDetectCellType(true);
         return sxmrc;
     }
 }
