@@ -364,6 +364,21 @@ z-index:400;}
 .ui-windowpanel .wptitle {display:block; font-size:20px; color:#878787; background-color:#EDEDED;
 	margin:2px; padding:8px 14px;}
 
+
+/*********************** COMMON **********************/
+/** Popup Text Field */
+.ui-text-popup {position:relative}
+.ui-text-popup .tpbutton {width:24px; height:28px; padding:6px 4px; background-color: #E8E8E8 !important;
+    border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
+.ui-text-popup .tpbutton img {width:14px;height:14px;}
+.ui-text-popup .tread {}
+.ui-text-popup .tnread {text-align: right; padding-right: 4px;}
+.ui-text-popup .tplbutton {height:28px; padding:6px 4px; background-color: #E8E8E8 !important; color:#484848;
+    border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
+
+.ui-text-popup-win {position:absolute; display:none; width: auto; z-index: 300;color:#000;}
+.ui-text-popup-win span {display: inline-block !important;}
+
 /*********************** CONTROLS **********************/
 /** Assignment box */
 .ui-assignmentbox {}
@@ -408,8 +423,9 @@ z-index:400;}
 .ui-date {width: 160px;}
 .ui-date .dborder {border: solid 1px #A0A0A0; background-color: #FFF;}
 .ui-date .cnav {}
-.ui-date .cdisplay {width: 98px; height: 15px; margin: 2px; text-align: center; font-size: 8pt;}
+.ui-date .cdisplay {width: calc(100% - 100px); height: 15px; margin: 2px; text-align: center; font-size: 8pt;}
 .ui-date .ccontent {padding:4px;}
+.ui-date .ccontent td{padding:0px !important;border:0px !important;}
 .ui-date .ccontrol {height: 30px; text-align: center; padding: 4px 5px;}
 .ui-date .cactbutton {width: 75px;  padding: 4px 0px; cursor: pointer; font-size: 8pt;
     border: 1px solid #C8C8C8;}
@@ -604,6 +620,21 @@ z-index:400;}
 .ui-select .sslist .norm:hover {background-color: #B2B2B2; color: #FFF;}
 .ui-select .sslist .sel {background-color: #5970B2; color: #FFF;}
 
+/** Single Select (Mini)*/
+.ui-miniselect {width: 100px; font-size:7pt;}
+.ui-miniselect .ssborder {width:100%;max-height:280px; border: solid 1px #A0A0A0; background-color: #FFF;}
+.ui-miniselect .sslist a {display:block; padding:6px 4px; color:#2C2C2C;white-space:nowrap;
+    background-color: transparent; border: 0px; text-decoration: none;}
+.ui-miniselect .sslist .norm {}
+.ui-miniselect .sslist .norm:hover {background-color: #B2B2B2; color: #FFF;}
+.ui-miniselect .sslist .sel {background-color: #5970B2; color: #FFF;}
+.ui-miniselect .tpbutton {width:16px; height:18px; padding:2px 2px; background-color: #E8E8E8 !important;
+    border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
+.ui-miniselect .tpbutton img {width:10px;height:10px;}
+.ui-miniselect .tread {height:14px; font-size:7pt !important;}
+.ui-miniselect .tnread {text-align: right; padding-right: 2px;}
+.ui-miniselect .tplbutton {height:18px; padding:2px 2px; background-color: #E8E8E8 !important; color:#484848;
+    border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
 
 /** Simple CRUD table */
 .ui-simplecrudtable {width:100%;}
@@ -741,16 +772,3 @@ z-index:400;}
 
 /** Word Field */
 .ui-word {}
-
-/** Popup Text Field */
-.ui-text-popup {position:relative}
-.ui-text-popup .tpbutton {width:24px; height:28px; padding:6px 4px; background-color: #E8E8E8 !important;
-	border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
-.ui-text-popup .tpbutton img {width:14px;height:14px;}
-.ui-text-popup .tread {}
-.ui-text-popup .tnread {text-align: right; padding-right: 4px;}
-.ui-text-popup .tplbutton {height:28px; padding:6px 4px; background-color: #E8E8E8 !important; color:#484848;
-	border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
-
-.ui-text-popup-win {position:absolute; display:none; width: auto; z-index: 300;}
-.ui-text-popup-win span {display: inline-block;}
