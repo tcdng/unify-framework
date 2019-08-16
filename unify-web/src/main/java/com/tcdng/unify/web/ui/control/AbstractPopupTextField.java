@@ -38,7 +38,7 @@ public abstract class AbstractPopupTextField extends TextField {
 
     @Override
     public String getStyleClass() throws UnifyException {
-        return super.getStyleClass() + " ui-text-popup";
+        return "ui-text-popup " + super.getStyleClass();
     }
 
     public String getPopupButtonId() throws UnifyException {
