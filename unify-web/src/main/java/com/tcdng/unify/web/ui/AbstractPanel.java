@@ -73,6 +73,16 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     }
 
     @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
+
+    @Override
+    public boolean isSupportDisabled() {
+        return false;
+    }
+
+    @Override
     public void addEventListener(PanelEventListener listener) {
         if (listeners == null) {
             listeners = new ArrayList<PanelEventListener>();

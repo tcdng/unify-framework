@@ -151,10 +151,11 @@ public interface Widget extends UplComponent {
      * Check if widget is marked for column summary.
      * 
      * @return a true value if marked otherwise false
-     * @throws UnifyException if an error occurs
+     * @throws UnifyException
+     *             if an error occurs
      */
     boolean getColumnSelectSummary() throws UnifyException;
-    
+
     /**
      * Returns widget hint.
      * 
@@ -341,13 +342,26 @@ public interface Widget extends UplComponent {
      * but are not visible.
      * 
      * @return a true value if component is hidden
+     * @throws UnifyException
+     *             if an error occurs
      */
     boolean isHidden() throws UnifyException;
+
+    /**
+     * Indicates if container state of widget ignores state of container.
+     * 
+     * @return a true value if widget ignores parent state otherwise false.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isIgnoreParentState() throws UnifyException;
 
     /**
      * Indicates that a component is masked.
      * 
      * @return a true value if component is hidden
+     * @throws UnifyException
+     *             if an error occurs
      */
     boolean isMasked() throws UnifyException;
 

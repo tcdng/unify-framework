@@ -35,7 +35,8 @@ import com.tcdng.unify.web.util.WidgetUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "binding", type = String.class),
+@UplAttributes({
+        @UplAttribute(name = "binding", type = String.class),
         @UplAttribute(name = "styleClass", type = String.class, defaultValue = "$e{}"),
         @UplAttribute(name = "styleClassBinding", type = String.class),
         @UplAttribute(name = "style", type = String.class),
@@ -46,6 +47,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
         @UplAttribute(name = "hint", type = String.class),
         @UplAttribute(name = "hintBinding", type = String.class),
         @UplAttribute(name = "readOnly", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "ignoreParentState", type = boolean.class, defaultValue = "false"),
         @UplAttribute(name = "privilege", type = String.class),
         @UplAttribute(name = "fixedConforming", type = boolean.class, defaultValue = "false"),
         @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false"),
@@ -176,6 +178,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
+    public boolean isIgnoreParentState() throws UnifyException {
+        return getUplAttribute(boolean.class, "ignoreParentState");
+    }
+
+    @Override
     public boolean isMasked() throws UnifyException {
         return false;
     }
@@ -267,7 +274,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isContainerDisabled() throws UnifyException {
-        if (container != null) {
+        if (container != null && !isIgnoreParentState()) {
             return container.isContainerDisabled() || isDisabled();
         }
         return isDisabled();
@@ -285,7 +292,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isContainerEditable() throws UnifyException {
-        if (container != null) {
+        if (container != null && !isIgnoreParentState()) {
             return container.isContainerEditable() && isEditable();
         }
         return isEditable();
@@ -303,7 +310,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isContainerVisible() throws UnifyException {
-        if (container != null) {
+        if (container != null && !isIgnoreParentState()) {
             return container.isContainerVisible() && isVisible();
         }
         return isVisible();
