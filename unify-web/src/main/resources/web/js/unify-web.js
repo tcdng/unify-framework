@@ -626,7 +626,8 @@ ux.clear = function(uEv) {
 	var trgNms = uEv.evp.uRef;
 	if (trgNms) {
 		for (var i = 0; i < trgNms.length; i++) {
-			var elem = _id(trgNms[i]);
+			var pgNm = trgNms[i]
+			var elem = _id(pgNm);
 			if (elem) {
 				if (!elem.disabled && elem.type != "button") {
 					if (elem.type == "checkbox" || elem.type == "radio") {
@@ -636,6 +637,12 @@ ux.clear = function(uEv) {
 							elem.options[k].selected = "";
 						}
 					} else {
+						elem.value = "";
+					}
+					
+					// Check for facade 21/08/19
+					var elem = _id("fac_" + pgNm);
+					if (elem) {
 						elem.value = "";
 					}
 				}
