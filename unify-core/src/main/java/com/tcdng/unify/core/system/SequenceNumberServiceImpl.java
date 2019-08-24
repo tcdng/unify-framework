@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Synchronized;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
-import com.tcdng.unify.core.operation.Update;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumber;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumberQuery;
 import com.tcdng.unify.core.system.entities.ClusterSequenceBlock;

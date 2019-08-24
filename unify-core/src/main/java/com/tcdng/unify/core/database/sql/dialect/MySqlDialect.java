@@ -30,7 +30,7 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
-import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**

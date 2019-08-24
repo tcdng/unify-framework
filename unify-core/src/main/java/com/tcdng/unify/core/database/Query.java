@@ -20,29 +20,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.tcdng.unify.core.constant.OrderType;
-import com.tcdng.unify.core.operation.Amongst;
-import com.tcdng.unify.core.operation.AndBuilder;
-import com.tcdng.unify.core.operation.Between;
-import com.tcdng.unify.core.operation.Criteria;
-import com.tcdng.unify.core.operation.CriteriaBuilder;
-import com.tcdng.unify.core.operation.Equal;
-import com.tcdng.unify.core.operation.Greater;
-import com.tcdng.unify.core.operation.GreaterOrEqual;
-import com.tcdng.unify.core.operation.IsNotNull;
-import com.tcdng.unify.core.operation.IsNull;
-import com.tcdng.unify.core.operation.Less;
-import com.tcdng.unify.core.operation.LessOrEqual;
-import com.tcdng.unify.core.operation.Like;
-import com.tcdng.unify.core.operation.LikeBegin;
-import com.tcdng.unify.core.operation.LikeEnd;
-import com.tcdng.unify.core.operation.NotAmongst;
-import com.tcdng.unify.core.operation.NotBetween;
-import com.tcdng.unify.core.operation.NotEqual;
-import com.tcdng.unify.core.operation.NotLike;
-import com.tcdng.unify.core.operation.NotLikeBegin;
-import com.tcdng.unify.core.operation.NotLikeEnd;
-import com.tcdng.unify.core.operation.Order;
-import com.tcdng.unify.core.operation.Select;
+import com.tcdng.unify.core.criterion.Amongst;
+import com.tcdng.unify.core.criterion.And;
+import com.tcdng.unify.core.criterion.Between;
+import com.tcdng.unify.core.criterion.CompoundRestriction;
+import com.tcdng.unify.core.criterion.Equal;
+import com.tcdng.unify.core.criterion.Greater;
+import com.tcdng.unify.core.criterion.GreaterOrEqual;
+import com.tcdng.unify.core.criterion.IsNotNull;
+import com.tcdng.unify.core.criterion.IsNull;
+import com.tcdng.unify.core.criterion.Less;
+import com.tcdng.unify.core.criterion.LessOrEqual;
+import com.tcdng.unify.core.criterion.Like;
+import com.tcdng.unify.core.criterion.LikeBegin;
+import com.tcdng.unify.core.criterion.LikeEnd;
+import com.tcdng.unify.core.criterion.NotAmongst;
+import com.tcdng.unify.core.criterion.NotBetween;
+import com.tcdng.unify.core.criterion.NotEqual;
+import com.tcdng.unify.core.criterion.NotLike;
+import com.tcdng.unify.core.criterion.NotLikeBegin;
+import com.tcdng.unify.core.criterion.NotLikeEnd;
+import com.tcdng.unify.core.criterion.Order;
+import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.Select;
 
 /**
  * Query object.
@@ -54,7 +54,7 @@ public class Query<T extends Entity> implements Cloneable {
 
     private Class<T> entityClass;
 
-    private AndBuilder andBuilder;
+    private CompoundRestriction restrictions;
 
     private Select select;
 
@@ -79,8 +79,12 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public Query(Class<T> entityClass, boolean applyAppQueryLimit) {
+        this(entityClass, new And(), false);
+    }
+
+    public Query(Class<T> entityClass, CompoundRestriction restrictions, boolean applyAppQueryLimit) {
         this.entityClass = entityClass;
-        andBuilder = new AndBuilder();
+        this.restrictions = restrictions;
         this.applyAppQueryLimit = applyAppQueryLimit;
         mustMatch = true;
     }
@@ -90,102 +94,97 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public Query<T> amongst(String field, Collection<? extends Object> values) {
-        andBuilder.and(new Amongst(field, values));
+        restrictions.add(new Amongst(field, values));
         return this;
     }
 
     public Query<T> between(String field, Object lowerValue, Object upperValue) {
-        andBuilder.and(new Between(field, lowerValue, upperValue));
+        restrictions.add(new Between(field, lowerValue, upperValue));
         return this;
     }
 
     public Query<T> equals(String field, Object value) {
-        andBuilder.and(new Equal(field, value));
+        restrictions.add(new Equal(field, value));
         return this;
     }
 
     public Query<T> greater(String field, Object value) {
-        andBuilder.and(new Greater(field, value));
+        restrictions.add(new Greater(field, value));
         return this;
     }
 
     public Query<T> greaterEqual(String field, Object value) {
-        andBuilder.and(new GreaterOrEqual(field, value));
+        restrictions.add(new GreaterOrEqual(field, value));
         return this;
     }
 
     public Query<T> isNotNull(String field) {
-        andBuilder.and(new IsNotNull(field));
+        restrictions.add(new IsNotNull(field));
         return this;
     }
 
     public Query<T> isNull(String field) {
-        andBuilder.and(new IsNull(field));
+        restrictions.add(new IsNull(field));
         return this;
     }
 
     public Query<T> less(String field, Object value) {
-        andBuilder.and(new Less(field, value));
+        restrictions.add(new Less(field, value));
         return this;
     }
 
     public Query<T> lessEqual(String field, Object value) {
-        andBuilder.and(new LessOrEqual(field, value));
+        restrictions.add(new LessOrEqual(field, value));
         return this;
     }
 
     public Query<T> like(String field, String value) {
-        andBuilder.and(new Like(field, value));
+        restrictions.add(new Like(field, value));
         return this;
     }
 
     public Query<T> likeBegin(String field, String value) {
-        andBuilder.and(new LikeBegin(field, value));
+        restrictions.add(new LikeBegin(field, value));
         return this;
     }
 
     public Query<T> likeEnd(String field, String value) {
-        andBuilder.and(new LikeEnd(field, value));
+        restrictions.add(new LikeEnd(field, value));
         return this;
     }
 
     public Query<T> notAmongst(String field, Collection<? extends Object> values) {
-        andBuilder.and(new NotAmongst(field, values));
+        restrictions.add(new NotAmongst(field, values));
         return this;
     }
 
     public Query<T> notBetween(String field, Object lowerValue, Object upperValue) {
-        andBuilder.and(new NotBetween(field, lowerValue, upperValue));
+        restrictions.add(new NotBetween(field, lowerValue, upperValue));
         return this;
     }
 
     public Query<T> notEqual(String field, Object value) {
-        andBuilder.and(new NotEqual(field, value));
+        restrictions.add(new NotEqual(field, value));
         return this;
     }
 
     public Query<T> notLike(String field, String value) {
-        andBuilder.and(new NotLike(field, value));
+        restrictions.add(new NotLike(field, value));
         return this;
     }
 
     public Query<T> notLikeBegin(String field, String value) {
-        andBuilder.and(new NotLikeBegin(field, value));
+        restrictions.add(new NotLikeBegin(field, value));
         return this;
     }
 
     public Query<T> notLikeEnd(String field, String value) {
-        andBuilder.and(new NotLikeEnd(field, value));
+        restrictions.add(new NotLikeEnd(field, value));
         return this;
     }
 
-    public Query<T> add(CriteriaBuilder criteriaBuilder) {
-        andBuilder.and(criteriaBuilder);
-        return this;
-    }
-
-    public Query<T> add(Criteria criteria) {
-        andBuilder.and(criteria);
+    public Query<T> add(Restriction restriction) {
+        restrictions.add(restriction);
         return this;
     }
 
@@ -255,16 +254,14 @@ public class Query<T extends Entity> implements Cloneable {
         return minProperty != null || maxProperty != null;
     }
 
-    public Criteria getCriteria() {
-        return andBuilder.getCriteria();
+    public CompoundRestriction getRestrictions() {
+        return restrictions;
     }
 
-    public Set<String> getFields() {
-        Set<String> fields = new HashSet<String>();
-        if (andBuilder.getCriteria() != null) {
-            andBuilder.getCriteria().getFields(fields);
-        }
-        return fields;
+    public Set<String> getProperties() {
+        Set<String> properties = new HashSet<String>();
+        restrictions.writeProperties(properties);
+        return properties;
     }
 
     public Select getSelect() {
@@ -313,7 +310,7 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public boolean isEmptyCriteria() {
-        return andBuilder.isEmpty();
+        return restrictions.isEmpty();
     }
 
     public boolean isIgnoreEmptyCriteria() {
@@ -353,7 +350,7 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public Query<T> clear() {
-        andBuilder.clear();
+        restrictions.clear();
         if (select != null) {
             select.clear();
         }
@@ -370,7 +367,7 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public void clearCriteria() {
-        andBuilder.clear();
+        restrictions.clear();
     }
 
     public void clearSelect() {
@@ -388,7 +385,7 @@ public class Query<T extends Entity> implements Cloneable {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public Query<T> copy() {
         Query<T> query = new Query(entityClass, applyAppQueryLimit);
-        query.andBuilder = andBuilder;
+        query.restrictions = restrictions;
         query.select = select;
         query.order = order;
         query.offset = offset;

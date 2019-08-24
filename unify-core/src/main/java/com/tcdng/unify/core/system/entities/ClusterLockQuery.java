@@ -18,10 +18,10 @@ package com.tcdng.unify.core.system.entities;
 import java.util.Collection;
 import java.util.Date;
 
+import com.tcdng.unify.core.criterion.IsNull;
+import com.tcdng.unify.core.criterion.Less;
+import com.tcdng.unify.core.criterion.Or;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.operation.IsNull;
-import com.tcdng.unify.core.operation.Less;
-import com.tcdng.unify.core.operation.Or;
 
 /**
  * Cluster synchronization lock query.
@@ -60,6 +60,6 @@ public class ClusterLockQuery extends Query<ClusterLock> {
     }
 
     public ClusterLockQuery expiredOrFree(Date date) {
-        return (ClusterLockQuery) add(new Or(new Less("expiryTime", date), new IsNull("currentOwner")));
+        return (ClusterLockQuery) add(new Or().add(new Less("expiryTime", date)).add(new IsNull("currentOwner")));
     }
 }

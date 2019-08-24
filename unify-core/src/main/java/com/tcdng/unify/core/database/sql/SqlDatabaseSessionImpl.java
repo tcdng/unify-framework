@@ -31,6 +31,9 @@ import java.util.Stack;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.criterion.Amongst;
+import com.tcdng.unify.core.criterion.Select;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.database.CallableProc;
@@ -38,9 +41,6 @@ import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.operation.Amongst;
-import com.tcdng.unify.core.operation.Select;
-import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
@@ -175,7 +175,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                         sqlDataSourceDialect.prepareFindStatement(query));
             }
@@ -201,7 +201,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                         sqlDataSourceDialect.prepareFindStatement(query));
             }
@@ -227,7 +227,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                         sqlDataSourceDialect.prepareFindStatement(query));
             }
@@ -466,7 +466,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields()))) {
+                    || (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareUpdateStatement(query, update));
             }
@@ -614,7 +614,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getFields()))) {
+                    || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(query));
             }
@@ -648,7 +648,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int count(Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareCountStatement(query), true);
@@ -676,7 +676,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
@@ -837,7 +837,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         T record = null;
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getFields())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                         sqlDataSourceDialect.prepareFindStatement(query), false);
             } else {

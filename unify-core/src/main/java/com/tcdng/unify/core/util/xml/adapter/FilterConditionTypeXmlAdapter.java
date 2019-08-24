@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.util.xml.adapter;
 
-import com.tcdng.unify.core.operation.FilterConditionType;
+import com.tcdng.unify.core.criterion.FilterConditionType;
 import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
 
 /**

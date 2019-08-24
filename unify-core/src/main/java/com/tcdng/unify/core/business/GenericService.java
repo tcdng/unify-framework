@@ -18,9 +18,9 @@ package com.tcdng.unify.core.business;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * Generic business service.

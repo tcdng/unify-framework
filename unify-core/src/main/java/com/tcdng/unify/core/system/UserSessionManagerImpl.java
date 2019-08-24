@@ -37,7 +37,7 @@ import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
-import com.tcdng.unify.core.operation.Update;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.system.entities.UserSessionTracking;
 import com.tcdng.unify.core.system.entities.UserSessionTrackingQuery;
 import com.tcdng.unify.core.task.TaskMonitor;

@@ -19,7 +19,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.operation.Criteria;
+import com.tcdng.unify.core.criterion.Restriction;
 
 /**
  * A data source dialect component.
@@ -37,7 +37,7 @@ public interface DataSourceDialect extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String translateCriteria(Criteria criteria) throws UnifyException;
+    String translateCriteria(Restriction criteria) throws UnifyException;
 
     /**
      * Translates specified value to data source dialect.

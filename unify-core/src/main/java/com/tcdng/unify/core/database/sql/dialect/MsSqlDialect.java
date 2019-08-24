@@ -31,11 +31,11 @@ import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
-import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
-import com.tcdng.unify.core.database.sql.policy.ClobPolicy;
-import com.tcdng.unify.core.database.sql.policy.DatePolicy;
-import com.tcdng.unify.core.database.sql.policy.TimestampPolicy;
-import com.tcdng.unify.core.database.sql.policy.TimestampUTCPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
