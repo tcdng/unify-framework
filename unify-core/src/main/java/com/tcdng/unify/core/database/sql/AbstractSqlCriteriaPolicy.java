@@ -17,7 +17,7 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
-import com.tcdng.unify.core.operation.Criteria;
+import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -46,8 +46,8 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected SqlCriteriaPolicy getOperatorPolicy(Criteria criteria) throws UnifyException {
-        return sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getOperator());
+    protected SqlCriteriaPolicy getOperatorPolicy(Restriction criteria) throws UnifyException {
+        return sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getType());
     }
 
     /**

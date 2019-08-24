@@ -34,59 +34,59 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.criterion.Order;
+import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.RestrictionType;
+import com.tcdng.unify.core.criterion.Select;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.database.sql.operation.AmongstPolicy;
-import com.tcdng.unify.core.database.sql.operation.AndPolicy;
-import com.tcdng.unify.core.database.sql.operation.BetweenPolicy;
-import com.tcdng.unify.core.database.sql.operation.EqualPolicy;
-import com.tcdng.unify.core.database.sql.operation.GreaterOrEqualPolicy;
-import com.tcdng.unify.core.database.sql.operation.GreaterPolicy;
-import com.tcdng.unify.core.database.sql.operation.IsNotNullPolicy;
-import com.tcdng.unify.core.database.sql.operation.IsNullPolicy;
-import com.tcdng.unify.core.database.sql.operation.LessOrEqualPolicy;
-import com.tcdng.unify.core.database.sql.operation.LessPolicy;
-import com.tcdng.unify.core.database.sql.operation.LikeBeginPolicy;
-import com.tcdng.unify.core.database.sql.operation.LikeEndPolicy;
-import com.tcdng.unify.core.database.sql.operation.LikePolicy;
-import com.tcdng.unify.core.database.sql.operation.NotAmongstPolicy;
-import com.tcdng.unify.core.database.sql.operation.NotBetweenPolicy;
-import com.tcdng.unify.core.database.sql.operation.NotEqualPolicy;
-import com.tcdng.unify.core.database.sql.operation.NotLikeBeginPolicy;
-import com.tcdng.unify.core.database.sql.operation.NotLikeEndPolicy;
-import com.tcdng.unify.core.database.sql.operation.NotLikePolicy;
-import com.tcdng.unify.core.database.sql.operation.OrPolicy;
-import com.tcdng.unify.core.database.sql.policy.BigDecimalPolicy;
-import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
-import com.tcdng.unify.core.database.sql.policy.BooleanArrayPolicy;
-import com.tcdng.unify.core.database.sql.policy.BooleanPolicy;
-import com.tcdng.unify.core.database.sql.policy.CharacterPolicy;
-import com.tcdng.unify.core.database.sql.policy.ClobPolicy;
-import com.tcdng.unify.core.database.sql.policy.DatePolicy;
-import com.tcdng.unify.core.database.sql.policy.DoubleArrayPolicy;
-import com.tcdng.unify.core.database.sql.policy.DoublePolicy;
-import com.tcdng.unify.core.database.sql.policy.EnumConstPolicy;
-import com.tcdng.unify.core.database.sql.policy.FloatArrayPolicy;
-import com.tcdng.unify.core.database.sql.policy.FloatPolicy;
-import com.tcdng.unify.core.database.sql.policy.IntegerArrayPolicy;
-import com.tcdng.unify.core.database.sql.policy.IntegerPolicy;
-import com.tcdng.unify.core.database.sql.policy.LongArrayPolicy;
-import com.tcdng.unify.core.database.sql.policy.LongPolicy;
-import com.tcdng.unify.core.database.sql.policy.ShortArrayPolicy;
-import com.tcdng.unify.core.database.sql.policy.ShortPolicy;
-import com.tcdng.unify.core.database.sql.policy.StringArrayPolicy;
-import com.tcdng.unify.core.database.sql.policy.StringPolicy;
-import com.tcdng.unify.core.database.sql.policy.TimestampPolicy;
-import com.tcdng.unify.core.database.sql.policy.TimestampUTCPolicy;
-import com.tcdng.unify.core.operation.Criteria;
-import com.tcdng.unify.core.operation.Operator;
-import com.tcdng.unify.core.operation.Order;
-import com.tcdng.unify.core.operation.Select;
-import com.tcdng.unify.core.operation.Update;
+import com.tcdng.unify.core.database.sql.criterion.policy.AmongstPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.AndPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.BetweenPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.EqualPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.GreaterOrEqualPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.GreaterPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.IsNotNullPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.IsNullPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.LessOrEqualPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.LessPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.LikeBeginPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.LikeEndPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.LikePolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.NotAmongstPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.NotBetweenPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.NotEqualPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.NotLikeBeginPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.NotLikeEndPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.NotLikePolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.OrPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BigDecimalPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BooleanArrayPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BooleanPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.CharacterPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DoubleArrayPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DoublePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.EnumConstPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.FloatArrayPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.FloatPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.IntegerArrayPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.LongArrayPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.LongPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ShortArrayPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ShortPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.StringArrayPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.StringPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.DataUtils;
 
@@ -122,7 +122,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies;
 
-    private Map<Operator, SqlCriteriaPolicy> sqlCriteriaPolicies;
+    private Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies;
 
     private String terminationSql;
 
@@ -167,27 +167,27 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlDataTypePolicies.put(ColumnType.TIMESTAMP, new TimestampPolicy());
         sqlDataTypePolicies.put(ColumnType.ENUMCONST, new EnumConstPolicy());
 
-        sqlCriteriaPolicies = new HashMap<Operator, SqlCriteriaPolicy>();
-        sqlCriteriaPolicies.put(Operator.EQUAL, new EqualPolicy(this));
-        sqlCriteriaPolicies.put(Operator.NOT_EQUAL, new NotEqualPolicy(this));
-        sqlCriteriaPolicies.put(Operator.LESS_THAN, new LessPolicy(this));
-        sqlCriteriaPolicies.put(Operator.LESS_OR_EQUAL, new LessOrEqualPolicy(this));
-        sqlCriteriaPolicies.put(Operator.GREATER, new GreaterPolicy(this));
-        sqlCriteriaPolicies.put(Operator.GREATER_OR_EQUAL, new GreaterOrEqualPolicy(this));
-        sqlCriteriaPolicies.put(Operator.BETWEEN, new BetweenPolicy(this));
-        sqlCriteriaPolicies.put(Operator.NOT_BETWEEN, new NotBetweenPolicy(this));
-        sqlCriteriaPolicies.put(Operator.AMONGST, new AmongstPolicy(this));
-        sqlCriteriaPolicies.put(Operator.NOT_AMONGST, new NotAmongstPolicy(this));
-        sqlCriteriaPolicies.put(Operator.LIKE, new LikePolicy(this));
-        sqlCriteriaPolicies.put(Operator.NOT_LIKE, new NotLikePolicy(this));
-        sqlCriteriaPolicies.put(Operator.LIKE_BEGIN, new LikeBeginPolicy(this));
-        sqlCriteriaPolicies.put(Operator.NOT_LIKE_BEGIN, new NotLikeBeginPolicy(this));
-        sqlCriteriaPolicies.put(Operator.LIKE_END, new LikeEndPolicy(this));
-        sqlCriteriaPolicies.put(Operator.NOT_LIKE_END, new NotLikeEndPolicy(this));
-        sqlCriteriaPolicies.put(Operator.IS_NULL, new IsNullPolicy(this));
-        sqlCriteriaPolicies.put(Operator.IS_NOT_NULL, new IsNotNullPolicy(this));
-        sqlCriteriaPolicies.put(Operator.AND, new AndPolicy(this));
-        sqlCriteriaPolicies.put(Operator.OR, new OrPolicy(this));
+        sqlCriteriaPolicies = new HashMap<RestrictionType, SqlCriteriaPolicy>();
+        sqlCriteriaPolicies.put(RestrictionType.EQUAL, new EqualPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_EQUAL, new NotEqualPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.LESS_THAN, new LessPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.LESS_OR_EQUAL, new LessOrEqualPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.GREATER, new GreaterPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.GREATER_OR_EQUAL, new GreaterOrEqualPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.BETWEEN, new BetweenPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_BETWEEN, new NotBetweenPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.AMONGST, new AmongstPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_AMONGST, new NotAmongstPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.LIKE, new LikePolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE, new NotLikePolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.LIKE_BEGIN, new LikeBeginPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE_BEGIN, new NotLikeBeginPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.LIKE_END, new LikeEndPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE_END, new NotLikeEndPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.IS_NULL, new IsNullPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.IS_NOT_NULL, new IsNotNullPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.AND, new AndPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.OR, new OrPolicy(this));
     }
 
     @Override
@@ -848,8 +848,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public SqlCriteriaPolicy getSqlCriteriaPolicy(Operator operator) throws UnifyException {
-        return sqlCriteriaPolicies.get(operator);
+    public SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) throws UnifyException {
+        return sqlCriteriaPolicies.get(restrictionType);
     }
 
     @Override
@@ -1261,9 +1261,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String translateCriteria(Criteria query) throws UnifyException {
+    public String translateCriteria(Restriction criteria) throws UnifyException {
         StringBuilder sql = new StringBuilder();
-        translateCriteria(sql, null, query);
+        translateCriteria(sql, null, criteria);
         return sql.toString();
     }
 
@@ -1414,11 +1414,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         boolean isAppend = false;
         if (!query.isEmptyCriteria()) {
             sql.append(" WHERE ");
-            translateCriteria(sql, sqlEntityInfo, query.getCriteria());
+            translateCriteria(sql, sqlEntityInfo, query.getRestrictions());
             if (query.isMinMax()) {
                 sql.append(" AND ");
                 StringBuilder critSql = new StringBuilder();
-                translateCriteria(critSql, sqlEntityInfo, query.getCriteria());
+                translateCriteria(critSql, sqlEntityInfo, query.getRestrictions());
                 appendMinMax(sql, sqlEntityInfo, query, critSql);
             }
             isAppend = true;
@@ -1478,8 +1478,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
 
         if (!query.isEmptyCriteria()) {
-            Criteria criteria = query.getCriteria();
-            SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(criteria.getOperator());
+            Restriction criteria = query.getRestrictions();
+            SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(criteria.getType());
             StringBuilder critSql = new StringBuilder();
             sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo, criteria);
             sql.append(" WHERE ");
@@ -1829,9 +1829,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return updateParams.toString();
     }
 
-    private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria)
+    private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction criteria)
             throws UnifyException {
-        sqlCriteriaPolicies.get(criteria.getOperator()).translate(sql, sqlEntityInfo, criteria);
+        sqlCriteriaPolicies.get(criteria.getType()).translate(sql, sqlEntityInfo, criteria);
     }
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,

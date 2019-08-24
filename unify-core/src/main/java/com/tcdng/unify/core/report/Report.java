@@ -25,8 +25,8 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
-import com.tcdng.unify.core.operation.Operator;
 
 /**
  * Used to define a report for generation at runtime.
@@ -528,7 +528,7 @@ public class Report {
             return this;
         }
 
-        public Builder addFilter(Operator op, String tableName, String columnName, Object param1, Object param2) {
+        public Builder addFilter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
             filters.add(new ReportColumnFilter(op, tableName, columnName, param1, param2));
             return this;
         }

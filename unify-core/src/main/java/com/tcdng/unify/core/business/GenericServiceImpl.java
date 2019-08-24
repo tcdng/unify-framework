@@ -21,9 +21,9 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Transactional;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * Generic business service implementation.

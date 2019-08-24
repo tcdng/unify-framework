@@ -18,8 +18,8 @@ package com.tcdng.unify.core.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
-import com.tcdng.unify.core.operation.Operator;
 
 /**
  * A native query object.
@@ -72,7 +72,7 @@ public class NativeQuery {
         return this;
     }
 
-    public NativeQuery addFilter(Operator op, String tableName, String columnName, Object param1, Object param2) {
+    public NativeQuery addFilter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
         filterList.add(new Filter(op, tableName, columnName, param1, param2));
         return this;
     }
@@ -200,7 +200,7 @@ public class NativeQuery {
 
     public class Filter {
 
-        private Operator op;
+        private RestrictionType op;
 
         private String tableName;
 
@@ -210,7 +210,7 @@ public class NativeQuery {
 
         private Object param2;
 
-        public Filter(Operator op, String tableName, String columnName, Object param1, Object param2) {
+        public Filter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
             this.op = op;
             this.tableName = tableName;
             this.columnName = columnName;
@@ -218,7 +218,7 @@ public class NativeQuery {
             this.param2 = param2;
         }
 
-        public Operator getOp() {
+        public RestrictionType getOp() {
             return op;
         }
 

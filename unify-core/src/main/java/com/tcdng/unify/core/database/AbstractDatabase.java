@@ -23,9 +23,9 @@ import java.util.Set;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * Abstract implementation of a database. Also implements transaction management

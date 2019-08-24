@@ -17,13 +17,13 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.criterion.RestrictionType;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.operation.Operator;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * SQL data source dialect component. Used to generate native SQL, maintain SQL
@@ -57,12 +57,12 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     /**
      * Returns the SQL criteria policy for an operator.
      * 
-     * @param operator
+     * @param restrictionType
      *            the operator
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlCriteriaPolicy getSqlCriteriaPolicy(Operator operator) throws UnifyException;
+    SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) throws UnifyException;
 
     /**
      * Returns the SQL entity information for an entity.
