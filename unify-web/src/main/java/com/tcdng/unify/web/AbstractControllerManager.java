@@ -323,7 +323,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                     response.setCharacterEncoding(request.getCharset().name());
                 }
 
-                if (remoteCallFormat.stringFormat()) {
+                if (remoteCallFormat.isStringFormat()) {
                     response.getWriter().write((String) respBody);
                 } else {
                     response.getOutputStream().write((byte[]) respBody);
@@ -602,7 +602,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             RemoteCallControllerInfo rbbInfo = remoteCallControllerInfoMap.get(remoteCallController.getName());
             handler = rbbInfo.getRemoteCallHandler(remoteHandler);
             RemoteCallParams param = null;
-            if (remoteCallFormat.stringFormat()) {
+            if (remoteCallFormat.isStringFormat()) {
                 param = streamer.unmarshal(handler.getParamType(), (String) remoteParam);
             } else {
                 param = streamer.unmarshal(handler.getParamType(), new ByteArrayInputStream((byte[]) remoteParam));

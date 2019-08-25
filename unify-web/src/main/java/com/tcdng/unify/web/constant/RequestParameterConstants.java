@@ -45,6 +45,8 @@ public interface RequestParameterConstants {
 
     String REMOTE_CALL_BODY = "req_rcb";
 
+    String REMOTE_CALL_INPUTSTREAM = "req_rcin";
+
     String REMOTE_VIEWER = "req_rv";
 
     String REMOTE_SESSION_ID = "req_rsi";

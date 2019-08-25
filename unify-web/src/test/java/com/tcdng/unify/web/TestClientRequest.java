@@ -15,10 +15,13 @@
  */
 package com.tcdng.unify.web;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.tcdng.unify.core.UnifyException;
 
 /**
  * Test controller request.
@@ -64,5 +67,10 @@ public class TestClientRequest extends AbstractClientRequest {
 
     public void setParameter(String name, Object value) {
         parameters.put(name, value);
+    }
+
+    @Override
+    public InputStream getInputStream() throws UnifyException {
+        return null;
     }
 }
