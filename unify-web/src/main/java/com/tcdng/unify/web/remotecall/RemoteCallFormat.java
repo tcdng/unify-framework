@@ -18,6 +18,7 @@ package com.tcdng.unify.web.remotecall;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
+import com.tcdng.unify.web.constant.RequestHeaderConstants;
 
 /**
  * Supported remote call messaging formats.
@@ -29,8 +30,9 @@ public enum RemoteCallFormat implements EnumConst {
 
     JSON("JSON", MimeType.APPLICATION_JSON),
     XML("XML", MimeType.APPLICATION_XML),
-    TAGGED_BINARYMESSAGE("TAGGED_BINARYMESSAGE", MimeType.APPLICATION_OCTETSTREAM),
-    TAGGED_XMLMESSAGE("TAGGED_XMLMESSAGE", MimeType.APPLICATION_XML);
+    OCTETSTREAM("OCTETSTRM", MimeType.APPLICATION_OCTETSTREAM),
+    TAGGED_XMLMESSAGE("TAG_XML", MimeType.APPLICATION_XML),
+    TAGGED_BINARYMESSAGE("TAG_OCTET", MimeType.APPLICATION_OCTETSTREAM);
 
     private String code;
 
@@ -55,8 +57,12 @@ public enum RemoteCallFormat implements EnumConst {
         return JSON.code;
     }
 
-    public boolean stringFormat() {
-        return JSON.equals(this) || XML.equals(this);
+    public boolean isStringFormat() {
+        return JSON.equals(this) || XML.equals(this) || TAGGED_XMLMESSAGE.equals(this);
+    }
+
+    public boolean isTagged() {
+        return TAGGED_BINARYMESSAGE.equals(this) || TAGGED_XMLMESSAGE.equals(this);
     }
 
     public static RemoteCallFormat fromCode(String code) {
@@ -67,18 +73,26 @@ public enum RemoteCallFormat implements EnumConst {
         return EnumUtils.fromName(RemoteCallFormat.class, name);
     }
 
-    public static RemoteCallFormat fromContentType(String contentType) {
+    public static RemoteCallFormat fromContentType(String header, String contentType) {
         if (contentType != null) {
             if (contentType.startsWith(JSON.mimeType.template())) {
                 return JSON;
             }
 
             if (contentType.startsWith(XML.mimeType.template())) {
+                if (RequestHeaderConstants.REMOTE_TAGGED_MESSAGE_TYPE.equals(header)) {
+                    return TAGGED_XMLMESSAGE;
+                }
+                
                 return XML;
             }
 
-            if (contentType.equals(TAGGED_BINARYMESSAGE.mimeType.template())) {
-                return TAGGED_BINARYMESSAGE;
+            if (contentType.equals(OCTETSTREAM.mimeType.template())) {
+                if (RequestHeaderConstants.REMOTE_TAGGED_MESSAGE_TYPE.equals(header)) {
+                    return TAGGED_BINARYMESSAGE;
+                }
+                
+                return OCTETSTREAM;
             }
         }
 

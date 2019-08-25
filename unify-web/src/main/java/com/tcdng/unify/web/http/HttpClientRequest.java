@@ -15,12 +15,16 @@
  */
 package com.tcdng.unify.web.http;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.AbstractClientRequest;
 import com.tcdng.unify.web.ClientRequestType;
+import com.tcdng.unify.web.UnifyWebErrorConstants;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 
 /**
  * HTTP client request.
@@ -69,5 +73,15 @@ public class HttpClientRequest extends AbstractClientRequest {
     @Override
     public Object getParameter(String name) {
         return parameters.get(name);
+    }
+
+    @Override
+    public InputStream getInputStream() throws UnifyException {
+        InputStream in = (InputStream) parameters.get(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM);
+        if (in == null) {
+            throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_NOT_INPUTSTREAM);
+        }
+
+        return in;
     }
 }

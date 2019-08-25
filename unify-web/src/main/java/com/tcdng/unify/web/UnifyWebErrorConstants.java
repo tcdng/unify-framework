@@ -128,4 +128,9 @@ public interface UnifyWebErrorConstants {
      * Remote call error.
      */
     String REMOTECALL_ERROR = "UW_0019";
+
+    /**
+     * Remote call not input stream type.
+     */
+    String REMOTECALL_NOT_INPUTSTREAM = "UW_001A";
 }

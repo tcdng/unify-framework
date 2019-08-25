@@ -37,6 +37,7 @@ import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.NetworkUtils;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
+import com.tcdng.unify.web.constant.RequestHeaderConstants;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryPathConstants;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryRemoteCallCodeConstants;
 import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallParams;
@@ -140,8 +141,7 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
     }
 
     @Override
-    public PushXmlMessageResult sendXmlMessage(String remoteAppURL, PushXmlMessageParams params)
-            throws UnifyException {
+    public PushXmlMessageResult sendXmlMessage(String remoteAppURL, PushXmlMessageParams params) throws UnifyException {
         return remoteCall(PushXmlMessageResult.class, remoteAppURL, params);
     }
 
@@ -165,15 +165,22 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
             ObjectStreamer streamer = objectStreamers.get(remoteCallSetup.getFormat());
 
             // Establish connection
+            RemoteCallFormat format = remoteCallSetup.getFormat();
             HttpURLConnection conn = (HttpURLConnection) new URL(remoteCallSetup.getTargetURL()).openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setRequestMethod("POST");
             conn.setUseCaches(false);
-            conn.setRequestProperty("Content-Type", remoteCallSetup.getFormat().mimeType().template());
+            conn.setRequestProperty("Content-Type", format.mimeType().template());
             if (charset != null) {
                 conn.setRequestProperty("Accept-Charset", charset.name());
             }
+            
+            if (format.isTagged()) {
+                conn.setRequestProperty(RequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER,
+                        RequestHeaderConstants.REMOTE_TAGGED_MESSAGE_TYPE);
+            }
+            
             conn.connect();
 
             // Stream remote call parameter out

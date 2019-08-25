@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public interface ClientRequest {
      * Returns the client request type.
      */
     ClientRequestType getType();
-    
+
     /**
      * Returns the request path
      */
@@ -60,10 +61,20 @@ public interface ClientRequest {
     /**
      * Gets a request parameter
      * 
-     * @param clazz type
+     * @param clazz
+     *            type
      * @param name
      *            the parameter name
      * @return object if found otherwise false
      */
-    <T> T getParameter(Class<T> clazz, String name) throws UnifyException ;
+    <T> T getParameter(Class<T> clazz, String name) throws UnifyException;
+
+    /**
+     * Gets input stream associated with this request.
+     * 
+     * @return the input stream
+     * @throws UnifyException
+     *             if not octet-stream request
+     */
+    InputStream getInputStream() throws UnifyException;
 }

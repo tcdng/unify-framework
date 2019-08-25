@@ -45,6 +45,7 @@ import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerManager;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
+import com.tcdng.unify.web.constant.RequestHeaderConstants;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
@@ -93,7 +94,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                 new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
         ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
-        if(!StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+        if (!StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
             if (!remoteViewerList.isEmpty()) {
                 String origin = request.getHeader("origin");
                 if (remoteViewerList.contains(origin)) {
@@ -128,15 +129,28 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             throws UnifyException {
         Map<String, Object> result = new HashMap<String, Object>();
         String contentType = request.getContentType() == null ? null : request.getContentType().toLowerCase();
-        RemoteCallFormat remoteCallFormat = RemoteCallFormat.fromContentType(contentType);
+        RemoteCallFormat remoteCallFormat = RemoteCallFormat
+                .fromContentType(request.getHeader(RequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
         if (remoteCallFormat != null) {
+            result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
             try {
-                result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
-                byte[] reqBody = IOUtils.readAll(request.getInputStream());
-                if (RemoteCallFormat.TAGGED_BINARYMESSAGE.equals(remoteCallFormat)) {
-                    result.put(RequestParameterConstants.REMOTE_CALL_BODY, reqBody);
-                } else {
-                    result.put(RequestParameterConstants.REMOTE_CALL_BODY, new String(reqBody, charset));
+                switch (remoteCallFormat) {
+                    case OCTETSTREAM:
+                        result.put(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM,
+                                request.getInputStream());
+                        break;
+                    case TAGGED_BINARYMESSAGE:
+                        result.put(RequestParameterConstants.REMOTE_CALL_BODY,
+                                IOUtils.readAll(request.getInputStream()));
+                        break;
+                    case JSON:
+                    case TAGGED_XMLMESSAGE:
+                    case XML:
+                        result.put(RequestParameterConstants.REMOTE_CALL_BODY,
+                                new String(IOUtils.readAll(request.getInputStream()), charset));
+                        break;
+                    default:
+                        break;
                 }
             } catch (IOException e) {
                 throwOperationErrorException(e);
