@@ -82,6 +82,20 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testRollbackWithinMethod() throws Exception {
+        MockService mockService = (MockService) getComponent("mockservice");
+        boolean isException = false;
+        try {
+            mockService.createLoanAccountWithError("501", "William Whipper Snapper", 20.00);
+        } catch (Exception e) {
+            isException = true;
+        }
+        assertTrue(isException);
+        List<Account> accountList = mockService.find((AccountQuery) new AccountQuery().ignoreEmptyCriteria(true));
+        assertTrue(accountList.isEmpty());
+    }
+
+    @Test
     public void testRollbackAcrossBusinessServices() throws Exception {
         MockService mockService = (MockService) getComponent("mockservice");
         boolean isException = false;

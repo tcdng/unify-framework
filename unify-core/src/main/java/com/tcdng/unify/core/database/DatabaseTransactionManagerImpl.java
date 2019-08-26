@@ -227,9 +227,8 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
         }
 
         public void end() throws UnifyException {
-            boolean isClose = --depth == 0;
-            commit(isClose);
-            if (isClose) {
+            if (--depth == 0) {
+                commit(true);
                 databaseSessions.clear();
             }
         }
