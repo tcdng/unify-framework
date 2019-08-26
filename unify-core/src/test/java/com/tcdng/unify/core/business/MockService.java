@@ -44,6 +44,8 @@ public interface MockService extends BusinessService {
 
     Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException;
 
+    Long createLoanAccountWithError(String accountNo, String accountName, Double amount) throws UnifyException;
+
     LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
 
     Long createAccountWithCreditCheck(Account account, BigDecimal loanAmount) throws UnifyException;

@@ -78,6 +78,13 @@ public class MockServiceImpl extends AbstractBusinessService implements MockServ
     }
 
     @Override
+    public Long createLoanAccountWithError(String accountNo, String accountName, Double amount) throws UnifyException {
+        Long accountId = (Long) db().create(new Account(accountNo, accountName));
+        anotherMockService.findLoanDisbursements((LoanDisbursementQuery) new LoanDisbursementQuery().ignoreEmptyCriteria(true));
+        return (Long) db().create(new LoanAccount(accountId, null));
+    }
+
+    @Override
     public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
         return anotherMockService.findLoanAccount(loanAccountId);
     }
