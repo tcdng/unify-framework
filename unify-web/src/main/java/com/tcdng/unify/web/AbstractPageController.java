@@ -355,8 +355,14 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      *             if an error occurs
      */
     protected String fireControllerAction(String controllerName, String actionName) throws UnifyException {
+        StringBuilder sb = new StringBuilder(controllerName);
+        if (actionName.charAt(0) != '/') {
+            sb.append('/');
+        }
+        
+        sb.append(actionName);
         return ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
-                .executeController(controllerName, actionName);
+                .executeController(controllerName, sb.toString());
     }
 
     /**
