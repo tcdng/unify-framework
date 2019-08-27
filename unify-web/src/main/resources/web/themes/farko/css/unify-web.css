@@ -712,6 +712,10 @@ z-index:400;}
 
 /** Text Field */
 .ui-text {}
+.ui-text-ok {border: 1px solid #00C828 !important;background-color:#F8FFF9 !important;}
+.ui-text-warn {border: 1px solid #C8C800 !important;background-color:#FFFFF8 !important;}
+.ui-text-gray {border: 1px solid #C8C8C8 !important;background-color:#FBFBFB !important;}
+.ui-text-err {border: 1px solid #C82800 !important;background-color:#FFF9F8 !important;}
 
 /** Text Area */
 .ui-textarea {resize: none; word-wrap:break-word;}
