@@ -32,10 +32,15 @@ import com.tcdng.unify.web.ui.AbstractLayout;
 @UplAttributes({
     @UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "true"),
     @UplAttribute(name = "inlineMode", type = boolean.class, defaultValue = "false"),
+    @UplAttribute(name = "minColumns", type = int.class),
     @UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
 public class ShadedListLayout extends AbstractLayout {
 
     public boolean isInlineMode() throws UnifyException {
         return getUplAttribute(boolean.class, "inlineMode");
+    }
+
+    public int minColumns() throws UnifyException {
+        return getUplAttribute(int.class, "minColumns");
     }
 }
