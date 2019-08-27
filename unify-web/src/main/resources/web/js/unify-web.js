@@ -3556,7 +3556,17 @@ ux.setDisabledById = function(ids, disabled) {
 			var id = ids[i];
 			var elem = _id(id);
 			if (elem) {
-				elem.disabled = disabled;
+				// 27/08/19 Enable only if disabled by this function
+				if (elem.disabled != disabled) {
+					if(elem.disabled) {
+						if(elem.localDisable) {
+							elem.disabled = false;
+						}
+					} else {
+						elem.localDisable = true;
+						elem.disabled = true;
+					}
+				}
 			}
 
 			var grpElems = _name(id);
