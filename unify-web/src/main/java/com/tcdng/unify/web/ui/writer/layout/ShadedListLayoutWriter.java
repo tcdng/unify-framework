@@ -48,7 +48,12 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
         if (shadedListLayout.isInlineMode()) {
             writer.write("<tr>");
             int colWidth =100;
+            int minColumns = shadedListLayout.minColumns();
             int itemCount = container.getLayoutWidgetLongNames().size();
+            if (itemCount < minColumns) {
+                itemCount = minColumns;
+            }
+
             if (itemCount > 0) {
                 colWidth = colWidth / itemCount;
             }
@@ -69,6 +74,11 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
                     writer.writeStructureAndContent(widget);
                 }
                 writer.write("</td>");
+                minColumns--;
+            }
+            
+            while((--minColumns) >= 0) {
+                writer.write("<td class=\"islbase\" style=\"width:").write(colWidth).write("%;\"></td>");
             }
             writer.write("</tr>");
         } else {
@@ -90,7 +100,7 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
                     writer.write("</td>");
                     writer.write("</tr>");
                 }
-            }
+            }            
         }
         writer.write("</table>");
     }
