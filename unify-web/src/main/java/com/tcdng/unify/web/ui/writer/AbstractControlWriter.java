@@ -34,13 +34,11 @@ public abstract class AbstractControlWriter extends AbstractWidgetWriter impleme
         super.doWriteBehavior(writer, widget, useFacade);
         Control control = (Control) widget;
         if (control.isFocus()) {
-            writer.write("ux.setFocus(\"");
             if (useFacade) {
-                writer.write(control.getFacadeId());
+                getRequestContextUtil().setFocusOnWidgetId(control.getFacadeId());
             } else {
-                writer.write(control.getId());
+                getRequestContextUtil().setFocusOnWidgetId(control.getId());
             }
-            writer.write("\");");
         }
     }
 

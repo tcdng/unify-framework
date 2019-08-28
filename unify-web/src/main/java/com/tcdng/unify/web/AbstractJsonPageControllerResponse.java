@@ -40,8 +40,17 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
     @Override
     public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
         writer.write("{\"handler\":\"").write(handlerName).write("\"");
+        RequestContextUtil reqUtils = getRequestContextUtil();
         doGenerate(writer, pageController);
-        appendOnSaveList(writer);
+
+        if (reqUtils.isFocusOnWidget()) {
+            writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetId()).write("\"");
+        }
+
+        List<String> saveList = reqUtils.getOnSaveContentWidgets();
+        if (!DataUtils.isBlank(saveList)) {
+            writer.write(",\"pSaveList\":").writeJsonArray(saveList);
+        }
         writer.write("}");
     }
 
@@ -51,11 +60,4 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
     }
 
     protected abstract void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException;
-
-    private void appendOnSaveList(ResponseWriter writer) throws UnifyException {
-        List<String> saveList = getRequestContextUtil().getOnSaveContentWidgets();
-        if (!DataUtils.isBlank(saveList)) {
-            writer.write(",\"pSaveList\":").writeJsonArray(saveList);
-        }
-    }
 }

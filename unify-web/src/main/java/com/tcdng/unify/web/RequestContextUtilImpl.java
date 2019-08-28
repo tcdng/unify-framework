@@ -79,6 +79,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     private static final String ON_SAVE_LIST = "ON_SAVE_LIST";
 
+    private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
+
     @Configurable(ApplicationComponents.APPLICATION_EVENTSLOGGER)
     private EventLogger eventLogger;
 
@@ -392,6 +394,26 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     @Override
     public <T extends Entity> void logUserEvent(EventType eventType, T oldRecord, T newRecord) throws UnifyException {
         eventLogger.logUserEvent(eventType, oldRecord, newRecord);
+    }
+
+    @Override
+    public boolean setFocusOnWidgetId(String id) throws UnifyException {
+        if(!isRequestAttribute(FOCUS_ON_WIDGET)) {
+            setRequestAttribute(FOCUS_ON_WIDGET, id);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isFocusOnWidget() throws UnifyException {
+        return isRequestAttribute(FOCUS_ON_WIDGET);
+    }
+
+    @Override
+    public String getFocusOnWidgetId() throws UnifyException {
+        return (String) getRequestAttribute(FOCUS_ON_WIDGET);
     }
 
     @Override

@@ -120,6 +120,9 @@ ux.processJSON = function(jsonstring) {
 		for (var j = 0; j < jsonEval.jsonResp.length; j++) {
 			var resp = jsonEval.jsonResp[j];
 			ux.respHandler[resp.handler](resp);
+			if (resp.focusOnWidget) {
+				ux.setFocus(resp.focusOnWidget);
+			}
 		}
 		ux.cascadeStretch();
 	}
