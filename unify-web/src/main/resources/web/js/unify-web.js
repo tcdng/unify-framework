@@ -745,6 +745,7 @@ ux.setFocus = function(id) {
 	var elem = _id(id);
 	if (elem) {
 		elem.focus();
+		ux.setCaretPosition(elem, 10000, 10000);
 	}
 }
 
