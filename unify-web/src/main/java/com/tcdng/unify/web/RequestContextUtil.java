@@ -477,4 +477,34 @@ public interface RequestContextUtil extends UnifyComponent {
      *             if an error occurs
      */
     void clearRequestContext() throws UnifyException;
+
+    /**
+     * Sets the ID of widget to focus on. Accepts only widget ID supplied on first
+     * call for request. All subsequent calls are ignored.
+     * 
+     * @param id
+     *            the widget ID to set
+     * @return a true value if set otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean setFocusOnWidgetId(String id) throws UnifyException;
+
+    /**
+     * Checks if widget focus is associated with this request.
+     * 
+     * @return a true value if widget focus is associated otherwise false.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isFocusOnWidget() throws UnifyException;
+
+    /**
+     * Gets the ID of widget to focus on.
+     * 
+     * @return the widget ID otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getFocusOnWidgetId() throws UnifyException;
 }

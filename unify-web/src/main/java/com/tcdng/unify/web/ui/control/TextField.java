@@ -58,17 +58,17 @@ public class TextField extends AbstractFormattedControl {
     }
 
     private ColorMode colorMode;
-    
+
     public TextField() {
         colorMode = ColorMode.NORMAL;
     }
-    
+
     @Override
     public String getStyleClass() throws UnifyException {
         if (ColorMode.NORMAL.equals(colorMode)) {
             return super.getStyleClass();
         }
-        
+
         return super.getStyleClass() + " " + colorMode.styleClass;
     }
 
@@ -90,6 +90,16 @@ public class TextField extends AbstractFormattedControl {
 
     public ExtensionType getExtensionType() {
         return ExtensionType.NONE;
+    }
+
+    @Override
+    public boolean setFocus() throws UnifyException {
+        boolean textUseFacade = !getExtReadOnly();
+        if (textUseFacade) {
+            return getRequestContextUtil().setFocusOnWidgetId(getFacadeId());
+        }
+
+        return super.setFocus();
     }
 
     public void setColorMode(ColorMode colorMode) {

@@ -77,7 +77,16 @@ public interface Control extends DataTransferWidget {
     void updateState() throws UnifyException;
 
     /**
-     * Tests if control requires focus
+     * Sets focus on this control.
+     * 
+     * @return a true value if focused otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean setFocus() throws UnifyException;
+
+    /**
+     * Tests if control focus attribute is true.
      * 
      * @throws UnifyException
      *             if an error occurs

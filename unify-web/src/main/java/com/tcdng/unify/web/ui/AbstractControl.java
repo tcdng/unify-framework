@@ -75,6 +75,11 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
     }
 
     @Override
+    public boolean setFocus() throws UnifyException {
+        return getRequestContextUtil().setFocusOnWidgetId(getId());
+    }
+
+    @Override
     public boolean isFocus() throws UnifyException {
         return getUplAttribute(boolean.class, "focus");
     }
