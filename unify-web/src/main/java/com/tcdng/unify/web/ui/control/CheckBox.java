@@ -28,7 +28,8 @@ import com.tcdng.unify.web.ui.AbstractControl;
  * @since 1.0
  */
 @Component("ui-checkbox")
-@UplAttributes({ @UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false") })
 public class CheckBox extends AbstractControl {
 
     @Override

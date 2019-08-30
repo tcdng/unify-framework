@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.Container;
+import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.Layout;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
@@ -47,7 +48,7 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
         writer.write(">");
         if (shadedListLayout.isInlineMode()) {
             writer.write("<tr>");
-            int colWidth =100;
+            int colWidth = 100;
             int minColumns = shadedListLayout.minColumns();
             int itemCount = container.getLayoutWidgetLongNames().size();
             if (itemCount < minColumns) {
@@ -57,16 +58,18 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
             if (itemCount > 0) {
                 colWidth = colWidth / itemCount;
             }
-            
+
             for (String longName : container.getLayoutWidgetLongNames()) {
-                writer.write("<td class=\"islbase\" style=\"width:").write(colWidth).write("%;\">");
                 Widget widget = container.getWidgetByLongName(longName);
+                writer.write("<td class=\"islbase");
+                writeLayoutColor(writer, widget);
+                writer.write("\" style=\"width:").write(colWidth).write("%;\">");
                 if (widget.isVisible()) {
                     writer.write("<span class=\"islcap\">");
                     String caption = widget.getCaption();
                     if (!StringUtils.isBlank(caption)) {
                         writer.write(caption);
-                        if(caption.charAt(caption.length() - 1) != '?') {
+                        if (caption.charAt(caption.length() - 1) != '?') {
                             writer.writeNotNull(shadedListLayout.getCaptionSuffix());
                         }
                     }
@@ -76,8 +79,8 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
                 writer.write("</td>");
                 minColumns--;
             }
-            
-            while((--minColumns) >= 0) {
+
+            while ((--minColumns) >= 0) {
                 writer.write("<td class=\"islbase\" style=\"width:").write(colWidth).write("%;\"></td>");
             }
             writer.write("</tr>");
@@ -94,15 +97,42 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
                         }
                         writer.write("</td>");
                     }
-                    
-                    writer.write("<td class=\"slcnt\">");
+
+                    writer.write("<td class=\"slcnt");
+                    writeLayoutColor(writer, widget);
+                    writer.write("\">");
                     writer.writeStructureAndContent(widget);
                     writer.write("</td>");
                     writer.write("</tr>");
                 }
-            }            
+            }
         }
         writer.write("</table>");
     }
 
+    private void writeLayoutColor(ResponseWriter writer, Widget widget) throws UnifyException {
+        if (widget instanceof Control) {
+            Control control = (Control) widget;
+            if (control.isLayoutColorMode()) {
+                switch (control.getColorMode()) {
+                    case ERROR:
+                        writer.write(" err");
+                        break;
+                    case GRAYED:
+                        writer.write(" gray");
+                        break;
+                    case OK:
+                        writer.write(" ok");
+                        break;
+                    case WARNING:
+                        writer.write(" warn");
+                        break;
+                    case NORMAL:
+                    default:
+                        break;
+                }
+            }
+        }
+
+    }
 }

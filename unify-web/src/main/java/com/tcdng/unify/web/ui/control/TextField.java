@@ -35,43 +35,6 @@ import com.tcdng.unify.web.ui.AbstractFormattedControl;
         @UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "true") })
 public class TextField extends AbstractFormattedControl {
 
-    public enum ColorMode {
-        NORMAL(""),
-        OK("ui-text-ok"),
-        WARNING("ui-text-warn"),
-        GRAYED("ui-text-gray"),
-        ERROR("ui-text-err");
-
-        private final String styleClass;
-
-        private ColorMode(String styleClass) {
-            this.styleClass = styleClass;
-        }
-
-        public String styleClass() {
-            return styleClass;
-        }
-
-        public boolean isVisual() {
-            return !this.equals(NORMAL);
-        }
-    }
-
-    private ColorMode colorMode;
-
-    public TextField() {
-        colorMode = ColorMode.NORMAL;
-    }
-
-    @Override
-    public String getStyleClass() throws UnifyException {
-        if (ColorMode.NORMAL.equals(colorMode)) {
-            return super.getStyleClass();
-        }
-
-        return super.getStyleClass() + " " + colorMode.styleClass;
-    }
-
     public String getCase() throws UnifyException {
         return getUplAttribute(String.class, "case");
     }
@@ -100,10 +63,6 @@ public class TextField extends AbstractFormattedControl {
         }
 
         return super.setFocus();
-    }
-
-    public void setColorMode(ColorMode colorMode) {
-        this.colorMode = colorMode;
     }
 
 }
