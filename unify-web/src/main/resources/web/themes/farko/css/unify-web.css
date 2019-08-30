@@ -70,11 +70,17 @@ z-index:400;}
 
 .ui-unordered {}
 
+/** Shaded list layout */
 .ui-shadedlist {width:100%;color:#000;}
 .ui-shadedlist .slcap {width:20%; padding:2px;font-weight:bold;font-size:10pt;background-color:#DCDCDC;}
 .ui-shadedlist .slcnt {padding:2px;background-color:#DCDCDC;}
 .ui-shadedlist .islbase {padding:2px;background-color:#DCDCDC;}
 .ui-shadedlist .islcap {padding-right:4px;font-weight:bold;font-size:10pt;}
+
+.ui-shadedlist .ok {background-color:#00C840 !important;}
+.ui-shadedlist .warn {background-color:#C8C800 !important;}
+.ui-shadedlist .gray {background-color:#C8C8C8 !important;}
+.ui-shadedlist .err {background-color:#C84040 !important;}
 
 /********************* CONTAINERS ***************************/
 /** Document */
@@ -366,6 +372,12 @@ z-index:400;}
 
 
 /*********************** COMMON **********************/
+/** Control color mode */
+.ui-cmode-ok {border: 1px solid #00C828 !important;background-color:#F0FFF4 !important;}
+.ui-cmode-warn {border: 1px solid #C8C800 !important;background-color:#FFFFF4 !important;}
+.ui-cmode-gray {border: 1px solid #C8C8C8 !important;background-color:#F4F4F4 !important;}
+.ui-cmode-err {border: 1px solid #C82800 !important;background-color:#FFF4F0 !important;}
+
 /** Popup Text Field */
 .ui-text-popup {position:relative}
 .ui-text-popup .tpbutton {width:24px; height:28px; padding:6px 4px; background-color: #E8E8E8 !important;
@@ -712,10 +724,6 @@ z-index:400;}
 
 /** Text Field */
 .ui-text {}
-.ui-text-ok {border: 1px solid #00C828 !important;background-color:#F0FFF4 !important;}
-.ui-text-warn {border: 1px solid #C8C800 !important;background-color:#FFFFF4 !important;}
-.ui-text-gray {border: 1px solid #C8C8C8 !important;background-color:#F4F4F4 !important;}
-.ui-text-err {border: 1px solid #C82800 !important;background-color:#FFF4F0 !important;}
 
 /** Text Area */
 .ui-textarea {resize: none; word-wrap:break-word;}
