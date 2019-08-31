@@ -299,6 +299,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
             actionPath = "/hidePopup";
         }
 
+        message = resolveSessionMessage(message);
         setSessionAttribute(UnifyWebSessionAttributeConstants.MESSAGEBOX,
                 new MessageBox(messageIcon, messageMode, caption, message, getName() + actionPath));
         return "showapplicationmessage";
