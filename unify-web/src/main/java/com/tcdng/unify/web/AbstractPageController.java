@@ -238,6 +238,26 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     }
 
     /**
+     * Sets up a response that shows a message box. The message box is backed by the
+     * {@link MessageBox} value of the session attribute
+     * {@link UnifyWebSessionAttributeConstants#MESSAGEBOX}.
+     * 
+     * @param messageIcon
+     *            the message icon of enumeration type {@link MessageIcon}
+     * @param messageMode
+     *            the message mode of enumeration type {@link MessageMode}
+     * @param message
+     *            the message to display
+     * @return response to show application message box
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String showMessageBox(MessageIcon messageIcon, MessageMode messageMode, String message)
+            throws UnifyException {
+        return showMessageBox(messageIcon, messageMode, getSessionMessage("messagebox.message"), message, "/hidePopup");
+    }
+
+    /**
      * Sets up a response that shows a message box with default info icon and OK
      * button. {@link MessageBox} value of the session attribute
      * {@link UnifyWebSessionAttributeConstants#MESSAGEBOX}.
@@ -360,7 +380,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
         if (actionName.charAt(0) != '/') {
             sb.append('/');
         }
-        
+
         sb.append(actionName);
         return ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
                 .executeController(controllerName, sb.toString());
@@ -378,7 +398,8 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void writeControllerProperty(String controllerName, String propertyName, Object value) throws UnifyException {
+    protected void writeControllerProperty(String controllerName, String propertyName, Object value)
+            throws UnifyException {
         ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
                 .populateController(controllerName, propertyName, value);
     }
