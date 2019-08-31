@@ -672,7 +672,35 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query)
+    public Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query)
+            throws UnifyException {
+        try {
+            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+                return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
+                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
+            }
+
+            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
+            if (!idList.isEmpty()) {
+                Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
+                aggregateQuery.add(new Amongst(idFieldInfo.getName(), idList));
+                return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
+                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregateType, aggregateQuery));
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        }
+        return null;
+    }
+
+    @Override
+    public List<Aggregate<?>> aggregateMany(AggregateType aggregateType, Query<? extends Entity> query)
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());

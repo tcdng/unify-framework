@@ -248,8 +248,13 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
-    public List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<?> query) throws UnifyException {
+    public Aggregate<?> aggregate(AggregateType aggregateType, Query<?> query) throws UnifyException {
         return getDatabaseSession().aggregate(aggregateType, query);
+    }
+
+    @Override
+    public List<Aggregate<?>> aggregateMany(AggregateType aggregateType, Query<?> query) throws UnifyException {
+        return getDatabaseSession().aggregateMany(aggregateType, query);
     }
 
     @Override
