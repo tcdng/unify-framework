@@ -67,37 +67,24 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
 
-            List<Aggregate<?>> list =
+            Aggregate<?> aggregate =
                     db.aggregate(AggregateType.SUM, new FruitQuery().select("price").ignoreEmptyCriteria(true));
-            assertNotNull(list);
-            assertEquals(1, list.size());
-
-            Aggregate<?> aggregate = list.get(0);
+            assertNotNull(aggregate);
             assertEquals(4, aggregate.getCount());
             assertEquals(140.00, aggregate.getValue());
 
-            list = db.aggregate(AggregateType.AVERAGE, new FruitQuery().like("name", "apple").select("price"));
-
-            assertNotNull(list);
-            assertEquals(1, list.size());
-
-            aggregate = list.get(0);
+            aggregate = db.aggregate(AggregateType.AVERAGE, new FruitQuery().like("name", "apple").select("price"));
+            assertNotNull(aggregate);
             assertEquals(2, aggregate.getCount());
             assertEquals(40.00, aggregate.getValue());
 
-            list = db.aggregate(AggregateType.MAXIMUM, new FruitQuery().select("price").ignoreEmptyCriteria(true));
-            assertNotNull(list);
-            assertEquals(1, list.size());
-
-            aggregate = list.get(0);
+            aggregate = db.aggregate(AggregateType.MAXIMUM, new FruitQuery().select("price").ignoreEmptyCriteria(true));
+            assertNotNull(aggregate);
             assertEquals(4, aggregate.getCount());
             assertEquals(60.00, aggregate.getValue());
 
-            list = db.aggregate(AggregateType.MINIMUM, new FruitQuery().like("name", "apple").select("price"));
-            assertNotNull(list);
-            assertEquals(1, list.size());
-
-            aggregate = list.get(0);
+            aggregate = db.aggregate(AggregateType.MINIMUM, new FruitQuery().like("name", "apple").select("price"));
+            assertNotNull(aggregate);
             assertEquals(2, aggregate.getCount());
             assertEquals(20.00, aggregate.getValue());
         } finally {
@@ -115,7 +102,7 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             // Sum
-            List<Aggregate<?>> list = db.aggregate(AggregateType.SUM,
+            List<Aggregate<?>> list = db.aggregateMany(AggregateType.SUM,
                     new FruitQuery().select("price", "quantity").ignoreEmptyCriteria(true));
             assertNotNull(list);
             assertEquals(2, list.size());
@@ -132,7 +119,7 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(84, qtyAggregate.getValue());
 
             // Average
-            list = db.aggregate(AggregateType.AVERAGE,
+            list = db.aggregateMany(AggregateType.AVERAGE,
                     new FruitQuery().like("name", "apple").select("quantity", "price"));
             assertNotNull(list);
             assertEquals(2, list.size());
@@ -149,7 +136,7 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(40.00, priceAggregate.getValue());
 
             // Maximum
-            list = db.aggregate(AggregateType.MAXIMUM,
+            list = db.aggregateMany(AggregateType.MAXIMUM,
                     new FruitQuery().select("price", "quantity").ignoreEmptyCriteria(true));
             assertNotNull(list);
             assertEquals(2, list.size());
@@ -166,7 +153,7 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(45, qtyAggregate.getValue());
 
             // Minimum
-            list = db.aggregate(AggregateType.MINIMUM,
+            list = db.aggregateMany(AggregateType.MINIMUM,
                     new FruitQuery().like("name", "apple").select("quantity", "price"));
             assertNotNull(list);
             assertEquals(2, list.size());
@@ -197,24 +184,16 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             // Count
-            List<Aggregate<?>> list =
+            Aggregate<?> countAggregate =
                     db.aggregate(AggregateType.COUNT, new FruitQuery().select("color").lessEqual("price", 45.00));
-            assertNotNull(list);
-            assertEquals(1, list.size());
-
-            Aggregate<?> countAggregate = list.get(0);
             assertNotNull(countAggregate);
             assertEquals("color", countAggregate.getFieldName());
             assertEquals(4, countAggregate.getCount());
             assertEquals("4", countAggregate.getValue());
 
             // Count with distinct
-            list = db.aggregate(AggregateType.COUNT,
+            countAggregate = db.aggregate(AggregateType.COUNT,
                     new FruitQuery().select("color").lessEqual("price", 45.00).distinct(true));
-            assertNotNull(list);
-            assertEquals(1, list.size());
-
-            countAggregate = list.get(0);
             assertNotNull(countAggregate);
             assertEquals("color", countAggregate.getFieldName());
             assertEquals(4, countAggregate.getCount());

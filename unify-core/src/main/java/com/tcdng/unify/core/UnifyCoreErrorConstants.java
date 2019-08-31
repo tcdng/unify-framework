@@ -265,7 +265,7 @@ public interface UnifyCoreErrorConstants {
     String REFLECT_FIELD_GETTER_SETTER_MISMATCH = "UC_0046";
 
     /**
-     * Multiple or no field selected in criteria for list value operation .Type {0}
+     * Multiple or no field selected in criteria for operation.
      */
     String RECORD_MULTIPLE_OR_NOFIELD_SELECTED = "UC_0047";
 

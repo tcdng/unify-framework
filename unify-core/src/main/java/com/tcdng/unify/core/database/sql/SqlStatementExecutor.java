@@ -234,6 +234,24 @@ public interface SqlStatementExecutor extends UnifyComponent {
             String key, SqlStatement sqlStatement) throws UnifyException;
 
     /**
+     * Executes an aggregate statement that returns a single aggregate via supplied
+     * connection. The first select field must be a COUNT aggregate followed by
+     * a single aggregated field.
+     * 
+     * @param connection
+     *            the database connection
+     * @param countSqlDataTypePolicy
+     *            count field SQL data type policy
+     * @param sqlStatement
+     *            the criteria statement object
+     * @return aggregate result
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Aggregate<?> executeSingleAggregateResultQuery(Connection connection,
+            SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
+
+    /**
      * Executes an aggregate statement that returns an aggregate list via supplied
      * connection. The first select field must be a COUNT aggregate followed by
      * other aggregated fields.

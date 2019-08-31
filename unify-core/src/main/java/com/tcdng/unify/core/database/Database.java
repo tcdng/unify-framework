@@ -666,6 +666,21 @@ public interface Database extends UnifyComponent {
     int countAll(Query<? extends Entity> query) throws UnifyException;
 
     /**
+     * Executes an aggregate function for single selected field of records
+     * that match specified query.
+     * 
+     * @param aggregateType
+     *            the aggregate type
+     * @param query
+     *            the query to use
+     * @return the aggregate object
+     * @throws UnifyException
+     *             if selected field is not numeric. If no field is selected. If multiple fields are selected. If
+     *             an error occurs
+     */
+    Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+
+    /**
      * Executes an aggregate function (individually) for selected properties of
      * record that match specified criteria.
      * 
@@ -678,7 +693,7 @@ public interface Database extends UnifyComponent {
      *             if selected fields are not numeric. If no field is selected. If
      *             an error occurs
      */
-    List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+    List<Aggregate<?>> aggregateMany(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
 
     /**
      * Gets the current UTC timestamp of database based on session time zone.

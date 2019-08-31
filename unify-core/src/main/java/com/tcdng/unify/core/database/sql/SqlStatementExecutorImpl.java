@@ -481,6 +481,47 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
+    public Aggregate<?> executeSingleAggregateResultQuery(Connection connection,
+            SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+        try {
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
+            rs = pStmt.executeQuery();
+            if (rs.next()) {
+                int resultIndex = 0;
+                int count =
+                        ((Number) countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex, timeZoneOffset))
+                                .intValue();
+                List<SqlResult> sqlResultList = sqlStatement.getResultInfoList();
+                if (sqlResultList.isEmpty() || sqlResultList.size() > 1) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_OR_NOFIELD_SELECTED);
+                }
+                
+                SqlResult sqlResult = sqlResultList.get(0);
+                Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
+                        ++resultIndex, timeZoneOffset);
+
+                if (rs.next()) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
+                }
+
+                return new Aggregate(sqlResult.getName(), count, value);
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pStmt);
+        }
+        return null;
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
     public List<Aggregate<?>> executeMultipleAggregateResultQuery(Connection connection,
             SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
         List<Aggregate<?>> resultList = new ArrayList<Aggregate<?>>();
