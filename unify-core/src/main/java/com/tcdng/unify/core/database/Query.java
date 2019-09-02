@@ -184,7 +184,10 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public Query<T> add(Restriction restriction) {
-        restrictions.add(restriction);
+        if (!restriction.isEmpty()) {
+            restrictions.add(restriction);
+        }
+
         return this;
     }
 

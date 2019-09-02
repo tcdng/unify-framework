@@ -41,4 +41,9 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
     public String getPropertyName() {
         return propertyName;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }

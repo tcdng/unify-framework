@@ -40,4 +40,11 @@ public interface Restriction {
      *            the bucket to write to
      */
     void writeProperties(Set<String> propertyBucket);
+
+    /**
+     * Checks if restriction is empty.
+     * 
+     * @return a true if empty otherwise false
+     */
+    boolean isEmpty();
 }
