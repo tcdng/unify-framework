@@ -424,6 +424,15 @@ z-index:400;}
 .ui-button-alert:disabled {cursor:default;}
 .ui-button-alert:hover:enabled {color: #FFF; background-color: #F06060;}
 
+/** Button (Mini)*/ 
+.ui-minibutton {padding: 0px 10px; min-height:18px; font-size:7pt; background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
+.ui-minibutton:disabled {cursor:default;}
+.ui-minibutton:hover:enabled {color: #FFF; background-color: #6080F0;}
+.ui-minibutton span {padding-left:10px;}
+.ui-minibutton-alert {padding: 0px 10px; min-height:18px; font-size:7pt background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
+.ui-minibutton-alert:disabled {cursor:default;}
+.ui-minibutton-alert:hover:enabled {color: #FFF; background-color: #F06060;}
+
 /** Check box*/
 .ui-checkbox {width:16px; height:16px;}
 
@@ -736,6 +745,10 @@ z-index:400;}
 /** Text Toggle Button */
 .ui-togglebutton {padding: 0px 16px; height:36px; border: 1px solid #C8C8C8; cursor: pointer;}
 .ui-togglebutton:hover {background-color: #D0D0D0;}
+
+/** Text Toggle Button (Mini) */
+.ui-minitogglebutton {padding: 0px 10px; height:18px; font-size:7pt; border: 1px solid #C8C8C8; cursor: pointer;}
+.ui-minitogglebutton:hover {background-color: #D0D0D0;}
 
 /** Time Field */
 .ui-time {width: 160px;}
