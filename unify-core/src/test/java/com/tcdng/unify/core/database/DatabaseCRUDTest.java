@@ -37,6 +37,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.BooleanType;
 import com.tcdng.unify.core.constant.Gender;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
@@ -1124,6 +1125,36 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test
+    public void testFindAllRecordsWithQueryBlankCopy() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("banana", "yellow", 35.00));
+            db.create(new Fruit("orange", "orange", 24.20));
+            db.create(new Fruit("mango", "green", 52.00));
+            db.create(new Fruit("pineapple", "green", 63.00));
+            db.create(new Fruit("peach", "peach", 11.50));
+            db.create(new Fruit("pear", "green", 42.50));
+            db.create(new Fruit("avocado", "purple", 99.20));
+            db.create(new Fruit("grape", "yellow", 4.50));
+            db.create(new Fruit("strawberry", "red", 4.50));
+            
+            FruitQuery query = (FruitQuery) new FruitQuery().ignoreEmptyCriteria(true);
+            Restriction criteria = query.getRestrictions();
+            Query<Fruit> copyQuery =
+                    query.copyNoCriteria().add(criteria).like("name", "apple").order("name");
+            
+            List<Fruit> testFruitList = db.findAll(copyQuery);
+            
+            assertEquals(2, testFruitList.size());
+            assertEquals("apple", testFruitList.get(0).getName());
+            assertEquals("pineapple", testFruitList.get(1).getName());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+    
     @Test
     public void testListRecordById() throws Exception {
         tm.beginTransaction();
