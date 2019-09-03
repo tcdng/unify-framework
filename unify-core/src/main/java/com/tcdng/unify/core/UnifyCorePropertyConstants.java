@@ -47,7 +47,7 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_LAYOUT = "application.layout";
 
-    String APPLICATION_CUSTOMIZATION = "application.customisation";
+    String APPLICATION_CUSTOMIZATION = "application.customization";
 
     String APPLICATION_MESSAGES_BASE = "application.messages.base";
 
