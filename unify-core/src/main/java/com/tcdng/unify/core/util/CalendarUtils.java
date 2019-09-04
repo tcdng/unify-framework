@@ -414,6 +414,69 @@ public final class CalendarUtils {
         return CalendarUtils.parse(RFC822_DATEFORMAT, dateString);
     }
 
+    /**
+     * Gets difference between dates.
+     * 
+     * @param olderDate
+     *            the older date
+     * @param newerDate
+     *            the newer date
+     * @return a date difference object that represents the total difference i days,
+     *         hours, minutes and seconds
+     */
+    public static DateDifference getDateDifference(Date olderDate, Date newerDate) {
+        if (olderDate.after(newerDate)) {
+            return CalendarUtils.getDateDifference(olderDate.getTime() - newerDate.getTime());
+        }
+
+        return CalendarUtils.getDateDifference(newerDate.getTime() - olderDate.getTime());
+    }
+
+    /**
+     * Gets difference based on supplied duration.
+     * 
+     * @param timeInMilliSecs
+     *            the duration in milliseconds
+     * @return a date difference object that represents the total difference i days,
+     *         hours, minutes and seconds
+     */
+    public static DateDifference getDateDifference(long timeInMilliSecs) {
+        int seconds = (int) (timeInMilliSecs / 1000 % 60);
+        int minutes = (int) (timeInMilliSecs / (60 * 1000) % 60);
+        int hours = (int) (timeInMilliSecs / (60 * 60 * 1000) % 24);
+        int days = (int) (timeInMilliSecs / (24 * 60 * 60 * 1000));
+        return new DateDifference(days, hours, minutes, seconds);
+    }
+
+    /**
+     * Gets days only difference between dates.
+     * 
+     * @param olderDate
+     *            the older date
+     * @param newerDate
+     *            the newer date
+     * @return a date difference object that represents the total difference i days,
+     *         hours, minutes and seconds
+     */
+    public static int getDaysDifference(Date olderDate, Date newerDate) {
+        if (olderDate.after(newerDate)) {
+            return CalendarUtils.getDaysDifference(olderDate.getTime() - newerDate.getTime());
+        }
+
+        return CalendarUtils.getDaysDifference(newerDate.getTime() - olderDate.getTime());
+    }
+
+    /**
+     * Gets days only difference based on supplied duration.
+     * 
+     * @param timeInMilliSecs
+     *            the duration in milliseconds
+     * @return the difference in days
+     */
+    public static int getDaysDifference(long timeInMilliSecs) {
+        return (int) (timeInMilliSecs / (24 * 60 * 60 * 1000));
+    }
+
     private static boolean nextEligibleDayOfWeek(int[] eMonths, int[] eWeekDays, Calendar cal) {
         int cWeekDay = cal.get(Calendar.DAY_OF_WEEK);
         int eWeekDay = CalendarUtils.eligibleCalendarIndex(eWeekDays, cWeekDay, 7);
@@ -504,18 +567,6 @@ public final class CalendarUtils {
             return false;
         }
         return true;
-    }
-
-    public static DateDifference getDateDifference(Date olderDate, Date newerDate) {
-        return CalendarUtils.getDateDifference(newerDate.getTime() - olderDate.getTime());
-    }
-
-    public static DateDifference getDateDifference(long timeInMilliSecs) {
-        int seconds = (int) (timeInMilliSecs / 1000 % 60);
-        int minutes = (int) (timeInMilliSecs / (60 * 1000) % 60);
-        int hours = (int) (timeInMilliSecs / (60 * 60 * 1000) % 24);
-        int days = (int) (timeInMilliSecs / (24 * 60 * 60 * 1000));
-        return new DateDifference(days, hours, minutes, seconds);
     }
 
     public static class DateDifference {
