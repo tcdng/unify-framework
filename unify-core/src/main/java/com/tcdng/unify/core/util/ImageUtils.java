@@ -22,6 +22,8 @@ import java.io.ByteArrayOutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base64;
+
 /**
  * Provides utility methods for Image processing.
  * 
@@ -30,7 +32,7 @@ import javax.imageio.ImageIO;
 public final class ImageUtils {
 
     private ImageUtils() {
-        
+
     }
 
     /**
@@ -39,7 +41,7 @@ public final class ImageUtils {
     public static void scanForPlugins() {
         ImageIO.scanForPlugins();
     }
-    
+
     /**
      * Converts image to JPEG image
      * 
@@ -437,5 +439,31 @@ public final class ImageUtils {
             IOUtils.close(outstream);
         }
         return result;
+    }
+
+    /**
+     * Encodes image to base 64 string.
+     * 
+     * @param image
+     *            the image to encode
+     * @return the base 64 string
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static String encodeImageToBase64String(byte[] image) throws Exception {
+        return new String(Base64.encodeBase64(image));
+    }
+
+    /**
+     * Decodes image from base 64 string.
+     * 
+     * @param base64Str
+     *            the base 64 string
+     * @return the image
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static byte[] decodeImageFromBase64String(String base64Str) throws Exception {
+        return Base64.decodeBase64(base64Str.getBytes("UTF-8"));
     }
 }
