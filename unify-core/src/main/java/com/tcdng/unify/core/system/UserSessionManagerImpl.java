@@ -120,7 +120,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     @Override
-    public void logIn(UserToken userToken) throws UnifyException {
+    public void login(UserToken userToken) throws UnifyException {
         SessionContext sessionContext = getRequestContext().getSessionContext();
 
         // Add user session if not existing
@@ -143,7 +143,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
                 db().updateAll(new UserSessionTrackingQuery().idAmongst(sessionIdList),
                         new Update().add("userLoginId", null).add("userLoginId", null).add("userName", null));
 
-                forceLogOut(sessionIdList.toArray(new String[sessionIdList.size()]));
+                forceLogout(sessionIdList.toArray(new String[sessionIdList.size()]));
             }
         }
 
@@ -152,7 +152,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     @Override
-    public void logOut(boolean clearCompleteSession) throws UnifyException {
+    public void logout(boolean clearCompleteSession) throws UnifyException {
         if (clearCompleteSession) {
             logOut(userSessions.get(getRequestContext().getSessionContext().getId()));
         } else {
@@ -161,16 +161,16 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     @Override
-    public void logOut(String sessionId) throws UnifyException {
+    public void logout(String sessionId) throws UnifyException {
         logOut(userSessions.get(sessionId));
     }
 
     @Broadcast
     @Override
-    public void forceLogOut(String... sessionIds) throws UnifyException {
+    public void forceLogout(String... sessionIds) throws UnifyException {
         // Force logout specific sessions in this node
         for (String otherSessionId : sessionIds) {
-            logOut(otherSessionId);
+            logout(otherSessionId);
             UserSession userSession = userSessions.get(otherSessionId);
             if (userSession != null) {
                 userSession.getSessionContext().setAttribute(UnifyCoreSessionAttributeConstants.FORCE_LOGOUT,

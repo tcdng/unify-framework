@@ -131,17 +131,17 @@ public interface UserSessionManager extends BusinessService {
     void broadcast(String attribute, Object value) throws UnifyException;
 
     /**
-     * Log in user into the current session context.
+     * Login user into the current session context.
      * 
      * @param userToken
      *            the user token
      * @throws UnifyException
      *             if multiple login is not allowed and user is already logged-in
      */
-    void logIn(UserToken userToken) throws UnifyException;
+    void login(UserToken userToken) throws UnifyException;
 
     /**
-     * Log out current user from current session context.
+     * Logout current user from current session context.
      * 
      * @param clearCompleteSession
      *            indicates if session should be completed cleared, otherwise only
@@ -149,17 +149,17 @@ public interface UserSessionManager extends BusinessService {
      * @throws UnifyException
      *             if an error occurs
      */
-    void logOut(boolean clearCompleteSession) throws UnifyException;
+    void logout(boolean clearCompleteSession) throws UnifyException;
 
     /**
-     * Log out user session out.
+     * Logout user session out.
      * 
      * @param sessionId
      *            the user session ID
      * @throws UnifyException
      *             if an error occurs
      */
-    void logOut(String sessionId) throws UnifyException;
+    void logout(String sessionId) throws UnifyException;
 
     /**
      * Force logout sessions.
@@ -168,5 +168,5 @@ public interface UserSessionManager extends BusinessService {
      *            Ids for sessions to log out
      * @throws UnifyException
      */
-    void forceLogOut(String... sessionIds) throws UnifyException;
+    void forceLogout(String... sessionIds) throws UnifyException;
 }
