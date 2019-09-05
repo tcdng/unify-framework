@@ -35,7 +35,7 @@ public class StringConverter extends AbstractConverter<String> {
     protected String doConvert(Object value, Formatter<?> formatter) throws Exception {
         if (value != null) {
             if (value instanceof String) {
-                if (formatter != null && String.class.equals(formatter.getDataType())) {
+                if (formatter != null) {
                     return ((Formatter<Object>) formatter).format(value);
                 }
 

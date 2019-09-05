@@ -21,6 +21,6 @@ package com.tcdng.unify.core.format;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface MessageFormatter extends Formatter<String> {
+public interface MessageFormatter extends Formatter<Object> {
 
 }

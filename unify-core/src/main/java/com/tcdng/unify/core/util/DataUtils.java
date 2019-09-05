@@ -480,6 +480,10 @@ public final class DataUtils {
             }
 
             if (targetClazz.equals(value.getClass())) {
+                if (formatter != null) {
+                    return (T) classToConverterMap.get(targetClazz).convert(value, formatter);
+                }
+                
                 return (T) value;
             }
 
