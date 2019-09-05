@@ -66,8 +66,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
             if (grabClusterMasterLock()) {
                 logInfo("Checking application version information...");
-                Feature featureData = getFeatureData("deploymentVersion", "0.0", true);
-                String lastDeploymentVersion = featureData.getValue();
+                Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
+                String lastDeploymentVersion = deploymentFeature.getValue();
                 String versionToDeploy = getDeploymentVersion();
 
                 // Do installation only if deployment version is new
@@ -85,8 +85,14 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                         }
                     }
 
-                    featureData.setValue(versionToDeploy);
-                    db().updateByIdVersion(featureData);
+                    // Update last deployment feature
+                    Feature lastDeploymentFeature = getFeature("lastDeploymentVersion", "0.0");
+                    lastDeploymentFeature.setValue(lastDeploymentVersion);
+                    db().updateByIdVersion(lastDeploymentFeature);
+                    
+                    // Update current current deployment feature
+                    deploymentFeature.setValue(versionToDeploy);
+                    db().updateByIdVersion(deploymentFeature);
                 } else {
                     if (lastDeploymentVersion.equals(versionToDeploy)) {
                         logInfo("Application deployment version {0} is current.", versionToDeploy);
@@ -165,14 +171,14 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
         }
     }
 
-    private Feature getFeatureData(String code, String value, boolean createNew) throws UnifyException {
-        Feature FeatureData = db().find(new FeatureQuery().code(code));
-        if (FeatureData == null) {
-            FeatureData = new Feature();
-            FeatureData.setCode(code);
-            FeatureData.setValue(value);
-            db().create(FeatureData);
+    private Feature getFeature(String code, String defaultVal) throws UnifyException {
+        Feature feature = db().find(new FeatureQuery().code(code));
+        if (feature == null) {
+            feature = new Feature();
+            feature.setCode(code);
+            feature.setValue(defaultVal);
+            db().create(feature);
         }
-        return FeatureData;
+        return feature;
     }
 }
