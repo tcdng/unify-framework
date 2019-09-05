@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.constant.ExtensionType;
 import com.tcdng.unify.web.ui.ListControlJsonData;
 
@@ -56,7 +57,7 @@ public class SingleSelect extends AbstractListPopupTextField {
     @Override
     public String getFacadeStringValue() throws UnifyException {
         ListControlJsonData listControlJsonData = getListControlJsonData(false, false, false);
-        return listControlJsonData.getValueLabel();
+        return DataUtils.convert(String.class, listControlJsonData.getValueLabel(), getFormatter());
     }
 
     public String getBlankOption() throws UnifyException {

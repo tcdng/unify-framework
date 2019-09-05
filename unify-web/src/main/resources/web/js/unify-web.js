@@ -2177,6 +2177,8 @@ ux.ssSelectOpt = function(ssCom, index, select) {
 			var txt = aElem.innerHTML;
 			if (txt == "&nbsp;") {
 				txt = "";
+			} else {
+				txt = ux.decodeHtml(txt);
 			}
 
 			ssCom.uFacObj.value = txt;
@@ -4234,7 +4236,13 @@ ux.documentKeydownHandler = function(uEv) {
 }
 
 
-/** DOM search functions */
+/** DOM functions */
+ux.decodeHtml = function(html) {
+    var elem = document.createElement("textarea");
+    elem.innerHTML = html;
+    return elem.value;	
+}
+
 ux.findParent = function(domObject, tagName) {
 	while (domObject = domObject.parentNode) {
 		if (domObject.tagName.toLowerCase() == tagName.toLowerCase()) {
