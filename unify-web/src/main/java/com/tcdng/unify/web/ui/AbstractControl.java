@@ -31,8 +31,8 @@ import com.tcdng.unify.web.util.WidgetUtils;
  */
 @UplAttributes({ @UplAttribute(name = "focus", type = boolean.class),
         @UplAttribute(name = "sortable", type = boolean.class),
-        @UplAttribute(name = "required", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultValue = "false")})
+        @UplAttribute(name = "required", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultVal = "false")})
 public abstract class AbstractControl extends AbstractWidget implements Control {
 
     private TriState required;

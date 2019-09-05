@@ -675,6 +675,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 if (!StringUtils.isBlank(confirm)) {
                     writer.write(",\"uConf\":");
                     writeStringParameter(writer, confirm);
+                    writer.write(",\"uIconIndex\":");
+                    writer.write(pageAction.getUplAttribute(int.class, "iconIndex"));
                     writer.write(",\"uConfURL\":\"");
                     writer.writeContextURL(beanId, "/confirm");
                     writer.write('"');

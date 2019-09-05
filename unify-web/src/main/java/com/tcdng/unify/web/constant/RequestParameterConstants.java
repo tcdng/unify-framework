@@ -35,6 +35,8 @@ public interface RequestParameterConstants {
 
     String CONFIRM_MSG = "req_cmsg";
 
+    String CONFIRM_MSGICON = "req_cmsgicon";
+
     String CONFIRM_PARAM = "req_cprm";
 
     String REFRESH = "req_rsh";

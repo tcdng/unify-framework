@@ -26,9 +26,9 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "styleClass", type = String.class, defaultValue = "$e{}"),
+@UplAttributes({ @UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
         @UplAttribute(name = "style", type = String.class),
-        @UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "showCaption", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "captionStyle", type = String.class),
         @UplAttribute(name = "captionSuffix", type = String.class),
         @UplAttribute(name = "inlineCaption", type = boolean.class) })

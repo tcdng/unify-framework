@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  * @since 1.0
  */
 @Component("hidepopupresponse")
-@UplAttributes({ @UplAttribute(name = "systemInfo", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "systemInfo", type = boolean.class, defaultVal = "false") })
 public class HidePopupResponse extends AbstractJsonPageControllerResponse {
 
     public HidePopupResponse() {

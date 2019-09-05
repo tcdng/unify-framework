@@ -53,7 +53,7 @@ import com.tcdng.unify.web.ui.EventHandler;
         @UplAttribute(name = "multiSelDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "multiSelect", type = boolean.class),
-        @UplAttribute(name = "multiSelectCheckboxes", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "multiSelectCheckboxes", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "pagination", type = boolean.class),
         @UplAttribute(name = "rowSelectable", type = boolean.class),
         @UplAttribute(name = "serialNumbers", type = boolean.class),

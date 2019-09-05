@@ -28,8 +28,8 @@ import com.tcdng.unify.web.ui.AbstractControl;
  * @since 1.0
  */
 @Component("ui-textclock")
-@UplAttributes({ @UplAttribute(name = "dateTitle", type = String.class, defaultValue = "$m{textclock.date.title}"),
-        @UplAttribute(name = "timeTitle", type = String.class, defaultValue = "$m{textclock.time.title}") })
+@UplAttributes({ @UplAttribute(name = "dateTitle", type = String.class, defaultVal = "$m{textclock.date.title}"),
+        @UplAttribute(name = "timeTitle", type = String.class, defaultVal = "$m{textclock.time.title}") })
 public class TextClock extends AbstractControl {
 
     public String getDateTitle() throws UnifyException {

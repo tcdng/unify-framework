@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 @Component("showpopupresponse")
 @UplAttributes({ @UplAttribute(name = "popup", type = String.class),
-        @UplAttribute(name = "systemInfo", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "systemInfo", type = boolean.class, defaultVal = "false") })
 public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
 
     public ShowPopupResponse() {

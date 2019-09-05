@@ -38,7 +38,7 @@ import com.tcdng.unify.web.ui.Widget;
 @Component("ui-dynamicpanel")
 @UplAttributes({ @UplAttribute(name = "panelNameBinding", type = String.class, mandatory = true),
         @UplAttribute(name = "panelValueBinding", type = String.class),
-        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultVal = "false") })
 public class DynamicPanel extends AbstractPanel {
 
     private Set<String> panelNames;

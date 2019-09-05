@@ -39,8 +39,8 @@ import com.tcdng.unify.web.ui.Widget;
  */
 @Component("ui-uniquevalidation")
 @UplAttributes({ @UplAttribute(name = "type", type = Class.class),
-        @UplAttribute(name = "idProperty", type = String.class, defaultValue = "id"),
-        @UplAttribute(name = "idType", type = Class.class, defaultValue = "java.lang.Long") })
+        @UplAttribute(name = "idProperty", type = String.class, defaultVal = "id"),
+        @UplAttribute(name = "idType", type = Class.class, defaultVal = "java.lang.Long") })
 public class UniqueValidation extends AbstractPageValidation {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

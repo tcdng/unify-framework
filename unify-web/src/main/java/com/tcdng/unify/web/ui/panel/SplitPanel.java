@@ -29,8 +29,8 @@ import com.tcdng.unify.web.ui.AbstractPanel;
  */
 @Component("ui-splitpanel")
 @UplAttributes({ @UplAttribute(name = "minorMin", type = int.class), @UplAttribute(name = "minorMax", type = int.class),
-        @UplAttribute(name = "minorDefault", type = int.class, defaultValue = "150"),
-        @UplAttribute(name = "vertical", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "minorDefault", type = int.class, defaultVal = "150"),
+        @UplAttribute(name = "vertical", type = boolean.class, defaultVal = "true") })
 public class SplitPanel extends AbstractPanel {
 
     public String getSplitCtrlId() throws UnifyException {

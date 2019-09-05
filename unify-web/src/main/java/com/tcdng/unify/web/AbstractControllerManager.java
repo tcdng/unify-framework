@@ -200,6 +200,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         skipOnPopulateSet.add(RequestParameterConstants.TARGET_VALUE);
         skipOnPopulateSet.add(RequestParameterConstants.VALIDATION_ACTION);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSG);
+        skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSGICON);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_PARAM);
 
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_VIEWER);

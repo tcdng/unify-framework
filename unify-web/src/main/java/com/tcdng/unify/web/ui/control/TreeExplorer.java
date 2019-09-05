@@ -47,9 +47,9 @@ import com.tcdng.unify.web.ui.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
  * @since 1.0
  */
 @Component("ui-treeexplorer")
-@UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultValue = "$t{images/collapsed.png}"),
-        @UplAttribute(name = "expandedIcon", type = String.class, defaultValue = "$t{images/expanded.png}"),
-        @UplAttribute(name = "treeRule", type = String.class, defaultValue = "default-treepolicy"),
+@UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultVal = "$t{images/collapsed.png}"),
+        @UplAttribute(name = "expandedIcon", type = String.class, defaultVal = "$t{images/expanded.png}"),
+        @UplAttribute(name = "treeRule", type = String.class, defaultVal = "default-treepolicy"),
         @UplAttribute(name = "treeEventPath", type = String.class),
         @UplAttribute(name = "dataComponents", type = UplElementReferences.class) })
 public class TreeExplorer extends AbstractMultiControl {

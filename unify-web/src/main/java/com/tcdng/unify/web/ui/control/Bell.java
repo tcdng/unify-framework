@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.AbstractWidget;
  */
 @Component("ui-bell")
 @UplAttributes({
-        @UplAttribute(name = "imageSrc", type = String.class, defaultValue = "$t{images/notification_gray.png}") })
+        @UplAttribute(name = "imageSrc", type = String.class, defaultVal = "$t{images/notification_gray.png}") })
 public class Bell extends AbstractWidget {
 
     public String getImageSrc() throws UnifyException {

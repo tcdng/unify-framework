@@ -34,8 +34,8 @@ import com.tcdng.unify.web.ui.Control;
  * @since 1.0
  */
 @Component("ui-multidynamic")
-@UplAttributes({ @UplAttribute(name = "isRequiredSymbol", type = String.class, defaultValue = "*"),
-        @UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
+@UplAttributes({ @UplAttribute(name = "isRequiredSymbol", type = String.class, defaultVal = "*"),
+        @UplAttribute(name = "captionSuffix", type = String.class, defaultVal = ":") })
 public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.ValueStore, Input> {
 
     private DynamicField valueCtrl;

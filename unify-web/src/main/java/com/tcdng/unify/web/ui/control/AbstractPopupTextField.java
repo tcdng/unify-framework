@@ -25,10 +25,10 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/droparrow.png}"),
-        @UplAttribute(name = "timeout", type = long.class, defaultValue = "-1"),
+@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/droparrow.png}"),
+        @UplAttribute(name = "timeout", type = long.class, defaultVal = "-1"),
         @UplAttribute(name = "clearable", type = boolean.class),
-        @UplAttribute(name = "popupAlways", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "popupAlways", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPopupTextField extends TextField {
 
     @Override

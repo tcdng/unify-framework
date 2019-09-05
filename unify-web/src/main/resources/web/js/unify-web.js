@@ -3345,8 +3345,10 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	if (evp.uConfMsg) {
 		if (isForm) {
 			pb.append("req_cmsg", evp.uConfMsg);
+			pb.append("req_cmsgicon", evp.uIconIndex);
 		} else {
 			pb += ("&req_cmsg=" + _enc(evp.uConfMsg));
+			pb += ("&req_cmsgicon=" + _enc(evp.uIconIndex));
 		}
 	}
 
@@ -4418,6 +4420,7 @@ ux.handleOrConfirmRedirect = function(event, handler, evp) {
 		var evPrmConf = {};
 		evPrmConf.uURL = evp.uConfURL;
 		evPrmConf.uConfMsg = evp.uConf;
+		evPrmConf.uIconIndex = evp.uIconIndex;
 		evPrmConf.uViewer = evp.uViewer;
 		var hiddenElem = _id(ux.confirmstore.normEvt.uTrg.id + "_a");
 		if (hiddenElem) {

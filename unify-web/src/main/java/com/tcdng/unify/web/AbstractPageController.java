@@ -186,8 +186,8 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
             msg = MessageFormat.format(msg, param);
         }
 
-        return showMessageBox(MessageIcon.QUESTION, MessageMode.YES_NO, getSessionMessage("messagebox.confirmation"),
-                msg, "/confirmResult");
+        return showMessageBox(getRequestContextUtil().getRequestConfirmMessageIcon(), MessageMode.YES_NO,
+                getSessionMessage("messagebox.confirmation"), msg, "/confirmResult");
     }
 
     @Action

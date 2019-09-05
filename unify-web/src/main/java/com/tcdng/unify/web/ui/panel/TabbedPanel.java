@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.Widget;
  */
 @Component("ui-tabbedpanel")
 @UplBinding("web/panels/upl/tabbedpanel.upl")
-@UplAttributes({ @UplAttribute(name = "tabPosition", type = TabPosition.class, defaultValue = "top") })
+@UplAttributes({ @UplAttribute(name = "tabPosition", type = TabPosition.class, defaultVal = "top") })
 public class TabbedPanel extends SwitchPanel {
 
     private String activeTabId;

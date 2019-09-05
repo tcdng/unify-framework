@@ -29,8 +29,8 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  */
 @Component("ui-togglebutton")
 @UplAttributes({ @UplAttribute(name = "toggleBinding", type = String.class, mandatory = true),
-        @UplAttribute(name = "onMessageKey", type = String.class, defaultValue = "button.on"),
-        @UplAttribute(name = "offMessageKey", type = String.class, defaultValue = "button.off") })
+        @UplAttribute(name = "onMessageKey", type = String.class, defaultVal = "button.on"),
+        @UplAttribute(name = "offMessageKey", type = String.class, defaultVal = "button.off") })
 public class ToggleButton extends AbstractTargetControl {
 
     public String getToggleBinding() throws UnifyException {

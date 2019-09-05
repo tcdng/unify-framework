@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.AbstractMultiControl;
  * @since 1.0
  */
 @Component("ui-titlebar")
-@UplAttributes({ @UplAttribute(name = "draggable", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false") })
 public class TitleBar extends AbstractMultiControl {
 
     @Override

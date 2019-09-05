@@ -35,8 +35,8 @@ import com.tcdng.unify.web.ui.AbstractControl;
         @UplAttribute(name = "maxSize", type = int.class),
         @UplAttribute(name = "maxSizeBinding", type = String.class),
         @UplAttribute(name = "uploadPath", type = String.class),
-        @UplAttribute(name = "browseCaption", type = String.class, defaultValue = "$m{button.browse}"),
-        @UplAttribute(name = "uploadCaption", type = String.class, defaultValue = "$m{button.upload}") })
+        @UplAttribute(name = "browseCaption", type = String.class, defaultVal = "$m{button.browse}"),
+        @UplAttribute(name = "uploadCaption", type = String.class, defaultVal = "$m{button.upload}") })
 public class FileUpload extends AbstractControl {
 
     public String getAccept() throws UnifyException {

@@ -33,9 +33,9 @@ import com.tcdng.unify.web.ui.data.Hint.MODE;
 @UplAttributes({ @UplAttribute(name = "backImageSrc", type = String.class),
         @UplAttribute(name = "refreshPath", type = String.class),
         @UplAttribute(name = "refreshEvery", type = int.class),
-        @UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "legend", type = String.class),
-        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPanel extends AbstractContainer implements Panel {
 
     private List<PanelEventListener> listeners;

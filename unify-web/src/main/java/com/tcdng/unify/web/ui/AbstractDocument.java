@@ -27,13 +27,13 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  */
 @UplAttributes({ @UplAttribute(name = "styleSheet", type = String[].class),
         @UplAttribute(name = "script", type = String[].class),
-        @UplAttribute(name = "layout", type = DocumentLayout.class, defaultValue = "$d{!ui-desktoptype0}"),
+        @UplAttribute(name = "layout", type = DocumentLayout.class, defaultVal = "$d{!ui-desktoptype0}"),
         @UplAttribute(name = "headerPanel", type = String.class),
         @UplAttribute(name = "footerPanel", type = String.class),
         @UplAttribute(name = "menuPanel", type = String.class),
         @UplAttribute(name = "contentPanel", type = String.class),
         @UplAttribute(name = "caption", type = String.class),
-        @UplAttribute(name = "favicon", type = String.class, defaultValue = "web/images/favicon.png") })
+        @UplAttribute(name = "favicon", type = String.class, defaultVal = "web/images/favicon.png") })
 public abstract class AbstractDocument extends AbstractPage implements Document {
 
     @Override

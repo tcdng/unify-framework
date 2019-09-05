@@ -36,7 +36,7 @@ import com.tcdng.unify.web.WebApplicationComponents;
         @UplAttribute(name = "listParams", type = String[].class),
         @UplAttribute(name = "listKey", type = String.class),
         @UplAttribute(name = "listDescription", type = String.class),
-        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "control"),
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "control"),
         @UplAttribute(name = "flow", type = boolean.class) })
 public abstract class AbstractListControl extends AbstractControl implements ListControl {
 

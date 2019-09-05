@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
  * @since 1.0
  */
 @Component("ui-postcommand")
-@UplAttributes({ @UplAttribute(name = "command", type = String.class, defaultValue = "switchState"),
+@UplAttributes({ @UplAttribute(name = "command", type = String.class, defaultVal = "switchState"),
         @UplAttribute(name = "target", type = String.class),
         @UplAttribute(name = "validations", type = UplElementReferences.class),
         @UplAttribute(name = "refresh", type = UplElementReferences.class) })

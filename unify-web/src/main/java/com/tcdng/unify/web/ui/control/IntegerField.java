@@ -29,7 +29,7 @@ import com.tcdng.unify.core.format.NumberFormatter;
  * @since 1.0
  */
 @Component("ui-integer")
-@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!integerformat}") })
+@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!integerformat}") })
 public class IntegerField extends AbstractNumberField {
 
     @Override

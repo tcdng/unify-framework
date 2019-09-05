@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "borderErrStyle", type = String.class, defaultValue = "2px solid #F0C0C0"),
+@UplAttributes({ @UplAttribute(name = "borderErrStyle", type = String.class, defaultVal = "2px solid #F0C0C0"),
         @UplAttribute(name = "components", type = UplElementReferences.class) })
 public abstract class AbstractPageValidation extends AbstractBehavior implements PageValidation {
 

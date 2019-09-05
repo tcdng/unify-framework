@@ -119,7 +119,7 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
                     if (uas != null) {
                         for (UplAttribute ua : uas.value()) {
                             uplAttributeInfoMap.put(ua.name(), new UplAttributeInfo(ua.type(),
-                                    AnnotationUtils.getAnnotationString(ua.defaultValue()), ua.mandatory()));
+                                    AnnotationUtils.getAnnotationString(ua.defaultVal()), ua.mandatory()));
                         }
                     }
                 }

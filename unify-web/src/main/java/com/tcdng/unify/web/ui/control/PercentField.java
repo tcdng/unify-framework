@@ -27,7 +27,7 @@ import com.tcdng.unify.core.format.Formatter;
  * @since 1.0
  */
 @Component("ui-percent")
-@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!percentformat}") })
+@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!percentformat}") })
 public class PercentField extends DecimalField {
 
 }

@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.AbstractControl;
 @Component("ui-textarea")
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class), @UplAttribute(name = "rows", type = int.class),
         @UplAttribute(name = "minLen", type = int.class), @UplAttribute(name = "maxLen", type = int.class),
-        @UplAttribute(name = "wordWrap", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "wordWrap", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "scrollToEnd", type = boolean.class) })
 public class TextArea extends AbstractControl {
 
