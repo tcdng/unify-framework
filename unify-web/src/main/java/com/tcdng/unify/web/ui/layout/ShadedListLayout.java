@@ -30,10 +30,10 @@ import com.tcdng.unify.web.ui.AbstractLayout;
  */
 @Component("ui-shadedlist")
 @UplAttributes({
-    @UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "true"),
-    @UplAttribute(name = "inlineMode", type = boolean.class, defaultValue = "false"),
+    @UplAttribute(name = "showCaption", type = boolean.class, defaultVal = "true"),
+    @UplAttribute(name = "inlineMode", type = boolean.class, defaultVal = "false"),
     @UplAttribute(name = "minColumns", type = int.class),
-    @UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
+    @UplAttribute(name = "captionSuffix", type = String.class, defaultVal = ":") })
 public class ShadedListLayout extends AbstractLayout {
 
     public boolean isInlineMode() throws UnifyException {

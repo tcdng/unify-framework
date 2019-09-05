@@ -37,7 +37,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
  */
 @UplAttributes({
         @UplAttribute(name = "binding", type = String.class),
-        @UplAttribute(name = "styleClass", type = String.class, defaultValue = "$e{}"),
+        @UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
         @UplAttribute(name = "styleClassBinding", type = String.class),
         @UplAttribute(name = "style", type = String.class),
         @UplAttribute(name = "caption", type = String.class),
@@ -46,12 +46,12 @@ import com.tcdng.unify.web.util.WidgetUtils;
         @UplAttribute(name = "columnSelectSummary", type = boolean.class),
         @UplAttribute(name = "hint", type = String.class),
         @UplAttribute(name = "hintBinding", type = String.class),
-        @UplAttribute(name = "readOnly", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "ignoreParentState", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "ignoreParentState", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "privilege", type = String.class),
-        @UplAttribute(name = "fixedConforming", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "behaviorAlways", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "fixedConforming", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "hidden", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "behaviorAlways", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "eventHandler", type = EventHandler[].class) })
 public abstract class AbstractWidget extends AbstractUplComponent implements Widget {
 

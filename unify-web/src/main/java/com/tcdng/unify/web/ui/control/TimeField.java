@@ -30,8 +30,8 @@ import com.tcdng.unify.core.format.Pattern;
  * @since 1.0
  */
 @Component("ui-time")
-@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/clock.png}"),
-        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!timeformat style:short}") })
+@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/clock.png}"),
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!timeformat style:short}") })
 public class TimeField extends AbstractTimeField {
 
     private DateTimeFormat[] dateTimeFormat;

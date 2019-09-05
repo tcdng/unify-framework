@@ -31,9 +31,9 @@ import com.tcdng.unify.web.ui.panel.StandalonePanel;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "type", type = String.class, defaultValue = "ui-page"),
+@UplAttributes({ @UplAttribute(name = "type", type = String.class, defaultVal = "ui-page"),
         @UplAttribute(name = "caption", type = String.class, mandatory = true),
-        @UplAttribute(name = "remote", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "remote", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPage extends AbstractStandalonePanel implements Page {
 
     private Map<String, StandalonePanel> standalonePanels;

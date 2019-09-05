@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.Control;
  * @since 1.0
  */
 @Component("ui-rack")
-@UplAttributes({ @UplAttribute(name = "rowSelectable", type = boolean.class, defaultValue = "true") })
+@UplAttributes({ @UplAttribute(name = "rowSelectable", type = boolean.class, defaultVal = "true") })
 public class Rack extends Table {
 
     private ShiftButtons shiftCtrl;

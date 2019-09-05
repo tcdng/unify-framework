@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractDocumentLayout;
  * @since 1.0
  */
 @Component("ui-desktoptype2")
-@UplAttributes({ @UplAttribute(name = "collapsibleSidebar", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "collapsibleSidebar", type = boolean.class, defaultVal = "false") })
 public class DesktopType2Layout extends AbstractDocumentLayout {
 
 }

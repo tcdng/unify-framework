@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.AbstractControl;
  * @since 1.0
  */
 @Component("ui-hidden")
-@UplAttributes({ @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "true") })
+@UplAttributes({ @UplAttribute(name = "hidden", type = boolean.class, defaultVal = "true") })
 public class HiddenField extends AbstractControl {
 
     @Override

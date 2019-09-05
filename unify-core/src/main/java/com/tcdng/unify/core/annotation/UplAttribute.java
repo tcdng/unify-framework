@@ -37,7 +37,7 @@ public @interface UplAttribute {
     Class<?> type();
 
     /** The attribute default value */
-    String defaultValue() default AnnotationConstants.NONE;
+    String defaultVal() default AnnotationConstants.NONE;
 
     /** Used to indicate that attribute is mandatory */
     boolean mandatory() default false;

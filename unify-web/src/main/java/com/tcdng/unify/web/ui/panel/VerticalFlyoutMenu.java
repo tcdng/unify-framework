@@ -26,8 +26,8 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @Component("ui-verticalflyoutmenu")
-@UplAttributes({ @UplAttribute(name = "backImgSrc", type = String.class, defaultValue = "$t{images/up.png}"),
-        @UplAttribute(name = "forwardImgSrc", type = String.class, defaultValue = "$t{images/down.png}") })
+@UplAttributes({ @UplAttribute(name = "backImgSrc", type = String.class, defaultVal = "$t{images/up.png}"),
+        @UplAttribute(name = "forwardImgSrc", type = String.class, defaultVal = "$t{images/down.png}") })
 public class VerticalFlyoutMenu extends AbstractFlyoutMenu {
 
     @Override

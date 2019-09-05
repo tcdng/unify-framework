@@ -40,11 +40,11 @@ import com.tcdng.unify.web.ui.ListParamType;
         @UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
         @UplAttribute(name = "acceptNegative", type = boolean.class),
         @UplAttribute(name = "useGrouping", type = boolean.class),
-        @UplAttribute(name = "list", type = String.class, defaultValue = "currencylist"),
-        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "immediate"),
-        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!decimalformat}"),
-        @UplAttribute(name = "extStyleClass", type = String.class, defaultValue = "tnread"),
-        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "list", type = String.class, defaultVal = "currencylist"),
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "immediate"),
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!decimalformat}"),
+        @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tnread"),
+        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultVal = "false") })
 public class MoneyField extends AbstractListPopupTextField {
 
     @Override

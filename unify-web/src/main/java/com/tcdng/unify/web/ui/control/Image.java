@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
 @UplAttributes({ @UplAttribute(name = "src", type = String.class),
         @UplAttribute(name = "srcBinding", type = String.class),
         @UplAttribute(name = "scope", type = String.class),
-        @UplAttribute(name = "clearOnRead", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "clearOnRead", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "alwaysFetch", type = boolean.class) })
 public class Image extends AbstractTargetControl {
 

@@ -28,6 +28,7 @@ import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.data.Hint;
+import com.tcdng.unify.web.ui.data.MessageIcon;
 import com.tcdng.unify.web.ui.data.ValidationInfo;
 
 /**
@@ -181,6 +182,14 @@ public interface RequestContextUtil extends UnifyComponent {
      */
     String getRequestConfirmMessage() throws UnifyException;
 
+    /**
+     * Returns the message icon of confirmation message from current request
+     * context.
+     * 
+     * @throws UnifyException if an error occurs
+     */
+    MessageIcon getRequestConfirmMessageIcon() throws UnifyException;
+    
     /**
      * Returns a converted value of the request confirm message from current request
      * context.

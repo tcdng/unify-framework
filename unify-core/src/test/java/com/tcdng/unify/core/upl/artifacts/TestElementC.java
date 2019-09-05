@@ -30,7 +30,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  */
 @Component("test-uplelementc")
 @UplAttributes({
-        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!dateformat style:$s{long}}") })
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!dateformat style:$s{long}}") })
 public class TestElementC extends AbstractUplComponent {
 
     @Override

@@ -28,9 +28,9 @@ import com.tcdng.unify.web.ui.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-label")
-@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultValue = "true"),
-        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "draggable", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false") })
 public class Label extends AbstractFormattedControl {
 
     public Label() {

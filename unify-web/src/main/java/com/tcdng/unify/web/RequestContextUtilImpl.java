@@ -39,6 +39,7 @@ import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.data.Hint;
+import com.tcdng.unify.web.ui.data.MessageIcon;
 import com.tcdng.unify.web.ui.data.ValidationInfo;
 
 /**
@@ -159,6 +160,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
                 request.getParameter(RequestParameterConstants.TARGET_VALUE));
         setRequestAttribute(RequestParameterConstants.CONFIRM_MSG,
                 request.getParameter(RequestParameterConstants.CONFIRM_MSG));
+        setRequestAttribute(RequestParameterConstants.CONFIRM_MSGICON,
+                request.getParameter(RequestParameterConstants.CONFIRM_MSGICON));
         setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM,
                 request.getParameter(RequestParameterConstants.CONFIRM_PARAM));
     }
@@ -171,6 +174,11 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     @Override
     public String getRequestConfirmMessage() throws UnifyException {
         return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.CONFIRM_MSG), null);
+    }
+
+    @Override
+    public MessageIcon getRequestConfirmMessageIcon() throws UnifyException {
+        return MessageIcon.getIconByInt(DataUtils.convert(int.class, getRequestAttribute(RequestParameterConstants.CONFIRM_MSGICON), null));
     }
 
     @Override
@@ -420,6 +428,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public void clearRequestContext() throws UnifyException {
         setRequestAttribute(RequestParameterConstants.TARGET_VALUE, null);
         setRequestAttribute(RequestParameterConstants.CONFIRM_MSG, null);
+        setRequestAttribute(RequestParameterConstants.CONFIRM_MSGICON, null);
         setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM, null);
         setRequestAttribute(COMMAND, null);
         setRequestAttribute(COMMAND_POSTRESPONSE_PATH, null);

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @Component("ui-grid")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class, defaultValue = "1") })
+@UplAttributes({ @UplAttribute(name = "columns", type = int.class, defaultVal = "1") })
 public class GridLayout extends AbstractTabularLayout {
 
     public int getColumns() throws UnifyException {

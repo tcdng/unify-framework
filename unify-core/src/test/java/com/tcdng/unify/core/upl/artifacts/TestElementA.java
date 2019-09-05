@@ -30,10 +30,10 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 @Component("test-uplelementa")
 @UplAttributes({ @UplAttribute(name = "name", type = String.class),
-        @UplAttribute(name = "description", type = String.class, defaultValue = "Application User"),
+        @UplAttribute(name = "description", type = String.class, defaultVal = "Application User"),
         @UplAttribute(name = "friendList", type = String[].class),
         @UplAttribute(name = "rateList", type = Double[].class),
-        @UplAttribute(name = "age", type = int.class, defaultValue = "20"),
+        @UplAttribute(name = "age", type = int.class, defaultVal = "20"),
         @UplAttribute(name = "action", type = UplElementReferences.class),
         @UplAttribute(name = "components", type = UplElementReferences.class),
         @UplAttribute(name = "componentRef", type = String.class) })

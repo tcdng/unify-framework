@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.Control;
  */
 @Component("ui-tilegroup")
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class),
-        @UplAttribute(name = "showTitleSection", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "showTitleSection", type = boolean.class, defaultVal = "false") })
 public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
 
     private Control imageCtrl;

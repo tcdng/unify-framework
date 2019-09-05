@@ -41,7 +41,7 @@ import com.tcdng.unify.web.ui.control.Table;
  * @since 1.0
  */
 @UplBinding("web/panels/upl/tablecrudpanel.upl")
-@UplAttributes({ @UplAttribute(name = "createNext", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "createNext", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractPanel implements TableCrudPanel<T> {
 
     protected enum FORMMODE {

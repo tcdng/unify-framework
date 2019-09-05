@@ -40,7 +40,7 @@ import com.tcdng.unify.web.ui.ListParamType;
         @UplAttribute(name = "listParams", type = String[].class),
         @UplAttribute(name = "listKey", type = String.class),
         @UplAttribute(name = "listDescription", type = String.class),
-        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "control") })
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "control") })
 public abstract class AbstractListPopupTextField extends AbstractPopupTextField implements ListControl {
 
     @Override

@@ -26,7 +26,9 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "components", type = UplElementReferences.class),
-        @UplAttribute(name = "confirm", type = String.class), @UplAttribute(name = "shortcut", type = String.class) })
+        @UplAttribute(name = "confirm", type = String.class),
+        @UplAttribute(name = "iconIndex", type = int.class, defaultVal = "3"),
+        @UplAttribute(name = "shortcut", type = String.class) })
 public abstract class AbstractPageAction extends AbstractBehavior implements PageAction {
 
     private String action;

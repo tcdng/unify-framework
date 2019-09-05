@@ -34,7 +34,7 @@ import com.tcdng.unify.web.constant.ExtensionType;
 @Component("ui-dropdowncheckboxlist")
 @UplAttributes({ @UplAttribute(name = "selectAllOption", type = String.class),
         @UplAttribute(name = "columns", type = int.class),
-        @UplAttribute(name = "popupAlways", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "popupAlways", type = boolean.class, defaultVal = "true") })
 public class DropdownCheckBoxList extends AbstractListPopupTextField {
 
     @Override

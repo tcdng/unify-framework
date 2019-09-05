@@ -38,8 +38,8 @@ import com.tcdng.unify.web.util.WidgetUtils;
  */
 @UplAttributes({ @UplAttribute(name = "layout", type = Layout.class),
         @UplAttribute(name = "components", type = UplElementReferences.class),
-        @UplAttribute(name = "arrayCascade", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "space", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "arrayCascade", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "space", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractContainer extends AbstractWidget implements Container {
 
     private WidgetRepository widgetRepository;
