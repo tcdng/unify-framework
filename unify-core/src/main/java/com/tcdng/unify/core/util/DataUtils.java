@@ -480,7 +480,7 @@ public final class DataUtils {
             }
 
             if (targetClazz.equals(value.getClass())) {
-                if (formatter != null) {
+                if (formatter != null && String.class.equals(targetClazz)) {
                     return (T) classToConverterMap.get(targetClazz).convert(value, formatter);
                 }
                 
