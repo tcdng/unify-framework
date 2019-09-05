@@ -53,7 +53,8 @@ public abstract class AbstractFormattedControl extends AbstractControl {
         return DataUtils.convert(clazz, dataClass, getValue(), getFormatter());
     }
 
-    public Formatter<?> getFormatter() throws UnifyException {
-        return (Formatter<?>) getUplAttribute(Formatter.class, "formatter");
+    @SuppressWarnings("unchecked")
+    public Formatter<Object> getFormatter() throws UnifyException {
+        return (Formatter<Object>) getUplAttribute(Formatter.class, "formatter");
     }
 }
