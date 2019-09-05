@@ -667,12 +667,12 @@ z-index:400;}
 .ui-simplecrudtable .todd {background-color: #FFF;}
 .ui-simplecrudtable .teven {background-color: #FFFFE0;}
 .ui-simplecrudtable .tnoitems {text-align: center; height:24px;}
-.ui-simplecrudtable .tsel {background-color: #5970B2; color: #FFF;}
-.ui-simplecrudtable .tselred {background-color: #C03333; color: #FFF;}
-.ui-simplecrudtable .tselblue {background-color: #3378C0; color: #FFF;}
-.ui-simplecrudtable .tselgreen {background-color: #33C078; color: #FFF;}
-.ui-simplecrudtable .tselorange {background-color: #C07833; color: #FFF;}
-.ui-simplecrudtable .tselgray {background-color: #787878; color: #FFF;}
+.ui-simplecrudtable .tsel {background-color: #BFD6FF;}
+.ui-simplecrudtable .tselred {background-color: #FF9999;}
+.ui-simplecrudtable .tselblue {background-color: #99DEFF;}
+.ui-simplecrudtable .tselgreen {background-color: #99FFDE;}
+.ui-simplecrudtable .tselorange {background-color: #FFDE99;}
+.ui-simplecrudtable .tselgray {background-color: #DEDEDE;}
 .ui-simplecrudtable .taction {width:16px; height:16px; margin-right:4px; cursor:pointer;}
 
 /** Span */
@@ -710,12 +710,12 @@ z-index:400;}
 .ui-table .teven {background-color: #FFFFE0;}
 .ui-table .teven:hover {background-color: #D0E0F0;}
 .ui-table .tnoitems {text-align: center; height:20px;}
-.ui-table .tsel {background-color: #5970B2; color: #FFF;}
-.ui-table .tselred {background-color: #C03333; color: #FFF;}
-.ui-table .tselblue {background-color: #3378C0; color: #FFF;}
-.ui-table .tselgreen {background-color: #33C078; color: #FFF;}
-.ui-table .tselorange {background-color: #C07833; color: #FFF;}
-.ui-table .tselgray {background-color: #787878; color: #FFF;}
+.ui-table .tsel {background-color: #BFD6FF;}
+.ui-table .tselred {background-color: #FF9999;}
+.ui-table .tselblue {background-color: #99DEFF;}
+.ui-table .tselgreen {background-color: #99FFDE;}
+.ui-table .tselorange {background-color: #FFDE99;}
+.ui-table .tselgray {background-color: #DEDEDE;}
 .ui-table .tpagn {background-color: #ECECEC;}
 .ui-table .tpagn span {display: inline-block;}
 .ui-table .tpselect {width: 60px;}
