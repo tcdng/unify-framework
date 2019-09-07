@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
@@ -38,6 +39,7 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
 
     @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
+        checkStorageIndex(storageIndex);
         return doRetrieve(storage[storageIndex], name);
     }
 
@@ -53,16 +55,19 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
 
     @Override
     public <U> U retrieve(Class<U> type, int storageIndex, String name) throws UnifyException {
+        checkStorageIndex(storageIndex);
         return DataUtils.convert(type, retrieve(storageIndex, name), null);
     }
 
     @Override
     public void store(int storageIndex, String name, Object value) throws UnifyException {
+        checkStorageIndex(storageIndex);
         doStore(storage[storageIndex], name, value, null);
     }
 
     @Override
     public void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
+        checkStorageIndex(storageIndex);
         doStore(storage[storageIndex], name, value, formatter);
     }
 
@@ -99,6 +104,25 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
     @Override
     public Object getValueObject() {
         return storage;
+    }
+
+    @Override
+    public int getStorageLength() {
+        if (storage != null) {
+            return storage.length;
+        }
+        
+        return 0;
+    }
+
+    private void checkStorageIndex(int storageIndex) throws UnifyException {
+        if (storage == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, 0);
+        }
+
+        if (storageIndex < 0 || storageIndex >= storage.length) {
+            throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, storage.length);
+        }
     }
 
     protected abstract boolean doSettable(T storage, String property) throws UnifyException;

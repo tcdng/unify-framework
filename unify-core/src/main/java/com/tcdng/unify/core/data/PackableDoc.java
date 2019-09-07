@@ -30,7 +30,6 @@ import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
-import com.tcdng.unify.core.util.StringUtils.StringToken;
 
 /**
  * A packable document.
@@ -44,6 +43,8 @@ public class PackableDoc implements Serializable {
 
     public transient static final String RESERVED_EXT_FIELD = "resrvExt";
 
+    private String configName;
+    
     private Object id;
     
     private Map<String, Object> values;
@@ -68,7 +69,7 @@ public class PackableDoc implements Serializable {
 
     private PackableDoc(PackableDocConfig config, Map<String, Object> values, boolean auditable) {
         this.values = values;
-        setup(config, auditable);
+        construct(config, auditable);
     }
 
     public PackableDoc preset() throws UnifyException {
@@ -82,6 +83,10 @@ public class PackableDoc implements Serializable {
         return this;
     }
 
+    public String getConfigName() {
+        return configName;
+    }
+
     public static PackableDoc unpack(PackableDocConfig config, byte[] packedDoc) throws UnifyException {
         return PackableDoc.unpack(config, packedDoc, false);
     }
@@ -89,33 +94,12 @@ public class PackableDoc implements Serializable {
     public static PackableDoc unpack(PackableDocConfig config, byte[] packedDoc, boolean auditable)
             throws UnifyException {
         PackableDoc pd = IOUtils.streamFromBytes(PackableDoc.class, packedDoc);
-        pd.setup(config, auditable);
+        pd.construct(config, auditable);
         return pd;
     }
 
     public byte[] pack() throws UnifyException {
         return IOUtils.streamToBytes(this);
-    }
-
-    public String describe(List<StringToken> itemDescFormat) throws UnifyException {
-        return PackableDoc.describe(itemDescFormat, this);
-    }
-
-    public static String describe(List<StringToken> itemDescFormat, PackableDoc packableDoc) throws UnifyException {
-        if (itemDescFormat.isEmpty()) {
-            return DataUtils.EMPTY_STRING;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (StringToken stringToken : itemDescFormat) {
-            if (stringToken.isParam()) {
-                sb.append(packableDoc.readFieldValue(String.class, stringToken.getToken()));
-            } else {
-                sb.append(stringToken.getToken());
-            }
-        }
-
-        return sb.toString();
     }
 
     public void readFrom(PackableDocRWConfig rwConfig, Object bean) throws UnifyException {
@@ -275,7 +259,8 @@ public class PackableDoc implements Serializable {
         return config.getFieldCount();
     }
 
-    private void setup(PackableDocConfig config, boolean auditable) {
+    private void construct(PackableDocConfig config, boolean auditable) {
+        this.configName = config.getName();
         this.config = config;
         this.auditable = auditable;
 
@@ -290,12 +275,12 @@ public class PackableDoc implements Serializable {
                             PackableDoc[] pd = (PackableDoc[]) val;
                             for (int i = 0; i < pd.length; i++) {
                                 if (pd[i] != null) {
-                                    pd[i].setup(fc.getPackableDocConfig(), auditable);
+                                    pd[i].construct(fc.getPackableDocConfig(), auditable);
                                 }
                             }
                         } else {
                             PackableDoc pd = (PackableDoc) val;
-                            pd.setup(fc.getPackableDocConfig(), auditable);
+                            pd.construct(fc.getPackableDocConfig(), auditable);
                         }
                     }
                 }

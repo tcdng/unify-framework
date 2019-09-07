@@ -44,7 +44,7 @@ public interface ValueStore {
      * @param name
      *            the name of the value to retrieve
      * @throws UnifyException
-     *             if an error occurs
+     *             if storage index is greater than storage length - 1. if an error occurs
      */
     Object retrieve(int storageIndex, String name) throws UnifyException;
 
@@ -68,7 +68,7 @@ public interface ValueStore {
      * @param name
      *            the name of the value to retrieve
      * @throws UnifyException
-     *             if an error occurs
+     *             if storage index is greater than storage length - 1. if an error occurs
      */
     <T> T retrieve(Class<T> type, int storageIndex, String name) throws UnifyException;
 
@@ -108,7 +108,7 @@ public interface ValueStore {
      * @param value
      *            the value to store
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *             if storage index is greater than storage length - 1. if value with supplied name is unknown. If an error occurs
      */
     void store(int storageIndex, String name, Object value) throws UnifyException;
 
@@ -125,7 +125,7 @@ public interface ValueStore {
      * @param formatter
      *            the optional formatter
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *             if storage index is greater than storage length - 1. if value with supplied name is unknown. If an error occurs
      */
     void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException;
 
@@ -166,4 +166,9 @@ public interface ValueStore {
      *            the data index to set
      */
     void setDataIndex(int dataIndex);
+    
+    /**
+     * Returns the value store storage length.
+     */
+    int getStorageLength();
 }

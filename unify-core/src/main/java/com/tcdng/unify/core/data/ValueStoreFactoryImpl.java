@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.List;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
@@ -63,6 +65,25 @@ public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements Val
             }
 
             return new BeanValueArrayStore(storageObject, dataIndex);
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> ValueStore getListValueStore(Class<T> clazz, List<T> storageObject, int dataIndex)
+            throws UnifyException {
+        if (storageObject != null) {
+            if (PackableDoc.class.equals(clazz)) {
+                return new PackableDocListStore((List<PackableDoc>) storageObject, dataIndex);
+            }
+
+            if (MapValues.class.equals(clazz)) {
+                return new MapValuesListStore((List<MapValues>) storageObject, dataIndex);
+            }
+
+            return new BeanValueListStore((List<Object>) storageObject, dataIndex);
         }
 
         return null;

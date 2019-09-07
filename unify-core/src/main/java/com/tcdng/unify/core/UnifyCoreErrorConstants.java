@@ -947,4 +947,7 @@ public interface UnifyCoreErrorConstants {
 
     /** Callable field data type is unsupported. Callable field = {0}.*/
     String CALLABLE_DATATYPE_UNSUPPORTED = "UC_00EB";
+
+    /** Storage index {0} is out of bounds of value store with storage length {1}*/
+    String VALUESTORE_STORAGE_INDEX_OUT_BOUNDS = "UC_00EC";
 }
