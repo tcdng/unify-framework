@@ -75,11 +75,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals(6, pDoc.getFieldCount());
 
         pDoc.readFrom(custDocRwConfig, customer);
-        assertEquals("Amos Quito", pDoc.readFieldValue("name"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
-        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
-        assertEquals(Long.valueOf(20), pDoc.readFieldValue("id"));
-        assertNull(pDoc.readFieldValue("address"));
+        assertEquals("Amos Quito", pDoc.readField("name"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
+        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readField("balance"));
+        assertEquals(Long.valueOf(20), pDoc.readField("id"));
+        assertNull(pDoc.readField("address"));
     }
 
     @Test
@@ -92,11 +92,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
 
         pDoc.readFrom(xCustDocRwConfig, customer);
         assertTrue(pDoc.isUpdated());
-        assertEquals("Amos Quito", pDoc.readFieldValue("name"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
-        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
-        assertEquals(Long.valueOf(20), pDoc.readFieldValue("id"));
-        assertNull(pDoc.readFieldValue("address"));
+        assertEquals("Amos Quito", pDoc.readField("name"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
+        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readField("balance"));
+        assertEquals(Long.valueOf(20), pDoc.readField("id"));
+        assertNull(pDoc.readField("address"));
     }
 
     @Test
@@ -108,11 +108,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals(6, pDoc.getFieldCount());
 
         pDoc.readFrom(custDocRwConfig, customer);
-        assertEquals("Amos Quito", pDoc.readFieldValue("name"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
-        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
-        assertEquals(Long.valueOf(20), pDoc.readFieldValue("id"));
-        assertEquals(address, pDoc.readFieldValue("address"));
+        assertEquals("Amos Quito", pDoc.readField("name"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
+        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readField("balance"));
+        assertEquals(Long.valueOf(20), pDoc.readField("id"));
+        assertEquals(address, pDoc.readField("address"));
     }
 
     @Test
@@ -126,18 +126,18 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
 
         pDoc.readFrom(xCustDocRwConfig, customer);
         assertTrue(pDoc.isUpdated());
-        assertEquals("Amos Quito", pDoc.readFieldValue("name"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
-        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
-        assertEquals(Long.valueOf(20), pDoc.readFieldValue("id"));
+        assertEquals("Amos Quito", pDoc.readField("name"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
+        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readField("balance"));
+        assertEquals(Long.valueOf(20), pDoc.readField("id"));
 
-        Object val = pDoc.readFieldValue("address");
+        Object val = pDoc.readField("address");
         assertNotNull(val);
         assertEquals(PackableDoc.class, val.getClass());
 
         PackableDoc apDoc = (PackableDoc) val;
-        assertEquals("38 Warehouse Road", apDoc.readFieldValue("line1"));
-        assertEquals("Apapa Lagos", apDoc.readFieldValue("line2"));
+        assertEquals("38 Warehouse Road", apDoc.readField("line1"));
+        assertEquals("Apapa Lagos", apDoc.readField("line2"));
     }
 
     @Test
@@ -153,12 +153,12 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
 
         pDoc.readFrom(custDocRwConfig, customer);
         assertEquals(6, pDoc.getFieldCount());
-        assertEquals("Amos Quito", pDoc.readFieldValue("name"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
-        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
-        assertEquals(Long.valueOf(20), pDoc.readFieldValue("id"));
-        assertEquals(address, pDoc.readFieldValue("address"));
-        assertEquals(modeList, pDoc.readFieldValue("modeList"));
+        assertEquals("Amos Quito", pDoc.readField("name"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
+        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readField("balance"));
+        assertEquals(Long.valueOf(20), pDoc.readField("id"));
+        assertEquals(address, pDoc.readField("address"));
+        assertEquals(modeList, pDoc.readField("modeList"));
     }
 
     @Test
@@ -176,19 +176,19 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         pDoc.readFrom(xCustDocRwConfig, customer);
         assertTrue(pDoc.isUpdated());
         assertEquals(6, pDoc.getFieldCount());
-        assertEquals("Amos Quito", pDoc.readFieldValue("name"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
-        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readFieldValue("balance"));
-        assertEquals(Long.valueOf(20), pDoc.readFieldValue("id"));
+        assertEquals("Amos Quito", pDoc.readField("name"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
+        assertEquals(BigDecimal.valueOf(250000.00), pDoc.readField("balance"));
+        assertEquals(Long.valueOf(20), pDoc.readField("id"));
 
-        Object val = pDoc.readFieldValue("address");
+        Object val = pDoc.readField("address");
         assertNotNull(val);
         assertEquals(PackableDoc.class, val.getClass());
 
         PackableDoc apDoc = (PackableDoc) val;
-        assertEquals("38 Warehouse Road", apDoc.readFieldValue("line1"));
-        assertEquals("Apapa Lagos", apDoc.readFieldValue("line2"));
-        assertEquals(modeList, pDoc.readFieldValue("modeList"));
+        assertEquals("38 Warehouse Road", apDoc.readField("line1"));
+        assertEquals("Apapa Lagos", apDoc.readField("line2"));
+        assertEquals(modeList, pDoc.readField("modeList"));
     }
 
     @Test
@@ -206,27 +206,27 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test
     public void testGetDocumentFieldType() throws Exception {
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
-        assertEquals(String.class, pDoc.getFieldType("name"));
-        assertEquals(Long.class, pDoc.getFieldType("id"));
-        assertEquals(Date.class, pDoc.getFieldType("birthDt"));
-        assertEquals(Address.class, pDoc.getFieldType("address"));
-        assertEquals(List.class, pDoc.getFieldType("modeList"));
+        assertEquals(String.class, pDoc.getDataType("name"));
+        assertEquals(Long.class, pDoc.getDataType("id"));
+        assertEquals(Date.class, pDoc.getDataType("birthDt"));
+        assertEquals(Address.class, pDoc.getDataType("address"));
+        assertEquals(List.class, pDoc.getDataType("modeList"));
     }
 
     @Test(expected = UnifyException.class)
     public void testGetDocumentUnknownFieldType() throws Exception {
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
-        pDoc.getFieldType("salary");
+        pDoc.getDataType("salary");
     }
 
     @Test
     public void testWriteFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
         assertFalse(pDoc.isUpdated());
-        pDoc.writeFieldValue("name", "Elmer Fudd");
-        pDoc.writeFieldValue("id", 12);
-        pDoc.writeFieldValue("birthDt", new Date());
-        pDoc.writeFieldValue("address", new Address());
+        pDoc.writeField("name", "Elmer Fudd");
+        pDoc.writeField("id", 12);
+        pDoc.writeField("birthDt", new Date());
+        pDoc.writeField("address", new Address());
         assertTrue(pDoc.isUpdated());
     }
 
@@ -234,10 +234,10 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     public void testWriteComplexFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(xCustDocConfig, false);
         assertFalse(pDoc.isUpdated());
-        pDoc.writeFieldValue("name", "Elmer Fudd");
-        pDoc.writeFieldValue("id", 12);
-        pDoc.writeFieldValue("birthDt", new Date());
-        pDoc.writeFieldValue(xCustDocRwConfig, "address", new Address("24 Parklane", "Apapa Lagos"));
+        pDoc.writeField("name", "Elmer Fudd");
+        pDoc.writeField("id", 12);
+        pDoc.writeField("birthDt", new Date());
+        pDoc.writeField(xCustDocRwConfig, "address", new Address("24 Parklane", "Apapa Lagos"));
         assertTrue(pDoc.isUpdated());
     }
 
@@ -255,49 +255,49 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     public void testWriteFieldValueWithConversion() throws Exception {
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
         assertFalse(pDoc.isUpdated());
-        pDoc.writeFieldValue("id", "15");
-        pDoc.writeFieldValue("purchases", new double[] { 100.2, 15.64, 75.42 });
+        pDoc.writeField("id", "15");
+        pDoc.writeField("purchases", new double[] { 100.2, 15.64, 75.42 });
         assertTrue(pDoc.isUpdated());
     }
 
     @Test(expected = UnifyException.class)
     public void testWriteUnknownDocumentFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
-        pDoc.writeFieldValue("name", "Elmer Fudd");
+        pDoc.writeField("name", "Elmer Fudd");
     }
 
     @Test(expected = UnifyException.class)
     public void testWriteFieldValueWithInvalidConversion() throws Exception {
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
-        pDoc.writeFieldValue("age", "Fifteen");
+        pDoc.writeField("age", "Fifteen");
     }
 
     @Test
     public void testReadFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
         Date birthDt = new Date();
-        pDoc.writeFieldValue("name", "Elmer Fudd");
-        pDoc.writeFieldValue("id", 12);
-        pDoc.writeFieldValue("birthDt", birthDt);
-        assertEquals("Elmer Fudd", pDoc.readFieldValue("name"));
-        assertEquals(Long.valueOf(12), pDoc.readFieldValue("id"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
+        pDoc.writeField("name", "Elmer Fudd");
+        pDoc.writeField("id", 12);
+        pDoc.writeField("birthDt", birthDt);
+        assertEquals("Elmer Fudd", pDoc.readField("name"));
+        assertEquals(Long.valueOf(12), pDoc.readField("id"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
     }
 
     @Test
     public void testReadComplexFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(xCustDocConfig, false);
         Date birthDt = new Date();
-        pDoc.writeFieldValue("name", "Elmer Fudd");
-        pDoc.writeFieldValue("id", 12);
-        pDoc.writeFieldValue("birthDt", birthDt);
-        pDoc.writeFieldValue(xCustDocRwConfig, "address", new Address("24 Parklane", "Apapa Lagos"));
+        pDoc.writeField("name", "Elmer Fudd");
+        pDoc.writeField("id", 12);
+        pDoc.writeField("birthDt", birthDt);
+        pDoc.writeField(xCustDocRwConfig, "address", new Address("24 Parklane", "Apapa Lagos"));
 
-        assertEquals("Elmer Fudd", pDoc.readFieldValue("name"));
-        assertEquals(Long.valueOf(12), pDoc.readFieldValue("id"));
-        assertEquals(birthDt, pDoc.readFieldValue("birthDt"));
+        assertEquals("Elmer Fudd", pDoc.readField("name"));
+        assertEquals(Long.valueOf(12), pDoc.readField("id"));
+        assertEquals(birthDt, pDoc.readField("birthDt"));
 
-        Object val = pDoc.readFieldValue(xCustDocRwConfig, "address");
+        Object val = pDoc.readField(xCustDocRwConfig, "address");
         assertNotNull(val);
         assertEquals(Address.class, val.getClass());
 
@@ -309,11 +309,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test
     public void testReadFieldWithConvertedValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
-        pDoc.writeFieldValue("id", "15");
-        pDoc.writeFieldValue("purchases", new double[] { 100.2, 15.64, 75.42 });
+        pDoc.writeField("id", "15");
+        pDoc.writeField("purchases", new double[] { 100.2, 15.64, 75.42 });
 
-        assertEquals(Long.valueOf(15), pDoc.readFieldValue("id"));
-        String[] purchases = (String[]) pDoc.readFieldValue("purchases");
+        assertEquals(Long.valueOf(15), pDoc.readField("id"));
+        String[] purchases = (String[]) pDoc.readField("purchases");
         assertEquals(3, purchases.length);
         assertEquals("100.2", purchases[0]);
         assertEquals("15.64", purchases[1]);
@@ -323,7 +323,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test(expected = UnifyException.class)
     public void testReadUnknownDocumentFieldValue() throws Exception {
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
-        pDoc.readFieldValue("name");
+        pDoc.readField("name");
     }
 
     @Test
@@ -391,21 +391,21 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         PackableDoc unpackedDocument = PackableDoc.unpack(custDocConfig, packedDocument, false);
         assertNotNull(unpackedDocument);
         assertEquals(6, unpackedDocument.getFieldCount());
-        assertEquals("Latsman", (String) unpackedDocument.readFieldValue("name"));
-        assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.readFieldValue("balance"));
-        assertEquals(birthDt, (Date) unpackedDocument.readFieldValue("birthDt"));
-        Address addressUnpacked = (Address) unpackedDocument.readFieldValue("address");
+        assertEquals("Latsman", (String) unpackedDocument.readField("name"));
+        assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.readField("balance"));
+        assertEquals(birthDt, (Date) unpackedDocument.readField("birthDt"));
+        Address addressUnpacked = (Address) unpackedDocument.readField("address");
         assertEquals("24 Parklane", addressUnpacked.getLine1());
         assertEquals("Apapa Lagos", addressUnpacked.getLine2());
-        List<String> modeListUnpacked = (List<String>) unpackedDocument.readFieldValue("modeList");
+        List<String> modeListUnpacked = (List<String>) unpackedDocument.readField("modeList");
         assertEquals(modeList, modeListUnpacked);
 
-        assertEquals(String.class, unpackedDocument.getFieldType("name"));
-        assertEquals(BigDecimal.class, unpackedDocument.getFieldType("balance"));
-        assertEquals(Long.class, unpackedDocument.getFieldType("id"));
-        assertEquals(Date.class, unpackedDocument.getFieldType("birthDt"));
-        assertEquals(Address.class, unpackedDocument.getFieldType("address"));
-        assertEquals(List.class, unpackedDocument.getFieldType("modeList"));
+        assertEquals(String.class, unpackedDocument.getDataType("name"));
+        assertEquals(BigDecimal.class, unpackedDocument.getDataType("balance"));
+        assertEquals(Long.class, unpackedDocument.getDataType("id"));
+        assertEquals(Date.class, unpackedDocument.getDataType("birthDt"));
+        assertEquals(Address.class, unpackedDocument.getDataType("address"));
+        assertEquals(List.class, unpackedDocument.getDataType("modeList"));
     }
 
     @SuppressWarnings("unchecked")
@@ -425,21 +425,21 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertNotNull(unpackedDocument);
         assertEquals(Long.valueOf(1024L), pDoc.getId());
         assertEquals(6, unpackedDocument.getFieldCount());
-        assertEquals("Latsman", (String) unpackedDocument.readFieldValue("name"));
-        assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.readFieldValue("balance"));
-        assertEquals(birthDt, (Date) unpackedDocument.readFieldValue("birthDt"));
-        Address addressUnpacked = (Address) unpackedDocument.readFieldValue("address");
+        assertEquals("Latsman", (String) unpackedDocument.readField("name"));
+        assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.readField("balance"));
+        assertEquals(birthDt, (Date) unpackedDocument.readField("birthDt"));
+        Address addressUnpacked = (Address) unpackedDocument.readField("address");
         assertEquals("24 Parklane", addressUnpacked.getLine1());
         assertEquals("Apapa Lagos", addressUnpacked.getLine2());
-        List<String> modeListUnpacked = (List<String>) unpackedDocument.readFieldValue("modeList");
+        List<String> modeListUnpacked = (List<String>) unpackedDocument.readField("modeList");
         assertEquals(modeList, modeListUnpacked);
 
-        assertEquals(String.class, unpackedDocument.getFieldType("name"));
-        assertEquals(BigDecimal.class, unpackedDocument.getFieldType("balance"));
-        assertEquals(Long.class, unpackedDocument.getFieldType("id"));
-        assertEquals(Date.class, unpackedDocument.getFieldType("birthDt"));
-        assertEquals(Address.class, unpackedDocument.getFieldType("address"));
-        assertEquals(List.class, unpackedDocument.getFieldType("modeList"));
+        assertEquals(String.class, unpackedDocument.getDataType("name"));
+        assertEquals(BigDecimal.class, unpackedDocument.getDataType("balance"));
+        assertEquals(Long.class, unpackedDocument.getDataType("id"));
+        assertEquals(Date.class, unpackedDocument.getDataType("birthDt"));
+        assertEquals(Address.class, unpackedDocument.getDataType("address"));
+        assertEquals(List.class, unpackedDocument.getDataType("modeList"));
     }
 
     @Test
@@ -464,11 +464,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         Date birthDt = new Date();
         Address address = new Address("38 Warehouse Road", "Apapa Lagos");
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
-        pDoc.writeFieldValue("name", "Hillary Clinton");
-        pDoc.writeFieldValue("birthDt", birthDt);
-        pDoc.writeFieldValue("balance", BigDecimal.valueOf(300));
-        pDoc.writeFieldValue("id", 5);
-        pDoc.writeFieldValue("address", address);
+        pDoc.writeField("name", "Hillary Clinton");
+        pDoc.writeField("birthDt", birthDt);
+        pDoc.writeField("balance", BigDecimal.valueOf(300));
+        pDoc.writeField("id", 5);
+        pDoc.writeField("address", address);
 
         Customer customer = new Customer();
         pDoc.writeTo(custDocRwConfig, customer);
@@ -484,11 +484,11 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         Date birthDt = new Date();
         Address address = new Address("38 Warehouse Road", "Apapa Lagos");
         PackableDoc pDoc = new PackableDoc(custDocConfig, true);
-        pDoc.writeFieldValue("name", "Hillary Clinton");
-        pDoc.writeFieldValue("birthDt", birthDt);
-        pDoc.writeFieldValue("balance", BigDecimal.valueOf(300));
-        pDoc.writeFieldValue("id", 5);
-        pDoc.writeFieldValue("address", address);
+        pDoc.writeField("name", "Hillary Clinton");
+        pDoc.writeField("birthDt", birthDt);
+        pDoc.writeField("balance", BigDecimal.valueOf(300));
+        pDoc.writeField("id", 5);
+        pDoc.writeField("address", address);
 
         PackableDocAudit pda = pDoc.audit();
         assertNotNull(pda);
@@ -523,15 +523,15 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         Date birthDt = new Date();
         Address address = new Address("38 Warehouse Road", "Apapa Lagos");
         PackableDoc pDoc1 = new PackableDoc(custDocConfig, false);
-        pDoc1.writeFieldValue("name", "Hillary Clinton");
-        pDoc1.writeFieldValue("birthDt", birthDt);
-        pDoc1.writeFieldValue("balance", BigDecimal.valueOf(300));
-        pDoc1.writeFieldValue("id", 5);
-        pDoc1.writeFieldValue("address", address);
+        pDoc1.writeField("name", "Hillary Clinton");
+        pDoc1.writeField("birthDt", birthDt);
+        pDoc1.writeField("balance", BigDecimal.valueOf(300));
+        pDoc1.writeField("id", 5);
+        pDoc1.writeField("address", address);
 
         PackableDoc pDoc2 = PackableDoc.unpack(custDocConfig, pDoc1.pack(), true);
-        pDoc2.writeFieldValue("name", "Tom Jones");
-        pDoc2.writeFieldValue("id", 20);
+        pDoc2.writeField("name", "Tom Jones");
+        pDoc2.writeField("id", 20);
 
         PackableDocAudit pda = pDoc2.audit();
         assertNotNull(pda);

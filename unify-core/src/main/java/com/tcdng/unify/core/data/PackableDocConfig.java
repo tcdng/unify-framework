@@ -15,9 +15,11 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +27,11 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.DataType;
+import com.tcdng.unify.core.task.TaskExecType;
+import com.tcdng.unify.core.task.TaskSetup.Builder;
+import com.tcdng.unify.core.util.GetterSetterInfo;
+import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Packable document configuration.
@@ -34,7 +41,15 @@ import com.tcdng.unify.core.constant.DataType;
  */
 public class PackableDocConfig {
 
+    public enum FieldType {
+        OBJECT,
+        ARRAY,
+        LIST
+    }
+
     private String name;
+
+    private Class<?> beanType;
 
     private Map<String, FieldConfig> fieldConfigs;
 
@@ -79,44 +94,114 @@ public class PackableDocConfig {
         return fieldConfigs.size();
     }
 
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder(Class<?> beanType) {
+        return new Builder(beanType);
+    }
+
+    public static class Builder {
+
+        private Class<?> beanType;
+
+        private Map<String, FieldConfig> fieldConfigs;
+
+        private Builder() {
+            this(null);
+        }
+
+        private Builder(Class<?> beanType) {
+            this.beanType = beanType;
+            fieldConfigs = new LinkedHashMap<String, FieldConfig>();
+        }
+
+        public Builder fieldConfig(String fieldName, FieldType fieldType, DataType dataType) throws UnifyException {
+            return fieldConfig(fieldName, null, fieldType, dataType);
+        }
+
+        public Builder fieldConfig(String fieldName, String beanProperty, FieldType fieldType, DataType dataType)
+                throws UnifyException {
+            if (fieldConfigs.containsKey(fieldName)) {
+                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_FIELD_EXISTS, fieldName);
+            }
+            
+            if (!StringUtils.isBlank(beanProperty)) {
+                if (beanType == null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_BUILDER_NOT_SUPPORT_MAPPING);
+                }
+                
+                // Ensure bean type has appropriate setters and getters
+                GetterSetterInfo gsInfo = ReflectUtils.getGetterSetterInfo(beanType, beanProperty);
+                
+                // Ensure type is the same
+                if (FieldType.LIST.equals(fieldType)) {
+                    
+                } else if (FieldType.ARRAY.equals(fieldType)) {
+                    
+                } else {
+                    
+                }
+            }
+            return this;
+        }
+    }
+
     public static class FieldConfig {
 
-        private String name;
+        private String fieldName;
 
-        private Class<?> type;
+        private String beanProperty;
+
+        private FieldType fieldType;
+
+        private Class<?> dataType;
 
         private PackableDocConfig packableDocConfig;
 
-        public FieldConfig(String name, Class<?> type) {
-            this.name = name;
-            this.type = type;
+        private FieldConfig(String fieldName, String beanProperty, FieldType fieldType, Class<?> dataType) {
+            this.fieldName = fieldName;
+            this.beanProperty = beanProperty;
+            this.fieldType = fieldType;
+            this.dataType = dataType;
         }
 
-        public FieldConfig(String name, DataType type) {
-            this.name = name;
-            this.type = type.javaClass();
+        private FieldConfig(String fieldName, String beanProperty, FieldType fieldType, Class<?> dataType,
+                PackableDocConfig packableDocConfig) {
+            this.fieldName = fieldName;
+            this.beanProperty = beanProperty;
+            this.fieldType = fieldType;
+            this.dataType = dataType;
+            this.packableDocConfig = packableDocConfig;
         }
 
-        public FieldConfig(String name, FieldConfig... fieldConfigs) {
-            this(name, Arrays.asList(fieldConfigs));
+        public String getFieldName() {
+            return fieldName;
         }
 
-        public FieldConfig(String name, List<FieldConfig> fieldConfigList) {
-            this.name = name;
-            this.type = DataType.COMPLEX.javaClass();
-            this.packableDocConfig = new PackableDocConfig(name, fieldConfigList);
+        public FieldType getFieldType() {
+            return fieldType;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public Class<?> getType() {
-            return type;
+        public Class<?> getDataType() {
+            return dataType;
         }
 
         public PackableDocConfig getPackableDocConfig() {
             return packableDocConfig;
+        }
+
+        public boolean isArray() {
+            return FieldType.ARRAY.equals(fieldType);
+        }
+
+        public boolean isList() {
+            return FieldType.LIST.equals(fieldType);
+        }
+
+        public boolean isMultiple() {
+            return FieldType.ARRAY.equals(fieldType) || FieldType.LIST.equals(fieldType);
         }
 
         public boolean isComplex() {

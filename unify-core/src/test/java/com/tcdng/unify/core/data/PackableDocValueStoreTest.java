@@ -46,12 +46,12 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
     public void testRetrieveDocumentFieldValue() throws Exception {
         PackableDoc pd = new PackableDoc(custDocConfig, false);
         Date birthDt = new Date();
-        pd.writeFieldValue("name", "Amos Quito");
-        pd.writeFieldValue("birthDt", birthDt);
-        pd.writeFieldValue("balance", BigDecimal.valueOf(250000.00));
-        pd.writeFieldValue("id", 16);
-        pd.writeFieldValue("address", new Address());
-        pd.writeFieldValue("address.line1", "Whipper!");
+        pd.writeField("name", "Amos Quito");
+        pd.writeField("birthDt", birthDt);
+        pd.writeField("balance", BigDecimal.valueOf(250000.00));
+        pd.writeField("id", 16);
+        pd.writeField("address", new Address());
+        pd.writeField("address.line1", "Whipper!");
 
         PackableDocStore dvs = new PackableDocStore(pd);
         assertEquals("Amos Quito", dvs.retrieve("name"));
@@ -87,8 +87,8 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
         PackableDocStore dvs = new PackableDocStore(pd);
         dvs.store("line1", "37 Pauwa Road");
         dvs.store("line2", "Ungwan Dosa, Kaduna");
-        assertEquals("37 Pauwa Road", pd.readFieldValue("line1"));
-        assertEquals("Ungwan Dosa, Kaduna", pd.readFieldValue("line2"));
+        assertEquals("37 Pauwa Road", pd.readField("line1"));
+        assertEquals("Ungwan Dosa, Kaduna", pd.readField("line2"));
     }
 
     @Test(expected = NullPointerException.class)
