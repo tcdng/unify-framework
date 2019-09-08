@@ -890,18 +890,18 @@ public interface UnifyCoreErrorConstants {
     /** Packable document field {0} configuration already exists. */
     String PACKABLEDOC_FIELD_EXISTS = "UC_00DD";
 
-    /** Packable document configuration builder instance does not support bean mapping. */
-    String PACKABLEDOC_BUILDER_NOT_SUPPORT_MAPPING = "UC_00DE";
-
     /** Packable document incompatible field configuration. Bean type = {0}, property = {1}, fieldType = {2}, dataType = [3} */
-    String PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG = "UC_00DF";
+    String PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG = "UC_00DE";
 
     /** Packable document incompatible complex field configuration. Bean type = {0}, property = {1}, fieldType = {2}, dataType = [3} */
-    String PACKABLEDOC_INCOMPATIBLE_COMPLEXFIELDCONFIG = "UC_00EO";
+    String PACKABLEDOC_INCOMPATIBLE_COMPLEXFIELDCONFIG = "UC_00DF";
 
-    /** Packable document has no such bean property {0}. */
-    String PACKABLEDOC_NO_SUCH_BEANPROPERTY = "UC_00E1";
+    /** Packable document has no such field configuration {0}. */
+    String PACKABLEDOC_NO_SUCH_FIELDCONFIG = "UC_00E0";
 
-    /** Packable document bean property {0} configuration already exists. */
-    String PACKABLEDOC_BEANPROPERTY_EXISTS = "UC_00E2";
+    /** Packable document bean property {0} configuration already exists for type {1}. */
+    String PACKABLEDOC_BEANPROPERTY_EXISTS = "UC_00E1";
+
+    /** Packable document has no such bean configuration for type {0}. */
+    String PACKABLEDOC_NO_SUCH_BEANCONFIG = "UC_00E2";
 }
