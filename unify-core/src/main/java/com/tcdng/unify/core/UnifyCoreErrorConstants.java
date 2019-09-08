@@ -439,13 +439,13 @@ public interface UnifyCoreErrorConstants {
     String CONTAINER_LOGGER_INITIALIZATION_ERROR = "UC_0070";
 
     /** Packable document has no such field {0}. */
-    String DOCUMENT_NO_SUCH_FIELD = "UC_0071";
+    String PACKABLEDOC_NO_SUCH_FIELD = "UC_0071";
 
     /** Packable document can not read from null document reference. */
-    String DOCUMENT_CANT_READ_FROM_NULL = "UC_0072";
+    String PACKABLEDOC_CANT_READ_FROM_NULL = "UC_0072";
 
     /** Packable document can not populate a null document reference. */
-    String DOCUMENT_CANT_WRITE_TO_NULL = "UC_0073";
+    String PACKABLEDOC_CANT_WRITE_TO_NULL = "UC_0073";
 
     /** Field {0} for class {1} is not bean compliant */
     String REFLECT_CLASS_FIELD_NOT_BEAN_COMPLIANT = "UC_0074";
@@ -887,9 +887,21 @@ public interface UnifyCoreErrorConstants {
     /** Storage index {0} is out of bounds of value store with storage length {1}*/
     String VALUESTORE_STORAGE_INDEX_OUT_BOUNDS = "UC_00DC";
 
-    /** Packable document field {0} already exists. */
+    /** Packable document field {0} configuration already exists. */
     String PACKABLEDOC_FIELD_EXISTS = "UC_00DD";
 
     /** Packable document configuration builder instance does not support bean mapping. */
     String PACKABLEDOC_BUILDER_NOT_SUPPORT_MAPPING = "UC_00DE";
+
+    /** Packable document incompatible field configuration. Bean type = {0}, property = {1}, fieldType = {2}, dataType = [3} */
+    String PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG = "UC_00DF";
+
+    /** Packable document incompatible complex field configuration. Bean type = {0}, property = {1}, fieldType = {2}, dataType = [3} */
+    String PACKABLEDOC_INCOMPATIBLE_COMPLEXFIELDCONFIG = "UC_00EO";
+
+    /** Packable document has no such bean property {0}. */
+    String PACKABLEDOC_NO_SUCH_BEANPROPERTY = "UC_00E1";
+
+    /** Packable document bean property {0} configuration already exists. */
+    String PACKABLEDOC_BEANPROPERTY_EXISTS = "UC_00E2";
 }

@@ -102,7 +102,7 @@ public class PackableDoc implements Serializable {
 
     public void readFrom(PackableDocRWConfig rwConfig, Object bean) throws UnifyException {
         if (bean == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_CANT_READ_FROM_NULL);
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_CANT_READ_FROM_NULL);
         }
 
         for (FieldMapping fMapping : rwConfig.getFieldMappings()) {
@@ -112,7 +112,7 @@ public class PackableDoc implements Serializable {
 
     public void writeTo(PackableDocRWConfig rwConfig, Object bean) throws UnifyException {
         if (bean == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_CANT_WRITE_TO_NULL);
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_CANT_WRITE_TO_NULL);
         }
 
         for (FieldMapping fMapping : rwConfig.getFieldMappings()) {

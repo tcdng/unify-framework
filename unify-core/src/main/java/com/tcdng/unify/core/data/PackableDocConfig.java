@@ -15,10 +15,7 @@
  */
 package com.tcdng.unify.core.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +24,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.task.TaskExecType;
-import com.tcdng.unify.core.task.TaskSetup.Builder;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -53,26 +49,28 @@ public class PackableDocConfig {
 
     private Map<String, FieldConfig> fieldConfigs;
 
-    public PackableDocConfig(String name, FieldConfig... fieldConfigs) {
-        this(name, Arrays.asList(fieldConfigs));
-    }
+    private Map<String, FieldConfig> beanPropertyConfigs;
 
-    public PackableDocConfig(String name, List<FieldConfig> fieldConfigList) {
+    private PackableDocConfig(String name, Class<?> beanType, Map<String, FieldConfig> fieldConfigs,
+            Map<String, FieldConfig> beanPropertyConfigs) {
         this.name = name;
-        fieldConfigs = new HashMap<String, FieldConfig>();
-        for (FieldConfig fieldConfig : fieldConfigList) {
-            fieldConfigs.put(fieldConfig.getName(), fieldConfig);
-        }
+        this.beanType = beanType;
+        this.fieldConfigs = fieldConfigs;
+        this.beanPropertyConfigs = beanPropertyConfigs;
     }
 
     public String getName() {
         return name;
     }
 
+    public Class<?> getBeanType() {
+        return beanType;
+    }
+
     public FieldConfig getFieldConfig(String fieldName) throws UnifyException {
         FieldConfig fc = fieldConfigs.get(fieldName);
         if (fc == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_NO_SUCH_FIELD, fieldName);
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_NO_SUCH_FIELD, fieldName);
         }
 
         return fc;
@@ -94,27 +92,60 @@ public class PackableDocConfig {
         return fieldConfigs.size();
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
+    public FieldConfig getBeanPropertyConfig(String beanProperty) throws UnifyException {
+        FieldConfig fc = beanPropertyConfigs.get(beanProperty);
+        if (fc == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_NO_SUCH_BEANPROPERTY, beanProperty);
+        }
+
+        return fc;
     }
 
-    public static Builder newBuilder(Class<?> beanType) {
-        return new Builder(beanType);
+    public boolean isBeanPropertyConfig(String beanProperty) {
+        return beanPropertyConfigs.containsKey(beanProperty);
+    }
+
+    public Set<String> getBeanProperties() {
+        return beanPropertyConfigs.keySet();
+    }
+
+    public Collection<FieldConfig> getBeanPropertyConfigs() {
+        return beanPropertyConfigs.values();
+    }
+
+    public int getBeanPropertyCount() {
+        return beanPropertyConfigs.size();
+    }
+
+    public static Builder newBuilder(String configName) {
+        return new Builder(configName);
+    }
+
+    public static Builder newBuilder(String configName, Class<?> beanType) {
+        return new Builder(configName, beanType);
     }
 
     public static class Builder {
 
+        private String name;
+
         private Class<?> beanType;
 
         private Map<String, FieldConfig> fieldConfigs;
+        
+        private Map<String, FieldConfig> beanPropertyConfigs;
 
-        private Builder() {
-            this(null);
+        private Builder(String name) {
+            this(name, null);
         }
 
-        private Builder(Class<?> beanType) {
+        private Builder(String name, Class<?> beanType) {
+            this.name = name;
             this.beanType = beanType;
             fieldConfigs = new LinkedHashMap<String, FieldConfig>();
+            if (beanType != null) {
+                beanPropertyConfigs = new LinkedHashMap<String, FieldConfig>();
+            }
         }
 
         public Builder fieldConfig(String fieldName, FieldType fieldType, DataType dataType) throws UnifyException {
@@ -126,25 +157,92 @@ public class PackableDocConfig {
             if (fieldConfigs.containsKey(fieldName)) {
                 throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_FIELD_EXISTS, fieldName);
             }
-            
+
             if (!StringUtils.isBlank(beanProperty)) {
                 if (beanType == null) {
                     throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_BUILDER_NOT_SUPPORT_MAPPING);
                 }
+
+                if (beanPropertyConfigs.containsKey(beanProperty)) {
+                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_BEANPROPERTY_EXISTS, beanProperty);
+                }
                 
                 // Ensure bean type has appropriate setters and getters
                 GetterSetterInfo gsInfo = ReflectUtils.getGetterSetterInfo(beanType, beanProperty);
-                
+
                 // Ensure type is the same
+                boolean isDifferentType = false;
                 if (FieldType.LIST.equals(fieldType)) {
-                    
+                    isDifferentType = !List.class.equals(gsInfo.getType())
+                            || !dataType.javaClass().equals(gsInfo.getArgumentType());
                 } else if (FieldType.ARRAY.equals(fieldType)) {
-                    
+                    isDifferentType = !gsInfo.getType().isArray()
+                            || !dataType.javaClass().equals(gsInfo.getType().getComponentType());
                 } else {
-                    
+                    isDifferentType = !dataType.javaClass().equals(gsInfo.getType());
+                }
+
+                if (isDifferentType) {
+                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG, beanType,
+                            beanProperty, fieldType, dataType.javaClass());
                 }
             }
+
+            fieldConfigs.put(fieldName, new FieldConfig(fieldName, beanProperty, fieldType, dataType.javaClass()));
             return this;
+        }
+
+        public Builder complexFieldConfig(String fieldName, FieldType fieldType, PackableDocConfig packableDocConfig)
+                throws UnifyException {
+            return complexFieldConfig(fieldName, null, fieldType, packableDocConfig);
+        }
+
+        public Builder complexFieldConfig(String fieldName, String beanProperty, FieldType fieldType,
+                PackableDocConfig packableDocConfig) throws UnifyException {
+            if (fieldConfigs.containsKey(fieldName)) {
+                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_FIELD_EXISTS, fieldName);
+            }
+
+            if (!StringUtils.isBlank(beanProperty)) {
+                if (beanType == null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_BUILDER_NOT_SUPPORT_MAPPING);
+                }
+
+                if (beanPropertyConfigs.containsKey(beanProperty)) {
+                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_BEANPROPERTY_EXISTS, beanProperty);
+                }
+
+                // Ensure bean type has appropriate setters and getters
+                GetterSetterInfo gsInfo = ReflectUtils.getGetterSetterInfo(beanType, beanProperty);
+
+                // Ensure type is the same
+                Class<?> configBeanType = packableDocConfig.getBeanType();
+                boolean isDifferentType = configBeanType == null;
+                if (!isDifferentType) {
+                    if (FieldType.LIST.equals(fieldType)) {
+                        isDifferentType = !List.class.equals(gsInfo.getType())
+                                || !configBeanType.isAssignableFrom(gsInfo.getArgumentType());
+                    } else if (FieldType.ARRAY.equals(fieldType)) {
+                        isDifferentType = !gsInfo.getType().isArray()
+                                || !configBeanType.isAssignableFrom(gsInfo.getType().getComponentType());
+                    } else {
+                        isDifferentType = !configBeanType.isAssignableFrom(gsInfo.getType());
+                    }
+                }
+
+                if (isDifferentType) {
+                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_COMPLEXFIELDCONFIG,
+                            beanType, beanProperty, fieldType, configBeanType);
+                }
+            }
+
+            fieldConfigs.put(fieldName, new FieldConfig(fieldName, beanProperty, fieldType, packableDocConfig));
+            return this;
+        }
+        
+        public PackableDocConfig build() {
+            return new PackableDocConfig(name, beanType, DataUtils.unmodifiableMap(fieldConfigs),
+                    DataUtils.unmodifiableMap(beanPropertyConfigs));
         }
     }
 
@@ -167,17 +265,20 @@ public class PackableDocConfig {
             this.dataType = dataType;
         }
 
-        private FieldConfig(String fieldName, String beanProperty, FieldType fieldType, Class<?> dataType,
+        private FieldConfig(String fieldName, String beanProperty, FieldType fieldType,
                 PackableDocConfig packableDocConfig) {
             this.fieldName = fieldName;
             this.beanProperty = beanProperty;
             this.fieldType = fieldType;
-            this.dataType = dataType;
             this.packableDocConfig = packableDocConfig;
         }
 
         public String getFieldName() {
             return fieldName;
+        }
+
+        public String getBeanProperty() {
+            return beanProperty;
         }
 
         public FieldType getFieldType() {
