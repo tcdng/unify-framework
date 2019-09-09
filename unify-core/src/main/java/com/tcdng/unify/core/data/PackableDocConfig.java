@@ -18,6 +18,7 @@ package com.tcdng.unify.core.data;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Packable document configuration.
@@ -78,7 +80,7 @@ public class PackableDocConfig {
         return fieldConfigs.size();
     }
 
-    public Set<Class<?>> getBeanMappingNames() {
+    public Set<Class<?>> getBeanMappingClasses() {
         return beanMappingConfigs.keySet();
     }
 
@@ -93,6 +95,34 @@ public class PackableDocConfig {
 
     public boolean isBeanConfig(Class<?> beanClass) {
         return beanMappingConfigs.containsKey(beanClass);
+    }
+
+    public static PackableDocConfig buildFrom(String configName, Class<?> beanClass) throws UnifyException {
+        PackableDocConfig.Builder pdcb = PackableDocConfig.newBuilder(configName);
+        BeanMappingConfig.Builder bmcb = BeanMappingConfig.newBuilder(beanClass);
+        for (GetterSetterInfo gsInfo : ReflectUtils.getGetterSetterList(beanClass)) {
+            if (gsInfo.isProperty()) {
+                String fieldName = gsInfo.getName();
+                bmcb.addMapping(fieldName, fieldName);
+
+                Class<?> dataClass = gsInfo.getType();
+                boolean isAugumented = gsInfo.isParameterArgumented();
+                if (isAugumented) {
+                    dataClass = gsInfo.getArgumentType();
+                }
+
+                DataType dataType = DataUtils.findDataType(dataClass);
+                if (dataType != null) {
+                    pdcb.addFieldConfig(fieldName, dataType, isAugumented);
+                } else {
+                    pdcb.addComplexFieldConfig(fieldName,
+                            PackableDocConfig.buildFrom(StringUtils.dotify(configName, fieldName), dataClass),
+                            isAugumented);
+                }
+            }
+        }
+
+        return pdcb.addBeanConfig(bmcb.build()).build();
     }
 
     public static Builder newBuilder(String configName) {
@@ -158,9 +188,19 @@ public class PackableDocConfig {
                 GetterSetterInfo gsInfo = ReflectUtils.getGetterSetterInfo(beanClass, beanProperty);
 
                 // Ensure type is the same
-                if (!fc.isComplex() && !fc.getDataType().equals(gsInfo.getType())) {
-                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG, beanClass,
-                            beanProperty, fc.getDataType());
+                if (!fc.isComplex()) {
+                    if (fc.isList()) {
+                        if (!List.class.equals(gsInfo.getType())
+                                || !fc.getDataType().equals(gsInfo.getArgumentType())) {
+                            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
+                                    beanClass, beanProperty, fc.getDataType());
+                        }
+                    } else {
+                        if (!fc.getDataType().equals(gsInfo.getType())) {
+                            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
+                                    beanClass, beanProperty, fc.getDataType());
+                        }
+                    }
                 }
             }
 

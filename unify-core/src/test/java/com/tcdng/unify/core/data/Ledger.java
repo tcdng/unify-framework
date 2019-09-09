@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.List;
+
 /**
  * Test ledger document.
  * 
@@ -25,7 +27,18 @@ public class Ledger extends AbstractDocument {
 
     private Long id;
 
-    private String[] purchases;
+    private String accountNo;
+
+    private List<String> purchases;
+
+    public Ledger(String accountNo, List<String> purchases) {
+        this.accountNo = accountNo;
+        this.purchases = purchases;
+    }
+
+    public Ledger() {
+
+    }
 
     @Override
     public Long getId() {
@@ -51,11 +64,19 @@ public class Ledger extends AbstractDocument {
         this.id = id;
     }
 
-    public String[] getPurchases() {
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public List<String> getPurchases() {
         return purchases;
     }
 
-    public void setPurchases(String[] purchases) {
+    public void setPurchases(List<String> purchases) {
         this.purchases = purchases;
     }
 

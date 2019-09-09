@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -46,12 +45,12 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
     public void testRetrieveDocumentFieldValue() throws Exception {
         PackableDoc pd = new PackableDoc(custDocConfig, false);
         Date birthDt = new Date();
-        pd.writeField("name", "Amos Quito");
-        pd.writeField("birthDt", birthDt);
-        pd.writeField("balance", BigDecimal.valueOf(250000.00));
-        pd.writeField("id", 16);
-        pd.writeField("address", new Address());
-        pd.writeField("address.line1", "Whipper!");
+        pd.write("name", "Amos Quito");
+        pd.write("birthDt", birthDt);
+        pd.write("balance", BigDecimal.valueOf(250000.00));
+        pd.write("id", 16);
+        pd.write("address", new Address());
+        pd.write("address.line1", "Whipper!");
 
         PackableDocStore dvs = new PackableDocStore(pd);
         assertEquals("Amos Quito", dvs.retrieve("name"));
@@ -87,8 +86,8 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
         PackableDocStore dvs = new PackableDocStore(pd);
         dvs.store("line1", "37 Pauwa Road");
         dvs.store("line2", "Ungwan Dosa, Kaduna");
-        assertEquals("37 Pauwa Road", pd.readField("line1"));
-        assertEquals("Ungwan Dosa, Kaduna", pd.readField("line2"));
+        assertEquals("37 Pauwa Road", pd.read("line1"));
+        assertEquals("Ungwan Dosa, Kaduna", pd.read("line2"));
     }
 
     @Test(expected = NullPointerException.class)
@@ -107,7 +106,7 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
     public void testRetrieveReservedExtension() throws Exception {
         PackableDoc pd = new PackableDoc(custDocConfig, false);
         pd.setResrvExt(new Account("Amos", BigDecimal.valueOf(25.45)));
-        
+
         PackableDocStore dvs = new PackableDocStore(pd);
         Account acct = (Account) dvs.retrieve(PackableDoc.RESERVED_EXT_FIELD);
         assertNotNull(acct);
@@ -119,7 +118,7 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
     public void testRetrieveReservedExtensionNested() throws Exception {
         PackableDoc pd = new PackableDoc(custDocConfig, false);
         pd.setResrvExt(new Account("Amos", BigDecimal.valueOf(25.45)));
-        
+
         PackableDocStore dvs = new PackableDocStore(pd);
         assertEquals("Amos", dvs.retrieve(PackableDoc.RESERVED_EXT_FIELD + ".accountNo"));
         assertEquals(BigDecimal.valueOf(25.45), dvs.retrieve(PackableDoc.RESERVED_EXT_FIELD + ".balance"));
@@ -141,7 +140,7 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
     public void testStoreReservedExtensionNested() throws Exception {
         PackableDoc pd = new PackableDoc(custDocConfig, false);
         pd.setResrvExt(new Account());
-        
+
         PackableDocStore dvs = new PackableDocStore(pd);
         dvs.store(PackableDoc.RESERVED_EXT_FIELD + ".accountNo", "Bruce Banner");
         dvs.store(PackableDoc.RESERVED_EXT_FIELD + ".balance", BigDecimal.ONE);
@@ -162,9 +161,9 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
         PackableDoc pd = new PackableDoc(custDocConfig, false);
         pd.setResrvExt(new Account());
         PackableDocStore dvs = new PackableDocStore(pd);
-        assertTrue(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD+ ".accountNo"));
-        assertTrue(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD+ ".balance"));
-        assertFalse(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD+ ".details"));
+        assertTrue(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD + ".accountNo"));
+        assertTrue(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD + ".balance"));
+        assertFalse(dvs.isGettable(PackableDoc.RESERVED_EXT_FIELD + ".details"));
     }
 
     @Test
@@ -178,25 +177,15 @@ public class PackableDocValueStoreTest extends AbstractUnifyComponentTest {
         PackableDoc pd = new PackableDoc(custDocConfig, false);
         pd.setResrvExt(new Account());
         PackableDocStore dvs = new PackableDocStore(pd);
-        assertTrue(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD+ ".accountNo"));
-        assertTrue(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD+ ".balance"));
-        assertFalse(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD+ ".details"));
+        assertTrue(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD + ".accountNo"));
+        assertTrue(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD + ".balance"));
+        assertFalse(dvs.isSettable(PackableDoc.RESERVED_EXT_FIELD + ".details"));
     }
 
     @Override
     protected void onSetup() throws Exception {
-        custDocConfig = new PackableDocConfig("customerConfig", new PackableDocConfig.FieldConfig("name", String.class),
-                new PackableDocConfig.FieldConfig("birthDt", Date.class),
-                new PackableDocConfig.FieldConfig("balance", BigDecimal.class),
-                new PackableDocConfig.FieldConfig("id", Long.class),
-                new PackableDocConfig.FieldConfig("address", Address.class),
-                new PackableDocConfig.FieldConfig("address.line1", String.class),
-                new PackableDocConfig.FieldConfig("address.line2", String.class),
-                new PackableDocConfig.FieldConfig("modeList", List.class));
-
-        addressDocConfig =
-                new PackableDocConfig("addressConfig", new PackableDocConfig.FieldConfig("line1", String.class),
-                        new PackableDocConfig.FieldConfig("line2", String.class));
+        custDocConfig = PackableDocConfig.buildFrom("customerConfig", Customer.class);
+        addressDocConfig = PackableDocConfig.buildFrom("addressConfig", Address.class);
     }
 
     @Override

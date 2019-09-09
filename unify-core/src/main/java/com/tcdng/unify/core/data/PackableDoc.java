@@ -29,6 +29,7 @@ import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * A packable document.
@@ -49,6 +50,8 @@ public class PackableDoc implements Serializable {
     private transient PackableDocConfig config;
 
     private transient Map<String, Object> oldValues;
+
+    private transient Map<String, Unnested> rootUnestedMap;
 
     private transient Object resrvExt;
 
@@ -93,28 +96,41 @@ public class PackableDoc implements Serializable {
             return resrvExt;
         }
 
-        config.getFieldConfig(fieldName);
-        return values.get(fieldName);
+        Unnested unnested = unnest(fieldName);
+        if (unnested != null) {
+            PackableDoc pd = unnested.uPd;
+            pd.config.getFieldConfig(unnested.uFieldName);
+            return pd.values.get(unnested.uFieldName);
+        }
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
     public <T> Object read(Class<T> type, String fieldName) throws UnifyException {
-        Object val = read(fieldName);
-        if (val != null && !RESERVED_EXT_FIELD.equals(fieldName)) {
-            FieldConfig fc = config.getFieldConfig(fieldName);
-            if (fc.isList()) {
-                List<T> valList = DataUtils.getNewArrayList(type);
-                for (Object aVal : (List<Object>) val) {
-                    valList.add(convertTo(type, fc, aVal));
-                }
-
-                return valList;
-            }
-
-            return convertTo(type, fc, val);
+        if (RESERVED_EXT_FIELD.equals(fieldName)) {
+            return resrvExt;
         }
 
-        return val;
+        Unnested unnested = unnest(fieldName);
+        if (unnested != null) {
+            PackableDoc pd = unnested.uPd;
+            FieldConfig fc = pd.config.getFieldConfig(unnested.uFieldName);
+            Object val = pd.values.get(unnested.uFieldName);
+            if (val != null) {
+                if (fc.isList()) {
+                    List<T> valList = DataUtils.getNewArrayList(type);
+                    for (Object aVal : (List<Object>) val) {
+                        valList.add(convertTo(type, fc, aVal));
+                    }
+                    return valList;
+                }
+                return convertTo(type, fc, val);
+            }
+            return val;
+        }
+
+        return null;
     }
 
     public void readFrom(Object bean) throws UnifyException {
@@ -145,28 +161,33 @@ public class PackableDoc implements Serializable {
             return;
         }
 
-        FieldConfig fc = config.getFieldConfig(fieldName);
-        if (val != null) {
-            if (fc.isList()) {
-                List<?> valList = null;
-                if (fc.isComplex()) {
-                    valList = DataUtils.getNewArrayList(PackableDoc.class);
+        Unnested unnested = unnest(fieldName);
+        if (unnested != null) {
+            PackableDoc pd = unnested.uPd;
+            FieldConfig fc = pd.config.getFieldConfig(unnested.uFieldName);
+            if (val != null) {
+                if (fc.isList()) {
+                    List<?> valList = null;
+                    if (fc.isComplex()) {
+                        valList = DataUtils.getNewArrayList(PackableDoc.class);
+                    } else {
+                        valList = DataUtils.getNewArrayList(fc.getDataType());
+                    }
+
+                    for (Object aVal : (List<Object>) val) {
+                        ((List<Object>) valList).add(convertFrom(fc, aVal, formatter));
+                    }
+
+                    val = valList;
                 } else {
-                    valList = DataUtils.getNewArrayList(fc.getDataType());
+                    val = convertFrom(fc, val, formatter);
                 }
-
-                for (Object aVal : (List<Object>) val) {
-                    ((List<Object>) valList).add(convertFrom(fc, aVal, formatter));
-                }
-
-                val = valList;
-            } else {
-                val = convertFrom(fc, val, formatter);
             }
-        }
 
-        values.put(fieldName, val);
-        updated = true;
+            pd.values.put(unnested.uFieldName, val);
+            pd.updated = true;
+            updated = true;
+        }
     }
 
     public void writeTo(Object bean) throws UnifyException {
@@ -257,21 +278,54 @@ public class PackableDoc implements Serializable {
         this.updated = false;
     }
 
+    private class Unnested {
+
+        private PackableDoc uPd;
+
+        private String uFieldName;
+
+        public Unnested(PackableDoc uPd, String uFieldName) {
+            this.uPd = uPd;
+            this.uFieldName = uFieldName;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     private void construct(PackableDocConfig config, boolean auditable) {
         this.config = config;
         this.auditable = auditable;
+        this.rootUnestedMap = new HashMap<String, Unnested>();
 
         for (FieldConfig fc : config.getFieldConfigs()) {
-            if (!values.containsKey(fc.getFieldName())) {
-                if (fc.isList()) {
-                    if (fc.isComplex()) {
-                        values.put(fc.getFieldName(), DataUtils.getNewArrayList(PackableDoc.class));
+            String fieldName = fc.getFieldName();
+            if (fc.isComplex()) {
+                if (!values.containsKey(fieldName)) {
+                    if (fc.isList()) {
+                        values.put(fieldName, DataUtils.getNewArrayList(PackableDoc.class));
                     } else {
-                        values.put(fc.getFieldName(), DataUtils.getNewArrayList(fc.getDataType()));
+                        values.put(fieldName, new PackableDoc(fc.getPackableDocConfig(), auditable));
                     }
                 } else {
-                    if (fc.isComplex()) {
-                        values.put(fc.getFieldName(), new PackableDoc(fc.getPackableDocConfig(), auditable));
+                    if (fc.isList()) {
+                        List<PackableDoc> valList = (List<PackableDoc>) values.get(fieldName);
+                        if (valList != null) {
+                            for (PackableDoc pd : valList) {
+                                if (pd != null) {
+                                    pd.construct(fc.getPackableDocConfig(), auditable);
+                                }
+                            }
+                        }
+                    } else {
+                        PackableDoc pd = (PackableDoc) values.get(fieldName);
+                        if (pd != null) {
+                            pd.construct(fc.getPackableDocConfig(), auditable);
+                        }
+                    }
+                }
+            } else {
+                if (!values.containsKey(fc.getFieldName())) {
+                    if (fc.isList()) {
+                        values.put(fc.getFieldName(), DataUtils.getNewArrayList(fc.getDataType()));
                     } else {
                         values.put(fc.getFieldName(), null);
                     }
@@ -284,6 +338,30 @@ public class PackableDoc implements Serializable {
         }
 
         updated = false;
+    }
+
+    private Unnested unnest(String fieldName) throws UnifyException {
+        int lastIndex = fieldName.lastIndexOf('.');
+        if (lastIndex > 0) {
+            PackableDoc lastPd = this;
+            String[] nFieldNames = StringUtils.dotSplit(fieldName);
+            int nlen = nFieldNames.length - 1;
+            for (int i = 0; i < nlen; i++) {
+                lastPd = (PackableDoc) lastPd.values.get(nFieldNames[i]); // TODO Handle indexing
+                if (lastPd == null)
+                    return null;
+            }
+
+            return new Unnested(lastPd, nFieldNames[nlen]);
+        }
+
+        Unnested unnested = rootUnestedMap.get(fieldName);
+        if (unnested == null) {
+            unnested = new Unnested(this, fieldName);
+            rootUnestedMap.put(fieldName, unnested);
+        }
+
+        return unnested;
     }
 
     private <T> T convertTo(Class<T> type, FieldConfig fc, Object val) throws UnifyException {
