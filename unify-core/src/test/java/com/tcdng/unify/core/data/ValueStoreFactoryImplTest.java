@@ -20,14 +20,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.constant.DataType;
 
 /**
  * Default value store factory implementation tests.
@@ -64,12 +61,22 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
-        custDocConfig = new PackableDocConfig("customerConfig", new PackableDocConfig.FieldConfig("name", String.class),
-                new PackableDocConfig.FieldConfig("birthDt", Date.class),
-                new PackableDocConfig.FieldConfig("balance", BigDecimal.class),
-                new PackableDocConfig.FieldConfig("id", Long.class),
-                new PackableDocConfig.FieldConfig("address", Address.class),
-                new PackableDocConfig.FieldConfig("modeList", List.class));
+        custDocConfig = PackableDocConfig.newBuilder("customerConfig")
+                .addFieldConfig("name", DataType.STRING)
+                .addFieldConfig("birthDt", DataType.DATE)
+                .addFieldConfig("id", DataType.LONG)
+                .addFieldConfig("balance", DataType.DECIMAL)
+                .addFieldConfig("modeList", DataType.STRING)
+                .addComplexFieldConfig("address",
+                        PackableDocConfig.newBuilder("addressConfig")
+                                .addFieldConfig("line1", DataType.STRING)
+                                .addFieldConfig("line2", DataType.STRING)
+                                .addBeanConfig(BeanMappingConfig.newBuilder(Address.class)
+                                        .addMapping("line1", "line1")
+                                        .addMapping("line2", "line2")
+                                        .build())
+                                .build())
+                .addBeanConfig(BeanMappingConfig.newBuilder(Customer.class).build()).build();
     }
 
     @Override

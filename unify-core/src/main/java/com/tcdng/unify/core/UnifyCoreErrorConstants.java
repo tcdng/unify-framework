@@ -890,7 +890,7 @@ public interface UnifyCoreErrorConstants {
     /** Packable document field {0} configuration already exists. */
     String PACKABLEDOC_FIELD_EXISTS = "UC_00DD";
 
-    /** Packable document incompatible field configuration. Bean type = {0}, property = {1}, fieldType = {2}, dataType = [3} */
+    /** Packable document incompatible field configuration. Bean type = {0}, property = {1}, dataType = {2} */
     String PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG = "UC_00DE";
 
     /** Packable document incompatible complex field configuration. Bean type = {0}, property = {1}, fieldType = {2}, dataType = [3} */
@@ -904,4 +904,10 @@ public interface UnifyCoreErrorConstants {
 
     /** Packable document has no such bean configuration for type {0}. */
     String PACKABLEDOC_NO_SUCH_BEANCONFIG = "UC_00E2";
+
+    /** Packable document bean configuration for type {0} exists. */
+    String PACKABLEDOC_BEANCONFIG_EXISTS = "UC_00E3";
+
+    /** Packable document bean configuration {0} is incompatible with bean {1}. */
+    String PACKABLEDOC_INCOMPATIBLE_BEANCONFIG =  "UC_00E4";
 }

@@ -87,7 +87,7 @@ public class PackableDocStore extends AbstractValueStore<PackableDoc> {
             }
         }
 
-        return storage.readField(property);
+        return storage.read(property);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class PackableDocStore extends AbstractValueStore<PackableDoc> {
             }
         }
 
-        storage.writeField(property, value, formatter);
+        storage.write(property, value, formatter);
     }
 
 }

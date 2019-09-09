@@ -45,13 +45,13 @@ public class PackableDocListStore extends AbstractListValueStore<PackableDoc> {
 
     @Override
     protected Object doRetrieve(PackableDoc storage, String property) throws UnifyException {
-        return storage.readField(property);
+        return storage.read(property);
     }
 
     @Override
     protected void doStore(PackableDoc storage, String property, Object value, Formatter<?> formatter)
             throws UnifyException {
-        storage.writeField(property, value, formatter);
+        storage.write(property, value, formatter);
     }
 
 }

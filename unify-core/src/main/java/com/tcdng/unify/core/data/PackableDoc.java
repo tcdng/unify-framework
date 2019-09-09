@@ -17,19 +17,16 @@ package com.tcdng.unify.core.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.PackableDocConfig.BeanConfig;
 import com.tcdng.unify.core.data.PackableDocConfig.FieldConfig;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
@@ -72,28 +69,6 @@ public class PackableDoc implements Serializable {
         construct(config, auditable);
     }
 
-    public PackableDoc preset() {
-        for (FieldConfig fc : config.getFieldConfigs()) {
-            if (fc.isComplex()) {
-                Object val = null;
-                if (fc.isList()) {
-                    val = DataUtils.getNewArrayList(PackableDoc.class);
-                } else {
-                    val = new PackableDoc(fc.getPackableDocConfig(), auditable).preset();
-                }
-
-                values.put(fc.getFieldName(), val);
-                updated = true;
-            }
-        }
-
-        return this;
-    }
-
-    public String getConfigName() {
-        return config.getName();
-    }
-
     public static PackableDoc unpack(PackableDocConfig config, byte[] packedDoc) throws UnifyException {
         return PackableDoc.unpack(config, packedDoc, false);
     }
@@ -109,6 +84,10 @@ public class PackableDoc implements Serializable {
         return IOUtils.streamToBytes(this);
     }
 
+    public String getConfigName() {
+        return config.getName();
+    }
+
     public Object read(String fieldName) throws UnifyException {
         if (RESERVED_EXT_FIELD.equals(fieldName)) {
             return resrvExt;
@@ -118,35 +97,24 @@ public class PackableDoc implements Serializable {
         return values.get(fieldName);
     }
 
-    public <T> T read(Class<T> type, String fieldName) throws UnifyException {
-        FieldConfig fc = config.getFieldConfig(fieldName);
-        if (fc.isList()) {
-            return null;
-        }
-        
-        if (fc.isComplex()) {
-            
-        }
-        
-        return DataUtils.convert(type, values.get(fieldName), null);
-    }
+    @SuppressWarnings("unchecked")
+    public <T> Object read(Class<T> type, String fieldName) throws UnifyException {
+        Object val = read(fieldName);
+        if (val != null && !RESERVED_EXT_FIELD.equals(fieldName)) {
+            FieldConfig fc = config.getFieldConfig(fieldName);
+            if (fc.isList()) {
+                List<T> valList = DataUtils.getNewArrayList(type);
+                for (Object aVal : (List<Object>) val) {
+                    valList.add(convertTo(type, fc, aVal));
+                }
 
-    public <T> List<T> readList(Class<T> type, String fieldName) throws UnifyException {
-        FieldConfig fc = config.getFieldConfig(fieldName);
-        if (!fc.isList()) {
-            return null;
-        }
-        
-        if (fc.isComplex()) {
-            
-        }
-        
-        return DataUtils.convert(List.class, type, values.get(fieldName), null);
-    }
+                return valList;
+            }
 
-    public <T> T readComplexField(Class<T> type, String fieldName) throws UnifyException {
-        config.getFieldConfig(fieldName);
-        return DataUtils.convert(type, values.get(fieldName), null);
+            return convertTo(type, fc, val);
+        }
+
+        return val;
     }
 
     public void readFrom(Object bean) throws UnifyException {
@@ -154,25 +122,51 @@ public class PackableDoc implements Serializable {
             throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_CANT_READ_FROM_NULL);
         }
 
-        BeanConfig beanConfig = config.getBeanConfig(bean.getClass());
-        for (String beanProperty : beanConfig.getBeanProperties()) {
-            writeField(beanConfig.getFieldConfig(beanProperty), ReflectUtils.getNestedBeanProperty(bean, beanProperty));
+        BeanMappingConfig beanMappingConfig = config.getBeanMapping(bean.getClass());
+        if (!beanMappingConfig.getBeanClass().isAssignableFrom(bean.getClass())) {
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_BEANCONFIG, config.getName(),
+                    bean.getClass());
+        }
+
+        for (String beanProperty : beanMappingConfig.getBeanProperties()) {
+            write(beanMappingConfig.getMappedField(beanProperty),
+                    ReflectUtils.getNestedBeanProperty(bean, beanProperty), null);
         }
     }
 
-    public void writeField(String fieldName, Object value) throws UnifyException {
-        writeField(fieldName, value, null);
+    public void write(String fieldName, Object val) throws UnifyException {
+        write(fieldName, val, null);
     }
 
-    public void writeField(String fieldName, Object value, Formatter<?> formatter) throws UnifyException {
+    @SuppressWarnings("unchecked")
+    public void write(String fieldName, Object val, Formatter<?> formatter) throws UnifyException {
         if (RESERVED_EXT_FIELD.equals(fieldName)) {
-            resrvExt = value;
+            resrvExt = val;
             return;
         }
 
         FieldConfig fc = config.getFieldConfig(fieldName);
-        Object val = DataUtils.convert(fc.getDataType(), value, formatter);
-        writeField(fc, val);
+        if (val != null) {
+            if (fc.isList()) {
+                List<?> valList = null;
+                if (fc.isComplex()) {
+                    valList = DataUtils.getNewArrayList(PackableDoc.class);
+                } else {
+                    valList = DataUtils.getNewArrayList(fc.getDataType());
+                }
+
+                for (Object aVal : (List<Object>) val) {
+                    ((List<Object>) valList).add(convertFrom(fc, aVal, formatter));
+                }
+
+                val = valList;
+            } else {
+                val = convertFrom(fc, val, formatter);
+            }
+        }
+
+        values.put(fieldName, val);
+        updated = true;
     }
 
     public void writeTo(Object bean) throws UnifyException {
@@ -180,10 +174,21 @@ public class PackableDoc implements Serializable {
             throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_CANT_WRITE_TO_NULL);
         }
 
-        BeanConfig beanConfig = config.getBeanConfig(bean.getClass());
-        for (String beanProperty : beanConfig.getBeanProperties()) {
-            DataUtils.setNestedBeanProperty(bean, beanProperty, readField(beanConfig.getFieldConfig(beanProperty)),
-                    null);
+        BeanMappingConfig beanMappingConfig = config.getBeanMapping(bean.getClass());
+        if (!beanMappingConfig.getBeanClass().isAssignableFrom(bean.getClass())) {
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_BEANCONFIG, config.getName(),
+                    bean.getClass());
+        }
+
+        for (String beanProperty : beanMappingConfig.getBeanProperties()) {
+            FieldConfig fc = config.getFieldConfig(beanMappingConfig.getMappedField(beanProperty));
+            GetterSetterInfo gsInfo = ReflectUtils.getGetterSetterInfo(bean.getClass(), beanProperty);
+            Class<?> type = gsInfo.getType();
+            if (gsInfo.isParameterArgumented()) {
+                type = gsInfo.getArgumentType();
+            }
+
+            DataUtils.setNestedBeanProperty(bean, beanProperty, read(type, fc.getFieldName()), null);
         }
     }
 
@@ -255,6 +260,25 @@ public class PackableDoc implements Serializable {
     private void construct(PackableDocConfig config, boolean auditable) {
         this.config = config;
         this.auditable = auditable;
+
+        for (FieldConfig fc : config.getFieldConfigs()) {
+            if (!values.containsKey(fc.getFieldName())) {
+                if (fc.isList()) {
+                    if (fc.isComplex()) {
+                        values.put(fc.getFieldName(), DataUtils.getNewArrayList(PackableDoc.class));
+                    } else {
+                        values.put(fc.getFieldName(), DataUtils.getNewArrayList(fc.getDataType()));
+                    }
+                } else {
+                    if (fc.isComplex()) {
+                        values.put(fc.getFieldName(), new PackableDoc(fc.getPackableDocConfig(), auditable));
+                    } else {
+                        values.put(fc.getFieldName(), null);
+                    }
+                }
+            }
+        }
+
         if (auditable) {
             oldValues = new HashMap<String, Object>(values);
         }
@@ -262,50 +286,23 @@ public class PackableDoc implements Serializable {
         updated = false;
     }
 
-    private Object readObject(PackableDocRWConfig rwConfig, PackableDoc pd) throws UnifyException {
-        Object bean = null;
-        if (pd != null) {
-            bean = ReflectUtils.newInstance(rwConfig.getBeanType());
-            for (FieldMapping fMapping : rwConfig.getFieldMappings()) {
-                Object val = readField(fMapping);
-                if (val != null) {
-                    DataUtils.setNestedBeanProperty(bean, fMapping.getBeanFieldName(), val);
-                }
-            }
+    private <T> T convertTo(Class<T> type, FieldConfig fc, Object val) throws UnifyException {
+        if (fc.isComplex()) {
+            T bean = ReflectUtils.newInstance(type);
+            ((PackableDoc) val).writeTo(bean);
+            return bean;
         }
 
-        return bean;
+        return DataUtils.convert(type, val, null);
     }
 
-    private void writeField(FieldMapping fMapping, Object val) throws UnifyException {
-        FieldConfig fc = config.getFieldConfig(fMapping.getDocFieldName());
-        Object oldValue = values.get(fc.getName());
-        Object newValue = null;
-        if (val != null) {
-            if (fc.isComplex()) {
-                PackableDocConfig fpdConfig = fc.getPackableDocConfig();
-                if (val.getClass().isArray()) {
-                    Object[] beans = DataUtils.convert(Object[].class, val, null);
-                    PackableDoc[] fpd = new PackableDoc[beans.length];
-                    for (int i = 0; i < beans.length; i++) {
-                        if (beans[i] != null) {
-                            fpd[i] = new PackableDoc(fpdConfig, auditable);
-                            fpd[i].readFrom(fMapping.getPackableDocRWConfig(), beans[i]);
-                        }
-                    }
-
-                    newValue = fpd;
-                } else {
-                    PackableDoc fpd = new PackableDoc(fpdConfig, auditable);
-                    fpd.readFrom(fMapping.getPackableDocRWConfig(), val);
-                    newValue = fpd;
-                }
-            } else {
-                newValue = DataUtils.convert(fc.getDataType(), val, null);
-            }
+    private Object convertFrom(FieldConfig fc, Object val, Formatter<?> formatter) throws UnifyException {
+        if (fc.isComplex()) {
+            PackableDoc pd = new PackableDoc(fc.getPackableDocConfig(), auditable);
+            pd.readFrom(val);
+            return pd;
         }
 
-        values.put(fc.getName(), newValue);
-        updated |= !DataUtils.equals(oldValue, newValue);
+        return DataUtils.convert(fc.getDataType(), val, formatter);
     }
 }
