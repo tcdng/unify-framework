@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.data;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
@@ -39,7 +38,6 @@ public abstract class AbstractValueStore<T> implements ValueStore {
 
     @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
-        checkStorageIndex(storageIndex);
         return retrieve(name);
     }
 
@@ -55,19 +53,16 @@ public abstract class AbstractValueStore<T> implements ValueStore {
 
     @Override
     public <U> U retrieve(Class<U> type, int storageIndex, String name) throws UnifyException {
-        checkStorageIndex(storageIndex);
         return DataUtils.convert(type, retrieve(storageIndex, name), null);
     }
 
     @Override
     public void store(int storageIndex, String name, Object value) throws UnifyException {
-        checkStorageIndex(storageIndex);
         store(name, value);
     }
 
     @Override
     public void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
-        checkStorageIndex(storageIndex);
         store(name, value, formatter);
     }
 
@@ -94,17 +89,6 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public Object getValueObject() {
         return storage;
-    }
-
-    @Override
-    public int getStorageLength() {
-        return 1;
-    }
-
-    private void checkStorageIndex(int storageIndex) throws UnifyException {
-        if (storageIndex < 0 || storageIndex >= 1) {
-            throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, 1);
-        }
     }
 
     protected abstract Object doRetrieve(String property) throws UnifyException;

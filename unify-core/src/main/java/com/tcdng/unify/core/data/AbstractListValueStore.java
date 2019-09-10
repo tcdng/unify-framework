@@ -108,15 +108,6 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
         return storage;
     }
 
-    @Override
-    public int getStorageLength() {
-        if (storage != null) {
-            return storage.size();
-        }
-        
-        return 0;
-    }
-
     private void checkStorageIndex(int storageIndex) throws UnifyException {
         if (storage == null) {
             throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, 0);
