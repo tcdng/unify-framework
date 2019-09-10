@@ -16,18 +16,20 @@
 
 package com.tcdng.unify.core.data;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 
 /**
- * Packable document array value store.
+ * Packable document list value store.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PackableDocArrayStore extends AbstractArrayValueStore<PackableDoc> {
+public class PackableDocListStore extends AbstractListValueStore<PackableDoc> {
 
-    public PackableDocArrayStore(PackableDoc[] storage, int dataIndex) {
+    public PackableDocListStore(List<PackableDoc> storage, int dataIndex) {
         super(storage, dataIndex);
     }
 

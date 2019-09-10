@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.tcdng.unify.core.annotation.StaticList;
-import com.tcdng.unify.core.data.PackableDoc;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
@@ -41,8 +40,7 @@ public enum DataType implements EnumConst {
     DECIMAL("DC", BigDecimal.class),
     DATE("DT", Date.class),
     STRING("ST", String.class),
-    BLOB("BT", byte[].class),
-    COMPLEX("CX", PackableDoc.class);
+    BLOB("BT", byte[].class);
 
     private final String code;
 

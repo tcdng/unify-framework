@@ -22,6 +22,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
+import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.Gender;
 import com.tcdng.unify.core.data.MapValues;
 import com.tcdng.unify.core.data.PackableDoc;
@@ -119,9 +120,8 @@ public class AuthorPageController extends AbstractPageController {
         bio.addValue("age", Integer.class);
         bio.addValue("gender", Gender.class);
 
-        PackableDocConfig docConfig =
-                new PackableDocConfig("ledgerConfig", new PackableDocConfig.FieldConfig("marker", String.class),
-                        new PackableDocConfig.FieldConfig("height", Double.class));
+        PackableDocConfig docConfig = PackableDocConfig.newBuilder("ledgerConfig")
+                .addFieldConfig("marker", DataType.STRING).addFieldConfig("height", DataType.DOUBLE).build();
 
         PackableDoc pDoc = new PackableDoc(docConfig, false);
         bio.addValue("metric", pDoc);

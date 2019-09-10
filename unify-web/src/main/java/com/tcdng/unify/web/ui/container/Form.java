@@ -24,7 +24,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.AbstractContainer;
 import com.tcdng.unify.web.ui.Section;
 import com.tcdng.unify.web.ui.Widget;
@@ -94,10 +93,10 @@ public class Form extends AbstractContainer {
 
                             formSection.valueStoreList = valueList;
                         } else if (newValue instanceof List) {
-                            Object[] list = DataUtils.getArrayFromList((List<Object>) newValue);
-                            List<ValueStore> valueList = new ArrayList<ValueStore>(list.length);
-                            for (int i = 0; i < list.length; i++) {
-                                valueList.add(createArrayValueStore(list, i));
+                            List<Object> list = (List<Object>) newValue;
+                            List<ValueStore> valueList = new ArrayList<ValueStore>(list.size());
+                            for (int i = 0; i < list.size(); i++) {
+                                valueList.add(createListValueStore(list, i));
                             }
 
                             formSection.valueStoreList = valueList;

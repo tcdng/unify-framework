@@ -442,7 +442,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Creates a array value store with index information using supplied storage
+     * Creates an array value store with index information using supplied storage
      * object.
      * 
      * @param storageObject
@@ -456,6 +456,23 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     protected ValueStore createArrayValueStore(Object[] storageObject, int dataIndex) throws UnifyException {
         return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
                 .getArrayValueStore(storageObject, dataIndex);
+    }
+
+    /**
+     * Creates a list value store with index information using supplied storage
+     * object.
+     * 
+     * @param storageObject
+     *            the storage object to use
+     * @param dataIndex
+     *            the data index
+     * @return ValueStore new instance of a value store
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected ValueStore createListValueStore(List<Object> storageObject, int dataIndex) throws UnifyException {
+        return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+                .getListValueStore(Object.class, storageObject, dataIndex);
     }
 
     /**

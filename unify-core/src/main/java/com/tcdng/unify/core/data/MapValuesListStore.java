@@ -16,40 +16,42 @@
 
 package com.tcdng.unify.core.data;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 
 /**
- * Packable document array value store.
+ * Map values list store.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PackableDocArrayStore extends AbstractArrayValueStore<PackableDoc> {
+public class MapValuesListStore extends AbstractListValueStore<MapValues> {
 
-    public PackableDocArrayStore(PackableDoc[] storage, int dataIndex) {
+    public MapValuesListStore(List<MapValues> storage, int dataIndex) {
         super(storage, dataIndex);
     }
 
     @Override
-    protected boolean doSettable(PackableDoc storage, String property) throws UnifyException {
-        return storage != null && storage.isField(property);
+    protected boolean doSettable(MapValues storage, String property) throws UnifyException {
+        return storage != null && storage.isMapValue(property);
     }
 
     @Override
-    protected boolean doGettable(PackableDoc storage, String property) throws UnifyException {
-        return storage != null && storage.isField(property);
+    protected boolean doGettable(MapValues storage, String property) throws UnifyException {
+        return storage != null && storage.isMapValue(property);
     }
 
     @Override
-    protected Object doRetrieve(PackableDoc storage, String property) throws UnifyException {
-        return storage.read(property);
+    protected Object doRetrieve(MapValues storage, String property) throws UnifyException {
+        return storage.getValue(property);
     }
 
     @Override
-    protected void doStore(PackableDoc storage, String property, Object value, Formatter<?> formatter)
+    protected void doStore(MapValues storage, String property, Object value, Formatter<?> formatter)
             throws UnifyException {
-        storage.write(property, value, formatter);
+        storage.setValue(property, value, formatter);
     }
 
 }

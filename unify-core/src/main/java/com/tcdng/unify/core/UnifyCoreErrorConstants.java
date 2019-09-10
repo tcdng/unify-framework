@@ -438,14 +438,14 @@ public interface UnifyCoreErrorConstants {
     /** Container logger initialization error. */
     String CONTAINER_LOGGER_INITIALIZATION_ERROR = "UC_0070";
 
-    /** PackableDoc has no such field {0}. */
-    String DOCUMENT_NO_SUCH_FIELD = "UC_0071";
+    /** Packable document has no such field {0}. */
+    String PACKABLEDOC_NO_SUCH_FIELD = "UC_0071";
 
     /** Packable document can not read from null document reference. */
-    String DOCUMENT_CANT_READ_FROM_NULL = "UC_0072";
+    String PACKABLEDOC_CANT_READ_FROM_NULL = "UC_0072";
 
     /** Packable document can not populate a null document reference. */
-    String DOCUMENT_CANT_WRITE_TO_NULL = "UC_0073";
+    String PACKABLEDOC_CANT_WRITE_TO_NULL = "UC_0073";
 
     /** Field {0} for class {1} is not bean compliant */
     String REFLECT_CLASS_FIELD_NOT_BEAN_COMPLIANT = "UC_0074";
@@ -577,374 +577,337 @@ public interface UnifyCoreErrorConstants {
     /** Unsupported collection type. Type = {0} */
     String UNSUPPORTED_COLLECTIONTYPE = "UC_0095";
 
-    /** Network communicator already open. Name = {0} */
-    String NETWORKCOMMUNICATOR_OPEN = "UC_0096";
-
-    /** Network communicator receive error. Name = {0} */
-    String NETWORKCOMMUNICATOR_RECEIVE_ERROR = "UC_0097";
-
-    /** Network communicator transmit error. Name = {0} */
-    String NETWORKCOMMUNICATOR_TRANSMIT_ERROR = "UC_0098";
-
-    /** Network interface configuration exists. Name = {0} */
-    String NETWORKINTERFACE_CONFIG_EXISTS = "UC_0099";
-
-    /** Network interface configuration unknown. Name = {0} */
-    String NETWORKINTERFACE_CONFIG_UNKNOWN = "UC_009A";
-
-    /** Network interface configuration incompatible type. Name = {0} */
-    String NETWORKINTERFACE_CONFIG_INCOMPATIBLE = "UC_009B";
-
-    /**
-     * Network interface communcator incompatible with type. Communicator = {0},
-     * type = {1}
-     */
-    String NETWORKINTERFACE_TYPE_COMM_INCOMPATIBLE = "UC_009C";
-
-    /**
-     * Network interface unable to bind local unicast server to port. Name = {0},
-     * Port = {1}
-     */
-    String NETWORKINTERFACE_UNABLE_BIND_LOCALSERVER = "UC_009D";
-
-    /** Network interface local unicast server already started. Name = {0} */
-    String NETWORKINTERFACE_UNICASTSERVER_STARTED = "UC_009E";
-
-    /** Network interface no local unicast server started. Name = {0} */
-    String NETWORKINTERFACE_UNICASTSERVER_NOT_STARTED = "UC_009F";
-
-    /**
-     * Network interface no local unicast client started. ID = {0}
-     */
-    String NETWORKINTERFACE_UNICASTCLIENT_NOT_STARTED = "UC_00A0";
-
-    /**
-     * Network interface no local multicast server started. ID = {0}
-     */
-    String NETWORKINTERFACE_MULTICASTSERVER_NOT_STARTED = "UC_00A1";
-
-    /** Network interface local multicast client already started. Name = {0} */
-    String NETWORKINTERFACE_MULTICLIENT_STARTED = "UC_00A2";
-
-    /** Network interface no local multicast client started. Name = {0} */
-    String NETWORKINTERFACE_MULTICASTCLIENT_NOT_STARTED = "UC_00A3";
-
-    /**
-     * Network interface unable to bind local multicast client to port. Name = {0},
-     * Port = {1}
-     */
-    String NETWORKINTERFACE_UNABLE_BIND_LOCALCLIENT = "UC_00A4";
-
-    /**
-     * Network interface message larger than maximum packet size. Max = {0}, Message
-     * size = {1}
-     */
-    String NETWORKINTERFACE_MESSAGE_LARGER_THAN_MAXPACKETSIZE = "UC_00A5";
-
     /** Document document must have at least one field. */
-    String DOCUMENT_HAS_NO_FIELD = "UC_00A6";
+    String DOCUMENT_HAS_NO_FIELD = "UC_0096";
 
     /**
      * Foreign type not allowed for enumeration constant type {0}. Type = {1}, field
      * = {2}
      */
-    String ANNOTATION_FOREIGN_TYPE_NOT_PERMITTED = "UC_00A7";
+    String ANNOTATION_FOREIGN_TYPE_NOT_PERMITTED = "UC_0097";
 
     /**
      * List-only key is not referencing a foriegn key. Type = {0}, property = {1},
      * key {2}
      */
-    String RECORD_LISTONLY_KEY_NOT_REF_FOREIGN_KEY = "UC_00A8";
+    String RECORD_LISTONLY_KEY_NOT_REF_FOREIGN_KEY = "UC_0098";
 
     /** No matching record found for single record query. Type = {0} */
-    String RECORD_NO_MATCHING_RECORD = "UC_00A9";
+    String RECORD_NO_MATCHING_RECORD = "UC_0099";
 
     /** No matching record found for single object query. Type = {0} */
-    String RECORD_SINGLEOBJECT_NO_MATCHING_RECORD = "UC_00AA";
+    String RECORD_SINGLEOBJECT_NO_MATCHING_RECORD = "UC_009A";
 
     /** Map value store has no such entry {0}. */
-    String MAPVALUESTORE_NO_SUCH_ENTRY = "UC_00AB";
+    String MAPVALUESTORE_NO_SUCH_ENTRY = "UC_009B";
 
     /** Document definitiion with code is unknown {0}. */
-    String DOCUMENT_DEFINITION_UNKNOWN = "UC_00AC";
+    String DOCUMENT_DEFINITION_UNKNOWN = "UC_009C";
 
     /** Business logic plug-in {0} is targeting an unknown target {1}. */
-    String BUSINESSLOGIC_PLUGIN_TARGET_UNKNOWN = "UC_00AD";
+    String BUSINESSLOGIC_PLUGIN_TARGET_UNKNOWN = "UC_009D";
 
     /**
      * Business logic plug-in {0} can not plug into a non-business service component
      * {1}.
      */
-    String BUSINESSLOGIC_PLUGIN_TARGET_NON_BUSINESSMODULE = "UC_00AE";
+    String BUSINESSLOGIC_PLUGIN_TARGET_NON_BUSINESSMODULE = "UC_009E";
 
     /**
      * Business logic plug-in {0} is targeting an unknown socket {1} on business
      * service component {2}.
      */
-    String BUSINESSLOGIC_PLUGIN_TARGET_NON_SOCKET = "UC_00AF";
+    String BUSINESSLOGIC_PLUGIN_TARGET_NON_SOCKET = "UC_009F";
 
     /** Data utility error */
-    String DATAUTIL_ERROR = "UC_00B0";
+    String DATAUTIL_ERROR = "UC_00A0";
 
     /** Reflect utility incompatible getter and setter for field {0}. Type {1}. */
-    String REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER = "UC_00B1";
+    String REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER = "UC_00A1";
 
     /** Invalid use of @Broadcast annotation. Component = {0}, method = {1} */
-    String COMPONENT_INVALID_BROADCAST_METHOD = "UC_00B2";
+    String COMPONENT_INVALID_BROADCAST_METHOD = "UC_00A2";
 
     /** Dynamic SQL data source {0} is already configured. */
-    String DYNAMIC_DATASOURCE_ALREADY_CONFIGURED = "UC_00B3";
+    String DYNAMIC_DATASOURCE_ALREADY_CONFIGURED = "UC_00A3";
 
     /** Dynamic SQL data source {0} is unknown. */
-    String DYNAMIC_DATASOURCE_IS_UNKNOWN = "UC_00B4";
+    String DYNAMIC_DATASOURCE_IS_UNKNOWN = "UC_00A4";
 
     /**
      * Entity type of attribute-only must have one foreign key. Type = {0}
      */
-    String RECORD_ATTRIBUTE_ONE_FK_ONLY = "UC_00B5";
+    String RECORD_ATTRIBUTE_ONE_FK_ONLY = "UC_00A5";
 
     /**
      * Entity type of attribute-only can not have list-only fields. Type = {0}
      */
-    String RECORD_ATTRIBUTE_NO_LISTONLY = "UC_00B6";
+    String RECORD_ATTRIBUTE_NO_LISTONLY = "UC_00A6";
 
     /**
      * Entity type of attribute-only can not have attribute list fields. Type = {0}
      */
-    String RECORD_ATTRIBUTE_NO_ATTRIBUTELIST = "UC_00B7";
+    String RECORD_ATTRIBUTE_NO_ATTRIBUTELIST = "UC_00A7";
 
     /**
      * Invalid child list field type. Type = {0}, field = {1}
      */
-    String RECORD_INVALID_CHILDLIST_FIELD_TYPE = "UC_00B8";
+    String RECORD_INVALID_CHILDLIST_FIELD_TYPE = "UC_00A8";
 
     /**
      * Child list type has no matching foreign key reference. Field = {0}, Child
      * type = {1}
      */
-    String RECORD_CHILDLIST_NO_MATCHING_FK = "UC_00B9";
+    String RECORD_CHILDLIST_NO_MATCHING_FK = "UC_00A9";
 
     /**
      * Multiple child-only foreign keys detected. Type = {0}
      */
-    String RECORD_MULTIPLE_CHILDONLY_FOREIGNKEYS = "UC_00BA";
+    String RECORD_MULTIPLE_CHILDONLY_FOREIGNKEYS = "UC_00AA";
 
     /**
      * Document unpacking definition mismatch. Configuration = {0}, size = {1},
      * expected size = {2}
      */
-    String DOCUMENT_UNPACK_DEFINTION_MISMATCH = "UC_00BB";
+    String DOCUMENT_UNPACK_DEFINTION_MISMATCH = "UC_00AB";
 
     /**
-     * PackableDoc unmatched types. Packable type = {0}, Document type = {1}
+     * Packable document unmatched types. Packable type = {0}, Document type = {1}
      */
-    String DOCUMENT_TYPE_MISMATCH = "UC_00BC";
+    String DOCUMENT_TYPE_MISMATCH = "UC_00AC";
 
     /** Packable document is not auditable */
-    String DOCUMENT_PACKABLE_NOT_AUDITABLE = "UC_00BD";
+    String DOCUMENT_PACKABLE_NOT_AUDITABLE = "UC_00AD";
 
     /** Taskable method {0} is unknown */
-    String TASKABLE_METHOD_UNKNOWN = "UC_00BE";
+    String TASKABLE_METHOD_UNKNOWN = "UC_00AE";
 
     /**
      * Taskable method {0} for component {1} and method {2} has invalid signature.
      * TaskMonitor required as first parameter
      */
-    String TASKABLE_METHOD_MUST_HAVE_FIRST_TASKMONITOR = "UC_00BF";
+    String TASKABLE_METHOD_MUST_HAVE_FIRST_TASKMONITOR = "UC_00AF";
 
     /**
      * Taskable method {0} for component {1} already exists for component {2}
      */
-    String TASKABLE_METHOD_ALREADY_EXISTS = "UC_00C0";
+    String TASKABLE_METHOD_ALREADY_EXISTS = "UC_00B0";
 
     /**
      * Taskable method {0} for component {1} must return a non-void type.
      */
-    String TASKABLE_METHOD_RETURN_NON_VOID = "UC_00C1";
+    String TASKABLE_METHOD_RETURN_NON_VOID = "UC_00B1";
 
     /**
      * Taskable method {0} for component {1} mismatched parameter count
      */
-    String TASKABLE_METHOD_MISMATCHED_PARAMS = "UC_00C2";
+    String TASKABLE_METHOD_MISMATCHED_PARAMS = "UC_00B2";
 
     /**
      * Taskable method {1} component {0} must be a singleton.
      */
-    String TASKABLE_METHOD_SINGLETON_ONLY = "UC_00C3";
+    String TASKABLE_METHOD_SINGLETON_ONLY = "UC_00B3";
 
     /**
      * Expirable method {1} component {0} must be a singleton.
      */
-    String EXPIRABLE_METHOD_SINGLETON_ONLY = "UC_00C4";
+    String EXPIRABLE_METHOD_SINGLETON_ONLY = "UC_00B4";
 
     /**
      * Expirable method {0} for component {1} must have no parameters
      */
-    String EXPIRABLE_METHOD_NO_PARAMS = "UC_00C5";
+    String EXPIRABLE_METHOD_NO_PARAMS = "UC_00B5";
 
     /**
      * Unknown document configuration setting. Configuration = {0}, setting = {1}.
      */
-    String DOCUMENT_CONFIG_UNKNOWN_SETTING = "UC_00C6";
+    String DOCUMENT_CONFIG_UNKNOWN_SETTING = "UC_00B6";
 
     /** Document configuration with name {0} already exists. */
-    String DOCUMENT_CONFIG_WITH_NAME_EXISTS = "UC_00C7";
+    String DOCUMENT_CONFIG_WITH_NAME_EXISTS = "UC_00B7";
 
     /** Document configuration with name {0} is unknown. */
-    String DOCUMENT_CONFIG_WITH_NAME_UNKNOWN = "UC_00C8";
+    String DOCUMENT_CONFIG_WITH_NAME_UNKNOWN = "UC_00B8";
 
     /** Parameter definition with name {0} is unknown. */
-    String PARAMETER_DEFINITION_UNKNOWN = "UC_00C9";
+    String PARAMETER_DEFINITION_UNKNOWN = "UC_00B9";
 
     /**
      * Parameter value {0} is required. Parameter definition = {1}, instance type =
      * {2}.
      */
-    String PARAMETER_VALUE_REQUIRED = "UC_00CA";
+    String PARAMETER_VALUE_REQUIRED = "UC_00BA";
 
     /**
      * Parameter {0} of type {1} of taskable method {2} is incompatible with method
      * parameter type {3}.
      */
-    String TASKABLE_PARAMETER_TYPE_INCOMPATIBLE = "UC_00CB";
+    String TASKABLE_PARAMETER_TYPE_INCOMPATIBLE = "UC_00BB";
 
     /**
      * Multiple records with same key {0} found. Type = {1}.
      */
-    String RECORD_MULTIPLE_SAME_KEY_FOUND = "UC_00CC";
+    String RECORD_MULTIPLE_SAME_KEY_FOUND = "UC_00BC";
 
     /**
      * Multiple values with same key {0} found. Type = {1}.
      */
-    String VALUE_MULTIPLE_SAME_KEY_FOUND = "UC_00CD";
+    String VALUE_MULTIPLE_SAME_KEY_FOUND = "UC_00BD";
 
     /**
      * XML batch file start tag {0} missing.
      */
-    String XMLBATCHFILEREADER_STARTTAG_MISSING = "UC_00CE";
+    String XMLBATCHFILEREADER_STARTTAG_MISSING = "UC_00BE";
 
     /**
      * XML batch file enclosing batch item tag {0} expected.
      */
-    String XMLBATCHFILEREADER_BATCHITEMTAG_MULTIPLE = "UC_00CF";
+    String XMLBATCHFILEREADER_BATCHITEMTAG_MULTIPLE = "UC_00BF";
 
     /**
      * XML batch file has multiple batch item with tag {0}.
      */
-    String XMLBATCHFILEREADER_BATCHITEM_MULTIPLE = "UC_00D0";
+    String XMLBATCHFILEREADER_BATCHITEM_MULTIPLE = "UC_00C0";
 
     /**
      * XML batch file batch item tag {0} unknown.
      */
-    String XMLBATCHFILEREADER_BATCHITEMTAG_UNKNOWN = "UC_00D1";
+    String XMLBATCHFILEREADER_BATCHITEMTAG_UNKNOWN = "UC_00C1";
 
     /**
      * XML batch file batch item tag {0} exception.
      */
-    String XMLBATCHFILEREADER_BATCHITEM_EXCEPTION = "UC_00D2";
+    String XMLBATCHFILEREADER_BATCHITEM_EXCEPTION = "UC_00C2";
 
     /**
      * Incompatible money currencies. Currency 1 = {0}, currency 2 = {1}.
      */
-    String INCOMPATIBLE_MONEY_CURRENCY = "UC_00D3";
+    String INCOMPATIBLE_MONEY_CURRENCY = "UC_00C3";
 
     /**
      * Attempt to apply alternate settings to a singleton component. Component = {0}
      */
-    String COMPONENT_ALTSETTINGS_SINGLETON = "UC_00D4";
+    String COMPONENT_ALTSETTINGS_SINGLETON = "UC_00C4";
 
     /** Unknown property {1} in alternate settings for component. Component = {0} */
-    String COMPONENT_ALTSETTINGS_UNKNOWN_PROPERTY = "UC_00D5";
+    String COMPONENT_ALTSETTINGS_UNKNOWN_PROPERTY = "UC_00C5";
 
     /** Property {2} for component {0} is not configurable. Type = {1} */
-    String COMPONENT_PROPERTY_NOT_CONFIGURABLE = "UC_00D6";
+    String COMPONENT_PROPERTY_NOT_CONFIGURABLE = "UC_00C6";
 
     /**
      * UPL descriptor closing brace is expected. Source= {0}, Line number = {1},
      * descriptor = {2}
      */
-    String UPL_DESCRIPTOR_CLOSING_BRACE_EXPECTED = "UC_00D7";
+    String UPL_DESCRIPTOR_CLOSING_BRACE_EXPECTED = "UC_00C7";
 
     /**
      * UPL descriptor element has no opening brace. Source= {0}, Line number = {1},
      * line = {2}
      */
-    String UPL_DESCRIPTOR_NO_OPENING_BRACE = "UC_00D8";
+    String UPL_DESCRIPTOR_NO_OPENING_BRACE = "UC_00C8";
 
     /**
      * Email server configuration with code {0} is unknown.
      */
-    String EMAILSERVER_CONFIGURATION_UNKNOWN = "UC_00D9";
+    String EMAILSERVER_CONFIGURATION_UNKNOWN = "UC_00C9";
 
     /** PackableDoc field {0} is not a complex type. */
-    String DOCUMENT_FIELD_NOT_COMPLEX = "UC_00DA";
+    String DOCUMENT_FIELD_NOT_COMPLEX = "UC_00CA";
 
     /** PackableDoc field mapping {0} is not a complex type. Bean field = {1} */
-    String DOCUMENT_FIELDMAPPING_NOT_COMPLEX = "UC_00DB";
+    String DOCUMENT_FIELDMAPPING_NOT_COMPLEX = "UC_00CB";
 
     /** PackableDoc field mapping {0} not found. */
-    String DOCUMENT_FIELDMAPPING_NOT_FOUND = "UC_00DC";
+    String DOCUMENT_FIELDMAPPING_NOT_FOUND = "UC_00CC";
 
     /** PackableDoc can not write directly to a complex field. Field = {0} */
-    String DOCUMENT_FIELD_COMPLEX_DIRECT_WRITE = "UC_00DD";
+    String DOCUMENT_FIELD_COMPLEX_DIRECT_WRITE = "UC_00CD";
 
     /** Build error. Message = {0} */
-    String BUILD_ERROR = "UC_00DE";
+    String BUILD_ERROR = "UC_00CE";
 
     /** Task setup has no task */
-    String TASKSETUP_NO_TASK = "UC_00DF";
+    String TASKSETUP_NO_TASK = "UC_00CF";
 
     /** Task setup has multiple tasks */
-    String TASKSETUP_MULTIPLE_TASKS = "UC_00E0";
+    String TASKSETUP_MULTIPLE_TASKS = "UC_00D0";
 
     /**
      * Child type has no matching foreign key reference. Field = {0}, Child type =
      * {1}
      */
-    String RECORD_CHILD_NO_MATCHING_FK = "UC_00E1";
+    String RECORD_CHILD_NO_MATCHING_FK = "UC_00D1";
 
     /**
      * Multiple child records found for record. Type {0} with primary key {1} at
      * field = {2}
      */
-    String RECORD_MULTIPLE_CHILD_FOUND = "UC_00E2";
+    String RECORD_MULTIPLE_CHILD_FOUND = "UC_00D2";
 
     /**
      * Chart generator {0} has no generator unit for chart type {1}.
      */
-    String CHARTGENERATOR_NO_GENERATOR_UNIT = "UC_00E3";
+    String CHARTGENERATOR_NO_GENERATOR_UNIT = "UC_00D3";
 
     /**
      * Chart generator {0} has multiple generator units for chart type {1}.
      */
-    String CHARTGENERATOR_MULTIPLE_GENERATOR_UNIT = "UC_00E4";
+    String CHARTGENERATOR_MULTIPLE_GENERATOR_UNIT = "UC_00D4";
     
     /**
      * Marked tree default.
      */
-    String MARKEDTREE_DEFAULT = "UC_00E5";
+    String MARKEDTREE_DEFAULT = "UC_00D5";
     
     /**
      * Marked tree not in chain mode.
      */
-    String MARKEDTREE_NOT_CHAIN = "UC_00E6";
+    String MARKEDTREE_NOT_CHAIN = "UC_00D6";
     
     /**
      * Marked tree in chain mode.
      */
-    String MARKEDTREE_IN_CHAIN = "UC_00E7";
+    String MARKEDTREE_IN_CHAIN = "UC_00D7";
     
     /**
      * Database is not part of transaction.
      */
-    String DATABASE_NOT_PART_OF_TRANSACTION = "UC_00E8";
+    String DATABASE_NOT_PART_OF_TRANSACTION = "UC_00D8";
 
     /** Callable result type information not found. Callable type = {0}, Result type = {1} */
-    String CALLABLE_RESULT_TYPE_NOT_FOUND = "UC_00E9";
+    String CALLABLE_RESULT_TYPE_NOT_FOUND = "UC_00D9";
 
     /** Callable field can not be annotated with multiple parameter annotation. Callable field = {0}.*/
-    String CALLABLE_FIELD_MULTIPLE_PARAM_ANNOTATION = "UC_00EA";
+    String CALLABLE_FIELD_MULTIPLE_PARAM_ANNOTATION = "UC_00DA";
 
     /** Callable field data type is unsupported. Callable field = {0}.*/
-    String CALLABLE_DATATYPE_UNSUPPORTED = "UC_00EB";
+    String CALLABLE_DATATYPE_UNSUPPORTED = "UC_00DB";
+
+    /** Storage index {0} is out of bounds of value store with storage length {1}*/
+    String VALUESTORE_STORAGE_INDEX_OUT_BOUNDS = "UC_00DC";
+
+    /** Packable document field {0} configuration already exists. */
+    String PACKABLEDOC_FIELD_EXISTS = "UC_00DD";
+
+    /** Packable document incompatible field configuration. Bean type = {0}, property = {1}, dataType = {2} */
+    String PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG = "UC_00DE";
+
+    /** Packable document incompatible complex field configuration. Bean type = {0}, property = {1}, fieldType = {2}, dataType = [3} */
+    String PACKABLEDOC_INCOMPATIBLE_COMPLEXFIELDCONFIG = "UC_00DF";
+
+    /** Packable document has no such field configuration {0}. */
+    String PACKABLEDOC_NO_SUCH_FIELDCONFIG = "UC_00E0";
+
+    /** Packable document bean property {0} configuration already exists for type {1}. */
+    String PACKABLEDOC_BEANPROPERTY_EXISTS = "UC_00E1";
+
+    /** Packable document has no such bean configuration for type {0}. */
+    String PACKABLEDOC_NO_SUCH_BEANCONFIG = "UC_00E2";
+
+    /** Packable document bean configuration for type {0} exists. */
+    String PACKABLEDOC_BEANCONFIG_EXISTS = "UC_00E3";
+
+    /** Packable document bean configuration {0} is incompatible with bean {1}. */
+    String PACKABLEDOC_INCOMPATIBLE_BEANCONFIG =  "UC_00E4";
 }
