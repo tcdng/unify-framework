@@ -672,8 +672,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query)
-            throws UnifyException {
+    public Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
@@ -951,8 +950,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                                 continue;
                             }
 
+                            SqlEntityInfo childSqlEntityInfo =
+                                    sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
                             Query<? extends Entity> query = new Query(clfi.getChildEntityClass());
-                            query.equals(clfi.getChildFkField().getName(), id).order("id");
+                            query.equals(clfi.getChildFkField().getName(), id)
+                                    .order(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
                             if (isListOnly) {
                                 childList = listAll(query);
@@ -969,8 +971,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                                 }
 
                                 childRecord = childList.get(0);
-                                SqlEntityInfo childSqlEntityInfo =
-                                        sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
                                 if (childSqlEntityInfo.isChildList()) {
                                     fetchChildRecords(childRecord, null, isListOnly);
                                 }
@@ -987,8 +987,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                                 continue;
                             }
 
+                            SqlEntityInfo childSqlEntityInfo =
+                                    sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
                             Query<? extends Entity> query = new Query(clfi.getChildEntityClass());
-                            query.equals(clfi.getChildFkField().getName(), id).order("id");
+                            query.equals(clfi.getChildFkField().getName(), id)
+                                    .order(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
                             if (isListOnly) {
                                 childList = listAll(query);
@@ -998,8 +1001,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
                             // Check if child has child list and load if necessary
                             if (!childList.isEmpty()) {
-                                SqlEntityInfo childSqlEntityInfo =
-                                        sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
                                 if (childSqlEntityInfo.isChildList()) {
                                     for (Entity childRecord : childList) {
                                         fetchChildRecords(childRecord, null, isListOnly);
