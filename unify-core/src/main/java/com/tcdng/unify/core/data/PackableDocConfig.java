@@ -196,7 +196,7 @@ public class PackableDocConfig {
                                     beanClass, beanProperty, fc.getDataType());
                         }
                     } else {
-                        if (!fc.getDataType().equals(gsInfo.getType())) {
+                        if (!fc.getDataType().equals(DataUtils.getWrapperClass(gsInfo.getType()))) {
                             throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
                                     beanClass, beanProperty, fc.getDataType());
                         }
