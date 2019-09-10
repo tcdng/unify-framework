@@ -106,28 +106,34 @@ public class PackableDoc implements Serializable {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> Object read(Class<T> type, String fieldName) throws UnifyException {
-        if (RESERVED_EXT_FIELD.equals(fieldName)) {
-            return resrvExt;
-        }
-
+    public <T> T read(Class<T> type, String fieldName) throws UnifyException {
         Unnested unnested = unnest(fieldName);
         if (unnested != null) {
             PackableDoc pd = unnested.uPd;
             FieldConfig fc = pd.config.getFieldConfig(unnested.uFieldName);
             Object val = pd.values.get(unnested.uFieldName);
-            if (val != null) {
-                if (fc.isList()) {
-                    List<T> valList = DataUtils.getNewArrayList(type);
-                    for (Object aVal : (List<Object>) val) {
-                        valList.add(convertTo(type, fc, aVal));
-                    }
-                    return valList;
-                }
+            if (val != null && !fc.isList()) {
                 return convertTo(type, fc, val);
             }
-            return val;
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> readList(Class<T> type, String fieldName) throws UnifyException {
+        Unnested unnested = unnest(fieldName);
+        if (unnested != null) {
+            PackableDoc pd = unnested.uPd;
+            FieldConfig fc = pd.config.getFieldConfig(unnested.uFieldName);
+            Object val = pd.values.get(unnested.uFieldName);
+            if (val != null && fc.isList()) {
+                List<T> valList = DataUtils.getNewArrayList(type);
+                for (Object aVal : (List<Object>) val) {
+                    valList.add(convertTo(type, fc, aVal));
+                }
+                return valList;
+            }
         }
 
         return null;
