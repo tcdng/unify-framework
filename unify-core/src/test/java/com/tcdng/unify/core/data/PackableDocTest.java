@@ -144,7 +144,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals(birthDt, pDoc.read("birthDt"));
         assertEquals(BigDecimal.valueOf(250000.00), pDoc.read("balance"));
         assertEquals(Long.valueOf(20), pDoc.read("id"));
-        assertEquals(Gender.MALE, pDoc.read("gender"));
+        assertEquals(Gender.MALE, pDoc.read(Gender.class, "gender"));
 
         Object val = pDoc.read("address");
         assertNotNull(val);
@@ -171,7 +171,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         Address address = (Address) pDoc.read(Address.class, "address");
         assertEquals("38 Warehouse Road", address.getLine1());
         assertEquals("Apapa Lagos", address.getLine2());
-        assertEquals(Gender.FEMALE, pDoc.read("gender"));
+        assertEquals(Gender.FEMALE, pDoc.read(Gender.class, "gender"));
     }
 
     @Test
@@ -306,7 +306,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals("Apapa Lagos", addressUnpacked.getLine2());
         List<String> modeListUnpacked = (List<String>) unpackedDocument.read("modeList");
         assertEquals(modeList, modeListUnpacked);
-        assertEquals(Gender.OTHER, (Gender) unpackedDocument.read("gender"));
+        assertEquals(Gender.OTHER, unpackedDocument.read(Gender.class, "gender"));
     }
 
     @SuppressWarnings("unchecked")
@@ -334,7 +334,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals("Apapa Lagos", addressUnpacked.getLine2());
         List<String> modeListUnpacked = (List<String>) unpackedDocument.read("modeList");
         assertEquals(modeList, modeListUnpacked);
-        assertEquals(Gender.FEMALE, (Gender) unpackedDocument.read("gender"));
+        assertEquals(Gender.FEMALE, unpackedDocument.read(Gender.class, "gender"));
     }
 
     @Test
