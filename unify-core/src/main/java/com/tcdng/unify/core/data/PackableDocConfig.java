@@ -98,7 +98,6 @@ public class PackableDocConfig {
         return beanMappingConfigs.containsKey(beanClass);
     }
 
-    @SuppressWarnings("unchecked")
     public static PackableDocConfig buildFrom(String configName, Class<?> beanClass) throws UnifyException {
         PackableDocConfig.Builder pdcb = PackableDocConfig.newBuilder(configName);
         BeanMappingConfig.Builder bmcb = BeanMappingConfig.newBuilder(beanClass);
@@ -120,7 +119,7 @@ public class PackableDocConfig {
                 if (dataType != null) {
                     pdcb.addFieldConfig(fieldName, dataType, isList);
                 } else if (EnumConst.class.isAssignableFrom(dataClass)) {
-                    pdcb.addFieldConfig(fieldName, (Class<? extends EnumConst>) dataClass, isList);
+                    pdcb.addFieldConfig(fieldName, DataType.STRING, isList);
                 } else {
                     pdcb.addComplexFieldConfig(fieldName,
                             PackableDocConfig.buildFrom(StringUtils.dotify(configName, fieldName), dataClass), isList);
@@ -162,20 +161,6 @@ public class PackableDocConfig {
             return this;
         }
 
-        public Builder addFieldConfig(String fieldName, Class<? extends EnumConst> dataType) throws UnifyException {
-            return addFieldConfig(fieldName, dataType, false);
-        }
-
-        public Builder addFieldConfig(String fieldName, Class<? extends EnumConst> dataType, boolean list)
-                throws UnifyException {
-            if (fieldConfigs.containsKey(fieldName)) {
-                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_FIELD_EXISTS, fieldName);
-            }
-
-            fieldConfigs.put(fieldName, new FieldConfig(fieldName, dataType, list));
-            return this;
-        }
-
         public Builder addComplexFieldConfig(String fieldName, PackableDocConfig packableDocConfig)
                 throws UnifyException {
             return addComplexFieldConfig(fieldName, packableDocConfig, false);
@@ -212,19 +197,19 @@ public class PackableDocConfig {
                     if (fc.isList()) {
                         if (gsInfo.isParameterArgumented()) {
                             if (!List.class.equals(gsInfo.getType())
-                                    || !fc.getDataType().equals(gsInfo.getArgumentType())) {
+                                    || !fc.getDataType().equals(getPackableType(gsInfo.getArgumentType()))) {
                                 throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
                                         beanClass, beanProperty, fc.getDataType());
                             }
                         } else {
                             if (!gsInfo.getType().isArray()
-                                    || !fc.getDataType().equals(DataUtils.getWrapperClass(gsInfo.getType().getComponentType()))) {
+                                    || !fc.getDataType().equals(getPackableType(gsInfo.getType().getComponentType()))) {
                                 throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
                                         beanClass, beanProperty, fc.getDataType());
                             }
                         }
                     } else {
-                        if (!fc.getDataType().equals(DataUtils.getWrapperClass(gsInfo.getType()))) {
+                        if (!fc.getDataType().equals(getPackableType(gsInfo.getType()))) {
                             throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
                                     beanClass, beanProperty, fc.getDataType());
                         }
@@ -239,6 +224,14 @@ public class PackableDocConfig {
         public PackableDocConfig build() {
             return new PackableDocConfig(name, DataUtils.unmodifiableMap(fieldConfigs),
                     DataUtils.unmodifiableMap(beanMappings));
+        }
+
+        private Class<?> getPackableType(Class<?> valueClass) throws UnifyException {
+            if (EnumConst.class.isAssignableFrom(valueClass)) {
+                return String.class;
+            }
+
+            return DataUtils.getWrapperClass(valueClass);
         }
     }
 
