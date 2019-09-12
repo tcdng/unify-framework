@@ -17,6 +17,8 @@ package com.tcdng.unify.web.ui.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.ui.AbstractTargetControl;
 
 /**
@@ -26,6 +28,9 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-link")
+@UplAttributes({
+    @UplAttribute(name = "preferredCaption", type = String.class),
+    @UplAttribute(name = "preferredCaptionBinding", type = String.class) })
 public class Link extends AbstractTargetControl {
 
     @Override
@@ -36,6 +41,15 @@ public class Link extends AbstractTargetControl {
     @Override
     public boolean isLayoutCaption() {
         return false;
+    }
+
+    public String getPreferredCaption() throws UnifyException {
+        String preferredCaptionBinding = getUplAttribute(String.class, "preferredCaptionBinding");
+        if (preferredCaptionBinding != null) {
+            return getStringValue(preferredCaptionBinding);
+        }
+
+        return getUplAttribute(String.class, "preferredCaption");
     }
 
 }

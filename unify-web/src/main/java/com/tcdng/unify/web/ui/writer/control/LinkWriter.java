@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.TargetControl;
 import com.tcdng.unify.web.ui.control.Link;
@@ -39,7 +40,12 @@ public class LinkWriter extends AbstractTargetControlWriter {
         writer.write("<a");
         writeTagAttributes(writer, link);
         writer.write(">");
-        writeCaption(writer, link);
+        String caption =link.getPreferredCaption();
+        if(!StringUtils.isBlank(caption)) {
+            writer.writeWithHtmlEscape(caption);
+        } else {
+            writeCaption(writer, link);
+        }
         writer.write("</a>");
     }
 }

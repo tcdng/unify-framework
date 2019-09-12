@@ -525,7 +525,7 @@ z-index:400;}
 .ui-labeledtext .ltcontent {color: #FFF;}
 
 /** Link */
-.ui-link {}
+.ui-link {text-decoration:underline;cursor: pointer;}
 
 /** Link grid */
 .ui-linkgrid {}
