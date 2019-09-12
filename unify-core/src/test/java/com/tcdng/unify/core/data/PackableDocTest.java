@@ -31,6 +31,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.Gender;
 
 /**
  * Packable document tests.
@@ -108,9 +109,9 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testSimpleReadFrom() throws Exception {
-        Ledger ledger = new Ledger("20039948858", Arrays.asList("250.50", "1823.25"));
+        Ledger ledger = new Ledger("20039948858", Arrays.asList("250.50", "1823.25"), new double[]{2.43, 5.8});
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
-        assertEquals(3, pDoc.getFieldCount());
+        assertEquals(4, pDoc.getFieldCount());
 
         pDoc.readFrom(ledger);
         assertNull(pDoc.read("id"));
@@ -120,16 +121,22 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals(2, purchases.size());
         assertEquals("250.50", purchases.get(0));
         assertEquals("1823.25", purchases.get(1));
+        
+        List<Double> rates = (List<Double>) pDoc.read("rates");
+        assertNotNull(rates);
+        assertEquals(2, rates.size());
+        assertEquals(Double.valueOf(2.43), rates.get(0));
+        assertEquals(Double.valueOf(5.8), rates.get(1));
     }
 
     @Test
     public void testComplexReadFrom() throws Exception {
         Date birthDt = new Date();
         Address address = new Address("38 Warehouse Road", "Apapa Lagos");
-        Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20, address);
+        Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20, address, Gender.MALE);
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
         assertFalse(pDoc.isUpdated());
-        assertEquals(6, pDoc.getFieldCount());
+        assertEquals(7, pDoc.getFieldCount());
 
         pDoc.readFrom(customer);
         assertTrue(pDoc.isUpdated());
@@ -137,6 +144,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals(birthDt, pDoc.read("birthDt"));
         assertEquals(BigDecimal.valueOf(250000.00), pDoc.read("balance"));
         assertEquals(Long.valueOf(20), pDoc.read("id"));
+        assertEquals(Gender.MALE, pDoc.read("gender"));
 
         Object val = pDoc.read("address");
         assertNotNull(val);
@@ -151,9 +159,9 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     public void testComplexReadFromWithBean() throws Exception {
         Date birthDt = new Date();
         Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20,
-                new Address("38 Warehouse Road", "Apapa Lagos"));
+                new Address("38 Warehouse Road", "Apapa Lagos"), Gender.FEMALE);
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
-        assertEquals(6, pDoc.getFieldCount());
+        assertEquals(7, pDoc.getFieldCount());
 
         pDoc.readFrom(customer);
         assertEquals("Amos Quito", pDoc.read("name"));
@@ -163,6 +171,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         Address address = (Address) pDoc.read(Address.class, "address");
         assertEquals("38 Warehouse Road", address.getLine1());
         assertEquals("Apapa Lagos", address.getLine2());
+        assertEquals(Gender.FEMALE, pDoc.read("gender"));
     }
 
     @Test
@@ -242,7 +251,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test
     public void testSimplePackDocument() throws Exception {
         Customer customer = new Customer("Latsman", new Date(), BigDecimal.valueOf(20.0), 12,
-                new Address("24 Parklane", "Apapa Lagos"));
+                new Address("24 Parklane", "Apapa Lagos"), Gender.OTHER);
         customer.setModeList(Arrays.asList("A", "B", "C"));
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
         pDoc.readFrom(customer);
@@ -253,7 +262,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test
     public void testSimplePackDocumentWithId() throws Exception {
         Customer customer = new Customer("Latsman", new Date(), BigDecimal.valueOf(20.0), 12,
-                new Address("24 Parklane", "Apapa Lagos"));
+                new Address("24 Parklane", "Apapa Lagos"), Gender.OTHER);
         customer.setModeList(Arrays.asList("A", "B", "C"));
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
         pDoc.setId(Long.valueOf(256L));
@@ -265,7 +274,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @Test
     public void testSimplePackDocumentWithReservedExtension() throws Exception {
         Customer customer = new Customer("Latsman", new Date(), BigDecimal.valueOf(20.0), 12,
-                new Address("24 Parklane", "Apapa Lagos"));
+                new Address("24 Parklane", "Apapa Lagos"), null);
         customer.setModeList(Arrays.asList("A", "B", "C"));
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
         pDoc.readFrom(customer);
@@ -279,7 +288,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     public void testSimpleUnpackDocument() throws Exception {
         Date birthDt = new Date();
         Address address = new Address("24 Parklane", "Apapa Lagos");
-        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address);
+        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address, Gender.OTHER);
         List<String> modeList = Arrays.asList("A", "B", "C");
         customer.setModeList(modeList);
 
@@ -288,7 +297,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         byte[] packedDocument = pDoc.pack();
         PackableDoc unpackedDocument = PackableDoc.unpack(custDocConfig, packedDocument, false);
         assertNotNull(unpackedDocument);
-        assertEquals(6, unpackedDocument.getFieldCount());
+        assertEquals(7, unpackedDocument.getFieldCount());
         assertEquals("Latsman", (String) unpackedDocument.read("name"));
         assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.read("balance"));
         assertEquals(birthDt, (Date) unpackedDocument.read("birthDt"));
@@ -297,6 +306,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals("Apapa Lagos", addressUnpacked.getLine2());
         List<String> modeListUnpacked = (List<String>) unpackedDocument.read("modeList");
         assertEquals(modeList, modeListUnpacked);
+        assertEquals(Gender.OTHER, (Gender) unpackedDocument.read("gender"));
     }
 
     @SuppressWarnings("unchecked")
@@ -304,7 +314,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     public void testSimpleUnpackDocumentWithId() throws Exception {
         Date birthDt = new Date();
         Address address = new Address("24 Parklane", "Apapa Lagos");
-        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address);
+        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address, Gender.FEMALE);
         List<String> modeList = Arrays.asList("A", "B", "C");
         customer.setModeList(modeList);
 
@@ -315,7 +325,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         PackableDoc unpackedDocument = PackableDoc.unpack(custDocConfig, packedDocument, false);
         assertNotNull(unpackedDocument);
         assertEquals(Long.valueOf(1024L), pDoc.getId());
-        assertEquals(6, unpackedDocument.getFieldCount());
+        assertEquals(7, unpackedDocument.getFieldCount());
         assertEquals("Latsman", (String) unpackedDocument.read("name"));
         assertEquals(BigDecimal.valueOf(20.0), (BigDecimal) unpackedDocument.read("balance"));
         assertEquals(birthDt, (Date) unpackedDocument.read("birthDt"));
@@ -324,13 +334,14 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals("Apapa Lagos", addressUnpacked.getLine2());
         List<String> modeListUnpacked = (List<String>) unpackedDocument.read("modeList");
         assertEquals(modeList, modeListUnpacked);
+        assertEquals(Gender.FEMALE, (Gender) unpackedDocument.read("gender"));
     }
 
     @Test
     public void testSimpleUnpackDocumentWithReservedExtension() throws Exception {
         Date birthDt = new Date();
         Address address = new Address("24 Parklane", "Apapa Lagos");
-        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address);
+        Customer customer = new Customer("Latsman", birthDt, BigDecimal.valueOf(20.0), 12, address, null);
         List<String> modeList = Arrays.asList("A", "B", "C");
         customer.setModeList(modeList);
 

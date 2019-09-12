@@ -25,6 +25,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.DataType;
+import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -97,6 +98,7 @@ public class PackableDocConfig {
         return beanMappingConfigs.containsKey(beanClass);
     }
 
+    @SuppressWarnings("unchecked")
     public static PackableDocConfig buildFrom(String configName, Class<?> beanClass) throws UnifyException {
         PackableDocConfig.Builder pdcb = PackableDocConfig.newBuilder(configName);
         BeanMappingConfig.Builder bmcb = BeanMappingConfig.newBuilder(beanClass);
@@ -106,18 +108,22 @@ public class PackableDocConfig {
                 bmcb.addMapping(fieldName, fieldName);
 
                 Class<?> dataClass = gsInfo.getType();
-                boolean isAugumented = gsInfo.isParameterArgumented();
-                if (isAugumented) {
+                boolean isList = gsInfo.isParameterArgumented();
+                if (isList) {
                     dataClass = gsInfo.getArgumentType();
+                } else if (dataClass.isArray() && !dataClass.equals(byte[].class)) {
+                    dataClass = dataClass.getComponentType();
+                    isList = true;
                 }
 
                 DataType dataType = DataUtils.findDataType(dataClass);
                 if (dataType != null) {
-                    pdcb.addFieldConfig(fieldName, dataType, isAugumented);
+                    pdcb.addFieldConfig(fieldName, dataType, isList);
+                } else if (EnumConst.class.isAssignableFrom(dataClass)) {
+                    pdcb.addFieldConfig(fieldName, (Class<? extends EnumConst>) dataClass, isList);
                 } else {
                     pdcb.addComplexFieldConfig(fieldName,
-                            PackableDocConfig.buildFrom(StringUtils.dotify(configName, fieldName), dataClass),
-                            isAugumented);
+                            PackableDocConfig.buildFrom(StringUtils.dotify(configName, fieldName), dataClass), isList);
                 }
             }
         }
@@ -156,6 +162,20 @@ public class PackableDocConfig {
             return this;
         }
 
+        public Builder addFieldConfig(String fieldName, Class<? extends EnumConst> dataType) throws UnifyException {
+            return addFieldConfig(fieldName, dataType, false);
+        }
+
+        public Builder addFieldConfig(String fieldName, Class<? extends EnumConst> dataType, boolean list)
+                throws UnifyException {
+            if (fieldConfigs.containsKey(fieldName)) {
+                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_FIELD_EXISTS, fieldName);
+            }
+
+            fieldConfigs.put(fieldName, new FieldConfig(fieldName, dataType, list));
+            return this;
+        }
+
         public Builder addComplexFieldConfig(String fieldName, PackableDocConfig packableDocConfig)
                 throws UnifyException {
             return addComplexFieldConfig(fieldName, packableDocConfig, false);
@@ -190,10 +210,18 @@ public class PackableDocConfig {
                 // Ensure type is the same
                 if (!fc.isComplex()) {
                     if (fc.isList()) {
-                        if (!List.class.equals(gsInfo.getType())
-                                || !fc.getDataType().equals(gsInfo.getArgumentType())) {
-                            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
-                                    beanClass, beanProperty, fc.getDataType());
+                        if (gsInfo.isParameterArgumented()) {
+                            if (!List.class.equals(gsInfo.getType())
+                                    || !fc.getDataType().equals(gsInfo.getArgumentType())) {
+                                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
+                                        beanClass, beanProperty, fc.getDataType());
+                            }
+                        } else {
+                            if (!gsInfo.getType().isArray()
+                                    || !fc.getDataType().equals(DataUtils.getWrapperClass(gsInfo.getType().getComponentType()))) {
+                                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
+                                        beanClass, beanProperty, fc.getDataType());
+                            }
                         }
                     } else {
                         if (!fc.getDataType().equals(DataUtils.getWrapperClass(gsInfo.getType()))) {
@@ -223,10 +251,6 @@ public class PackableDocConfig {
         private PackableDocConfig packableDocConfig;
 
         private boolean list;
-
-        private FieldConfig(String fieldName, Class<?> dataType) {
-            this(fieldName, dataType, false);
-        }
 
         private FieldConfig(String fieldName, Class<?> dataType, boolean list) {
             this.fieldName = fieldName;

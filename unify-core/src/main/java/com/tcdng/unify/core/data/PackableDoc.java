@@ -180,7 +180,7 @@ public class PackableDoc implements Serializable {
                         valList = DataUtils.getNewArrayList(fc.getDataType());
                     }
 
-                    for (Object aVal : (List<Object>) val) {
+                    for (Object aVal : DataUtils.convert(List.class, Object.class, val, null)) {
                         ((List<Object>) valList).add(convertFrom(fc, aVal, formatter));
                     }
 

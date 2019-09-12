@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.tcdng.unify.core.constant.Gender;
+
 /**
  * Test customer bean.
  * 
@@ -39,12 +41,15 @@ public class Customer extends AbstractDocument {
 
     private List<String> modeList;
 
-    public Customer(String name, Date birthDt, BigDecimal balance, long id, Address address) {
+    private Gender gender;
+    
+    public Customer(String name, Date birthDt, BigDecimal balance, long id, Address address, Gender gender) {
         this.name = name;
         this.birthDt = birthDt;
         this.balance = balance;
         this.id = id;
         this.address = address;
+        this.gender = gender;
     }
 
     public Customer() {
@@ -113,5 +118,13 @@ public class Customer extends AbstractDocument {
 
     public void setModeList(List<String> modeList) {
         this.modeList = modeList;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }
