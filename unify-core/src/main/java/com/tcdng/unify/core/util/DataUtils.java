@@ -686,7 +686,7 @@ public final class DataUtils {
             Collection<Object> result = ReflectUtils.newInstance(DataUtils.getCollectionConcreteType(collectionClazz));
             if (valueClass.isArray()) {
                 int length = Array.getLength(value);
-                if (dataClass.equals(valueClass.getComponentType())) {
+                if (dataClass.isAssignableFrom(DataUtils.getWrapperClass(valueClass.getComponentType()))) {
                     for (int i = 0; i < length; i++) {
                         result.add(Array.get(value, i));
                     }

@@ -31,9 +31,12 @@ public class Ledger extends AbstractDocument {
 
     private List<String> purchases;
 
-    public Ledger(String accountNo, List<String> purchases) {
+    private double[] rates;
+    
+    public Ledger(String accountNo, List<String> purchases, double[] rates) {
         this.accountNo = accountNo;
         this.purchases = purchases;
+        this.rates = rates;
     }
 
     public Ledger() {
@@ -78,6 +81,14 @@ public class Ledger extends AbstractDocument {
 
     public void setPurchases(List<String> purchases) {
         this.purchases = purchases;
+    }
+
+    public double[] getRates() {
+        return rates;
+    }
+
+    public void setRates(double[] rates) {
+        this.rates = rates;
     }
 
 }
