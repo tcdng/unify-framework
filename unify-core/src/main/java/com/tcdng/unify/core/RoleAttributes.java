@@ -33,21 +33,21 @@ public class RoleAttributes {
 
     private String description;
 
-    private Map<String, PrivilegeSettings> controlledAccessPrivilegeSettings;
+    private Map<String, ViewDirective> viewDirectives;
 
     private Map<String, Set<String>> privilegeCodesByCategory;
 
-    private Set<String> allAccessPrivileges;
+    private Set<String> viewAllPrivilegeCodes;
 
     private Set<String> stepCodes;
 
     public RoleAttributes(String code, String description,
-            Map<String, PrivilegeSettings> controlledAccessPrivilegeSettings, Set<String> allAccessPrivileges,
+            Map<String, ViewDirective> viewDirectives, Set<String> viewAllPrivilegeCodes,
             Map<String, Set<String>> privilegeCodesByCategory, Set<String> stepCodes) {
         this.code = code;
         this.description = description;
-        this.controlledAccessPrivilegeSettings = DataUtils.unmodifiableMap(controlledAccessPrivilegeSettings);
-        this.allAccessPrivileges = DataUtils.unmodifiableSet(allAccessPrivileges);
+        this.viewDirectives = DataUtils.unmodifiableMap(viewDirectives);
+        this.viewAllPrivilegeCodes = DataUtils.unmodifiableSet(viewAllPrivilegeCodes);
         this.privilegeCodesByCategory = privilegeCodesByCategory;
         if (this.privilegeCodesByCategory != null) {
             for (Map.Entry<String, Set<String>> entry : this.privilegeCodesByCategory.entrySet()) {
@@ -58,19 +58,19 @@ public class RoleAttributes {
         this.stepCodes = DataUtils.unmodifiableSet(stepCodes);
     }
     
-    public RoleAttributes(String code, String description, Set<String> allAccessPrivileges) {
+    public RoleAttributes(String code, String description, Set<String> viewAllPrivilegeCodes) {
         this.code = code;
         this.description = description;
-        this.allAccessPrivileges = DataUtils.unmodifiableSet(allAccessPrivileges);
-        this.controlledAccessPrivilegeSettings = Collections.emptyMap();
+        this.viewAllPrivilegeCodes = DataUtils.unmodifiableSet(viewAllPrivilegeCodes);
+        this.viewDirectives = Collections.emptyMap();
         this.privilegeCodesByCategory = Collections.emptyMap();
         this.stepCodes = Collections.emptySet();
     }
 
 
     public RoleAttributes() {
-        this.controlledAccessPrivilegeSettings = Collections.emptyMap();
-        this.allAccessPrivileges = Collections.emptySet();
+        this.viewDirectives = Collections.emptyMap();
+        this.viewAllPrivilegeCodes = Collections.emptySet();
         this.privilegeCodesByCategory = Collections.emptyMap();
         this.stepCodes = Collections.emptySet();
     }
@@ -83,12 +83,12 @@ public class RoleAttributes {
         return description;
     }
 
-    public PrivilegeSettings getControlledAccessPrivilegeSettings(String privilegeCode) {
-        return controlledAccessPrivilegeSettings.get(privilegeCode);
+    public ViewDirective getViewDirective(String privilegeCode) {
+        return viewDirectives.get(privilegeCode);
     }
 
-    public boolean isAllAccessPrivilege(String privilegeCode) {
-        return allAccessPrivileges.contains(privilegeCode);
+    public boolean isViewAllPrivilege(String privilegeCode) {
+        return viewAllPrivilegeCodes.contains(privilegeCode);
     }
 
     public Set<String> getPrivilegeCodes(String privilegeCategoryCode) {

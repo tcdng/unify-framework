@@ -18,12 +18,12 @@ package com.tcdng.unify.core;
 import com.tcdng.unify.core.constant.TriState;
 
 /**
- * Privilege settings.
+ * View directive.
  * 
  * @author Lateef Ojulari
  * @version 1.0
  */
-public class PrivilegeSettings {
+public class ViewDirective {
 
     private boolean visible;
 
@@ -33,7 +33,7 @@ public class PrivilegeSettings {
 
     private TriState required;
 
-    public PrivilegeSettings(boolean visible, boolean editable, boolean disabled, TriState required) {
+    public ViewDirective(boolean visible, boolean editable, boolean disabled, TriState required) {
         this.visible = visible;
         this.editable = editable;
         this.disabled = disabled;

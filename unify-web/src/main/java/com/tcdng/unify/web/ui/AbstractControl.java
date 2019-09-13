@@ -110,7 +110,7 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
 
     @Override
     public TriState getRequired() throws UnifyException {
-        TriState result = getPrivilegeSettings().getRequired();
+        TriState result = getViewDirective().getRequired();
         if (result.isConforming()) {
             result = required;
             if (result.isConforming()) {

@@ -158,7 +158,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
         if (menuSet.isShowSelect()) {
             List<Integer> visibleIndexList = new ArrayList<Integer>();
             for (int i = 0; i < menuSet.size(); i++) {
-                if (getPrivilegeSettings(menuSet.getMenu(i).getPrivilege()).isVisible()) {
+                if (getViewDirective(menuSet.getMenu(i).getPrivilege()).isVisible()) {
                     visibleIndexList.add(i);
                 }
             }
@@ -197,7 +197,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
             }
 
             for (MenuItemSet menuItemSet : menu.getMenuItemSetList()) {
-                if (getPrivilegeSettings(menuItemSet.getPrivilege()).isVisible()) {
+                if (getViewDirective(menuItemSet.getPrivilege()).isVisible()) {
                     String menuId = flyoutMenu.getNamingIndexedId(childIndex++);
                     flyoutMenu.addMenuItem(menuId, menuItemSet);
                     writer.write("<li id=\"").write("win_" + menuId).write("\">");
@@ -214,7 +214,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
                         psb.append(">");
                         psb.append("<ul id=\"").append("popc_" + menuId).append("\">");
                         for (MenuItem menuItem : menuItemList) {
-                            if (getPrivilegeSettings(menuItem.getPrivilege()).isVisible()) {
+                            if (getViewDirective(menuItem.getPrivilege()).isVisible()) {
                                 String menuItemId = flyoutMenu.getNamingIndexedId(childIndex++);
                                 flyoutMenu.addMenuItem(menuItemId, menuItem);
                                 psb.append("<li><a class=\"mitem ").append(mcat).append("\" id=\"").append(menuItemId)

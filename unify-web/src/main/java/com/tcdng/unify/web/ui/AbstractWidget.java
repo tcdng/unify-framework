@@ -17,7 +17,7 @@ package com.tcdng.unify.web.ui;
 
 import java.util.Collection;
 
-import com.tcdng.unify.core.PrivilegeSettings;
+import com.tcdng.unify.core.ViewDirective;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
@@ -264,7 +264,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isDisabled() throws UnifyException {
-        return disabled || getPrivilegeSettings().isDisabled();
+        return disabled || getViewDirective().isDisabled();
     }
 
     @Override
@@ -282,7 +282,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isEditable() throws UnifyException {
-        return editable && !getUplAttribute(boolean.class, "readOnly") && getPrivilegeSettings().isEditable();
+        return editable && !getUplAttribute(boolean.class, "readOnly") && getViewDirective().isEditable();
     }
 
     @Override
@@ -300,7 +300,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isVisible() throws UnifyException {
-        return visible && getPrivilegeSettings().isVisible();
+        return visible && getViewDirective().isVisible();
     }
 
     @Override
@@ -426,8 +426,8 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         return null;
     }
 
-    protected PrivilegeSettings getPrivilegeSettings() throws UnifyException {
-        return getPrivilegeSettings(getUplAttribute(String.class, "privilege"));
+    protected ViewDirective getViewDirective() throws UnifyException {
+        return getViewDirective(getUplAttribute(String.class, "privilege"));
     }
 
     protected <T> T getRequestTarget(Class<T> clazz) throws UnifyException {
