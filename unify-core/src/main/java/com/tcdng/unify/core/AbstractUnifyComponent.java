@@ -830,24 +830,24 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns privilege settings of supplied privilege code for current session
+     * Returns view directive of supplied visual privilege code for current session
      * role.
      * 
      * @param privilege
      *            the privilege to test
-     * @return the privilege settings
+     * @return the view rule
      * @throws UnifyException
      *             if an error occurs
      */
-    protected PrivilegeSettings getPrivilegeSettings(String privilege) throws UnifyException {
-        return unifyComponentContext.getRolePrivilegeSettings(privilege);
+    protected ViewDirective getViewDirective(String privilege) throws UnifyException {
+        return unifyComponentContext.getRoleViewDirective(privilege);
     }
 
     /**
-     * Returns privilege names for supplied category.
+     * Returns privilege codes for supplied category and current context role.
      * 
      * @param privilegeCategoryCode
-     *            the privilege category
+     *            the privilege category code
      * @return set of privilege codes
      * @throws UnifyException
      *             if an error occurs

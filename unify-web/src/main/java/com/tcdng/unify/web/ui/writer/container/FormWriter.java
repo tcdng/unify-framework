@@ -17,7 +17,7 @@ package com.tcdng.unify.web.ui.writer.container;
 
 import java.util.List;
 
-import com.tcdng.unify.core.PrivilegeSettings;
+import com.tcdng.unify.core.ViewDirective;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
@@ -55,10 +55,10 @@ public class FormWriter extends AbstractContainerWriter {
         boolean isFormDisabled = form.isDisabled();
         boolean isFormEditable = form.isEditable();
         for (FormSection formSection : form.getSections()) {
-            PrivilegeSettings ps = getPrivilegeSettings(formSection.getPrivilege());
-            if (ps.isVisible() && formSection.isVisible()) {
-                form.setDisabled(isFormDisabled || ps.isDisabled() || formSection.isDisabled());
-                form.setEditable(isFormEditable && ps.isEditable() && formSection.isEditable());
+            ViewDirective viewDirective = getViewDirective(formSection.getPrivilege());
+            if (viewDirective.isVisible() && formSection.isVisible()) {
+                form.setDisabled(isFormDisabled || viewDirective.isDisabled() || formSection.isDisabled());
+                form.setEditable(isFormEditable && viewDirective.isEditable() && formSection.isEditable());
 
                 if (formSection.isBinding()) {
                     if (formSection.isBindingValueList()) {
@@ -86,8 +86,8 @@ public class FormWriter extends AbstractContainerWriter {
     protected void writeContainedWidgetsBehavior(ResponseWriter writer, Container container) throws UnifyException {
         Form form = (Form) container;
         for (FormSection formSection : form.getSections()) {
-            PrivilegeSettings ps = getPrivilegeSettings(formSection.getPrivilege());
-            if (ps.isVisible() && formSection.isVisible()) {
+            ViewDirective viewDirective = getViewDirective(formSection.getPrivilege());
+            if (viewDirective.isVisible() && formSection.isVisible()) {
                 if (formSection.isBinding()) {
                     if (formSection.isBindingValueList()) {
                         for (ValueStore valueStore : formSection.getValueStoreList()) {

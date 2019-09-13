@@ -34,10 +34,10 @@ import com.tcdng.unify.core.data.Context;
  */
 public class ApplicationContext extends Context {
 
-    private static final PrivilegeSettings ALL_PRIVILEGES =
-            new PrivilegeSettings(true, true, false, TriState.CONFORMING);
+    private static final ViewDirective ALLOW_VIEW_DIRECTIVE =
+            new ViewDirective(true, true, false, TriState.CONFORMING);
 
-    private static final PrivilegeSettings NO_PRIVILEGES = new PrivilegeSettings(false, false, true, TriState.TRUE);
+    private static final ViewDirective DISALLOW_VIEW_DIRECTIVE = new ViewDirective(false, false, true, TriState.TRUE);
 
     private UnifyContainer container;
 
@@ -81,30 +81,30 @@ public class ApplicationContext extends Context {
     }
 
     /**
-     * Tests if supplied role has privilege code attribute.
+     * Gets supplied role privilege code view directive.
      * 
      * @param roleCode
      *            the role code
      * @param privilege
      *            the privilege to test
-     * @return true if role has privilege
+     * @return the role's view directive for supplied privilege
      */
-    public PrivilegeSettings getPrivilegeSettings(String roleCode, String privilege) {
+    public ViewDirective getRoleViewDirective(String roleCode, String privilege) {
         if (roleCode != null && privilege != null && !privilege.isEmpty()) {
             RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
             if (roleAttributes != null) {
-                if (roleAttributes.isAllAccessPrivilege(privilege)) {
-                    return ALL_PRIVILEGES;
+                if (roleAttributes.isViewAllPrivilege(privilege)) {
+                    return ALLOW_VIEW_DIRECTIVE;
                 }
 
-                PrivilegeSettings pSettings = roleAttributes.getControlledAccessPrivilegeSettings(privilege);
-                if (pSettings != null) {
-                    return pSettings;
+                ViewDirective directive = roleAttributes.getViewDirective(privilege);
+                if (directive != null) {
+                    return directive;
                 }
             }
-            return NO_PRIVILEGES;
+            return DISALLOW_VIEW_DIRECTIVE;
         }
-        return ALL_PRIVILEGES;
+        return ALLOW_VIEW_DIRECTIVE;
     }
 
     public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {

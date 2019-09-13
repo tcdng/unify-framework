@@ -363,7 +363,7 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns privilege settings for supplied privilege code and current session
+     * Returns view directive for supplied privilege code and current session
      * role.
      * 
      * @param privilege
@@ -372,12 +372,12 @@ public class UnifyComponentContext {
      * @throws UnifyException
      *             if an error occurs
      */
-    public PrivilegeSettings getRolePrivilegeSettings(String privilege) throws UnifyException {
+    public ViewDirective getRoleViewDirective(String privilege) throws UnifyException {
         UserToken userToken = getSessionContext().getUserToken();
         if (userToken != null) {
-            return applicationContext.getPrivilegeSettings(userToken.getRoleCode(), privilege);
+            return applicationContext.getRoleViewDirective(userToken.getRoleCode(), privilege);
         }
-        return applicationContext.getPrivilegeSettings(null, privilege);
+        return applicationContext.getRoleViewDirective(null, privilege);
     }
 
     /**
