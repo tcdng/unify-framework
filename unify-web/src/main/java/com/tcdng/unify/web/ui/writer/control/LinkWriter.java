@@ -37,10 +37,17 @@ public class LinkWriter extends AbstractTargetControlWriter {
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
         Link link = (Link) targetControl;
+        String caption = null;
+        if (link.isUsePreferredCaption()) {
+            caption = link.getPreferredCaption();
+            if (StringUtils.isBlank(caption)) {
+                return;
+            }
+        }
+        
         writer.write("<a");
         writeTagAttributes(writer, link);
         writer.write(">");
-        String caption =link.getPreferredCaption();
         if(!StringUtils.isBlank(caption)) {
             writer.writeWithHtmlEscape(caption);
         } else {

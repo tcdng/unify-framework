@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.AbstractTargetControl;
 
 /**
@@ -28,9 +29,8 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-link")
-@UplAttributes({
-    @UplAttribute(name = "preferredCaption", type = String.class),
-    @UplAttribute(name = "preferredCaptionBinding", type = String.class) })
+@UplAttributes({ @UplAttribute(name = "preferredCaption", type = String.class),
+        @UplAttribute(name = "preferredCaptionBinding", type = String.class) })
 public class Link extends AbstractTargetControl {
 
     @Override
@@ -52,4 +52,8 @@ public class Link extends AbstractTargetControl {
         return getUplAttribute(String.class, "preferredCaption");
     }
 
+    public boolean isUsePreferredCaption() throws UnifyException {
+        return !StringUtils.isBlank(getUplAttribute(String.class, "preferredCaption"))
+                || !StringUtils.isBlank(getUplAttribute(String.class, "preferredCaptionBinding"));
+    }
 }
