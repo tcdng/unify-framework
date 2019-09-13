@@ -35,43 +35,42 @@ public class RoleAttributes {
 
     private Map<String, ViewDirective> dynamicViewDirectives;
 
-    private Map<String, Set<String>> privilegeCodesByCategory;
+    private Map<String, Set<String>> nonViewDirectivePrivilegeCodes;
 
     private Set<String> staticViewDirectivePrivilegeCodes;
 
     private Set<String> stepCodes;
 
-    public RoleAttributes(String code, String description,
-            Map<String, ViewDirective> dynamicViewDirectives, Set<String> staticViewDirectivePrivilegeCodes,
-            Map<String, Set<String>> privilegeCodesByCategory, Set<String> stepCodes) {
+    public RoleAttributes(String code, String description, Map<String, ViewDirective> dynamicViewDirectives,
+            Set<String> staticViewDirectivePrivilegeCodes, Map<String, Set<String>> nonViewDirectivePrivilegeCodes,
+            Set<String> stepCodes) {
         this.code = code;
         this.description = description;
         this.dynamicViewDirectives = DataUtils.unmodifiableMap(dynamicViewDirectives);
         this.staticViewDirectivePrivilegeCodes = DataUtils.unmodifiableSet(staticViewDirectivePrivilegeCodes);
-        this.privilegeCodesByCategory = privilegeCodesByCategory;
-        if (this.privilegeCodesByCategory != null) {
-            for (Map.Entry<String, Set<String>> entry : this.privilegeCodesByCategory.entrySet()) {
-                this.privilegeCodesByCategory.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
+        this.nonViewDirectivePrivilegeCodes = nonViewDirectivePrivilegeCodes;
+        if (this.nonViewDirectivePrivilegeCodes != null) {
+            for (Map.Entry<String, Set<String>> entry : this.nonViewDirectivePrivilegeCodes.entrySet()) {
+                this.nonViewDirectivePrivilegeCodes.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
             }
         }
-        this.privilegeCodesByCategory = DataUtils.unmodifiableMap(this.privilegeCodesByCategory);
+        this.nonViewDirectivePrivilegeCodes = DataUtils.unmodifiableMap(this.nonViewDirectivePrivilegeCodes);
         this.stepCodes = DataUtils.unmodifiableSet(stepCodes);
     }
-    
+
     public RoleAttributes(String code, String description, Set<String> staticViewDirectivePrivilegeCodes) {
         this.code = code;
         this.description = description;
         this.staticViewDirectivePrivilegeCodes = DataUtils.unmodifiableSet(staticViewDirectivePrivilegeCodes);
         this.dynamicViewDirectives = Collections.emptyMap();
-        this.privilegeCodesByCategory = Collections.emptyMap();
+        this.nonViewDirectivePrivilegeCodes = Collections.emptyMap();
         this.stepCodes = Collections.emptySet();
     }
-
 
     public RoleAttributes() {
         this.dynamicViewDirectives = Collections.emptyMap();
         this.staticViewDirectivePrivilegeCodes = Collections.emptySet();
-        this.privilegeCodesByCategory = Collections.emptyMap();
+        this.nonViewDirectivePrivilegeCodes = Collections.emptyMap();
         this.stepCodes = Collections.emptySet();
     }
 
@@ -92,7 +91,7 @@ public class RoleAttributes {
     }
 
     public Set<String> getPrivilegeCodes(String privilegeCategoryCode) {
-        return privilegeCodesByCategory.get(privilegeCategoryCode);
+        return nonViewDirectivePrivilegeCodes.get(privilegeCategoryCode);
     }
 
     public Set<String> getStepCodes() {
