@@ -93,11 +93,11 @@ public class ApplicationContext extends Context {
         if (roleCode != null && privilege != null && !privilege.isEmpty()) {
             RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
             if (roleAttributes != null) {
-                if (roleAttributes.isViewAllPrivilege(privilege)) {
+                if (roleAttributes.isStaticViewDirectivePrivilege(privilege)) {
                     return ALLOW_VIEW_DIRECTIVE;
                 }
 
-                ViewDirective directive = roleAttributes.getViewDirective(privilege);
+                ViewDirective directive = roleAttributes.getDynamicViewDirective(privilege);
                 if (directive != null) {
                     return directive;
                 }
