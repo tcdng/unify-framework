@@ -40,6 +40,7 @@ import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.transform.Transformer;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Default implementation of an SQL statement executor.
@@ -502,6 +503,9 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 SqlResult sqlResult = sqlResultList.get(0);
                 Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
                         ++resultIndex, timeZoneOffset);
+                if (value == null) {
+                    value = DataUtils.convert(sqlResult.getType(), 0, null);
+                }
 
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
@@ -539,6 +543,9 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
                     Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
                             ++resultIndex, timeZoneOffset);
+                    if (value == null) {
+                        value = DataUtils.convert(sqlResult.getType(), 0, null);
+                    }
                     resultList.add(new Aggregate(sqlResult.getName(), count, value));
                 }
 
