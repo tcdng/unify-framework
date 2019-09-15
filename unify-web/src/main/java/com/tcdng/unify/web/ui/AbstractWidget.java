@@ -426,6 +426,23 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         return null;
     }
 
+    protected void setPageAttribute(String name, Object value) throws UnifyException {
+        getRequestContextUtil().getRequestPage().setAttribute(name, value);
+    }
+
+    protected Object clearPageAttribute(String name) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().clearAttribute(name);
+    }
+
+    protected Object getPageAttribute(String name) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().getAttribute(name);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T getPageAttribute(Class<T> clazz, String name) throws UnifyException {
+        return (T) getRequestContextUtil().getRequestPage().getAttribute(name);
+    }
+
     protected ViewDirective getViewDirective() throws UnifyException {
         return getViewDirective(getUplAttribute(String.class, "privilege"));
     }
