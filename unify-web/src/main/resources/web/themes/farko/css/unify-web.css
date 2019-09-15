@@ -518,6 +518,7 @@ z-index:400;}
 
 /** Label */
 .ui-label {display:block; word-wrap:break-word;}
+.ui-label-ellipsis {white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 /** Label text */
 .ui-labeledtext {display: inline; width: auto; white-space: nowrap;}
