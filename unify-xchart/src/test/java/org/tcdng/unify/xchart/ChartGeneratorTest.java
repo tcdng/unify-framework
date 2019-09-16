@@ -65,6 +65,7 @@ public class ChartGeneratorTest extends AbstractUnifyComponentTest {
         byte[] image = getChartGenerator().generateImage(chart);
         assertNotNull(image);
         assertTrue(image.length > 0);
+        //getChartGenerator().generateToFile(chart, "e:\\data\\ming.png");
     }
 
     @Override
