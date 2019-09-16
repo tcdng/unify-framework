@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.constant.ColorPalette;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -53,18 +54,18 @@ public class PieChart extends AbstractChart {
 
     private boolean showLegend;
 
-    private PieChart(int width, int height, boolean showLegend, boolean useCustomColors, ChartImageFormat format,
+    private PieChart(int width, int height, boolean showLegend, ColorPalette colorPalette, ChartImageFormat format,
             AnnotationType annotationType, ValueFormat valueFormat, List<SingleValueSeries> seriesList) {
-        super(width, height, useCustomColors, format);
+        super(width, height, colorPalette, format);
         this.showLegend = showLegend;
         this.annotationType = annotationType;
         this.valueFormat = valueFormat;
         this.seriesList = seriesList;
     }
 
-    private PieChart(int width, int height, boolean showLegend, boolean useCustomColors, AnnotationType annotationType,
-            ValueFormat valueFormat, List<SingleValueSeries> seriesList) {
-        super(width, height, useCustomColors);
+    private PieChart(int width, int height, boolean showLegend, ColorPalette colorPalette,
+            AnnotationType annotationType, ValueFormat valueFormat, List<SingleValueSeries> seriesList) {
+        super(width, height, colorPalette);
         this.showLegend = showLegend;
         this.annotationType = annotationType;
         this.valueFormat = valueFormat;
@@ -105,9 +106,9 @@ public class PieChart extends AbstractChart {
 
         private ValueFormat valueFormat;
 
-        private boolean showLegend;
+        private ColorPalette colorPalette;
 
-        private boolean useCustomColors;
+        private boolean showLegend;
 
         public Builder(int width, int height) {
             this.width = width;
@@ -115,7 +116,7 @@ public class PieChart extends AbstractChart {
             this.annotationType = AnnotationType.VALUE;
             this.valueFormat = ValueFormat.INTEGER;
             this.showLegend = true;
-            this.useCustomColors = false;
+            this.colorPalette = ColorPalette.DEFAULT;
             this.seriesList = new ArrayList<SingleValueSeries>();
         }
 
@@ -139,8 +140,8 @@ public class PieChart extends AbstractChart {
             return this;
         }
 
-        public Builder useCustomColors(boolean useCustomColors) {
-            this.useCustomColors = useCustomColors;
+        public Builder colorPalette(ColorPalette colorPalette) {
+            this.colorPalette = colorPalette;
             return this;
         }
 
@@ -161,11 +162,11 @@ public class PieChart extends AbstractChart {
 
         public PieChart build() {
             if (format == null) {
-                return new PieChart(width, height, showLegend, useCustomColors, annotationType, valueFormat,
+                return new PieChart(width, height, showLegend, colorPalette, annotationType, valueFormat,
                         DataUtils.unmodifiableList(seriesList));
             }
 
-            return new PieChart(width, height, showLegend, useCustomColors, format, annotationType, valueFormat,
+            return new PieChart(width, height, showLegend, colorPalette, format, annotationType, valueFormat,
                     DataUtils.unmodifiableList(seriesList));
         }
     }

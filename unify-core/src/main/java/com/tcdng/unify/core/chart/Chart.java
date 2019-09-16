@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.chart;
 
+import com.tcdng.unify.core.constant.ColorPalette;
+
 /**
  * Chart object.
  * 
@@ -39,11 +41,11 @@ public interface Chart {
     int getHeight();
 
     /**
-     * Gets the custom colors flag.
+     * Gets the color palette for this chart.
      * 
-     * @return the custom colors flag
+     * @return the palette
      */
-    boolean isUseCustomColors();
+    ColorPalette getColorPalette();
 
     /**
      * Gets the chart image format.

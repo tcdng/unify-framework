@@ -79,31 +79,34 @@ public class PieChartGeneratorUnit extends AbstractXChartGeneratorUnit<PieChart>
 
         // Customize Chart
         pieChart.getStyler().setLegendVisible(chart.isShowLegend());
-        pieChart.getStyler().setAnnotationDistance(1.45);
+        pieChart.getStyler().setAnnotationDistance(1.2);
         pieChart.getStyler().setAnnotationType(annotationMapping.get(chart.getAnnotationType()));
-        pieChart.getStyler().setPlotContentSize(.6);
+        pieChart.getStyler().setPlotContentSize(.75);
         pieChart.getStyler().setStartAngleInDegrees(45);
         pieChart.getStyler().setPlotBackgroundColor(Color.WHITE);
         pieChart.getStyler().setChartBackgroundColor(Color.WHITE);
         pieChart.getStyler().setDecimalPattern(valueFormatMapping.get(chart.getValueFormat()));
 
         // Series
-        List<Color> seriesColors = Collections.emptyList();
-        boolean useCustomColors = chart.isUseCustomColors();
+        List<Color> customColors = Collections.emptyList();
+        boolean useCustomColors = chart.getColorPalette().isCustom();
         if (useCustomColors) {
-            seriesColors = new ArrayList<Color>();
+            customColors = new ArrayList<Color>();
         }
 
         for (SingleValueSeries series : chart.getSeriesList()) {
             if (useCustomColors) {
-                seriesColors.add(series.getColor());
+                customColors.add(series.getColor());
             }
 
             pieChart.addSeries(series.getName(), series.getValue());
         }
 
         if (useCustomColors) {
-            pieChart.getStyler().setSeriesColors(seriesColors.toArray(new Color[seriesColors.size()]));
+            pieChart.getStyler().setSeriesColors(customColors.toArray(new Color[customColors.size()]));
+        } else if(!chart.getColorPalette().isDefault()) {
+            List<Color> palette = chart.getColorPalette().pallete();
+            pieChart.getStyler().setSeriesColors(palette.toArray(new Color[palette.size()]));
         }
 
         return pieChart;

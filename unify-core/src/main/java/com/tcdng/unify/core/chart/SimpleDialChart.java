@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.chart;
 
+import com.tcdng.unify.core.constant.ColorPalette;
+
 /**
  * Simple dial chart.
  * 
@@ -27,12 +29,12 @@ public class SimpleDialChart extends AbstractChart {
     private SingleValueSeries singleValueSeries;
 
     private SimpleDialChart(int width, int height, ChartImageFormat format, String seriesName, Double value) {
-        super(width, height, false, format);
+        super(width, height, ColorPalette.DEFAULT, format);
         this.singleValueSeries = new SingleValueSeries(seriesName, value);
     }
 
     private SimpleDialChart(int width, int height, String seriesName, Double value) {
-        super(width, height, false);
+        super(width, height, ColorPalette.DEFAULT);
         this.singleValueSeries = new SingleValueSeries(seriesName, value);
     }
 

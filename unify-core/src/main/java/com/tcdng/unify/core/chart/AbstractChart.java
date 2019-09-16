@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.chart;
 
+import com.tcdng.unify.core.constant.ColorPalette;
+
 /**
  * Abstract base class for charts.
  * 
@@ -28,18 +30,18 @@ public abstract class AbstractChart implements Chart {
 
     private int height;
 
-    private boolean useCustomColors;
+    private ColorPalette colorPalette;
 
     private ChartImageFormat format;
 
-    public AbstractChart(int width, int height, boolean useCustomColors) {
-        this(width, height, useCustomColors, ChartImageFormat.PNG);
+    public AbstractChart(int width, int height, ColorPalette colorPalette) {
+        this(width, height, colorPalette, ChartImageFormat.PNG);
     }
 
-    public AbstractChart(int width, int height, boolean useCustomColors, ChartImageFormat format) {
+    public AbstractChart(int width, int height, ColorPalette colorPalette, ChartImageFormat format) {
         this.width = width;
         this.height = height;
-        this.useCustomColors = useCustomColors;
+        this.colorPalette = colorPalette;
         this.format = format;
     }
 
@@ -54,8 +56,8 @@ public abstract class AbstractChart implements Chart {
     }
 
     @Override
-    public boolean isUseCustomColors() {
-        return useCustomColors;
+    public ColorPalette getColorPalette() {
+        return colorPalette;
     }
 
     @Override
