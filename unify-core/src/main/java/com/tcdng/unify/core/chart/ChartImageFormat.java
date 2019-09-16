@@ -17,11 +17,11 @@
 package com.tcdng.unify.core.chart;
 
 /**
- * Chart bitmap format enumeration.
+ * Chart image format enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum ChartBitmapFormat {
+public enum ChartImageFormat {
     BMP, JPG, PNG, GIF;
 }

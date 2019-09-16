@@ -29,7 +29,7 @@ import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.chart.AbstractChartGeneratorUnit;
 import com.tcdng.unify.core.chart.Chart;
-import com.tcdng.unify.core.chart.ChartBitmapFormat;
+import com.tcdng.unify.core.chart.ChartImageFormat;
 
 /**
  * Abstract base class for XChart chart generator units.
@@ -37,20 +37,20 @@ import com.tcdng.unify.core.chart.ChartBitmapFormat;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractXChartChartGeneratorUnit<T extends Chart> extends AbstractChartGeneratorUnit<T> {
+public abstract class AbstractXChartGeneratorUnit<T extends Chart> extends AbstractChartGeneratorUnit<T> {
 
-    private static final Map<ChartBitmapFormat, BitmapFormat> formats;
+    private static final Map<ChartImageFormat, BitmapFormat> formats;
 
     static {
-        Map<ChartBitmapFormat, BitmapFormat> tempFormats = new HashMap<ChartBitmapFormat, BitmapFormat>();
-        tempFormats.put(ChartBitmapFormat.BMP, BitmapFormat.BMP);
-        tempFormats.put(ChartBitmapFormat.GIF, BitmapFormat.GIF);
-        tempFormats.put(ChartBitmapFormat.JPG, BitmapFormat.JPG);
-        tempFormats.put(ChartBitmapFormat.PNG, BitmapFormat.PNG);
+        Map<ChartImageFormat, BitmapFormat> tempFormats = new HashMap<ChartImageFormat, BitmapFormat>();
+        tempFormats.put(ChartImageFormat.BMP, BitmapFormat.BMP);
+        tempFormats.put(ChartImageFormat.GIF, BitmapFormat.GIF);
+        tempFormats.put(ChartImageFormat.JPG, BitmapFormat.JPG);
+        tempFormats.put(ChartImageFormat.PNG, BitmapFormat.PNG);
         formats = Collections.unmodifiableMap(tempFormats);
     }
 
-    public AbstractXChartChartGeneratorUnit(Class<T> chartType) {
+    public AbstractXChartGeneratorUnit(Class<T> chartType) {
         super(chartType);
     }
 
@@ -88,7 +88,7 @@ public abstract class AbstractXChartChartGeneratorUnit<T extends Chart> extends 
     }
 
     protected BitmapFormat getBitmapFormat(T chart) {
-        return formats.get(chart.getBitmapFormat());
+        return formats.get(chart.getImageFormat());
     }
 
     protected abstract org.knowm.xchart.internal.chartpart.Chart<?, ?> translate(T chart) throws UnifyException;

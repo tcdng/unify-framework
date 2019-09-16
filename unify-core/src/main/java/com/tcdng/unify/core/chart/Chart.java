@@ -39,9 +39,16 @@ public interface Chart {
     int getHeight();
 
     /**
-     * Gets the chart bitmap format.
+     * Gets the custom colors flag.
      * 
-     * @return the chart bitmap format
+     * @return the custom colors flag
      */
-    ChartBitmapFormat getBitmapFormat();
+    boolean isUseCustomColors();
+
+    /**
+     * Gets the chart image format.
+     * 
+     * @return the chart image format
+     */
+    ChartImageFormat getImageFormat();
 }

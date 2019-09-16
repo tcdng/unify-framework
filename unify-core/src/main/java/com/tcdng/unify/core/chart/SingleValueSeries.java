@@ -14,28 +14,44 @@
  * the License.
  */
 
-package org.tcdng.unify.xchart.generator;
+package com.tcdng.unify.core.chart;
 
-import org.tcdng.unify.xchart.XChartApplicationComponents;
-
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.chart.AbstractChartGenerator;
+import java.awt.Color;
 
 /**
- * Implementation of a chart generator using XChart.
+ * Single value series object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(XChartApplicationComponents.XCHART_CHARTGENERATOR)
-public class XChartChartGenerator extends AbstractChartGenerator {
+public class SingleValueSeries {
 
-    private static final String[] GENERATOR_UNITS = { XChartApplicationComponents.XCHART_SIMPLEDIALGENERATOR };
+    private String name;
 
-    @Override
-    protected String[] getProvidedChartGeneratorUnitNames() throws UnifyException {
-        return GENERATOR_UNITS;
+    private Double value;
+
+    private Color color;
+
+    public SingleValueSeries(String name, Double value, Color color) {
+        this.name = name;
+        this.value = value;
+        this.color = color;
     }
 
+    public SingleValueSeries(String name, Double value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
+    public Color getColor() {
+        return color;
+    }
 }

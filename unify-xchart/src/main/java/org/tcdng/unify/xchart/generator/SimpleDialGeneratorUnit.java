@@ -25,6 +25,7 @@ import org.tcdng.unify.xchart.XChartApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.chart.SimpleDialChart;
+import com.tcdng.unify.core.chart.SingleValueSeries;
 
 /**
  * XChart simple dial generator.
@@ -33,7 +34,7 @@ import com.tcdng.unify.core.chart.SimpleDialChart;
  * @since 1.0
  */
 @Component(XChartApplicationComponents.XCHART_SIMPLEDIALGENERATOR)
-public class SimpleDialGeneratorUnit extends AbstractXChartChartGeneratorUnit<SimpleDialChart> {
+public class SimpleDialGeneratorUnit extends AbstractXChartGeneratorUnit<SimpleDialChart> {
 
     public SimpleDialGeneratorUnit() {
         super(SimpleDialChart.class);
@@ -42,7 +43,8 @@ public class SimpleDialGeneratorUnit extends AbstractXChartChartGeneratorUnit<Si
     @Override
     protected Chart<?, ?> translate(SimpleDialChart chart) throws UnifyException {
         DialChart dialChart = new DialChart(chart.getWidth(), chart.getHeight());
-        dialChart.addSeries(chart.getSeriesName(), chart.getValue());
+        SingleValueSeries series = chart.getSeries();
+        dialChart.addSeries(series.getName(), series.getValue());
         dialChart.getStyler().setDonutThickness(0.4);
         dialChart.getStyler().setRedFrom(0.7);
         dialChart.getStyler().setArcAngle(240);
