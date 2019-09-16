@@ -31,15 +31,15 @@ import com.tcdng.unify.core.UnifyException;
 public interface ChartGenerator extends UnifyComponent {
 
     /**
-     * Generates supplied chart and returns generated bitmap as byte array.
+     * Generates supplied chart and returns generated image as byte array.
      * 
      * @param chart
      *            the chart to generate
-     * @return the generated bitmap
+     * @return the generated image
      * @throws UnifyException
      *             if there is no generator unit for chart type. if an error occurs
      */
-    byte[] generateBitmap(Chart chart) throws UnifyException;
+    byte[] generateImage(Chart chart) throws UnifyException;
 
     /**
      * Generates supplied chart and saves as specified file.

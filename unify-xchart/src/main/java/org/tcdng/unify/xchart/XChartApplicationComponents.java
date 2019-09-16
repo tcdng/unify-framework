@@ -27,4 +27,6 @@ public interface XChartApplicationComponents {
     String XCHART_CHARTGENERATOR = "xchart-chartgenerator";
 
     String XCHART_SIMPLEDIALGENERATOR = "xchart-simpledialgenerator";
+
+    String XCHART_PIECHARTGENERATOR = "xchart-piechartgenerator";
 }

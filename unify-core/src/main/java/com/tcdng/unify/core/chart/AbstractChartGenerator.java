@@ -40,7 +40,7 @@ public abstract class AbstractChartGenerator extends AbstractUnifyComponent impl
     }
     
     @Override
-    public byte[] generateBitmap(Chart chart) throws UnifyException {
+    public byte[] generateImage(Chart chart) throws UnifyException {
         return getChartGeneratorUnit(chart).generateBitmap(chart);
     }
 

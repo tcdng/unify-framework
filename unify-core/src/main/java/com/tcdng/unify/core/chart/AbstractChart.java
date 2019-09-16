@@ -25,18 +25,21 @@ package com.tcdng.unify.core.chart;
 public abstract class AbstractChart implements Chart {
 
     private int width;
-    
+
     private int height;
-    
-    private ChartBitmapFormat format;
-    
-    public AbstractChart(int width, int height) {
-        this(width, height, ChartBitmapFormat.PNG);
+
+    private boolean useCustomColors;
+
+    private ChartImageFormat format;
+
+    public AbstractChart(int width, int height, boolean useCustomColors) {
+        this(width, height, useCustomColors, ChartImageFormat.PNG);
     }
-    
-    public AbstractChart(int width, int height, ChartBitmapFormat format) {
+
+    public AbstractChart(int width, int height, boolean useCustomColors, ChartImageFormat format) {
         this.width = width;
         this.height = height;
+        this.useCustomColors = useCustomColors;
         this.format = format;
     }
 
@@ -51,7 +54,12 @@ public abstract class AbstractChart implements Chart {
     }
 
     @Override
-    public ChartBitmapFormat getBitmapFormat() {
+    public boolean isUseCustomColors() {
+        return useCustomColors;
+    }
+
+    @Override
+    public ChartImageFormat getImageFormat() {
         return format;
     }
 
