@@ -36,14 +36,14 @@ public enum FilterConditionType implements EnumConst {
     LESS_OR_EQUAL("LTE", RestrictionType.LESS_OR_EQUAL),
     BETWEEN("BT", RestrictionType.BETWEEN),
     NOT_BETWEEN("NBT", RestrictionType.NOT_BETWEEN),
-    LIKE_BEGIN("BW", RestrictionType.LIKE_BEGIN),
-    LIKE_END("EW", RestrictionType.LIKE_END),
+    BEGIN_WITH("BW", RestrictionType.BEGIN_WITH),
+    END_WITH("EW", RestrictionType.END_WITH),
     LIKE("LK", RestrictionType.LIKE),
-    NOT_LIKE_BEGIN("NBW", RestrictionType.NOT_LIKE_BEGIN),
-    NOT_LIKE_END("NEW", RestrictionType.NOT_LIKE_END),
+    NOT_BEGIN_WITH("NBW", RestrictionType.NOT_BEGIN_WITH),
+    NOT_END_WITH("NEW", RestrictionType.NOT_END_WITH),
     NOT_LIKE("NLK", RestrictionType.NOT_LIKE),
-    IS_NULL("IN", RestrictionType.IS_NULL),
-    IS_NOT_NULL("NIN", RestrictionType.IS_NOT_NULL);
+    IS_NULL("NL", RestrictionType.IS_NULL),
+    IS_NOT_NULL("NNL", RestrictionType.IS_NOT_NULL);
 
     private final String code;
 

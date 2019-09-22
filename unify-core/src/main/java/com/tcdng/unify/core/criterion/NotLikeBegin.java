@@ -29,7 +29,7 @@ public class NotLikeBegin extends AbstractSingleValueRestriction {
 
     @Override
     public RestrictionType getType() {
-        return RestrictionType.NOT_LIKE_BEGIN;
+        return RestrictionType.NOT_BEGIN_WITH;
     }
 }
 

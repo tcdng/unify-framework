@@ -180,10 +180,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlCriteriaPolicies.put(RestrictionType.NOT_AMONGST, new NotAmongstPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.LIKE, new LikePolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE, new NotLikePolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.LIKE_BEGIN, new LikeBeginPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE_BEGIN, new NotLikeBeginPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.LIKE_END, new LikeEndPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE_END, new NotLikeEndPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.BEGIN_WITH, new LikeBeginPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_BEGIN_WITH, new NotLikeBeginPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.END_WITH, new LikeEndPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_END_WITH, new NotLikeEndPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.IS_NULL, new IsNullPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.IS_NOT_NULL, new IsNotNullPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.AND, new AndPolicy(this));

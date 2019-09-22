@@ -15,31 +15,76 @@
  */
 package com.tcdng.unify.core.criterion;
 
+import com.tcdng.unify.core.annotation.StaticList;
+import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.util.EnumUtils;
+
 /**
  * Restriction type enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum RestrictionType {
-    EQUAL,
-    NOT_EQUAL,
-    LESS_THAN,
-    LESS_OR_EQUAL,
-    GREATER,
-    GREATER_OR_EQUAL,
-    BETWEEN,
-    NOT_BETWEEN,
-    AMONGST,
-    NOT_AMONGST,
-    LIKE,
-    NOT_LIKE,
-    LIKE_BEGIN,
-    NOT_LIKE_BEGIN,
-    LIKE_END,
-    NOT_LIKE_END,
-    IS_NULL,
-    IS_NOT_NULL,
-    AND,
-    OR;
+@StaticList("restrictiontypelist")
+public enum RestrictionType implements EnumConst {
+    EQUAL("EQ"),
+    NOT_EQUAL("NEQ"),
+    LESS_THAN("LT"),
+    LESS_OR_EQUAL("LTE"),
+    GREATER("GT"),
+    GREATER_OR_EQUAL("GTE"),
+    BETWEEN("BT"),
+    NOT_BETWEEN("NBT"),
+    AMONGST("IN"),
+    NOT_AMONGST("NIN"),
+    LIKE("LK"),
+    NOT_LIKE("NLK"),
+    BEGIN_WITH("BW"),
+    NOT_BEGIN_WITH("NBW"),
+    END_WITH("EW"),
+    NOT_END_WITH("NEW"),
+    IS_NULL("NL"),
+    IS_NOT_NULL("NNL"),
+    AND("AND"),
+    OR("OR");
+
+    private final String code;
+
+    private RestrictionType(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String code() {
+        return code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return EQUAL.code;
+    }
+
+    public boolean isCollection() {
+        return AMONGST.equals(this) || NOT_AMONGST.equals(this);
+    }
+
+    public boolean isCompound() {
+        return AND.equals(this) || OR.equals(this);
+    }
+
+    public boolean isRange() {
+        return BETWEEN.equals(this) || NOT_BETWEEN.equals(this);
+    }
+
+    public boolean isZeroParams() {
+        return IS_NULL.equals(this) || IS_NOT_NULL.equals(this);
+    }
+
+    public static RestrictionType fromCode(String code) {
+        return EnumUtils.fromCode(RestrictionType.class, code);
+    }
+
+    public static RestrictionType fromName(String name) {
+        return EnumUtils.fromName(RestrictionType.class, name);
+    }
 }

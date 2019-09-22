@@ -29,6 +29,6 @@ public class LikeEnd extends AbstractSingleValueRestriction {
 
     @Override
     public RestrictionType getType() {
-        return RestrictionType.LIKE_END;
+        return RestrictionType.END_WITH;
     }
 }
