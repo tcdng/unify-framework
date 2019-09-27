@@ -844,6 +844,21 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Returns privilege codes for supplied category and role.
+     * 
+     * @param roleCode
+     *            the role code
+     * @param privilegeCategoryCode
+     *            the privilege category code
+     * @return set of privilege codes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected Set<String> getRolePrivilegeCodes(String roleCode, String privilegeCategoryCode) throws UnifyException {
+        return unifyComponentContext.getRolePrivilegeCodes(roleCode, privilegeCategoryCode);
+    }
+
+    /**
      * Returns privilege codes for supplied category and current context role.
      * 
      * @param privilegeCategoryCode
@@ -852,20 +867,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected Set<String> getPrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
-        return unifyComponentContext.getRolePrivilegeCodes(privilegeCategoryCode);
+    protected Set<String> getCurrentRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
+        return unifyComponentContext.getCurrentRolePrivilegeCodes(privilegeCategoryCode);
     }
-
-    /**
-     * Checks if application context has an attribute.
-     * 
-     * @param name
-     *            the attribute name
-     * @return a true value if attribute exists in application context otherwise
-     *         false
-     * @throws UnifyException
-     *             if an error occurs
-     */
 
     /**
      * Checks if current session role has privilege.
@@ -878,8 +882,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    public boolean isRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
-        return unifyComponentContext.isRolePrivilege(privilegeCategoryCode, privilegeCode);
+    public boolean isCurrentRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
+        return unifyComponentContext.isCurrentRolePrivilege(privilegeCategoryCode, privilegeCode);
     }
 
     /**
