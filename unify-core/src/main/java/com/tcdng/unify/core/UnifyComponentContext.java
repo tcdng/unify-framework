@@ -363,8 +363,7 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns view directive for supplied privilege code and current session
-     * role.
+     * Returns view directive for supplied privilege code and current session role.
      * 
      * @param privilege
      *            the privilege to test
@@ -381,6 +380,21 @@ public class UnifyComponentContext {
     }
 
     /**
+     * Returns privilege codes for supplied privilege category and role.
+     * 
+     * @param roleCode
+     *            the role code
+     * @param privilegeCategoryCode
+     *            the privilege category code
+     * @return set of privilege codes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public Set<String> getRolePrivilegeCodes(String roleCode, String privilegeCategoryCode) throws UnifyException {
+        return applicationContext.getPrivilegeCodes(roleCode, privilegeCategoryCode);
+    }
+
+    /**
      * Returns privilege codes for supplied privilege category and current session
      * role.
      * 
@@ -390,7 +404,7 @@ public class UnifyComponentContext {
      * @throws UnifyException
      *             if an error occurs
      */
-    public Set<String> getRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
+    public Set<String> getCurrentRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
         return applicationContext.getPrivilegeCodes(getSessionContext().getUserToken().getRoleCode(),
                 privilegeCategoryCode);
     }
@@ -406,10 +420,10 @@ public class UnifyComponentContext {
      * @throws UnifyException
      *             if an error occurs
      */
-    public boolean isRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
+    public boolean isCurrentRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
         UserToken userToken = getSessionContext().getUserToken();
         if (userToken != null && userToken.getRoleCode() != null) {
-            Set<String> privileges = getRolePrivilegeCodes(privilegeCategoryCode);
+            Set<String> privileges = getRolePrivilegeCodes(userToken.getRoleCode(), privilegeCategoryCode);
             if (privileges != null) {
                 return privileges.contains(privilegeCode);
             }
