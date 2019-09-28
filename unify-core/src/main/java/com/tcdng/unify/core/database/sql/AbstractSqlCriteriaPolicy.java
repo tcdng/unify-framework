@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -38,7 +39,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     }
 
     /**
-     * Returns the SQL criteria policy for supplied criteria's operator.
+     * Returns the SQL criteria policy for supplied restriction.
      * 
      * @param criteria
      *            the criteria object
@@ -46,8 +47,21 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected SqlCriteriaPolicy getOperatorPolicy(Restriction criteria) throws UnifyException {
-        return sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getType());
+    protected SqlCriteriaPolicy getOperatorPolicy(Restriction restriction) throws UnifyException {
+        return sqlDataSourceDialect.getSqlCriteriaPolicy(restriction.getType());
+    }
+
+    /**
+     * Returns the SQL criteria policy for supplied restriction type.
+     * 
+     * @param type
+     *            the restriction type
+     * @return the criteris policy
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected SqlCriteriaPolicy getOperatorPolicy(RestrictionType type) throws UnifyException {
+        return sqlDataSourceDialect.getSqlCriteriaPolicy(type);
     }
 
     /**

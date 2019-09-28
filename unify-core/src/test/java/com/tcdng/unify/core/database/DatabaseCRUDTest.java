@@ -1141,9 +1141,9 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("strawberry", "red", 4.50));
             
             FruitQuery query = (FruitQuery) new FruitQuery().ignoreEmptyCriteria(true);
-            Restriction criteria = query.getRestrictions();
+            Restriction restriction = query.getRestrictions();
             Query<Fruit> copyQuery =
-                    query.copyNoCriteria().add(criteria).like("name", "apple").order("name");
+                    query.copyNoCriteria().add(restriction).like("name", "apple").order("name");
             
             List<Fruit> testFruitList = db.findAll(copyQuery);
             

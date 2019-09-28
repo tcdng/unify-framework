@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.HAlignType;
@@ -56,7 +57,7 @@ public class Report {
 
     private List<ReportColumn> columns;
 
-    private List<ReportColumnFilter> filters;
+    private ReportFilter filter;
 
     private ReportFormat format;
 
@@ -92,7 +93,7 @@ public class Report {
 
     private Report(String code, String title, String template, String processor, String dataSource, String query,
             Collection<?> beanCollection, ReportTable table, List<ReportTableJoin> joins, List<ReportColumn> columns,
-            List<ReportColumnFilter> filters, ReportFormat format, ReportLayout layout,
+            ReportFilter filter, ReportFormat format, ReportLayout layout,
             ReportParameters reportParameters, int pageWidth, int pageHeight, String columnFontName, int columnFontSize, int columnHeaderHeight,
             int detailHeight, String summationLegend, String groupSummationLegend, boolean dynamicDataSource,
             boolean printColumnNames, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
@@ -106,7 +107,7 @@ public class Report {
         this.table = table;
         this.joins = joins;
         this.columns = columns;
-        this.filters = filters;
+        this.filter = filter;
         this.format = format;
         this.layout = layout;
         this.reportParameters = reportParameters;
@@ -269,8 +270,8 @@ public class Report {
         return Collections.unmodifiableList(columns);
     }
 
-    public List<ReportColumnFilter> getFilters() {
-        return filters;
+    public ReportFilter getFilter() {
+        return filter;
     }
 
     public void addColumn(ReportColumn reportColumn) {
@@ -311,8 +312,10 @@ public class Report {
 
         private List<ReportColumn> columns;
 
-        private List<ReportColumnFilter> filters;
+        private Stack<ReportFilter> filters;
 
+        private ReportFilter rootFilter;
+        
         private ReportFormat format;
 
         private ReportLayout layout;
@@ -350,7 +353,7 @@ public class Report {
             this.layout = ReportLayout.TABULAR;
             this.joins = new ArrayList<ReportTableJoin>();
             this.columns = new ArrayList<ReportColumn>();
-            this.filters = new ArrayList<ReportColumnFilter>();
+            this.filters = new Stack<ReportFilter>();
             this.parameters = new HashMap<String, Object>();
             this.printColumnNames = true;
             this.columnFontName = DEFAULT_COLUMN_FONTNAME;
@@ -523,13 +526,52 @@ public class Report {
             return this;
         }
 
-        public Builder addFilter(ReportColumnFilter reportFilter) {
-            filters.add(reportFilter);
+        public Builder beginCompoundFilter(RestrictionType op) {
+            if (!op.isCompound()) {
+                throw new IllegalArgumentException(op + " is not a compound restriction type.");
+            }
+
+            if (rootFilter != null) {
+                throw new IllegalStateException("Can not have multiple root compound filter.");
+            }
+
+            ReportFilter reportFilter = new ReportFilter(op, new ArrayList<ReportFilter>());
+            if (!filters.isEmpty()) {
+                filters.peek().getSubFilterList().add(reportFilter);
+            }
+
+            filters.push(reportFilter);
             return this;
         }
 
-        public Builder addFilter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
-            filters.add(new ReportColumnFilter(op, tableName, columnName, param1, param2));
+        public Builder endCompoundFilter() {
+            if (filters.isEmpty()) {
+                throw new IllegalStateException("No compound filter context currently open.");
+            }
+
+            ReportFilter reportFilter = filters.pop();
+            if (filters.isEmpty()) {
+                rootFilter = reportFilter;
+            }
+
+            return this;
+        }
+
+        public Builder addSimpleFilter(RestrictionType op, String tableName, String columnName, Object param1,
+                Object param2) {
+            return addSimpleFilter(new ReportFilter(op, tableName, columnName, param1, param2));
+        }
+
+        public Builder addSimpleFilter(ReportFilter reportFilter) {
+            if (reportFilter.isCompound()) {
+                throw new IllegalArgumentException(reportFilter.getOp() + " is not a simple restriction type.");
+            }
+            
+            if (filters.isEmpty()) {
+                throw new IllegalStateException("No compound filter context currently open.");
+            }
+
+            filters.peek().getSubFilterList().add(reportFilter);
             return this;
         }
 
@@ -545,7 +587,7 @@ public class Report {
 
         public Report build() throws UnifyException {
             Report report = new Report(code, title, template, processor, dataSource, query, beanCollection, table,
-                    Collections.unmodifiableList(joins), columns, filters, format, layout,
+                    Collections.unmodifiableList(joins), columns, rootFilter, format, layout,
                     new ReportParameters(parameters), pageWidth, pageHeight, columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
                     summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames, underlineRows,
                     shadeOddRows, landscape);

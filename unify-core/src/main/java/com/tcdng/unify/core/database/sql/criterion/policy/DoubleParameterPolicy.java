@@ -40,8 +40,8 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     }
 
     @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction criteria) throws UnifyException {
-        DoubleValueRestriction dvc = (DoubleValueRestriction) criteria;
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+        DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
         String columnName = dvc.getPropertyName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(dvc.getPropertyName()).getPreferredColumnName();
@@ -61,8 +61,8 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @SuppressWarnings("unchecked")
     @Override
     public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction criteria) throws UnifyException {
-        DoubleValueRestriction dvc = (DoubleValueRestriction) criteria;
+            SqlEntityInfo sqlEntityInfo, final Restriction restriction) throws UnifyException {
+        DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(dvc.getPropertyName());
         sql.append("(");
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("? AND ?");

@@ -37,7 +37,7 @@ public interface DataSourceDialect extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String translateCriteria(Restriction criteria) throws UnifyException;
+    String translateCriteria(Restriction restriction) throws UnifyException;
 
     /**
      * Translates specified value to data source dialect.

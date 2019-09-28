@@ -43,7 +43,7 @@ public interface SqlCriteriaPolicy {
      *             if an error occurs
      */
     void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, Restriction criteria) throws UnifyException;
+            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException;
 
     /**
      * Translates a criteria object to native SQL and appends to supplied string
@@ -58,7 +58,7 @@ public interface SqlCriteriaPolicy {
      * @throws UnifyException
      *             if an error occurs
      */
-    void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction criteria) throws UnifyException;
+    void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException;
 
     /**
      * Translates a criteria to native SQL and appends to supplied string buffer..

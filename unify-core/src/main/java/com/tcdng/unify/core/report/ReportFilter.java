@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.report;
 
+import java.util.List;
+
 import com.tcdng.unify.core.criterion.RestrictionType;
 
 /**
@@ -23,7 +25,7 @@ import com.tcdng.unify.core.criterion.RestrictionType;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ReportColumnFilter {
+public class ReportFilter {
 
     private RestrictionType op;
 
@@ -35,7 +37,9 @@ public class ReportColumnFilter {
 
     private Object param2;
 
-    public ReportColumnFilter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
+    private List<ReportFilter> subFilterList;
+    
+    public ReportFilter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
         this.op = op;
         this.tableName = tableName;
         this.columnName = columnName;
@@ -43,8 +47,17 @@ public class ReportColumnFilter {
         this.param2 = param2;
     }
 
+    public ReportFilter(RestrictionType op, List<ReportFilter> subFilterList) {
+        this.op = op;
+        this.subFilterList = subFilterList;
+    }
+
     public RestrictionType getOp() {
         return op;
+    }
+
+    public boolean isCompound() {
+        return op.isCompound();
     }
 
     public String getTableName() {
@@ -61,6 +74,10 @@ public class ReportColumnFilter {
 
     public Object getParam2() {
         return param2;
+    }
+
+    public List<ReportFilter> getSubFilterList() {
+        return subFilterList;
     }
 
 }
