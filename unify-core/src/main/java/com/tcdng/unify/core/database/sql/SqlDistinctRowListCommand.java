@@ -45,9 +45,9 @@ public class SqlDistinctRowListCommand extends AbstractDynamicSqlDataSourceListC
             SqlDistinctRowListConfig config = manager.getSqlDistinctRowListConfig(params.getConfigName());
 
             String tableName = config.getTable();
-            NativeQuery query = new NativeQuery().schemaName(config.getSchema()).tableName(tableName)
+            NativeQuery query = NativeQuery.newBuilder().schemaName(config.getSchema()).tableName(tableName)
                     .addColumn(tableName, config.getKeyColumn()).addColumn(tableName, config.getDescColumn())
-                    .distinct(true);
+                    .distinct(true).build();
             List<Object[]> rows = getDsManager().getRows(config.getDataSource(), query);
 
             List<ListData> resultList = new ArrayList<ListData>();

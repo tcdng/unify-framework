@@ -44,8 +44,8 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
     }
 
     @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction criteria) throws UnifyException {
-        SingleValueRestriction svc = (SingleValueRestriction) criteria;
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+        SingleValueRestriction svc = (SingleValueRestriction) restriction;
         String columnName = svc.getPropertyName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(svc.getPropertyName()).getPreferredColumnName();
@@ -63,8 +63,8 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @SuppressWarnings("unchecked")
     @Override
     public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction criteria) throws UnifyException {
-        SingleValueRestriction svc = (SingleValueRestriction) criteria;
+            SqlEntityInfo sqlEntityInfo, final Restriction restriction) throws UnifyException {
+        SingleValueRestriction svc = (SingleValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getPropertyName());
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
         if (sqlFieldInfo.isTransformed()) {

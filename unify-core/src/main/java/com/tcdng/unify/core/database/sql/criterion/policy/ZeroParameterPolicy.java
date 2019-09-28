@@ -39,8 +39,8 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
     }
 
     @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction criteria) throws UnifyException {
-        NoValueRestriction nvc = (NoValueRestriction) criteria;
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+        NoValueRestriction nvc = (NoValueRestriction) restriction;
         String columnName = nvc.getPropertyName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(nvc.getPropertyName()).getPreferredColumnName();
@@ -58,8 +58,8 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
 
     @Override
     public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction criteria) throws UnifyException {
-        NoValueRestriction nvc = (NoValueRestriction) criteria;
+            SqlEntityInfo sqlEntityInfo, final Restriction restriction) throws UnifyException {
+        NoValueRestriction nvc = (NoValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(nvc.getPropertyName());
         sql.append("(");
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);

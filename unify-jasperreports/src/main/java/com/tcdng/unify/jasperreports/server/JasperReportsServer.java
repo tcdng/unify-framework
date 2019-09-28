@@ -59,7 +59,7 @@ import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.report.AbstractReportServer;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
-import com.tcdng.unify.core.report.ReportColumnFilter;
+import com.tcdng.unify.core.report.ReportFilter;
 import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.report.ReportTableJoin;
 import com.tcdng.unify.core.report.ReportLayout;
@@ -187,22 +187,22 @@ public class JasperReportsServer extends AbstractReportServer {
                     query = report.getQuery();
                 } else {
                     DataSourceDialect dataSourceDialect = getDataSource(report).getDialect();
-                    NativeQuery nativeQuery = new NativeQuery();
-                    nativeQuery.tableName(report.getTable().getName());
+                    NativeQuery.Builder nqb = NativeQuery.newBuilder();
+                    nqb.tableName(report.getTable().getName());
                     for (ReportColumn rc : report.getColumns()) {
-                        nativeQuery.addColumn(rc.getTable(), rc.getName());
+                        nqb.addColumn(rc.getTable(), rc.getName());
                     }
 
                     for (ReportTableJoin rj : report.getJoins()) {
-                        nativeQuery.addJoin(rj.getType(), rj.getTableA(), rj.getColumnA(), rj.getTableB(),
-                                rj.getColumnB());
+                        nqb.addJoin(rj.getType(), rj.getTableA(), rj.getColumnA(), rj.getTableB(), rj.getColumnB());
                     }
 
-                    for (ReportColumnFilter rf : report.getFilters()) {
-                        nativeQuery.addFilter(rf.getOp(), rf.getTableName(), rf.getColumnName(), rf.getParam1(),
-                                rf.getParam2());
+                    ReportFilter rootFilter = report.getFilter();
+                    if (rootFilter != null) {
+                        buildNativeQueryFilters(nqb, rootFilter);
                     }
-                    query = dataSourceDialect.generateNativeQuery(nativeQuery);
+
+                    query = dataSourceDialect.generateNativeQuery(nqb.build());
                 }
 
                 logDebug("Setting jasper reports query [{0}]...", query);
@@ -271,5 +271,18 @@ public class JasperReportsServer extends AbstractReportServer {
         sxmrc.setWhitePageBackground(false);
         // sxmrc.setDetectCellType(true);
         return sxmrc;
+    }
+
+    private void buildNativeQueryFilters(NativeQuery.Builder nqb, ReportFilter compoundFilter) throws UnifyException {
+        nqb.beginCompoundFilter(compoundFilter.getOp());
+        for (ReportFilter subFilter : compoundFilter.getSubFilterList()) {
+            if (subFilter.isCompound()) {
+                buildNativeQueryFilters(nqb, subFilter);
+            } else {
+                nqb.addSimpleFilter(subFilter.getOp(), subFilter.getTableName(), subFilter.getColumnName(),
+                        subFilter.getParam1(), subFilter.getParam2());
+            }
+        }
+        nqb.endCompoundFilter();
     }
 }

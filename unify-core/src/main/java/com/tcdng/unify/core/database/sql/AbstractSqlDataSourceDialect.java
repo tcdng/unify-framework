@@ -1151,7 +1151,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     public String generateNativeQuery(NativeQuery query) throws UnifyException {
         StringBuilder sql = new StringBuilder();
-        Map<String, String> aliases = new HashMap<String, String>();
+        SqlTableNativeAliasGenerator aliasGenerator = new SqlTableNativeAliasGenerator();
         sql.append("SELECT ");
         if (query.isDistinct()) {
             sql.append(" DISTINCT ");
@@ -1160,7 +1160,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         appendLimitOffsetInfixClause(sql, query.getOffset(), query.getLimit());
 
         String tableName = getTableName(query, query.getTableName());
-        String talias = getTableNativeAlias(aliases, tableName);
+        String talias = aliasGenerator.getTableNativeAlias(tableName);
         boolean isAppendSymbol = false;
         for (NativeQuery.Column column : query.getColumnList()) {
             if (isAppendSymbol) {
@@ -1169,7 +1169,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 isAppendSymbol = true;
             }
 
-            sql.append(getTableNativeAlias(aliases, getTableName(query, column.getTableName()))).append('.')
+            sql.append(aliasGenerator.getTableNativeAlias(getTableName(query, column.getTableName()))).append('.')
                     .append(column.getColumnName());
         }
 
@@ -1179,32 +1179,22 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             for (NativeQuery.Join join : query.getJoinList()) {
                 String tableA = getTableName(query, join.getTableA());
                 String tableB = getTableName(query, join.getTableB());
-                String aalias = getTableNativeAlias(aliases, tableA);
-                String balias = getTableNativeAlias(aliases, tableB);
+                String aalias = aliasGenerator.getTableNativeAlias(tableA);
+                String balias = aliasGenerator.getTableNativeAlias(tableB);
                 sql.append(" ").append(join.getType().sql()).append(" ").append(tableB).append(" ").append(balias)
                         .append(" ON ").append(balias).append(".").append(join.getColumnB()).append(" = ")
                         .append(aalias).append(".").append(join.getColumnA());
             }
         }
 
-        if (query.isFilter()) {
+        if (query.isRootFilter()) {
             sql.append(" WHERE ");
-
-            isAppendSymbol = false;
-            for (NativeQuery.Filter filter : query.getFilterList()) {
-                if (isAppendSymbol) {
-                    sql.append(" AND ");
-                } else {
-                    isAppendSymbol = true;
-                }
-
-                String calias = getTableNativeAlias(aliases, filter.getTableName());
-                sqlCriteriaPolicies.get(filter.getOp()).translate(sql, calias, filter.getColumnName(),
-                        filter.getParam1(), filter.getParam2());
-            }
+            NativeQuery.Filter rootFilter = query.getRootFilter();
+            sqlCriteriaPolicies.get(rootFilter.getOp()).translate(sql, null, null, aliasGenerator,
+                    rootFilter.getSubFilterList());
         }
 
-        appendLimitOffsetSuffixClause(sql, query.getOffset(), query.getLimit(), query.isFilter());
+        appendLimitOffsetSuffixClause(sql, query.getOffset(), query.getLimit(), query.isRootFilter());
         return sql.toString();
     }
 
@@ -1261,9 +1251,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String translateCriteria(Restriction criteria) throws UnifyException {
+    public String translateCriteria(Restriction restriction) throws UnifyException {
         StringBuilder sql = new StringBuilder();
-        translateCriteria(sql, null, criteria);
+        translateCriteria(sql, null, restriction);
         return sql.toString();
     }
 
@@ -1478,17 +1468,17 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
 
         if (!query.isEmptyCriteria()) {
-            Restriction criteria = query.getRestrictions();
-            SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(criteria.getType());
+            Restriction restriction = query.getRestrictions();
+            SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(restriction.getType());
             StringBuilder critSql = new StringBuilder();
-            sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo, criteria);
+            sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo, restriction);
             sql.append(" WHERE ");
             sql.append(critSql);
             if (query.isMinMax()) {
                 sql.append(" AND ");
                 critSql = new StringBuilder();
                 sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo,
-                        criteria);
+                        restriction);
                 appendMinMax(sql, sqlEntityInfo, query, critSql);
             }
             isAppend = true;
@@ -1771,16 +1761,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return appendLimitOffsetInfixClause(sql, query.getOffset(), getQueryLimit(query));
     }
 
-    private String getTableNativeAlias(Map<String, String> aliases, String tableName) {
-        String alias = aliases.get(tableName);
-        if (alias == null) {
-            alias = "T" + (aliases.size() + 1);
-            aliases.put(tableName, alias);
-        }
-
-        return alias;
-    }
-
     private String getTableName(NativeQuery query, String tableName) {
         if (query.getSchemaName() != null) {
             return query.getSchemaName() + '.' + tableName;
@@ -1829,9 +1809,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return updateParams.toString();
     }
 
-    private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction criteria)
+    private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        sqlCriteriaPolicies.get(criteria.getType()).translate(sql, sqlEntityInfo, criteria);
+        sqlCriteriaPolicies.get(restriction.getType()).translate(sql, sqlEntityInfo, restriction);
     }
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,
