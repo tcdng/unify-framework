@@ -75,7 +75,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 }
 
                 JRDesignElement jRDesignElement =
-                        this.newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
+                        newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
                 jRDesignElement.setX(reportWidth);
                 jRDesignElement.setY(2);
                 reportWidth += jRDesignElement.getWidth();

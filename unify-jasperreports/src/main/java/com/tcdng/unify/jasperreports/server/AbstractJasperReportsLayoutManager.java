@@ -50,7 +50,6 @@ import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.util.ReflectUtils;
-import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Abstract jasper report layout manager that provides methods for easy
@@ -99,7 +98,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             jasperDesign.addStyle(columnStyles.getNormalStyle());
             jasperDesign.addStyle(columnStyles.getBoldStyle());
 
-            boolean isQuery = !StringUtils.isBlank(report.getQuery());
+            boolean isQuery = !report.isBeanCollection();
             for (ReportColumn reportColumn : report.getColumns()) {
                 jasperDesign.addField(newJRDesignField(reportColumn, isQuery));
             }
