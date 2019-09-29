@@ -76,7 +76,7 @@ public interface ParameterService extends BusinessService {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Input> fetchInputList(String paramTypeName) throws UnifyException;
+    List<Input<?>> fetchInputList(String paramTypeName) throws UnifyException;
 
     /**
      * Finds normalized parameter inputs

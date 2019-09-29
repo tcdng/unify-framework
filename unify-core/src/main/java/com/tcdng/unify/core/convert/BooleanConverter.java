@@ -19,7 +19,7 @@ import com.tcdng.unify.core.format.Formatter;
 
 /**
  * A value to boolean converter. Converts, non-case sensitively, strings "y",
- * "on", "true", and "yes" to Boolean.TRUE.
+ * "on", "true", and "yes" to ByteArrayInput.TRUE.
  * 
  * @author Lateef Ojulari
  * @since 1.0
