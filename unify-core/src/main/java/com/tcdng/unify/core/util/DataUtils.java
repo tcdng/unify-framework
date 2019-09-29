@@ -76,7 +76,15 @@ import com.tcdng.unify.core.convert.UploadedFileConverter;
 import com.tcdng.unify.core.data.Input;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.data.UploadedFile;
+import com.tcdng.unify.core.format.DateTimeFormatter;
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.input.BigDecimalInput;
+import com.tcdng.unify.core.input.BooleanInput;
+import com.tcdng.unify.core.input.ByteArrayInput;
+import com.tcdng.unify.core.input.DateInput;
+import com.tcdng.unify.core.input.IntegerInput;
+import com.tcdng.unify.core.input.LongInput;
+import com.tcdng.unify.core.input.StringInput;
 import com.tcdng.unify.core.list.ZeroParams;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.json.JsonBigDecimalArrayConverter;
@@ -122,6 +130,8 @@ public final class DataUtils {
 
     private static final Map<Class<?>, DataType> classToDataTypeMap;
 
+    private static DateTimeFormatter defaultDateTimeFormatter;
+    
     static {
         Map<Class<?>, DataType> map = new HashMap<Class<?>, DataType>();
         map.put(byte[].class, DataType.BLOB);
@@ -206,6 +216,35 @@ public final class DataUtils {
         map.put(UploadedFile.class, new UploadedFileConverter());
         map.put(Class.class, new ClassConverter());
         classToConverterMap = Collections.unmodifiableMap(map);
+    }
+
+    private static final Map<Class<?>, Class<? extends Input>> classToInputMap;
+
+    static {
+        Map<Class<?>, Class<? extends Input>> map = new HashMap<Class<?>, Class<? extends Input>>();
+        map.put(boolean.class, BooleanInput.class);
+        map.put(Boolean.class, BooleanInput.class);
+        //TODO
+//        map.put(byte.class, new ByteConverter());
+//        map.put(Byte.class, new ByteConverter());
+        map.put(byte[].class, ByteArrayInput.class);
+//        map.put(char.class, new CharacterConverter());
+//        map.put(Character.class, new CharacterConverter());
+//        map.put(short.class, new ShortConverter());
+//        map.put(Short.class, new ShortConverter());
+        map.put(int.class, IntegerInput.class);
+        map.put(Integer.class, IntegerInput.class);
+        map.put(long.class, LongInput.class);
+        map.put(Long.class, LongInput.class);
+//        map.put(float.class, new FloatConverter());
+//        map.put(Float.class, new FloatConverter());
+//        map.put(double.class, new DoubleConverter());
+//        map.put(Double.class, new DoubleConverter());
+        map.put(BigDecimal.class, BigDecimalInput.class);
+        map.put(Date.class, DateInput.class);
+//        map.put(Money.class, new MoneyConverter());
+        map.put(String.class, StringInput.class);
+        classToInputMap = Collections.unmodifiableMap(map);
     }
 
     private static final Map<Class<?>, Object> classToNullMap;
@@ -306,6 +345,14 @@ public final class DataUtils {
 
     }
 
+    public static void registerDefaultFormatters(DateTimeFormatter defaultDateTimeFormatter) {
+        DataUtils.defaultDateTimeFormatter = defaultDateTimeFormatter;
+    }
+    
+    public static DateTimeFormatter getDefaultDateTimeFormatter() {
+        return DataUtils.defaultDateTimeFormatter;
+    }
+    
     /**
      * Checks if two objects are equal.
      * 
@@ -505,6 +552,14 @@ public final class DataUtils {
 
     public static <T> T getBeanProperty(Class<T> targetClazz, Object bean, String propertyName) throws UnifyException {
         return DataUtils.convert(targetClazz, ReflectUtils.getBeanProperty(bean, propertyName), null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Input<T> newInput(Class<T> type, String name, String description, String editor, boolean mandatory) throws UnifyException {
+        Class<? extends Input> inputClass = classToInputMap.get(type);
+        return (Input<T>) ReflectUtils.newInstance(inputClass,
+                new Class<?>[] { String.class, String.class, String.class, boolean.class }, name, description, editor,
+                mandatory);
     }
 
     @SuppressWarnings("unchecked")
@@ -881,21 +936,6 @@ public final class DataUtils {
                 return -1;
             return -value1.compareTo(value2);
         }
-    }
-
-    /**
-     * Returns input holder values by name.
-     * 
-     * @param parameterList
-     *            the parameter holder list
-     * @return map of values by name
-     */
-    public static Map<String, Object> getInputHolderNameValueMap(List<Input> parameterList) throws UnifyException {
-        Map<String, Object> result = new HashMap<String, Object>();
-        for (Input parameterHolder : parameterList) {
-            result.put(parameterHolder.getName(), parameterHolder.getTypeValue());
-        }
-        return result;
     }
 
     /**

@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.Control;
 @Component("ui-multidynamic")
 @UplAttributes({ @UplAttribute(name = "isRequiredSymbol", type = String.class, defaultVal = "*"),
         @UplAttribute(name = "captionSuffix", type = String.class, defaultVal = ":") })
-public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.ValueStore, Input> {
+public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.ValueStore, Input<?>> {
 
     private DynamicField valueCtrl;
 
@@ -69,12 +69,12 @@ public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.Val
 
     @SuppressWarnings("unchecked")
     @Override
-    protected List<Input> getItemList() throws UnifyException {
-        return (List<Input>) getValue();
+    protected List<Input<?>> getItemList() throws UnifyException {
+        return (List<Input<?>>) getValue();
     }
 
     @Override
-    protected ValueStore newValue(Input item, int index) throws UnifyException {
+    protected ValueStore newValue(Input<?> item, int index) throws UnifyException {
         return new ValueStore(createValueStore(item, index), item.getDescription(), item.isMandatory());
     }
 

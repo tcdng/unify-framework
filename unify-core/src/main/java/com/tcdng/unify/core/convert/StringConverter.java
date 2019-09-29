@@ -16,11 +16,13 @@
 package com.tcdng.unify.core.convert;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A value to string converter.
@@ -76,7 +78,13 @@ public class StringConverter extends AbstractConverter<String> {
             }
 
             if (formatter == null) {
-                return String.valueOf(value);
+                if (value instanceof Date) {
+                    formatter = DataUtils.getDefaultDateTimeFormatter();
+                }
+                
+                if (formatter == null) {
+                    return String.valueOf(value);
+                }
             }
 
             return ((Formatter<Object>) formatter).format(value);

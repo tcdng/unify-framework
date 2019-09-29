@@ -241,11 +241,11 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     }
 
     protected JRDesignExpression newNotNullJRDesignExpression(ReportColumn reportColumn) {
-        return newJRDesignExpression("new Boolean($F{" + reportColumn.getName() + "} != null)");
+        return newJRDesignExpression("new ByteArrayInput($F{" + reportColumn.getName() + "} != null)");
     }
 
     protected JRDesignExpression getOnOddJRDesignExpression() {
-        return newJRDesignExpression("new Boolean($V{PAGE_COUNT}.intValue() % 2 > 0)");
+        return newJRDesignExpression("new ByteArrayInput($V{PAGE_COUNT}.intValue() % 2 > 0)");
     }
 
     protected JRDesignExpression newJRDesignExpression(String expression) {

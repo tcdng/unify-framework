@@ -57,6 +57,7 @@ import com.tcdng.unify.core.business.internal.ProxyBusinessServiceGenerator;
 import com.tcdng.unify.core.constant.AnnotationConstants;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.LocaleFactoryMaps;
+import com.tcdng.unify.core.format.DateTimeFormatter;
 import com.tcdng.unify.core.logging.AbstractLog4jLogger;
 import com.tcdng.unify.core.logging.DummyEventLogger;
 import com.tcdng.unify.core.logging.Logger;
@@ -166,6 +167,10 @@ public class UnifyContainer {
     private String accessKey;
 
     private Date startTime;
+    
+    private Locale applicationLocale;
+    
+    private TimeZone applicationTimeZone;
 
     private boolean toConsole;
 
@@ -275,9 +280,6 @@ public class UnifyContainer {
             toConsole = Boolean.valueOf(
                     String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE)));
         }
-
-        // Initialize utilities
-        ImageUtils.scanForPlugins();
         
         // Banner
         List<String> banner = getApplicationBanner();
@@ -479,6 +481,10 @@ public class UnifyContainer {
         clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
         userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
 
+        // Initialize utilities
+        ImageUtils.scanForPlugins();
+        DataUtils.registerDefaultFormatters((DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
+        
         // Run application startup service
         toConsole("Initializing application bootup service...");
         String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
@@ -1412,21 +1418,29 @@ public class UnifyContainer {
     }
 
     public Locale getApplicationLocale() throws UnifyException {
-        String languageTag = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOCALE);
-        if (!StringUtils.isBlank(languageTag)) {
-            return Locale.forLanguageTag(languageTag);
+        if (applicationLocale == null) {
+            String languageTag = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOCALE);
+            if (!StringUtils.isBlank(languageTag)) {
+                applicationLocale = Locale.forLanguageTag(languageTag);
+            } else {
+                applicationLocale = Locale.getDefault();
+            }
         }
-
-        return Locale.getDefault();
+        
+        return applicationLocale;
     }
 
     public TimeZone getApplicationTimeZone() throws UnifyException {
-        String timeZone = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TIMEZONE);
-        if (!StringUtils.isBlank(timeZone)) {
-            return TimeZone.getTimeZone(timeZone);
+        if(applicationTimeZone == null) {
+            String timeZone = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TIMEZONE);
+            if (!StringUtils.isBlank(timeZone)) {
+                applicationTimeZone = TimeZone.getTimeZone(timeZone);
+            } else {
+                applicationTimeZone = TimeZone.getDefault();
+            }
         }
-
-        return TimeZone.getDefault();
+        
+        return applicationTimeZone;
     }
 
     private void checkStarted() throws UnifyException {
