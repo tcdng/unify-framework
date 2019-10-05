@@ -38,8 +38,8 @@ public abstract class AbstractCompoundRestrictionBuilder {
         return this;
     }
 
-    public AbstractCompoundRestrictionBuilder equal(String propertyName, Object value) {
-        getCompoundRestriction().add(new Equal(propertyName, value));
+    public AbstractCompoundRestrictionBuilder equals(String propertyName, Object value) {
+        getCompoundRestriction().add(new Equals(propertyName, value));
         return this;
     }
 

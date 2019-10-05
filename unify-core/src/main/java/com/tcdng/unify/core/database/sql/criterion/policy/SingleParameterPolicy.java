@@ -35,45 +35,41 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-    public SingleParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+    public SingleParameterPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
         super(opSql, sqlDataSourceDialect);
     }
 
-    protected Object adjustValue(Object value) {
-        return value;
-    }
-
     @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
+            throws UnifyException {
         SingleValueRestriction svc = (SingleValueRestriction) restriction;
         String columnName = svc.getPropertyName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(svc.getPropertyName()).getPreferredColumnName();
         }
-        translate(sql, sqlEntityInfo.getTableAlias(), columnName, svc.getValue(), null);
-    }
 
-    @Override
-    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-            throws UnifyException {
-        sql.append(tableName).append('.').append(columnName).append(opSql)
-                .append(getSqlStringValue(adjustValue(param1)));
+        translate(sql, sqlEntityInfo.getTableAlias(), columnName, svc.getValue(), null);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction restriction) throws UnifyException {
+    public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         SingleValueRestriction svc = (SingleValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getPropertyName());
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
         if (sqlFieldInfo.isTransformed()) {
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                    adjustValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
-                            .forwardTransform(svc.getValue()))));
+            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), resolveParam(
+                    ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(svc.getValue()))));
         } else {
-            Object postOp = convertType(sqlFieldInfo, adjustValue(svc.getValue()));
+            Object postOp = convertType(sqlFieldInfo, resolveParam(svc.getValue()));
             parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
         }
+    }
+
+    @Override
+    protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlStringValue(param1));
     }
 }

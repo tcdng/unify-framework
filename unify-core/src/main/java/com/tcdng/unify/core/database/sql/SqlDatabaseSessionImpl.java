@@ -42,6 +42,7 @@ import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Implementation of an SQL database session.

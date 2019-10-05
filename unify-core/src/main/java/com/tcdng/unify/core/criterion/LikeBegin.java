@@ -29,7 +29,7 @@ public class LikeBegin extends AbstractSingleValueRestriction {
 
     @Override
     public RestrictionType getType() {
-        return RestrictionType.BEGIN_WITH;
+        return RestrictionType.BEGINS_WITH;
     }
 }
 

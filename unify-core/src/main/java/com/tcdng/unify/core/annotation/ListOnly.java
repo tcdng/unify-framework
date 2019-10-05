@@ -37,9 +37,12 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 public @interface ListOnly {
 
     /** The name of the foreign key field */
-    String key();
+    String key() default AnnotationConstants.NONE;
 
-    /** The property of the foreign entity the view-only field binds to */
+    /**
+     * The property of the foreign entity the list-only field binds to. Should have
+     * a table alias when used in view definitions
+     */
     String property();
 
     /**
@@ -47,10 +50,4 @@ public @interface ListOnly {
      * the field name.
      */
     String name() default AnnotationConstants.NONE;
-
-    /**
-     * The table alias of property. Used with the managed view annotated entity
-     * types
-     */
-    String tableAlias() default AnnotationConstants.NONE;
 }

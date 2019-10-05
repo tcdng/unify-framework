@@ -31,8 +31,8 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
-import com.tcdng.unify.core.database.sql.SqlUtils;
 import com.tcdng.unify.core.util.CalendarUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Database callable tests.

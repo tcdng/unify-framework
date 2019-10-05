@@ -36,7 +36,7 @@ import com.tcdng.unify.core.database.sql.SqlTableNativeAliasGenerator;
  */
 public abstract class CompoundPolicy extends AbstractSqlCriteriaPolicy {
 
-    public CompoundPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+    public CompoundPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
         super(opSql, sqlDataSourceDialect);
     }
 
@@ -69,38 +69,10 @@ public abstract class CompoundPolicy extends AbstractSqlCriteriaPolicy {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-            throws UnifyException {
-        SqlTableNativeAliasGenerator aliasGenerator = (SqlTableNativeAliasGenerator) param1;
-        List<NativeQuery.Filter> subFilterList = (List<NativeQuery.Filter>) param2;
-        if (subFilterList != null && !subFilterList.isEmpty()) {
-            int size = subFilterList.size();
-            boolean useBrackets = size > 1;
-            if (useBrackets) {
-                sql.append("(");
-            }
-
-            int i = 0;
-            NativeQuery.Filter subFilter = subFilterList.get(i++);
-            translate(sql, aliasGenerator, subFilter);
-            while (i < size) {
-                sql.append(opSql);
-                subFilter = subFilterList.get(i++);
-                translate(sql, aliasGenerator, subFilter);
-            }
-
-            if (useBrackets) {
-                sql.append(")");
-            }
-        }
-    }
-
-    @Override
-    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction restrictiond) throws UnifyException {
-        CompoundRestriction cc = (CompoundRestriction) restrictiond;
+    public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+        CompoundRestriction cc = (CompoundRestriction) restriction;
         List<Restriction> restrictionList = cc.getRestrictionList();
         if (restrictionList != null && !restrictionList.isEmpty()) {
             int size = restrictionList.size();
@@ -119,6 +91,34 @@ public abstract class CompoundPolicy extends AbstractSqlCriteriaPolicy {
                 sqlCriteriaPolicy = getOperatorPolicy(subRestriction);
                 sqlCriteriaPolicy.generatePreparedStatementCriteria(sql, parameterInfoList, sqlEntityInfo,
                         subRestriction);
+            }
+
+            if (useBrackets) {
+                sql.append(")");
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        SqlTableNativeAliasGenerator aliasGenerator = (SqlTableNativeAliasGenerator) param1;
+        List<NativeQuery.Filter> subFilterList = (List<NativeQuery.Filter>) param2;
+        if (subFilterList != null && !subFilterList.isEmpty()) {
+            int size = subFilterList.size();
+            boolean useBrackets = size > 1;
+            if (useBrackets) {
+                sql.append("(");
+            }
+
+            int i = 0;
+            NativeQuery.Filter subFilter = subFilterList.get(i++);
+            translate(sql, aliasGenerator, subFilter);
+            while (i < size) {
+                sql.append(opSql);
+                subFilter = subFilterList.get(i++);
+                translate(sql, aliasGenerator, subFilter);
             }
 
             if (useBrackets) {

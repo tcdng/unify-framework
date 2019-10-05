@@ -35,33 +35,26 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-    public DoubleParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+    public DoubleParameterPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
         super(opSql, sqlDataSourceDialect);
     }
 
     @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
+            throws UnifyException {
         DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
         String columnName = dvc.getPropertyName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(dvc.getPropertyName()).getPreferredColumnName();
         }
-        translate(sql, sqlEntityInfo.getTableAlias(), columnName, dvc.getFirstValue(), dvc.getSecondValue());
-    }
 
-    @Override
-    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-            throws UnifyException {
-        sql.append("(");
-        sql.append(tableName).append('.').append(columnName).append(opSql).append(getSqlStringValue(param1))
-                .append(" AND ").append(getSqlStringValue(param2));
-        sql.append(")");
+        translate(sql, sqlEntityInfo.getTableAlias(), columnName, dvc.getFirstValue(), dvc.getSecondValue());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction restriction) throws UnifyException {
+    public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(dvc.getPropertyName());
         sql.append("(");
@@ -79,5 +72,14 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
             parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), value1));
             parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), value2));
         }
+    }
+
+    @Override
+    protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        sql.append("(");
+        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlStringValue(param1))
+                .append(" AND ").append(getNativeSqlStringValue(param2));
+        sql.append(")");
     }
 }

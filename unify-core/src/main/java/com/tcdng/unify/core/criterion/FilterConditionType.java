@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("filterconditiontypelist")
 public enum FilterConditionType implements EnumConst {
 
-    EQUALS("EQ", RestrictionType.EQUAL),
+    EQUALS("EQ", RestrictionType.EQUALS),
     NOT_EQUAL("NEQ", RestrictionType.NOT_EQUAL),
     GREATER("GT", RestrictionType.GREATER),
     GREATER_OR_EQUAL("GTE", RestrictionType.GREATER_OR_EQUAL),
@@ -36,8 +36,8 @@ public enum FilterConditionType implements EnumConst {
     LESS_OR_EQUAL("LTE", RestrictionType.LESS_OR_EQUAL),
     BETWEEN("BT", RestrictionType.BETWEEN),
     NOT_BETWEEN("NBT", RestrictionType.NOT_BETWEEN),
-    BEGIN_WITH("BW", RestrictionType.BEGIN_WITH),
-    END_WITH("EW", RestrictionType.END_WITH),
+    BEGIN_WITH("BW", RestrictionType.BEGINS_WITH),
+    END_WITH("EW", RestrictionType.ENDS_WITH),
     LIKE("LK", RestrictionType.LIKE),
     NOT_BEGIN_WITH("NBW", RestrictionType.NOT_BEGIN_WITH),
     NOT_END_WITH("NEW", RestrictionType.NOT_END_WITH),

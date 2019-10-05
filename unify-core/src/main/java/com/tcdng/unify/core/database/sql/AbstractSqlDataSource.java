@@ -35,6 +35,7 @@ import com.tcdng.unify.core.data.AbstractPool;
 import com.tcdng.unify.core.database.AbstractDataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.security.Authentication;
+import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Abstract SQL data source.

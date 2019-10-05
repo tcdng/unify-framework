@@ -34,12 +34,13 @@ import com.tcdng.unify.core.database.sql.SqlParameter;
  */
 public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-    public ZeroParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect) {
+    public ZeroParameterPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
         super(opSql, sqlDataSourceDialect);
     }
 
     @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
+            throws UnifyException {
         NoValueRestriction nvc = (NoValueRestriction) restriction;
         String columnName = nvc.getPropertyName();
         if (sqlEntityInfo != null) {
@@ -49,20 +50,20 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
     }
 
     @Override
-    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-            throws UnifyException {
-        sql.append("(");
-        sql.append(tableName).append('.').append(columnName).append(opSql);
-        sql.append(")");
-    }
-
-    @Override
-    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction restriction) throws UnifyException {
+    public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         NoValueRestriction nvc = (NoValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(nvc.getPropertyName());
         sql.append("(");
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);
+        sql.append(")");
+    }
+
+    @Override
+    protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        sql.append("(");
+        sql.append(tableName).append('.').append(columnName).append(opSql);
         sql.append(")");
     }
 

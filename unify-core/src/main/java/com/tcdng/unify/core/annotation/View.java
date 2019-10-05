@@ -46,13 +46,13 @@ public @interface View {
     String schema() default AnnotationConstants.NONE;
 
     /** The name of the view. */
-    String name();
+    String name() default AnnotationConstants.NONE;
 
-    /** The primary base table reference */
-    TableRef baseTable();
+    /** The primary base table alias */
+    String primaryAlias();
 
-    /** More base table references that form the view */
-    TableRef[] moreBaseTables() default {};
+    /** Base table references that form the view */
+    TableRef[] tables();
 
     /** View restrictions */
     ViewRestriction[] restrictions() default {};

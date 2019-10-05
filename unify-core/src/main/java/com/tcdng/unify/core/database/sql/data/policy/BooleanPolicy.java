@@ -21,7 +21,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 
 import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
-import com.tcdng.unify.core.database.sql.SqlUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Boolean data type SQL policy.
