@@ -444,7 +444,7 @@ z-index:400;}
 .ui-date {width: 160px;}
 .ui-date .dborder {border: solid 1px #A0A0A0; background-color: #FFF;}
 .ui-date .cnav {}
-.ui-date .cdisplay {width: calc(100% - 100px); height: 15px; margin: 2px; text-align: center; font-size: 8pt;}
+.ui-date .cdisplay {width: calc(100% - 100px); width: -webkit-calc(100% - 100px); height: 15px; margin: 2px; text-align: center; font-size: 8pt;}
 .ui-date .ccontent {padding:4px;}
 .ui-date .ccontent td{padding:0px !important;border:0px !important;}
 .ui-date .ccontrol {height: 30px; text-align: center; padding: 4px 5px;}
@@ -694,8 +694,8 @@ z-index:400;}
 .ui-table .thframe {border-collapse: collapse; background-color: #ECECEC; vertical-align: middle;}
 .ui-table .thead {border: 0px; border-collapse: collapse; background-color: #ECECEC; vertical-align: middle;}
 .ui-table .thead th {border-right: 1px solid #A9A9A9; padding: 2px; font-weight: normal;}
-.ui-table .theadtitle {display:inline-block !important; width:calc(70%); vertical-align:middle;}
-.ui-table .theadwdg {display:inline-block !important; width:calc(24%); vertical-align:middle; text-align:right;}
+.ui-table .theadtitle {display:inline-block !important; width:70%; vertical-align:middle;}
+.ui-table .theadwdg {display:inline-block !important; width:24%; vertical-align:middle; text-align:right;}
 .ui-table .theadellipsis {white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .ui-table .tbody {height:100%;padding: 0px; border: 0px;overflow:scroll;}
 .ui-table .ttable {padding: 3px; border: 1px solid #A9A9A9; border-collapse: collapse;
