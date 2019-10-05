@@ -13,44 +13,43 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.annotation;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 import com.tcdng.unify.core.constant.AnnotationConstants;
+import com.tcdng.unify.core.criterion.RestrictionType;
 
 /**
- * Annotation for marking a field as a view-only property. A view-only property
- * is a read-only property that binds to a foreign property usually through a
- * view.
+ * Defines a view restriction.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Documented
-@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ListOnly {
+public @interface ViewRestriction {
 
-    /** The name of the foreign key field */
-    String key();
-
-    /** The property of the foreign entity the view-only field binds to */
-    String property();
+    /** The restriction type */
+    RestrictionType type();
 
     /**
-     * The field column name. If not set, the system generates a column name using
-     * the field name.
+     * The property of left table in restriction operation.
+     * Expected format is [Table Alias].[propertyName]. Example: T1.id
      */
-    String name() default AnnotationConstants.NONE;
+    String leftProperty();
 
     /**
-     * The table alias of property. Used with the managed view annotated entity
-     * types
+     * Optional property of right table in restriction operation.
+     * Expected format is [Table Alias].[propertyName]. Example: T2.id
      */
-    String tableAlias() default AnnotationConstants.NONE;
+    String rightProperty() default AnnotationConstants.NONE;
+
+    /**
+     * Optional operand values.
+     */
+    String[] values() default {};
 }
