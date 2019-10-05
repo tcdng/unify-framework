@@ -230,7 +230,6 @@ public final class DataUtils {
         Map<Class<?>, Class<? extends Input>> map = new HashMap<Class<?>, Class<? extends Input>>();
         map.put(boolean.class, BooleanInput.class);
         map.put(Boolean.class, BooleanInput.class);
-        //TODO
         map.put(byte.class, ByteInput.class);
         map.put(Byte.class, ByteInput.class);
         map.put(byte[].class, ByteArrayInput.class);

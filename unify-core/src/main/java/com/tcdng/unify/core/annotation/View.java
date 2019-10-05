@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.annotation;
 
 import java.lang.annotation.Documented;
@@ -21,36 +22,38 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.constant.AnnotationConstants;
 
 /**
- * Annotation for marking a field as a view-only property. A view-only property
- * is a read-only property that binds to a foreign property usually through a
- * view.
+ * Annotation for defining a managed view.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Documented
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ListOnly {
-
-    /** The name of the foreign key field */
-    String key();
-
-    /** The property of the foreign entity the view-only field binds to */
-    String property();
+public @interface View {
 
     /**
-     * The field column name. If not set, the system generates a column name using
-     * the field name.
+     * The application data source that view belongs to. Defaults to
+     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
      */
-    String name() default AnnotationConstants.NONE;
+    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 
-    /**
-     * The table alias of property. Used with the managed view annotated entity
-     * types
-     */
-    String tableAlias() default AnnotationConstants.NONE;
+    /** Optional name of schema that view belongs to. */
+    String schema() default AnnotationConstants.NONE;
+
+    /** The name of the view. */
+    String name();
+
+    /** The primary base table reference */
+    TableRef baseTable();
+
+    /** More base table references that form the view */
+    TableRef[] moreBaseTables() default {};
+
+    /** View restrictions */
+    ViewRestriction[] restrictions() default {};
 }
