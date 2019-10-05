@@ -20,12 +20,12 @@ import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
- * ByteArrayInput type constants.
+ * Boolean type constants.
  * 
  * @author Lateef Ojulari
  * @version 1.0
  */
-@Tooling(description = "ByteArrayInput")
+@Tooling(description = "Boolean")
 @StaticList("booleanlist")
 public enum BooleanType implements EnumConst {
 

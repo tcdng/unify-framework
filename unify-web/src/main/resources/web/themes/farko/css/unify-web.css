@@ -381,9 +381,9 @@ z-index:400;}
 /** Popup Text Field */
 .ui-text-popup {position:relative}
 .ui-text-popup .tpbutton {width:24px; height:28px; padding:6px 4px; background-color: #E8E8E8 !important;
-    border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
+    border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
 .ui-text-popup .tpbutton img {width:14px;height:14px;}
-.ui-text-popup .tread {padding-left:2px;}
+.ui-text-popup .tread {/*padding-left:2px;*/}
 .ui-text-popup .tnread {text-align: right; padding-right: 4px;}
 .ui-text-popup .tplbutton {height:28px; padding:6px 4px; background-color: #E8E8E8 !important; color:#484848;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
@@ -651,7 +651,7 @@ z-index:400;}
 .ui-miniselect .sslist .norm:hover {background-color: #B2B2B2; color: #FFF;}
 .ui-miniselect .sslist .sel {background-color: #5970B2; color: #FFF;}
 .ui-miniselect .tpbutton {width:16px; height:18px; padding:2px 2px; background-color: #E8E8E8 !important;
-    border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
+    border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
 .ui-miniselect .tpbutton img {width:10px;height:10px;}
 .ui-miniselect .tread {height:14px; font-size:7pt !important;}
 .ui-miniselect .tnread {text-align: right; padding-right: 2px;}
