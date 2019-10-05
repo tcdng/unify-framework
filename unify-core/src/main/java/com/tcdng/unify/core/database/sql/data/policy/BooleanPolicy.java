@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlUtils;
 
 /**
- * ByteArrayInput data type SQL policy.
+ * Boolean data type SQL policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
