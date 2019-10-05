@@ -24,7 +24,7 @@ import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.And;
 import com.tcdng.unify.core.criterion.Between;
 import com.tcdng.unify.core.criterion.CompoundRestriction;
-import com.tcdng.unify.core.criterion.Equal;
+import com.tcdng.unify.core.criterion.Equals;
 import com.tcdng.unify.core.criterion.Greater;
 import com.tcdng.unify.core.criterion.GreaterOrEqual;
 import com.tcdng.unify.core.criterion.IsNotNull;
@@ -104,7 +104,7 @@ public class Query<T extends Entity> implements Cloneable {
     }
 
     public Query<T> equals(String field, Object value) {
-        restrictions.add(new Equal(field, value));
+        restrictions.add(new Equals(field, value));
         return this;
     }
 

@@ -36,7 +36,7 @@ import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.database.sql.DynamicSqlDatabase;
 import com.tcdng.unify.core.database.sql.NameSqlDataSourceSchemaImpl;
 import com.tcdng.unify.core.database.sql.SqlDatabase;
-import com.tcdng.unify.core.database.sql.SqlUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Business service tests.

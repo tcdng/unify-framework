@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,10 +49,14 @@ import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.ResultField;
 import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TableRef;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.annotation.Version;
+import com.tcdng.unify.core.annotation.View;
+import com.tcdng.unify.core.annotation.ViewRestriction;
 import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
 import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.data.CycleDetector;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
@@ -63,6 +68,7 @@ import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -95,7 +101,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     public SqlEntityInfoFactoryImpl() {
         sqlEntityInfoMap = new FactoryMap<Class<?>, SqlEntityInfo>() {
 
-            @SuppressWarnings("unchecked")
             @Override
             protected SqlEntityInfo create(Class<?> entityClass, Object... params) throws Exception {
                 EntityCycleDetector entityCycleDetector = null;
@@ -110,46 +115,71 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             cycle.toString());
                 }
 
+                // Enumerations
                 if (EnumConst.class.isAssignableFrom(entityClass)) {
-                    String tableName =
-                            ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
-
-                    String preferredTableName = sqlDataSourceDialect.getPreferredName(tableName);
-                    String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
-                            ApplicationComponents.APPLICATION_DATASOURCE).getSettings().getSettingValue("appSchema");
-                    String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
-
-                    SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
-                    Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
-                    GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "code");
-                    SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
-                            ColumnType.STRING, null, null, null, "code", "REF_CD",
-                            sqlDataSourceDialect.getPreferredName("REF_CD"), null, true, false, false, null,
-                            sqlFieldDimensions, false, null, ReflectUtils.getField(StaticReference.class, "code"),
-                            getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
-
-                    sqlFieldDimensions = new SqlFieldDimensions(StaticReference.DESCRIPTION_LENGTH, -1, -1);
-                    getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "description");
-                    SqlFieldInfo descFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.COLUMN_POSITION,
-                            ColumnType.STRING, null, null, null, "description", "REF_DESC",
-                            sqlDataSourceDialect.getPreferredName("REF_DESC"), null, false, false, false, null,
-                            sqlFieldDimensions, false, null,
-                            ReflectUtils.getField(StaticReference.class, "description"), getterSetterInfo.getGetter(),
-                            getterSetterInfo.getSetter());
-
-                    propertyInfoMap.put(idFieldInfo.getName(), idFieldInfo);
-                    propertyInfoMap.put(descFieldInfo.getName(), descFieldInfo);
-
-                    String tableAlias = "R" + (++rAliasCounter);
-                    return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass,
-                            null, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
-                            preferredTableName, schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null,
-                            null, null);
+                    return createEnumConstEntityInfo(entityClass);
                 }
 
-                ReflectUtils.assertAnnotation(entityClass, Table.class);
                 Table ta = entityClass.getAnnotation(Table.class);
+                View va = entityClass.getAnnotation(View.class);
+                if (ta != null && va != null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_TABLE_VIEW_ANNOTATION_COMBO,
+                            entityClass);
+                }
 
+                if (ta == null && va == null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_TABLE_OR_VIEW_ANNOTATION, entityClass);
+                }
+
+                // Tables
+                if (ta != null) {
+                    return createTableEntityInfo(entityClass, entityCycleDetector);
+                }
+
+                // Views
+                return createViewEntityInfo(entityClass, entityCycleDetector);
+            }
+
+            @SuppressWarnings("unchecked")
+            private SqlEntityInfo createEnumConstEntityInfo(Class<?> entityClass) throws Exception {
+                String tableName =
+                        ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
+
+                String preferredTableName = sqlDataSourceDialect.getPreferredName(tableName);
+                String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
+                        ApplicationComponents.APPLICATION_DATASOURCE).getSettings().getSettingValue("appSchema");
+                String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
+
+                SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
+                Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
+                GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "code");
+                SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
+                        ColumnType.STRING, null, null, null, "code", "REF_CD",
+                        sqlDataSourceDialect.getPreferredName("REF_CD"), null, true, false, false, null,
+                        sqlFieldDimensions, false, null, ReflectUtils.getField(StaticReference.class, "code"),
+                        getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+
+                sqlFieldDimensions = new SqlFieldDimensions(StaticReference.DESCRIPTION_LENGTH, -1, -1);
+                getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "description");
+                SqlFieldInfo descFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.COLUMN_POSITION,
+                        ColumnType.STRING, null, null, null, "description", "REF_DESC",
+                        sqlDataSourceDialect.getPreferredName("REF_DESC"), null, false, false, false, null,
+                        sqlFieldDimensions, false, null, ReflectUtils.getField(StaticReference.class, "description"),
+                        getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+
+                propertyInfoMap.put(idFieldInfo.getName(), idFieldInfo);
+                propertyInfoMap.put(descFieldInfo.getName(), descFieldInfo);
+
+                String tableAlias = "R" + (++rAliasCounter);
+                return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
+                        tableName, preferredTableName, schemaTableName, tableAlias, tableName, preferredTableName,
+                        schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null, null, null, null);
+            }
+
+            @SuppressWarnings("unchecked")
+            private SqlEntityInfo createTableEntityInfo(Class<?> entityClass, EntityCycleDetector entityCycleDetector)
+                    throws Exception {
+                Table ta = entityClass.getAnnotation(Table.class);
                 String tableName = AnnotationUtils.getAnnotationString(ta.name());
                 if (StringUtils.isBlank(tableName)) {
                     tableName = AnnotationUtils.getAnnotationString(ta.value());
@@ -230,9 +260,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             if (column == null) {
                                 column = AnnotationUtils.getAnnotationString(ia.name());
                             }
+
                             if (column == null) {
                                 column = tableName + "_ID";
                             }
+
                             if (idFieldInfo != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_ID_ANNOTATION,
                                         searchClass, field);
@@ -637,8 +669,197 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
                         entityPolicy, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
                         preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
-                        childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null);
+                        childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null, null);
                 return sqlEntityInfo;
+            }
+
+            @SuppressWarnings("unchecked")
+            private SqlEntityInfo createViewEntityInfo(Class<?> entityClass, EntityCycleDetector entityCycleDetector)
+                    throws Exception {
+                View va = entityClass.getAnnotation(View.class);
+                String viewName = AnnotationUtils.getAnnotationString(va.name());
+                if (StringUtils.isBlank(viewName)) {
+                    viewName = VIEW_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(),
+                            sqlGenerationApplySpacing);
+                }
+
+                String preferredViewName = sqlDataSourceDialect.getPreferredName(viewName);
+
+                String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(va.schema()), va.datasource());
+                String schemaViewName = SqlUtils.generateFullSchemaElementName(schema, preferredViewName);
+
+                TableReferences tableReferences = new TableReferences(entityClass);
+
+                // Process all list-only fields including super class fields
+                Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
+                SqlFieldInfo idFieldInfo = null;
+                Class<?> searchClass = entityClass;
+                do {
+                    Field[] fields = searchClass.getDeclaredFields();
+                    for (Field field : fields) {
+                        boolean isPrimaryKey = false;
+                        Column ca = field.getAnnotation(Column.class);
+                        if (ca != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_UNSUPPORTED_ANNOTATION,
+                                    Column.class, searchClass, field.getName());
+                        }
+
+                        Version vsa = field.getAnnotation(Version.class);
+                        if (vsa != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_UNSUPPORTED_ANNOTATION,
+                                    Version.class, searchClass, field.getName());
+                        }
+
+                        ForeignKey fka = field.getAnnotation(ForeignKey.class);
+                        if (fka != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_UNSUPPORTED_ANNOTATION,
+                                    ForeignKey.class, searchClass, field.getName());
+                        }
+
+                        Child clda = field.getAnnotation(Child.class);
+                        if (clda != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_UNSUPPORTED_ANNOTATION,
+                                    Child.class, searchClass, field.getName());
+                        }
+
+                        ChildList cla = field.getAnnotation(ChildList.class);
+                        if (cla != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_UNSUPPORTED_ANNOTATION,
+                                    ChildList.class, searchClass, field.getName());
+                        }
+
+                        Id ia = field.getAnnotation(Id.class);
+                        ListOnly loa = field.getAnnotation(ListOnly.class);
+
+                        if (ia != null && loa != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
+                                    searchClass, field.getName());
+                        }
+
+                        SqlEntityInfo refEntityInfo = null;
+                        SqlFieldInfo refFieldInfo = null;
+                        if (ia != null) {
+                            isPrimaryKey = true;
+                            refEntityInfo = get(tableReferences.getEntityClass(va.primaryAlias()), entityCycleDetector);
+                            refFieldInfo = refEntityInfo.getIdFieldInfo();
+                        } else {
+                            PropertyRef propertyRef = tableReferences.getPropertyRef(loa.property());
+                            refEntityInfo = get(tableReferences.getEntityClass(propertyRef.getTableAlias()),
+                                    entityCycleDetector);
+                            // Persistent properties only
+                            refFieldInfo = refEntityInfo.getFieldInfo(propertyRef.getFieldName());
+                        }
+
+                        if (!field.getType().equals(refFieldInfo.getFieldType())) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_TYPE_MUST_MATCH_TYPE,
+                                    searchClass, field, refFieldInfo.getFieldType());
+                        }
+
+                        // Set column name
+                        String column = AnnotationUtils.getAnnotationString(loa.name());
+                        if (StringUtils.isBlank(column)) {
+                            column = SqlUtils.generateSchemaElementName(field.getName(), true);
+                        }
+
+                        SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(refFieldInfo.getLength(),
+                                refFieldInfo.getPrecision(), refFieldInfo.getScale());
+                        GetterSetterInfo getterSetterInfo =
+                                ReflectUtils.getGetterSetterInfo(searchClass, field.getName());
+                        SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
+                                refFieldInfo.getColumnType(), refEntityInfo, refFieldInfo, null, field.getName(),
+                                column, sqlDataSourceDialect.getPreferredName(column), null, false, false, false,
+                                refFieldInfo.getTransformer(), sqlFieldDimensions, false, null, field,
+                                getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+
+                        if (isPrimaryKey) {
+                            if (idFieldInfo != null) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_ID_ANNOTATION,
+                                        searchClass, field);
+                            }
+
+                            idFieldInfo = sqlFieldInfo;
+                        }
+
+                        propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
+
+                    }
+                } while ((searchClass = searchClass.getSuperclass()) != null);
+
+                // View must have an ID property
+                if (idFieldInfo == null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_REQUIRES_ID, entityClass);
+                }
+
+                // View restriction
+                List<SqlViewRestrictionInfo> viewRestrictionList = null;
+                if (va.restrictions().length > 0) {
+                    viewRestrictionList = new ArrayList<SqlViewRestrictionInfo>();
+                    for (ViewRestriction vra : va.restrictions()) {
+                        RestrictionType restrictionType = vra.type();
+                        Object param1 = null;
+                        Object param2 = null;
+                        switch (restrictionType) {
+                            case IS_NOT_NULL:
+                            case IS_NULL:
+                                // TODO
+                                break;
+                            case BEGINS_WITH:
+                            case ENDS_WITH:
+                            case EQUALS:
+                            case GREATER:
+                            case GREATER_OR_EQUAL:
+                            case LESS_OR_EQUAL:
+                            case LESS_THAN:
+                            case LIKE:
+                            case NOT_BEGIN_WITH:
+                            case NOT_END_WITH:
+                            case NOT_EQUAL:
+                            case NOT_LIKE:
+                                if (!StringUtils.isBlank(vra.rightProperty())) {
+                                    param1 = getSqlViewColumnInfo(tableReferences, entityCycleDetector,
+                                            vra.rightProperty());
+                                } else {
+                                    param1 = vra.values()[0];
+                                }
+                                break;
+                            case BETWEEN:
+                            case NOT_BETWEEN:
+                                param1 = vra.values()[0];
+                                param2 = vra.values()[1];
+                                break;
+                            case AMONGST:
+                            case NOT_AMONGST:
+                                param1 = DataUtils.convert(List.class, String.class, vra.values(), null);
+                                break;
+                            case AND:
+                            case OR:
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.RECORD_VIEW_COMPOUND_RESTRICTION_UNSUPPORTED,
+                                        entityClass);
+                            default:
+                                break;
+                        }
+
+                        SqlViewColumnInfo columnInfo =
+                                getSqlViewColumnInfo(tableReferences, entityCycleDetector, vra.leftProperty());
+                        viewRestrictionList
+                                .add(new SqlViewRestrictionInfo(columnInfo, restrictionType, param1, param2));
+                    }
+                }
+
+                SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, null,
+                        viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName, schemaViewName,
+                        idFieldInfo, null, propertyInfoMap, null, null, null, null, null, viewRestrictionList);
+                return sqlEntityInfo;
+            }
+
+            private SqlViewColumnInfo getSqlViewColumnInfo(TableReferences tableReferences,
+                    EntityCycleDetector entityCycleDetector, String property) throws UnifyException {
+                PropertyRef propertyRef = tableReferences.getPropertyRef(property);
+                SqlEntityInfo sqlEntityInfo =
+                        get(tableReferences.getEntityClass(propertyRef.getTableAlias()), entityCycleDetector);
+                String columnName = sqlEntityInfo.getFieldInfo(propertyRef.getFieldName()).getPreferredColumnName();
+                return new SqlViewColumnInfo(propertyRef.getTableAlias(), columnName);
             }
 
         };
@@ -844,5 +1065,85 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
     private class EntityCycleDetector extends CycleDetector<Class<?>> {
 
+    }
+
+    private class TableReferences {
+
+        private String primaryAlias;
+
+        private Class<?> entityClass;
+
+        private Map<String, Class<? extends Entity>> tables;
+
+        public TableReferences(Class<?> entityClass) throws UnifyException {
+            ReflectUtils.assertAnnotation(entityClass, View.class);
+            View va = entityClass.getAnnotation(View.class);
+            if (va.tables().length == 0) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_AT_LEAST_ONE_TABLE, entityClass);
+            }
+
+            this.primaryAlias = va.primaryAlias().toUpperCase();
+            this.entityClass = entityClass;
+            tables = new LinkedHashMap<String, Class<? extends Entity>>();
+            for (TableRef tableRef : va.tables()) {
+                String tableAlias = tableRef.alias().toUpperCase();
+                if (StringUtils.isBlank(tableAlias)) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_TABLE_ALIAS_BLANK, entityClass);
+                }
+
+                if (tables.containsKey(tableAlias)) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_MULTIPLE_TABLEREF_WITH_ALIAS,
+                            entityClass, tableAlias);
+                }
+
+                tables.put(tableAlias, tableRef.entity());
+            }
+
+            tables = Collections.unmodifiableMap(tables);
+        }
+
+        public Class<? extends Entity> getEntityClass(String tableAlias) throws UnifyException {
+            Class<? extends Entity> entityType = tables.get(tableAlias.toUpperCase());
+            if (entityType == null) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_UNKNOWN_TABLEREF_WITH_ALIAS, entityClass,
+                        tableAlias);
+            }
+
+            return entityType;
+        }
+
+        public PropertyRef getPropertyRef(String property) {
+            // Default assumes reference to primary table property
+            String tableAlias = primaryAlias;
+            String fieldName = property;
+
+            // Check if long name
+            String[] parts = StringUtils.dotSplit(property);
+            if (parts.length == 2) {
+                tableAlias = parts[0];
+                fieldName = parts[1];
+            }
+
+            return new PropertyRef(tableAlias, fieldName);
+        }
+    }
+
+    private class PropertyRef {
+
+        private String tableAlias;
+        private String fieldName;
+
+        public PropertyRef(String tableAlias, String fieldName) {
+            this.tableAlias = tableAlias;
+            this.fieldName = fieldName;
+        }
+
+        public String getTableAlias() {
+            return tableAlias;
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
     }
 }

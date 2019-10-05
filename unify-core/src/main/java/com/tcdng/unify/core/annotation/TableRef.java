@@ -35,6 +35,6 @@ public @interface TableRef {
     /** The entity represented by table. Entity class must be annotated with the {@link Table} annotation.*/
     Class<? extends Entity> entity();
 
-    /** The table alias used in this reference */
+    /** The table alias used in this reference. Table aliases are not case-sensitive */
     String alias();
 }

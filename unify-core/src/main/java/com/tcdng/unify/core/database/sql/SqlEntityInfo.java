@@ -90,13 +90,15 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private List<Map<String, Object>> staticValueList;
 
+    private List<SqlViewRestrictionInfo> viewRestrictionList;
+    
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
             EntityPolicy recordPolicy, String tableName, String preferredTableName, String schemaTableName,
             String tableAlias, String viewName, String preferredViewName, String schemaViewName,
             SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
-            List<Map<String, Object>> staticValueList) {
+            List<Map<String, Object>> staticValueList, List<SqlViewRestrictionInfo> viewRestrictionList) {
         this.index = index;
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
@@ -163,6 +165,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
         this.childInfoByName = DataUtils.unmodifiableMap(this.childInfoByName);
         this.staticValueList = staticValueList;
+        this.viewRestrictionList = DataUtils.unmodifiableList(viewRestrictionList);
     }
 
     @Override
@@ -293,6 +296,10 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return foreignKeyList;
     }
 
+    public List<SqlViewRestrictionInfo> getViewRestrictionList() {
+        return viewRestrictionList;
+    }
+
     public ChildFieldInfo getChildFieldInfo(String name) {
         return childInfoByName.get(name);
     }
@@ -313,6 +320,14 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return childListInfoList;
     }
 
+    public boolean isViewEntity() {
+        return fieldInfoList.isEmpty() && !listFieldInfoList.isEmpty();
+    }
+    
+    public boolean isViewRestriction() {
+        return !viewRestrictionList.isEmpty();
+    }
+    
     public boolean isManyChildList() {
         return !childListInfoList.isEmpty();
     }

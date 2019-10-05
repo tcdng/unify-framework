@@ -910,4 +910,31 @@ public interface UnifyCoreErrorConstants {
 
     /** Packable document bean configuration {0} is incompatible with bean {1}. */
     String PACKABLEDOC_INCOMPATIBLE_BEANCONFIG =  "UC_00E4";
+
+    /** Entity type illegal combination of Table and View annotation. Type = {0}. */
+    String RECORD_INVALID_TABLE_VIEW_ANNOTATION_COMBO = "UC_00E5";
+
+    /** Entity type must have a Table or View annotation. Type = {0}. */
+    String RECORD_NO_TABLE_OR_VIEW_ANNOTATION = "UC_00E6";
+
+    /** Entity type annotation {0} is unsupported for view. Type = {1}, field {2}. */
+    String RECORD_VIEW_UNSUPPORTED_ANNOTATION = "UC_00E7";
+
+    /** Entity type view annotation must refer to at least one table. Type = {0}.*/
+    String RECORD_VIEW_AT_LEAST_ONE_TABLE = "UC_00E8";
+
+    /** Entity type view annotation has at least on blank table alias. Type = {0}.*/
+    String RECORD_VIEW_TABLE_ALIAS_BLANK= "UC_00E9";
+
+    /** Entity type view annotation has multiple table references with the same alias. Type = {0}, table alias {1}.*/
+    String RECORD_VIEW_MULTIPLE_TABLEREF_WITH_ALIAS= "UC_00EA";
+
+    /** Entity type view annotation has unknown table reference with alias. Type = {0}, table alias {1}.*/
+    String RECORD_VIEW_UNKNOWN_TABLEREF_WITH_ALIAS= "UC_00EB";
+
+    /** Entity type view list-only type must match referenced property type. Type = {0}, field = {1}, referenced Type = {2}. */
+    String RECORD_VIEW_TYPE_MUST_MATCH_TYPE = "UC_00EC";
+
+    /** Entity type compound restriction not supported for view. Type = {0}*/
+    String RECORD_VIEW_COMPOUND_RESTRICTION_UNSUPPORTED = "UC_00ED";
 }

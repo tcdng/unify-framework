@@ -22,7 +22,8 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractSingleValueRestriction extends AbstractSimpleRestriction implements SingleValueRestriction {
+public abstract class AbstractSingleValueRestriction extends AbstractSimpleRestriction
+        implements SingleValueRestriction {
 
     private Object value;
 

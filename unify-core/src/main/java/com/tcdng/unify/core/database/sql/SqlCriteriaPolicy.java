@@ -70,9 +70,9 @@ public interface SqlCriteriaPolicy {
      * @param columnName
      *            the column name
      * @param param1
-     *            the primary parameter
+     *            the first parameter
      * @param param2
-     *            the secondary parameter
+     *            the second parameter
      * @throws UnifyException
      *             if an error occurs
      */

@@ -33,7 +33,7 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
-import com.tcdng.unify.core.database.sql.SqlUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**

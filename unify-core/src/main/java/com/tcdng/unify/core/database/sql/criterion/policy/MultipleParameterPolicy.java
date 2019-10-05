@@ -42,13 +42,14 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
 
     private String multOpSql;
 
-    public MultipleParameterPolicy(String opSql, final SqlDataSourceDialect sqlDataSourceDialect, String multOpSql) {
+    public MultipleParameterPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect, String multOpSql) {
         super(opSql, sqlDataSourceDialect);
         this.multOpSql = multOpSql;
     }
 
     @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
+            throws UnifyException {
         MultipleValueRestriction mvc = (MultipleValueRestriction) restriction;
         String columnName = mvc.getPropertyName();
         if (sqlEntityInfo != null) {
@@ -58,43 +59,8 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
     }
 
     @Override
-    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-            throws UnifyException {
-        Collection<? extends Object> values = (Collection<? extends Object>) param1;
-        if (values == null || values.isEmpty()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_AT_LEAST_ONE_VALUE_EXPECTED, columnName);
-        }
-
-        sql.append("(");
-        int[] blocks = DataUtils.splitToBlocks(values.size(), maximumClauseValues());
-        int i = 0;
-        int j = 0;
-        int iLen = blocks[j];
-        for (Object value : values) {
-            if (i >= iLen) {
-                sql.append(multOpSql);
-                i = 0;
-                iLen = blocks[++j];
-            }
-
-            if (i == 0) {
-                sql.append(tableName).append('.').append(columnName).append(opSql).append("(");
-            } else {
-                sql.append(", ");
-            }
-
-            sql.append(getSqlStringValue(value));
-
-            if ((++i) >= iLen) {
-                sql.append(")");
-            }
-        }
-        sql.append(")");
-    }
-
-    @Override
-    public void generatePreparedStatementCriteria(StringBuilder sql, final List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, final Restriction restriction) throws UnifyException {
+    public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
+            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         MultipleValueRestriction mvc = (MultipleValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) mvc.getPropertyName());
         Collection<Object> values = mvc.getValues();
@@ -139,6 +105,41 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
         }
         sql.append(")");
         parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), values, true));
+    }
+
+    @Override
+    protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        Collection<? extends Object> values = (Collection<? extends Object>) param1;
+        if (values == null || values.isEmpty()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_AT_LEAST_ONE_VALUE_EXPECTED, columnName);
+        }
+
+        sql.append("(");
+        int[] blocks = DataUtils.splitToBlocks(values.size(), maximumClauseValues());
+        int i = 0;
+        int j = 0;
+        int iLen = blocks[j];
+        for (Object value : values) {
+            if (i >= iLen) {
+                sql.append(multOpSql);
+                i = 0;
+                iLen = blocks[++j];
+            }
+
+            if (i == 0) {
+                sql.append(tableName).append('.').append(columnName).append(opSql).append("(");
+            } else {
+                sql.append(", ");
+            }
+
+            sql.append(getNativeSqlStringValue(value));
+
+            if ((++i) >= iLen) {
+                sql.append(")");
+            }
+        }
+        sql.append(")");
     }
 
 }

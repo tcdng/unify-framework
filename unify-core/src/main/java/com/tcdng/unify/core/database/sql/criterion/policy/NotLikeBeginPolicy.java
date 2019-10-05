@@ -30,7 +30,7 @@ public class NotLikeBeginPolicy extends NotLikePolicy {
     }
 
     @Override
-    protected Object adjustValue(Object value) {
-        return value + "%";
+    protected Object resolveParam(Object param) {
+        return param + "%";
     }
 }

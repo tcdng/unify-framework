@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 @StaticList("restrictiontypelist")
 public enum RestrictionType implements EnumConst {
-    EQUAL("EQ"),
+    EQUALS("EQ"),
     NOT_EQUAL("NEQ"),
     LESS_THAN("LT"),
     LESS_OR_EQUAL("LTE"),
@@ -39,9 +39,9 @@ public enum RestrictionType implements EnumConst {
     NOT_AMONGST("NIN"),
     LIKE("LK"),
     NOT_LIKE("NLK"),
-    BEGIN_WITH("BW"),
+    BEGINS_WITH("BW"),
     NOT_BEGIN_WITH("NBW"),
-    END_WITH("EW"),
+    ENDS_WITH("EW"),
     NOT_END_WITH("NEW"),
     IS_NULL("NL"),
     IS_NOT_NULL("NNL"),
@@ -61,7 +61,7 @@ public enum RestrictionType implements EnumConst {
 
     @Override
     public String defaultCode() {
-        return EQUAL.code;
+        return EQUALS.code;
     }
 
     public boolean isCollection() {

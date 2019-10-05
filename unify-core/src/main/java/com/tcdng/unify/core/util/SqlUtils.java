@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.util;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -32,7 +32,7 @@ import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.database.StaticReferenceQuery;
-import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.database.sql.SqlFieldDimensions;
 
 /**
  * Provides utility methods for SQL manipulation.

@@ -38,6 +38,12 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
         this.opSql = opSql;
     }
 
+    @Override
+    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        doTranslate(sql, tableName, columnName, resolveParam(param1), resolveParam(param2));
+    }
+
     /**
      * Returns the SQL criteria policy for supplied restriction.
      * 
@@ -77,7 +83,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     }
 
     /**
-     * Converts a value to its SQL string equivalent.
+     * Converts a value to its native SQL string equivalent.
      * 
      * @param value
      *            the value to convert
@@ -85,7 +91,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected String getSqlStringValue(Object value) throws UnifyException {
+    protected String getNativeSqlStringValue(Object value) throws UnifyException {
         return sqlDataSourceDialect.translateValue(value);
     }
 
@@ -114,4 +120,18 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
 
         return postOp;
     }
+
+    /**
+     * Resolves parameter.
+     * 
+     * @param param
+     *            the parameter to resolve
+     * @return the resolved parameter
+     */
+    protected Object resolveParam(Object param) {
+        return param;
+    }
+
+    protected abstract void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1,
+            Object param2) throws UnifyException;
 }

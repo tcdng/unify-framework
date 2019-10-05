@@ -89,6 +89,7 @@ import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Abstract SQL dialect implementation.
@@ -168,7 +169,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlDataTypePolicies.put(ColumnType.ENUMCONST, new EnumConstPolicy());
 
         sqlCriteriaPolicies = new HashMap<RestrictionType, SqlCriteriaPolicy>();
-        sqlCriteriaPolicies.put(RestrictionType.EQUAL, new EqualPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.EQUALS, new EqualPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.NOT_EQUAL, new NotEqualPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.LESS_THAN, new LessPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.LESS_OR_EQUAL, new LessOrEqualPolicy(this));
@@ -180,9 +181,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlCriteriaPolicies.put(RestrictionType.NOT_AMONGST, new NotAmongstPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.LIKE, new LikePolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE, new NotLikePolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.BEGIN_WITH, new LikeBeginPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.BEGINS_WITH, new LikeBeginPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.NOT_BEGIN_WITH, new NotLikeBeginPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.END_WITH, new LikeEndPolicy(this));
+        sqlCriteriaPolicies.put(RestrictionType.ENDS_WITH, new LikeEndPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.NOT_END_WITH, new NotLikeEndPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.IS_NULL, new IsNullPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.IS_NOT_NULL, new IsNotNullPolicy(this));

@@ -13,22 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.criterion;
+
+package com.tcdng.unify.core.database.sql;
 
 /**
- * Restriction for a property equal to a value.
+ * SQl view column information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Equal extends AbstractSingleValueRestriction {
+public class SqlViewColumnInfo {
 
-    public Equal(String propertyName, Object value) {
-        super(propertyName, value);
+    private String tableAlias;
+    
+    private String columnName;
+
+    public SqlViewColumnInfo(String tableAlias, String columnName) {
+        this.tableAlias = tableAlias;
+        this.columnName = columnName;
     }
 
-    @Override
-    public RestrictionType getType() {
-        return RestrictionType.EQUAL;
+    public String getTableAlias() {
+        return tableAlias;
     }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
 }

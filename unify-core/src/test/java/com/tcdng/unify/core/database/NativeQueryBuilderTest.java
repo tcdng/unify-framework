@@ -37,7 +37,7 @@ public class NativeQueryBuilderTest {
     @Test
     public void testBuildSingleCompoundFilterQuery() throws Exception {
         NativeQuery nq = NativeQuery.newBuilder().beginCompoundFilter(RestrictionType.AND)
-                .addSimpleFilter(RestrictionType.EQUAL, "TESTTBL", "TESTTBL_ID", 101L, null).endCompoundFilter()
+                .addSimpleFilter(RestrictionType.EQUALS, "TESTTBL", "TESTTBL_ID", 101L, null).endCompoundFilter()
                 .build();
         assertNotNull(nq);
 
@@ -50,7 +50,7 @@ public class NativeQueryBuilderTest {
 
         NativeQuery.Filter subFilter = subFilterList.get(0);
         assertNotNull(subFilter);
-        assertEquals(RestrictionType.EQUAL, subFilter.getOp());
+        assertEquals(RestrictionType.EQUALS, subFilter.getOp());
         assertEquals("TESTTBL", subFilter.getTableName());
         assertEquals("TESTTBL_ID", subFilter.getColumnName());
         assertEquals(101L, subFilter.getParam1());
@@ -60,11 +60,11 @@ public class NativeQueryBuilderTest {
     @Test
     public void testBuildDeepCompoundFilterQuery() throws Exception {
         NativeQuery nq = NativeQuery.newBuilder().beginCompoundFilter(RestrictionType.AND)
-                .addSimpleFilter(RestrictionType.EQUAL, "TESTTBL", "TESTTBL_ID", 101L, null)
+                .addSimpleFilter(RestrictionType.EQUALS, "TESTTBL", "TESTTBL_ID", 101L, null)
                 .addSimpleFilter(RestrictionType.BETWEEN, "TESTTBL", "AGE", 24, 46)
                 .beginCompoundFilter(RestrictionType.OR)
-                .addSimpleFilter(RestrictionType.BEGIN_WITH, "TESTTBL", "NAME", "A", null)
-                .addSimpleFilter(RestrictionType.BEGIN_WITH, "TESTTBL", "NAME", "B", null)
+                .addSimpleFilter(RestrictionType.BEGINS_WITH, "TESTTBL", "NAME", "A", null)
+                .addSimpleFilter(RestrictionType.BEGINS_WITH, "TESTTBL", "NAME", "B", null)
                 .endCompoundFilter()
                 .addSimpleFilter(RestrictionType.IS_NOT_NULL, "TESTTBL", "ADDRESS", null, null)
                 .endCompoundFilter()
@@ -80,7 +80,7 @@ public class NativeQueryBuilderTest {
 
         NativeQuery.Filter subFilter1 = subFilterList.get(0);
         assertNotNull(subFilter1);
-        assertEquals(RestrictionType.EQUAL, subFilter1.getOp());
+        assertEquals(RestrictionType.EQUALS, subFilter1.getOp());
         assertEquals("TESTTBL", subFilter1.getTableName());
         assertEquals("TESTTBL_ID", subFilter1.getColumnName());
         assertEquals(101L, subFilter1.getParam1());
@@ -104,7 +104,7 @@ public class NativeQueryBuilderTest {
         
         NativeQuery.Filter subFilter2 = subFilter1.getSubFilterList().get(0);
         assertNotNull(subFilter2);
-        assertEquals(RestrictionType.BEGIN_WITH, subFilter2.getOp());
+        assertEquals(RestrictionType.BEGINS_WITH, subFilter2.getOp());
         assertEquals("TESTTBL", subFilter2.getTableName());
         assertEquals("NAME", subFilter2.getColumnName());
         assertEquals("A", subFilter2.getParam1());
@@ -113,7 +113,7 @@ public class NativeQueryBuilderTest {
         
         subFilter2 = subFilter1.getSubFilterList().get(1);
         assertNotNull(subFilter2);
-        assertEquals(RestrictionType.BEGIN_WITH, subFilter2.getOp());
+        assertEquals(RestrictionType.BEGINS_WITH, subFilter2.getOp());
         assertEquals("TESTTBL", subFilter2.getTableName());
         assertEquals("NAME", subFilter2.getColumnName());
         assertEquals("B", subFilter2.getParam1());
@@ -132,7 +132,7 @@ public class NativeQueryBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBeginCompoundFilterBadOp() throws Exception {
-        NativeQuery.newBuilder().beginCompoundFilter(RestrictionType.EQUAL);
+        NativeQuery.newBuilder().beginCompoundFilter(RestrictionType.EQUALS);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -147,7 +147,7 @@ public class NativeQueryBuilderTest {
 
     @Test(expected = IllegalStateException.class)
     public void testAddSimpleFilterNoContext() throws Exception {
-        NativeQuery.newBuilder().addSimpleFilter(RestrictionType.EQUAL, "TESTTBL", "TESTTBL_ID", 201, null);
+        NativeQuery.newBuilder().addSimpleFilter(RestrictionType.EQUALS, "TESTTBL", "TESTTBL_ID", 201, null);
     }
 
     @Test(expected = IllegalStateException.class)
