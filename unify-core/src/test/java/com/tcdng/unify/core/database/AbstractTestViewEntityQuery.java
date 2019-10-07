@@ -13,23 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.core.database;
 
 /**
- * Restriction for a property that begins with a value.
+ * Abstract base test view entity query.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LikeBegin extends AbstractSingleValueRestriction {
+public abstract class AbstractTestViewEntityQuery<T extends AbstractTestViewEntity> extends Query<T> {
 
-    public LikeBegin(String propertyName, Object value) {
-        super(propertyName, value);
-    }
-
-    @Override
-    public RestrictionType getType() {
-        return RestrictionType.BEGINS_WITH;
+    public AbstractTestViewEntityQuery(Class<T> entityClass) {
+        super(entityClass);
     }
 }
-

@@ -31,8 +31,8 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.DataSourceManager;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -50,23 +50,6 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
     @Configurable("false")
     private boolean formatSql;
-
-    private FactoryMap<String, List<Class<?>>> datasourceEntityTypeMap;
-
-    public SqlDataSourceManagerImpl() {
-        datasourceEntityTypeMap = new FactoryMap<String, List<Class<?>>>() {
-            @Override
-            protected List<Class<?>> create(String datasource, Object... params) throws Exception {
-                SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
-                List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
-                for (Class<?> entityClass : sqlDataSource.getEntityTypes()) {
-                    logDebug("Building dependency list for entity type {0}", entityClass);
-                    buildDependencyList(sqlDataSource, entityTypeList, entityClass);
-                }
-                return entityTypeList;
-            }
-        };
-    }
 
     @Override
     public void initDataSource(String datasource) throws UnifyException {
@@ -88,18 +71,23 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     }
 
     @Override
-    public void manageDataSource(String datasource) throws UnifyException {
-        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
+    public void manageDataSource(String dataSourceName) throws UnifyException {
+        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
-            logInfo("Scanning datasource {0} schema...", datasource);
+            logInfo("Scanning datasource {0} schema...", dataSourceName);
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            for (Class<?> entityClass : datasourceEntityTypeMap.get(datasource)) {
-                logDebug("Managing schema elements for entity type {0}...", entityClass);
-                manageEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass);
+            for (Class<?> entityClass : getTableEntities(dataSourceName)) {
+                logDebug("Managing schema elements for table entity type {0}...", entityClass);
+                manageTableEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass);
+            }
+
+            for (Class<? extends Entity> entityClass : getViewEntities(dataSourceName)) {
+                logDebug("Managing schema elements for view entity type {0}...", entityClass);
+                manageViewEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass);
             }
         } catch (SQLException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, datasource);
+            throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, dataSourceName);
         } finally {
             sqlDataSource.restoreConnection(connection);
         }
@@ -115,7 +103,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
     }
 
-    private void manageEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
+    private void manageTableEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
             Class<?> entityClass) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
@@ -125,7 +113,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
         try {
             connection = databaseMetaData.getConnection();
-            // Manage table
+            // Manage entity table
             String appSchema = sqlDataSource.getAppSchema();
             List<String> tableUpdateSql = new ArrayList<String>();
             rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getTableName(), null);
@@ -176,7 +164,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
             boolean isTableNewOrAltered = !tableUpdateSql.isEmpty();
 
-            // Manage view
+            // Manage entity view
             List<String> viewUpdateSQL = new ArrayList<String>();
             if (sqlEntityInfo.isViewable()) {
                 boolean isDropView = false;
@@ -230,6 +218,104 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         } finally {
             SqlUtils.close(rs);
             SqlUtils.close(pstmt);
+        }
+    }
+
+    private void manageViewEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
+            Class<? extends Entity> entityClass) throws UnifyException {
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            connection = databaseMetaData.getConnection();
+            String appSchema = sqlDataSource.getAppSchema();
+
+            // Manage entity view
+            List<String> viewUpdateSQL = new ArrayList<String>();
+            if (sqlEntityInfo.isViewOnly()) {
+                boolean isViewNew = false;
+                boolean isDropView = false;
+                rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getViewName(), null);
+                if (rs.next()) {
+                    String tableType = rs.getString("TABLE_TYPE");
+                    if (!"VIEW".equalsIgnoreCase(tableType)) {
+                        throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
+                                sqlDataSource.getName(), sqlEntityInfo.getViewName(), tableType);
+                    }
+
+                    // Check is list-only fields have changed
+                    isDropView = !matchViewColumns(sqlEntityInfo,
+                            sqlDataSource.getColumns(appSchema, sqlEntityInfo.getViewName()));
+                } else {
+                    // Force creation of view
+                    isViewNew = true;
+                }
+                SqlUtils.close(rs);
+
+                if (isViewNew || isDropView) {
+                    // Check if we have to drop view first
+                    if (isDropView) {
+                        viewUpdateSQL.add(sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo));
+                    }
+
+                    // Create view
+                    viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, formatSql));
+                }
+            }
+
+            // Apply updates
+            for (String sql : viewUpdateSQL) {
+                logDebug("Executing managed datasource script {0}...", sql);
+                pstmt = connection.prepareStatement(sql);
+                pstmt.executeUpdate();
+                SqlUtils.close(pstmt);
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+            }
+            throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR,
+                    sqlDataSource.getName());
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pstmt);
+        }
+    }
+
+    private List<Class<?>> getTableEntities(String dataSourceName) throws UnifyException {
+        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
+        List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
+        for (Class<?> entityClass : sqlDataSource.getTableEntityTypes()) {
+            logDebug("Building dependency list for entity type {0}", entityClass);
+            buildDependencyList(sqlDataSource, entityTypeList, entityClass);
+        }
+        return entityTypeList;
+    }
+
+    private List<Class<? extends Entity>> getViewEntities(String dataSourceName) throws UnifyException {
+        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
+        return sqlDataSource.getViewEntityTypes();
+    }
+
+    private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
+            throws UnifyException {
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+
+        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+            if (sqlFieldInfo.isForeignKey()) {
+                SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
+                buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
+            }
+        }
+
+        if (!entityTypeList.contains(entityClass)) {
+            entityTypeList.add(entityClass);
         }
     }
 
@@ -309,22 +395,5 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         }
 
         return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
-    }
-
-    private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
-            throws UnifyException {
-        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
-
-        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
-            if (sqlFieldInfo.isForeignKey()) {
-                SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
-                buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
-            }
-        }
-
-        if (!entityTypeList.contains(entityClass)) {
-            entityTypeList.add(entityClass);
-        }
     }
 }

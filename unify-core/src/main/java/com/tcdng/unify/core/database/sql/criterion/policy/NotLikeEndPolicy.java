@@ -15,7 +15,9 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlLikeType;
 
 /**
  * Not like end with operator policy.
@@ -30,7 +32,7 @@ public class NotLikeEndPolicy extends NotLikePolicy {
     }
 
     @Override
-    protected Object resolveParam(Object param) {
-        return "%" + param;
+    protected Object resolveParam(Object param) throws UnifyException {
+        return resolveParam(SqlLikeType.ENDS_WITH, param);
     }
 }

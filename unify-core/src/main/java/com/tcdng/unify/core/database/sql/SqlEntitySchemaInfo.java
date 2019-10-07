@@ -29,137 +29,59 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SqlEntitySchemaInfo {
 
-    /**
-     * Returns the entity index.
-     */
-    Long getIndex();
-
-    /**
-     * Returns the entity table name.
-     */
     String getTableName();
 
-    /**
-     * Returns the preferred table name.
-     */
     String getPreferredTableName();
 
-    /**
-     * Returns the entity schema table name.
-     */
     String getSchemaTableName();
 
-    /**
-     * Returns the table alias.
-     */
     String getTableAlias();
 
-    /**
-     * Returns the table view.
-     */
     String getViewName();
 
-    /**
-     * Returns the preferred view name.
-     */
     String getPreferredViewName();
 
-    /**
-     * Returns the entity schema view name.
-     */
     String getSchemaViewName();
 
-    /**
-     * Returns true if entity is versioned.
-     */
-    boolean isVersioned();
+    Long getIndex();
 
-    /**
-     * Returns true if entity is viewable.
-     */
-    boolean isViewable();
-
-    /**
-     * Returns ID field information.
-     */
     SqlFieldSchemaInfo getIdFieldInfo();
 
-    /**
-     * Returns version field information.
-     */
     SqlFieldSchemaInfo getVersionFieldInfo();
 
-    /**
-     * Returns the entity field schema information.
-     */
     List<? extends SqlFieldSchemaInfo> getFieldInfos();
 
-    /**
-     * Returns the entity list field schema information.
-     */
     List<? extends SqlFieldSchemaInfo> getListFieldInfos();
 
-    /**
-     * Returns entity field names.
-     */
     Set<String> getFieldNames();
 
-    /**
-     * Gets field schema information by name.
-     * 
-     * @param name
-     *            the field name
-     * @return the field schema information
-     * @throws UnifyException
-     *             if field with name is not found
-     */
     SqlFieldSchemaInfo getFieldInfo(String name) throws UnifyException;
 
-    /**
-     * Gets field schema information by marker.
-     * 
-     * @param marker
-     *            the field marker
-     * @return the field schema information otherwise null if not found
-     * @throws UnifyException
-     *             if an error occurs
-     */
     SqlFieldSchemaInfo getFieldInfo(Long marker) throws UnifyException;
 
-    /**
-     * Returns true if record type has foreign keys.
-     */
-    boolean isForeignKeys();
+    Map<String, Class<?>> getViewBaseTables();
 
-    /**
-     * Returns foreign key information list.
-     */
+    List<SqlViewRestrictionInfo> getViewRestrictionList();
+
     List<? extends SqlForeignKeySchemaInfo> getForeignKeyList();
 
-    /**
-     * Returns true if record type has unique constraints.
-     */
-    boolean isUniqueConstraints();
-
-    /**
-     * Returns unique constraint information list.
-     */
     Map<String, ? extends SqlUniqueConstraintSchemaInfo> getUniqueConstraintList();
 
-    /**
-     * Returns true if record type has indexes.
-     */
-    boolean isIndexes();
-
-    /**
-     * Returns index information list.
-     */
     Map<String, ? extends SqlIndexSchemaInfo> getIndexList();
 
-    /**
-     * Returns record type static values.
-     * 
-     * @return the static values list otherwise null
-     */
     List<Map<String, Object>> getStaticValueList();
+
+    boolean isVersioned();
+
+    boolean isViewable();
+    
+    boolean isViewOnly();
+
+    boolean isViewRestriction();
+
+    boolean isForeignKeys();
+
+    boolean isUniqueConstraints();
+
+    boolean isIndexes();
 }

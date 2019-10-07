@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.business;
 
-import com.tcdng.unify.core.database.AbstractTestEntityQuery;
+import com.tcdng.unify.core.database.AbstractTestTableEntityQuery;
 
 /**
  * Loan disbursement query.
@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.AbstractTestEntityQuery;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LoanDisbursementQuery extends AbstractTestEntityQuery<LoanDisbursement> {
+public class LoanDisbursementQuery extends AbstractTestTableEntityQuery<LoanDisbursement> {
 
     public LoanDisbursementQuery() {
         super(LoanDisbursement.class);

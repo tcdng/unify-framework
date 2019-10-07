@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyContainer;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
@@ -101,7 +100,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private static final String TIMESTAMP_FORMAT = "''yyyy-MM-dd HH:mm:ss''";
 
-    @Configurable(ApplicationComponents.APPLICATION_SQLENTITYINFOFACTORY)
+    @Configurable
     private SqlEntityInfoFactory sqlEntityInfoFactory;
 
     @Configurable("4000")
@@ -558,75 +557,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public String generateCreateViewSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("CREATE VIEW ").append(sqlEntitySchemaInfo.getSchemaViewName()).append('(');
-        if (format) {
-            sb.append(newLineSql);
-        }
-
-        ViewAliasInfo viewAliasInfo = new ViewAliasInfo(sqlEntitySchemaInfo.getTableAlias());
-        Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap = new LinkedHashMap<SqlFieldSchemaInfo, SqlJoinInfo>();
-        for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getListFieldInfos()) {
-            appendCreateViewSQLElements(sqlEntitySchemaInfo, sqlFieldInfo, viewAliasInfo, sqlJoinMap);
-        }
-
-        boolean appendSym = false;
-        StringBuilder fsb = new StringBuilder();
-        StringBuilder ssb = new StringBuilder();
-        for (SqlPair sqlPair : viewAliasInfo.getPairs()) {
-            if (appendSym) {
-                fsb.append(',');
-                ssb.append(',');
-
-                if (format) {
-                    fsb.append(newLineSql);
-                    ssb.append(newLineSql);
-                }
-            } else {
-                appendSym = true;
-            }
-
-            if (format) {
-                fsb.append('\t');
-                ssb.append('\t');
-            }
-
-            fsb.append(sqlPair.getAliasSql());
-            ssb.append(sqlPair.getSelectSql());
-        }
-
-        sb.append(fsb.toString());
-        if (format) {
-            sb.append(newLineSql);
-        }
-
-        sb.append(") AS SELECT ");
-        if (format) {
-            sb.append(newLineSql);
-        }
-        sb.append(ssb.toString());
-
-        if (format) {
-            sb.append(newLineSql);
-            sb.append("FROM ");
+        if (sqlEntitySchemaInfo.isViewOnly()) {
+            return generateCreateViewSqlForViewEntity(sqlEntitySchemaInfo, format);
         } else {
-            sb.append(" FROM ");
+            return generateCreateViewSqlForTableEntity(sqlEntitySchemaInfo, format);
         }
-        sb.append(sqlEntitySchemaInfo.getSchemaTableName()).append(' ').append(viewAliasInfo.getViewAlias());
-        for (SqlJoinInfo sqlJoinInfo : sqlJoinMap.values()) {
-            if (format) {
-                sb.append(newLineSql);
-                sb.append('\t');
-                sb.append("LEFT JOIN ");
-            } else {
-                sb.append(" LEFT JOIN ");
-            }
-
-            sb.append(sqlJoinInfo.getRightTable()).append(' ').append(sqlJoinInfo.getRightAlias());
-            sb.append(" ON ");
-            sb.append(sqlJoinInfo.getConditionSQL());
-        }
-        return sb.toString();
     }
 
     @Override
@@ -818,6 +753,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             deleteByPkVersionSql.append(generateDeleteRecordByPkSql(sqlEntitySchemaInfo)).append(" AND ")
                     .append(sqlEntitySchemaInfo.getVersionFieldInfo().getPreferredColumnName()).append(" = ?");
         }
+
         return deleteByPkVersionSql.toString();
     }
 
@@ -826,6 +762,31 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         StringBuffer countSql = new StringBuffer();
         countSql.append("SELECT COUNT(*) FROM ").append(sqlEntitySchemaInfo.getSchemaViewName());
         return countSql.toString();
+    }
+
+    @Override
+    public String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException {
+        String paramStr = null;
+        if (param instanceof SqlViewColumnInfo) {
+            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
+            paramStr = sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
+        } else {
+            paramStr = String.valueOf(param);
+        }
+
+        if (type.equals(SqlLikeType.BEGINS_WITH)) {
+            return paramStr + "%";
+        } else if (type.equals(SqlLikeType.ENDS_WITH)) {
+            return "%" + paramStr;
+        }
+
+        return "%" + paramStr + "%";
+    }
+
+    @Override
+    public int getMaxClauseValues() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
@@ -980,7 +941,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         Select select = query.getSelect();
 
         if ((select == null || (select.isEmpty() && !select.isDistinct())) && !query.isLimit()) {
-            returnFieldInfoList = sqlEntityInfo.getFieldInfos();
+            if (sqlEntityInfo.isViewOnly()) {
+                returnFieldInfoList = sqlEntityInfo.getListFieldInfos();
+            } else {
+                returnFieldInfoList = sqlEntityInfo.getFieldInfos();
+            }
+
             findSql.append(sqlCacheFactory.get(sqlEntityInfo.getKeyClass()).getFindSql());
         } else {
             findSql.append("SELECT ");
@@ -993,16 +959,31 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             boolean appendSym = false;
             if (select != null && !select.isEmpty()) {
                 returnFieldInfoList = new ArrayList<SqlFieldInfo>();
-                for (String name : select.values()) {
-                    if (!sqlEntityInfo.isChildFieldInfo(name)) {
-                        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
-                        if (appendSym) {
-                            findSql.append(", ");
-                        } else {
-                            appendSym = true;
+                if (sqlEntityInfo.isViewOnly()) {
+                    for (String name : select.values()) {
+                        if (!sqlEntityInfo.isChildFieldInfo(name)) {
+                            SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(name);
+                            if (appendSym) {
+                                findSql.append(", ");
+                            } else {
+                                appendSym = true;
+                            }
+                            findSql.append(sqlFieldInfo.getPreferredColumnName());
+                            returnFieldInfoList.add(sqlFieldInfo);
                         }
-                        findSql.append(sqlFieldInfo.getPreferredColumnName());
-                        returnFieldInfoList.add(sqlFieldInfo);
+                    }
+                } else {
+                    for (String name : select.values()) {
+                        if (!sqlEntityInfo.isChildFieldInfo(name)) {
+                            SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
+                            if (appendSym) {
+                                findSql.append(", ");
+                            } else {
+                                appendSym = true;
+                            }
+                            findSql.append(sqlFieldInfo.getPreferredColumnName());
+                            returnFieldInfoList.add(sqlFieldInfo);
+                        }
                     }
                 }
 
@@ -1018,7 +999,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                     returnFieldInfoList.add(sqlFieldInfo);
                 }
             } else {
-                returnFieldInfoList = sqlEntityInfo.getFieldInfos();
+                if (sqlEntityInfo.isViewOnly()) {
+                    returnFieldInfoList = sqlEntityInfo.getListFieldInfos();
+                } else {
+                    returnFieldInfoList = sqlEntityInfo.getFieldInfos();
+                }
+
                 for (SqlFieldInfo sqlFieldInfo : returnFieldInfoList) {
                     if (appendSym) {
                         findSql.append(", ");
@@ -1259,19 +1245,25 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String translateValue(Object value) throws UnifyException {
-        if (value instanceof String) {
-            return "\'" + value + "\'";
+    public String translateValue(Object param) throws UnifyException {
+        if (param instanceof String) {
+            String paramStr = (String) param;
+            if (paramStr.indexOf('.') > 0) {
+                return paramStr;
+            }
+
+            return "\'" + param + "\'";
         }
 
-        if (value instanceof Date) {
-            return timestampFormat.format((Date) value);
+        if (param instanceof Date) {
+            return timestampFormat.format((Date) param);
         }
 
-        if (value instanceof Boolean) {
-            return "\'" + SqlUtils.getString((Boolean) value) + "\'";
+        if (param instanceof Boolean) {
+            return "\'" + SqlUtils.getString((Boolean) param) + "\'";
         }
-        return String.valueOf(value);
+
+        return String.valueOf(param);
     }
 
     @Override
@@ -1737,6 +1729,179 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return 0;
     }
 
+    private String generateCreateViewSqlForTableEntity(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean format)
+            throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE VIEW ").append(sqlEntitySchemaInfo.getSchemaViewName()).append('(');
+        if (format) {
+            sb.append(newLineSql);
+        }
+
+        ViewAliasInfo viewAliasInfo = new ViewAliasInfo(sqlEntitySchemaInfo.getTableAlias());
+        Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap = new LinkedHashMap<SqlFieldSchemaInfo, SqlJoinInfo>();
+        for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getListFieldInfos()) {
+            appendCreateViewSQLElements(sqlEntitySchemaInfo, sqlFieldInfo, viewAliasInfo, sqlJoinMap);
+        }
+
+        boolean appendSym = false;
+        StringBuilder fsb = new StringBuilder();
+        StringBuilder ssb = new StringBuilder();
+        for (SqlPair sqlPair : viewAliasInfo.getPairs()) {
+            if (appendSym) {
+                fsb.append(',');
+                ssb.append(',');
+
+                if (format) {
+                    fsb.append(newLineSql);
+                    ssb.append(newLineSql);
+                }
+            } else {
+                appendSym = true;
+            }
+
+            if (format) {
+                fsb.append('\t');
+                ssb.append('\t');
+            }
+
+            fsb.append(sqlPair.getAliasSql());
+            ssb.append(sqlPair.getSelectSql());
+        }
+
+        sb.append(fsb.toString());
+        if (format) {
+            sb.append(newLineSql);
+        }
+
+        sb.append(") AS SELECT ");
+        if (format) {
+            sb.append(newLineSql);
+        }
+        sb.append(ssb.toString());
+
+        if (format) {
+            sb.append(newLineSql);
+            sb.append("FROM ");
+        } else {
+            sb.append(" FROM ");
+        }
+        sb.append(sqlEntitySchemaInfo.getSchemaTableName()).append(' ').append(viewAliasInfo.getViewAlias());
+        for (SqlJoinInfo sqlJoinInfo : sqlJoinMap.values()) {
+            if (format) {
+                sb.append(newLineSql);
+                sb.append('\t');
+                sb.append("LEFT JOIN ");
+            } else {
+                sb.append(" LEFT JOIN ");
+            }
+
+            sb.append(sqlJoinInfo.getRightTable()).append(' ').append(sqlJoinInfo.getRightAlias());
+            sb.append(" ON ");
+            sb.append(sqlJoinInfo.getConditionSQL());
+        }
+        return sb.toString();
+    }
+
+    private String generateCreateViewSqlForViewEntity(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean format)
+            throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE VIEW ").append(sqlEntitySchemaInfo.getSchemaViewName()).append('(');
+        if (format) {
+            sb.append(newLineSql);
+        }
+
+        boolean appendSym = false;
+        StringBuilder fsb = new StringBuilder();
+        StringBuilder ssb = new StringBuilder();
+        for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getListFieldInfos()) {
+            if (appendSym) {
+                fsb.append(", ");
+                ssb.append(", ");
+
+                if (format) {
+                    fsb.append(newLineSql);
+                    ssb.append(newLineSql);
+                }
+            } else {
+                appendSym = true;
+            }
+
+            if (format) {
+                fsb.append('\t');
+                ssb.append('\t');
+            }
+
+            fsb.append(sqlFieldInfo.getPreferredColumnName());
+            ssb.append(sqlFieldInfo.getForeignEntityPreferredAlias() + '.'
+                    + sqlFieldInfo.getForeignFieldInfo().getPreferredColumnName());
+        }
+
+        sb.append(fsb.toString());
+        if (format) {
+            sb.append(newLineSql);
+        }
+
+        sb.append(") AS SELECT ");
+        if (format) {
+            sb.append(newLineSql);
+        }
+        sb.append(ssb.toString());
+
+        if (format) {
+            sb.append(newLineSql);
+            sb.append("FROM ");
+        } else {
+            sb.append(" FROM ");
+        }
+
+        appendSym = false;
+        for (Map.Entry<String, Class<?>> entry : sqlEntitySchemaInfo.getViewBaseTables().entrySet()) {
+            if (appendSym) {
+                sb.append(", ");
+
+                if (format) {
+                    sb.append(newLineSql);
+                }
+            } else {
+                appendSym = true;
+            }
+
+            if (format) {
+                sb.append('\t');
+            }
+
+            sb.append(getSqlEntityInfo(entry.getValue()).getPreferredTableName()).append(' ').append(entry.getKey());
+        }
+
+        if (sqlEntitySchemaInfo.isViewRestriction()) {
+            if (format) {
+                sb.append(newLineSql);
+                sb.append("WHERE ");
+            } else {
+                sb.append(" WHERE ");
+            }
+
+            appendSym = false;
+            for (SqlViewRestrictionInfo sqlViewRestrictionInfo : sqlEntitySchemaInfo.getViewRestrictionList()) {
+                if (appendSym) {
+                    if (format) {
+                        sb.append(newLineSql);
+                        sb.append('\t');
+                    }
+                    sb.append("AND ");
+                } else {
+                    appendSym = true;
+                }
+
+                sqlCriteriaPolicies.get(sqlViewRestrictionInfo.getRestrictionType()).translate(sb,
+                        sqlViewRestrictionInfo.getTableAlias(), sqlViewRestrictionInfo.getColumnName(),
+                        sqlViewRestrictionInfo.getParam1(), sqlViewRestrictionInfo.getParam2());
+            }
+        }
+
+        return sb.toString();
+    }
+
     private class SqlStatementPoolsFactory extends FactoryMap<Class<?>, SqlStatementPools> {
         @Override
         protected SqlStatementPools create(Class<?> clazz, Object... params) throws Exception {
@@ -1940,6 +2105,15 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         @Override
         protected SqlCache create(Class<?> clazz, Object... params) throws Exception {
             SqlEntitySchemaInfo sqlEntitySchemaInfo = sqlEntityInfoFactory.getSqlEntityInfo(clazz);
+            if (sqlEntitySchemaInfo.isViewOnly()) {
+                return new SqlCache(generateListRecordSql(sqlEntitySchemaInfo),
+                        generateListRecordByPkSql(sqlEntitySchemaInfo),
+                        generateListRecordByPkVersionSql(sqlEntitySchemaInfo),
+                        generateListRecordSql(sqlEntitySchemaInfo), generateListRecordByPkSql(sqlEntitySchemaInfo),
+                        generateListRecordByPkVersionSql(sqlEntitySchemaInfo), null, null, null, null, null, null, null,
+                        generateCountRecordSql(sqlEntitySchemaInfo), generateTestSql());
+            }
+
             return new SqlCache(generateFindRecordSql(sqlEntitySchemaInfo),
                     generateFindRecordByPkSql(sqlEntitySchemaInfo),
                     generateFindRecordByPkVersionSql(sqlEntitySchemaInfo), generateListRecordSql(sqlEntitySchemaInfo),

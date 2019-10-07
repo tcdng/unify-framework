@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @since 1.0
  */
 @Table(name = "REPORT_FORM")
-public class ReportForm extends AbstractTestEntity {
+public class ReportForm extends AbstractTestTableEntity {
 
     @ForeignKey(Report.class)
     private Long reportId;

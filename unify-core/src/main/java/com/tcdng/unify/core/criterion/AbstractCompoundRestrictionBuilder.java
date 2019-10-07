@@ -79,12 +79,12 @@ public abstract class AbstractCompoundRestrictionBuilder {
     }
 
     public AbstractCompoundRestrictionBuilder likeBegin(String propertyName, String value) {
-        getCompoundRestriction().add(new LikeBegin(propertyName, value));
+        getCompoundRestriction().add(new BeginsWith(propertyName, value));
         return this;
     }
 
     public AbstractCompoundRestrictionBuilder likeEnd(String propertyName, String value) {
-        getCompoundRestriction().add(new LikeEnd(propertyName, value));
+        getCompoundRestriction().add(new EndsWith(propertyName, value));
         return this;
     }
 
@@ -109,12 +109,12 @@ public abstract class AbstractCompoundRestrictionBuilder {
     }
 
     public AbstractCompoundRestrictionBuilder notLikeBegin(String propertyName, String value) {
-        getCompoundRestriction().add(new NotLikeBegin(propertyName, value));
+        getCompoundRestriction().add(new NotBeginWith(propertyName, value));
         return this;
     }
 
     public AbstractCompoundRestrictionBuilder notLikeEnd(String propertyName, String value) {
-        getCompoundRestriction().add(new NotLikeEnd(propertyName, value));
+        getCompoundRestriction().add(new NotEndWith(propertyName, value));
         return this;
     }
 

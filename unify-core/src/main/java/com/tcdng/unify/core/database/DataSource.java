@@ -19,6 +19,9 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.StaticList;
+import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.View;
 
 /**
  * A data source component. Entity types are defined at this level. This is
@@ -30,17 +33,27 @@ import com.tcdng.unify.core.UnifyException;
 public interface DataSource extends UnifyComponent {
 
     /**
-     * Returns a list of entity types maintained in this datasource. Entity types in
-     * list are expected to be ordered based on dependency with parents coming
-     * before dependants.
+     * Returns a list of entity types annotated with {@link Table} and enumerations
+     * annotated with {@link StaticList} that are maintained in this data source.
+     * Entity types in list are expected to be ordered based on dependency with
+     * parents coming before dependents.
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<?>> getEntityTypes() throws UnifyException;
+    List<Class<?>> getTableEntityTypes() throws UnifyException;
 
     /**
-     * Returns the datasource dialect.
+     * Returns a list of entity types annotated with {@link View} that are
+     * maintained in this data source.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException;
+
+    /**
+     * Returns the data source dialect.
      * 
      * @throws UnifyException
      *             if an error occurs

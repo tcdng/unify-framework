@@ -15,19 +15,43 @@
  */
 package com.tcdng.unify.core.database;
 
+import com.tcdng.unify.core.annotation.Id;
+import com.tcdng.unify.core.annotation.Policy;
+import com.tcdng.unify.core.annotation.Version;
+
 /**
- * Query object for test report parameter record.
+ * Abstract base class for test entities.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ReportParameterQuery extends AbstractTestTableEntityQuery<ReportParameter> {
+@Policy("testentity-policy")
+public abstract class AbstractTestTableEntity extends AbstractEntity {
 
-    public ReportParameterQuery() {
-        super(ReportParameter.class);
+    @Id
+    private Long id;
+
+    @Version
+    private long version;
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
-    public ReportParameterQuery reportId(Long reportId) {
-        return (ReportParameterQuery) equals("reportId", reportId);
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

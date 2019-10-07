@@ -34,14 +34,14 @@ public class TestEntityPolicy extends AbstractEntityPolicy {
     @Override
     public Object preCreate(Entity record, Date now) throws UnifyException {
         Long id = Long.valueOf(++idCounter);
-        ((AbstractTestEntity) record).setId(id);
-        ((AbstractTestEntity) record).setVersion(1L);
+        ((AbstractTestTableEntity) record).setId(id);
+        ((AbstractTestTableEntity) record).setVersion(1L);
         return id;
     }
 
     @Override
     public void preUpdate(Entity record, Date now) throws UnifyException {
-        ((AbstractTestEntity) record).setVersion(((AbstractTestEntity) record).getVersion() + 1L);
+        ((AbstractTestTableEntity) record).setVersion(((AbstractTestTableEntity) record).getVersion() + 1L);
     }
 
     @Override

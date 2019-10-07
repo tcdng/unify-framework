@@ -17,7 +17,7 @@ package com.tcdng.unify.core.batch;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.database.AbstractTestEntity;
+import com.tcdng.unify.core.database.AbstractTestTableEntity;
 
 /**
  * A test batch record.
@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
  * @since 1.0
  */
 @Table(name = "TESTBATCHB")
-public class TestBatchRecordB extends AbstractTestEntity implements BatchRecord {
+public class TestBatchRecordB extends AbstractTestTableEntity implements BatchRecord {
 
     @Column
     private String currency;

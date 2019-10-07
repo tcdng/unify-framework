@@ -30,7 +30,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @since 1.0
  */
 @Table("REPORT")
-public class Report extends AbstractTestEntity {
+public class Report extends AbstractTestTableEntity {
 
     @Column
     private String name;

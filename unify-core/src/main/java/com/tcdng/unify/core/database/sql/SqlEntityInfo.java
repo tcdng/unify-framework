@@ -90,15 +90,18 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private List<Map<String, Object>> staticValueList;
 
+    private Map<String, Class<?>> viewBaseTables;
+
     private List<SqlViewRestrictionInfo> viewRestrictionList;
-    
+
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
             EntityPolicy recordPolicy, String tableName, String preferredTableName, String schemaTableName,
             String tableAlias, String viewName, String preferredViewName, String schemaViewName,
             SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
-            List<Map<String, Object>> staticValueList, List<SqlViewRestrictionInfo> viewRestrictionList) {
+            List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
+            List<SqlViewRestrictionInfo> viewRestrictionList) throws UnifyException {
         this.index = index;
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
@@ -117,7 +120,10 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.listFieldInfoByName = Collections.unmodifiableMap(sQLFieldInfoMap);
         this.foreignKeyList = new ArrayList<SqlForeignKeyInfo>();
         this.fieldInfoByName = new HashMap<String, SqlFieldInfo>();
-        for (SqlFieldInfo sqlFieldInfo : this.listFieldInfoByName.values()) {
+
+        List<SqlFieldInfo> inputlistFieldInfoList = new ArrayList<SqlFieldInfo>(listFieldInfoByName.values());
+        DataUtils.sort(inputlistFieldInfoList, SqlFieldSchemaInfo.class, "foreignEntityPreferredAlias", true);
+        for (SqlFieldInfo sqlFieldInfo : inputlistFieldInfoList) {
             if (!sqlFieldInfo.isListOnly()) {
                 fieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
                 fieldInfoList.add(sqlFieldInfo);
@@ -165,31 +171,13 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
         this.childInfoByName = DataUtils.unmodifiableMap(this.childInfoByName);
         this.staticValueList = staticValueList;
+        this.viewBaseTables = DataUtils.unmodifiableMap(viewBaseTables);
         this.viewRestrictionList = DataUtils.unmodifiableList(viewRestrictionList);
     }
 
     @Override
     public Long getIndex() {
         return index;
-    }
-
-    public Class<? extends Entity> getEntityClass() {
-        return entityClass;
-    }
-
-    public Class<? extends EnumConst> getEnumConstClass() {
-        return enumConstClass;
-    }
-
-    public Class<?> getKeyClass() {
-        if (enumConstClass != null) {
-            return enumConstClass;
-        }
-        return entityClass;
-    }
-
-    public EntityPolicy getEntityPolicy() {
-        return entityPolicy;
     }
 
     @Override
@@ -242,26 +230,6 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return fieldInfoByName.keySet();
     }
 
-    public Set<String> getListFieldNames() {
-        return listFieldInfoByName.keySet();
-    }
-
-    public Map<String, String> getListColumnsByFieldNames() {
-        Map<String, String> map = new HashMap<String, String>();
-        for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoByName.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().getPreferredColumnName());
-        }
-        return map;
-    }
-
-    public Map<String, SqlFieldInfo> getFieldInfoByColumnNames() {
-        Map<String, SqlFieldInfo> map = new HashMap<String, SqlFieldInfo>();
-        for (SqlFieldInfo entry : fieldInfoByName.values()) {
-            map.put(entry.getColumnName(), entry);
-        }
-        return map;
-    }
-
     @Override
     public List<SqlFieldInfo> getFieldInfos() {
         return fieldInfoList;
@@ -292,59 +260,6 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     }
 
     @Override
-    public List<SqlForeignKeyInfo> getForeignKeyList() {
-        return foreignKeyList;
-    }
-
-    public List<SqlViewRestrictionInfo> getViewRestrictionList() {
-        return viewRestrictionList;
-    }
-
-    public ChildFieldInfo getChildFieldInfo(String name) {
-        return childInfoByName.get(name);
-    }
-
-    public boolean isChildFieldInfo(String name) {
-        return childInfoByName.containsKey(name);
-    }
-
-    public List<ChildFieldInfo> getSingleChildInfoList() {
-        return childInfoList;
-    }
-
-    public boolean isSingleChildList() {
-        return !childInfoList.isEmpty();
-    }
-
-    public List<ChildFieldInfo> getManyChildInfoList() {
-        return childListInfoList;
-    }
-
-    public boolean isViewEntity() {
-        return fieldInfoList.isEmpty() && !listFieldInfoList.isEmpty();
-    }
-    
-    public boolean isViewRestriction() {
-        return !viewRestrictionList.isEmpty();
-    }
-    
-    public boolean isManyChildList() {
-        return !childListInfoList.isEmpty();
-    }
-
-    public boolean isChildList() {
-        return !childInfoList.isEmpty() || !childListInfoList.isEmpty();
-    }
-
-    public List<OnDeleteCascadeInfo> getOnDeleteCascadeInfoList() {
-        return onDeleteCascadeInfoList;
-    }
-
-    public boolean isOnDeleteCascadeList() {
-        return !onDeleteCascadeInfoList.isEmpty();
-    }
-
-    @Override
     public boolean isUniqueConstraints() {
         return uniqueConstraintMap != null && !uniqueConstraintMap.isEmpty();
     }
@@ -367,6 +282,106 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public List<Map<String, Object>> getStaticValueList() {
         return staticValueList;
+    }
+
+    @Override
+    public boolean isViewOnly() {
+        return !viewBaseTables.isEmpty();
+    }
+
+    @Override
+    public Map<String, Class<?>> getViewBaseTables() {
+        return viewBaseTables;
+    }
+
+    @Override
+    public boolean isViewRestriction() {
+        return !viewRestrictionList.isEmpty();
+    }
+
+    @Override
+    public List<SqlViewRestrictionInfo> getViewRestrictionList() {
+        return viewRestrictionList;
+    }
+
+    @Override
+    public List<SqlForeignKeyInfo> getForeignKeyList() {
+        return foreignKeyList;
+    }
+
+    public Class<? extends Entity> getEntityClass() {
+        return entityClass;
+    }
+
+    public Class<? extends EnumConst> getEnumConstClass() {
+        return enumConstClass;
+    }
+
+    public Class<?> getKeyClass() {
+        if (enumConstClass != null) {
+            return enumConstClass;
+        }
+        return entityClass;
+    }
+
+    public EntityPolicy getEntityPolicy() {
+        return entityPolicy;
+    }
+
+    public Set<String> getListFieldNames() {
+        return listFieldInfoByName.keySet();
+    }
+
+    public Map<String, String> getListColumnsByFieldNames() {
+        Map<String, String> map = new HashMap<String, String>();
+        for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoByName.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().getPreferredColumnName());
+        }
+        return map;
+    }
+
+    public Map<String, SqlFieldInfo> getFieldInfoByColumnNames() {
+        Map<String, SqlFieldInfo> map = new HashMap<String, SqlFieldInfo>();
+        for (SqlFieldInfo entry : fieldInfoByName.values()) {
+            map.put(entry.getColumnName(), entry);
+        }
+        return map;
+    }
+
+    public ChildFieldInfo getChildFieldInfo(String name) {
+        return childInfoByName.get(name);
+    }
+
+    public boolean isChildFieldInfo(String name) {
+        return childInfoByName.containsKey(name);
+    }
+
+    public List<ChildFieldInfo> getSingleChildInfoList() {
+        return childInfoList;
+    }
+
+    public boolean isSingleChildList() {
+        return !childInfoList.isEmpty();
+    }
+
+    public List<ChildFieldInfo> getManyChildInfoList() {
+        return childListInfoList;
+    }
+
+    public boolean isManyChildList() {
+        return !childListInfoList.isEmpty();
+    }
+
+    public boolean isChildList() {
+        return !childInfoList.isEmpty() || !childListInfoList.isEmpty();
+    }
+
+    public List<OnDeleteCascadeInfo> getOnDeleteCascadeInfoList() {
+        return onDeleteCascadeInfoList;
+    }
+
+    public boolean isOnDeleteCascadeList() {
+        return !onDeleteCascadeInfoList.isEmpty();
     }
 
     void expandOnDeleteCascade(OnDeleteCascadeInfo onDeleteCascadeInfo) {
@@ -403,7 +418,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return enumConstClass != null;
     }
 
-    public boolean testTrueFieldNamesOnly(final Collection<String> fieldNames) {
+    public boolean testTrueFieldNamesOnly(Collection<String> fieldNames) {
         return fieldInfoByName.keySet().containsAll(fieldNames);
     }
 }

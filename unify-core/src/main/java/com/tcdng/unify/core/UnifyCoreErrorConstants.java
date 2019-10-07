@@ -937,4 +937,7 @@ public interface UnifyCoreErrorConstants {
 
     /** Entity type compound restriction not supported for view. Type = {0}*/
     String RECORD_VIEW_COMPOUND_RESTRICTION_UNSUPPORTED = "UC_00ED";
+
+    /** Entity type operation not supported for view. Type = {0}, operation {1}*/
+    String RECORD_VIEW_OPERATION_UNSUPPORTED = "UC_00EE";
 }

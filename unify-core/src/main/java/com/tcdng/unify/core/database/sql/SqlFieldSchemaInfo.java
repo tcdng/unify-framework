@@ -126,6 +126,11 @@ public interface SqlFieldSchemaInfo {
     SqlFieldSchemaInfo getForeignFieldInfo();
 
     /**
+     * Returns the foreign entity preferred table alias.
+     */
+    String getForeignEntityPreferredAlias();
+
+    /**
      * Returns the foreign key field schema information.
      */
     SqlFieldSchemaInfo getForeignKeyFieldInfo();

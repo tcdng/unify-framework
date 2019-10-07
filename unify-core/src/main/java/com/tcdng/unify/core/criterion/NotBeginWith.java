@@ -13,26 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql.criterion.policy;
-
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
-import com.tcdng.unify.core.database.sql.SqlLikeType;
+package com.tcdng.unify.core.criterion;
 
 /**
- * Like begin with operator policy.
+ * Restriction for a property that does not begin with a value.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LikeBeginPolicy extends LikePolicy {
+public class NotBeginWith extends AbstractSingleValueRestriction {
 
-    public LikeBeginPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(sqlDataSourceDialect);
+    public NotBeginWith(String propertyName, Object value) {
+        super(propertyName, value);
     }
 
     @Override
-    protected Object resolveParam(Object param) throws UnifyException {
-        return resolveParam(SqlLikeType.BEGINS_WITH, param);
+    public RestrictionType getType() {
+        return RestrictionType.NOT_BEGIN_WITH;
     }
 }
+

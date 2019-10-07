@@ -21,7 +21,7 @@ package com.tcdng.unify.core.database;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ReportFormQuery extends AbstractTestEntityQuery<ReportForm> {
+public class ReportFormQuery extends AbstractTestTableEntityQuery<ReportForm> {
 
     public ReportFormQuery() {
         super(ReportForm.class);

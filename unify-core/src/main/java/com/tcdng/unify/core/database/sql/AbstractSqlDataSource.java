@@ -348,6 +348,8 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         if (sqlConnectionPool != null) {
             sqlConnectionPool.terminate();
         }
+        
+        super.onTerminate();
         logInfo("Datasource [{0}] terminated.", getName());
     }
 

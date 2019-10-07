@@ -97,6 +97,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public Object create(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
+        if (sqlEntityInfo.isViewOnly()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                    sqlEntityInfo.getEntityClass(), "CREATE");
+        }
+
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         Object id = null;
         if (entityPolicy != null) {
@@ -431,7 +436,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
         }
     }
@@ -466,6 +470,16 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+            if (sqlEntityInfo.isViewOnly()) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                        sqlEntityInfo.getEntityClass(), "UPDATE");
+            }
+
+            if (sqlEntityInfo.isViewOnly()) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                        sqlEntityInfo.getEntityClass(), "UPDATE");
+            }
+
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
                     || (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
@@ -491,6 +505,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int deleteById(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        if (sqlEntityInfo.isViewOnly()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                    sqlEntityInfo.getEntityClass(), "DELETE");
+        }
+
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareDeleteByPkStatement(record.getClass(), record.getId());
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         int result;
@@ -531,6 +550,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int deleteByIdVersion(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        if (sqlEntityInfo.isViewOnly()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                    sqlEntityInfo.getEntityClass(), "DELETE");
+        }
+
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         SqlStatement sqlStatement = null;
         int result;
@@ -588,6 +612,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int delete(Class<? extends Entity> clazz, final Object id) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        if (sqlEntityInfo.isViewOnly()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                    sqlEntityInfo.getEntityClass(), "DELETE");
+        }
+
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareDeleteByPkStatement(clazz, id);
         int result;
         try {
@@ -614,6 +643,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int deleteAll(Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            if (sqlEntityInfo.isViewOnly()) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                        sqlEntityInfo.getEntityClass(), "DELETE");
+            }
+
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
                     || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
@@ -1027,6 +1061,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         int result;
         SqlStatement sqlStatement = null;
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
+        if (sqlEntityInfo.isViewOnly()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                    sqlEntityInfo.getEntityClass(), "UPDATE");
+        }
+
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         try {
             if (entityPolicy != null) {
@@ -1064,6 +1103,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         int result;
         SqlStatement sqlStatement = null;
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
+        if (sqlEntityInfo.isViewOnly()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
+                    sqlEntityInfo.getEntityClass(), "UPDATE");
+        }
+
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         try {
             Object oldVersionNo = null;

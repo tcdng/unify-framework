@@ -32,7 +32,7 @@ import com.tcdng.unify.core.constant.BooleanType;
  * @since 1.0
  */
 @Table(name = "REPORT_PARAMETER")
-public class ReportParameter extends AbstractTestEntity {
+public class ReportParameter extends AbstractTestTableEntity {
 
     @ForeignKey(Report.class)
     private Long reportId;

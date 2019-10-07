@@ -19,7 +19,7 @@ import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.database.AbstractTestEntity;
+import com.tcdng.unify.core.database.AbstractTestTableEntity;
 
 /**
  * Load account entity.
@@ -28,7 +28,7 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
  * @since 1.0
  */
 @Table
-public class LoanAccount extends AbstractTestEntity {
+public class LoanAccount extends AbstractTestTableEntity {
 
     @ForeignKey(Account.class)
     private Long accountId;
