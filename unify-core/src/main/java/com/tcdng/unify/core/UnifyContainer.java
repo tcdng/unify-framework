@@ -1538,7 +1538,6 @@ public class UnifyContainer {
 
                     ThreadUtils.sleep(COMMAND_THREAD_RATE);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     logError(e);
                 }
             }

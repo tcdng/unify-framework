@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @since 1.0
  */
 @Table(name = "OFFICE")
-public class Office extends AbstractTestEntity {
+public class Office extends AbstractTestTableEntity {
 
     @Column
     private String address;

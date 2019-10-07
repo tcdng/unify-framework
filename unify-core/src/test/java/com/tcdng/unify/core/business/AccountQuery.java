@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.business;
 
-import com.tcdng.unify.core.database.AbstractTestEntityQuery;
+import com.tcdng.unify.core.database.AbstractTestTableEntityQuery;
 
 /**
  * Account query.
@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.AbstractTestEntityQuery;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class AccountQuery extends AbstractTestEntityQuery<Account> {
+public class AccountQuery extends AbstractTestTableEntityQuery<Account> {
 
     public AccountQuery() {
         super(Account.class);

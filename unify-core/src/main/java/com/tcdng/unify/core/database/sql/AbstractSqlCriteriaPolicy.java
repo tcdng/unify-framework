@@ -127,11 +127,22 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      * @param param
      *            the parameter to resolve
      * @return the resolved parameter
+     * @throws UnifyException
+     *             if an error occurs
      */
-    protected Object resolveParam(Object param) {
+    protected Object resolveParam(Object param) throws UnifyException {
+        if (param instanceof SqlViewColumnInfo) {
+            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
+            return sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
+        }
+        
         return param;
     }
 
     protected abstract void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1,
             Object param2) throws UnifyException;
+
+    protected SqlDataSourceDialect getSqlDataSourceDialect() {
+        return sqlDataSourceDialect;
+    }
 }

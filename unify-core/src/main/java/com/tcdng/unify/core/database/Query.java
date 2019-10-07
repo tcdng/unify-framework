@@ -32,14 +32,14 @@ import com.tcdng.unify.core.criterion.IsNull;
 import com.tcdng.unify.core.criterion.Less;
 import com.tcdng.unify.core.criterion.LessOrEqual;
 import com.tcdng.unify.core.criterion.Like;
-import com.tcdng.unify.core.criterion.LikeBegin;
-import com.tcdng.unify.core.criterion.LikeEnd;
+import com.tcdng.unify.core.criterion.BeginsWith;
+import com.tcdng.unify.core.criterion.EndsWith;
 import com.tcdng.unify.core.criterion.NotAmongst;
 import com.tcdng.unify.core.criterion.NotBetween;
 import com.tcdng.unify.core.criterion.NotEqual;
 import com.tcdng.unify.core.criterion.NotLike;
-import com.tcdng.unify.core.criterion.NotLikeBegin;
-import com.tcdng.unify.core.criterion.NotLikeEnd;
+import com.tcdng.unify.core.criterion.NotBeginWith;
+import com.tcdng.unify.core.criterion.NotEndWith;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Select;
@@ -143,13 +143,13 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
-    public Query<T> likeBegin(String field, String value) {
-        restrictions.add(new LikeBegin(field, value));
+    public Query<T> beginsWith(String field, String value) {
+        restrictions.add(new BeginsWith(field, value));
         return this;
     }
 
-    public Query<T> likeEnd(String field, String value) {
-        restrictions.add(new LikeEnd(field, value));
+    public Query<T> endsWith(String field, String value) {
+        restrictions.add(new EndsWith(field, value));
         return this;
     }
 
@@ -173,13 +173,13 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
-    public Query<T> notLikeBegin(String field, String value) {
-        restrictions.add(new NotLikeBegin(field, value));
+    public Query<T> notBeginWith(String field, String value) {
+        restrictions.add(new NotBeginWith(field, value));
         return this;
     }
 
-    public Query<T> notLikeEnd(String field, String value) {
-        restrictions.add(new NotLikeEnd(field, value));
+    public Query<T> notEndWith(String field, String value) {
+        restrictions.add(new NotEndWith(field, value));
         return this;
     }
 

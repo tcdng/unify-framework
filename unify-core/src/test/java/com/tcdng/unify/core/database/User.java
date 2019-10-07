@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @since 1.0
  */
 @Table(name = "TEST_USER")
-public class User extends AbstractTestEntity {
+public class User extends AbstractTestTableEntity {
 
     @Column
     private String name;

@@ -21,7 +21,7 @@ package com.tcdng.unify.core.database;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ReportParameterOptionsQuery extends AbstractTestEntityQuery<ReportParameterOptions> {
+public class ReportParameterOptionsQuery extends AbstractTestTableEntityQuery<ReportParameterOptions> {
 
     public ReportParameterOptionsQuery() {
         super(ReportParameterOptions.class);

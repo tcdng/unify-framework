@@ -153,19 +153,24 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
                 Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
                 GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "code");
-                SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
-                        ColumnType.STRING, null, null, null, "code", "REF_CD",
-                        sqlDataSourceDialect.getPreferredName("REF_CD"), null, true, false, false, null,
-                        sqlFieldDimensions, false, null, ReflectUtils.getField(StaticReference.class, "code"),
-                        getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+                boolean isForeignKey = false;
+                boolean isIgnoreFkConstraint = false;
+                boolean isListOnly = false;
+                SqlFieldInfo idFieldInfo =
+                        new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION, ColumnType.STRING, null, null,
+                                null, "code", "REF_CD", sqlDataSourceDialect.getPreferredName("REF_CD"), null, null,
+                                true, isForeignKey, isListOnly, isIgnoreFkConstraint, null, sqlFieldDimensions, false,
+                                null, ReflectUtils.getField(StaticReference.class, "code"),
+                                getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
 
                 sqlFieldDimensions = new SqlFieldDimensions(StaticReference.DESCRIPTION_LENGTH, -1, -1);
                 getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "description");
                 SqlFieldInfo descFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.COLUMN_POSITION,
                         ColumnType.STRING, null, null, null, "description", "REF_DESC",
-                        sqlDataSourceDialect.getPreferredName("REF_DESC"), null, false, false, false, null,
-                        sqlFieldDimensions, false, null, ReflectUtils.getField(StaticReference.class, "description"),
-                        getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+                        sqlDataSourceDialect.getPreferredName("REF_DESC"), null, null, false, isForeignKey, isListOnly,
+                        isIgnoreFkConstraint, null, sqlFieldDimensions, false, null,
+                        ReflectUtils.getField(StaticReference.class, "description"), getterSetterInfo.getGetter(),
+                        getterSetterInfo.getSetter());
 
                 propertyInfoMap.put(idFieldInfo.getName(), idFieldInfo);
                 propertyInfoMap.put(descFieldInfo.getName(), descFieldInfo);
@@ -173,7 +178,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 String tableAlias = "R" + (++rAliasCounter);
                 return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
                         tableName, preferredTableName, schemaTableName, tableAlias, tableName, preferredTableName,
-                        schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null, null, null, null);
+                        schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null, null, null, null, null);
             }
 
             @SuppressWarnings("unchecked")
@@ -492,13 +497,15 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             SqlFieldDimensions sqlFieldDimensions =
                                     SqlUtils.getNormalizedSqlFieldDimensions(columnType, length, precision, scale);
                             boolean isIgnoreFkConstraint = false;
+                            boolean isListOnly = false;
                             GetterSetterInfo getterSetterInfo =
                                     ReflectUtils.getGetterSetterInfo(searchClass, field.getName());
                             SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(position, columnType, foreignEntityInfo,
                                     foreignFieldInfo, null, field.getName(), column,
-                                    sqlDataSourceDialect.getPreferredName(column), constraintName, isPrimaryKey,
-                                    isForeignKey, isIgnoreFkConstraint, transformer, sqlFieldDimensions, isNullable,
-                                    defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+                                    sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
+                                    isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
+                                    isNullable, defaultVal, field, getterSetterInfo.getGetter(),
+                                    getterSetterInfo.getSetter());
 
                             if (ia != null) {
                                 idFieldInfo = sqlFieldInfo;
@@ -557,12 +564,17 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 foreignFieldInfo.getPrecision(), foreignFieldInfo.getScale());
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(entry.getKey(), field.getName());
+                        boolean isPrimaryKey = false;
+                        boolean isForeignKey = false;
+                        boolean isIgnoreFkConstraint = false;
+                        boolean isListOnly = true;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
                                 foreignFieldInfo.getColumnType(), foreignEntityInfo, foreignFieldInfo,
                                 foreignKeySQLFieldInfo, field.getName(), column,
-                                sqlDataSourceDialect.getPreferredName(column), null, false, false, false,
-                                foreignFieldInfo.getTransformer(), sqlFieldDimensions, foreignFieldInfo.isNullable(),
-                                null, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+                                sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey, isForeignKey,
+                                isListOnly, isIgnoreFkConstraint, foreignFieldInfo.getTransformer(), sqlFieldDimensions,
+                                foreignFieldInfo.isNullable(), null, field, getterSetterInfo.getGetter(),
+                                getterSetterInfo.getSetter());
 
                         propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
                     }
@@ -669,7 +681,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
                         entityPolicy, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
                         preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
-                        childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null, null);
+                        childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null, null, null);
                 return sqlEntityInfo;
             }
 
@@ -738,14 +750,22 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                         SqlEntityInfo refEntityInfo = null;
                         SqlFieldInfo refFieldInfo = null;
+                        String refEntityPreferredAlias = null;
+                        String column = null;
                         if (ia != null) {
                             isPrimaryKey = true;
-                            refEntityInfo = get(tableReferences.getEntityClass(va.primaryAlias()), entityCycleDetector);
+                            refEntityPreferredAlias = va.primaryAlias();
+                            refEntityInfo =
+                                    get(tableReferences.getEntityClass(refEntityPreferredAlias), entityCycleDetector);
                             refFieldInfo = refEntityInfo.getIdFieldInfo();
-                        } else {
+                        }
+
+                        if (loa != null) {
+                            column = AnnotationUtils.getAnnotationString(loa.name());
                             PropertyRef propertyRef = tableReferences.getPropertyRef(loa.property());
-                            refEntityInfo = get(tableReferences.getEntityClass(propertyRef.getTableAlias()),
-                                    entityCycleDetector);
+                            refEntityPreferredAlias = propertyRef.getTableAlias();
+                            refEntityInfo =
+                                    get(tableReferences.getEntityClass(refEntityPreferredAlias), entityCycleDetector);
                             // Persistent properties only
                             refFieldInfo = refEntityInfo.getFieldInfo(propertyRef.getFieldName());
                         }
@@ -755,8 +775,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                     searchClass, field, refFieldInfo.getFieldType());
                         }
 
-                        // Set column name
-                        String column = AnnotationUtils.getAnnotationString(loa.name());
                         if (StringUtils.isBlank(column)) {
                             column = SqlUtils.generateSchemaElementName(field.getName(), true);
                         }
@@ -765,11 +783,15 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 refFieldInfo.getPrecision(), refFieldInfo.getScale());
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(searchClass, field.getName());
+                        boolean isForeignKey = false;
+                        boolean isIgnoreFkConstraint = false;
+                        boolean isListOnly = true;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
                                 refFieldInfo.getColumnType(), refEntityInfo, refFieldInfo, null, field.getName(),
-                                column, sqlDataSourceDialect.getPreferredName(column), null, false, false, false,
-                                refFieldInfo.getTransformer(), sqlFieldDimensions, false, null, field,
-                                getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
+                                column, sqlDataSourceDialect.getPreferredName(column), null,
+                                refEntityPreferredAlias.toUpperCase(), isPrimaryKey, isForeignKey, isListOnly,
+                                isIgnoreFkConstraint, refFieldInfo.getTransformer(), sqlFieldDimensions, false, null,
+                                field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter());
 
                         if (isPrimaryKey) {
                             if (idFieldInfo != null) {
@@ -849,7 +871,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, null,
                         viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName, schemaViewName,
-                        idFieldInfo, null, propertyInfoMap, null, null, null, null, null, viewRestrictionList);
+                        idFieldInfo, null, propertyInfoMap, null, null, null, null, null,
+                        tableReferences.getBaseTables(), viewRestrictionList);
                 return sqlEntityInfo;
             }
 
@@ -1073,7 +1096,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
         private Class<?> entityClass;
 
-        private Map<String, Class<? extends Entity>> tables;
+        private Map<String, Class<?>> tables;
 
         public TableReferences(Class<?> entityClass) throws UnifyException {
             ReflectUtils.assertAnnotation(entityClass, View.class);
@@ -1084,7 +1107,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
             this.primaryAlias = va.primaryAlias().toUpperCase();
             this.entityClass = entityClass;
-            tables = new LinkedHashMap<String, Class<? extends Entity>>();
+            tables = new LinkedHashMap<String, Class<?>>();
             for (TableRef tableRef : va.tables()) {
                 String tableAlias = tableRef.alias().toUpperCase();
                 if (StringUtils.isBlank(tableAlias)) {
@@ -1102,8 +1125,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             tables = Collections.unmodifiableMap(tables);
         }
 
-        public Class<? extends Entity> getEntityClass(String tableAlias) throws UnifyException {
-            Class<? extends Entity> entityType = tables.get(tableAlias.toUpperCase());
+        public Class<?> getEntityClass(String tableAlias) throws UnifyException {
+            Class<?> entityType = tables.get(tableAlias.toUpperCase());
             if (entityType == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_UNKNOWN_TABLEREF_WITH_ALIAS, entityClass,
                         tableAlias);
@@ -1124,8 +1147,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 fieldName = parts[1];
             }
 
-            return new PropertyRef(tableAlias, fieldName);
+            return new PropertyRef(tableAlias.toUpperCase(), fieldName);
         }
+
+        public Map<String, Class<?>> getBaseTables() {
+            return tables;
+        }
+
     }
 
     private class PropertyRef {

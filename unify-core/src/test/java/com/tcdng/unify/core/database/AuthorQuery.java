@@ -21,7 +21,7 @@ package com.tcdng.unify.core.database;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class AuthorQuery extends AbstractTestEntityQuery<Author> {
+public class AuthorQuery extends AbstractTestTableEntityQuery<Author> {
 
     public AuthorQuery() {
         super(Author.class);

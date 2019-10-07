@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @since 1.0
  */
 @Table(name = "REPORT_PARAMETEROPT")
-public class ReportParameterOptions extends AbstractTestEntity {
+public class ReportParameterOptions extends AbstractTestTableEntity {
 
     @ForeignKey(ReportParameter.class)
     private Long reportParameterId;

@@ -15,7 +15,9 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlLikeType;
 
 /**
  * Not like operator policy.
@@ -30,7 +32,11 @@ public class NotLikePolicy extends SingleParameterPolicy {
     }
 
     @Override
-    protected Object resolveParam(Object param) {
-        return "%" + param + "%";
+    protected Object resolveParam(Object param) throws UnifyException{
+        return resolveParam(SqlLikeType.CONTAINS, param);
+    }
+    
+    protected String resolveParam(SqlLikeType type, Object param) throws UnifyException{
+        return getSqlDataSourceDialect().generateLikeParameter(type, param);
     }
 }

@@ -50,6 +50,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
     private String defaultVal;
 
+    private String foreignEntityPreferredAlias;
+
     private Transformer<?, ?> transformer;
 
     private boolean primaryKey;
@@ -57,6 +59,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     private boolean foreignKey;
 
     private boolean ignoreFkConstraint;
+
+    private boolean listOnly;
 
     private boolean nullable;
 
@@ -72,19 +76,22 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
     public SqlFieldInfo(int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
             SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
-            String preferredColumnName, String constraintName, boolean primaryKey, boolean foreignKey,
-            boolean ignoreFkConstraint, Transformer<?, ?> transformer, SqlFieldDimensions sqlFieldDimensions,
-            boolean nullable, String defaultVal, Field field, Method getter, Method setter) {
+            String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
+            boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
+            SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
+            Method setter) {
         this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
-                columnName, preferredColumnName, constraintName, primaryKey, foreignKey, ignoreFkConstraint,
-                transformer, sqlFieldDimensions, nullable, defaultVal, field, getter, setter);
+                columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
+                listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, defaultVal, field, getter,
+                setter);
     }
 
     public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
             SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
-            String preferredColumnName, String constraintName, boolean primaryKey, boolean foreignKey,
-            boolean ignoreFkConstraint, Transformer<?, ?> transformer, SqlFieldDimensions sqlFieldDimensions,
-            boolean nullable, String defaultVal, Field field, Method getter, Method setter) {
+            String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
+            boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
+            SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
+            Method setter) {
         this.marker = marker;
         this.columnType = columnType;
         this.foreignEntityInfo = foreignSqlEntityInfo;
@@ -96,6 +103,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         this.constraintName = constraintName;
         this.primaryKey = primaryKey;
         this.foreignKey = foreignKey;
+        this.foreignEntityPreferredAlias = foreignEntityPreferredAlias;
+        this.listOnly = listOnly;
         this.ignoreFkConstraint = ignoreFkConstraint;
         this.transformer = transformer;
         this.nullable = nullable;
@@ -141,8 +150,13 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     }
 
     @Override
+    public String getForeignEntityPreferredAlias() {
+        return foreignEntityPreferredAlias;
+    }
+
+    @Override
     public boolean isListOnly() {
-        return foreignKeyFieldInfo != null;
+        return listOnly;
     }
 
     public Transformer<?, ?> getTransformer() {

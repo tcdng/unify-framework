@@ -44,12 +44,12 @@ import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
- * Database CRUD tests.
+ * Database table entity CRUD tests.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
+public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
     private Office parklaneOffice = new Office("24, Parklane Apapa", "+2348888888", 20);
 
@@ -215,7 +215,7 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(4, db.countAll(new FruitQuery().ignoreEmptyCriteria(true)));
             assertEquals(2, db.countAll(new FruitQuery().lessEqual("price", 20.00)));
-            assertEquals(1, db.countAll(new FruitQuery().likeBegin("name", "ban")));
+            assertEquals(1, db.countAll(new FruitQuery().beginsWith("name", "ban")));
         } finally {
             tm.endTransaction();
         }
@@ -4025,7 +4025,7 @@ public class DatabaseCRUDTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
-        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);;
+        tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
     }
 

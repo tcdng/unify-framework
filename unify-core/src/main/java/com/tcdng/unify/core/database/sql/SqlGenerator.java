@@ -537,4 +537,17 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateUTCTimestampSql() throws UnifyException;
+
+    /**
+     * Generates a like parameter based on supplied like type and parameter object
+     * 
+     * @param type
+     *            the like type
+     * @param param
+     *            the base parameter
+     * @return the generated parameter
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException;
 }

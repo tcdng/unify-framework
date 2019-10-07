@@ -105,7 +105,7 @@ public class SqlStatementPools {
     public void restore(SqlStatement sqlStatement) throws UnifyException {
         poolMap.get(sqlStatement.getType()).returnObject(sqlStatement);
     }
-    
+
     private abstract class SqlStatementPool extends AbstractPool<SqlStatement> {
 
         private List<SqlResult> sqlResultList;
@@ -121,11 +121,12 @@ public class SqlStatementPools {
 
         protected List<SqlResult> getSqlResultList(List<SqlFieldInfo> sqlFieldInfoList) {
             if (sqlResultList == null) {
-                synchronized(SqlStatementPool.class) {
+                synchronized (SqlStatementPool.class) {
                     if (sqlResultList == null) {
                         sqlResultList = new ArrayList<SqlResult>();
                         for (SqlFieldInfo sqlFieldInfo : sqlFieldInfoList) {
-                            sqlResultList.add(new SqlResult(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), sqlFieldInfo));
+                            sqlResultList.add(
+                                    new SqlResult(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), sqlFieldInfo));
                         }
                     }
                 }
@@ -223,6 +224,10 @@ public class SqlStatementPools {
             List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
             parameterInfoList
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            if (sqlEntityInfo.isViewOnly()) {
+                return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
+                        parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+            }
 
             return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
                     parameterInfoList, getSqlResultList(sqlEntityInfo.getFieldInfos()));
@@ -247,7 +252,13 @@ public class SqlStatementPools {
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
             parameterInfoList.add(
                     new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
-            
+
+            if (sqlEntityInfo.isViewOnly()) {
+                return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
+                        sqlCache.getFindByPkVersionSql(), parameterInfoList,
+                        getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+            }
+
             return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
                     sqlCache.getFindByPkVersionSql(), parameterInfoList,
                     getSqlResultList(sqlEntityInfo.getFieldInfos()));
@@ -271,7 +282,7 @@ public class SqlStatementPools {
             List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
             parameterInfoList
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
-            
+
             return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK, sqlCache.getListByPkSql(),
                     parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
         }
@@ -295,7 +306,7 @@ public class SqlStatementPools {
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
             parameterInfoList.add(
                     new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
-            
+
             return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK_VERSION,
                     sqlCache.getListByPkVersionSql(), parameterInfoList,
                     getSqlResultList(sqlEntityInfo.getListFieldInfos()));

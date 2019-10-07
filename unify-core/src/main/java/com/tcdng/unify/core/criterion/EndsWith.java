@@ -16,21 +16,19 @@
 package com.tcdng.unify.core.criterion;
 
 /**
- * Restriction for a property that does not end with a value.
+ * Restriction for a property that ends with a value.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotLikeEnd extends AbstractSingleValueRestriction {
+public class EndsWith extends AbstractSingleValueRestriction {
 
-    public NotLikeEnd(String propertyName, Object value) {
+    public EndsWith(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
     public RestrictionType getType() {
-        return RestrictionType.NOT_END_WITH;
+        return RestrictionType.ENDS_WITH;
     }
 }
-
-
