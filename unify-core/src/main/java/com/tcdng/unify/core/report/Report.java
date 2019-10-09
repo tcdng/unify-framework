@@ -76,7 +76,7 @@ public class Report {
     private int pageWidth;
 
     private int pageHeight;
-    
+
     private String summationLegend;
 
     private String groupSummationLegend;
@@ -84,6 +84,8 @@ public class Report {
     private boolean dynamicDataSource;
 
     private boolean printColumnNames;
+
+    private boolean printGroupColumnNames;
 
     private boolean underlineRows;
 
@@ -93,10 +95,11 @@ public class Report {
 
     private Report(String code, String title, String template, String processor, String dataSource, String query,
             Collection<?> beanCollection, ReportTable table, List<ReportTableJoin> joins, List<ReportColumn> columns,
-            ReportFilter filter, ReportFormat format, ReportLayout layout,
-            ReportParameters reportParameters, int pageWidth, int pageHeight, String columnFontName, int columnFontSize, int columnHeaderHeight,
+            ReportFilter filter, ReportFormat format, ReportLayout layout, ReportParameters reportParameters,
+            int pageWidth, int pageHeight, String columnFontName, int columnFontSize, int columnHeaderHeight,
             int detailHeight, String summationLegend, String groupSummationLegend, boolean dynamicDataSource,
-            boolean printColumnNames, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
+            boolean printColumnNames, boolean printGroupColumnNames, boolean underlineRows, boolean shadeOddRows,
+            boolean landscape) {
         this.code = code;
         this.title = title;
         this.template = template;
@@ -121,6 +124,7 @@ public class Report {
         this.groupSummationLegend = groupSummationLegend;
         this.dynamicDataSource = dynamicDataSource;
         this.printColumnNames = printColumnNames;
+        this.printGroupColumnNames = printGroupColumnNames;
         this.underlineRows = underlineRows;
         this.shadeOddRows = shadeOddRows;
         this.landscape = landscape;
@@ -222,6 +226,10 @@ public class Report {
         return printColumnNames;
     }
 
+    public boolean isPrintGroupColumnNames() {
+        return printGroupColumnNames;
+    }
+
     public boolean isUnderlineRows() {
         return underlineRows;
     }
@@ -315,7 +323,7 @@ public class Report {
         private Stack<ReportFilter> filters;
 
         private ReportFilter rootFilter;
-        
+
         private ReportFormat format;
 
         private ReportLayout layout;
@@ -340,6 +348,8 @@ public class Report {
 
         private boolean printColumnNames;
 
+        private boolean printGroupColumnNames;
+
         private boolean underlineRows;
 
         private boolean shadeOddRows;
@@ -356,6 +366,7 @@ public class Report {
             this.filters = new Stack<ReportFilter>();
             this.parameters = new HashMap<String, Object>();
             this.printColumnNames = true;
+            this.printGroupColumnNames = true;
             this.columnFontName = DEFAULT_COLUMN_FONTNAME;
             this.columnFontSize = DEFAULT_COLUMN_FONTSIZE;
             this.columnHeaderHeight = DEFAULT_COLUMNHEADER_HEIGHT;
@@ -454,6 +465,11 @@ public class Report {
 
         public Builder printColumnNames(boolean printColumnNames) {
             this.printColumnNames = printColumnNames;
+            return this;
+        }
+
+        public Builder printGroupColumnNames(boolean printGroupColumnNames) {
+            this.printGroupColumnNames = printGroupColumnNames;
             return this;
         }
 
@@ -566,7 +582,7 @@ public class Report {
             if (reportFilter.isCompound()) {
                 throw new IllegalArgumentException(reportFilter.getOp() + " is not a simple restriction type.");
             }
-            
+
             if (filters.isEmpty()) {
                 throw new IllegalStateException("No compound filter context currently open.");
             }
@@ -588,9 +604,9 @@ public class Report {
         public Report build() throws UnifyException {
             Report report = new Report(code, title, template, processor, dataSource, query, beanCollection, table,
                     Collections.unmodifiableList(joins), columns, rootFilter, format, layout,
-                    new ReportParameters(parameters), pageWidth, pageHeight, columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
-                    summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames, underlineRows,
-                    shadeOddRows, landscape);
+                    new ReportParameters(parameters), pageWidth, pageHeight, columnFontName, columnFontSize,
+                    columnHeaderHeight, detailHeight, summationLegend, groupSummationLegend, dynamicDataSource,
+                    printColumnNames, printGroupColumnNames, underlineRows, shadeOddRows, landscape);
             return report;
         }
     }

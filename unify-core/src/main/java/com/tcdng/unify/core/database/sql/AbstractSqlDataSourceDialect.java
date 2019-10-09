@@ -1202,6 +1202,19 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                     rootFilter.getSubFilterList());
         }
 
+        if (query.isOrderBy()) {
+            sql.append(" ORDER BY ");
+            boolean appendSym = false;
+            for (NativeQuery.OrderBy orderBy : query.getOrderByList()) {
+                if (appendSym) {
+                    sql.append(',');
+                } else {
+                    appendSym = true;
+                }
+
+                sql.append(orderBy.getColumnName()).append(' ').append(orderBy.getOrderType().code());
+            }
+        }
         appendLimitOffsetSuffixClause(sql, query.getOffset(), query.getLimit(), query.isRootFilter());
         return sql.toString();
     }
@@ -1561,15 +1574,19 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected boolean appendOrderClause(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
             throws UnifyException {
         if (query.isOrder()) {
-            StringBuilder orderSql = new StringBuilder();
+            sql.append(" ORDER BY ");
+            boolean appendSym = false;
             for (Order.Part part : query.getOrder().getParts()) {
-                if (orderSql.length() > 0) {
-                    orderSql.append(',');
+                if (appendSym) {
+                    sql.append(',');
+                } else {
+                    appendSym = true;
                 }
-                orderSql.append(sqlEntityInfo.getListFieldInfo(part.getField()).getPreferredColumnName()).append(' ')
+
+                sql.append(sqlEntityInfo.getListFieldInfo(part.getField()).getPreferredColumnName()).append(' ')
                         .append(part.getType().code());
             }
-            sql.append(" ORDER BY ").append(orderSql);
+
             return true;
         }
         return false;

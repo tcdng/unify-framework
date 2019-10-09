@@ -16,12 +16,13 @@
 package com.tcdng.unify.core.database;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A native query object.
@@ -35,6 +36,8 @@ public class NativeQuery {
 
     private List<Join> joinList;
 
+    private List<OrderBy> orderByList;
+
     private Filter rootFilter;
 
     private String schemaName;
@@ -47,11 +50,12 @@ public class NativeQuery {
 
     private boolean distinct;
 
-    private NativeQuery(List<Column> columnList, List<Join> joinList, Filter rootFilter, String schemaName,
-            String tableName, int offset, int limit, boolean distinct) {
+    private NativeQuery(List<Column> columnList, List<Join> joinList, Filter rootFilter, List<OrderBy> orderByList,
+            String schemaName, String tableName, int offset, int limit, boolean distinct) {
         this.columnList = columnList;
         this.joinList = joinList;
         this.rootFilter = rootFilter;
+        this.orderByList = orderByList;
         this.schemaName = schemaName;
         this.tableName = tableName;
         this.offset = offset;
@@ -79,6 +83,10 @@ public class NativeQuery {
         return rootFilter;
     }
 
+    public List<OrderBy> getOrderByList() {
+        return orderByList;
+    }
+
     public int getLimit() {
         return limit;
     }
@@ -103,6 +111,10 @@ public class NativeQuery {
         return rootFilter != null;
     }
 
+    public boolean isOrderBy() {
+        return !orderByList.isEmpty();
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -112,6 +124,8 @@ public class NativeQuery {
         private List<Column> columnList;
 
         private List<Join> joinList;
+
+        private List<OrderBy> orderByList;
 
         private Stack<Filter> filters;
 
@@ -131,6 +145,7 @@ public class NativeQuery {
             this.columnList = new ArrayList<Column>();
             this.joinList = new ArrayList<Join>();
             this.filters = new Stack<Filter>();
+            this.orderByList = new ArrayList<OrderBy>();
             this.limit = 0;
         }
 
@@ -151,6 +166,15 @@ public class NativeQuery {
 
         public Builder addJoin(SqlJoinType type, String tableA, String columnA, String tableB, String columnB) {
             joinList.add(new Join(type, tableA, columnA, tableB, columnB));
+            return this;
+        }
+
+        public Builder addOrderBy(String columnName) {
+            return addOrderBy(OrderType.ASCENDING, columnName);
+        }
+
+        public Builder addOrderBy(OrderType type, String columnName) {
+            orderByList.add(new OrderBy(type, columnName));
             return this;
         }
 
@@ -190,7 +214,7 @@ public class NativeQuery {
             if (op.isCompound()) {
                 throw new IllegalArgumentException(op + " is not a simple restriction type.");
             }
-            
+
             if (filters.isEmpty()) {
                 throw new IllegalStateException("No compound filter context currently open.");
             }
@@ -218,9 +242,10 @@ public class NativeQuery {
             if (rootFilter == null && !filters.isEmpty()) {
                 throw new IllegalStateException("Compound filter context is still open.");
             }
-            
-            return new NativeQuery(Collections.unmodifiableList(columnList), Collections.unmodifiableList(joinList),
-                    rootFilter, schemaName, tableName, offset, limit, distinct);
+
+            return new NativeQuery(DataUtils.unmodifiableList(columnList), DataUtils.unmodifiableList(joinList),
+                    rootFilter, DataUtils.unmodifiableList(orderByList), schemaName, tableName, offset, limit,
+                    distinct);
         }
     }
 
@@ -339,6 +364,26 @@ public class NativeQuery {
 
         public List<Filter> getSubFilterList() {
             return subFilterList;
+        }
+    }
+
+    public static class OrderBy {
+
+        private OrderType orderType;
+
+        private String columnName;
+
+        public OrderBy(OrderType orderType, String columnName) {
+            this.orderType = orderType;
+            this.columnName = columnName;
+        }
+
+        public OrderType getOrderType() {
+            return orderType;
+        }
+
+        public String getColumnName() {
+            return columnName;
         }
     }
 }
