@@ -455,18 +455,25 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+    public final String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlForeignKeySchemaInfo sqlForeignKeyInfo, boolean format) throws UnifyException {
+        return generateDropForeignKeyConstraintSql(sqlEntitySchemaInfo,
+                sqlEntitySchemaInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).getConstraint(), format);
+    }
+
+    @Override
+    public String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbForeignKeyName,
+            boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         String tableName = sqlEntitySchemaInfo.getSchemaTableName();
-        SqlFieldSchemaInfo sqlFieldInfo = sqlEntitySchemaInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName());
         sb.append("ALTER TABLE ").append(tableName);
         if (format) {
             sb.append(newLineSql);
         } else {
             sb.append(" ");
         }
-        sb.append("DROP CONSTRAINT ").append(sqlFieldInfo.getConstraint());
+        sb.append("DROP CONSTRAINT ")
+                .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbForeignKeyName));
         return sb.toString().toUpperCase();
     }
 
@@ -505,6 +512,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException {
+        return generateDropUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo.getName(), format);
+    }
+
+    @Override
+    public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            String dbUniqueConstraintName, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         String tableName = sqlEntitySchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
@@ -513,7 +526,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" ");
         }
-        sb.append("DROP CONSTRAINT ").append(sqlUniqueConstraintInfo.getName());
+        sb.append("DROP CONSTRAINT ").append(
+                SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbUniqueConstraintName));
         return sb.toString();
     }
 
@@ -548,10 +562,17 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
+    public final String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
             boolean format) throws UnifyException {
+        return generateDropIndexSql(sqlEntitySchemaInfo, sqlIndexInfo.getName().toUpperCase(), format);
+    }
+
+    @Override
+    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, boolean format)
+            throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("DROP INDEX ").append(sqlIndexInfo.getName().toUpperCase());
+        sb.append("DROP INDEX ")
+                .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbIndexName));
         return sb.toString();
     }
 

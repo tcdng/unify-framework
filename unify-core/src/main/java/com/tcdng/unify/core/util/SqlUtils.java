@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,17 @@ import com.tcdng.unify.core.database.sql.SqlFieldDimensions;
  */
 public final class SqlUtils {
 
+    public static final String IDENTIFIER_SUFFIX_FOREIGNKEY = "_FK";
+    public static final String IDENTIFIER_SUFFIX_UNIQUECONSTRAINT = "_UC";
+    public static final String IDENTIFIER_SUFFIX_INDEX = "_IX";
+
+    private static final List<String> VENDOR_IDENTIFIER_PREFIXES =
+            Collections.unmodifiableList(Arrays.asList("SYS_IDX_", "SYS_"));
+
+    private static final List<String> MANAGED_IDENTIFIER_SUFFIXES =
+            Collections.unmodifiableList(Arrays.asList(SqlUtils.IDENTIFIER_SUFFIX_FOREIGNKEY,
+                    SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT, SqlUtils.IDENTIFIER_SUFFIX_INDEX));
+
     private static final List<Class<? extends Number>> versionNoTypes;
 
     private static final Map<Integer, Class<?>> sqlToJavaTypeMap;
@@ -55,6 +68,9 @@ public final class SqlUtils {
     private static final int DEFAULT_STRING_LEN = 32;
     private static final int DEFAULT_STRINGARRAY_LEN = 256;
     private static final int DEFAULT_ENUMCONST_LEN = StaticReference.CODE_LENGTH;
+
+    private static final int MAX_CONSTRAINT_TABLE_PREFIX_LEN = 14;
+    private static final int MAX_CONSTRAINT_TOTAL_FIELD_PREFIX_LEN = 12;
 
     static {
         versionNoTypes = new ArrayList<Class<? extends Number>>();
@@ -187,12 +203,13 @@ public final class SqlUtils {
      * 
      * @param tableName
      *            the table name
-     * @param index
-     *            the index
+     * @param fieldName
+     *            the field name
      * @return the generated foreign key constraint name
      */
-    public static String generateForeignKeyConstraintName(String tableName, int index) {
-        return String.format("%s_FK%02d", tableName, index);
+    public static String generateForeignKeyConstraintName(String tableName, String fieldName) {
+        return String.format("%s%s", SqlUtils.generateConstraintName(tableName, fieldName),
+                IDENTIFIER_SUFFIX_FOREIGNKEY);
     }
 
     /**
@@ -200,12 +217,13 @@ public final class SqlUtils {
      * 
      * @param tableName
      *            the table name
-     * @param index
-     *            the index
+     * @param fieldNames
+     *            the field names
      * @return the generated constraint name string
      */
-    public static String generateUniqueConstraintName(String tableName, int index) {
-        return String.format("%s_UC%02d", tableName, index);
+    public static String generateUniqueConstraintName(String tableName, String... fieldNames) {
+        return String.format("%s%s", SqlUtils.generateConstraintName(tableName, fieldNames),
+                IDENTIFIER_SUFFIX_UNIQUECONSTRAINT);
     }
 
     /**
@@ -213,14 +231,47 @@ public final class SqlUtils {
      * 
      * @param tableName
      *            the table name
-     * @param index
-     *            the index
+     * @param fieldNames
+     *            the field names
      * @return the generated index string
      */
-    public static String generateIndexName(String tableName, int index) {
-        return String.format("%s_IDX%02d", tableName, index);
+    public static String generateIndexName(String tableName, String... fieldNames) {
+        return String.format("%s%s", SqlUtils.generateConstraintName(tableName, fieldNames), IDENTIFIER_SUFFIX_INDEX);
     }
 
+    /**
+     * Resolves a constraint name from a suggested vendor object name.
+     * 
+     * @param suggestedName
+     *            the suggested name
+     * @return the resolved constraint name otherwise null
+     */
+    public static String resolveConstraintName(String suggestedName) {
+        if (!StringUtils.isBlank(suggestedName)) {
+            // Trim prefix
+            for (String vendorPrefix : VENDOR_IDENTIFIER_PREFIXES) {
+                if (suggestedName.startsWith(vendorPrefix)) {
+                    suggestedName = suggestedName.substring(vendorPrefix.length());
+                    break;
+                }
+            }
+
+            // Trim and detect suffix
+            for (String managedSuffix : MANAGED_IDENTIFIER_SUFFIXES) {
+                int index = suggestedName.lastIndexOf(managedSuffix);
+                if (index > 0) {
+                    int nIndex = suggestedName.indexOf('_', index + 1);
+                    if (nIndex > 0) {
+                        return suggestedName.substring(0, nIndex);
+                    } else {
+                        return suggestedName;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
     /**
      * Tests if supplied type is a supported version number type.
      * 
@@ -392,6 +443,37 @@ public final class SqlUtils {
                 break;
         }
         return new SqlFieldDimensions(nLength, nPrecision, nScale);
+    }
+
+    private static String generateConstraintName(String tableName, String... fieldNames) {
+        StringBuilder sb = new StringBuilder();
+        if (tableName.length() > MAX_CONSTRAINT_TABLE_PREFIX_LEN) {
+            int midLen = tableName.length() / 2;
+            sb.append(tableName.substring(0, MAX_CONSTRAINT_TABLE_PREFIX_LEN / 2))
+                    .append(tableName.substring(midLen, midLen + MAX_CONSTRAINT_TABLE_PREFIX_LEN / 2));
+        } else {
+            sb.append(tableName);
+        }
+
+        if (fieldNames.length > 0) {
+            sb.append('_');
+            int fMaxLen = MAX_CONSTRAINT_TOTAL_FIELD_PREFIX_LEN / fieldNames.length;
+            if (fMaxLen <= 1) {
+                fMaxLen = 2;
+            }
+
+            for (String fieldName : fieldNames) {
+                if (fieldName.length() > fMaxLen) {
+                    int midLen = fieldName.length() / 2;
+                    sb.append(fieldName.substring(0, fMaxLen / 2))
+                            .append(fieldName.substring(midLen, midLen + fMaxLen / 2));
+                } else {
+                    sb.append(fieldName);
+                }
+            }
+        }
+
+        return sb.toString().toUpperCase();
     }
 
 }

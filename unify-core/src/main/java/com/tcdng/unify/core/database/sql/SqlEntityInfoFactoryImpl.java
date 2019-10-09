@@ -177,7 +177,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 String tableAlias = "R" + (++rAliasCounter);
                 return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
-                        tableName, preferredTableName, schemaTableName, tableAlias, tableName, preferredTableName,
+                        schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName, preferredTableName,
                         schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null, null, null, null, null);
             }
 
@@ -224,7 +224,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 List<ChildFieldInfo> childListInfoList = new ArrayList<ChildFieldInfo>();
                 SqlFieldInfo idFieldInfo = null;
                 SqlFieldInfo versionFieldInfo = null;
-                int fkIndex = 0;
                 Map<Class<?>, List<Field>> listOnlyFieldMap = new HashMap<Class<?>, List<Field>>();
                 Class<?> searchClass = entityClass;
                 do {
@@ -491,7 +490,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                             String constraintName = null;
                             if (isForeignKey) {
-                                constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, ++fkIndex);
+                                constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
                             }
 
                             SqlFieldDimensions sqlFieldDimensions =
@@ -603,11 +602,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 // Unique constraints
                 Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = null;
                 if (ta.uniqueConstraints().length > 0) {
-                    int index = 0;
                     uniqueConstraintMap = new LinkedHashMap<String, SqlUniqueConstraintInfo>();
                     for (UniqueConstraint uca : ta.uniqueConstraints()) {
-                        String name = SqlUtils.generateUniqueConstraintName(tableName, ++index);
                         String[] fieldNames = uca.value();
+                        String name = SqlUtils.generateUniqueConstraintName(tableName, fieldNames);
                         if (fieldNames.length == 0) {
                             throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_UNIQUECONSTRAINT,
                                     entityClass, name);
@@ -635,11 +633,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 // Indexes
                 Map<String, SqlIndexInfo> indexMap = null;
                 if (ta.indexes().length > 0) {
-                    int index = 0;
                     indexMap = new LinkedHashMap<String, SqlIndexInfo>();
                     for (Index idxa : ta.indexes()) {
-                        String name = SqlUtils.generateIndexName(tableName, ++index);
                         String[] fieldNames = idxa.value();
+                        String name = SqlUtils.generateIndexName(tableName, fieldNames);
                         if (fieldNames.length == 0) {
                             throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_INDEX,
                                     entityClass, name);
@@ -679,7 +676,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 String tableAlias = "T" + (++tAliasCounter);
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
-                        entityPolicy, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
+                        entityPolicy, schema, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
                         preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
                         childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null, null, null);
                 return sqlEntityInfo;
@@ -870,8 +867,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
 
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, null,
-                        viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName, schemaViewName,
-                        idFieldInfo, null, propertyInfoMap, null, null, null, null, null,
+                        schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
+                        schemaViewName, idFieldInfo, null, propertyInfoMap, null, null, null, null, null,
                         tableReferences.getBaseTables(), viewRestrictionList);
                 return sqlEntityInfo;
             }

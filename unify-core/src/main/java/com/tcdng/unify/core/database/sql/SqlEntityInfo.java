@@ -46,6 +46,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private EntityPolicy entityPolicy;
 
+    private String schema;
+    
     private String tableName;
 
     private String preferredTableName;
@@ -95,7 +97,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     private List<SqlViewRestrictionInfo> viewRestrictionList;
 
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
-            EntityPolicy recordPolicy, String tableName, String preferredTableName, String schemaTableName,
+            EntityPolicy recordPolicy, String schema, String tableName, String preferredTableName, String schemaTableName,
             String tableAlias, String viewName, String preferredViewName, String schemaViewName,
             SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
@@ -106,6 +108,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
         this.entityPolicy = recordPolicy;
+        this.schema = schema;
         this.tableName = tableName;
         this.preferredTableName = preferredTableName;
         this.schemaTableName = schemaTableName;
@@ -178,6 +181,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public Long getIndex() {
         return index;
+    }
+
+    @Override
+    public String getSchema() {
+        return schema;
     }
 
     @Override
