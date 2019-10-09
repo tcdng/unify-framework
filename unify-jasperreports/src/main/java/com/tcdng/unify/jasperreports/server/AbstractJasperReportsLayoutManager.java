@@ -292,10 +292,16 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             jRDesignVariable.setResetType(ResetTypeEnum.GROUP);
             jRDesignVariable.setResetGroup(jRDesignGroup);
             jRDesignVariable.setCalculation(CalculationEnum.SUM);
-            jRDesignVariable
-                    .setInitialValueExpression(newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
-            jRDesignVariable.setExpression(newJRDesignExpression(
-                    "new " + reportColumn.getTypeName() + "($F{" + reportColumn.getName() + "})"));
+            if (reportColumn.getTypeName().equals("java.math.BigDecimal")) {
+                jRDesignVariable.setInitialValueExpression(newJRDesignExpression("new java.math.BigDecimal(0)"));
+                jRDesignVariable.setExpression(newJRDesignExpression(
+                        "new java.math.BigDecimal($F{" + reportColumn.getName() + "}.doubleValue())"));
+            } else {
+                jRDesignVariable
+                        .setInitialValueExpression(newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
+                jRDesignVariable.setExpression(newJRDesignExpression(
+                        "new " + reportColumn.getTypeName() + "($F{" + reportColumn.getName() + "})"));
+            }
             jasperDesign.addVariable(jRDesignVariable);
             return jRDesignVariable;
         } catch (JRException e) {
@@ -313,10 +319,16 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             jRDesignVariable.setValueClass(ReflectUtils.getClassForName(reportColumn.getTypeName()));
             jRDesignVariable.setResetType(ResetTypeEnum.REPORT);
             jRDesignVariable.setCalculation(CalculationEnum.SUM);
-            jRDesignVariable
-                    .setInitialValueExpression(newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
-            jRDesignVariable.setExpression(newJRDesignExpression(
-                    "new " + reportColumn.getTypeName() + "($F{" + reportColumn.getName() + "})"));
+            if (reportColumn.getTypeName().equals("java.math.BigDecimal")) {
+                jRDesignVariable.setInitialValueExpression(newJRDesignExpression("new java.math.BigDecimal(0)"));
+                jRDesignVariable.setExpression(newJRDesignExpression(
+                        "new java.math.BigDecimal($F{" + reportColumn.getName() + "}.doubleValue())"));
+            } else {
+                jRDesignVariable
+                        .setInitialValueExpression(newJRDesignExpression("new " + reportColumn.getTypeName() + "(0)"));
+                jRDesignVariable.setExpression(newJRDesignExpression(
+                        "new " + reportColumn.getTypeName() + "($F{" + reportColumn.getName() + "})"));
+            }
             jasperDesign.addVariable(jRDesignVariable);
             return jRDesignVariable;
         } catch (JRException e) {
