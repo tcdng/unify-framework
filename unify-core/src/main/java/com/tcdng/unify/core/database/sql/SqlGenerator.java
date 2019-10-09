@@ -233,8 +233,24 @@ public interface SqlGenerator extends UnifyComponent {
             SqlForeignKeySchemaInfo sqlForeignKeyInfo, boolean format) throws UnifyException;
 
     /**
-     * Generates native add unique key constraint SQL for specified unique constaint
-     * info.
+     * Generates native drop foreign key constraint SQL for specified constraint.
+     * 
+     * @param sqlEntitySchemaInfo
+     *            record schema information
+     * @param dbForeignKeyName
+     *            foreign key name
+     * @param format
+     *            indicates if SQL should be formatted
+     * @return the drop foreign constraint SQL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbForeignKeyName,
+            boolean format) throws UnifyException;
+
+    /**
+     * Generates native add unique key constraint SQL for specified unique
+     * constraint info.
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
@@ -251,7 +267,7 @@ public interface SqlGenerator extends UnifyComponent {
 
     /**
      * Generates native drop unique key constraint SQL for specified unique
-     * constaint info.
+     * constraint info.
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
@@ -265,6 +281,23 @@ public interface SqlGenerator extends UnifyComponent {
      */
     String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException;
+
+    /**
+     * Generates native drop unique key constraint SQL for specified unique
+     * constraint.
+     * 
+     * @param sqlEntitySchemaInfo
+     *            record schema information
+     * @param dbUniqueConstraintName
+     *            unique constraint name
+     * @param format
+     *            indicates if SQL should be formatted
+     * @return the drop unique constraint SQL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbUniqueConstraintName,
+            boolean format) throws UnifyException;
 
     /**
      * Generates native create index SQL for specified index.
@@ -296,6 +329,22 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
+            boolean format) throws UnifyException;
+
+    /**
+     * Generate native drop index SQL for specified index.
+     * 
+     * @param sqlEntitySchemaInfo
+     *            record schema information
+     * @param dbIndexName
+     *            the index name
+     * @param format
+     *            indicates if SQL should be formatted
+     * @return the drop index SQL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName,
             boolean format) throws UnifyException;
 
     /**

@@ -29,6 +29,8 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SqlEntitySchemaInfo {
 
+    String getSchema();
+
     String getTableName();
 
     String getPreferredTableName();

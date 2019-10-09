@@ -21,6 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -123,19 +125,152 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                 if ("TABLE".equalsIgnoreCase(tableType)) {
                     Map<String, SqlColumnInfo> columnMap =
                             sqlDataSource.getColumnMap(appSchema, sqlEntityInfo.getTableName());
-                    List<String> columnUpdateSql =
-                            generateColumnUpdateSql(sqlDataSourceDialect, sqlEntityInfo, columnMap);
+                    List<String> columnUpdateSql = detectColumnUpdates(sqlDataSourceDialect, sqlEntityInfo, columnMap);
                     tableUpdateSql.addAll(columnUpdateSql);
                 } else {
                     throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
                             sqlDataSource.getName(), sqlEntityInfo.getTableName(), tableType);
                 }
+
+                SqlUtils.close(rs);
+
+                Map<String, TableConstraint> managedTableConstraints = new HashMap<String, TableConstraint>();
+                // Fetch foreign keys
+                rs = databaseMetaData.getImportedKeys(null, appSchema, sqlEntityInfo.getTableName());
+                while (rs.next()) {
+                    String fkName =
+                            SqlUtils.resolveConstraintName(rs.getString("FK_NAME"));
+                    String pkTableName = rs.getString("PKTABLE_NAME");
+                    String pkColumnName = rs.getString("PKCOLUMN_NAME");
+                    if (!StringUtils.isBlank(fkName) && !StringUtils.isBlank(pkTableName)
+                            && !StringUtils.isBlank(pkColumnName)) {
+                        TableConstraint tConst = managedTableConstraints.get(fkName);
+                        if (tConst == null) {
+                            tConst = new TableConstraint(fkName, pkTableName, false);
+                            managedTableConstraints.put(fkName, tConst);
+                        }
+
+                        tConst.addColumn(pkColumnName);
+                    }
+                }
+
+                SqlUtils.close(rs);
+                // Fetch indexes
+                rs = databaseMetaData.getIndexInfo(null, appSchema, sqlEntityInfo.getTableName(), false, false);
+                while (rs.next()) {
+                    String idxName =
+                            SqlUtils.resolveConstraintName(rs.getString("INDEX_NAME"));
+                    String idxColumnName = rs.getString("COLUMN_NAME");
+                    if (!StringUtils.isBlank(idxName) && !StringUtils.isBlank(idxColumnName)) {
+                        boolean unique = idxName.indexOf(SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT) > 0;
+                        TableConstraint tConst = managedTableConstraints.get(idxName);
+                        if (tConst == null) {
+                            tConst = new TableConstraint(idxName, null, unique);
+                            managedTableConstraints.put(idxName, tConst);
+                        }
+
+                        tConst.addColumn(idxColumnName);
+                    }
+                }
+
+                List<String> createUpdateConstraintSql = new ArrayList<String>();
+                // Detect foreign constraint changes
+                if (forceForeignConstraints && sqlEntityInfo.isForeignKeys()) {
+                    for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
+                        if (!sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
+                            SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName());
+                            String fkConstName = sqlFieldInfo.getConstraint();
+                            TableConstraint fkConst = managedTableConstraints.get(fkConstName);
+                            boolean update = true;
+                            if (fkConst != null) {
+                                // Check if foreign key matches database constraint
+                                if (fkConst.isForeignKey() && fkConst.getColumns().size() == 1
+                                        && fkConst.getTableName()
+                                                .equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
+                                        && fkConst.getColumns()
+                                                .contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
+                                    // Perfect match. Remove from pending list and no need for update
+                                    managedTableConstraints.remove(fkConstName);
+                                    update = false;
+                                }
+                            }
+
+                            if (update) {
+                                createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
+                                        sqlEntityInfo, sqlForeignKeyInfo, formatSql));
+                            }
+                        }
+                    }
+                }
+
+                // Detect unique constraint changes
+                if (sqlEntityInfo.isUniqueConstraints()) {
+                    for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
+                            .values()) {
+                        TableConstraint ucConst = managedTableConstraints.get(sqlUniqueConstraintInfo.getName());
+                        boolean update = true;
+                        if (ucConst != null) {
+                            // Check if unique constant matches database constraint
+                            if (ucConst.isUniqueConst() && matchIndexAllColumns(sqlEntityInfo,
+                                    sqlUniqueConstraintInfo.getFieldNameList(), ucConst.getColumns())) {
+                                // Perfect match. Remove from pending list and no need for update
+                                managedTableConstraints.remove(sqlUniqueConstraintInfo.getName());
+                                update = false;
+                            }
+                        }
+
+                        if (update) {
+                            createUpdateConstraintSql.add(sqlDataSourceDialect
+                                    .generateAddUniqueConstraintSql(sqlEntityInfo, sqlUniqueConstraintInfo, formatSql));
+                        }
+                    }
+                }
+
+                // Detect index changes
+                if (sqlEntityInfo.isIndexes()) {
+                    for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
+                        TableConstraint idxConst = managedTableConstraints.get(sqlIndexInfo.getName());
+                        boolean update = true;
+                        if (idxConst != null) {
+                            // Check if index matches database constraint
+                            if (idxConst.isIndex() && matchIndexAllColumns(sqlEntityInfo,
+                                    sqlIndexInfo.getFieldNameList(), idxConst.getColumns())) {
+                                // Perfect match. Remove from pending list and no need for update
+                                managedTableConstraints.remove(sqlIndexInfo.getName());
+                                update = false;
+                            }
+                        }
+
+                        if (update) {
+                            createUpdateConstraintSql.add(sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo,
+                                    sqlIndexInfo, formatSql));
+                        }
+                    }
+                }
+
+                // Add drops first
+                for (TableConstraint tConst : managedTableConstraints.values()) {
+                    if (tConst.isForeignKey()) {
+                        tableUpdateSql.add(sqlDataSourceDialect.generateDropForeignKeyConstraintSql(sqlEntityInfo,
+                                tConst.getName(), formatSql));
+                    } else if (tConst.isUniqueConst()) {
+                        tableUpdateSql.add(sqlDataSourceDialect.generateDropUniqueConstraintSql(sqlEntityInfo,
+                                tConst.getName(), formatSql));
+                    } else {
+                        tableUpdateSql.add(
+                                sqlDataSourceDialect.generateDropIndexSql(sqlEntityInfo, tConst.getName(), formatSql));
+                    }
+                }
+
+                // Then create changes
+                tableUpdateSql.addAll(createUpdateConstraintSql);
             } else {
                 logInfo("Creating datasource table {0}...", sqlEntityInfo.getTableName());
 
-                // Create table with constraints and indexes
+                // Create table
                 tableUpdateSql.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, formatSql));
 
+                // Create constraints and indexes
                 if (forceForeignConstraints && sqlEntityInfo.isForeignKeys()) {
                     for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
                         if (!sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
@@ -219,6 +354,20 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(rs);
             SqlUtils.close(pstmt);
         }
+    }
+
+    private boolean matchIndexAllColumns(SqlEntityInfo sqlEntityInfo, List<String> fieldNameList, Set<String> columns)
+            throws UnifyException {
+        if (fieldNameList.size() == columns.size()) {
+            for (String fieldName : fieldNameList) {
+                if (!columns.contains(sqlEntityInfo.getFieldInfo(fieldName).getColumnName())) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        return false;
     }
 
     private void manageViewEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
@@ -329,20 +478,20 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         return true;
     }
 
-    private List<String> generateColumnUpdateSql(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
+    private List<String> detectColumnUpdates(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
             Map<String, SqlColumnInfo> columnInfos) throws UnifyException {
-        List<String> columnUpdateSqlList = new ArrayList<String>();
+        List<String> columnUpdateSql = new ArrayList<String>();
         for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getFieldInfos()) {
             SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName());
             if (sqlColumnInfo == null) {
                 // New column
-                columnUpdateSqlList.add(sqlDataSourceDialect.generateAddColumn(sqlEntityInfo, sqlfieldInfo, formatSql));
+                columnUpdateSql.add(sqlDataSourceDialect.generateAddColumn(sqlEntityInfo, sqlfieldInfo, formatSql));
             } else {
                 SqlColumnAlterInfo columnAlterInfo =
                         checkSqlColumnAltered(sqlDataSourceDialect, sqlfieldInfo, sqlColumnInfo);
                 if (columnAlterInfo.isAltered()) {
                     // Alter column
-                    columnUpdateSqlList.addAll(sqlDataSourceDialect.generateAlterColumn(sqlEntityInfo, sqlfieldInfo,
+                    columnUpdateSql.addAll(sqlDataSourceDialect.generateAlterColumn(sqlEntityInfo, sqlfieldInfo,
                             columnAlterInfo, formatSql));
                 }
             }
@@ -352,12 +501,12 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         for (SqlColumnInfo sqlColumnInfo : columnInfos.values()) {
             if (!sqlColumnInfo.isNullable()) {
                 // Alter column nullable
-                columnUpdateSqlList
+                columnUpdateSql
                         .add(sqlDataSourceDialect.generateAlterColumnNull(sqlEntityInfo, sqlColumnInfo, formatSql));
             }
         }
 
-        return columnUpdateSqlList;
+        return columnUpdateSql;
     }
 
     private SqlColumnAlterInfo checkSqlColumnAltered(SqlDataSourceDialect sqlDataSourceDialect,
@@ -395,5 +544,60 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         }
 
         return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
+    }
+
+    private class TableConstraint {
+
+        private String name;
+
+        private String tableName;
+
+        private Set<String> columns;
+
+        private boolean unique;
+
+        public TableConstraint(String name, String tableName, boolean unique) {
+            this.columns = new HashSet<String>();
+            this.name = name;
+            this.tableName = tableName;
+            this.unique = unique;
+        }
+
+        public void addColumn(String columnName) {
+            columns.add(columnName);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getTableName() {
+            return tableName;
+        }
+
+        public Set<String> getColumns() {
+            return columns;
+        }
+
+        public boolean isForeignKey() {
+            return tableName != null;
+        }
+
+        public boolean isUniqueConst() {
+            return tableName == null && unique;
+        }
+
+        public boolean isIndex() {
+            return tableName == null && !unique;
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("{name = ").append(name);
+            sb.append(", tableName = ").append(tableName);
+            sb.append(", unique = ").append(unique);
+            sb.append(", columns = ").append(columns).append("}");
+            return sb.toString();
+        }
     }
 }
