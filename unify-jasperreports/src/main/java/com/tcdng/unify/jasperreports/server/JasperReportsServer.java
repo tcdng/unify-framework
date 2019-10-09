@@ -191,6 +191,11 @@ public class JasperReportsServer extends AbstractReportServer {
                     nqb.tableName(report.getTable().getName());
                     for (ReportColumn rc : report.getColumns()) {
                         nqb.addColumn(rc.getTable(), rc.getName());
+                        if (rc.getOrder() != null) {
+                            nqb.addOrderBy(rc.getOrder(), rc.getName());
+                        } else if (rc.isGroup()) {
+                            nqb.addOrderBy(rc.getName());
+                        }
                     }
 
                     for (ReportTableJoin rj : report.getJoins()) {
