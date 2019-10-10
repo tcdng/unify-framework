@@ -45,10 +45,12 @@ public class ReportColumn {
 
     private boolean group;
 
+    private boolean groupOnNewPage;
+
     private boolean sum;
 
     private ReportColumn(String title, String table, String name, String className, String formatterUpl,
-            OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group, boolean sum) {
+            OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum) {
         this.title = title;
         this.table = table;
         this.name = name;
@@ -58,6 +60,7 @@ public class ReportColumn {
         this.order = order;
         this.formatterUpl = formatterUpl;
         this.group = group;
+        this.groupOnNewPage = groupOnNewPage;
         this.sum = sum;
     }
 
@@ -101,6 +104,10 @@ public class ReportColumn {
         return group;
     }
 
+    public boolean isGroupOnNewPage() {
+        return groupOnNewPage;
+    }
+
     public boolean isSum() {
         return sum;
     }
@@ -128,6 +135,8 @@ public class ReportColumn {
         private int widthRatio;
 
         private boolean group;
+
+        private boolean groupOnNewPage;
 
         private boolean sum;
 
@@ -180,6 +189,11 @@ public class ReportColumn {
             return this;
         }
 
+        public Builder groupOnNewPage(boolean groupOnNewPage) {
+            this.groupOnNewPage = groupOnNewPage;
+            return this;
+        }
+
         public Builder sum(boolean sum) {
             this.sum = sum;
             return this;
@@ -187,7 +201,7 @@ public class ReportColumn {
 
         public ReportColumn build() throws UnifyException {
             ReportColumn reportColumn = new ReportColumn(title, table, name, className, formatterUpl, order,
-                    horizontalAlignment, widthRatio, group, sum);
+                    horizontalAlignment, widthRatio, group, groupOnNewPage, sum);
             return reportColumn;
         }
     }

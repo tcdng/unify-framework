@@ -50,6 +50,8 @@ import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.jasperreports.JasperReportsTheme;
+import com.tcdng.unify.jasperreports.JasperReportsTheme.ThemeColors;
 
 /**
  * Abstract jasper report layout manager that provides methods for easy
@@ -69,7 +71,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         columnStylesMap = new FactoryMap<String, ColumnStyles>() {
             @Override
             protected ColumnStyles create(String key, Object... params) throws Exception {
-                return new ColumnStyles((String) params[0], (Integer) params[1]);
+                return new ColumnStyles((String) params[0], (Integer) params[1], (Integer) params[2]);
             }
         };
 
@@ -96,7 +98,9 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             ColumnStyles columnStyles = getReportColumnStyles(report);
             jasperDesign.addStyle(columnStyles.getParentStyle());
             jasperDesign.addStyle(columnStyles.getNormalStyle());
+            jasperDesign.addStyle(columnStyles.getNormalLargeStyle());
             jasperDesign.addStyle(columnStyles.getBoldStyle());
+            jasperDesign.addStyle(columnStyles.getBoldLargeStyle());
 
             boolean isQuery = !report.isBeanCollection();
             for (ReportColumn reportColumn : report.getColumns()) {
@@ -134,8 +138,9 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         jRDesignGroup.setName(reportColumn.getTitle() + " Group");
         jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
 
+        JasperReportsTheme theme = JasperReportsTheme.getTheme(report.getTheme());
         JRDesignBand jRDesignBand = new JRDesignBand();
-        int groupBandHeight = report.getColumnHeaderHeight();
+        int groupBandHeight = theme.getColumnHeaderHeight();
         jRDesignBand.setHeight(groupBandHeight);
         JRDesignTextField jRDesignTextField = new JRDesignTextField();
         jRDesignTextField.setX(0);
@@ -171,8 +176,9 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         return jRDesignGroup;
     }
 
-    protected JRDesignElement newColumnJRDesignElement(JasperDesign jasperDesign, ColumnStyles columnStyles,
-            ReportColumn reportColumn, boolean isListFormat) throws UnifyException {
+    protected JRDesignElement newColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
+            JRDesignStyle fontStyle, ReportColumn reportColumn, boolean isListFormat)
+            throws UnifyException {
         if ("byte[]".equals(reportColumn.getTypeName())) {
             JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
             jrDesignImage.setHorizontalAlignment(HorizontalAlignEnum.CENTER);
@@ -185,7 +191,8 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 
         JRDesignTextField textField = new JRDesignTextField();
         textField.setWidth(reportColumn.getWidthRatio());
-        textField.setStyle(columnStyles.getNormalStyle());
+        textField.setForecolor(themeColors.getFontColor());
+        textField.setStyle(fontStyle);
         textField.setHorizontalAlignment(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
         textField.setExpression(newJRDesignExpression(reportColumn));
         textField.setBlankWhenNull(true);
@@ -219,13 +226,14 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     }
 
     protected JRDesignRectangle newJRDesignRectangle(JasperDesign jasperDesign, int x, int y, int width, int height,
-            Color color) throws UnifyException {
+            ThemeColors themeColors) throws UnifyException {
         JRDesignRectangle jRDesignRectangle = new JRDesignRectangle(jasperDesign);
         jRDesignRectangle.setX(x);
         jRDesignRectangle.setY(y);
         jRDesignRectangle.setWidth(width);
         jRDesignRectangle.setHeight(height);
-        jRDesignRectangle.setBackcolor(color);
+        jRDesignRectangle.setForecolor(themeColors.getForeColor());
+        jRDesignRectangle.setBackcolor(themeColors.getBackColor());
         return jRDesignRectangle;
     }
 
@@ -274,7 +282,8 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             JRDesignGroup jRDesignGroup = new JRDesignGroup();
             jRDesignGroup.setName(reportColumn.getTitle() + "_Group");
             jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
-            jasperDesign.addGroup(jRDesignGroup);
+            jRDesignGroup.setStartNewPage(reportColumn.isGroupOnNewPage());
+           jasperDesign.addGroup(jRDesignGroup);
             return jRDesignGroup;
         } catch (JRException e) {
             throwOperationErrorException(e);
@@ -353,8 +362,9 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     }
 
     private ColumnStyles getReportColumnStyles(Report report) throws UnifyException {
-        String key = report.getColumnFontName() + "_" + report.getColumnFontSize();
-        return columnStylesMap.get(key, report.getColumnFontName(), report.getColumnFontSize());
+        JasperReportsTheme theme = JasperReportsTheme.getTheme(report.getTheme());
+        String key = theme.getColumnFontName() + "_" + theme.getColumnFontSize();
+        return columnStylesMap.get(key, theme.getColumnFontName(), theme.getColumnFontSize(), theme.getGroupFontSize());
     }
 
     protected static class ColumnStyles {
@@ -363,13 +373,17 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 
         private JRDesignStyle normalStyle;
 
+        private JRDesignStyle normalLargeStyle;
+
         private JRDesignStyle boldStyle;
 
+        private JRDesignStyle boldLargeStyle;
+
         public ColumnStyles() {
-            this("Arial", 10);
+            this("Arial", 10, 14);
         }
 
-        public ColumnStyles(String fontName, int fontSize) {
+        public ColumnStyles(String fontName, int fontSize, int largeFontSize) {
             String nameSuffix = String.valueOf(hashCode());
             parentStyle = new JRDesignStyle();
             parentStyle.setName("parent_" + nameSuffix);
@@ -382,11 +396,21 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             normalStyle.setParentStyle(parentStyle);
             normalStyle.setName("normal_" + nameSuffix);
 
+            normalLargeStyle = new JRDesignStyle();
+            normalLargeStyle.setParentStyle(parentStyle);
+            normalLargeStyle.setName("normallarge_" + nameSuffix);
+            normalLargeStyle.setFontSize((float) largeFontSize);
+
             boldStyle = new JRDesignStyle();
             boldStyle.setParentStyle(parentStyle);
             boldStyle.setName("bold_" + nameSuffix);
             boldStyle.setBold(true);
 
+            boldLargeStyle = new JRDesignStyle();
+            boldLargeStyle.setParentStyle(parentStyle);
+            boldLargeStyle.setName("boldlarge_" + nameSuffix);
+            boldLargeStyle.setFontSize((float) largeFontSize);
+            boldLargeStyle.setBold(true);
         }
 
         public JRDesignStyle getParentStyle() {
@@ -397,8 +421,16 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             return normalStyle;
         }
 
+        public JRDesignStyle getNormalLargeStyle() {
+            return normalLargeStyle;
+        }
+
         public JRDesignStyle getBoldStyle() {
             return boldStyle;
+        }
+
+        public JRDesignStyle getBoldLargeStyle() {
+            return boldLargeStyle;
         }
     }
 }

@@ -1,0 +1,274 @@
+/*
+ * Copyright 2018-2019 The Code Department.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.tcdng.unify.jasperreports;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
+
+/**
+ * Jasper reports theme.
+ * 
+ * @author Lateef Ojulari
+ * @since 1.0
+ */
+public class JasperReportsTheme {
+
+    private static final JasperReportsTheme DEFAULT_THEME;
+
+    static {
+        DEFAULT_THEME = JasperReportsTheme.newBuilder()
+                .addGroupTheme(Color.decode("#000000"), Color.decode("#CFC8F0"), Color.decode("#CFC8F0"))
+                .addGroupTheme(Color.decode("#FFFFFF"), Color.decode("#4C3B96"), Color.decode("#4C3B96")).build();
+    }
+
+    private static final Map<String, JasperReportsTheme> themes = new HashMap<String, JasperReportsTheme>();
+
+    private static final String DEFAULT_COLUMN_FONTNAME = "Times-Roman";
+
+    private static final int DEFAULT_COLUMN_FONTSIZE = 10;
+
+    private static final int DEFAULT_GROUP_FONTSIZE = 12;
+
+    private static final int DEFAULT_COLUMNHEADER_HEIGHT = 18;
+
+    private static final int DEFAULT_DETAIL_HEIGHT = 18;
+
+    private String columnFontName;
+
+    private int columnFontSize;
+
+    private int columnHeaderHeight;
+
+    private int detailHeight;
+
+    private int groupFontSize;
+
+    private ThemeColors columnTheme;
+
+    private ThemeColors detailTheme;
+
+    private ThemeColors shadeTheme;
+
+    private ThemeColors grandSummaryTheme;
+
+    private List<ThemeColors> groupThemeList;
+
+    private JasperReportsTheme(String columnFontName, int columnFontSize, int columnHeaderHeight, int detailHeight,
+            int groupFontSize, ThemeColors columnTheme, ThemeColors detailTheme, ThemeColors shadeTheme, ThemeColors grandSummaryTheme,
+            List<ThemeColors> groupThemeList) {
+        this.columnFontName = columnFontName;
+        this.columnFontSize = columnFontSize;
+        this.columnHeaderHeight = columnHeaderHeight;
+        this.detailHeight = detailHeight;
+        this.groupFontSize = groupFontSize;
+        this.columnTheme = columnTheme;
+        this.detailTheme = detailTheme;
+        this.shadeTheme = shadeTheme;
+        this.grandSummaryTheme = grandSummaryTheme;
+        this.groupThemeList = groupThemeList;
+    }
+
+    public String getColumnFontName() {
+        return columnFontName;
+    }
+
+    public int getColumnFontSize() {
+        return columnFontSize;
+    }
+
+    public int getColumnHeaderHeight() {
+        return columnHeaderHeight;
+    }
+
+    public int getDetailHeight() {
+        return detailHeight;
+    }
+
+    public int getGroupFontSize() {
+        return groupFontSize;
+    }
+
+    public ThemeColors getColumnTheme() {
+        return columnTheme;
+    }
+
+    public ThemeColors getDetailTheme() {
+        return detailTheme;
+    }
+
+    public ThemeColors getShadeTheme() {
+        return shadeTheme;
+    }
+
+    public ThemeColors getGrandSummaryTheme() {
+        return grandSummaryTheme;
+    }
+
+    public ThemeColors getGroupTheme(int level) {
+        if (level < 0 || groupThemeList.isEmpty()) {
+            return columnTheme;
+        }
+
+        return groupThemeList.get((groupThemeList.size() - level % groupThemeList.size()) - 1);
+    }
+
+    public static void register(String name, JasperReportsTheme theme) {
+        if (!StringUtils.isBlank(name) && theme != null) {
+            themes.put(name, theme);
+        }
+    }
+
+    public static JasperReportsTheme getTheme(String name) {
+        JasperReportsTheme theme = null;
+        if (!StringUtils.isBlank(name)) {
+            theme = themes.get(name);
+        }
+
+        if (theme == null) {
+            return DEFAULT_THEME;
+        }
+
+        return theme;
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String columnFontName;
+
+        private int columnFontSize;
+
+        private int columnHeaderHeight;
+
+        private int detailHeight;
+
+        private int groupFontSize;
+
+        private ThemeColors columnTheme;
+
+        private ThemeColors detailTheme;
+
+        private ThemeColors shadeTheme;
+
+        private ThemeColors grandSummaryTheme;
+
+        private List<ThemeColors> groupThemeList;
+
+        private Builder() {
+            columnFontName = DEFAULT_COLUMN_FONTNAME;
+            columnFontSize = DEFAULT_COLUMN_FONTSIZE;
+            columnHeaderHeight = DEFAULT_COLUMNHEADER_HEIGHT;
+            detailHeight = DEFAULT_DETAIL_HEIGHT;
+            groupFontSize = DEFAULT_GROUP_FONTSIZE;
+            columnTheme = new ThemeColors(Color.decode("#FFFFFF"), Color.decode("#C0C0C0"), Color.decode("#C0C0C0"));
+            detailTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"));
+            shadeTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#EEEEEE"), Color.decode("#EEEEEE"));
+            grandSummaryTheme =
+                    new ThemeColors(Color.decode("#000000"), Color.decode("#D0D0D0"), Color.decode("#D0D0D0"));
+        }
+
+        public Builder columnFontSize(int columnFontSize) {
+            this.columnFontSize = columnFontSize;
+            return this;
+        }
+
+        public Builder columnHeaderHeight(int columnHeaderHeight) {
+            this.columnHeaderHeight = columnHeaderHeight;
+            return this;
+        }
+
+        public Builder detailHeight(int detailHeight) {
+            this.detailHeight = detailHeight;
+            return this;
+        }
+
+        public Builder groupFontSize(int groupFontSize) {
+            this.groupFontSize = groupFontSize;
+            return this;
+        }
+
+        public Builder columnTheme(Color fontColor, Color foreColor, Color backColor) {
+            columnTheme = new ThemeColors(fontColor, foreColor, backColor);
+            return this;
+        }
+
+        public Builder detailTheme(Color fontColor, Color foreColor, Color backColor) {
+            detailTheme = new ThemeColors(fontColor, foreColor, backColor);
+            return this;
+        }
+        
+        public Builder shadeTheme(Color fontColor, Color foreColor, Color backColor) {
+            shadeTheme = new ThemeColors(fontColor, foreColor, backColor);
+            return this;
+        }
+
+        public Builder grandSummaryTheme(Color fontColor, Color foreColor, Color backColor) {
+            grandSummaryTheme = new ThemeColors(fontColor, foreColor, backColor);
+            return this;
+        }
+
+        public Builder addGroupTheme(Color fontColor, Color foreColor, Color backColor) {
+            if (groupThemeList == null) {
+                groupThemeList = new ArrayList<ThemeColors>();
+            }
+            groupThemeList.add(new ThemeColors(fontColor, foreColor, backColor));
+            return this;
+        }
+
+        public JasperReportsTheme build() {
+            return new JasperReportsTheme(columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
+                    groupFontSize, columnTheme, detailTheme, shadeTheme, grandSummaryTheme,
+                    DataUtils.unmodifiableList(groupThemeList));
+        }
+    }
+
+    public static class ThemeColors {
+
+        private Color fontColor;
+
+        private Color foreColor;
+
+        private Color backColor;
+
+        public ThemeColors(Color fontColor, Color foreColor, Color backColor) {
+            this.fontColor = fontColor;
+            this.foreColor = foreColor;
+            this.backColor = backColor;
+        }
+
+        public Color getFontColor() {
+            return fontColor;
+        }
+
+        public Color getForeColor() {
+            return foreColor;
+        }
+
+        public Color getBackColor() {
+            return backColor;
+        }
+    }
+}
