@@ -14,34 +14,29 @@
  * the License.
  */
 
-package com.tcdng.unify.jasperreports;
+package com.tcdng.unify.core.report;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * Jasper reports theme.
+ * Report theme.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class JasperReportsTheme {
+public class ReportTheme {
 
-    private static final JasperReportsTheme DEFAULT_THEME;
+    public static final ReportTheme DEFAULT_THEME;
 
     static {
-        DEFAULT_THEME = JasperReportsTheme.newBuilder()
+        DEFAULT_THEME = ReportTheme.newBuilder()
                 .addGroupTheme(Color.decode("#000000"), Color.decode("#CFC8F0"), Color.decode("#CFC8F0"))
                 .addGroupTheme(Color.decode("#FFFFFF"), Color.decode("#4C3B96"), Color.decode("#4C3B96")).build();
     }
-
-    private static final Map<String, JasperReportsTheme> themes = new HashMap<String, JasperReportsTheme>();
 
     private static final String DEFAULT_COLUMN_FONTNAME = "Times-Roman";
 
@@ -53,6 +48,10 @@ public class JasperReportsTheme {
 
     private static final int DEFAULT_DETAIL_HEIGHT = 18;
 
+    private static final int DEFAULT_DETAIL_IMAGE_WIDTH = 442;
+
+    private static final int DEFAULT_DETAIL_IMAGE_HEIGHT = 124;
+
     private String columnFontName;
 
     private int columnFontSize;
@@ -62,6 +61,12 @@ public class JasperReportsTheme {
     private int detailHeight;
 
     private int groupFontSize;
+
+    private int detailImageWidth;
+
+    private int detailImageHeight;
+    
+    private Object extension;
 
     private ThemeColors columnTheme;
 
@@ -73,14 +78,18 @@ public class JasperReportsTheme {
 
     private List<ThemeColors> groupThemeList;
 
-    private JasperReportsTheme(String columnFontName, int columnFontSize, int columnHeaderHeight, int detailHeight,
-            int groupFontSize, ThemeColors columnTheme, ThemeColors detailTheme, ThemeColors shadeTheme, ThemeColors grandSummaryTheme,
+    private ReportTheme(String columnFontName, int columnFontSize, int columnHeaderHeight, int detailHeight,
+            int groupFontSize, int detailImageWidth, int detailImageHeight, Object extension, ThemeColors columnTheme,
+            ThemeColors detailTheme, ThemeColors shadeTheme, ThemeColors grandSummaryTheme,
             List<ThemeColors> groupThemeList) {
         this.columnFontName = columnFontName;
         this.columnFontSize = columnFontSize;
         this.columnHeaderHeight = columnHeaderHeight;
         this.detailHeight = detailHeight;
         this.groupFontSize = groupFontSize;
+        this.detailImageWidth = detailImageWidth;
+        this.detailImageHeight = detailImageHeight;
+        this.extension = extension;
         this.columnTheme = columnTheme;
         this.detailTheme = detailTheme;
         this.shadeTheme = shadeTheme;
@@ -108,6 +117,18 @@ public class JasperReportsTheme {
         return groupFontSize;
     }
 
+    public int getDetailImageWidth() {
+        return detailImageWidth;
+    }
+
+    public int getDetailImageHeight() {
+        return detailImageHeight;
+    }
+
+    public Object getExtension() {
+        return extension;
+    }
+
     public ThemeColors getColumnTheme() {
         return columnTheme;
     }
@@ -124,31 +145,16 @@ public class JasperReportsTheme {
         return grandSummaryTheme;
     }
 
-    public ThemeColors getGroupTheme(int level) {
+    public ThemeColors getGroupTheme(int level, boolean inverted) {
         if (level < 0 || groupThemeList.isEmpty()) {
             return columnTheme;
         }
 
-        return groupThemeList.get((groupThemeList.size() - level % groupThemeList.size()) - 1);
-    }
-
-    public static void register(String name, JasperReportsTheme theme) {
-        if (!StringUtils.isBlank(name) && theme != null) {
-            themes.put(name, theme);
-        }
-    }
-
-    public static JasperReportsTheme getTheme(String name) {
-        JasperReportsTheme theme = null;
-        if (!StringUtils.isBlank(name)) {
-            theme = themes.get(name);
+        if (inverted) {
+            return groupThemeList.get((groupThemeList.size() - level % groupThemeList.size()) - 1);
         }
 
-        if (theme == null) {
-            return DEFAULT_THEME;
-        }
-
-        return theme;
+        return groupThemeList.get(level % groupThemeList.size());
     }
 
     public static Builder newBuilder() {
@@ -167,6 +173,12 @@ public class JasperReportsTheme {
 
         private int groupFontSize;
 
+        private int detailImageWidth;
+
+        private int detailImageHeight;
+        
+        private Object extension;
+
         private ThemeColors columnTheme;
 
         private ThemeColors detailTheme;
@@ -183,6 +195,9 @@ public class JasperReportsTheme {
             columnHeaderHeight = DEFAULT_COLUMNHEADER_HEIGHT;
             detailHeight = DEFAULT_DETAIL_HEIGHT;
             groupFontSize = DEFAULT_GROUP_FONTSIZE;
+            detailImageWidth = DEFAULT_DETAIL_IMAGE_WIDTH;
+            detailImageHeight = DEFAULT_DETAIL_IMAGE_HEIGHT;
+
             columnTheme = new ThemeColors(Color.decode("#FFFFFF"), Color.decode("#C0C0C0"), Color.decode("#C0C0C0"));
             detailTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"));
             shadeTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#EEEEEE"), Color.decode("#EEEEEE"));
@@ -210,6 +225,21 @@ public class JasperReportsTheme {
             return this;
         }
 
+        public Builder detailImageWidth(int detailImageWidth) {
+            this.detailImageWidth = detailImageWidth;
+            return this;
+        }
+
+        public Builder detailImageHeight(int detailImageHeight) {
+            this.detailImageHeight = detailImageHeight;
+            return this;
+        }
+
+        public Builder extension(Object extension) {
+            this.extension = extension;
+            return this;
+        }
+
         public Builder columnTheme(Color fontColor, Color foreColor, Color backColor) {
             columnTheme = new ThemeColors(fontColor, foreColor, backColor);
             return this;
@@ -219,7 +249,7 @@ public class JasperReportsTheme {
             detailTheme = new ThemeColors(fontColor, foreColor, backColor);
             return this;
         }
-        
+
         public Builder shadeTheme(Color fontColor, Color foreColor, Color backColor) {
             shadeTheme = new ThemeColors(fontColor, foreColor, backColor);
             return this;
@@ -238,10 +268,10 @@ public class JasperReportsTheme {
             return this;
         }
 
-        public JasperReportsTheme build() {
-            return new JasperReportsTheme(columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
-                    groupFontSize, columnTheme, detailTheme, shadeTheme, grandSummaryTheme,
-                    DataUtils.unmodifiableList(groupThemeList));
+        public ReportTheme build() {
+            return new ReportTheme(columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
+                    groupFontSize, detailImageWidth, detailImageHeight, extension, columnTheme, detailTheme, shadeTheme,
+                    grandSummaryTheme, DataUtils.unmodifiableList(groupThemeList));
         }
     }
 
@@ -271,4 +301,5 @@ public class JasperReportsTheme {
             return backColor;
         }
     }
+
 }

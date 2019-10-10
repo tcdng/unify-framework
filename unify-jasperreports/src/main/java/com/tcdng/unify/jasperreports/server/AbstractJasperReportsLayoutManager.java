@@ -19,6 +19,17 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.HAlignType;
+import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.report.Report;
+import com.tcdng.unify.core.report.ReportColumn;
+import com.tcdng.unify.core.report.ReportFormat;
+import com.tcdng.unify.core.report.ReportTheme;
+import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
+import com.tcdng.unify.core.util.ReflectUtils;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignElement;
@@ -41,17 +52,6 @@ import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 import net.sf.jasperreports.engine.type.ScaleImageEnum;
 import net.sf.jasperreports.engine.type.VerticalAlignEnum;
-
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.constant.HAlignType;
-import com.tcdng.unify.core.data.FactoryMap;
-import com.tcdng.unify.core.report.Report;
-import com.tcdng.unify.core.report.ReportColumn;
-import com.tcdng.unify.core.report.ReportFormat;
-import com.tcdng.unify.core.util.ReflectUtils;
-import com.tcdng.unify.jasperreports.JasperReportsTheme;
-import com.tcdng.unify.jasperreports.JasperReportsTheme.ThemeColors;
 
 /**
  * Abstract jasper report layout manager that provides methods for easy
@@ -138,7 +138,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         jRDesignGroup.setName(reportColumn.getTitle() + " Group");
         jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
 
-        JasperReportsTheme theme = JasperReportsTheme.getTheme(report.getTheme());
+        ReportTheme theme = report.getReportTheme();
         JRDesignBand jRDesignBand = new JRDesignBand();
         int groupBandHeight = theme.getColumnHeaderHeight();
         jRDesignBand.setHeight(groupBandHeight);
@@ -362,7 +362,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     }
 
     private ColumnStyles getReportColumnStyles(Report report) throws UnifyException {
-        JasperReportsTheme theme = JasperReportsTheme.getTheme(report.getTheme());
+        ReportTheme theme = report.getReportTheme();
         String key = theme.getColumnFontName() + "_" + theme.getColumnFontSize();
         return columnStylesMap.get(key, theme.getColumnFontName(), theme.getColumnFontSize(), theme.getGroupFontSize());
     }

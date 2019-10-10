@@ -30,6 +30,30 @@ import com.tcdng.unify.core.UnifyException;
 public interface ReportServer extends UnifyComponent {
 
     /**
+     * Registers a report theme.
+     * 
+     * @param themeName
+     *            the theme name
+     * @param componentName
+     *            the manager component
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void registerReportTheme(String themeName, ReportTheme reportTheme) throws UnifyException;
+
+    /**
+     * Registers a report layout manager.
+     * 
+     * @param layoutName
+     *            the layout name
+     * @param reportLayoutManager
+     *            the manager component
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void registerReportLayoutManager(String layoutName, ReportLayoutManager reportLayoutManager) throws UnifyException;
+
+    /**
      * Generates a report to file with specified file name.
      * 
      * @param report

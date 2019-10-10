@@ -13,15 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.jasperreports;
+
+package com.tcdng.unify.core.report;
+
+import com.tcdng.unify.core.UnifyComponent;
 
 /**
- * Jasper reports application components.
+ * Report layout manager.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface JasperReportsApplicationComponents {
+public interface ReportLayoutManager extends UnifyComponent {
 
-    String JASPERREPORTS_SERVER = "jasperreports-server";
 }
