@@ -41,6 +41,10 @@ public class ReportParameters {
         return parameters.keySet();
     }
 
+    public boolean isParameter(String name) {
+        return parameters.containsKey(name);
+    }
+    
     public Object getParameter(String name) {
         return parameters.get(name);
     }
