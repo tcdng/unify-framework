@@ -15,20 +15,20 @@
  */
 package com.tcdng.unify.jasperreports.server;
 
-import net.sf.jasperreports.engine.design.JasperDesign;
-
-import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.report.Report;
+import com.tcdng.unify.core.report.ReportLayoutManager;
+
+import net.sf.jasperreports.engine.design.JasperDesign;
 
 /**
- * UIComponent used to manage the layout of a report by manipulating a jasper
+ * Component used to manage the layout of a report by manipulating a jasper
  * design object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface JasperReportsLayoutManager extends UnifyComponent {
+public interface JasperReportsLayoutManager extends ReportLayoutManager {
 
     /**
      * Applies a layout to a jasper report design object.

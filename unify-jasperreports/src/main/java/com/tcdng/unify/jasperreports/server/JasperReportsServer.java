@@ -19,7 +19,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.Collection;
-import java.util.EnumMap;
+
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.FrequencyUnit;
+import com.tcdng.unify.core.database.DataSource;
+import com.tcdng.unify.core.database.DataSourceDialect;
+import com.tcdng.unify.core.database.NativeQuery;
+import com.tcdng.unify.core.report.AbstractReportServer;
+import com.tcdng.unify.core.report.Report;
+import com.tcdng.unify.core.report.ReportColumn;
+import com.tcdng.unify.core.report.ReportFilter;
+import com.tcdng.unify.core.report.ReportFormat;
+import com.tcdng.unify.core.report.ReportLayoutManagerConstants;
+import com.tcdng.unify.core.report.ReportTableJoin;
+import com.tcdng.unify.core.util.CalendarUtils;
+import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -49,24 +66,6 @@ import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsMetadataReportConfiguration;
 import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.FrequencyUnit;
-import com.tcdng.unify.core.database.DataSource;
-import com.tcdng.unify.core.database.DataSourceDialect;
-import com.tcdng.unify.core.database.NativeQuery;
-import com.tcdng.unify.core.report.AbstractReportServer;
-import com.tcdng.unify.core.report.Report;
-import com.tcdng.unify.core.report.ReportColumn;
-import com.tcdng.unify.core.report.ReportFilter;
-import com.tcdng.unify.core.report.ReportFormat;
-import com.tcdng.unify.core.report.ReportTableJoin;
-import com.tcdng.unify.core.report.ReportLayout;
-import com.tcdng.unify.core.util.CalendarUtils;
-import com.tcdng.unify.core.util.IOUtils;
-import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
-
 /**
  * Implementation of a report server using JasperReports.
  * 
@@ -81,12 +80,6 @@ public class JasperReportsServer extends AbstractReportServer {
     @Configurable("20")
     private int reportExpirationPeriod;
 
-    private EnumMap<ReportLayout, JasperReportsLayoutManager> layoutManagers;
-
-    public JasperReportsServer() {
-        layoutManagers = new EnumMap<ReportLayout, JasperReportsLayoutManager>(ReportLayout.class);
-    }
-
     public void setJasperReportCache(JasperReportsCache jasperReportsCache) {
         this.jasperReportsCache = jasperReportsCache;
     }
@@ -95,10 +88,12 @@ public class JasperReportsServer extends AbstractReportServer {
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
         jasperReportsCache = (JasperReportsCache) getComponent("jasperreports-cache");
-        layoutManagers.put(ReportLayout.TABULAR,
-                (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
-        layoutManagers.put(ReportLayout.COLUMNAR,
+        registerReportLayoutManager(ReportLayoutManagerConstants.COLUMNAR_REPORTLAYOUTMANAGER,
                 (JasperReportsLayoutManager) getComponent("jasperreports-columnarlayoutmanager"));
+        registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_IMAGESONLY_REPORTLAYOUTMANAGER,
+                (JasperReportsLayoutManager) getComponent("jasperreports-tabularimagesonlylayoutmanager"));
+        registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER,
+                (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
     }
 
     @Override
@@ -216,7 +211,9 @@ public class JasperReportsServer extends AbstractReportServer {
                 jasperDesign.setQuery(jRDesignQuery);
             }
 
-            JasperReportsLayoutManager jasperReportsLayoutManager = layoutManagers.get(report.getLayout());
+            JasperReportsLayoutManager jasperReportsLayoutManager =
+                    (JasperReportsLayoutManager) getReportLayoutManager(report.getLayout());
+            report.setReportTheme(getReportTheme(report.getTheme()));
             jasperReportsLayoutManager.applyLayout(jasperDesign, report);
             return JasperCompileManager.compileReport(jasperDesign);
         } catch (JRException e) {

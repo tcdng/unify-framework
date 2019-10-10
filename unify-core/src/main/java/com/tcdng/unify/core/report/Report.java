@@ -50,22 +50,24 @@ public class Report {
 
     private String theme;
 
-    private List<?> beanCollection;
+    private String layout;
 
-    private ReportTable table;
+    private List<?> beanCollection;
 
     private List<ReportTableJoin> joins;
 
     private List<ReportColumn> columns;
 
+    private ReportTable table;
+
     private ReportFilter filter;
 
     private ReportFormat format;
 
-    private ReportLayout layout;
-
     private ReportParameters reportParameters;
 
+    private ReportTheme reportTheme;
+    
     private int pageWidth;
 
     private int pageHeight;
@@ -80,6 +82,8 @@ public class Report {
 
     private boolean printGroupColumnNames;
 
+    private boolean invertGroupColors;
+
     private boolean underlineRows;
 
     private boolean shadeOddRows;
@@ -88,10 +92,11 @@ public class Report {
 
     private Report(String code, String title, String template, String processor, String dataSource, String query,
             String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
-            List<ReportColumn> columns, ReportFilter filter, ReportFormat format, ReportLayout layout,
+            List<ReportColumn> columns, ReportFilter filter, ReportFormat format, String layout,
             ReportParameters reportParameters, int pageWidth, int pageHeight, String summationLegend,
             String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
-            boolean printGroupColumnNames, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
+            boolean printGroupColumnNames, boolean invertGroupColors, boolean underlineRows, boolean shadeOddRows,
+            boolean landscape) {
         this.code = code;
         this.title = title;
         this.template = template;
@@ -114,6 +119,7 @@ public class Report {
         this.dynamicDataSource = dynamicDataSource;
         this.printColumnNames = printColumnNames;
         this.printGroupColumnNames = printGroupColumnNames;
+        this.invertGroupColors = invertGroupColors;
         this.underlineRows = underlineRows;
         this.shadeOddRows = shadeOddRows;
         this.landscape = landscape;
@@ -127,7 +133,7 @@ public class Report {
         return format;
     }
 
-    public ReportLayout getLayout() {
+    public String getLayout() {
         return layout;
     }
 
@@ -179,6 +185,14 @@ public class Report {
         return beanCollection;
     }
 
+    public ReportTheme getReportTheme() {
+        return reportTheme;
+    }
+
+    public void setReportTheme(ReportTheme reportTheme) {
+        this.reportTheme = reportTheme;
+    }
+
     public int getPageWidth() {
         return pageWidth;
     }
@@ -209,6 +223,10 @@ public class Report {
 
     public boolean isPrintGroupColumnNames() {
         return printGroupColumnNames;
+    }
+
+    public boolean isInvertGroupColors() {
+        return invertGroupColors;
     }
 
     public boolean isUnderlineRows() {
@@ -301,7 +319,7 @@ public class Report {
 
         private ReportFormat format;
 
-        private ReportLayout layout;
+        private String layout;
 
         private int pageWidth;
 
@@ -317,6 +335,8 @@ public class Report {
 
         private boolean printGroupColumnNames;
 
+        private boolean invertGroupColors;
+
         private boolean underlineRows;
 
         private boolean shadeOddRows;
@@ -327,7 +347,7 @@ public class Report {
 
         private Builder() {
             this.format = ReportFormat.PDF;
-            this.layout = ReportLayout.TABULAR;
+            this.layout = ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER;
             this.joins = new ArrayList<ReportTableJoin>();
             this.columns = new ArrayList<ReportColumn>();
             this.filters = new Stack<ReportFilter>();
@@ -381,7 +401,7 @@ public class Report {
             return this;
         }
 
-        public Builder layout(ReportLayout layout) {
+        public Builder layout(String layout) {
             this.layout = layout;
             return this;
         }
@@ -418,6 +438,11 @@ public class Report {
 
         public Builder printGroupColumnNames(boolean printGroupColumnNames) {
             this.printGroupColumnNames = printGroupColumnNames;
+            return this;
+        }
+
+        public Builder invertGroupColors(boolean invertGroupColors) {
+            this.invertGroupColors = invertGroupColors;
             return this;
         }
 
@@ -475,14 +500,16 @@ public class Report {
         }
 
         public Builder addColumn(String title, String name, String className, String formatterUpl, OrderType order,
-                HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum) throws UnifyException {
-            addColumn(title, null, name, className, formatterUpl, order, hAlignType, widthRatio, group, groupOnNewPage, sum);
+                HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum)
+                throws UnifyException {
+            addColumn(title, null, name, className, formatterUpl, order, hAlignType, widthRatio, group, groupOnNewPage,
+                    sum);
             return this;
         }
 
         public Builder addColumn(String title, String table, String name, String className, String formatterUpl,
-                OrderType order, HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum)
-                throws UnifyException {
+                OrderType order, HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage,
+                boolean sum) throws UnifyException {
             ReportColumn rc = ReportColumn.newBuilder().title(title).table(table).name(name).className(className)
                     .horizontalAlignment(hAlignType).widthRatio(widthRatio).formatter(formatterUpl).order(order)
                     .group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
@@ -553,7 +580,8 @@ public class Report {
             Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
                     table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout,
                     new ReportParameters(parameters), pageWidth, pageHeight, summationLegend, groupSummationLegend,
-                    dynamicDataSource, printColumnNames, printGroupColumnNames, underlineRows, shadeOddRows, landscape);
+                    dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors, underlineRows,
+                    shadeOddRows, landscape);
             return report;
         }
     }

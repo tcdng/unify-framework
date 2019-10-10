@@ -43,13 +43,13 @@ import net.sf.jasperreports.engine.type.PositionTypeEnum;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
 
 /**
- * Used for tabular report layout.
+ * Used to manage tabular images only report layout.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("jasperreports-tabularlayoutmanager")
-public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayoutManager {
+@Component("jasperreports-tabularimagesonlylayoutmanager")
+public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperReportsLayoutManager {
 
     @Override
     protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)

@@ -13,14 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.report;
 
 /**
- * Supported report layout enumeration.
+ * Report layout name manager constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum ReportLayout {
-    COLUMNAR, TABULAR
+public interface ReportLayoutManagerConstants {
+
+    String TABULAR_REPORTLAYOUTMANAGER = "tabular-reportlayoutmanager";
+
+    String TABULAR_IMAGESONLY_REPORTLAYOUTMANAGER  = "tabularimagesonly-reportlayoutmanager";
+
+    String COLUMNAR_REPORTLAYOUTMANAGER = "columnar-reportlayoutmanager";
 }

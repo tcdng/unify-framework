@@ -19,9 +19,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.DataSource;
@@ -46,10 +49,30 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
     @Configurable
     private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
+    private Map<String, ReportTheme> reportThemes;
+
+    private Map<String, ReportLayoutManager> reportLayoutManagers;
+
+    public AbstractReportServer() {
+        reportThemes = new HashMap<String, ReportTheme>();
+        reportLayoutManagers = new HashMap<String, ReportLayoutManager>();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
         return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
+    }
+
+    @Override
+    public void registerReportTheme(String themeName, ReportTheme reportTheme) throws UnifyException {
+        reportThemes.put(themeName, reportTheme);
+    }
+
+    @Override
+    public void registerReportLayoutManager(String layoutName, ReportLayoutManager reportLayoutManager)
+            throws UnifyException {
+        reportLayoutManagers.put(layoutName, reportLayoutManager);
     }
 
     @Override
@@ -109,6 +132,25 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
         }
 
         return (DataSource) getComponent(report.getDataSource());
+    }
+
+    protected ReportTheme getReportTheme(String themeName) throws UnifyException {
+        ReportTheme reportTheme = reportThemes.get(themeName);
+        if (reportTheme == null) {
+            return ReportTheme.DEFAULT_THEME;
+        }
+
+        return reportTheme;
+    }
+
+    protected ReportLayoutManager getReportLayoutManager(String layoutName) throws UnifyException {
+        ReportLayoutManager reportLayoutManager = reportLayoutManagers.get(layoutName);
+        if (reportLayoutManager == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER, layoutName,
+                    getName());
+        }
+
+        return reportLayoutManager;
     }
 
     protected abstract void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException;

@@ -940,4 +940,7 @@ public interface UnifyCoreErrorConstants {
 
     /** Entity type operation not supported for view. Type = {0}, operation {1}*/
     String RECORD_VIEW_OPERATION_UNSUPPORTED = "UC_00EE";
+
+    /** No report layout manager is available for layout name {0}. Report server = {1}*/
+    String REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER = "UC_00EF";
 }
