@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.constant;
 
+import com.tcdng.unify.core.annotation.StaticList;
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
@@ -23,6 +25,8 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(description = "Horizontal Alignment")
+@StaticList("horizontalalignlist")
 public enum HAlignType implements EnumConst {
     LEFT("L"), CENTER("C"), RIGHT("R"), JUSTIFIED("J");
 

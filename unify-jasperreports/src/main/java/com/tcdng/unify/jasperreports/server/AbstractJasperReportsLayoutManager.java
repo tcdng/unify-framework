@@ -102,7 +102,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             jasperDesign.addStyle(columnStyles.getBoldStyle());
             jasperDesign.addStyle(columnStyles.getBoldLargeStyle());
 
-            boolean isQuery = !report.isBeanCollection();
+            boolean isQuery = !report.isWithBeanCollection();
             for (ReportColumn reportColumn : report.getColumns()) {
                 jasperDesign.addField(newJRDesignField(reportColumn, isQuery));
             }
