@@ -17,6 +17,9 @@ package com.tcdng.unify.core.report;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.database.DataSource;
+import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
 
 /**
  * Convenient abstract report processor.
@@ -26,6 +29,9 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractReportProcessor extends AbstractUnifyComponent implements ReportProcessor {
 
+    @Configurable
+    private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
+
     @Override
     protected void onInitialize() throws UnifyException {
 
@@ -34,5 +40,13 @@ public abstract class AbstractReportProcessor extends AbstractUnifyComponent imp
     @Override
     protected void onTerminate() throws UnifyException {
 
+    }
+
+    protected DataSource getDataSource(Report report) throws UnifyException {
+        if (report.isDynamicDataSource()) {
+            return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
+        }
+
+        return (DataSource) getComponent(report.getDataSource());
     }
 }

@@ -16,7 +16,6 @@
 package com.tcdng.unify.core.report;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +50,7 @@ public class Report {
 
     private String theme;
 
-    private Collection<?> beanCollection;
+    private List<?> beanCollection;
 
     private ReportTable table;
 
@@ -88,7 +87,7 @@ public class Report {
     private boolean landscape;
 
     private Report(String code, String title, String template, String processor, String dataSource, String query,
-            String theme, Collection<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
+            String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
             List<ReportColumn> columns, ReportFilter filter, ReportFormat format, ReportLayout layout,
             ReportParameters reportParameters, int pageWidth, int pageHeight, String summationLegend,
             String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
@@ -172,7 +171,11 @@ public class Report {
         return table;
     }
 
-    public Collection<?> getBeanCollection() {
+    public void setBeanCollection(List<?> beanCollection) {
+        this.beanCollection = beanCollection;
+    }
+
+    public List<?> getBeanCollection() {
         return beanCollection;
     }
 
@@ -224,7 +227,7 @@ public class Report {
         return !columns.isEmpty();
     }
 
-    public boolean isBeanCollection() {
+    public boolean isWithBeanCollection() {
         return beanCollection != null;
     }
 
@@ -286,7 +289,7 @@ public class Report {
 
         private ReportTable table;
 
-        private Collection<?> beanCollection;
+        private List<?> beanCollection;
 
         private List<ReportTableJoin> joins;
 
@@ -368,7 +371,7 @@ public class Report {
             return this;
         }
 
-        public Builder beanCollection(Collection<?> beanCollection) {
+        public Builder beanCollection(List<?> beanCollection) {
             this.beanCollection = beanCollection;
             return this;
         }
@@ -542,7 +545,7 @@ public class Report {
         }
 
         public Builder setParameters(Map<String, Object> parameters) {
-            parameters.putAll(parameters);
+            this.parameters.putAll(parameters);
             return this;
         }
 

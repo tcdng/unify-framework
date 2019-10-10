@@ -181,7 +181,7 @@ public class JasperReportsServer extends AbstractReportServer {
             }
 
             jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
-            if (!report.isBeanCollection()) {
+            if (!report.isWithBeanCollection()) {
                 String query = null;
                 if (report.isQuery()) {
                     query = report.getQuery();
