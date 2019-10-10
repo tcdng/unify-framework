@@ -39,6 +39,8 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.jasperreports.JasperReportsTheme;
+import com.tcdng.unify.jasperreports.JasperReportsTheme.ThemeColors;
 
 /**
  * Used for tabular report layout.
@@ -52,11 +54,12 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
     @Override
     protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
             throws UnifyException {
+        JasperReportsTheme theme = JasperReportsTheme.getTheme(report.getTheme());
         List<ReportColumn> reportColumnList = report.getColumns();
         boolean isListFormat = isListFormat(report.getFormat());
         int actualColumnWidth = jasperDesign.getColumnWidth();
-        int columnHeaderHeight = report.getColumnHeaderHeight();
-        int detailHeight = report.getDetailHeight();
+        int columnHeaderHeight = theme.getColumnHeaderHeight();
+        int detailHeight = theme.getDetailHeight();
 
         // Organize layout
         List<ReportColumn> groupingColumnList = new ArrayList<ReportColumn>();
@@ -64,6 +67,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
         List<ReportColumn> summationColumnList = new ArrayList<ReportColumn>();
         Map<ReportColumn, JRDesignElement> detailJRElementMap = new HashMap<ReportColumn, JRDesignElement>();
 
+        ThemeColors detailColors = theme.getDetailTheme();
         int reportWidth = 0;
         for (ReportColumn reportColumn : reportColumnList) {
             if (reportColumn.isGroup()) {
@@ -74,8 +78,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                     summationColumnList.add(reportColumn);
                 }
 
-                JRDesignElement jRDesignElement =
-                        newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
+                JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, detailColors, columnStyles.getNormalStyle(),
+                        reportColumn, isListFormat);
                 jRDesignElement.setX(reportWidth);
                 jRDesignElement.setY(2);
                 reportWidth += jRDesignElement.getWidth();
@@ -106,8 +110,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             JRDesignBand columnHeaderBand = new JRDesignBand();
             columnHeaderBand.setHeight(columnHeaderHeight);
 
-            constructColumnHeaderToBand(jasperDesign, columnHeaderBand, columnStyles, detailColumnList,
-                    detailJRElementMap, 0, columnHeaderHeight, actualColumnWidth, isListFormat);
+            constructColumnHeaderToBand(jasperDesign, columnHeaderBand, theme.getColumnTheme(), columnStyles,
+                    detailColumnList, detailJRElementMap, 0, columnHeaderHeight, actualColumnWidth, isListFormat);
 
             if (!isWithGroupColumns) {
                 if (isListFormat) {
@@ -123,8 +127,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
         detailBand.setHeight(detailHeight);
 
         if (report.isShadeOddRows()) {
-            JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth,
-                    detailHeight, new Color(0xEE, 0xEE, 0xEE));
+            JRDesignRectangle jRDesignRectangle =
+                    newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth, detailHeight, theme.getShadeTheme());
             jRDesignRectangle.getLinePen().setLineWidth(0);
             jRDesignRectangle.setPrintWhenExpression(getOnOddJRDesignExpression());
             jRDesignRectangle.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
@@ -152,7 +156,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
         detailJRDesignSection.addBand(detailBand); // Add new detail band
 
         // Prepare groups
-        int groupHeaderX = 0;
+        int groupHeaderX = 4;
         int groupCascade = 20;
         int glen = groupingColumnList.size();
         for (int i = 0; i < glen; i++) {
@@ -168,14 +172,15 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             } else {
                 groupHeaderBand.setHeight(columnHeaderHeight);
             }
-
-            JRDesignRectangle grpJRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth,
-                    columnHeaderHeight - 2, new Color(0xD0, 0xD0, 0xD0));
+            
+            ThemeColors groupTheme = theme.getGroupTheme(i);
+            JRDesignRectangle grpJRDesignRectangle =
+                    newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
             grpJRDesignRectangle.getLinePen().setLineWidth(0);
             groupHeaderBand.addElement(grpJRDesignRectangle);
 
             JRDesignElement jRDesignElement =
-                    newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
+                    newColumnJRDesignElement(jasperDesign, groupTheme, columnStyles.getBoldLargeStyle(), reportColumn, isListFormat);
             jRDesignElement.setX(groupHeaderX);
             jRDesignElement.setY(2);
             jRDesignElement.setWidth(actualColumnWidth - jRDesignElement.getX());
@@ -184,8 +189,9 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
 
             if (showColumnHeader) {
                 // Add column header strip
-                constructColumnHeaderToBand(jasperDesign, groupHeaderBand, columnStyles, detailColumnList,
-                        detailJRElementMap, columnHeaderHeight, columnHeaderHeight, actualColumnWidth, isListFormat);
+                constructColumnHeaderToBand(jasperDesign, groupHeaderBand, theme.getColumnTheme(), columnStyles,
+                        detailColumnList, detailJRElementMap, columnHeaderHeight, columnHeaderHeight, actualColumnWidth,
+                        isListFormat);
             }
 
             ((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(groupHeaderBand);
@@ -194,8 +200,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 // Group footer
                 JRDesignBand groupFooterBand = new JRDesignBand();
                 groupFooterBand.setHeight(columnHeaderHeight);
-                grpJRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth,
-                        columnHeaderHeight - 2, new Color(0xD0, 0xD0, 0xD0));
+                grpJRDesignRectangle =
+                        newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
                 grpJRDesignRectangle.getLinePen().setLineWidth(0);
                 groupFooterBand.addElement(grpJRDesignRectangle);
 
@@ -204,8 +210,9 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                             newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup, sumReportColumn);
                     jRDesignElement = detailJRElementMap.get(sumReportColumn);
 
-                    JRDesignTextField sumJRDesignElement = (JRDesignTextField) this
-                            .newColumnJRDesignElement(jasperDesign, columnStyles, sumReportColumn, isListFormat);
+                    JRDesignTextField sumJRDesignElement =
+                            (JRDesignTextField) newColumnJRDesignElement(jasperDesign, groupTheme, columnStyles.getNormalStyle(),
+                                    sumReportColumn, isListFormat);
 
                     sumJRDesignElement.setX(jRDesignElement.getX());
                     sumJRDesignElement.setY(jRDesignElement.getY());
@@ -234,8 +241,9 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             JRDesignBand summaryBand = new JRDesignBand();
             summaryBand.setHeight(columnHeaderHeight);
 
-            JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth,
-                    columnHeaderHeight, new Color(0xC0, 0xC0, 0xC0));
+            ThemeColors grandTheme = theme.getGrandSummaryTheme();
+            JRDesignRectangle jRDesignRectangle =
+                    newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth, columnHeaderHeight, grandTheme);
             summaryBand.addElement(jRDesignRectangle);
 
             for (ReportColumn sumReportColumn : summationColumnList) {
@@ -243,7 +251,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 JRDesignElement jRDesignElement = detailJRElementMap.get(sumReportColumn);
 
                 JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
-                        columnStyles, sumReportColumn, isListFormat);
+                        grandTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
 
                 sumJRDesignElement.setX(jRDesignElement.getX());
                 sumJRDesignElement.setY(jRDesignElement.getY());
@@ -265,16 +273,16 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
     }
 
     private void constructColumnHeaderToBand(JasperDesign jasperDesign, JRDesignBand jrDesignBand,
-            ColumnStyles columnStyles, List<ReportColumn> detailColumnList,
+            ThemeColors columnHeaderColors, ColumnStyles columnStyles, List<ReportColumn> detailColumnList,
             Map<ReportColumn, JRDesignElement> detailJRElementMap, int y, int columnHeaderHeight, int actualColumnWidth,
             boolean isListFormat) throws UnifyException {
-        JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, y, actualColumnWidth,
-                columnHeaderHeight, new Color(0xC0, 0xC0, 0xC0));
+        JRDesignRectangle jRDesignRectangle =
+                newJRDesignRectangle(jasperDesign, 0, y, actualColumnWidth, columnHeaderHeight, columnHeaderColors);
         jRDesignRectangle.getLinePen().setLineWidth(0);
         jRDesignRectangle.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
         jrDesignBand.addElement(jRDesignRectangle);
 
-        Color colHeaderColor = Color.WHITE;
+        Color colHeaderColor = columnHeaderColors.getFontColor();
         if (isListFormat) {
             colHeaderColor = Color.BLACK;
         }

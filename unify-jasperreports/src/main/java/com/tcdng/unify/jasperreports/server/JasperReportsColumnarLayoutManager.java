@@ -33,6 +33,8 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.jasperreports.JasperReportsTheme;
+import com.tcdng.unify.jasperreports.JasperReportsTheme.ThemeColors;
 
 /**
  * Used for columnar report layout.
@@ -46,18 +48,20 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
     @Override
     protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
             throws UnifyException {
+        JasperReportsTheme theme = JasperReportsTheme.getTheme(report.getTheme());
         List<ReportColumn> reportColumnList = report.getColumns();
         boolean isListFormat = isListFormat(report.getFormat());
         boolean isPrintColumnNames = report.isPrintColumnNames();
         int actualColumnWidth = jasperDesign.getColumnWidth();
-        int columnHeaderHeight = report.getColumnHeaderHeight();
-        int detailHeight = report.getDetailHeight();
+        int columnHeaderHeight = theme.getColumnHeaderHeight();
+        int detailHeight = theme.getDetailHeight();
 
         // Organise layout
         List<ReportColumn> groupingColumnList = new ArrayList<ReportColumn>();
         List<JRDesignElement> detailTitleElementList = new ArrayList<JRDesignElement>();
         List<JRDesignElement> detailElementList = new ArrayList<JRDesignElement>();
 
+        ThemeColors detailColors = theme.getDetailTheme();
         int calcDetailHeight = 0;
         int detailColumnWidth = (actualColumnWidth * 2) / 3;
         int titleWidth = (detailColumnWidth * 2) / 5;
@@ -69,8 +73,9 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
                 if (reportColumn.isSum() && DataUtils.isNumberType(reportColumn.getTypeName())) {
                 }
 
+                
                 JRDesignElement jRDesignElement =
-                        newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
+                        newColumnJRDesignElement(jasperDesign, detailColors, columnStyles.getNormalStyle(), reportColumn, isListFormat);
                 jRDesignElement.setX(titleWidth);
                 jRDesignElement.setY(calcDetailHeight + 2);
                 jRDesignElement.setWidth(actualDetailWidth);
@@ -102,7 +107,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 
         if (report.isShadeOddRows()) {
             JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth,
-                    calcDetailHeight, new Color(0xEE, 0xEE, 0xEE));
+                    calcDetailHeight, theme.getShadeTheme());
             jRDesignRectangle.getLinePen().setLineWidth(0);
             jRDesignRectangle.setPrintWhenExpression(getOnOddJRDesignExpression());
             detailBand.addElement(jRDesignRectangle);
@@ -131,19 +136,21 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
         // Prepare groups
         int groupHeaderX = 0;
         int groupCascade = 20;
-        for (ReportColumn reportColumn : groupingColumnList) {
+        for (int i = 0; i < groupingColumnList.size(); i++) {
+            ReportColumn reportColumn = groupingColumnList.get(i);
             JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, reportColumn);
 
             JRDesignBand groupBand = new JRDesignBand();
             groupBand.setHeight(columnHeaderHeight);
 
+            ThemeColors groupTheme = theme.getGroupTheme(i);
             JRDesignRectangle grpJRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth,
-                    columnHeaderHeight - 2, new Color(0xD0, 0xD0, 0xD0));
+                    columnHeaderHeight - 2, groupTheme);
             grpJRDesignRectangle.getLinePen().setLineWidth(0);
             groupBand.addElement(grpJRDesignRectangle);
 
             JRDesignElement jRDesignElement =
-                    newColumnJRDesignElement(jasperDesign, columnStyles, reportColumn, isListFormat);
+                    newColumnJRDesignElement(jasperDesign, groupTheme, columnStyles.getBoldLargeStyle(), reportColumn, isListFormat);
             jRDesignElement.setX(groupHeaderX);
             jRDesignElement.setY(2);
             jRDesignElement.setWidth(actualColumnWidth - jRDesignElement.getX());

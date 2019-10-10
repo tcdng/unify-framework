@@ -49,6 +49,8 @@ public class Report {
 
     private String query;
 
+    private String theme;
+
     private Collection<?> beanCollection;
 
     private ReportTable table;
@@ -64,14 +66,6 @@ public class Report {
     private ReportLayout layout;
 
     private ReportParameters reportParameters;
-
-    private String columnFontName;
-
-    private int columnFontSize;
-
-    private int columnHeaderHeight;
-
-    private int detailHeight;
 
     private int pageWidth;
 
@@ -94,18 +88,18 @@ public class Report {
     private boolean landscape;
 
     private Report(String code, String title, String template, String processor, String dataSource, String query,
-            Collection<?> beanCollection, ReportTable table, List<ReportTableJoin> joins, List<ReportColumn> columns,
-            ReportFilter filter, ReportFormat format, ReportLayout layout, ReportParameters reportParameters,
-            int pageWidth, int pageHeight, String columnFontName, int columnFontSize, int columnHeaderHeight,
-            int detailHeight, String summationLegend, String groupSummationLegend, boolean dynamicDataSource,
-            boolean printColumnNames, boolean printGroupColumnNames, boolean underlineRows, boolean shadeOddRows,
-            boolean landscape) {
+            String theme, Collection<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
+            List<ReportColumn> columns, ReportFilter filter, ReportFormat format, ReportLayout layout,
+            ReportParameters reportParameters, int pageWidth, int pageHeight, String summationLegend,
+            String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
+            boolean printGroupColumnNames, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
         this.code = code;
         this.title = title;
         this.template = template;
         this.processor = processor;
         this.dataSource = dataSource;
         this.query = query;
+        this.theme = theme;
         this.beanCollection = beanCollection;
         this.table = table;
         this.joins = joins;
@@ -114,12 +108,8 @@ public class Report {
         this.format = format;
         this.layout = layout;
         this.reportParameters = reportParameters;
-        this.columnFontName = columnFontName;
-        this.columnFontSize = columnFontSize;
         this.pageWidth = pageWidth;
         this.pageHeight = pageHeight;
-        this.columnHeaderHeight = columnHeaderHeight;
-        this.detailHeight = detailHeight;
         this.summationLegend = summationLegend;
         this.groupSummationLegend = groupSummationLegend;
         this.dynamicDataSource = dynamicDataSource;
@@ -174,6 +164,10 @@ public class Report {
         this.query = query;
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
     public ReportTable getTable() {
         return table;
     }
@@ -182,28 +176,12 @@ public class Report {
         return beanCollection;
     }
 
-    public String getColumnFontName() {
-        return columnFontName;
-    }
-
-    public int getColumnFontSize() {
-        return columnFontSize;
-    }
-
     public int getPageWidth() {
         return pageWidth;
     }
 
     public int getPageHeight() {
         return pageHeight;
-    }
-
-    public int getColumnHeaderHeight() {
-        return columnHeaderHeight;
-    }
-
-    public int getDetailHeight() {
-        return detailHeight;
     }
 
     public String getSummationLegend() {
@@ -292,14 +270,6 @@ public class Report {
 
     public static class Builder {
 
-        public static String DEFAULT_COLUMN_FONTNAME = "Arial";
-
-        public static int DEFAULT_COLUMN_FONTSIZE = 10;
-
-        public static int DEFAULT_COLUMNHEADER_HEIGHT = 20;
-
-        public static int DEFAULT_DETAIL_HEIGHT = 20;
-
         private String code;
 
         private String title;
@@ -311,6 +281,8 @@ public class Report {
         private String dataSource;
 
         private String query;
+
+        private String theme;
 
         private ReportTable table;
 
@@ -328,17 +300,9 @@ public class Report {
 
         private ReportLayout layout;
 
-        private String columnFontName;
-
-        private int columnFontSize;
-
-        private int columnHeaderHeight;
-
         private int pageWidth;
 
         private int pageHeight;
-
-        private int detailHeight;
 
         private String summationLegend;
 
@@ -367,10 +331,6 @@ public class Report {
             this.parameters = new HashMap<String, Object>();
             this.printColumnNames = true;
             this.printGroupColumnNames = true;
-            this.columnFontName = DEFAULT_COLUMN_FONTNAME;
-            this.columnFontSize = DEFAULT_COLUMN_FONTSIZE;
-            this.columnHeaderHeight = DEFAULT_COLUMNHEADER_HEIGHT;
-            this.detailHeight = DEFAULT_DETAIL_HEIGHT;
         }
 
         public Builder code(String code) {
@@ -403,6 +363,11 @@ public class Report {
             return this;
         }
 
+        public Builder theme(String theme) {
+            this.theme = theme;
+            return this;
+        }
+
         public Builder beanCollection(Collection<?> beanCollection) {
             this.beanCollection = beanCollection;
             return this;
@@ -418,16 +383,6 @@ public class Report {
             return this;
         }
 
-        public Builder columnFontName(String columnFontName) {
-            this.columnFontName = columnFontName;
-            return this;
-        }
-
-        public Builder columnFontSize(int columnFontSize) {
-            this.columnFontSize = columnFontSize;
-            return this;
-        }
-
         public Builder pageWidth(int pageWidth) {
             this.pageWidth = pageWidth;
             return this;
@@ -435,16 +390,6 @@ public class Report {
 
         public Builder pageHeight(int pageHeight) {
             this.pageHeight = pageHeight;
-            return this;
-        }
-
-        public Builder columnHeaderHeight(int columnHeaderHeight) {
-            this.columnHeaderHeight = columnHeaderHeight;
-            return this;
-        }
-
-        public Builder detailHeight(int detailHeight) {
-            this.detailHeight = detailHeight;
             return this;
         }
 
@@ -527,17 +472,17 @@ public class Report {
         }
 
         public Builder addColumn(String title, String name, String className, String formatterUpl, OrderType order,
-                HAlignType hAlignType, int widthRatio, boolean group, boolean sum) throws UnifyException {
-            addColumn(title, null, name, className, formatterUpl, order, hAlignType, widthRatio, group, sum);
+                HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum) throws UnifyException {
+            addColumn(title, null, name, className, formatterUpl, order, hAlignType, widthRatio, group, groupOnNewPage, sum);
             return this;
         }
 
         public Builder addColumn(String title, String table, String name, String className, String formatterUpl,
-                OrderType order, HAlignType hAlignType, int widthRatio, boolean group, boolean sum)
+                OrderType order, HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum)
                 throws UnifyException {
             ReportColumn rc = ReportColumn.newBuilder().title(title).table(table).name(name).className(className)
                     .horizontalAlignment(hAlignType).widthRatio(widthRatio).formatter(formatterUpl).order(order)
-                    .group(group).sum(sum).build();
+                    .group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
             columns.add(rc);
             return this;
         }
@@ -602,11 +547,10 @@ public class Report {
         }
 
         public Report build() throws UnifyException {
-            Report report = new Report(code, title, template, processor, dataSource, query, beanCollection, table,
-                    Collections.unmodifiableList(joins), columns, rootFilter, format, layout,
-                    new ReportParameters(parameters), pageWidth, pageHeight, columnFontName, columnFontSize,
-                    columnHeaderHeight, detailHeight, summationLegend, groupSummationLegend, dynamicDataSource,
-                    printColumnNames, printGroupColumnNames, underlineRows, shadeOddRows, landscape);
+            Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
+                    table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout,
+                    new ReportParameters(parameters), pageWidth, pageHeight, summationLegend, groupSummationLegend,
+                    dynamicDataSource, printColumnNames, printGroupColumnNames, underlineRows, shadeOddRows, landscape);
             return report;
         }
     }
