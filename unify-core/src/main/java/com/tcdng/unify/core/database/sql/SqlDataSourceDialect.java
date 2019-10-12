@@ -352,6 +352,11 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     String getPreferredName(String name);
 
     /**
+     * Returns the dialect SQL BLOB type.
+     */
+    String getSqlBlobType();
+    
+    /**
      * Gets the maximum number of values the data source would accept for
      * multi-value conditions.
      * 

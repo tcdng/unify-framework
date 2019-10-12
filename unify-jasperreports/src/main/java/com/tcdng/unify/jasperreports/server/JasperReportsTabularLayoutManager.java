@@ -28,7 +28,6 @@ import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.report.ReportParameters;
 import com.tcdng.unify.core.report.ReportTheme;
 import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
-import com.tcdng.unify.core.util.DataUtils;
 
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignElement;
@@ -56,13 +55,13 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
     protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
             throws UnifyException {
         ReportTheme theme = report.getReportTheme();
-        List<ReportColumn> reportColumnList = report.getColumns();
         boolean isListFormat = isListFormat(report.getFormat());
         int actualColumnWidth = jasperDesign.getColumnWidth();
         int columnHeaderHeight = theme.getColumnHeaderHeight();
         int detailHeight = theme.getDetailHeight();
 
         // Organize layout
+        List<ReportColumn> reportColumnList = report.getColumns();
         List<ReportColumn> groupingColumnList = new ArrayList<ReportColumn>();
         List<ReportColumn> detailColumnList = new ArrayList<ReportColumn>();
         List<ReportColumn> summationColumnList = new ArrayList<ReportColumn>();
@@ -75,7 +74,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 groupingColumnList.add(reportColumn);
             } else {
                 detailColumnList.add(reportColumn);
-                if (reportColumn.isSum() && DataUtils.isNumberType(reportColumn.getTypeName())) {
+                if (reportColumn.isSum() && reportColumn.isNumber()) {
                     summationColumnList.add(reportColumn);
                 }
 
@@ -220,14 +219,14 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 for (ReportColumn sumReportColumn : summationColumnList) {
                     JRDesignVariable sumJRDesignVariable =
                             newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup, sumReportColumn);
-                    jRDesignElement = detailJRElementMap.get(sumReportColumn);
 
                     JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
                             groupTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
 
-                    sumJRDesignElement.setX(jRDesignElement.getX());
-                    sumJRDesignElement.setY(jRDesignElement.getY());
-                    sumJRDesignElement.setWidth(jRDesignElement.getWidth());
+                    JRDesignElement refJRDesignElement = detailJRElementMap.get(sumReportColumn);
+                    sumJRDesignElement.setX(refJRDesignElement.getX());
+                    sumJRDesignElement.setY(refJRDesignElement.getY());
+                    sumJRDesignElement.setWidth(refJRDesignElement.getWidth());
                     sumJRDesignElement.setHeight(columnHeaderHeight - (4));
                     if (sumReportColumn.getFormatterUpl() != null) {
                         sumJRDesignElement.setExpression(

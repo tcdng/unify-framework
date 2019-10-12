@@ -540,8 +540,13 @@ public final class DataUtils {
      * @param className
      *            the data type class name
      */
-    public static boolean isNumberType(String className) throws UnifyException {
-        return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.getClassForName(className)));
+    public static boolean isNumberType(String className) {
+        try {
+            return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.getClassForName(className)));
+        } catch (UnifyException e) {
+        }
+        
+        return false;
     }
 
     /**

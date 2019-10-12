@@ -1272,6 +1272,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
+    public String getSqlBlobType() {
+        return "java.sql.Blob";
+    }
+
+    @Override
     public String translateCriteria(Restriction restriction) throws UnifyException {
         StringBuilder sql = new StringBuilder();
         translateCriteria(sql, null, restriction);
@@ -1926,7 +1931,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                         sb.append(newLineSql);
                         sb.append('\t');
                     }
-                    sb.append("AND ");
+                    sb.append(" AND ");
                 } else {
                     appendSym = true;
                 }

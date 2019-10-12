@@ -18,6 +18,7 @@ package com.tcdng.unify.core.report;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A report column.
@@ -35,6 +36,8 @@ public class ReportColumn {
 
     private String className;
 
+    private String sqlBlobTypeName;
+
     private String formatterUpl;
 
     private OrderType order;
@@ -49,16 +52,18 @@ public class ReportColumn {
 
     private boolean sum;
 
-    private ReportColumn(String title, String table, String name, String className, String formatterUpl,
-            OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum) {
+    private ReportColumn(String title, String table, String name, String className, String sqlBlobTypeName,
+            String formatterUpl, OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group,
+            boolean groupOnNewPage, boolean sum) {
         this.title = title;
         this.table = table;
         this.name = name;
         this.className = className;
+        this.sqlBlobTypeName = sqlBlobTypeName;
+        this.formatterUpl = formatterUpl;
         this.horizontalAlignment = horizontalAlignment;
         this.widthRatio = widthRatio;
         this.order = order;
-        this.formatterUpl = formatterUpl;
         this.group = group;
         this.groupOnNewPage = groupOnNewPage;
         this.sum = sum;
@@ -82,6 +87,22 @@ public class ReportColumn {
 
     public String getTypeName() {
         return className;
+    }
+
+    public boolean isNumber() {
+        return DataUtils.isNumberType(className);
+    }
+
+    public boolean isDate() {
+        return "java.util.Date".equals(className);
+    }
+
+    public boolean isBlob() {
+        return "[B".equals(className);
+    }
+
+    public String getSqlBlobTypeName() {
+        return sqlBlobTypeName;
     }
 
     public HAlignType getHorizontalAlignment() {
@@ -126,6 +147,8 @@ public class ReportColumn {
 
         private String className;
 
+        private String sqlBlobTypeName;
+
         private String formatterUpl;
 
         private OrderType order;
@@ -161,6 +184,11 @@ public class ReportColumn {
 
         public Builder className(String className) {
             this.className = className;
+            return this;
+        }
+
+        public Builder sqlBlobTypeName(String sqlBlobTypeName) {
+            this.sqlBlobTypeName = sqlBlobTypeName;
             return this;
         }
 
@@ -200,8 +228,8 @@ public class ReportColumn {
         }
 
         public ReportColumn build() throws UnifyException {
-            ReportColumn reportColumn = new ReportColumn(title, table, name, className, formatterUpl, order,
-                    horizontalAlignment, widthRatio, group, groupOnNewPage, sum);
+            ReportColumn reportColumn = new ReportColumn(title, table, name, className, sqlBlobTypeName, formatterUpl,
+                    order, horizontalAlignment, widthRatio, group, groupOnNewPage, sum);
             return reportColumn;
         }
     }

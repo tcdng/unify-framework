@@ -18,7 +18,9 @@ package com.tcdng.unify.core.report;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.util.DataUtils;
 
@@ -48,7 +50,7 @@ public class ReportTheme {
 
     private static final int DEFAULT_DETAIL_HEIGHT = 18;
 
-    private static final int DEFAULT_DETAIL_IMAGE_WIDTH = 442;
+    private static final int DEFAULT_DETAIL_IMAGE_WIDTH = 360;
 
     private static final int DEFAULT_DETAIL_IMAGE_HEIGHT = 124;
 
@@ -66,7 +68,7 @@ public class ReportTheme {
 
     private int detailImageHeight;
 
-    private Object extension;
+    private Map<String, Object> attributes;
 
     private ThemeColors paramTheme;
 
@@ -81,9 +83,9 @@ public class ReportTheme {
     private List<ThemeColors> groupThemeList;
 
     private ReportTheme(String columnFontName, int columnFontSize, int columnHeaderHeight, int detailHeight,
-            int groupFontSize, int detailImageWidth, int detailImageHeight, Object extension, ThemeColors paramTheme,
-            ThemeColors columnTheme, ThemeColors detailTheme, ThemeColors shadeTheme, ThemeColors grandSummaryTheme,
-            List<ThemeColors> groupThemeList) {
+            int groupFontSize, int detailImageWidth, int detailImageHeight, Map<String, Object> attributes,
+            ThemeColors paramTheme, ThemeColors columnTheme, ThemeColors detailTheme, ThemeColors shadeTheme,
+            ThemeColors grandSummaryTheme, List<ThemeColors> groupThemeList) {
         this.columnFontName = columnFontName;
         this.columnFontSize = columnFontSize;
         this.columnHeaderHeight = columnHeaderHeight;
@@ -91,7 +93,7 @@ public class ReportTheme {
         this.groupFontSize = groupFontSize;
         this.detailImageWidth = detailImageWidth;
         this.detailImageHeight = detailImageHeight;
-        this.extension = extension;
+        this.attributes = attributes;
         this.paramTheme = paramTheme;
         this.columnTheme = columnTheme;
         this.detailTheme = detailTheme;
@@ -128,8 +130,8 @@ public class ReportTheme {
         return detailImageHeight;
     }
 
-    public Object getExtension() {
-        return extension;
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     public ThemeColors getParamTheme() {
@@ -184,7 +186,7 @@ public class ReportTheme {
 
         private int detailImageHeight;
 
-        private Object extension;
+        private Map<String, Object> attributes;
 
         private ThemeColors paramTheme;
 
@@ -245,8 +247,12 @@ public class ReportTheme {
             return this;
         }
 
-        public Builder extension(Object extension) {
-            this.extension = extension;
+        public Builder addAttribute(String name, Object value) {
+            if (attributes == null) {
+                attributes = new HashMap<String, Object>();
+            }
+
+            attributes.put(name, value);
             return this;
         }
 
@@ -285,8 +291,8 @@ public class ReportTheme {
 
         public ReportTheme build() {
             return new ReportTheme(columnFontName, columnFontSize, columnHeaderHeight, detailHeight, groupFontSize,
-                    detailImageWidth, detailImageHeight, extension, paramTheme, columnTheme, detailTheme, shadeTheme,
-                    grandSummaryTheme, DataUtils.unmodifiableList(groupThemeList));
+                    detailImageWidth, detailImageHeight, DataUtils.unmodifiableMap(attributes), paramTheme, columnTheme,
+                    detailTheme, shadeTheme, grandSummaryTheme, DataUtils.unmodifiableList(groupThemeList));
         }
     }
 

@@ -155,8 +155,8 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         jrDesignBand.setHeight(y + height);
 
         // Draw background
-        JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, x, y + 2, width,
-                height - 4, paramHeaderColors);
+        JRDesignRectangle jRDesignRectangle =
+                newJRDesignRectangle(jasperDesign, x, y + 2, width, height - 4, paramHeaderColors);
         jRDesignRectangle.getLinePen().setLineWidth(0);
         jRDesignRectangle.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
         jrDesignBand.addElement(jRDesignRectangle);
@@ -204,7 +204,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 
                 // Next line
                 penY += detailHeight;
-                
+
                 if (--linesToWrite == 0) {
                     // Reset to first line
                     penY = y + 4;
@@ -260,9 +260,21 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         return jRDesignGroup;
     }
 
+    protected JRDesignImage newJRDesignImage(JasperDesign jasperDesign, int x, int y, int width, int height,
+            ReportColumn reportColumn) throws UnifyException {
+        JRDesignImage jRDesignImage = new JRDesignImage(jasperDesign);
+        jRDesignImage.setX(x);
+        jRDesignImage.setY(y);
+        jRDesignImage.setWidth(width);
+        jRDesignImage.setHeight(height);
+        jRDesignImage.setExpression(newJRDesignExpression(reportColumn));
+        jRDesignImage.setScaleImage(ScaleImageEnum.FILL_FRAME);
+        return jRDesignImage;
+    }
+
     protected JRDesignElement newColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
             JRDesignStyle fontStyle, ReportColumn reportColumn, boolean isListFormat) throws UnifyException {
-        if ("byte[]".equals(reportColumn.getTypeName())) {
+        if (reportColumn.isBlob()) {
             JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
             jrDesignImage.setHorizontalAlignment(HorizontalAlignEnum.CENTER);
             jrDesignImage.setWidth(reportColumn.getWidthRatio());
@@ -346,8 +358,12 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 
     protected JRDesignExpression newJRDesignExpression(ReportColumn reportColumn) throws UnifyException {
         JRDesignExpression expression = new JRDesignExpression();
-        if ("byte[]".equals(reportColumn.getTypeName())) {
-            expression.setText("new ByteArrayInputStream((byte[])$F{" + reportColumn.getName() + "})");
+        if (reportColumn.isBlob()) {
+            if (StringUtils.isNotBlank(reportColumn.getSqlBlobTypeName())) {
+                expression.setText("$F{" + reportColumn.getName() + "}.getBinaryStream()");
+            } else {
+                expression.setText("new ByteArrayInputStream((byte[])$F{" + reportColumn.getName() + "})");
+            }
         } else {
             if (reportColumn.getFormatterUpl() != null) {
                 expression.setText("com.tcdng.unify.core.report.ReportFormatUtils.format(\""
@@ -437,9 +453,14 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         JRDesignField field = new JRDesignField();
         field.setName(reportColumn.getName());
         String type = reportColumn.getTypeName();
-        if (isQuery && type.equals("java.util.Date")) {
-            type = "java.sql.Timestamp";
+        if (isQuery) {
+            if (reportColumn.isDate()) {
+                type = "java.sql.Timestamp";
+            } else if (reportColumn.isBlob() && StringUtils.isNotBlank(reportColumn.getSqlBlobTypeName())) {
+                type = reportColumn.getSqlBlobTypeName();
+            }
         }
+
         field.setValueClass(ReflectUtils.getClassForName(type));
         return field;
     }
