@@ -177,8 +177,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 String tableAlias = "R" + (++rAliasCounter);
                 return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
-                        schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName, preferredTableName,
-                        schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null, null, null, null, null);
+                        schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
+                        preferredTableName, schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null, null,
+                        null, null, null);
             }
 
             @SuppressWarnings("unchecked")
@@ -820,7 +821,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         switch (restrictionType) {
                             case IS_NOT_NULL:
                             case IS_NULL:
-                                // TODO
                                 break;
                             case BEGINS_WITH:
                             case ENDS_WITH:
@@ -834,7 +834,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             case NOT_END_WITH:
                             case NOT_EQUAL:
                             case NOT_LIKE:
-                                if (StringUtils.isNotBlank(vra.rightProperty())) {
+                                String rightProperty = AnnotationUtils.getAnnotationString(vra.rightProperty());
+                                if (StringUtils.isNotBlank(rightProperty)) {
                                     param1 = getSqlViewColumnInfo(tableReferences, entityCycleDetector,
                                             vra.rightProperty());
                                 } else {
