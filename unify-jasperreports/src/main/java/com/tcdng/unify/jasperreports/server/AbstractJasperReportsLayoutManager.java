@@ -268,6 +268,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         jRDesignImage.setWidth(width);
         jRDesignImage.setHeight(height);
         jRDesignImage.setExpression(newJRDesignExpression(reportColumn));
+        jRDesignImage.setScaleImage(ScaleImageEnum.FILL_FRAME);
         return jRDesignImage;
     }
 
@@ -459,6 +460,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
                 type = reportColumn.getSqlBlobTypeName();
             }
         }
+
         field.setValueClass(ReflectUtils.getClassForName(type));
         return field;
     }

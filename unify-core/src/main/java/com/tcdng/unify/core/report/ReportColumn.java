@@ -98,7 +98,7 @@ public class ReportColumn {
     }
 
     public boolean isBlob() {
-        return "byte[]".equals(className);
+        return "[B".equals(className);
     }
 
     public String getSqlBlobTypeName() {

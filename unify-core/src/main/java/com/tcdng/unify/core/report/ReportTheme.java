@@ -50,7 +50,7 @@ public class ReportTheme {
 
     private static final int DEFAULT_DETAIL_HEIGHT = 18;
 
-    private static final int DEFAULT_DETAIL_IMAGE_WIDTH = 442;
+    private static final int DEFAULT_DETAIL_IMAGE_WIDTH = 360;
 
     private static final int DEFAULT_DETAIL_IMAGE_HEIGHT = 124;
 

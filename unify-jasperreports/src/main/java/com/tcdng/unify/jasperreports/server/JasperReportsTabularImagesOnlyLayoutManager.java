@@ -17,9 +17,7 @@ package com.tcdng.unify.jasperreports.server;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -62,10 +60,7 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
         List<ReportColumn> groupingColumnList = new ArrayList<ReportColumn>();
         List<ReportColumn> imageColumnList = new ArrayList<ReportColumn>();
         List<ReportColumn> summationColumnList = new ArrayList<ReportColumn>();
-        Map<ReportColumn, JRDesignElement> detailJRElementMap = new HashMap<ReportColumn, JRDesignElement>();
 
-        ThemeColors detailColors = theme.getDetailTheme();
-        int reportWidth = 0;
         for (ReportColumn reportColumn : reportColumnList) {
             if (reportColumn.isGroup()) {
                 groupingColumnList.add(reportColumn);
@@ -75,13 +70,6 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
                 } else if (reportColumn.isBlob()) {
                     imageColumnList.add(reportColumn);
                 }
-
-                JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, detailColors,
-                        columnStyles.getNormalStyle(), reportColumn, isListFormat);
-                jRDesignElement.setX(reportWidth);
-                jRDesignElement.setY(2);
-                reportWidth += jRDesignElement.getWidth();
-                detailJRElementMap.put(reportColumn, jRDesignElement);
             }
         }
 
@@ -125,6 +113,7 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
         detailJRDesignSection.addBand(detailBand); // Add new detail band
 
         // Construct groups
+        final int sumWidth = actualColumnWidth / 6;
         int columnHeaderHeight = theme.getColumnHeaderHeight();
         int groupHeaderX = 4;
         int groupCascade = 20;
@@ -162,6 +151,7 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
                 grpJRDesignRectangle.getLinePen().setLineWidth(0);
                 groupFooterBand.addElement(grpJRDesignRectangle);
 
+                int sumX = 4 + sumWidth * (6 - summationColumnList.size()) - 2;
                 for (ReportColumn sumReportColumn : summationColumnList) {
                     JRDesignVariable sumJRDesignVariable =
                             newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup, sumReportColumn);
@@ -169,10 +159,9 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
                     JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
                             groupTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
 
-                    JRDesignElement refJRDesignElement = detailJRElementMap.get(sumReportColumn);
-                    sumJRDesignElement.setX(refJRDesignElement.getX());
-                    sumJRDesignElement.setY(refJRDesignElement.getY());
-                    sumJRDesignElement.setWidth(refJRDesignElement.getWidth());
+                    sumJRDesignElement.setX(sumX);
+                    sumJRDesignElement.setY(2);
+                    sumJRDesignElement.setWidth(sumWidth);
                     sumJRDesignElement.setHeight(columnHeaderHeight - (4));
                     if (sumReportColumn.getFormatterUpl() != null) {
                         sumJRDesignElement.setExpression(
@@ -184,6 +173,7 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
                                 .setExpression(newJRDesignExpression("$V{" + sumJRDesignVariable.getName() + "}"));
                     }
 
+                    sumX += sumWidth;
                     groupFooterBand.addElement(sumJRDesignElement);
                 }
                 ((JRDesignSection) jRDesignGroup.getGroupFooterSection()).addBand(groupFooterBand);
@@ -203,16 +193,15 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
                     newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth, columnHeaderHeight, grandTheme);
             summaryBand.addElement(jRDesignRectangle);
 
+            int sumX = groupHeaderX + sumWidth * (6 - summationColumnList.size()) - 2;
             for (ReportColumn sumReportColumn : summationColumnList) {
                 JRDesignVariable sumJRDesignVariable = newReportSumJRDesignVariable(jasperDesign, sumReportColumn);
-                JRDesignElement jRDesignElement = detailJRElementMap.get(sumReportColumn);
-
                 JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
                         grandTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
 
-                sumJRDesignElement.setX(jRDesignElement.getX());
-                sumJRDesignElement.setY(jRDesignElement.getY());
-                sumJRDesignElement.setWidth(jRDesignElement.getWidth());
+                sumJRDesignElement.setX(sumX);
+                sumJRDesignElement.setY(2);
+                sumJRDesignElement.setWidth(sumWidth);
                 sumJRDesignElement.setHeight(columnHeaderHeight - (4));
                 if (sumReportColumn.getFormatterUpl() != null) {
                     sumJRDesignElement.setExpression(
@@ -223,6 +212,8 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
                     sumJRDesignElement
                             .setExpression(newJRDesignExpression("$V{" + sumJRDesignVariable.getName() + "}"));
                 }
+                
+                sumX += sumWidth;
                 summaryBand.addElement(sumJRDesignElement);
             }
             jasperDesign.setSummary(summaryBand);
