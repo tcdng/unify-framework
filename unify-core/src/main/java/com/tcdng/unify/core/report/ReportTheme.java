@@ -65,8 +65,10 @@ public class ReportTheme {
     private int detailImageWidth;
 
     private int detailImageHeight;
-    
+
     private Object extension;
+
+    private ThemeColors paramTheme;
 
     private ThemeColors columnTheme;
 
@@ -79,8 +81,8 @@ public class ReportTheme {
     private List<ThemeColors> groupThemeList;
 
     private ReportTheme(String columnFontName, int columnFontSize, int columnHeaderHeight, int detailHeight,
-            int groupFontSize, int detailImageWidth, int detailImageHeight, Object extension, ThemeColors columnTheme,
-            ThemeColors detailTheme, ThemeColors shadeTheme, ThemeColors grandSummaryTheme,
+            int groupFontSize, int detailImageWidth, int detailImageHeight, Object extension, ThemeColors paramTheme,
+            ThemeColors columnTheme, ThemeColors detailTheme, ThemeColors shadeTheme, ThemeColors grandSummaryTheme,
             List<ThemeColors> groupThemeList) {
         this.columnFontName = columnFontName;
         this.columnFontSize = columnFontSize;
@@ -90,6 +92,7 @@ public class ReportTheme {
         this.detailImageWidth = detailImageWidth;
         this.detailImageHeight = detailImageHeight;
         this.extension = extension;
+        this.paramTheme = paramTheme;
         this.columnTheme = columnTheme;
         this.detailTheme = detailTheme;
         this.shadeTheme = shadeTheme;
@@ -127,6 +130,10 @@ public class ReportTheme {
 
     public Object getExtension() {
         return extension;
+    }
+
+    public ThemeColors getParamTheme() {
+        return paramTheme;
     }
 
     public ThemeColors getColumnTheme() {
@@ -176,8 +183,10 @@ public class ReportTheme {
         private int detailImageWidth;
 
         private int detailImageHeight;
-        
+
         private Object extension;
+
+        private ThemeColors paramTheme;
 
         private ThemeColors columnTheme;
 
@@ -198,6 +207,7 @@ public class ReportTheme {
             detailImageWidth = DEFAULT_DETAIL_IMAGE_WIDTH;
             detailImageHeight = DEFAULT_DETAIL_IMAGE_HEIGHT;
 
+            paramTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#EEEEEE"), Color.decode("#EEEEEE"));
             columnTheme = new ThemeColors(Color.decode("#FFFFFF"), Color.decode("#C0C0C0"), Color.decode("#C0C0C0"));
             detailTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"));
             shadeTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#EEEEEE"), Color.decode("#EEEEEE"));
@@ -240,6 +250,11 @@ public class ReportTheme {
             return this;
         }
 
+        public Builder paramTheme(Color fontColor, Color foreColor, Color backColor) {
+            paramTheme = new ThemeColors(fontColor, foreColor, backColor);
+            return this;
+        }
+
         public Builder columnTheme(Color fontColor, Color foreColor, Color backColor) {
             columnTheme = new ThemeColors(fontColor, foreColor, backColor);
             return this;
@@ -269,8 +284,8 @@ public class ReportTheme {
         }
 
         public ReportTheme build() {
-            return new ReportTheme(columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
-                    groupFontSize, detailImageWidth, detailImageHeight, extension, columnTheme, detailTheme, shadeTheme,
+            return new ReportTheme(columnFontName, columnFontSize, columnHeaderHeight, detailHeight, groupFontSize,
+                    detailImageWidth, detailImageHeight, extension, paramTheme, columnTheme, detailTheme, shadeTheme,
                     grandSummaryTheme, DataUtils.unmodifiableList(groupThemeList));
         }
     }

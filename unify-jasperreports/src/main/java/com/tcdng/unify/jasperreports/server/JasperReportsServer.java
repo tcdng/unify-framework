@@ -112,12 +112,12 @@ public class JasperReportsServer extends AbstractReportServer {
             Collection<?> content = report.getBeanCollection();
             if (content != null) {
                 JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(content);
-                jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
-                        jrBeanDataSource);
+                jasperPrint = JasperFillManager.fillReport(jasperReport,
+                        report.getReportParameters().getParameterValues(), jrBeanDataSource);
             } else {
                 connection = (Connection) dataSource.getConnection();
-                jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
-                        connection);
+                jasperPrint = JasperFillManager.fillReport(jasperReport,
+                        report.getReportParameters().getParameterValues(), connection);
             }
 
             Exporter<ExporterInput, ?, ?, ?> exporter = getExporter(report.getFormat(), outputStream);

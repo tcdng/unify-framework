@@ -17,9 +17,7 @@ package com.tcdng.unify.core.report;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import com.tcdng.unify.core.UnifyException;
@@ -67,7 +65,7 @@ public class Report {
     private ReportParameters reportParameters;
 
     private ReportTheme reportTheme;
-    
+
     private int pageWidth;
 
     private int pageHeight;
@@ -84,6 +82,8 @@ public class Report {
 
     private boolean invertGroupColors;
 
+    private boolean showParameterHeader;
+
     private boolean underlineRows;
 
     private boolean shadeOddRows;
@@ -95,8 +95,8 @@ public class Report {
             List<ReportColumn> columns, ReportFilter filter, ReportFormat format, String layout,
             ReportParameters reportParameters, int pageWidth, int pageHeight, String summationLegend,
             String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
-            boolean printGroupColumnNames, boolean invertGroupColors, boolean underlineRows, boolean shadeOddRows,
-            boolean landscape) {
+            boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
+            boolean underlineRows, boolean shadeOddRows, boolean landscape) {
         this.code = code;
         this.title = title;
         this.template = template;
@@ -120,6 +120,7 @@ public class Report {
         this.printColumnNames = printColumnNames;
         this.printGroupColumnNames = printGroupColumnNames;
         this.invertGroupColors = invertGroupColors;
+        this.showParameterHeader = showParameterHeader;
         this.underlineRows = underlineRows;
         this.shadeOddRows = shadeOddRows;
         this.landscape = landscape;
@@ -229,6 +230,10 @@ public class Report {
         return invertGroupColors;
     }
 
+    public boolean isShowParameterHeader() {
+        return showParameterHeader;
+    }
+
     public boolean isUnderlineRows() {
         return underlineRows;
     }
@@ -261,12 +266,34 @@ public class Report {
         this.reportParameters = reportParameters;
     }
 
-    public void setParameter(String name, Object value) {
-        reportParameters.setParameter(name, value);
+    public void setParameter(String name, String description, Object value) {
+        setParameter(name, description, null, value, false, false);
     }
 
-    public Object getParameter(String name) {
+    public void setParameter(String name, String description, String formatter, Object value, boolean headerDetail,
+            boolean footerDetail) {
+        setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
+    }
+
+    public void setParameter(ReportParameter reportParameter) {
+        reportParameters.setParameter(reportParameter);
+    }
+
+    public boolean isParameter(String name) {
+        return reportParameters.isParameter(name);
+    }
+
+    public ReportParameter getParameter(String name) {
         return reportParameters.getParameter(name);
+    }
+
+    public Object getParameterValue(String name) {
+        ReportParameter reportParameter = reportParameters.getParameter(name);
+        if (reportParameter != null) {
+            return reportParameter.getValue();
+        }
+
+        return null;
     }
 
     public List<ReportTableJoin> getJoins() {
@@ -307,6 +334,12 @@ public class Report {
 
         private ReportTable table;
 
+        private ReportFilter rootFilter;
+
+        private ReportFormat format;
+
+        private ReportParameters reportParameters;
+
         private List<?> beanCollection;
 
         private List<ReportTableJoin> joins;
@@ -314,10 +347,6 @@ public class Report {
         private List<ReportColumn> columns;
 
         private Stack<ReportFilter> filters;
-
-        private ReportFilter rootFilter;
-
-        private ReportFormat format;
 
         private String layout;
 
@@ -337,23 +366,24 @@ public class Report {
 
         private boolean invertGroupColors;
 
+        private boolean showParameterHeader;
+
         private boolean underlineRows;
 
         private boolean shadeOddRows;
 
         private boolean landscape;
 
-        private Map<String, Object> parameters;
-
         private Builder() {
             this.format = ReportFormat.PDF;
             this.layout = ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER;
+            this.reportParameters = new ReportParameters();
             this.joins = new ArrayList<ReportTableJoin>();
             this.columns = new ArrayList<ReportColumn>();
             this.filters = new Stack<ReportFilter>();
-            this.parameters = new HashMap<String, Object>();
             this.printColumnNames = true;
             this.printGroupColumnNames = true;
+            this.showParameterHeader = true;
         }
 
         public Builder code(String code) {
@@ -443,6 +473,11 @@ public class Report {
 
         public Builder invertGroupColors(boolean invertGroupColors) {
             this.invertGroupColors = invertGroupColors;
+            return this;
+        }
+
+        public Builder showParameterHeader(boolean showParameterHeader) {
+            this.showParameterHeader = showParameterHeader;
             return this;
         }
 
@@ -566,22 +601,28 @@ public class Report {
             return this;
         }
 
-        public Builder setParameter(String name, Object value) {
-            parameters.put(name, value);
+        public Builder addParameter(ReportParameter reportParameter) {
+            reportParameters.setParameter(reportParameter);
             return this;
         }
 
-        public Builder setParameters(Map<String, Object> parameters) {
-            this.parameters.putAll(parameters);
+        public Builder addReportParameter(String name, String description, Object value) {
+            return addReportParameter(name, description, null, value, false, false);
+        }
+
+        public Builder addReportParameter(String name, String description, String formatter, Object value,
+                boolean headerDetail, boolean footerDetail) {
+            reportParameters
+                    .setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
             return this;
         }
 
         public Report build() throws UnifyException {
             Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
-                    table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout,
-                    new ReportParameters(parameters), pageWidth, pageHeight, summationLegend, groupSummationLegend,
-                    dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors, underlineRows,
-                    shadeOddRows, landscape);
+                    table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout, reportParameters,
+                    pageWidth, pageHeight, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,
+                    printGroupColumnNames, invertGroupColors, showParameterHeader, underlineRows, shadeOddRows,
+                    landscape);
             return report;
         }
     }

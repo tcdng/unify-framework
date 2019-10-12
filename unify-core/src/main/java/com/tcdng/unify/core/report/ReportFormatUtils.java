@@ -16,6 +16,9 @@
 package com.tcdng.unify.core.report;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Reports format util.
@@ -35,7 +38,15 @@ public final class ReportFormatUtils {
         ReportFormatUtils.reportFormatterStore = reportFormatterStore;
     }
 
+    public static Formatter<Object> getFormatter(String formatterUpl) throws UnifyException {
+        if (StringUtils.isNotBlank(formatterUpl)) {
+            return reportFormatterStore.getFormatter(formatterUpl);
+        }
+        
+        return null;
+    }
+    
     public static String format(String formatterUpl, Object value) throws UnifyException {
-        return reportFormatterStore.getFormatter(formatterUpl).format(value);
+        return DataUtils.convert(String.class, value, getFormatter(formatterUpl));
     }
 }
