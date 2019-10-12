@@ -505,7 +505,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         T list = getUplAttribute(type, attribute);
         if (list == null) {
             String listBinding = getUplAttribute(String.class, attributeBinding);
-            if (!StringUtils.isBlank(listBinding)) {
+            if (StringUtils.isNotBlank(listBinding)) {
                 list = getValue(type, listBinding);
             }
         }

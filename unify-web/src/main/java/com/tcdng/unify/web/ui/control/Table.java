@@ -846,7 +846,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             if (strippedStyle == null) {
                 String style = control.getColumnStyle();
                 int index = 0;
-                if (!StringUtils.isBlank(style) && (index = style.indexOf("width:")) >= 0) {
+                if (StringUtils.isNotBlank(style) && (index = style.indexOf("width:")) >= 0) {
                     int endIndex = style.indexOf(';', index);
                     if (endIndex > index) {
                         return strippedStyle = (style.substring(0, index) + style.substring(endIndex + 1)).trim();
@@ -860,7 +860,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         }
 
         public boolean isWithStrippedStyle() throws UnifyException {
-            return !StringUtils.isBlank(getStrippedStyle());
+            return StringUtils.isNotBlank(getStrippedStyle());
         }
     }
 

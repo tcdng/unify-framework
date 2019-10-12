@@ -66,7 +66,7 @@ public class TaskMonitorPanel extends AbstractPanel {
             taskDonePath = taskMonitorInfo.getOnFailurePath();
         }
 
-        if (!StringUtils.isBlank(taskDonePath)) {
+        if (StringUtils.isNotBlank(taskDonePath)) {
             setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, taskDonePath);
             setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
         } else {

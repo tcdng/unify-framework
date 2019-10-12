@@ -66,12 +66,12 @@ public abstract class AbstractDBSearchProvider extends AbstractSearchProviderLis
     @Override
     public List<? extends Listable> execute(Locale locale, SearchProviderParams params) throws UnifyException {
         String key = params.getKey();
-        if (!StringUtils.isBlank(key)) {
+        if (StringUtils.isNotBlank(key)) {
             return genericService.listAll(new Query(recordType).equals(keyProperty, key).limit(searchLimit));
         }
 
         String filter = params.getFilter();
-        if (!StringUtils.isBlank(filter)) {
+        if (StringUtils.isNotBlank(filter)) {
             Query<?> query = new Query(recordType).like(descProperty, filter).limit(searchLimit);
             addQueryFilters(query);
             return genericService.listAll(query);

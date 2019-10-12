@@ -97,7 +97,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                 writer.write(">");
                 if (msg != null) {
                     String xml = msg.getMessage();
-                    if (!StringUtils.isBlank(xml)) {
+                    if (StringUtils.isNotBlank(xml)) {
                         // Validate
                         InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
                         saxParser.parse(is, new DefaultHandler());
@@ -111,7 +111,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                 writeAttribute(writer, "methodCode", result.getMethodCode());
                 writeAttribute(writer, "errorCode", result.getErrorCode());
                 writer.write(">");
-                if (!StringUtils.isBlank(result.getErrorMsg())) {
+                if (StringUtils.isNotBlank(result.getErrorMsg())) {
                     writer.write("<errorMsg>");
                     writer.write(HtmlUtils.getStringWithHtmlEscape(result.getErrorMsg()));
                     writer.write("</errorMsg>");
@@ -140,7 +140,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
                 }
                 writer.write(">");
 
-                if (!StringUtils.isBlank(result.getErrorMsg())) {
+                if (StringUtils.isNotBlank(result.getErrorMsg())) {
                     writer.write("<errorMsg>");
                     writer.write(HtmlUtils.getStringWithHtmlEscape(result.getErrorMsg()));
                     writer.write("</errorMsg>");
@@ -148,7 +148,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
 
                 if (msg != null) {
                     String xml = msg.getMessage();
-                    if (!StringUtils.isBlank(xml)) {
+                    if (StringUtils.isNotBlank(xml)) {
                         // Validate
                         InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
                         saxParser.parse(is, new DefaultHandler());
@@ -217,7 +217,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
     }
 
     private void writeAttribute(Writer writer, String qname, String val) throws IOException {
-        if (!StringUtils.isBlank(val)) {
+        if (StringUtils.isNotBlank(val)) {
             writer.write(" ");
             writer.write(qname);
             writer.write(" = \"");
@@ -227,7 +227,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
     }
 
     private void writeAttribute(StringBuilder sb, String qname, String val) throws IOException {
-        if (!StringUtils.isBlank(val)) {
+        if (StringUtils.isNotBlank(val)) {
             sb.append(" ").append(qname).append(" = \"").append(val).append("\"");
         }
     }

@@ -172,7 +172,7 @@ public class FileTransferInfo {
         }
 
         public Builder filterByPrefixes(Collection<String> prefixes) {
-            if (!DataUtils.isBlank(prefixes)) {
+            if (DataUtils.isNotBlank(prefixes)) {
                 if (filePrefixes == null) {
                     filePrefixes = new HashSet<String>();
                 }
@@ -193,7 +193,7 @@ public class FileTransferInfo {
         }
 
         public Builder filterByExtensions(Collection<String> extensions) {
-            if (!DataUtils.isBlank(extensions)) {
+            if (DataUtils.isNotBlank(extensions)) {
                 if (fileSuffixes == null) {
                     fileSuffixes = new HashSet<String>();
                 }

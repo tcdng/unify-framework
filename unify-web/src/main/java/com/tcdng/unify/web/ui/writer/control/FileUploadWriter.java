@@ -55,7 +55,7 @@ public class FileUploadWriter extends AbstractControlWriter {
         writer.write("<input type=\"file\"");
         writeTagId(writer, fileUpload);
         String accept = fileUpload.getAccept();
-        if (!StringUtils.isBlank(accept)) {
+        if (StringUtils.isNotBlank(accept)) {
             FileAttachmentType fileAttachmentType = FileAttachmentType.fromName(accept);
             if (fileAttachmentType != null && !FileAttachmentType.WILDCARD.equals(fileAttachmentType)) {
                 writer.write(" accept=\"").write(fileAttachmentType.mimeType().template()).write('"');

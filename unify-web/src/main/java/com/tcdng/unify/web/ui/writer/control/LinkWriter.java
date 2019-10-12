@@ -48,7 +48,7 @@ public class LinkWriter extends AbstractTargetControlWriter {
         writer.write("<a");
         writeTagAttributes(writer, link);
         writer.write(">");
-        if(!StringUtils.isBlank(caption)) {
+        if(StringUtils.isNotBlank(caption)) {
             writer.writeWithHtmlEscape(caption);
         } else {
             writeCaption(writer, link);

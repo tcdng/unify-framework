@@ -472,7 +472,7 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
     private void parseDocument(ParserContext parserContext, UplElement uplElement,
             Class<? extends UnifyComponent> componentClass, String generatedUpl) throws UnifyException {
         // Add generated UPL if necessary 18/08/18
-        if (!StringUtils.isBlank(generatedUpl)) {
+        if (StringUtils.isNotBlank(generatedUpl)) {
             logDebug("Parsing generated document for component type [{0}]...", componentClass);
             uplElement.merge(parseUplSource(parserContext, new StringReader(generatedUpl), componentClass.getName()));
         }

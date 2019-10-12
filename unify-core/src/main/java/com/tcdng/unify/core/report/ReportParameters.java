@@ -15,7 +15,8 @@
  */
 package com.tcdng.unify.core.report;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,14 +28,14 @@ import java.util.Set;
  */
 public class ReportParameters {
 
-    private Map<String, Object> parameters;
+    private Map<String, ReportParameter> parameters;
+
+    private int showInHeaderCount;
+
+    private int showInFooterCount;
 
     public ReportParameters() {
-        parameters = new HashMap<String, Object>();
-    }
-
-    public ReportParameters(Map<String, Object> parameters) {
-        this.parameters = parameters;
+        parameters = new LinkedHashMap<String, ReportParameter>();
     }
 
     public Set<String> getNames() {
@@ -44,16 +45,77 @@ public class ReportParameters {
     public boolean isParameter(String name) {
         return parameters.containsKey(name);
     }
-    
-    public Object getParameter(String name) {
+
+    public boolean isParameterNotNull(String name) {
+        ReportParameter reportParameter = parameters.get(name);
+        return reportParameter != null && reportParameter.getValue() != null;
+    }
+
+    public ReportParameter getParameter(String name) {
         return parameters.get(name);
     }
 
-    public void setParameter(String name, Object parameter) {
-        parameters.put(name, parameter);
+    public Object getParameterValue(String name) {
+        ReportParameter reportParameter = parameters.get(name);
+        if (reportParameter != null) {
+            return reportParameter.getValue();
+        }
+        
+        return null;
     }
 
-    public Map<String, Object> getParameters() {
-        return parameters;
+    public void setParameter(String name, String description, Object value) {
+        setParameter(name, description, null, value, false, false);
+    }
+
+    public void setParameter(String name, String description, String formatter, Object value, boolean headerDetail,
+            boolean footerDetail) {
+        setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
+    }
+
+    public void setParameter(ReportParameter parameter) {
+        if (!parameters.containsKey(parameter.getName())) {
+            if (parameter.isHeaderDetail()) {
+                showInHeaderCount++;
+            }
+
+            if (parameter.isFooterDetail()) {
+                showInFooterCount++;
+            }
+        }
+
+        parameters.put(parameter.getName(), parameter);
+    }
+
+    public Collection<ReportParameter> getParameters() {
+        return parameters.values();
+    }
+
+    public Map<String, Object> getParameterValues() {
+        Map<String, Object> paramValues = new LinkedHashMap<String, Object>();
+        for (ReportParameter parameter : parameters.values()) {
+            paramValues.put(parameter.getName(), parameter.getValue());
+        }
+        return paramValues;
+    }
+
+    public boolean isWithShowInHeader() {
+        return showInHeaderCount > 0;
+    }
+
+    public boolean isWithShowInFooter() {
+        return showInFooterCount > 0;
+    }
+
+    public int size() {
+        return parameters.size();
+    }
+
+    public int getShowInHeaderCount() {
+        return showInHeaderCount;
+    }
+
+    public int getShowInFooterCount() {
+        return showInFooterCount;
     }
 }

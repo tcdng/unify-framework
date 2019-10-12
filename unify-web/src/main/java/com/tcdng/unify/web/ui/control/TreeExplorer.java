@@ -122,7 +122,7 @@ public class TreeExplorer extends AbstractMultiControl {
     @Action
     public void executeEventPath() throws UnifyException {
         String treeEventPath = getTreeEventPath();
-        if (!StringUtils.isBlank(treeEventPath)) {
+        if (StringUtils.isNotBlank(treeEventPath)) {
             if (TreeEventType.TREEITEM_DROP.equals(eventType)) {
                 String srcLongName = getPageManager().getLongName(dropSrcId);
                 List<Long> srcItemIdList =

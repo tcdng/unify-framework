@@ -290,7 +290,7 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
 
         for (ReportColumn reportColumn : detailColumnList) {
             JRDesignElement colHeaderJRDesignElement =
-                    newTitleJRDesignStaticText(columnStyles, colHeaderColor, HorizontalAlignEnum.CENTER, reportColumn);
+                    newTitleJRDesignStaticText(columnStyles, colHeaderColor, HorizontalAlignEnum.CENTER, reportColumn.getTitle());
             JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
             colHeaderJRDesignElement.setX(jRDesignElement.getX());
             colHeaderJRDesignElement.setY(y + 2);

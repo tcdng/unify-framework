@@ -319,13 +319,23 @@ public final class StringUtils {
     }
 
     /**
-     * Tests if supplied string is null or is blank.
+     * Tests if supplied string is null or is white space.
      * 
      * @param string
      *            the string to test
      */
     public static boolean isBlank(String string) {
         return string == null || string.trim().isEmpty();
+    }
+
+    /**
+     * Tests if supplied string is not null and is not white space.
+     * 
+     * @param string
+     *            the string to test
+     */
+    public static boolean isNotBlank(String string) {
+        return string != null && !string.trim().isEmpty();
     }
 
     /**
@@ -577,7 +587,7 @@ public final class StringUtils {
     
     public static String getFirstNonBlank(String... values) {
         for(String val: values) {
-            if(!StringUtils.isBlank(val)) {
+            if(StringUtils.isNotBlank(val)) {
                 return val;
             }
         }

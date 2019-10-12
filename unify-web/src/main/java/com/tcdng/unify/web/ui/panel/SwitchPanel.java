@@ -42,7 +42,7 @@ public class SwitchPanel extends AbstractPanel {
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
         String switchHandlerName = getUplAttribute(String.class, "switchHandler");
-        if (!StringUtils.isBlank(switchHandlerName)) {
+        if (StringUtils.isNotBlank(switchHandlerName)) {
             switchPanelHandler = (SwitchPanelHandler) getComponent(switchHandlerName);
         }
 

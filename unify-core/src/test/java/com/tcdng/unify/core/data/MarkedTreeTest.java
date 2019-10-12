@@ -1436,7 +1436,7 @@ class TestMarkedTreePolicy1 implements MarkedTreePolicy<String> {
 
     @Override
     public int addDecision(String targetItem, String childItem) {
-        if (!StringUtils.isBlank(targetItem) && !StringUtils.isBlank(childItem)) {
+        if (StringUtils.isNotBlank(targetItem) && StringUtils.isNotBlank(childItem)) {
             if (childItem.compareTo(targetItem) < 0) {
                 return -1;
             }
@@ -1459,7 +1459,7 @@ class TestMarkedTreePolicy2 implements MarkedTreePolicy<String> {
 
     @Override
     public int addDecision(String targetItem, String childItem) {
-        if (!StringUtils.isBlank(targetItem) && !StringUtils.isBlank(childItem)) {
+        if (StringUtils.isNotBlank(targetItem) && StringUtils.isNotBlank(childItem)) {
             if (childItem.compareTo(targetItem) < 0) {
                 return 1;
             }

@@ -94,7 +94,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                 new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
         ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
-        if (!StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+        if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
             if (!remoteViewerList.isEmpty()) {
                 String origin = request.getHeader("origin");
                 if (remoteViewerList.contains(origin)) {

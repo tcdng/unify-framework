@@ -90,7 +90,7 @@ public class Inputs {
     }
     
     public static void getTypeValuesByNameIntoMap(List<Input<?>> inputList, Map<String, Object> map) {
-        if(!DataUtils.isBlank(inputList)) {
+        if(DataUtils.isNotBlank(inputList)) {
             for(Input<?> input: inputList) {
                 map.put(input.getName(), input.getTypeValue());
             }

@@ -30,7 +30,7 @@ public final class UplAppender {
     }
 
     public static void appendFormatterUplAttribute(StringBuilder sb, String formatter) {
-        if (!StringUtils.isBlank(formatter)) {
+        if (StringUtils.isNotBlank(formatter)) {
             sb.append(" formatter:$d{").append(formatter).append("}");
         }
     }
@@ -108,31 +108,31 @@ public final class UplAppender {
     }
 
     public static void appendListUplAttribute(StringBuilder sb, String list) {
-        if (!StringUtils.isBlank(list)) {
+        if (StringUtils.isNotBlank(list)) {
             sb.append(" list:$s{").append(list).append("}");
         }
     }
 
     public static void appendListParamsUplAttribute(StringBuilder sb, String listParams) {
-        if (!StringUtils.isBlank(listParams)) {
+        if (StringUtils.isNotBlank(listParams)) {
             sb.append(" listParams:$l{").append(listParams).append("}");
         }
     }
 
     public static void appendListKeyUplAttribute(StringBuilder sb, String listKey) {
-        if (!StringUtils.isBlank(listKey)) {
+        if (StringUtils.isNotBlank(listKey)) {
             sb.append(" listKey:").append(listKey);
         }
     }
 
     public static void appendListDescriptionUplAttribute(StringBuilder sb, String listDesc) {
-        if (!StringUtils.isBlank(listDesc)) {
+        if (StringUtils.isNotBlank(listDesc)) {
             sb.append(" listDescription:").append(listDesc);
         }
     }
 
     public static void appendCurrencyUplAttribute(StringBuilder sb, String currency) {
-        if (!StringUtils.isBlank(currency)) {
+        if (StringUtils.isNotBlank(currency)) {
             sb.append(" currency:").append(currency);
         }
     }

@@ -1328,7 +1328,7 @@ public class UnifyContainer {
         List<String> messageBaseList = new ArrayList<String>();
         for (UnifyStaticSettings unifyStaticSettings : staticSettings) {
             String messageBase = unifyStaticSettings.getMessageBase();
-            if (!StringUtils.isBlank(messageBase)) {
+            if (StringUtils.isNotBlank(messageBase)) {
                 messageBaseList.add(messageBase);
             }
         }
@@ -1400,7 +1400,7 @@ public class UnifyContainer {
         }
 
         String level = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL);
-        if (!StringUtils.isBlank(level)) {
+        if (StringUtils.isNotBlank(level)) {
             rootLogger.setLevel(Level.toLevel(level.toUpperCase()));
         } else {
             rootLogger.setLevel(Level.OFF);
@@ -1420,7 +1420,7 @@ public class UnifyContainer {
     public Locale getApplicationLocale() throws UnifyException {
         if (applicationLocale == null) {
             String languageTag = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOCALE);
-            if (!StringUtils.isBlank(languageTag)) {
+            if (StringUtils.isNotBlank(languageTag)) {
                 applicationLocale = Locale.forLanguageTag(languageTag);
             } else {
                 applicationLocale = Locale.getDefault();
@@ -1433,7 +1433,7 @@ public class UnifyContainer {
     public TimeZone getApplicationTimeZone() throws UnifyException {
         if(applicationTimeZone == null) {
             String timeZone = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TIMEZONE);
-            if (!StringUtils.isBlank(timeZone)) {
+            if (StringUtils.isNotBlank(timeZone)) {
                 applicationTimeZone = TimeZone.getTimeZone(timeZone);
             } else {
                 applicationTimeZone = TimeZone.getDefault();

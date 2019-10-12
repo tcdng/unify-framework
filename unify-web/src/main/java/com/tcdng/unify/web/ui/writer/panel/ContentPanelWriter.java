@@ -168,7 +168,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
                 writer.write("><div><a ");
                 if (page.getUplAttribute(boolean.class, "remote")) {
                     String cpcat = CPREMOTE_CATEGORYBASE;
-                    if (!StringUtils.isBlank(contentInfo.getColorScheme())) {
+                    if (StringUtils.isNotBlank(contentInfo.getColorScheme())) {
                         cpcat = CPREMOTE_CATEGORYBASE + contentInfo.getColorScheme();
                     }
 

@@ -287,7 +287,7 @@ public class IOUtils {
     public static File fileInstance(String filename, String optionPath) {
         File file = new File(filename);
         if (!file.exists()) {
-            if (!StringUtils.isBlank(optionPath)) {
+            if (StringUtils.isNotBlank(optionPath)) {
                 file = new File(IOUtils.buildFilename(optionPath, filename));
             }
             if (!file.exists()) {

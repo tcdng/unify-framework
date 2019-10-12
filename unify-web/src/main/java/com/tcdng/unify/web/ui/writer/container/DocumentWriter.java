@@ -51,7 +51,7 @@ public class DocumentWriter extends AbstractPageWriter {
         // Write title
         writer.write("<title>");
         String title = document.getUplAttribute(String.class, "caption");
-        if (!StringUtils.isBlank(title)) {
+        if (StringUtils.isNotBlank(title)) {
             writer.write(title);
         } else {
             writer.write(getUnifyComponentContext().getInstanceName());
@@ -105,7 +105,7 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.write("<body class=\"dBody\"");
         String style = document.getStyle();
         String backImageSrc = document.getBackImageSrc();
-        if (!StringUtils.isBlank(backImageSrc)) {
+        if (StringUtils.isNotBlank(backImageSrc)) {
             writer.write(" style=\"background: url('");
             writer.writeFileImageContextURL(backImageSrc);
             writer.write("') no-repeat;background-size:100% 100%;");

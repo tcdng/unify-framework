@@ -38,7 +38,7 @@ public class SqlDataSourceSchemaListCommand extends AbstractDynamicSqlDataSource
 
     @Override
     public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-        if (!StringUtils.isBlank(params.getConfigName())) {
+        if (StringUtils.isNotBlank(params.getConfigName())) {
             List<Listable> schemaList = new ArrayList<Listable>();
             for (String schema : getDsManager().getSchemas(params.getConfigName())) {
                 schemaList.add(new ListData(schema, schema));

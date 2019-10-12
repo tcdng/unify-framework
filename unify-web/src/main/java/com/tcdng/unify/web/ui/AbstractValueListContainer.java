@@ -47,7 +47,7 @@ public abstract class AbstractValueListContainer<T, U> extends AbstractContainer
     public List<T> getValueList() throws UnifyException {
         List<U> itemList = getItemList();
         if (oldItemList != itemList || (itemList != null && itemList.size() != valueList.size())) {
-            if (!DataUtils.isBlank(itemList)) {
+            if (DataUtils.isNotBlank(itemList)) {
                 int size = itemList.size();
                 valueList = new ArrayList<T>(itemList.size());
                 for (int i = 0; i < size; i++) {

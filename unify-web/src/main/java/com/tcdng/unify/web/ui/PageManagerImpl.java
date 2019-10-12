@@ -360,7 +360,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     @Override
     public List<String> getPageNames(Collection<String> longNames) throws UnifyException {
-        if (!DataUtils.isBlank(longNames)) {
+        if (DataUtils.isNotBlank(longNames)) {
             List<String> resultList = new ArrayList<String>();
             for (String longName : longNames) {
                 resultList.add(pageNameMap.get(longName));
@@ -396,11 +396,11 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     @Override
     public List<String> getExpandedReferencesForLongNames(Collection<String> longNames) throws UnifyException {
-        if (!DataUtils.isBlank(longNames)) {
+        if (DataUtils.isNotBlank(longNames)) {
             List<String> resultList = new ArrayList<String>();
             for (String longName : longNames) {
                 List<String> list = expandedReferences.get(pageNameMap.get(longName));
-                if (!DataUtils.isBlank(list)) {
+                if (DataUtils.isNotBlank(list)) {
                     resultList.addAll(list);
                 }
             }
@@ -413,11 +413,11 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     @Override
     public List<String> getExpandedReferencesForPageNames(Collection<String> pageNames) throws UnifyException {
-        if (!DataUtils.isBlank(pageNames)) {
+        if (DataUtils.isNotBlank(pageNames)) {
             List<String> resultList = new ArrayList<String>();
             for (String pageName : pageNames) {
                 List<String> list = expandedReferences.get(pageName);
-                if (!DataUtils.isBlank(list)) {
+                if (DataUtils.isNotBlank(list)) {
                     resultList.addAll(list);
                 }
             }

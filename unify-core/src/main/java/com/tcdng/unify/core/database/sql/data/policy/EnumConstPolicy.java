@@ -46,7 +46,7 @@ public class EnumConstPolicy extends AbstractSqlDataTypePolicy {
     @Override
     public void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal) {
         EnumConst val= null;
-        if (!StringUtils.isBlank(defaultVal)) {
+        if (StringUtils.isNotBlank(defaultVal)) {
             val = EnumUtils.fromCode((Class<? extends EnumConst>) type, (String) defaultVal);
             if (val == null) {
                 val = EnumUtils.fromName((Class<? extends EnumConst>) type, (String) defaultVal);

@@ -53,7 +53,7 @@ public class Link extends AbstractTargetControl {
     }
 
     public boolean isUsePreferredCaption() throws UnifyException {
-        return !StringUtils.isBlank(getUplAttribute(String.class, "preferredCaption"))
-                || !StringUtils.isBlank(getUplAttribute(String.class, "preferredCaptionBinding"));
+        return StringUtils.isNotBlank(getUplAttribute(String.class, "preferredCaption"))
+                || StringUtils.isNotBlank(getUplAttribute(String.class, "preferredCaptionBinding"));
     }
 }

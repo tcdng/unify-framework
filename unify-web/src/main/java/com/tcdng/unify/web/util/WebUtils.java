@@ -56,7 +56,7 @@ public final class WebUtils {
                 themePath = WebUtils.DEFAULT_THEME_PATH;
             }
 
-            if (!StringUtils.isBlank(themePath)) {
+            if (StringUtils.isNotBlank(themePath)) {
                 if (themePath.endsWith("/")) {
                     if (resouceName.startsWith("/")) {
                         return themePath + resouceName.substring("/".length());
@@ -131,7 +131,7 @@ public final class WebUtils {
      */
     public static String encodeShortcut(String shortcut) throws UnifyException {
         String encodedShortcut = null;
-        if (!StringUtils.isBlank(shortcut)) {
+        if (StringUtils.isNotBlank(shortcut)) {
             int encoded = 0;
             String[] elements = shortcut.toUpperCase().split("\\+");
             boolean validShortcut = false;

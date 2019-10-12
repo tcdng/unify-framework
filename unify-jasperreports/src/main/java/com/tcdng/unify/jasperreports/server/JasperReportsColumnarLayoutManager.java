@@ -83,7 +83,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 
                 if (isPrintColumnNames) {
                     JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles, Color.WHITE,
-                            HorizontalAlignEnum.LEFT, reportColumn);
+                            HorizontalAlignEnum.LEFT, reportColumn.getTitle());
                     colHeaderJRDesignElement.setBackcolor(new Color(0xD0, 0xD0, 0xD0));
                     colHeaderJRDesignElement.setX(0);
                     colHeaderJRDesignElement.setY(jRDesignElement.getY());
@@ -100,7 +100,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
             }
         }
 
-        // Prepare detail band
+        // Construct detail band
         JRDesignBand detailBand = new JRDesignBand();
         detailBand.setHeight(calcDetailHeight);
 
@@ -132,7 +132,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
         }
         detailJRDesignSection.addBand(detailBand); // Add new detail band
 
-        // Prepare groups
+        // Construct groups
         int groupHeaderX = 0;
         int groupCascade = 20;
         boolean invertGroupColors = report.isInvertGroupColors();

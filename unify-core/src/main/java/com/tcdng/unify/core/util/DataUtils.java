@@ -1290,14 +1290,23 @@ public final class DataUtils {
     }
 
     /**
-     * Returns true if supplied collection is null or is empty, otherwise a null is
-     * returned
+     * Returns true if supplied collection is null or is empty.
      * 
      * @param coll
      *            the collection to check
      */
     public static boolean isBlank(Collection<?> coll) {
         return coll == null || coll.isEmpty();
+    }
+
+    /**
+     * Returns true if supplied collection is not null and is not empty.
+     * 
+     * @param coll
+     *            the collection to check
+     */
+    public static boolean isNotBlank(Collection<?> coll) {
+        return coll != null && !coll.isEmpty();
     }
 
     public static <T> List<T> unmodifiableList(List<T> list) {

@@ -562,7 +562,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             String actionId = dataTransfer.getActionId();
             logDebug("Page validation is enabled. actionId = [{0}]", actionId);
 
-            if (!StringUtils.isBlank(actionId)) {
+            if (StringUtils.isNotBlank(actionId)) {
                 logDebug("Performing request parameter validation. Controller [{0}]", pageController.getName());
 
                 // Do validations

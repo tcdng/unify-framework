@@ -170,7 +170,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
 
             uiCommandManager.executeCommand(widget, requestCommand.getCommand());
             String commandResultMapping = getRequestContextUtil().getCommandResultMapping();
-            if (!StringUtils.isBlank(commandResultMapping)) {
+            if (StringUtils.isNotBlank(commandResultMapping)) {
                 return commandResultMapping;
             }
         }
@@ -182,7 +182,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     public String confirm() throws UnifyException {
         String msg = getRequestContextUtil().getRequestConfirmMessage();
         String param = getRequestContextUtil().getRequestConfirmParam();
-        if (!StringUtils.isBlank(param)) {
+        if (StringUtils.isNotBlank(param)) {
             msg = MessageFormat.format(msg, param);
         }
 
