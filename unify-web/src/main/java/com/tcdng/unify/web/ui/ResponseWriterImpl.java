@@ -394,12 +394,12 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         PageManager pageManager = getPageManager();
         buf.append('&').append(pageManager.getPageName("resourceName")).append("=")
                 .append(encodeURLParameter(expandThemeTag(resourceName)));
-        if (!StringUtils.isBlank(contentType)) {
+        if (StringUtils.isNotBlank(contentType)) {
             buf.append('&').append(pageManager.getPageName("contentType")).append("=")
                     .append(encodeURLParameter(contentType));
         }
 
-        if (!StringUtils.isBlank(scope)) {
+        if (StringUtils.isNotBlank(scope)) {
             buf.append('&').append(pageManager.getPageName("scope")).append("=").append(encodeURLParameter(scope));
         }
 

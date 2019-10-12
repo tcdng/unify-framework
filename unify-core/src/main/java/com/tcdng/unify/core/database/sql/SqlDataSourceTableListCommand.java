@@ -36,7 +36,7 @@ public class SqlDataSourceTableListCommand extends AbstractDynamicSqlDataSourceL
 
     @Override
     public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-        if (!StringUtils.isBlank(params.getConfigName()) && !StringUtils.isBlank(params.getSchemaName())) {
+        if (StringUtils.isNotBlank(params.getConfigName()) && StringUtils.isNotBlank(params.getSchemaName())) {
             SqlTableType sqlTableType = SqlTableType.TABLE;
             if (params.getTableName() != null) {
                 sqlTableType = SqlTableType.fromName(params.getTableName());

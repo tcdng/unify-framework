@@ -42,7 +42,7 @@ public class ParagraphWriter extends AbstractControlWriter {
         writer.write(">");
         String value = paragraph.getStringValue();
         if (value == null) {
-            if (!StringUtils.isBlank(paragraph.getBinding())) {
+            if (StringUtils.isNotBlank(paragraph.getBinding())) {
                 writer.writeHtmlFixedSpace();
             } else {
                 writeCaption(writer, paragraph);

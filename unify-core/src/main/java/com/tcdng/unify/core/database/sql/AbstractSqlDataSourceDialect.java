@@ -868,7 +868,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     public SqlStatement[] prepareDataSourceInitStatements() throws UnifyException {
         List<SqlStatement> list = Collections.emptyList();
         List<String> initSqlList = getDataSourceInitStatements();
-        if (!DataUtils.isBlank(initSqlList)) {
+        if (DataUtils.isNotBlank(initSqlList)) {
             list = new ArrayList<SqlStatement>();
             for (String sqlN : initSqlList) {
                 list.add(new SqlStatement(null, SqlStatementType.UPDATE, sqlN));

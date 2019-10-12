@@ -46,20 +46,20 @@ public class PostResponse extends AbstractJsonPageControllerResponse {
         String path = getUplAttribute(String.class, "path");
         if (StringUtils.isBlank(path)) {
             String pathBinding = getUplAttribute(String.class, "pathBinding");
-            if (!StringUtils.isBlank(pathBinding)) {
+            if (StringUtils.isNotBlank(pathBinding)) {
                 path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathBinding);
             }
         }
 
         if (StringUtils.isBlank(path)) {
             String pathRequestAttribute = getUplAttribute(String.class, "pathRequestAttribute");
-            if (!StringUtils.isBlank(pathRequestAttribute)) {
+            if (StringUtils.isNotBlank(pathRequestAttribute)) {
                 path = (String) getRequestAttribute(pathRequestAttribute);
             }
         }
 
         logDebug("Preparing post response: controller = [{0}], path = [{1}]", pageController.getName(), path);
-        if (!StringUtils.isBlank(path)) {
+        if (StringUtils.isNotBlank(path)) {
             writer.write(",");
             writer.writeJsonPathVariable("postPath", path);
         } else {

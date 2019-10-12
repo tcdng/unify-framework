@@ -46,7 +46,7 @@ public abstract class AbstractByteArrayOutputStreamPlainController extends Abstr
     public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
         try {
             response.setContentType(getContentType());
-            if (!StringUtils.isBlank(disposition)) {
+            if (StringUtils.isNotBlank(disposition)) {
                 response.setMetaData("Content-Disposition", disposition);
             }
 

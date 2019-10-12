@@ -78,13 +78,13 @@ public class AssignmentBox extends AbstractMultiControl {
     @Override
     public void onPageConstruct() throws UnifyException {
         String filterList1 = getUplAttribute(String.class, "filterList1");
-        if (!StringUtils.isBlank(filterList1)) {
+        if (StringUtils.isNotBlank(filterList1)) {
             filterCtrl1 = (Control) addInternalChildControl("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
                     + filterList1 + " binding:filterId1 popupAlways:true");
         }
 
         String filterList2 = getUplAttribute(String.class, "filterList2");
-        if (!StringUtils.isBlank(filterList2)) {
+        if (StringUtils.isNotBlank(filterList2)) {
             filterCtrl2 = (Control) addInternalChildControl("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
                     + filterList2 + " listParams:$s{filterId1} binding:filterId2 popupAlways:true");
         }
@@ -230,12 +230,12 @@ public class AssignmentBox extends AbstractMultiControl {
         sb.append("!ui-multiselect styleClass:$e{abmselect} ").append(msStyle).append(" list:")
                 .append(getUplAttribute(String.class, listAttr));
         String listKey = getUplAttribute(String.class, listKeyAttr);
-        if (!StringUtils.isBlank(listKey)) {
+        if (StringUtils.isNotBlank(listKey)) {
             sb.append(" listKey:").append(listKey);
         }
 
         String listDesc= getUplAttribute(String.class, listDescAttr);
-        if (!StringUtils.isBlank(listDesc)) {
+        if (StringUtils.isNotBlank(listDesc)) {
             sb.append(" listDescription:").append(listDesc);
         }
 

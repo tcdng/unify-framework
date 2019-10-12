@@ -105,7 +105,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
         }
 
         startupShutdownHooks = getStartupShutdownHooks();
-        if (!DataUtils.isBlank(startupShutdownHooks)) {
+        if (DataUtils.isNotBlank(startupShutdownHooks)) {
             for (StartupShutdownHook startupShutdownHook : startupShutdownHooks) {
                 startupShutdownHook.onApplicationStartup();
             }
@@ -118,7 +118,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     public void shutdown() throws UnifyException {
         onShutdown();
 
-        if (!DataUtils.isBlank(startupShutdownHooks)) {
+        if (DataUtils.isNotBlank(startupShutdownHooks)) {
             for (StartupShutdownHook startupShutdownHook : startupShutdownHooks) {
                 startupShutdownHook.onApplicationShutdown();
             }

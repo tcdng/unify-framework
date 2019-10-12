@@ -230,7 +230,7 @@ public class TableWriter extends AbstractControlWriter {
             }
 
             String summarySrc = table.getSummarySrc();
-            if (!StringUtils.isBlank(summarySrc)) {
+            if (StringUtils.isNotBlank(summarySrc)) {
                 writer.write(",\"pSumSrc\":\"").write(summarySrc).write('"');
                 writer.write(",\"pSumProcList\":").writeJsonArray(table.getSummaryProcList());
                 writer.write(",\"pSumDepList\":").writeJsonArray(table.getSummaryDependentList());
@@ -480,12 +480,12 @@ public class TableWriter extends AbstractControlWriter {
                         if (isWindowed || isHideMultiSelectBorder) {
                             if (columnIndex == 0) {
                                 writer.write(" style=\"border-left:0px;");
-                                if (!StringUtils.isBlank(columnStyle)) {
+                                if (StringUtils.isNotBlank(columnStyle)) {
                                     writer.write(columnStyle);
                                 }
                                 writer.write("\"");
                             } else {
-                                if (!StringUtils.isBlank(columnStyle)) {
+                                if (StringUtils.isNotBlank(columnStyle)) {
                                     writer.write(" style=\"").write(columnStyle).write("\"");
                                 }
                             }
@@ -519,7 +519,7 @@ public class TableWriter extends AbstractControlWriter {
 
     private String getSelectClassName() throws UnifyException {
         UserToken userToken = getUserToken();
-        if (userToken != null && !StringUtils.isBlank(userToken.getColorScheme())) {
+        if (userToken != null && StringUtils.isNotBlank(userToken.getColorScheme())) {
             return SELECT_CLASSNAME_BASE + userToken.getColorScheme();
         }
 

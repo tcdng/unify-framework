@@ -400,7 +400,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                 runTasks();
             } catch (Exception e) {
             } finally {
-                if (!StringUtils.isBlank(lockToRelease)) {
+                if (StringUtils.isNotBlank(lockToRelease)) {
                     try {
                         ClusterService clusterManager =
                                 (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);

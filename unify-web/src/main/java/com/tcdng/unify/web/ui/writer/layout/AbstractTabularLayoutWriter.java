@@ -104,7 +104,7 @@ public abstract class AbstractTabularLayoutWriter extends AbstractLayoutWriter {
             boolean isCaption = widget.isLayoutCaption();
             if (isCaption) {
                 caption = widget.getCaption();
-                isCaption = !StringUtils.isBlank(caption);
+                isCaption = StringUtils.isNotBlank(caption);
             }
 
             if (isCaption) {

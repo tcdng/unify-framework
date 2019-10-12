@@ -222,7 +222,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public String getDynamicPanelPageName() throws UnifyException {
         List<DynamicPanelNames> dynamicPanelNameList =
                 (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
-        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+        if (DataUtils.isNotBlank(dynamicPanelNameList)) {
             return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getPageName();
         }
 
@@ -233,7 +233,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public String getDynamicPanelParentPageName() throws UnifyException {
         List<DynamicPanelNames> dynamicPanelNameList =
                 (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
-        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+        if (DataUtils.isNotBlank(dynamicPanelNameList)) {
             return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getParentPageName();
         }
 
@@ -244,7 +244,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public void clearDynamicPanelPageName() throws UnifyException {
         List<DynamicPanelNames> dynamicPanelNameList =
                 (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
-        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+        if (DataUtils.isNotBlank(dynamicPanelNameList)) {
             dynamicPanelNameList.remove(0);
         }
     }

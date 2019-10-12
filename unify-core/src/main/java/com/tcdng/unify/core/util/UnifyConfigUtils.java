@@ -212,7 +212,7 @@ public final class UnifyConfigUtils {
             name = AnnotationUtils.getAnnotationString(ca.value());
             if (StringUtils.isBlank(name)) {
                 name = AnnotationUtils.getAnnotationString(ca.name());
-            } else if (!StringUtils.isBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
+            } else if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
                 throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION, "value", "name",
                         Component.class, clazz);
             }

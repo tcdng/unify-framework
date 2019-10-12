@@ -32,7 +32,7 @@ public abstract class AbstractSqlDataTypePolicy implements SqlDataTypePolicy {
             defaultVal = getAltDefault();
         }
 
-        if (!StringUtils.isBlank(defaultVal)) {
+        if (StringUtils.isNotBlank(defaultVal)) {
             sb.append(" DEFAULT ").append(defaultVal);
         }
     }
@@ -43,7 +43,7 @@ public abstract class AbstractSqlDataTypePolicy implements SqlDataTypePolicy {
             defaultVal = getAltDefault();
         }
 
-        if (!StringUtils.isBlank(defaultVal)) {
+        if (StringUtils.isNotBlank(defaultVal)) {
             sb.append(defaultVal);
         }
     }

@@ -48,7 +48,7 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
         }
 
         List<String> saveList = reqUtils.getOnSaveContentWidgets();
-        if (!DataUtils.isBlank(saveList)) {
+        if (DataUtils.isNotBlank(saveList)) {
             writer.write(",\"pSaveList\":").writeJsonArray(saveList);
         }
         writer.write("}");

@@ -190,7 +190,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 
             String opcat = MENU_CATEGORY_CLASSBASE;
             String mcat = MENUITEM_CATEGORY_CLASSBASE;
-            if (!StringUtils.isBlank(menu.getColorScheme())) {
+            if (StringUtils.isNotBlank(menu.getColorScheme())) {
                 String scheme = menu.getColorScheme();
                 opcat += scheme;
                 mcat += scheme;

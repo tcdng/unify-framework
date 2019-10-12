@@ -45,7 +45,7 @@ public class FileDownload extends Button {
     public void download() throws UnifyException {
         DownloadFile downloadFile = null;
         String fileSrc = getUplAttribute(String.class, "fileSrc");
-        if (!StringUtils.isBlank(fileSrc)) {
+        if (StringUtils.isNotBlank(fileSrc)) {
             byte[] data = IOUtils.readFileResourceInputStream(fileSrc);
             String fileName = fileSrc;
             int index = fileName.lastIndexOf('/') + 1;
@@ -56,11 +56,11 @@ public class FileDownload extends Button {
             downloadFile = new DownloadFile(MimeType.APPLICATION_OCTETSTREAM, fileName, data);
         } else {
             String fileBinding = getUplAttribute(String.class, "fileBinding");
-            if (!StringUtils.isBlank(fileBinding)) {
+            if (StringUtils.isNotBlank(fileBinding)) {
                 downloadFile = (DownloadFile) getValue(fileBinding);
             } else {
                 String handler = getUplAttribute(String.class, "handler");
-                if (!StringUtils.isBlank(handler)) {
+                if (StringUtils.isNotBlank(handler)) {
                     FileDownloadHandler fileDownloadHandler = (FileDownloadHandler) getComponent(handler);
                     String id = getRequestTarget(String.class);
                     downloadFile = fileDownloadHandler.handleFileDownload(id);

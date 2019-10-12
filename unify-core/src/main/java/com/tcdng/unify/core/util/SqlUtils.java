@@ -157,7 +157,7 @@ public final class SqlUtils {
      * @return the full schema element name
      */
     public static String generateFullSchemaElementName(String schema, String name) {
-        if (!StringUtils.isBlank(schema)) {
+        if (StringUtils.isNotBlank(schema)) {
             return StringUtils.dotify(schema, name);
         }
 
@@ -247,7 +247,7 @@ public final class SqlUtils {
      * @return the resolved constraint name otherwise null
      */
     public static String resolveConstraintName(String suggestedName) {
-        if (!StringUtils.isBlank(suggestedName)) {
+        if (StringUtils.isNotBlank(suggestedName)) {
             // Trim prefix
             for (String vendorPrefix : VENDOR_IDENTIFIER_PREFIXES) {
                 if (suggestedName.startsWith(vendorPrefix)) {

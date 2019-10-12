@@ -72,10 +72,10 @@ public class StringUtilsTest {
 
     @Test
     public void testIsNotBlank() throws Exception {
-        assertFalse(!StringUtils.isBlank(null));
-        assertFalse(!StringUtils.isBlank(""));
-        assertFalse(!StringUtils.isBlank("  "));
-        assertTrue(!StringUtils.isBlank("Snuffleupagus"));
+        assertFalse(StringUtils.isNotBlank(null));
+        assertFalse(StringUtils.isNotBlank(""));
+        assertFalse(StringUtils.isNotBlank("  "));
+        assertTrue(StringUtils.isNotBlank("Snuffleupagus"));
     }
 
     @Test

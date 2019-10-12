@@ -115,7 +115,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         }
 
         String parentLongName = getParentLongName();
-        if (!StringUtils.isBlank(parentLongName)) {
+        if (StringUtils.isNotBlank(parentLongName)) {
             widget = widgetRepository.getWidget(parentLongName, shortName);
             if (widget != null) {
                 return widget;

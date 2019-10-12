@@ -72,7 +72,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
 
     protected void writePanelTagAttributes(ResponseWriter writer, Panel panel) throws UnifyException {
         String backImageSrc = panel.getBackImageSrc();
-        if (!StringUtils.isBlank(backImageSrc)) {
+        if (StringUtils.isNotBlank(backImageSrc)) {
             writeTagId(writer, panel);
             writeTagStyleClass(writer, panel, true, "ui-panel");
             writer.write(" style=\"background: url('");
@@ -91,7 +91,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
     protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
         String legend = panel.getLegend();
 
-        boolean isLegend = !StringUtils.isBlank(legend);
+        boolean isLegend = StringUtils.isNotBlank(legend);
         if (isLegend) {
             writer.write("<fieldset><legend>");
             writeAttributeWithEscape(writer, panel, "legend");

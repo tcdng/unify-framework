@@ -49,4 +49,24 @@ public abstract class AbstractReportProcessor extends AbstractUnifyComponent imp
 
         return (DataSource) getComponent(report.getDataSource());
     }
+
+    protected void setReportHeaderParameter(Report report, String paramName, String paramDesc, Object paramValue)
+            throws UnifyException {
+        setReportHeaderParameter(report, paramName, paramDesc, null, paramValue);
+    }
+
+    protected void setReportHeaderParameter(Report report, String paramName, String paramDesc, String formatter,
+            Object paramValue) throws UnifyException {
+        report.setParameter(paramName, paramDesc, formatter, paramValue, true, false);
+    }
+
+    protected void setReportHeaderParameter(ReportParameters reportParameters, String paramName, String paramDesc,
+            Object paramValue) throws UnifyException {
+        setReportHeaderParameter(reportParameters, paramName, paramDesc, null, paramValue);
+    }
+
+    protected void setReportHeaderParameter(ReportParameters reportParameters, String paramName, String paramDesc,
+            String formatter, Object paramValue) throws UnifyException {
+        reportParameters.setParameter(paramName, paramDesc, formatter, paramValue, true, false);
+    }
 }

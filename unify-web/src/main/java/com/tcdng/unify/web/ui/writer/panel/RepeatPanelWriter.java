@@ -43,7 +43,7 @@ public class RepeatPanelWriter extends AbstractPanelWriter {
         RepeatPanel repeatPanel = (RepeatPanel) widget;
         Widget innerWidget = repeatPanel.getWidgetByLongName(repeatPanel.getLayoutWidgetLongNames().get(0));
         List<ValueStore> valueStoreList = repeatPanel.getRepeatValueStores();
-        if (!DataUtils.isBlank(valueStoreList)) {
+        if (DataUtils.isNotBlank(valueStoreList)) {
             for (ValueStore valueStore : valueStoreList) {
                 if (innerWidget.isVisible()) {
                     innerWidget.setValueStore(valueStore);

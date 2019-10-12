@@ -64,12 +64,12 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
                     properties.put("mail.smtp.port", emailServerConfig.getHostPort());
                 }
 
-                if (!StringUtils.isBlank(emailServerConfig.getUsername())) {
+                if (StringUtils.isNotBlank(emailServerConfig.getUsername())) {
                     authenticator =
                             new SessionAuthenticator(emailServerConfig.getUsername(), emailServerConfig.getPassword());
                 }
 
-                if (authenticator != null || !StringUtils.isBlank(emailServerConfig.getAuthentication())) {
+                if (authenticator != null || StringUtils.isNotBlank(emailServerConfig.getAuthentication())) {
                     if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
                         if (emailServerConfig.getHostPort() != null) {
                             properties.put("mail.smtp.socketFactory.port", emailServerConfig.getHostPort());
@@ -113,7 +113,7 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
 
         InternalConfig internalConfig = configurations.get(configurationCode);
         Authenticator authenthicator = internalConfig.getAuthenticator();
-        if (authenthicator == null && !StringUtils.isBlank(internalConfig.getOrigConfig().getAuthentication())) {
+        if (authenthicator == null && StringUtils.isNotBlank(internalConfig.getOrigConfig().getAuthentication())) {
             Authentication passwordAuthentication =
                     (Authentication) getComponent(internalConfig.getOrigConfig().getAuthentication());
             authenthicator = new SessionAuthenticator(passwordAuthentication.getUsername(),

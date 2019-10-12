@@ -58,7 +58,7 @@ public class LinkGridWriter extends AbstractControlWriter {
                 }
 
                 List<LinkInfo> linkInfoList = linkCategoryInfo.getLinkInfoList();
-                if (!DataUtils.isBlank(linkInfoList)) {
+                if (DataUtils.isNotBlank(linkInfoList)) {
                     writer.write("<div class=\"lgcatsec\"><table style=\"width:100%;\">");
                     String catName = linkGrid.getPrefixedId(linkCategoryInfo.getName());
 
@@ -115,7 +115,7 @@ public class LinkGridWriter extends AbstractControlWriter {
                 writer.write(",\"links\":[");
                 boolean isAppendSym2 = false;
                 List<LinkInfo> linkInfoList = linkCategoryInfo.getLinkInfoList();
-                if (!DataUtils.isBlank(linkInfoList)) {
+                if (DataUtils.isNotBlank(linkInfoList)) {
                     String catName = linkGrid.getPrefixedId(linkCategoryInfo.getName());
                     int len = linkInfoList.size();
                     for (int i = 0; i < len; i++) {

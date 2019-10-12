@@ -142,8 +142,8 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                             SqlUtils.resolveConstraintName(rs.getString("FK_NAME"));
                     String pkTableName = rs.getString("PKTABLE_NAME");
                     String pkColumnName = rs.getString("PKCOLUMN_NAME");
-                    if (!StringUtils.isBlank(fkName) && !StringUtils.isBlank(pkTableName)
-                            && !StringUtils.isBlank(pkColumnName)) {
+                    if (StringUtils.isNotBlank(fkName) && StringUtils.isNotBlank(pkTableName)
+                            && StringUtils.isNotBlank(pkColumnName)) {
                         TableConstraint tConst = managedTableConstraints.get(fkName);
                         if (tConst == null) {
                             tConst = new TableConstraint(fkName, pkTableName, false);
@@ -161,7 +161,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                     String idxName =
                             SqlUtils.resolveConstraintName(rs.getString("INDEX_NAME"));
                     String idxColumnName = rs.getString("COLUMN_NAME");
-                    if (!StringUtils.isBlank(idxName) && !StringUtils.isBlank(idxColumnName)) {
+                    if (StringUtils.isNotBlank(idxName) && StringUtils.isNotBlank(idxColumnName)) {
                         boolean unique = idxName.indexOf(SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT) > 0;
                         TableConstraint tConst = managedTableConstraints.get(idxName);
                         if (tConst == null) {

@@ -38,7 +38,7 @@ public class CommandPostResponse extends AbstractJsonPageControllerResponse {
     @Override
     protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
         String path = getRequestContextUtil().getCommandResponsePath();
-        if (!StringUtils.isBlank(path)) {
+        if (StringUtils.isNotBlank(path)) {
             writer.write(",");
             writer.writeJsonPathVariable("postPath", path);
         }

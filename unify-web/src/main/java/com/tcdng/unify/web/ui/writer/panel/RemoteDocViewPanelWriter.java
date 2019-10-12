@@ -49,15 +49,15 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
         UserToken userToken = getUserToken();
         writer.write(",\"pLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
         writer.write(",\"pUserName\":\"").write(userToken.getUserName()).write("\"");
-        if (!StringUtils.isBlank(userToken.getRoleCode())) {
+        if (StringUtils.isNotBlank(userToken.getRoleCode())) {
             writer.write(",\"pRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
         }
 
-        if (!StringUtils.isBlank(userToken.getBranchCode())) {
+        if (StringUtils.isNotBlank(userToken.getBranchCode())) {
             writer.write(",\"pBranchCode\":\"").write(userToken.getBranchCode()).write("\"");
         }
 
-        if (!StringUtils.isBlank(remoteDocViewInfo.getColorScheme())) {
+        if (StringUtils.isNotBlank(remoteDocViewInfo.getColorScheme())) {
             writer.write(",\"pColorScheme\":\"").write(remoteDocViewInfo.getColorScheme()).write("\"");
         }
 

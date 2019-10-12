@@ -242,7 +242,7 @@ public class HttpApplicationServlet extends HttpServlet {
             // Create single use session object
             userSession = createHttpUserSession(request);
         } else {
-            if (!StringUtils.isBlank(request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+            if (StringUtils.isNotBlank(request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
                 // Handle remote view
                 HttpSession httpSession = request.getSession(false);
                 if (httpSession != null) {
@@ -250,7 +250,7 @@ public class HttpApplicationServlet extends HttpServlet {
                 }
 
                 String sessionId = (String) request.getParameter(RequestParameterConstants.REMOTE_SESSION_ID);
-                if (!StringUtils.isBlank(sessionId)) {
+                if (StringUtils.isNotBlank(sessionId)) {
                     userSession = (HttpUserSession) userSessionManager.getUserSession(sessionId);
                 }
 

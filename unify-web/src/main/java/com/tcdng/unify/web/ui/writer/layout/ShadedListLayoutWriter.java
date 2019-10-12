@@ -67,7 +67,7 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
                 if (widget.isVisible()) {
                     writer.write("<span class=\"islcap\">");
                     String caption = widget.getCaption();
-                    if (!StringUtils.isBlank(caption)) {
+                    if (StringUtils.isNotBlank(caption)) {
                         writer.write(caption);
                         if (caption.charAt(caption.length() - 1) != '?') {
                             writer.writeNotNull(shadedListLayout.getCaptionSuffix());
@@ -91,7 +91,7 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
                     writer.write("<tr>");
                     if (shadedListLayout.isShowCaption()) {
                         writer.write("<td class=\"slcap\">");
-                        if (!StringUtils.isBlank(widget.getCaption())) {
+                        if (StringUtils.isNotBlank(widget.getCaption())) {
                             writer.write(widget.getCaption());
                             writer.writeNotNull(shadedListLayout.getCaptionSuffix());
                         }

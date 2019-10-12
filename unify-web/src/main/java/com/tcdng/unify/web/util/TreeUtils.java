@@ -34,7 +34,7 @@ public final class TreeUtils {
     }
 
     public static boolean isAnyMenuItemVisible(List<TreeMenuItemInfo> menuList, Set<String> hidden) {
-        if (!DataUtils.isBlank(menuList)) {
+        if (DataUtils.isNotBlank(menuList)) {
             if (hidden == null) {
                 return true;
             }

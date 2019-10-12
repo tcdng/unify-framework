@@ -71,7 +71,7 @@ public class DropdownCheckBoxListWriter extends AbstractPopupTextFieldWriter {
                     writer.write(" disabled=\"true\"");
                 }
                 writer.write("/>");
-                if (!StringUtils.isBlank(selectAllOption)) {
+                if (StringUtils.isNotBlank(selectAllOption)) {
                     writer.writeWithHtmlEscape(selectAllOption);
                 } else {
                     writer.writeHtmlFixedSpace();

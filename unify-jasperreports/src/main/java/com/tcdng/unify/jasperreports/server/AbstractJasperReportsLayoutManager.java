@@ -26,9 +26,13 @@ import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.report.ReportFormat;
+import com.tcdng.unify.core.report.ReportFormatUtils;
+import com.tcdng.unify.core.report.ReportParameter;
+import com.tcdng.unify.core.report.ReportParameters;
 import com.tcdng.unify.core.report.ReportTheme;
 import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.design.JRDesignBand;
@@ -51,6 +55,7 @@ import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 import net.sf.jasperreports.engine.type.ScaleImageEnum;
+import net.sf.jasperreports.engine.type.StretchTypeEnum;
 import net.sf.jasperreports.engine.type.VerticalAlignEnum;
 
 /**
@@ -132,6 +137,85 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         return horizontalAlignmentMap.get(hAlignType);
     }
 
+    protected void constructParamHeaderToBand(JasperDesign jasperDesign, JRDesignBand jrDesignBand,
+            ThemeColors paramHeaderColors, ColumnStyles columnStyles, ReportParameters reportParameters,
+            final int actualColumnWidth, final int detailHeight, boolean isListFormat) throws UnifyException {
+        // Compute dimensions
+        final int NUMBER_OF_COLUMNS = 2;
+        final int width = actualColumnWidth - 0;
+        int paramCount = reportParameters.getShowInHeaderCount();
+        int paramLineCount = paramCount / NUMBER_OF_COLUMNS;
+        if (paramCount % NUMBER_OF_COLUMNS > 0) {
+            paramLineCount++;
+        }
+
+        final int height = (detailHeight * paramLineCount) + 8;
+        final int x = (actualColumnWidth - width) / 2;
+        final int y = jrDesignBand.getHeight();
+        jrDesignBand.setHeight(y + height);
+
+        // Draw background
+        JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, x, y + 2, width,
+                height - 4, paramHeaderColors);
+        jRDesignRectangle.getLinePen().setLineWidth(0);
+        jRDesignRectangle.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
+        jrDesignBand.addElement(jRDesignRectangle);
+
+        Color fontColor = paramHeaderColors.getFontColor();
+        if (isListFormat) {
+            fontColor = Color.BLACK;
+        }
+
+        int linesToWrite = paramLineCount;
+        int penX = x;
+        int penY = y + 4;
+        int sectionWidth = width / (NUMBER_OF_COLUMNS * 3 - 1);
+        for (ReportParameter reportParameter : reportParameters.getParameters()) {
+            if (reportParameter.isHeaderDetail()) {
+                // Label
+                String paramLabel = StringUtils.concatenate(reportParameter.getDescription(), " :");
+                JRDesignElement paramLabelJRDesignElement =
+                        newTitleJRDesignStaticText(columnStyles, fontColor, HorizontalAlignEnum.LEFT, paramLabel);
+                paramLabelJRDesignElement.setX(penX + 2);
+                paramLabelJRDesignElement.setY(penY + 2);
+                paramLabelJRDesignElement.setWidth(sectionWidth - 4);
+                paramLabelJRDesignElement.setHeight(detailHeight - (4));
+
+                if (isListFormat) {
+                    paramLabelJRDesignElement.addPropertyExpression(
+                            newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
+                }
+                jrDesignBand.addElement(paramLabelJRDesignElement);
+
+                // Value
+                String paramVal = ReportFormatUtils.format(reportParameter.getFormatter(), reportParameter.getValue());
+                JRDesignElement paramValJRDesignElement =
+                        newTitleJRDesignStaticText(columnStyles, fontColor, HorizontalAlignEnum.LEFT, paramVal);
+                paramValJRDesignElement.setX(penX + sectionWidth + 2);
+                paramValJRDesignElement.setY(penY + 2);
+                paramValJRDesignElement.setWidth(sectionWidth - 4);
+                paramValJRDesignElement.setHeight(detailHeight - (4));
+
+                if (isListFormat) {
+                    paramValJRDesignElement.addPropertyExpression(
+                            newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
+                }
+                jrDesignBand.addElement(paramValJRDesignElement);
+
+                // Next line
+                penY += detailHeight;
+                
+                if (--linesToWrite == 0) {
+                    // Reset to first line
+                    penY = y + 4;
+
+                    // Move to next column
+                    penX += sectionWidth * 3;
+                }
+            }
+        }
+    }
+
     protected JRDesignGroup newJRDesignGroup(ColumnStyles columnStyles, Report report, ReportColumn reportColumn,
             int reportWidth, int columnWidth, boolean footer) throws UnifyException {
         JRDesignGroup jRDesignGroup = new JRDesignGroup();
@@ -177,8 +261,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     }
 
     protected JRDesignElement newColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
-            JRDesignStyle fontStyle, ReportColumn reportColumn, boolean isListFormat)
-            throws UnifyException {
+            JRDesignStyle fontStyle, ReportColumn reportColumn, boolean isListFormat) throws UnifyException {
         if ("byte[]".equals(reportColumn.getTypeName())) {
             JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
             jrDesignImage.setHorizontalAlignment(HorizontalAlignEnum.CENTER);
@@ -215,12 +298,12 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     }
 
     protected JRDesignStaticText newTitleJRDesignStaticText(ColumnStyles columnStyles, Color foreColor,
-            HorizontalAlignEnum horizontalAlignment, ReportColumn reportColumn) throws UnifyException {
+            HorizontalAlignEnum horizontalAlignment, String text) throws UnifyException {
         JRDesignStaticText staticText = new JRDesignStaticText();
         staticText.setForecolor(foreColor);
         staticText.setMode(ModeEnum.TRANSPARENT);
         staticText.setStyle(columnStyles.getBoldStyle());
-        staticText.setText(reportColumn.getTitle());
+        staticText.setText(text);
         staticText.setHorizontalAlignment(horizontalAlignment);
         return staticText;
     }
@@ -283,7 +366,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             jRDesignGroup.setName(reportColumn.getTitle() + "_Group");
             jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
             jRDesignGroup.setStartNewPage(reportColumn.isGroupOnNewPage());
-           jasperDesign.addGroup(jRDesignGroup);
+            jasperDesign.addGroup(jRDesignGroup);
             return jRDesignGroup;
         } catch (JRException e) {
             throwOperationErrorException(e);

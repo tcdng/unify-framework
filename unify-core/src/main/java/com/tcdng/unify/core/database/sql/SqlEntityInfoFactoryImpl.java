@@ -188,7 +188,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 String tableName = AnnotationUtils.getAnnotationString(ta.name());
                 if (StringUtils.isBlank(tableName)) {
                     tableName = AnnotationUtils.getAnnotationString(ta.value());
-                } else if (!StringUtils.isBlank(AnnotationUtils.getAnnotationString(ta.value()))) {
+                } else if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ta.value()))) {
                     throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION, "value",
                             "name", Table.class, entityClass);
                 }
@@ -318,7 +318,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                             ColumnOverride coa = colOverrideMap.get(field.getName());
                             if (coa != null) {
-                                if (!StringUtils.isBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
+                                if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
                                     column = coa.name();
                                 }
                                 columnType = coa.type();
@@ -333,7 +333,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 precision = coa.precision();
                                 scale = coa.scale();
                             } else {
-                                if (!StringUtils.isBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
+                                if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
                                     column = ca.name();
                                 }
                                 columnType = ca.type(); // Overrides default
@@ -834,7 +834,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             case NOT_END_WITH:
                             case NOT_EQUAL:
                             case NOT_LIKE:
-                                if (!StringUtils.isBlank(vra.rightProperty())) {
+                                if (StringUtils.isNotBlank(vra.rightProperty())) {
                                     param1 = getSqlViewColumnInfo(tableReferences, entityCycleDetector,
                                             vra.rightProperty());
                                 } else {
@@ -900,7 +900,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 // Parameters
                 List<SqlCallableParamInfo> paramInfoList = null;
                 String paramStr = AnnotationUtils.getAnnotationString(ca.params());
-                if (!StringUtils.isBlank(paramStr)) {
+                if (StringUtils.isNotBlank(paramStr)) {
                     paramInfoList = new ArrayList<SqlCallableParamInfo>();
                     String[] fieldNames = StringUtils.commaSplit(paramStr);
                     for (String fieldName : fieldNames) {
@@ -956,7 +956,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         List<SqlCallableFieldInfo> fieldInfoList = new ArrayList<SqlCallableFieldInfo>();
                         CallableResult cra = resultClass.getAnnotation(CallableResult.class);
                         String fieldsStr = AnnotationUtils.getAnnotationString(cra.fields());
-                        boolean useIndexing = !StringUtils.isBlank(fieldsStr);
+                        boolean useIndexing = StringUtils.isNotBlank(fieldsStr);
                         if (useIndexing) {
                             String[] fieldNames = StringUtils.commaSplit(fieldsStr);
                             for (String fieldName : fieldNames) {
