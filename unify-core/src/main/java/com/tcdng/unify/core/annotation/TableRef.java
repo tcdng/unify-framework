@@ -20,7 +20,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import com.tcdng.unify.core.database.Entity;
 
 /**
  * Defines a table reference.
@@ -32,9 +31,15 @@ import com.tcdng.unify.core.database.Entity;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TableRef {
 
-    /** The entity represented by table. Entity class must be annotated with the {@link Table} annotation.*/
-    Class<? extends Entity> entity();
+    /**
+     * The entity represented by table. Entity class must be annotated with the
+     * {@link Table} annotation or an enumeration constant annotated with
+     * {@link StaticList}.
+     */
+    Class<?> entity();
 
-    /** The table alias used in this reference. Table aliases are not case-sensitive */
+    /**
+     * The table alias used in this reference. Table aliases are not case-sensitive
+     */
     String alias();
 }
