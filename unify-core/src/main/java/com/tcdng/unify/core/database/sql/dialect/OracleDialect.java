@@ -66,6 +66,11 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String getSqlBlobType() {
+        return "oracle.jdbc.OracleBlob";
+    }
+
+    @Override
     public int getMaxClauseValues() {
         return 1000;
     }

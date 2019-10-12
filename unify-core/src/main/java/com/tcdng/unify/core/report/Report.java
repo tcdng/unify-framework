@@ -534,20 +534,12 @@ public class Report {
             return this;
         }
 
-        public Builder addColumn(String title, String name, String className, String formatterUpl, OrderType order,
-                HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage, boolean sum)
-                throws UnifyException {
-            addColumn(title, null, name, className, formatterUpl, order, hAlignType, widthRatio, group, groupOnNewPage,
-                    sum);
-            return this;
-        }
-
-        public Builder addColumn(String title, String table, String name, String className, String formatterUpl,
-                OrderType order, HAlignType hAlignType, int widthRatio, boolean group, boolean groupOnNewPage,
-                boolean sum) throws UnifyException {
+        public Builder addColumn(String title, String table, String name, String className, String sqlBlobTypeName,
+                String formatterUpl, OrderType order, HAlignType hAlignType, int widthRatio, boolean group,
+                boolean groupOnNewPage, boolean sum) throws UnifyException {
             ReportColumn rc = ReportColumn.newBuilder().title(title).table(table).name(name).className(className)
-                    .horizontalAlignment(hAlignType).widthRatio(widthRatio).formatter(formatterUpl).order(order)
-                    .group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
+                    .horizontalAlignment(hAlignType).widthRatio(widthRatio).sqlBlobTypeName(sqlBlobTypeName)
+                    .formatter(formatterUpl).order(order).group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
             columns.add(rc);
             return this;
         }
