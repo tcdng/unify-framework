@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.core.database.sql;
 
 /**
- * SQL dialect constants.
+ * SQL dialect name constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SqlDialectConstants {
+public interface SqlDialectNameConstants {
 
     String HSQLDB = "hsqldb-dialect";
 
@@ -36,4 +36,6 @@ public interface SqlDialectConstants {
     String ORACLE = "oracle-dialect";
 
     String ORACLE_12C = "oracle12c-dialect";
+
+    String POSTGRESQL = "postgresql-dialect";
 }

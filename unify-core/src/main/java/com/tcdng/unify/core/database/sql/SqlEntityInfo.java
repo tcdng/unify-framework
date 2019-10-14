@@ -29,6 +29,7 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Holds entity information.
@@ -103,7 +104,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
-            List<SqlViewRestrictionInfo> viewRestrictionList) throws UnifyException {
+            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase) throws UnifyException {
         this.index = index;
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
@@ -123,6 +124,16 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.listFieldInfoByName = Collections.unmodifiableMap(sQLFieldInfoMap);
         this.foreignKeyList = new ArrayList<SqlForeignKeyInfo>();
         this.fieldInfoByName = new HashMap<String, SqlFieldInfo>();
+
+        if (isAllObjectsInLowerCase) {
+            this.tableName = StringUtils.toLowerCase(tableName);
+            this.preferredTableName = StringUtils.toLowerCase(preferredTableName);
+            this.schemaTableName = StringUtils.toLowerCase(schemaTableName);
+            this.tableAlias = StringUtils.toLowerCase(tableAlias);
+            this.viewName = StringUtils.toLowerCase(viewName);
+            this.preferredViewName = StringUtils.toLowerCase(preferredViewName);
+            this.schemaViewName = StringUtils.toLowerCase(schemaViewName);
+        }
 
         List<SqlFieldInfo> inputlistFieldInfoList = new ArrayList<SqlFieldInfo>(listFieldInfoByName.values());
         DataUtils.sort(inputlistFieldInfoList, SqlFieldSchemaInfo.class, "foreignEntityPreferredAlias", true);

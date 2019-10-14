@@ -196,8 +196,14 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
             try {
                 Set<String> columnNames = new LinkedHashSet<String>();
                 rs = connection.getMetaData().getColumns(null, schemaName, tableName, null);
-                while (rs.next()) {
-                    columnNames.add(rs.getString("COLUMN_NAME").toUpperCase());
+                if(getDialect().isAllObjectsInLowerCase()) {
+                    while (rs.next()) {
+                        columnNames.add(rs.getString("COLUMN_NAME").toLowerCase());
+                    }
+                } else {
+                    while (rs.next()) {
+                        columnNames.add(rs.getString("COLUMN_NAME").toUpperCase());
+                    }
                 }
                 
                 return columnNames;

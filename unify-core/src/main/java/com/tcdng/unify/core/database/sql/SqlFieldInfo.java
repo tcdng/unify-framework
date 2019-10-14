@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.transform.Transformer;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Holds SQL information, relational information, reflection information and
@@ -79,11 +80,11 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
             String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
             boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
             SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
-            Method setter) {
+            Method setter, boolean isAllObjectsInLowerCase) {
         this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
                 columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
                 listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, defaultVal, field, getter,
-                setter);
+                setter, isAllObjectsInLowerCase);
     }
 
     public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
@@ -91,7 +92,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
             String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
             boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
             SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
-            Method setter) {
+            Method setter, boolean isAllObjectsInLowerCase) {
         this.marker = marker;
         this.columnType = columnType;
         this.foreignEntityInfo = foreignSqlEntityInfo;
@@ -114,6 +115,12 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         this.getter = getter;
         this.setter = setter;
         this.orderIndex = orderIndex;
+        
+        if (isAllObjectsInLowerCase) {
+            this.columnName = StringUtils.toLowerCase(columnName);
+            this.preferredColumnName = StringUtils.toLowerCase(preferredColumnName);
+            this.constraintName = StringUtils.toLowerCase(constraintName);
+        }
     }
 
     @Override
