@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.report.ReportParameters;
@@ -31,6 +32,7 @@ import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
 
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignLine;
 import net.sf.jasperreports.engine.design.JRDesignRectangle;
@@ -56,9 +58,9 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             throws UnifyException {
         ReportTheme theme = report.getReportTheme();
         boolean isListFormat = isListFormat(report.getFormat());
-        int actualColumnWidth = jasperDesign.getColumnWidth();
-        int columnHeaderHeight = theme.getColumnHeaderHeight();
-        int detailHeight = theme.getDetailHeight();
+        final int actualColumnWidth = jasperDesign.getColumnWidth();
+        final int columnHeaderHeight = theme.getColumnHeaderHeight();
+        final int detailHeight = theme.getDetailHeight();
 
         // Organize layout
         List<ReportColumn> reportColumnList = report.getColumns();
@@ -171,8 +173,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
         int glen = groupingColumnList.size();
         boolean invertGroupColors = report.isInvertGroupColors();
         for (int i = 0; i < glen; i++) {
-            ReportColumn reportColumn = groupingColumnList.get(i);
-            JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, reportColumn);
+            ReportColumn grpReportColumn = groupingColumnList.get(i);
+            JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, grpReportColumn);
 
             // Group header
             boolean showColumnHeader = isWithGroupColumns && ((i + 1) == glen);
@@ -191,7 +193,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             groupHeaderBand.addElement(grpJRDesignRectangle);
 
             JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, groupTheme,
-                    columnStyles.getBoldLargeStyle(), reportColumn, isListFormat);
+                    columnStyles.getBoldLargeStyle(), grpReportColumn, isListFormat);
             jRDesignElement.setX(groupHeaderX);
             jRDesignElement.setY(2);
             jRDesignElement.setWidth(actualColumnWidth - jRDesignElement.getX());
@@ -216,6 +218,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 grpJRDesignRectangle.getLinePen().setLineWidth(0);
                 groupFooterBand.addElement(grpJRDesignRectangle);
 
+                int sumStartX = actualColumnWidth;
                 for (ReportColumn sumReportColumn : summationColumnList) {
                     JRDesignVariable sumJRDesignVariable =
                             newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup, sumReportColumn);
@@ -224,7 +227,12 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                             groupTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
 
                     JRDesignElement refJRDesignElement = detailJRElementMap.get(sumReportColumn);
-                    sumJRDesignElement.setX(refJRDesignElement.getX());
+                    int sumX = refJRDesignElement.getX();
+                    if (sumStartX > sumX) {
+                        sumStartX = sumX;
+                    }
+
+                    sumJRDesignElement.setX(sumX);
                     sumJRDesignElement.setY(refJRDesignElement.getY());
                     sumJRDesignElement.setWidth(refJRDesignElement.getWidth());
                     sumJRDesignElement.setHeight(columnHeaderHeight - (4));
@@ -240,6 +248,25 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
 
                     groupFooterBand.addElement(sumJRDesignElement);
                 }
+                
+                // Total legend
+                final int totalElemWidth = actualColumnWidth / 4;
+                sumStartX -= totalElemWidth;
+                if (sumStartX >= 0) {
+                    JRDesignExpression totalExpression = newJRDesignExpression(
+                            "$V{" + jRDesignGroup.getName() + "_COUNT} + \" line item(s)  Total :\"");
+                    jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
+                            totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
+                    groupFooterBand.addElement(jRDesignElement);
+
+                    sumStartX -= totalElemWidth;
+                    if (sumStartX >= 0) {
+                        jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
+                                totalElemWidth, columnHeaderHeight - 4, newJRDesignExpression(grpReportColumn), HAlignType.RIGHT);;
+                        groupFooterBand.addElement(jRDesignElement);
+                    }
+                }
+                
                 ((JRDesignSection) jRDesignGroup.getGroupFooterSection()).addBand(groupFooterBand);
             }
 

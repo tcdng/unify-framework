@@ -35,6 +35,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
@@ -44,7 +45,6 @@ import net.sf.jasperreports.engine.design.JRDesignImage;
 import net.sf.jasperreports.engine.design.JRDesignLine;
 import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
 import net.sf.jasperreports.engine.design.JRDesignRectangle;
-import net.sf.jasperreports.engine.design.JRDesignSection;
 import net.sf.jasperreports.engine.design.JRDesignStaticText;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
@@ -216,48 +216,19 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         }
     }
 
-    protected JRDesignGroup newJRDesignGroup(ColumnStyles columnStyles, Report report, ReportColumn reportColumn,
-            int reportWidth, int columnWidth, boolean footer) throws UnifyException {
-        JRDesignGroup jRDesignGroup = new JRDesignGroup();
-        jRDesignGroup.setName(reportColumn.getTitle() + " Group");
-        jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
-
-        ReportTheme theme = report.getReportTheme();
-        JRDesignBand jRDesignBand = new JRDesignBand();
-        int groupBandHeight = theme.getColumnHeaderHeight();
-        jRDesignBand.setHeight(groupBandHeight);
-        JRDesignTextField jRDesignTextField = new JRDesignTextField();
-        jRDesignTextField.setX(0);
-        jRDesignTextField.setY(2);
-        jRDesignTextField.setWidth(columnWidth);
-        jRDesignTextField.setStyle(columnStyles.getBoldStyle());
-        jRDesignTextField.setHeight(groupBandHeight - (22));
-        jRDesignTextField.setBackcolor(new Color(0xC0, 0xC0, 0xC0));
-        jRDesignTextField.setMode(ModeEnum.OPAQUE);
-        jRDesignTextField.setHorizontalAlignment(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
-        jRDesignTextField.setExpression(newJRDesignExpression(reportColumn));
-        jRDesignBand.addElement(jRDesignTextField);
-        jRDesignBand.addElement(newJRDesignLine(0, groupBandHeight - 1, reportWidth, 0, Color.BLACK));
-        ((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(jRDesignBand);
-
-        if (footer) {
-            jRDesignBand = new JRDesignBand();
-            jRDesignBand.setHeight(groupBandHeight);
-            jRDesignBand.addElement(newJRDesignLine(0, 0, reportWidth, 0, Color.BLACK));
-            if (report.getGroupSummationLegend() != null) {
-                JRDesignStaticText jRDesignStaticText = new JRDesignStaticText();
-                jRDesignStaticText.setX(0);
-                jRDesignStaticText.setY(2);
-                jRDesignStaticText.setWidth(60);
-                jRDesignStaticText.setHeight(groupBandHeight - (22));
-                jRDesignStaticText.setStyle(columnStyles.getBoldStyle());
-                jRDesignStaticText.setHorizontalAlignment(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
-                jRDesignStaticText.setText(report.getGroupSummationLegend());
-                jRDesignBand.addElement(jRDesignStaticText);
-            }
-            ((JRDesignSection) jRDesignGroup.getGroupFooterSection()).addBand(jRDesignBand);
+    protected JRDesignGroup newJRDesignGroup(JasperDesign jasperDesign, ReportColumn reportColumn)
+            throws UnifyException {
+        try {
+            JRDesignGroup jRDesignGroup = new JRDesignGroup();
+            jRDesignGroup.setName(reportColumn.getName() + "_Group");
+            jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
+            jRDesignGroup.setStartNewPage(reportColumn.isGroupOnNewPage());
+            jasperDesign.addGroup(jRDesignGroup);
+            return jRDesignGroup;
+        } catch (JRException e) {
+            throwOperationErrorException(e);
         }
-        return jRDesignGroup;
+        return null;
     }
 
     protected JRDesignImage newJRDesignImage(JasperDesign jasperDesign, int x, int y, int width, int height,
@@ -320,6 +291,22 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         return staticText;
     }
 
+    protected JRDesignTextField newJRDesignTextField(ThemeColors themeColors, JRStyle style, int x, int y, int width,
+            int height, JRDesignExpression expression, HAlignType alignType) throws UnifyException {
+        JRDesignTextField jRDesignTextField = new JRDesignTextField();
+        jRDesignTextField.setX(x);
+        jRDesignTextField.setY(y);
+        jRDesignTextField.setWidth(width);
+        jRDesignTextField.setHeight(height);
+        jRDesignTextField.setForecolor(themeColors.getFontColor());
+        jRDesignTextField.setBackcolor(themeColors.getBackColor());
+        jRDesignTextField.setStyle(style);
+        jRDesignTextField.setMode(ModeEnum.OPAQUE);
+        jRDesignTextField.setHorizontalAlignment(getHorizontalAlign(alignType));
+        jRDesignTextField.setExpression(expression);
+        return jRDesignTextField;
+    }
+
     protected JRDesignRectangle newJRDesignRectangle(JasperDesign jasperDesign, int x, int y, int width, int height,
             ThemeColors themeColors) throws UnifyException {
         JRDesignRectangle jRDesignRectangle = new JRDesignRectangle(jasperDesign);
@@ -373,21 +360,6 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             }
         }
         return expression;
-    }
-
-    protected JRDesignGroup newJRDesignGroup(JasperDesign jasperDesign, ReportColumn reportColumn)
-            throws UnifyException {
-        try {
-            JRDesignGroup jRDesignGroup = new JRDesignGroup();
-            jRDesignGroup.setName(reportColumn.getTitle() + "_Group");
-            jRDesignGroup.setExpression(newJRDesignExpression(reportColumn));
-            jRDesignGroup.setStartNewPage(reportColumn.isGroupOnNewPage());
-            jasperDesign.addGroup(jRDesignGroup);
-            return jRDesignGroup;
-        } catch (JRException e) {
-            throwOperationErrorException(e);
-        }
-        return null;
     }
 
     protected JRDesignVariable newGroupSumJRDesignVariable(JasperDesign jasperDesign, JRDesignGroup jRDesignGroup,
