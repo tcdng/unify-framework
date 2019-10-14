@@ -534,6 +534,21 @@ public final class StringUtils {
         }
         return null;
     }
+    
+    public static String toUpperCase(String text) {
+        if (text != null && text.length() > 0) {
+            return text.toUpperCase();
+        }
+        return text;
+    }
+    
+    public static String toLowerCase(String text) {
+        if (text != null && text.length() > 0) {
+            return text.toLowerCase();
+        }
+        return text;
+    }
+
 
     /**
      * Builds a string by concatenating supplied objects.

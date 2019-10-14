@@ -15,6 +15,10 @@
  */
 package com.tcdng.unify.core.database.sql.dialect;
 
+import java.io.ByteArrayInputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,15 +38,15 @@ import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * MySQL SQL dialect.
+ * PostgreSQL SQL dialect.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(name = SqlDialectNameConstants.MYSQL, description = "$m{sqldialect.mysqldb}")
-public class MySqlDialect extends AbstractSqlDataSourceDialect {
+@Component(name = SqlDialectNameConstants.POSTGRESQL, description = "$m{sqldialect.postgresdb}")
+public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 
-    public MySqlDialect() {
+    public PostgreSqlDialect() {
         super(true);
     }
 
@@ -53,12 +57,17 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateUTCTimestampSql() throws UnifyException {
-        return "SELECT UTC_TIMESTAMP";
+        return "SELECT NOW() AT TIME ZONE 'utc'";
     }
 
     @Override
     public int getMaxClauseValues() {
         return -1;
+    }
+
+    @Override
+    public boolean isAllObjectsInLowerCase() throws UnifyException {
+        return true;
     }
 
     @Override
@@ -149,7 +158,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
 
-        setDataTypePolicy(ColumnType.BLOB, new MySqlBlobPolicy());
+        setDataTypePolicy(ColumnType.BLOB, new PostgreSqlBlobPolicy());
     }
 
     @Override
@@ -181,10 +190,35 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     }
 }
 
-class MySqlBlobPolicy extends BlobPolicy {
+class PostgreSqlBlobPolicy extends BlobPolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append(" MEDIUMBLOB");
+        sb.append(" BYTEA");
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.BINARY;
+    }
+
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.BINARY);
+        } else {
+            byte[] bArray = (byte[]) data;
+            ((PreparedStatement) pstmt).setBinaryStream(index, new ByteArrayInputStream(bArray), bArray.length);
+        }
+    }
+
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
+        return ((ResultSet) rs).getBytes(column);
+    }
+
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
+        return ((ResultSet) rs).getBytes(index);
     }
 }

@@ -376,6 +376,14 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     boolean isQueryOffsetOrLimit(Query<? extends Entity> query) throws UnifyException;
 
     /**
+     * Checks if object are all renamed to lower case in dialect.
+     * 
+     * @return true if all lower case objects
+     * @throws UnifyException if an error occurs
+     */
+    boolean isAllObjectsInLowerCase() throws UnifyException;
+    
+    /**
      * Restores a statement info. This applies to implementations that maintain a
      * statement info pool.
      * 

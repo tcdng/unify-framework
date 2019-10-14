@@ -48,12 +48,23 @@ public final class SqlUtils {
     public static final String IDENTIFIER_SUFFIX_UNIQUECONSTRAINT = "_UC";
     public static final String IDENTIFIER_SUFFIX_INDEX = "_IX";
 
+    public static final String IDENTIFIER_SUFFIX_FOREIGNKEY_LOWERCASE = IDENTIFIER_SUFFIX_FOREIGNKEY.toLowerCase();
+    public static final String IDENTIFIER_SUFFIX_UNIQUECONSTRAINT_LOWERCASE = IDENTIFIER_SUFFIX_UNIQUECONSTRAINT.toLowerCase();
+    public static final String IDENTIFIER_SUFFIX_INDEX_LOWERCASE = IDENTIFIER_SUFFIX_INDEX.toLowerCase();
+
     private static final List<String> VENDOR_IDENTIFIER_PREFIXES =
             Collections.unmodifiableList(Arrays.asList("SYS_IDX_", "SYS_"));
 
     private static final List<String> MANAGED_IDENTIFIER_SUFFIXES =
             Collections.unmodifiableList(Arrays.asList(SqlUtils.IDENTIFIER_SUFFIX_FOREIGNKEY,
                     SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT, SqlUtils.IDENTIFIER_SUFFIX_INDEX));
+
+    private static final List<String> VENDOR_IDENTIFIER_PREFIXES_LOWERCASE =
+            Collections.unmodifiableList(Arrays.asList("sys_idx_", "sys_"));
+
+    private static final List<String> MANAGED_IDENTIFIER_SUFFIXES_LOWERCASE =
+            Collections.unmodifiableList(Arrays.asList(SqlUtils.IDENTIFIER_SUFFIX_FOREIGNKEY_LOWERCASE,
+                    SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT_LOWERCASE, SqlUtils.IDENTIFIER_SUFFIX_INDEX_LOWERCASE));
 
     private static final List<Class<? extends Number>> versionNoTypes;
 
@@ -244,12 +255,18 @@ public final class SqlUtils {
      * 
      * @param suggestedName
      *            the suggested name
+     * @param isAllObjectsInLowerCase all objects in lower case
      * @return the resolved constraint name otherwise null
      */
-    public static String resolveConstraintName(String suggestedName) {
+    public static String resolveConstraintName(String suggestedName, boolean isAllObjectsInLowerCase) {
         if (StringUtils.isNotBlank(suggestedName)) {
             // Trim prefix
-            for (String vendorPrefix : VENDOR_IDENTIFIER_PREFIXES) {
+            List<String> refList = VENDOR_IDENTIFIER_PREFIXES;
+            if (isAllObjectsInLowerCase) {
+                refList = VENDOR_IDENTIFIER_PREFIXES_LOWERCASE;
+            }
+            
+            for (String vendorPrefix : refList) {
                 if (suggestedName.startsWith(vendorPrefix)) {
                     suggestedName = suggestedName.substring(vendorPrefix.length());
                     break;
@@ -257,7 +274,12 @@ public final class SqlUtils {
             }
 
             // Trim and detect suffix
-            for (String managedSuffix : MANAGED_IDENTIFIER_SUFFIXES) {
+            refList = MANAGED_IDENTIFIER_SUFFIXES;
+            if (isAllObjectsInLowerCase) {
+                refList = MANAGED_IDENTIFIER_SUFFIXES_LOWERCASE;
+            }
+            
+            for (String managedSuffix : refList) {
                 int index = suggestedName.lastIndexOf(managedSuffix);
                 if (index > 0) {
                     int nIndex = suggestedName.indexOf('_', index + 1);

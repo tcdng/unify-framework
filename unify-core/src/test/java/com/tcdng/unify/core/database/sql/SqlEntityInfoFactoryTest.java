@@ -28,7 +28,6 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.annotation.CallableDataType;
-import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.CallableProcA;
 import com.tcdng.unify.core.database.CallableProcB;
 import com.tcdng.unify.core.database.CallableProcC;
@@ -290,7 +289,7 @@ public class SqlEntityInfoFactoryTest extends AbstractUnifyComponentTest {
             sqlEntityInfoFactory =
                     (SqlEntityInfoFactory) getComponent(ApplicationComponents.APPLICATION_SQLENTITYINFOFACTORY);
             sqlEntityInfoFactory
-                    .setSqlDataSourceDialect((SqlDataSourceDialect) getComponent(SqlDialectConstants.HSQLDB));
+                    .setSqlDataSourceDialect((SqlDataSourceDialect) getComponent(SqlDialectNameConstants.HSQLDB));
         }
         return sqlEntityInfoFactory;
     }

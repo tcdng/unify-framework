@@ -451,7 +451,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
         sb.append("REFERENCES ").append(foreignEntityInfo.getSchemaTableName()).append('(')
                 .append(foreignFieldInfo.getPreferredColumnName()).append(")");
-        return sb.toString().toUpperCase();
+        return sb.toString();
     }
 
     @Override
@@ -474,7 +474,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
         sb.append("DROP CONSTRAINT ")
                 .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbForeignKeyName));
-        return sb.toString().toUpperCase();
+        return sb.toString();
     }
 
     @Override
@@ -564,7 +564,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     public final String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
             boolean format) throws UnifyException {
-        return generateDropIndexSql(sqlEntitySchemaInfo, sqlIndexInfo.getName().toUpperCase(), format);
+        return generateDropIndexSql(sqlEntitySchemaInfo, sqlIndexInfo.getName(), format);
     }
 
     @Override
@@ -806,8 +806,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public int getMaxClauseValues() {
-        // TODO Auto-generated method stub
         return 0;
+    }
+
+    @Override
+    public boolean isAllObjectsInLowerCase() throws UnifyException {
+        return false;
     }
 
     @Override
