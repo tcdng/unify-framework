@@ -135,7 +135,7 @@ public final class CalendarUtils {
             throws UnifyException {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.DAY_OF_YEAR, 1);
         cal.setTime(cal.getTime());
 
         int[] eMonths = MonthInYear.getJavaCalendarIndexes(months);
@@ -150,7 +150,7 @@ public final class CalendarUtils {
                 CalendarUtils.nextEligibleDay(eMonths, eDays, cal);
             }
         }
-        return cal.getTime();
+        return CalendarUtils.getMidnightDate(cal.getTime());
     }
 
     /**
