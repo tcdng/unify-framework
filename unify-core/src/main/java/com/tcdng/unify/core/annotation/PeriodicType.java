@@ -41,7 +41,13 @@ public enum PeriodicType {
     FASTER(2000),
 
     /** 1 second */
-    FASTEST(1000);
+    FASTEST(1000),
+
+    /** .5 seconds */
+    EXTREME(500),
+
+    /** .1 second */
+    LIGHTSPEED(100);
 
     private final long periodInMillSec;
 
