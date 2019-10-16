@@ -105,7 +105,7 @@ public class MockServiceImpl extends AbstractBusinessService implements MockServ
         // Talk to third party database
         db(CREDITCHECK_DATASOURCECONFIG)
                 .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
-        setRollback();
+        setRollbackTransactions();
         return accountId;
     }
 

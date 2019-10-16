@@ -45,7 +45,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 
     @Configurable
     private DatabaseTransactionManager databaseTransactionManager;
-    
+
     @Configurable
     private DynamicSqlDatabaseManager dynamicSqlDatabaseManager;
 
@@ -124,15 +124,36 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
         return output;
     }
 
+    /**
+     * Launches a task.
+     * 
+     * @param taskSetup
+     *            the task setup
+     * @return the task monitor
+     * @throws UnifyException
+     *             if an error occurs
+     */
     protected TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
         return taskLauncher.launchTask(taskSetup);
     }
 
-    protected void commit() throws UnifyException {
+    /**
+     * Commits all pending database transactions
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void commitTransactions() throws UnifyException {
         databaseTransactionManager.commit();
     }
 
-    protected void setRollback() throws UnifyException {
+    /**
+     * Sets roll back on current transactions in database session.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void setRollbackTransactions() throws UnifyException {
         databaseTransactionManager.setRollback();
     }
 }
