@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +110,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testSimpleReadFrom() throws Exception {
-        Ledger ledger = new Ledger("20039948858", Arrays.asList("250.50", "1823.25"), new double[]{2.43, 5.8});
+        Ledger ledger = new Ledger("20039948858", Arrays.asList("250.50", "1823.25"), new double[] { 2.43, 5.8 });
         PackableDoc pDoc = new PackableDoc(ledgerDocConfig, false);
         assertEquals(4, pDoc.getFieldCount());
 
@@ -121,7 +122,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals(2, purchases.size());
         assertEquals("250.50", purchases.get(0));
         assertEquals("1823.25", purchases.get(1));
-        
+
         List<Double> rates = (List<Double>) pDoc.read("rates");
         assertNotNull(rates);
         assertEquals(2, rates.size());
@@ -133,7 +134,8 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
     public void testComplexReadFrom() throws Exception {
         Date birthDt = new Date();
         Address address = new Address("38 Warehouse Road", "Apapa Lagos");
-        Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20, address, Gender.MALE);
+        Customer customer =
+                new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20, address, Gender.MALE);
         PackableDoc pDoc = new PackableDoc(custDocConfig, false);
         assertFalse(pDoc.isUpdated());
         assertEquals(7, pDoc.getFieldCount());
@@ -202,6 +204,41 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertFalse(pDoc.isUpdated());
         pDoc.write("id", "15");
         pDoc.write("purchases", Arrays.asList(new double[] { 100.2, 15.64, 75.42 }));
+        assertTrue(pDoc.isUpdated());
+    }
+
+    @Test
+    public void testMerge() throws Exception {
+        PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+        Date birthDt = new Date();
+        pDoc.write("name", "Elmer Fudd");
+        pDoc.write("id", 12);
+        pDoc.write("birthDt", birthDt);
+        pDoc.write("balance", BigDecimal.valueOf(106.80));
+        pDoc.write("gender", Gender.MALE);
+        pDoc.clearUpdated();
+
+        PackableDoc srcDoc = new PackableDoc(custDocConfig, false);
+        srcDoc.write("name", "Mary Somers");
+        srcDoc.write("id", 14);
+        srcDoc.write("birthDt", null);
+        srcDoc.write("balance", BigDecimal.valueOf(250.23));
+        srcDoc.write("gender", Gender.FEMALE);
+
+        pDoc.merge(srcDoc, new HashSet<String>(Arrays.asList("id", "balance", "gender")));
+
+        assertEquals("Elmer Fudd", pDoc.read("name"));
+        assertEquals(Long.valueOf(14), pDoc.read("id"));
+        assertEquals(birthDt, pDoc.read("birthDt"));
+        assertEquals(BigDecimal.valueOf(250.23), pDoc.read("balance"));
+        assertEquals(Gender.FEMALE, pDoc.read(Gender.class, "gender"));
+
+        assertEquals("Mary Somers", srcDoc.read("name"));
+        assertEquals(Long.valueOf(14), srcDoc.read("id"));
+        assertNull(srcDoc.read("birthDt"));
+        assertEquals(BigDecimal.valueOf(250.23), srcDoc.read("balance"));
+        assertEquals(Gender.FEMALE, srcDoc.read(Gender.class, "gender"));
+
         assertTrue(pDoc.isUpdated());
     }
 
