@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -89,6 +90,12 @@ public class PackableDoc implements Serializable {
 
     public String getConfigName() {
         return config.getName();
+    }
+
+    public void merge(PackableDoc src, Set<String> fieldNames) throws UnifyException {
+        for (String fieldName : fieldNames) {
+            write(fieldName, src.read(fieldName));
+        }
     }
 
     public Object read(String fieldName) throws UnifyException {
