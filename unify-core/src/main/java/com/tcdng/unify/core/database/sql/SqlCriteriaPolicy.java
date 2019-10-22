@@ -29,7 +29,7 @@ import com.tcdng.unify.core.criterion.Restriction;
 public interface SqlCriteriaPolicy {
     /**
      * Generates a native prepared statement SQL with parameter information based on
-     * supplied criteria.
+     * supplied restriction.
      * 
      * @param sql
      *            generated native SQL are appended to this buffer
@@ -37,8 +37,8 @@ public interface SqlCriteriaPolicy {
      *            parameter information is added to this list
      * @param sqlEntityInfo
      *            the record type information object
-     * @param criteria
-     *            the criteria object
+     * @param restriction
+     *            the restriction object
      * @throws UnifyException
      *             if an error occurs
      */
@@ -46,15 +46,15 @@ public interface SqlCriteriaPolicy {
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException;
 
     /**
-     * Translates a criteria object to native SQL and appends to supplied string
+     * Translates a restriction object to native SQL and appends to supplied string
      * buffer..
      * 
      * @param sql
      *            the buffer to write to
      * @param sqlEntityInfo
      *            the record info
-     * @param criteria
-     *            the criteria
+     * @param restriction
+     *            the restriction
      * @throws UnifyException
      *             if an error occurs
      */

@@ -29,10 +29,10 @@ import com.tcdng.unify.core.criterion.Restriction;
  */
 public interface DataSourceDialect extends UnifyComponent {
     /**
-     * Translates specified criteria to data source dialect.
+     * Translates specified restriction to data source dialect.
      * 
-     * @param criteria
-     *            the criteria to translate
+     * @param restriction
+     *            the restriction to translate
      * @return the translation
      * @throws UnifyException
      *             if an error occurs

@@ -34,8 +34,8 @@ public interface ReportServer extends UnifyComponent {
      * 
      * @param themeName
      *            the theme name
-     * @param componentName
-     *            the manager component
+     * @param reportTheme
+     *            the report theme
      * @throws UnifyException
      *             if an error occurs
      */
