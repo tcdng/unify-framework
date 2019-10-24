@@ -46,12 +46,12 @@ public class Money {
 
     @Override
     public boolean equals(Object obj) {
-        return ReflectUtils.equals(this, obj);
+        return ReflectUtils.beanEquals(this, obj);
     }
 
     @Override
     public int hashCode() {
-        return ReflectUtils.hashCode(this);
+        return ReflectUtils.beanHashCode(this);
     }
 
     public String getCurrencyCode() {

@@ -739,8 +739,8 @@ public final class ReflectUtils {
      * @return the computed hash code
      */
     @SuppressWarnings("unchecked")
-    public static int hashCode(Object object) {
-        return ReflectUtils.hashCode(object, (Set<String>) Collections.EMPTY_SET);
+    public static int beanHashCode(Object object) {
+        return ReflectUtils.beanHashCode(object, (Set<String>) Collections.EMPTY_SET);
     }
 
     /**
@@ -752,7 +752,7 @@ public final class ReflectUtils {
      *            Fields to ignore otherwise all fields are considered
      * @return the computed hash code
      */
-    public static int hashCode(Object object, Set<String> ignore) {
+    public static int beanHashCode(Object object, Set<String> ignore) {
         try {
             final int prime = 31;
             int result = 1;
@@ -790,13 +790,24 @@ public final class ReflectUtils {
      *            object to compare
      * @return true value if a equals b
      */
-    @SuppressWarnings("unchecked")
-    public static boolean equals(Object a, Object b) {
-        return ReflectUtils.equals(a, b, (Set<String>) Collections.EMPTY_SET);
+    public static boolean objectEquals(Object a, Object b) {
+        if (a == b) {
+            return true;
+        }
+
+        if (b == null) {
+            return false;
+        }
+
+        if (a.getClass() != b.getClass()) {
+            return false;
+        }
+
+        return a.equals(b);
     }
 
     /**
-     * Compares two objects.
+     * Compares two bean objects.
      * 
      * @param a
      *            object to compare
@@ -806,14 +817,26 @@ public final class ReflectUtils {
      *            Fields to ignore otherwise all fields are considered
      * @return true value if a equals b
      */
-    public static boolean equals(Object a, Object b, String... ignore) {
+    public static boolean beanEquals(Object a, Object b, String... ignore) {
+        if (a == b) {
+            return true;
+        }
+
+        if (b == null) {
+            return false;
+        }
+
+        if (a.getClass() != b.getClass()) {
+            return false;
+        }
+        
         Set<String> ignoreSet = new HashSet<String>();
         Collections.addAll(ignoreSet, ignore);
-        return ReflectUtils.equals(a, b, ignoreSet);
+        return ReflectUtils.innerBeanEquals(a, b, ignoreSet);
     }
 
     /**
-     * Compares two objects.
+     * Compares two bean objects.
      * 
      * @param a
      *            object to compare
@@ -823,59 +846,20 @@ public final class ReflectUtils {
      *            Fields to ignore otherwise all fields are considered
      * @return true value if a equals b
      */
-    public static boolean equals(Object a, Object b, Set<String> ignore) {
-        try {
-            if (a == b) {
-                return true;
-            }
-
-            if (b == null) {
-                return false;
-            }
-
-            if (a.getClass() != b.getClass()) {
-                return false;
-            }
-
-            if (ignore.isEmpty()) {
-                for (GetterSetterInfo getterSetterInfo : caseSensitiveGetterSetterMap.get(a.getClass()).values()) {
-                    if (getterSetterInfo.isGetter()) {
-                        Method getter = getterSetterInfo.getGetter();
-                        Object valueA = getter.invoke(a);
-                        Object valueB = getter.invoke(b);
-                        if (valueA == null) {
-                            if (valueB != null) {
-                                return false;
-                            }
-                        } else if (!valueA.equals(valueB)) {
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                Map<String, GetterSetterInfo> map = caseSensitiveGetterSetterMap.get(a.getClass());
-                for (Map.Entry<String, GetterSetterInfo> entry : map.entrySet()) {
-                    if (!ignore.contains(entry.getKey())) {
-                        GetterSetterInfo getterSetterInfo = entry.getValue();
-                        if (getterSetterInfo != null && getterSetterInfo.isGetter()) {
-                            Method getter = getterSetterInfo.getGetter();
-                            Object valueA = getter.invoke(a);
-                            Object valueB = getter.invoke(b);
-                            if (valueA == null) {
-                                if (valueB != null) {
-                                    return false;
-                                }
-                            } else if (!valueA.equals(valueB)) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
+    public static boolean beanEquals(Object a, Object b, Set<String> ignore) {
+        if (a == b) {
             return true;
-        } catch (Exception e) {
         }
-        return false;
+
+        if (b == null) {
+            return false;
+        }
+
+        if (a.getClass() != b.getClass()) {
+            return false;
+        }
+
+        return ReflectUtils.innerBeanEquals(a, b, ignore);
     }
 
     /**
@@ -1340,6 +1324,49 @@ public final class ReflectUtils {
             }
         }
         return null;
+    }
+
+    private static boolean innerBeanEquals(Object a, Object b, Set<String> ignore) {
+        try {
+            if (ignore.isEmpty()) {
+                for (GetterSetterInfo getterSetterInfo : caseSensitiveGetterSetterMap.get(a.getClass()).values()) {
+                    if (getterSetterInfo.isGetter()) {
+                        Method getter = getterSetterInfo.getGetter();
+                        Object valueA = getter.invoke(a);
+                        Object valueB = getter.invoke(b);
+                        if (valueA == null) {
+                            if (valueB != null) {
+                                return false;
+                            }
+                        } else if (!valueA.equals(valueB)) {
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                Map<String, GetterSetterInfo> map = caseSensitiveGetterSetterMap.get(a.getClass());
+                for (Map.Entry<String, GetterSetterInfo> entry : map.entrySet()) {
+                    if (!ignore.contains(entry.getKey())) {
+                        GetterSetterInfo getterSetterInfo = entry.getValue();
+                        if (getterSetterInfo != null && getterSetterInfo.isGetter()) {
+                            Method getter = getterSetterInfo.getGetter();
+                            Object valueA = getter.invoke(a);
+                            Object valueB = getter.invoke(b);
+                            if (valueA == null) {
+                                if (valueB != null) {
+                                    return false;
+                                }
+                            } else if (!valueA.equals(valueB)) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
     }
 
     private static String getPublicStaticStringConstant(Field field) throws UnifyException {
