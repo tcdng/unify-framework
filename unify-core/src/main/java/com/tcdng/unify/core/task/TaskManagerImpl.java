@@ -564,10 +564,10 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
         public TaskMonitorImpl(TaskStatusLogger taskStatusLogger, boolean logMessages) {
             this.taskStatusLogger = taskStatusLogger;
             this.logMessages = logMessages;
-            taskInfoList = new ArrayList<TaskInfo>();
+            this.exceptions = new ArrayList<Exception>();
+            this.taskInfoList = new ArrayList<TaskInfo>();
             if (this.logMessages) {
                 messages = new ArrayList<String>();
-                exceptions = new ArrayList<Exception>();
             }
         }
 
@@ -584,11 +584,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
         @Override
         public boolean isExceptions() {
-            if (logMessages) {
-                return !exceptions.isEmpty();
-            }
-
-            return false;
+            return !exceptions.isEmpty();
         }
 
         @Override
@@ -655,22 +651,12 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
         @Override
         public void addException(Exception exception) {
-            if (logMessages) {
-                if (exceptions.size() >= maxMonitorMessages) {
-                    exceptions.remove(0);
-                }
-
-                exceptions.add(exception);
-            }
+            exceptions.add(exception);
         }
 
         @Override
         public Exception[] getExceptions() {
-            if (logMessages) {
-                return exceptions.toArray(new Exception[exceptions.size()]);
-            }
-
-            return new Exception[0];
+            return exceptions.toArray(new Exception[exceptions.size()]);
         }
 
         @Override
