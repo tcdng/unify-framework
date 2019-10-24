@@ -281,6 +281,8 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
                     }
                 }
             }
+            
+            rollback = false;
         }
     }
 
