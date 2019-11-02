@@ -48,12 +48,12 @@ public abstract class AbstractEntity implements Entity {
 
     @Override
     public boolean equals(Object object) {
-        return ReflectUtils.equals(this, object, ignore());
+        return ReflectUtils.beanEquals(this, object, ignore());
     }
 
     @Override
     public int hashCode() {
-        return ReflectUtils.hashCode(this, ignore());
+        return ReflectUtils.beanHashCode(this, ignore());
     }
 
     @Override
