@@ -133,4 +133,9 @@ public interface UnifyWebErrorConstants {
      * Remote call not input stream type.
      */
     String REMOTECALL_NOT_INPUTSTREAM = "UW_001A";
+
+    /**
+     * Access to resource denied.
+     */
+    String RESOURCE_ACCESS_DENIED = "UW_001B";
 }

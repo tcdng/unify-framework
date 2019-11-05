@@ -35,7 +35,7 @@ public class DownloadPathResourceController extends RealPathResourceController {
     public void prepareExecution() throws UnifyException {
         super.prepareExecution();
         file = new File(
-                IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), "download/" + getResourceName()));
+                IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), "WEB-INF/download/" + getResourceName()));
         if (file.exists()) {
             setContentLength(file.length());
         }
