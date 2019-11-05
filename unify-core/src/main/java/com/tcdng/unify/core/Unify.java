@@ -35,7 +35,7 @@ public class Unify {
 
     public static final String DEFAULT_UNIFY_HOST = "localhost";
 
-    private static final String CONFIGURATION_FILE = "conf/unify.xml";
+    private static final String CONFIGURATION_FILE = "WEB-INF/conf/unify.xml";
 
     private static UnifyContainer uc;
 

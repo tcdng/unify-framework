@@ -23,6 +23,7 @@ import java.io.InputStream;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.web.UnifyWebErrorConstants;
 
 /**
  * Resource controller for fetching file resources from application real path.
@@ -33,6 +34,8 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("/resource/realpath")
 public class RealPathResourceController extends FileResourceController {
 
+    private static final String[] RESTRICTED_FOLDERS = {"WEB-INF", "\\WEB-INF", "/WEB-INF"};
+
     protected File file;
 
     public RealPathResourceController() {
@@ -41,6 +44,13 @@ public class RealPathResourceController extends FileResourceController {
 
     @Override
     public void prepareExecution() throws UnifyException {
+        String resourceName = getResourceName().toUpperCase();
+        for(String restrictedFolder: RESTRICTED_FOLDERS) {
+            if (resourceName.startsWith(restrictedFolder)) {
+                throw new UnifyException(UnifyWebErrorConstants.RESOURCE_ACCESS_DENIED);
+            }
+        }
+
         super.prepareExecution();
         file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), getResourceName()));
         if (file.exists()) {
