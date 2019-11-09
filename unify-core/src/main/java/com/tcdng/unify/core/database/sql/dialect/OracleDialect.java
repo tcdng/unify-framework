@@ -132,7 +132,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
                 sb.append(' ');
             }
             sb.append("MODIFY ");
-            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
             sqlList.add(sb.toString());
             StringUtils.truncate(sb);
             return sqlList;

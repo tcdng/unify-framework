@@ -198,7 +198,7 @@ public class JasperReportsServer extends AbstractReportServer {
                     }
 
                     ReportFilter rootFilter = report.getFilter();
-                    if (rootFilter != null) {
+                    if (rootFilter != null && !(rootFilter.isCompound() && !rootFilter.isSubFilters())) {
                         buildNativeQueryFilters(nqb, rootFilter);
                     }
 
