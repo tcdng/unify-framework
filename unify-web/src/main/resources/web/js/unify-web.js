@@ -2961,7 +2961,6 @@ ux.rigTreeExplorer = function(rgp) {
 	}
 	
 	tdat.selList = selList;
-	ux.disableWinContextMenu();
 }
 
 ux.treeMenuClickHandler = function(uEv) {
@@ -4058,6 +4057,7 @@ ux.padRight = function(text, ch, length) {
 }
 
 /** Mouse */
+ux.actRightClick = false;
 ux.wireRightClickHandler = function(evp, handler) {
 	evp.uRightHandler = handler;
 	return ux.onRightClickHandler;
@@ -4065,6 +4065,7 @@ ux.wireRightClickHandler = function(evp, handler) {
 
 ux.onRightClickHandler = function(uEv) {
 	if (uEv.mButton == UNIFY_RIGHT_BUTTON) {
+		ux.actRightClick = true;
 		uEv.evp.uRightHandler(uEv);
 	}
 }
@@ -4191,8 +4192,6 @@ ux.setHiddenValues = function(references, hiddenValues) {
 }
 
 /** Document functions and event handlers */
-var menuContextOff = false;
-
 ux.init = function() {
 	ux.resizeTimeout = null;
 	// Set document keydown handler
@@ -4202,16 +4201,16 @@ ux.init = function() {
 	
 	// Register self as extension
 	ux.registerExtension("ux", ux);
-}
-
-ux.disableWinContextMenu = function() {
-	if (!menuContextOff) {
-		window.oncontextmenu = function () {
-		    return false; // Cancel default menu
+	
+	// Override window menu context
+	window.oncontextmenu = function (uEv) {
+		if (ux.actRightClick) {
+			return ux.actRightClick = false;
 		}
-
-		menuContextOff = true;
+		
+	    return true; // Do default
 	}
+
 }
 
 ux.documentKeydownHandler = function(uEv) {
