@@ -553,7 +553,7 @@ public class Report {
                 throw new IllegalStateException("Can not have multiple root compound filter.");
             }
 
-            ReportFilter reportFilter = new ReportFilter(op, new ArrayList<ReportFilter>());
+            ReportFilter reportFilter = new ReportFilter(op);
             if (!filters.isEmpty()) {
                 filters.peek().getSubFilterList().add(reportFilter);
             }
@@ -610,6 +610,10 @@ public class Report {
         }
 
         public Report build() throws UnifyException {
+            if (rootFilter == null) {
+                rootFilter = new ReportFilter(RestrictionType.AND);
+            }
+            
             Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
                     table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout, reportParameters,
                     pageWidth, pageHeight, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,

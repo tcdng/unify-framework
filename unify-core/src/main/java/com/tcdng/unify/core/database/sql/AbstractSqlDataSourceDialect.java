@@ -472,8 +472,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" ");
         }
-        sb.append("DROP CONSTRAINT ")
-                .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbForeignKeyName));
+        // sb.append("DROP CONSTRAINT ")
+        // .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(),
+        // dbForeignKeyName));
+        sb.append("DROP CONSTRAINT ").append(dbForeignKeyName);
         return sb.toString();
     }
 
@@ -526,8 +528,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" ");
         }
-        sb.append("DROP CONSTRAINT ").append(
-                SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbUniqueConstraintName));
+//        sb.append("DROP CONSTRAINT ").append(
+//                SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbUniqueConstraintName));
+        sb.append("DROP CONSTRAINT ").append(dbUniqueConstraintName);
         return sb.toString();
     }
 
@@ -571,8 +574,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, boolean format)
             throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("DROP INDEX ")
-                .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbIndexName));
+//        sb.append("DROP INDEX ")
+//                .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbIndexName));
+        sb.append("DROP INDEX ").append(dbIndexName);
         return sb.toString();
     }
 
@@ -1706,6 +1710,33 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 }
 
                 sb.append(" NULL");
+            }
+        }
+    }
+
+    protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlColumnAlterInfo sqlColumnAlterInfo) throws UnifyException {
+        SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+        sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
+        sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                sqlFieldSchemaInfo.getScale());
+
+        if (sqlFieldSchemaInfo.isPrimaryKey()) {
+            sb.append(" PRIMARY KEY NOT NULL");
+        } else {
+            if (sqlColumnAlterInfo.isDefaultChange()) {
+                if (sqlFieldSchemaInfo.isWithDefaultVal()) {
+                    sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                }
+            }
+
+            if (sqlColumnAlterInfo.isNullableChange()) {
+                if (!sqlFieldSchemaInfo.isNullable()) {
+                    sb.append(" NOT NULL");
+                } else {
+                    sb.append(" NULL");
+                }
             }
         }
     }
