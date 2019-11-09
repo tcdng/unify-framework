@@ -88,6 +88,18 @@ public class ContentPanel extends AbstractPanel {
         return getPrefixedId("tabimg_") + index;
     }
 
+    public String getTabPaneId() throws UnifyException {
+        return getPrefixedId("tp_");
+    }
+
+    public String getMenuId() throws UnifyException {
+        return getPrefixedId("m_");
+    }
+
+    public String getMenuBaseId() throws UnifyException {
+        return getPrefixedId("mb_");
+    }
+
     public boolean isSidebar() throws UnifyException {
         return getUplAttribute(UplElementReferences.class, "sidebar") != null;
     }

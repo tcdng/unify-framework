@@ -42,15 +42,17 @@ import com.tcdng.unify.web.ui.writer.AbstractPanelWriter;
 public class ContentPanelWriter extends AbstractPanelWriter {
 
     private static final String CPREMOTE_CATEGORYBASE = "cpcat";
-    
+
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         ContentPanel contentPanel = (ContentPanel) widget;
 
         // Write content variables
         writer.write("ux.rigContentPanel({");
-        writer.write("\"pHintPanelId\":\"").write(contentPanel.getHintPanelId()).write("\"");
+        writer.write("\"pId\":\"").write(contentPanel.getId()).write("\"");
+        writer.write(",\"pHintPanelId\":\"").write(contentPanel.getHintPanelId()).write("\"");
         if (contentPanel.getPageCount() > 0) {
+            // Close image
             String closeImgId = contentPanel.getTabItemImgId(contentPanel.getPageIndex());
             writer.write(",\"pCloseImgId\":\"").write(closeImgId).write("\"");
         }
@@ -84,6 +86,16 @@ public class ContentPanelWriter extends AbstractPanelWriter {
             }
 
             writer.write("]");
+        }
+
+        if (contentPanel.isTabbed() && contentPanel.getPageCount() > 0) {
+            ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
+            writer.write(",\"pTabPaneId\":\"").write(contentPanel.getTabPaneId()).write("\"");
+            writer.write(",\"pMenuId\":\"").write(contentPanel.getMenuId()).write("\"");
+            writer.write(",\"pClosePath\":\"").writeContextURL(currentContentInfo.getClosePath()).write("\"");
+            // TODO
+            writer.write(",\"pCloseOtherPath\":\"").writeContextURL(currentContentInfo.getClosePath()).write("\"");
+            writer.write(",\"pCloseAllPath\":\"").writeContextURL(currentContentInfo.getClosePath()).write("\"");
         }
 
         writer.write("});");
@@ -147,7 +159,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         if (contentPanel.isTabbed()) {
             writer.write("<div style=\"display:table-row;width:100%;\">");
             writer.write("<div style=\"display:table-cell;\">");
-            writer.write("<div class=\"cptabbar\">");
+            writer.write("<div id=\"").write(contentPanel.getTabPaneId()).write("\" class=\"cptabbar\">");
 
             writer.write("<ul class=\"cptab\">");
             for (int i = 0; i < contentPanel.getPageCount(); i++) {
@@ -190,6 +202,25 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
             writer.write("</div>");
             writer.write("</div>");
+            writer.write("</div>");
+
+            // Menu
+            String menuId = contentPanel.getMenuId();
+            writer.write("<div");
+            writeTagId(writer, menuId);
+            writeTagStyleClass(writer, "contentpanel-popup");
+            writer.write(">");
+            writer.write("<ul id=\"").write(contentPanel.getMenuBaseId()).write("\">");
+            writer.write("<li><a class=\"mitem\" id=\"").write(menuId + "_c").write("\">");
+            writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.close}"));
+            writer.write("</a></li>");
+            writer.write("<li><a class=\"mitem\" id=\"").write(menuId + "_cot").write("\">");
+            writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closeothertabs}"));
+            writer.write("</a></li>");
+            writer.write("<li class=\"msep\"><a class=\"mitem\" id=\"").write(menuId + "_cat").write("\">");
+            writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closealltabs}"));
+            writer.write("</a></li>");
+            writer.write("</ul>");
             writer.write("</div>");
         }
         // End tabs

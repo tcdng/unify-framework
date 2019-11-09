@@ -1052,7 +1052,23 @@ ux.rigContentPanel = function(rgp) {
 		var currIdx = rgp.pCurIdx;
 		for(var i = 0; i < rgp.pContent.length; i++) {
 			var cnt = rgp.pContent[i];
-			if (i != currIdx) {
+			if (i == currIdx) {
+				if (i > 0) {
+					var evp = {};
+					evp.uTabPaneId = rgp.pTabPaneId;
+					evp.uMenuId = rgp.pMenuId;
+					ux.attachEventHandler(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
+							evp);
+
+//					var menu = rgp.pMenu;
+//					for(var i = 0; i < menu.items.length; i++) {
+//						var menuItem = menu.items[i];
+//						var evp = ux.newTreeEvPrm(rgp);
+//						evp.uMenuCode = menuItem.code;
+//						ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
+//					}
+				}
+			} else {
 				var evp = {};
 				evp.uOpenPath = cnt.openPath;
 				ux.attachEventHandler(_id(cnt.tabId), "click", ux.contentOpen,
@@ -1068,6 +1084,20 @@ ux.rigContentPanel = function(rgp) {
 		}
 		
 	}
+}
+
+ux.contentOpenTabMenu = function(uEv) {
+	var evp = uEv.evp;
+	var loc = ux.getExactPointerCoordinates(uEv);
+	// Show menu
+	var openPrm = {};
+	openPrm.popupId = evp.uMenuId;
+	openPrm.relFrameId = evp.uTabPaneId;
+	openPrm.stayOpenForMillSec = UNIFY_DEFAULT_POPUP_TIMEOUT;
+	openPrm.forceReopen = true;
+	openPrm.uTrg = uEv.uTrg;
+	openPrm.uLoc = loc;
+	ux.doOpenPopup(openPrm);
 }
 
 ux.contentOpen  = function(uEv) {
