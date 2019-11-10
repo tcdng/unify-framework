@@ -1050,23 +1050,22 @@ ux.rigContentPanel = function(rgp) {
 		ux.postToPath(rgp.pImmURL);
 	} else {
 		var currIdx = rgp.pCurIdx;
+		var menuId = rgp.pMenuId;
+		var uId = rgp.pId;
 		for(var i = 0; i < rgp.pContent.length; i++) {
 			var cnt = rgp.pContent[i];
 			if (i == currIdx) {
 				if (i > 0) {
 					var evp = {};
 					evp.uTabPaneId = rgp.pTabPaneId;
-					evp.uMenuId = rgp.pMenuId;
+					evp.uMenuId = menuId;
 					ux.attachEventHandler(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
 							evp);
-
-//					var menu = rgp.pMenu;
-//					for(var i = 0; i < menu.items.length; i++) {
-//						var menuItem = menu.items[i];
-//						var evp = ux.newTreeEvPrm(rgp);
-//						evp.uMenuCode = menuItem.code;
-//						ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
-//					}
+					
+					// Wire menu events
+					ux.contentAttachClose(uId, cnt, "mic_", "CL");
+					ux.contentAttachClose(uId, cnt, "mico_", "CLO");
+					ux.contentAttachClose(uId, cnt, "mica_", "CLA");
 				}
 			} else {
 				var evp = {};
@@ -1118,6 +1117,14 @@ ux.contentOpen  = function(uEv) {
 	
 	evp.uURL = path;
 	ux.post(uEv);
+}
+
+ux.contentAttachClose = function(uId, cnt, type, mode) {
+	var evp = {};
+	evp.uSendTrg = mode;
+	evp.uURL = cnt.closePath;
+	ux.attachEventHandler(_id(type + uId), "click", ux.post,
+			evp);
 }
 
 /** Fixed content panel */

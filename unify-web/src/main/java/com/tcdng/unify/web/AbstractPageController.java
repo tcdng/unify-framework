@@ -28,6 +28,7 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.constant.ClosePageMode;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.DataTransferWidget;
@@ -135,10 +136,14 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
 
     @Action
     public final String closePage() throws UnifyException {
-        onClosePage();
+        ClosePageMode mode = getRequestTarget(ClosePageMode.class);
+        if (!ClosePageMode.CLOSE_OTHERS.equals(mode)) {
+            onClosePage();
 
-        // Remove controller from session, effectively terminating self
-        removeSessionAttribute(page.getSessionId());
+            // Remove controller from session, effectively terminating self
+            removeSessionAttribute(page.getSessionId());
+        }
+
         return ResultMappingConstants.CLOSE;
     }
 

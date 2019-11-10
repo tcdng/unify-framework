@@ -89,13 +89,8 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         }
 
         if (contentPanel.isTabbed() && contentPanel.getPageCount() > 0) {
-            ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
             writer.write(",\"pTabPaneId\":\"").write(contentPanel.getTabPaneId()).write("\"");
             writer.write(",\"pMenuId\":\"").write(contentPanel.getMenuId()).write("\"");
-            writer.write(",\"pClosePath\":\"").writeContextURL(currentContentInfo.getClosePath()).write("\"");
-            // TODO
-            writer.write(",\"pCloseOtherPath\":\"").writeContextURL(currentContentInfo.getClosePath()).write("\"");
-            writer.write(",\"pCloseAllPath\":\"").writeContextURL(currentContentInfo.getClosePath()).write("\"");
         }
 
         writer.write("});");
@@ -211,13 +206,14 @@ public class ContentPanelWriter extends AbstractPanelWriter {
             writeTagStyleClass(writer, "contentpanel-popup");
             writer.write(">");
             writer.write("<ul id=\"").write(contentPanel.getMenuBaseId()).write("\">");
-            writer.write("<li><a class=\"mitem\" id=\"").write(menuId + "_c").write("\">");
+            writer.write("<li><a class=\"mitem\" id=\"").write(contentPanel.getMenuCloseId()).write("\">");
             writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.close}"));
             writer.write("</a></li>");
-            writer.write("<li><a class=\"mitem\" id=\"").write(menuId + "_cot").write("\">");
+            writer.write("<li><a class=\"mitem\" id=\"").write(contentPanel.getMenuCloseOtherId()).write("\">");
             writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closeothertabs}"));
             writer.write("</a></li>");
-            writer.write("<li class=\"msep\"><a class=\"mitem\" id=\"").write(menuId + "_cat").write("\">");
+            writer.write("<li class=\"msep\"><a class=\"mitem\" id=\"").write(contentPanel.getMenuCloseAllId())
+                    .write("\">");
             writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closealltabs}"));
             writer.write("</a></li>");
             writer.write("</ul>");
