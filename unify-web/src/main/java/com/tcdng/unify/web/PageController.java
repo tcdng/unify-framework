@@ -83,4 +83,31 @@ public interface PageController extends UserInterfaceController {
      *             if an error occurs
      */
     String index() throws UnifyException;
+
+    /**
+     * Executes a page open action.
+     * 
+     * @return the result mapping name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String openPage() throws UnifyException;
+
+    /**
+     * Executes a page save action.
+     * 
+     * @return the result mapping name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String savePage() throws UnifyException;
+
+    /**
+     * Executes a page close action.
+     * 
+     * @return the result mapping name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String closePage() throws UnifyException;
 }
