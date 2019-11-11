@@ -23,7 +23,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.web.constant.RealPathConstants;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.DownloadLinkGrid;
@@ -46,7 +45,7 @@ public class DownloadLinkGridWriter extends AbstractControlWriter {
         writeTagAttributes(writer, downloadLinkGrid);
         writer.write(">");
         writer.write("<div><span class=\"dlgcatcap\">");
-        writer.writeWithHtmlEscape(RealPathConstants.DOWNLOAD_FOLDER);
+        writer.writeWithHtmlEscape(downloadLinkGrid.getCaption());
         writer.write("</span></div>");
         List<String> resourceList = downloadLinkGrid.getResourceList();
         if (DataUtils.isNotBlank(resourceList)) {
