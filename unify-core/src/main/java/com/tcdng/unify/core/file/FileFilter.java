@@ -42,6 +42,10 @@ public class FileFilter implements java.io.FileFilter {
         this(prefixes, suffixes, false);
     }
 
+    public FileFilter(boolean fileOnly) {
+        this(null, null, fileOnly);
+    }
+
     public FileFilter(Set<String> prefixes, Set<String> suffixes, boolean fileOnly) {
         this.prefixes = DataUtils.unmodifiableSet(prefixes);
         this.suffixes = DataUtils.unmodifiableSet(suffixes);

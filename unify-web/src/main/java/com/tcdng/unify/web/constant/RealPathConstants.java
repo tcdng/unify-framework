@@ -13,22 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.controller;
 
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.web.constant.RealPathConstants;
+package com.tcdng.unify.web.constant;
 
 /**
- * Resource controller for fetching file downloading resources from container
- * download path.
+ * Real path constants.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("/resource/downloadpath")
-public class DownloadPathResourceController extends RealPathResourceController {
+public interface RealPathConstants {
 
-    public DownloadPathResourceController() {
-        super(RealPathConstants.DOWNLOAD_FOLDER);
-    }
+    String DOWNLOAD_FOLDER = "WEB-INF/download/";
 }

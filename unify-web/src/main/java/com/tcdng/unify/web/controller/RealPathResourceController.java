@@ -23,6 +23,7 @@ import java.io.InputStream;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 
 /**
@@ -38,26 +39,39 @@ public class RealPathResourceController extends FileResourceController {
 
     protected File file;
 
+    private String subfolder;
+    
     public RealPathResourceController() {
+        this(null);
+    }
+
+    public RealPathResourceController(String subfolder) {
         super(false);
+        this.subfolder = subfolder;
     }
 
     @Override
     public void prepareExecution() throws UnifyException {
-        String resourceName = getResourceName().toUpperCase();
-        for(String restrictedFolder: RESTRICTED_FOLDERS) {
-            if (resourceName.startsWith(restrictedFolder)) {
-                throw new UnifyException(UnifyWebErrorConstants.RESOURCE_ACCESS_DENIED);
-            }
+        String resourceName = getResourceName();
+        if (!StringUtils.isBlank(subfolder)) {
+            resourceName = subfolder + resourceName;
+        } else {
+            // Apply restrictions only on direct real path access
+            String uResourceName = resourceName.toUpperCase();
+            for(String restrictedFolder: RESTRICTED_FOLDERS) {
+                if (uResourceName.startsWith(restrictedFolder)) {
+                    throw new UnifyException(UnifyWebErrorConstants.RESOURCE_ACCESS_DENIED);
+                }
+            }            
         }
-
+        
         super.prepareExecution();
-        file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), getResourceName()));
+        file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), resourceName));
         if (file.exists()) {
             setContentLength(file.length());
         }
     }
-
+    
     @Override
     protected InputStream getInputStream() throws UnifyException {
         if (file != null && file.exists()) {

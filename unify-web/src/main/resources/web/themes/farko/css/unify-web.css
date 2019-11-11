@@ -474,6 +474,12 @@ z-index:400;}
 /** Decimal field */
 .ui-decimal {text-align: right; padding-right: 4px;}
 
+/** Download link grid */
+.ui-downloadlinkgrid {}
+.ui-downloadlinkgrid .dlgcatcap{display:block; background-color:#F0F0F0; font-size:18px;
+    padding:4px 4px; vertical-align:middle; margin-bottom:8px;}
+.ui-downloadlinkgrid .dlglink{font-size:14px; text-decoration:underline;cursor: pointer;}
+
 /** Drop-down with checkbox list */
 .ui-dropdowncheckboxlist {width:180px;}
 .ui-dropdowncheckboxlist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
