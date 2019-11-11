@@ -451,7 +451,7 @@ public final class ImageUtils {
      *             if an error occurs
      */
     public static String encodeImageToBase64String(byte[] image) throws Exception {
-        return new String(Base64.encodeBase64(image));
+        return new String(Base64.encodeBase64(image), "UTF-8");
     }
 
     /**
