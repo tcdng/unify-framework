@@ -29,10 +29,15 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.StreamReaderDelegate;
+import javax.xml.transform.sax.SAXSource;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
@@ -78,12 +83,14 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
     public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
         Unmarshaller unmarshaller = jaxbContextPools.get(type).getUnmarshallerPool().borrowObject();
         try {
+            XMLReader xmlReader = getSkipDTDValidationReader();
             if (charset == null) {
-                return (T) unmarshaller.unmarshal(inputStream);
+                return (T) unmarshaller.unmarshal(new SAXSource(xmlReader, new InputSource(inputStream)));
             } else {
-                return (T) unmarshaller.unmarshal(new InputStreamReader(inputStream, charset));
+                return (T) unmarshaller.unmarshal(
+                        new SAXSource(xmlReader, new InputSource(new InputStreamReader(inputStream, charset))));
             }
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             throwOperationErrorException(e);
         } finally {
             jaxbContextPools.get(type).getUnmarshallerPool().returnObject(unmarshaller);
@@ -96,8 +103,9 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
     public <T> T unmarshal(Class<T> type, Reader reader) throws UnifyException {
         Unmarshaller unmarshaller = jaxbContextPools.get(type).getUnmarshallerPool().borrowObject();
         try {
-            return (T) unmarshaller.unmarshal(reader);
-        } catch (JAXBException e) {
+            XMLReader xmlReader = getSkipDTDValidationReader();
+            return (T) unmarshaller.unmarshal(new SAXSource(xmlReader, new InputSource(reader)));
+        } catch (Exception e) {
             throwOperationErrorException(e);
         } finally {
             jaxbContextPools.get(type).getUnmarshallerPool().returnObject(unmarshaller);
@@ -282,6 +290,14 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
 
         }
 
+    }
+
+    private XMLReader getSkipDTDValidationReader() throws Exception {
+        XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+        // Disable JAXB DTD validation
+        xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        xmlReader.setFeature("http://xml.org/sax/features/validation", false);
+        return xmlReader;
     }
 
     private class SkipNamespaceXMLReader extends StreamReaderDelegate {
