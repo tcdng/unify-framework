@@ -140,6 +140,7 @@ public class HttpApplicationServlet extends HttpServlet {
                 uplComponentWriterManager = (UplComponentWriterManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
             } catch (Exception e) {
+                e.printStackTrace();
                 if (unifyContainer != null && unifyContainer.isStarted()) {
                     unifyContainer.shutdown();
                 }
