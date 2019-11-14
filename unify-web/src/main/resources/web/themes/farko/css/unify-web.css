@@ -412,7 +412,7 @@ z-index:400;}
 .ui-assignmentbox .abrow {display:table-row;}
 .ui-assignmentbox .abscell {display:table-cell;}
 .ui-assignmentbox .abfieldset {padding-top: 4px; padding-bottom: 4px; border: 1px solid white;}
-.ui-assignmentbox .abmselect {width: 280px;height:140px; border: 1px solid #C8C8C8;}
+.ui-assignmentbox .abmselect {width: 360px;height:220px; border: 1px solid #C8C8C8;}
 .ui-assignmentbox .abbcell {display:table-cell;text-align:center;vertical-align:middle;padding:8px;}
 .ui-assignmentbox .abbutton {width:32px; height: 24px; padding:0px; margin:2px;}
 .ui-assignmentbox .abbutton:hover:enabled {color: #FFF; background-color: #6080F0;}
