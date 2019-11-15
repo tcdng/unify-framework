@@ -37,7 +37,7 @@ public @interface GatewayAction {
 
     String description();
 
-    boolean restricted() default true;
+    boolean restricted() default false;
 
     boolean discoverable() default true;
 }
