@@ -24,6 +24,7 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.logging.EventType;
+import com.tcdng.unify.core.logging.FieldAudit;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Panel;
@@ -186,10 +187,11 @@ public interface RequestContextUtil extends UnifyComponent {
      * Returns the message icon of confirmation message from current request
      * context.
      * 
-     * @throws UnifyException if an error occurs
+     * @throws UnifyException
+     *             if an error occurs
      */
     MessageIcon getRequestConfirmMessageIcon() throws UnifyException;
-    
+
     /**
      * Returns a converted value of the request confirm message from current request
      * context.
@@ -478,6 +480,23 @@ public interface RequestContextUtil extends UnifyComponent {
      *             occurs.
      */
     <T extends Entity> void logUserEvent(EventType eventType, T oldRecord, T newRecord) throws UnifyException;
+
+    /**
+     * Logs a user event using supplied event, record type and audit list.
+     * 
+     * @param eventType
+     *            the event type
+     * @param entityClass
+     *            the record type
+     * @param recordId
+     *            the record ID
+     * @param fieldAuditList
+     *            the field audit list
+     * @throws UnifyException
+     *             If an error occurs.
+     */
+    void logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object recordId,
+            List<FieldAudit> fieldAuditList) throws UnifyException;
 
     /**
      * Clears all request context data.

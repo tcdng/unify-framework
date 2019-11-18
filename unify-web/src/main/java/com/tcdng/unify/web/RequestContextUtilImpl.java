@@ -33,6 +33,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.logging.EventLogger;
 import com.tcdng.unify.core.logging.EventType;
+import com.tcdng.unify.core.logging.FieldAudit;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.Document;
@@ -402,6 +403,12 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     @Override
     public <T extends Entity> void logUserEvent(EventType eventType, T oldRecord, T newRecord) throws UnifyException {
         eventLogger.logUserEvent(eventType, oldRecord, newRecord);
+    }
+
+    @Override
+    public void logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object recordId,
+            List<FieldAudit> fieldAuditList) throws UnifyException {
+        eventLogger.logUserEvent(eventType, entityClass, recordId, fieldAuditList);
     }
 
     @Override
