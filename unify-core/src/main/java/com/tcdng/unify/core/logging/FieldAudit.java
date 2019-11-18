@@ -47,4 +47,8 @@ public class FieldAudit {
     public Object getNewValue() {
         return newValue;
     }
+
+    public void setNewValue(Object newValue) {
+        this.newValue = newValue;
+    }
 }
