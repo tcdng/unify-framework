@@ -56,7 +56,7 @@ public class DummyEventLogger extends AbstractUnifyComponent implements EventLog
     }
 
     @Override
-    public boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass,
+    public boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object id,
             List<FieldAudit> fieldAuditList) throws UnifyException {
         return false;
     }

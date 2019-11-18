@@ -106,12 +106,14 @@ public interface EventLogger extends UnifyComponent {
      *            the event type
      * @param entityClass
      *            the record type
+     * @param id
+     *            the record ID
      * @param fieldAuditList
      *            the field audit list
      * @return true if event was successfully logged
      * @throws UnifyException
      *             If an error occurs.
      */
-    boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass, List<FieldAudit> fieldAuditList)
-            throws UnifyException;
+    boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object id,
+            List<FieldAudit> fieldAuditList) throws UnifyException;
 }
