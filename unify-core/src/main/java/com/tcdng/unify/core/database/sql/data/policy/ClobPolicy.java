@@ -85,7 +85,7 @@ public class ClobPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
-    public String getAltDefault() {
+    public String getAltDefault(Class<?> fieldType) {
         return null;
     }
 

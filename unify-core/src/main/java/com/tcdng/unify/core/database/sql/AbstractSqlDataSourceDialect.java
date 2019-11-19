@@ -1360,7 +1360,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return Collections.emptyList();
     }
 
-    protected void appendCreateTableColumnSQLL(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+    protected void appendCreateTableColumnSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean onAlter) {
         sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
