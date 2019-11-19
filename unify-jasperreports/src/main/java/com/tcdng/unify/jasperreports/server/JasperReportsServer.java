@@ -20,6 +20,9 @@ import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.Collection;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -80,6 +83,9 @@ public class JasperReportsServer extends AbstractReportServer {
     @Configurable("20")
     private int reportExpirationPeriod;
 
+    @Configurable
+    private boolean logDebug;
+
     public void setJasperReportCache(JasperReportsCache jasperReportsCache) {
         this.jasperReportsCache = jasperReportsCache;
     }
@@ -94,6 +100,12 @@ public class JasperReportsServer extends AbstractReportServer {
                 (JasperReportsLayoutManager) getComponent("jasperreports-tabularimagesonlylayoutmanager"));
         registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER,
                 (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
+
+        if (!logDebug) {
+            Logger.getLogger("net.sf.jasperreports").setLevel((Level) Level.ERROR);
+            Logger.getLogger("org.apache.commons.beanutils").setLevel((Level) Level.ERROR);
+            Logger.getLogger("org.apache.commons.digester").setLevel((Level) Level.ERROR);
+        }
     }
 
     @Override
