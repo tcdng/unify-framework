@@ -85,7 +85,7 @@ public class BlobPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
-    public String getAltDefault() {
+    public String getAltDefault(Class<?> fieldType) {
         return null;
     }
 

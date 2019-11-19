@@ -79,7 +79,7 @@ public class TimestampUTCPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
-    public String getAltDefault() {
+    public String getAltDefault(Class<?> fieldType) {
         return "'0000-00-00 00:00:00'";
     }
 

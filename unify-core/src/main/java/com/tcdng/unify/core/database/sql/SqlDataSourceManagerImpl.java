@@ -35,6 +35,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.DataSourceManager;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -168,7 +169,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                         } else {
                             unique = idxName.indexOf(SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT) > 0;
                         }
-                        
+
                         TableConstraint tConst = managedTableConstraints.get(idxName);
                         if (tConst == null) {
                             tConst = new TableConstraint(idxName, null, unique);
@@ -518,15 +519,31 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     private SqlColumnAlterInfo checkSqlColumnAltered(SqlDataSourceDialect sqlDataSourceDialect,
             SqlFieldInfo sqlfieldInfo, SqlColumnInfo columnInfo) throws UnifyException {
         boolean nullableChange = columnInfo.isNullable() != sqlfieldInfo.isNullable();
-
-        boolean defaultChange = !(((StringUtils.isBlank(columnInfo.getDefaultVal()) || columnInfo.getDefaultVal()
-                .equals(sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType()).getAltDefault()))
-                && StringUtils.isBlank(sqlfieldInfo.getDefaultVal()))
-                || (columnInfo.getDefaultVal() != null
-                        && columnInfo.getDefaultVal().equals(sqlfieldInfo.getDefaultVal())));
+        if (nullableChange) {
+            logDebug("Nullable Change: columnInfo.isNullable() = {0}, sqlfieldInfo.isNullable() = {1}...",
+                    columnInfo.isNullable(), sqlfieldInfo.isNullable());
+        }
 
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
+        boolean defaultChange = !DataUtils.equals(columnInfo.getDefaultVal(), sqlfieldInfo.getDefaultVal());
+        if (defaultChange && StringUtils.isBlank(sqlfieldInfo.getDefaultVal())) {
+            if (columnInfo.getDefaultVal().equals(sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()))) {
+                defaultChange = false;
+            }
+        }
+
+        if (defaultChange) {
+            logDebug(
+                    "Default Change: columnInfo.getDefaultVal() = {0}, sqlfieldInfo.getDefaultVal() = {1}, sqlDataTypePolicy.getAltDefault() = {2}...",
+                    columnInfo.getDefaultVal(), sqlfieldInfo.getDefaultVal(),
+                    sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()));
+        }
+
         boolean typeChange = columnInfo.getSqlType() != sqlDataTypePolicy.getSqlType();
+        if (typeChange) {
+            logDebug("Type Change: columnInfo.getSqlType() = {0}, sqlDataTypePolicy.getSqlType() = {1}...",
+                    columnInfo.getSqlType(), sqlDataTypePolicy.getSqlType());
+        }
 
         boolean lenChange = false;
         if (!sqlDataTypePolicy.isFixedLength()) {
@@ -547,6 +564,13 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                     lenChange = true;
                 }
             }
+        }
+
+        if (lenChange) {
+            logDebug(
+                    "Length Change: columnInfo.getSize() = {0}, columnInfo.getDecimalDigits() = {1}, sqlfieldInfo.getLength() = {2}, sqlfieldInfo.getPrecision() = {3}, sqlfieldInfo.getScale() = {4}...",
+                    columnInfo.getSize(), columnInfo.getDecimalDigits(), sqlfieldInfo.getLength(),
+                    sqlfieldInfo.getPrecision(), sqlfieldInfo.getScale());
         }
 
         return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
