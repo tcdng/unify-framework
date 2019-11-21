@@ -59,19 +59,31 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
         }
 
         if (isDeploymentMode()) {
-            logInfo("Checking datasources...");
-            for (String datasource : datasources) {
-                dataSourceManager.manageDataSource(datasource);
+            Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
+            boolean isDataSourcesManaged = false;
+            if (deploymentFeature == null) {
+                // Blank database. Manage data sources first time.
+                manageDataSources();
+                deploymentFeature = getFeature("deploymentVersion", "0.0");
+                isDataSourcesManaged = true;
             }
 
             if (grabClusterMasterLock()) {
                 logInfo("Checking application version information...");
-                Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
+                deploymentFeature = getFeature("deploymentVersion", "0.0");
                 String lastDeploymentVersion = deploymentFeature.getValue();
                 String versionToDeploy = getDeploymentVersion();
+                boolean isDeployNewVersion = VersionUtils.isNewerVersion(versionToDeploy, lastDeploymentVersion);
+                if (!isDataSourcesManaged) {
+                    // If not already managed, manage data sources if not production mode or if
+                    // deploying new version
+                    if (!isProductionMode() || isDeployNewVersion) {
+                        manageDataSources();
+                    }
+                }
 
                 // Do installation only if deployment version is new
-                if (VersionUtils.isNewerVersion(versionToDeploy, lastDeploymentVersion)) {
+                if (isDeployNewVersion) {
                     logInfo("Installing newer application version {0}. Current version is {1}.", versionToDeploy,
                             lastDeploymentVersion);
 
@@ -89,7 +101,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                     Feature lastDeploymentFeature = getFeature("lastDeploymentVersion", "0.0");
                     lastDeploymentFeature.setValue(lastDeploymentVersion);
                     db().updateByIdVersion(lastDeploymentFeature);
-                    
+
                     // Update current current deployment feature
                     deploymentFeature.setValue(versionToDeploy);
                     db().updateByIdVersion(deploymentFeature);
@@ -143,6 +155,13 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     protected abstract void onShutdown() throws UnifyException;
 
+    private void manageDataSources() throws UnifyException {
+        logInfo("Managing datasources...");
+        for (String datasource : datasources) {
+            dataSourceManager.manageDataSource(datasource);
+        }
+    }
+
     private void updateStaticReferenceTables() throws UnifyException {
         // Update reference tables
         logDebug("Updating static reference tables...");
@@ -172,13 +191,19 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     }
 
     private Feature getFeature(String code, String defaultVal) throws UnifyException {
-        Feature feature = db().find(new FeatureQuery().code(code));
-        if (feature == null) {
-            feature = new Feature();
-            feature.setCode(code);
-            feature.setValue(defaultVal);
-            db().create(feature);
+        try {
+            grabClusterMasterLock(); // Check integrity of cluster lock table
+            Feature feature = db().find(new FeatureQuery().code(code));
+            if (feature == null) {
+                feature = new Feature();
+                feature.setCode(code);
+                feature.setValue(defaultVal);
+                db().create(feature);
+            }
+            return feature;
+        } catch (UnifyException ue) {
         }
-        return feature;
+
+        return null;
     }
 }
