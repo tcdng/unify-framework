@@ -74,40 +74,45 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     @Override
     public void handleRequest(HttpRequestMethodType methodType, Object requestObject, Object responseObject)
             throws UnifyException {
-        HttpServletRequest request = (HttpServletRequest) requestObject;
-        String resolvedPath = request.getPathInfo();
-        if (resolvedPath != null && resolvedPath.endsWith("/")) {
-            resolvedPath = resolvedPath.substring(0, resolvedPath.length() - 1);
-        }
+        try {
+            HttpServletRequest request = (HttpServletRequest) requestObject;
+            String resolvedPath = request.getPathInfo();
+            if (resolvedPath != null && resolvedPath.endsWith("/")) {
+                resolvedPath = resolvedPath.substring(0, resolvedPath.length() - 1);
+            }
 
-        if (StringUtils.isBlank(resolvedPath)) {
-            resolvedPath = getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_HOME,
-                    ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
-        }
+            if (StringUtils.isBlank(resolvedPath)) {
+                resolvedPath = getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_HOME,
+                        ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
+            }
 
-        Charset charset = StandardCharsets.UTF_8;
-        if (request.getCharacterEncoding() != null) {
-            charset = Charset.forName(request.getCharacterEncoding());
-        }
+            Charset charset = StandardCharsets.UTF_8;
+            if (request.getCharacterEncoding() != null) {
+                charset = Charset.forName(request.getCharacterEncoding());
+            }
 
-        ClientRequest clientRequest =
-                new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
-        ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
+            ClientRequest clientRequest =
+                    new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
+            ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
-        if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
-            if (!remoteViewerList.isEmpty()) {
-                String origin = request.getHeader("origin");
-                if (remoteViewerList.contains(origin)) {
-                    HttpServletResponse response = (HttpServletResponse) responseObject;
-                    response.setHeader("Access-Control-Allow-Origin", origin);
-                    response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-                    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-                    response.setHeader("Access-Control-Max-Age", "600");
+            if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+                if (!remoteViewerList.isEmpty()) {
+                    String origin = request.getHeader("origin");
+                    if (remoteViewerList.contains(origin)) {
+                        HttpServletResponse response = (HttpServletResponse) responseObject;
+                        response.setHeader("Access-Control-Allow-Origin", origin);
+                        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+                        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                        response.setHeader("Access-Control-Max-Age", "600");
+                    }
                 }
             }
-        }
 
-        controllerManager.executeController(clientRequest, clientResponse);
+            controllerManager.executeController(clientRequest, clientResponse);
+        } catch (UnifyException ue) {
+            logError(ue);
+            throw ue;
+        }
     }
 
     @SuppressWarnings("unchecked")
