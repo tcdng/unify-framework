@@ -450,86 +450,91 @@ public class UnifyContainer {
 
         // Initialization
         started = true;
-        requestContextManager =
-                (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-        uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
+        try {
+            requestContextManager =
+                    (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+            uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
 
-        // Generate and install proxy business service objects
-        logInfo("Generating and installing proxy business service objects...");
-        for (UnifyComponentConfig unifyComponentConfig : managedBusinessServiceConfigList) {
-            Map<String, List<UnifyPluginInfo>> pluginMap = allPluginsBySocketMap.get(unifyComponentConfig.getName());
-            if (pluginMap == null) {
-                pluginMap = Collections.emptyMap();
+            // Generate and install proxy business service objects
+            logInfo("Generating and installing proxy business service objects...");
+            for (UnifyComponentConfig unifyComponentConfig : managedBusinessServiceConfigList) {
+                Map<String, List<UnifyPluginInfo>> pluginMap = allPluginsBySocketMap.get(unifyComponentConfig.getName());
+                if (pluginMap == null) {
+                    pluginMap = Collections.emptyMap();
+                }
+                UnifyComponentConfig proxyUnifyComponentConfig =
+                        generateInstallBusinessServiceProxyObjects(unifyComponentConfig, pluginMap);
+                InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(proxyUnifyComponentConfig.getName());
+                iuc.setUnifyComponentConfig(proxyUnifyComponentConfig);
             }
-            UnifyComponentConfig proxyUnifyComponentConfig =
-                    generateInstallBusinessServiceProxyObjects(unifyComponentConfig, pluginMap);
-            InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(proxyUnifyComponentConfig.getName());
-            iuc.setUnifyComponentConfig(proxyUnifyComponentConfig);
-        }
 
-        // Set proxy broadcast methods
-        logInfo("Setting broadcast proxy methods...");
-        for (BroadcastInfo broadcastInfo : broadcastInfoMap.values()) {
-            InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(broadcastInfo.getComponentName());
-            Method method = ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName(), String[].class);
-            broadcastInfo.setMethod(method);
-        }
-
-        logInfo("Generation and installation of proxy objects completed");
-
-        // Cluster manager
-        clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
-        userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
-
-        // Initialize utilities
-        ImageUtils.scanForPlugins();
-        DataUtils.registerDefaultFormatters((DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
-        
-        // Run application startup service
-        toConsole("Initializing application bootup service...");
-        String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
-        if (bootComponentName == null) {
-            bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTSERVICE;
-        }
-        applicationBootService = (BootService) getComponent(bootComponentName);
-        applicationBootService.startup();
-
-        toConsole("Application bootup service initialization completed.");
-
-        // Initialize interfaces
-        logInfo("Initializing container interfaces...");
-        initializeInterfaces();
-        logInfo("Container interfaces initialization complete.");
-
-        // Schedule periodic tasks
-        logInfo("Scheduling periodic tasks...");
-        TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-        for (Map.Entry<String, Map<String, Periodic>> entry1 : componentPeriodMethodMap.entrySet()) {
-            logInfo("Intializing component [{0}] with periodic methods...", entry1.getKey());
-            getComponent(entry1.getKey());
-            for (Map.Entry<String, Periodic> entry2 : entry1.getValue().entrySet()) {
-                Periodic pa = entry2.getValue();
-                PeriodicType periodicType = pa.value();
-                String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
-                TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType, entry1.getKey(),
-                        entry2.getKey(), taskStatusLoggerName, PERIODIC_EXECUTION_INITIAL_DELAY);
-                periodicTaskMonitorList.add(taskMonitor);
+            // Set proxy broadcast methods
+            logInfo("Setting broadcast proxy methods...");
+            for (BroadcastInfo broadcastInfo : broadcastInfoMap.values()) {
+                InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(broadcastInfo.getComponentName());
+                Method method = ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName(), String[].class);
+                broadcastInfo.setMethod(method);
             }
+
+            logInfo("Generation and installation of proxy objects completed");
+
+            // Cluster manager
+            clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+            userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
+
+            // Initialize utilities
+            ImageUtils.scanForPlugins();
+            DataUtils.registerDefaultFormatters((DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
+            
+            // Run application startup service
+            toConsole("Initializing application bootup service...");
+            String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
+            if (bootComponentName == null) {
+                bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTSERVICE;
+            }
+            applicationBootService = (BootService) getComponent(bootComponentName);
+            applicationBootService.startup();
+
+            toConsole("Application bootup service initialization completed.");
+
+            // Initialize interfaces
+            logInfo("Initializing container interfaces...");
+            initializeInterfaces();
+            logInfo("Container interfaces initialization complete.");
+
+            // Schedule periodic tasks
+            logInfo("Scheduling periodic tasks...");
+            TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
+            for (Map.Entry<String, Map<String, Periodic>> entry1 : componentPeriodMethodMap.entrySet()) {
+                logInfo("Intializing component [{0}] with periodic methods...", entry1.getKey());
+                getComponent(entry1.getKey());
+                for (Map.Entry<String, Periodic> entry2 : entry1.getValue().entrySet()) {
+                    Periodic pa = entry2.getValue();
+                    PeriodicType periodicType = pa.value();
+                    String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
+                    TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType, entry1.getKey(),
+                            entry2.getKey(), taskStatusLoggerName, PERIODIC_EXECUTION_INITIAL_DELAY);
+                    periodicTaskMonitorList.add(taskMonitor);
+                }
+            }
+            logInfo("Periodic task scheduling completed.");
+
+            // Open container interfaces to start servicing requests
+            openInterfaces();
+
+            // Start command processing thread
+            new CommandThread().start();
+
+            // Set start time to now
+            startTime = new Date();
+
+            // Container initialization completed
+            long startupTimeMillis = startTime.getTime() - startTimeMillis;
+            toConsole("Container initialization completed in " + startupTimeMillis + "ms.");
+        } catch (UnifyException ue) {
+            logError(ue);
+            throw ue;
         }
-        logInfo("Periodic task scheduling completed.");
-
-        // Open container interfaces to start servicing requests
-        openInterfaces();
-
-        // Start command processing thread
-        new CommandThread().start();
-
-        // Set start time to now
-        startTime = new Date();
-
-        // Container initialization completed
-        long startupTimeMillis = startTime.getTime() - startTimeMillis;
-        toConsole("Container initialization completed in " + startupTimeMillis + "ms.");
     }
 
     /**
