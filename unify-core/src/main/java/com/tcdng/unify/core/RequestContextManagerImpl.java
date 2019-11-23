@@ -95,7 +95,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
             return new RequestContext(null,
                     new SessionContext(ApplicationUtils.generateSessionContextId(), applicationLocale,
                             applicationTimeZone, "http://localhost", "/default", inetAddress.getHostName(),
-                            inetAddress.getHostAddress(), null, null, UserPlatform.DEFAULT));
+                            inetAddress.getHostAddress(), null, UserPlatform.DEFAULT));
         } catch (UnknownHostException e) {
         }
         return null;

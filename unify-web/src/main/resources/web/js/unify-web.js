@@ -45,6 +45,7 @@ ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
 ux.docSysInfoId = null;
+ux.docSessionId = null;
 
 ux.popupVisible = false;
 
@@ -65,7 +66,6 @@ ux.remoteView = null;
 ux.shortcuts = [];
 ux.pagenamealiases = [];
 ux.delayedpanelposting = [];
-ux.remoteviewsessions = [];
 
 ux.resizefunctions = {};
 ux.confirmstore = {};
@@ -102,20 +102,17 @@ ux.registerExtension = function(extLiteral, extObj) {
 }
 
 /** Basic * */
-ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId) {
+ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docSessionId) {
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
 	ux.docSysInfoId = docSysInfoId;
+	ux.docSessionId = docSessionId;
 }
 
 ux.processJSON = function(jsonstring) {
 	var jsonEval = eval("(" + jsonstring + ")");
 	ux.remoteView = jsonEval.remoteView;
-	if (ux.remoteView) {
-		ux.remoteviewsessions[ux.remoteView.view] = ux.remoteView.sessionID;
-	}
-
 	if (jsonEval.jsonResp) {
 		for (var j = 0; j < jsonEval.jsonResp.length; j++) {
 			var resp = jsonEval.jsonResp[j];
@@ -134,13 +131,13 @@ ux.processJSON = function(jsonstring) {
 ux.newEvPrm = function(rgp) {
 	var evp = {};
 	if (ux.remoteView) {
-		evp.uSessionID = ux.remoteView.sessionID;
 		evp.uViewer = ux.remoteView.view;
 	}
 
 	if (rgp.pCmdURL) {
 		evp.uURL = rgp.pCmdURL;
 	}
+
 	return evp;
 }
 
@@ -806,7 +803,6 @@ ux.rigDragAndDropPopup = function(rgp) {
 ux.loadRemoteDocViewPanel = function(rgp) {
 	var evp = {};
 	evp.uViewer = rgp.pWinPgNm;
-	evp.uSessionID = ux.remoteviewsessions[evp.uViewer];
 	evp.uURL = rgp.pRemoteURL;
 	evp.uLoginId = rgp.pLoginId;
 	evp.uUserName = rgp.pUserName;
@@ -818,7 +814,6 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 	// Resolve save path viewer
 	ux.cntSaveRemoteView = {};
 	ux.cntSaveRemoteView.view = evp.uViewer;
-	ux.cntSaveRemoteView.sessionID = evp.uSessionID;
 	
 	ux.postCommit(evp);
 }
@@ -1104,14 +1099,12 @@ ux.contentOpen  = function(uEv) {
 	var path = evp.uOpenPath;
 	evp.uRef = [];
 	evp.uViewer = null;
-	evp.uSessionID = null;
 	if (ux.cntSaveList && ux.cntSavePath) {
 		ux.cntOpenPath = evp.uOpenPath;
 		path = ux.cntSavePath;
 		evp.uRef = ux.cntSaveList;
 		if (ux.cntSaveIsRemote && ux.cntSaveRemoteView) {
 			evp.uViewer = ux.cntSaveRemoteView.view;
-			evp.uSessionID = ux.cntSaveRemoteView.sessionID;
 		}
 	}
 	
@@ -3435,11 +3428,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	if (isForm) {
 		if (evp.uViewer) {
 			pb.append("req_rv", evp.uViewer);
-			if (evp.uSessionID) {
-				pb.append("req_rsi", evp.uSessionID);
-			} else if (ux.remoteviewsessions[evp.uViewer]) {
-				pb.append("req_rsi", ux.remoteviewsessions[evp.uViewer]);
-			}
+			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
 		}
@@ -3457,11 +3446,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	} else {
 		if (evp.uViewer) {
 			pb += ("&req_rv=" + _enc(evp.uViewer));
-			if (evp.uSessionID) {
-				pb += ("&req_rsi=" + _enc(evp.uSessionID));
-			} else if (ux.remoteviewsessions[evp.uViewer]) {
-				pb += ("&req_rsi=" + _enc(ux.remoteviewsessions[evp.uViewer]));
-			}
+			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
 		}

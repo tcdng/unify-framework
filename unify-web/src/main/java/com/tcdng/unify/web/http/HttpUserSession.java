@@ -27,6 +27,7 @@ import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.core.util.ApplicationUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * HTTP user session.
@@ -40,10 +41,14 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     private SessionContext sessionContext;
 
-    public HttpUserSession(Locale locale, TimeZone timeZone, String uriBase, String contextPath, String remoteHost,
-            String remoteIpAddress, String remoteUser, String remoteViewer, UserPlatform platform) {
-        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), locale, timeZone,
-                uriBase, contextPath, remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
+    public HttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase, String contextPath,
+            String remoteHost, String remoteIpAddress, String remoteUser, UserPlatform platform) {
+        if (StringUtils.isBlank(sessionId)) {
+            sessionId = ApplicationUtils.generateSessionContextId();
+        }
+
+        sessionContext = new SessionContext(sessionId, locale, timeZone, uriBase, contextPath, remoteHost,
+                remoteIpAddress, remoteUser, platform);
     }
 
     @Override
@@ -59,11 +64,6 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
     @Override
     public String getRemoteUser() {
         return sessionContext.getRemoteUser();
-    }
-
-    @Override
-    public String getRemoteViewer() {
-        return sessionContext.getRemoteViewer();
     }
 
     @Override

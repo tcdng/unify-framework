@@ -241,7 +241,7 @@ public class HttpApplicationServlet extends HttpServlet {
                 httpSession.invalidate();
             }
             // Create single use session object
-            userSession = createHttpUserSession(request);
+            userSession = createHttpUserSession(request, null);
         } else {
             if (StringUtils.isNotBlank(request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
                 // Handle remote view
@@ -251,12 +251,9 @@ public class HttpApplicationServlet extends HttpServlet {
                 }
 
                 String sessionId = (String) request.getParameter(RequestParameterConstants.REMOTE_SESSION_ID);
-                if (StringUtils.isNotBlank(sessionId)) {
-                    userSession = (HttpUserSession) userSessionManager.getUserSession(sessionId);
-                }
-
+                userSession = (HttpUserSession) userSessionManager.getUserSession(sessionId);
                 if (userSession == null) {
-                    userSession = createHttpUserSession(request);
+                    userSession = createHttpUserSession(request, sessionId);
                     userSessionManager.addUserSession(userSession);
 
                     String userLoginId = request.getParameter(RequestParameterConstants.REMOTE_USERLOGINID);
@@ -272,7 +269,6 @@ public class HttpApplicationServlet extends HttpServlet {
                     userToken.setRoleCode(roleCode);
                     userSession.getSessionContext().setUserToken(userToken);
                 }
-
             } else {
                 // Handle document request
                 HttpSession httpSession = request.getSession();
@@ -281,7 +277,7 @@ public class HttpApplicationServlet extends HttpServlet {
                     synchronized (httpSession) {
                         userSession = (HttpUserSession) httpSession.getAttribute(HttpConstants.USER_SESSION);
                         if (userSession == null) {
-                            userSession = createHttpUserSession(request);
+                            userSession = createHttpUserSession(request, null);
                             httpSession.setAttribute(HttpConstants.USER_SESSION, userSession);
                         }
                     }
@@ -293,7 +289,7 @@ public class HttpApplicationServlet extends HttpServlet {
         return userSession;
     }
 
-    private HttpUserSession createHttpUserSession(HttpServletRequest request) throws UnifyException {
+    private HttpUserSession createHttpUserSession(HttpServletRequest request, String sessionId) throws UnifyException {
         String remoteIpAddress = request.getHeader("X-FORWARDED-FOR");
         if (remoteIpAddress == null || remoteIpAddress.trim().isEmpty()
                 || "unknown".equalsIgnoreCase(remoteIpAddress)) {
@@ -318,9 +314,8 @@ public class HttpApplicationServlet extends HttpServlet {
         }
 
         UserPlatform platform = detectRequestPlatform(request);
-        HttpUserSession userSession = new HttpUserSession(applicationLocale, applicationTimeZone, uriBase.toString(),
-                contextPath, request.getRemoteHost(), remoteIpAddress, request.getRemoteUser(),
-                (String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER), platform);
+        HttpUserSession userSession = new HttpUserSession( applicationLocale, applicationTimeZone, sessionId, uriBase.toString(),
+                contextPath, request.getRemoteHost(), remoteIpAddress, request.getRemoteUser(), platform);
         userSession.getSessionContext().setStickyAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
                 uplComponentWriterManager.getWriters(platform));
         userSession.setTransient(userSessionManager);
