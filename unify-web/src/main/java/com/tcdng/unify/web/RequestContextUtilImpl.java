@@ -35,6 +35,7 @@ import com.tcdng.unify.core.logging.EventLogger;
 import com.tcdng.unify.core.logging.EventType;
 import com.tcdng.unify.core.logging.FieldAudit;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
@@ -165,6 +166,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
                 request.getParameter(RequestParameterConstants.CONFIRM_MSGICON));
         setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM,
                 request.getParameter(RequestParameterConstants.CONFIRM_PARAM));
+        setRequestAttribute(RequestParameterConstants.REMOTE_VIEWER,
+                request.getParameter(RequestParameterConstants.REMOTE_VIEWER));
     }
 
     @Override
@@ -189,12 +192,12 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     @Override
     public String getRemoteViewer() throws UnifyException {
-        return getSessionContext().getRemoteViewer();
+        return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.REMOTE_VIEWER), null);
     }
 
     @Override
     public boolean isRemoteViewer() throws UnifyException {
-        return getSessionContext().isRemoteViewer();
+        return StringUtils.isNotBlank(getRemoteViewer());
     }
 
     @Override

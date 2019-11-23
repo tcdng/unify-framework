@@ -29,7 +29,7 @@ public final class ApplicationUtils {
 
     }
 
-    public static String generateSessionContextId() {
+    public static synchronized String generateSessionContextId() {
         return UUID.randomUUID().toString();
     }
 }

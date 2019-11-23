@@ -45,7 +45,7 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.write("<html ");
         writeTagAttributes(writer, document);
         writer.write(">");
-        
+
         // Head
         writer.write("<head>");
         // Write title
@@ -100,7 +100,7 @@ public class DocumentWriter extends AbstractPageWriter {
             }
         }
         writer.write("</head>");
-        
+
         // Body
         writer.write("<body class=\"dBody\"");
         String style = document.getStyle();
@@ -144,7 +144,7 @@ public class DocumentWriter extends AbstractPageWriter {
         // Set document properties
         writer.write("ux.setupDocument(\"").write(pageController.getName()).write("\", \"")
                 .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
-                .write(document.getPopupSysId()).write("\");");
+                .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
 
         // Write layout behaviour
         DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");

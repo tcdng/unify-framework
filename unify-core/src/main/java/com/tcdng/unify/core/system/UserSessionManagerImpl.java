@@ -85,13 +85,13 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     @Override
     public void addUserSession(UserSession userSession) throws UnifyException {
         SessionContext sessionContext = userSession.getSessionContext();
-        UserSessionTracking userSessionData = new UserSessionTracking();
-        userSessionData.setSessionId(sessionContext.getId());
-        userSessionData.setRemoteHost(sessionContext.getRemoteHost());
-        userSessionData.setRemoteAddress(sessionContext.getRemoteAddress());
-        userSessionData.setRemoteUser(sessionContext.getRemoteUser());
-        userSessionData.setNode(getNodeId());
-        db().create(userSessionData);
+        UserSessionTracking userSessionTracking = new UserSessionTracking();
+        userSessionTracking.setSessionId(sessionContext.getId());
+        userSessionTracking.setRemoteHost(sessionContext.getRemoteHost());
+        userSessionTracking.setRemoteAddress(sessionContext.getRemoteAddress());
+        userSessionTracking.setRemoteUser(sessionContext.getRemoteUser());
+        userSessionTracking.setNode(getNodeId());
+        db().create(userSessionTracking);
         userSessions.put(sessionContext.getId(), userSession);
     }
 
@@ -249,11 +249,6 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         @Override
         public String getRemoteUser() {
             return sessionContext.getRemoteUser();
-        }
-
-        @Override
-        public String getRemoteViewer() {
-            return sessionContext.getRemoteViewer();
         }
 
         @Override

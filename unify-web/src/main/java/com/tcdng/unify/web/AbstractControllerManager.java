@@ -300,7 +300,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             }
 
             SessionContext sessionContext = getSessionContext();
-            if (controller.isSecured() && !sessionContext.isUserLoggedIn()) {
+            boolean isUserLoggedIn = sessionContext.isUserLoggedIn() || requestContextUtil.isRemoteViewer();
+            if (controller.isSecured() && !isUserLoggedIn) {
                 String forceLogout =
                         (String) sessionContext.removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
                 if (forceLogout != null) {
@@ -859,8 +860,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             writer.write("]");
             if (requestContextUtil.isRemoteViewer()) {
                 writer.write(",\"remoteView\":{");
-                writer.write("\"view\":\"").write(requestContextUtil.getRemoteViewer()).write("\",\"sessionID\":\"")
-                        .write(getSessionContext().getId()).write("\"}");
+                writer.write("\"view\":\"").write(requestContextUtil.getRemoteViewer()).write("\"}");
             }
             writer.write("}");
         } else {
