@@ -125,6 +125,10 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     @Action
     public final String openPage() throws UnifyException {
         onOpenPage();
+        if(getRequestContextUtil().isRemoteViewer()) {
+            return ResultMappingConstants.REMOTE_VIEW;
+        }
+        
         return ResultMappingConstants.OPEN;
     }
 

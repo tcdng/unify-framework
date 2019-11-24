@@ -54,4 +54,13 @@ public class RemoteDocViewInfo {
         return remoteSaveUrl;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{pageTitle = ").append(pageTitle);
+        sb.append(", colorScheme = ").append(colorScheme);
+        sb.append(", remoteDocUrl = ").append(remoteDocUrl);
+        sb.append(", remoteSaveUrl = ").append(remoteSaveUrl);
+        sb.append("}");
+        return sb.toString();
+    }
 }
