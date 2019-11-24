@@ -469,6 +469,10 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                         (PageControllerResponse) getUplComponent(defaultLocale, "!unloadcontentresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 
+        defaultResultMap.put(ResultMappingConstants.REMOTE_VIEW,
+                new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!docviewresponse", false) }));
+
         defaultResultMap.put(ResultMappingConstants.POST_RESPONSE,
                 new Result(new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
