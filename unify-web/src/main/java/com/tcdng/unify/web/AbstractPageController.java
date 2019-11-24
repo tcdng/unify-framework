@@ -123,6 +123,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     }
 
     @Action
+    @Override
     public final String openPage() throws UnifyException {
         onOpenPage();
         if(getRequestContextUtil().isRemoteViewer()) {
@@ -133,12 +134,14 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     }
 
     @Action
+    @Override
     public final String savePage() throws UnifyException {
         onSavePage();
         return ResultMappingConstants.SAVE;
     }
 
     @Action
+    @Override
     public final String closePage() throws UnifyException {
         ClosePageMode mode = getRequestTarget(ClosePageMode.class);
         if (!ClosePageMode.CLOSE_OTHERS.equals(mode)) {
