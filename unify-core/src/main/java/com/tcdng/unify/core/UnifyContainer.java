@@ -1124,11 +1124,13 @@ public class UnifyContainer {
                 }
 
                 Field field = ReflectUtils.getField(clazz, property);
-                if (value == null) {
+                if (value == null && settings.isAutoInject(property)) {
                     if (UnifyComponent.class.isAssignableFrom(field.getType())) {
                         List<String> names = namelessConfigurableSuggestions.get(field.getType());
                         if (names.size() == 1) { // Check perfect suggestion
                             value = names.get(0);
+                        } else if(names.size() > 1) {
+                            // TODO throw exception to many possible types to inject
                         }
                     }
                 }

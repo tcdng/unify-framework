@@ -53,4 +53,10 @@ public @interface Configurable {
      * Indicates that configurable property is hidden.
      */
     boolean hidden() default false;
+
+    /**
+     * Indicates annotated component type is automatically injected if no default is
+     * specified and there's no explicit configuration.
+     */
+    boolean autoInject() default true;
 }

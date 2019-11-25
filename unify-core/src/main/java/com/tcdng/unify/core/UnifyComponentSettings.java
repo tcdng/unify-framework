@@ -64,6 +64,15 @@ public class UnifyComponentSettings {
         return null;
     }
 
+    public boolean isAutoInject(String property) {
+        Setting setting = settings.get(property);
+        if (setting != null) {
+            return setting.isAutoInject();
+        }
+
+        return true;
+    }
+
     public boolean isConcealed(String property) {
         Setting setting = settings.get(property);
         if (setting != null) {
@@ -102,13 +111,13 @@ public class UnifyComponentSettings {
             settings = new HashMap<String, Setting>();
             settings.putAll(annotationSettings.settings);
         }
+//
+//        public Builder setProperty(String name, Object value) {
+//            return setProperty(name, value, true, false);
+//        }
 
-        public Builder setProperty(String name, Object value) {
-            return setProperty(name, value, false);
-        }
-
-        public Builder setProperty(String name, Object value, boolean concealed) {
-            settings.put(name, new Setting(name, value, concealed));
+        public Builder setProperty(String name, Object value, boolean autoInject, boolean concealed) {
+            settings.put(name, new Setting(name, value, autoInject, concealed));
             return this;
         }
 
