@@ -282,7 +282,7 @@ public abstract class AbstractUnifyComponentTest {
         UnifyComponentSettings confSettings = UnifyConfigUtils.readComponentSettings(componentClass);
         UnifyComponentSettings.Builder ub = new UnifyComponentSettings.Builder(confSettings);
         for (Setting setting : settings) {
-            ub.setProperty(setting.getName(), setting.getValue(), setting.isHidden());
+            ub.setProperty(setting.getName(), setting.getValue(), setting.isAutoInject(), setting.isHidden());
         }
 
         uccb.addComponentConfig(name, "", componentClass, singleton, overwrite, ub.build());
