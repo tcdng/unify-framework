@@ -36,6 +36,7 @@ import com.tcdng.unify.core.database.AbstractDataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.security.Authentication;
 import com.tcdng.unify.core.util.SqlUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Abstract SQL data source.
@@ -51,7 +52,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     @Configurable
     private String connectionUrl;
 
-    @Configurable
+    @Configurable(resolve = false)
     private Authentication passwordAuthentication;
 
     @Configurable
@@ -449,12 +450,12 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     private SqlConnectionPool createSqlConnectionPool() throws UnifyException {
         String xUsername = null;
         String xPassword = null;
-        if (passwordAuthentication != null) {
-            xUsername = passwordAuthentication.getUsername();
-            xPassword = passwordAuthentication.getPassword();
-        } else if (username != null && password != null) {
+        if (!StringUtils.isBlank(username)) {
             xUsername = username;
             xPassword = password;
+        } else if (passwordAuthentication != null) {
+            xUsername = passwordAuthentication.getUsername();
+            xPassword = passwordAuthentication.getPassword();
         }
 
         return new SqlConnectionPool(connectionUrl, xUsername, xPassword, getConnectionTimeout, minConnections,
