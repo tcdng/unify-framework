@@ -52,7 +52,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     @Configurable
     private String connectionUrl;
 
-    @Configurable
+    @Configurable(resolve = false)
     private Authentication passwordAuthentication;
 
     @Configurable
