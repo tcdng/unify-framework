@@ -55,8 +55,8 @@ public @interface Configurable {
     boolean hidden() default false;
 
     /**
-     * Indicates annotated component type is automatically injected if no default is
-     * specified and there's no explicit configuration.
+     * Indicates annotated component type is automatically resolved and injected if
+     * no default is specified and there's no explicit configuration.
      */
-    boolean autoInject() default true;
+    boolean resolve() default true;
 }

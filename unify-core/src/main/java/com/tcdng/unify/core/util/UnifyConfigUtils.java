@@ -153,7 +153,7 @@ public final class UnifyConfigUtils {
         for (Field field : fields) {
             Configurable ca = field.getAnnotation(Configurable.class);
             names.add(field.getName());
-            ub.setProperty(field.getName(), UnifyConfigUtils.getConfigurableValue(ca), ca.autoInject(), ca.hidden());
+            ub.setProperty(field.getName(), UnifyConfigUtils.getConfigurableValue(ca), ca.resolve(), ca.hidden());
         }
 
         // Set configurable fields overriding same fields if present
@@ -166,7 +166,7 @@ public final class UnifyConfigUtils {
                         throw new UnifyException(UnifyCoreErrorConstants.PROPERTY_IS_NOT_CONFIGURABLE, property, claz);
                     }
 
-                    ub.setProperty(property, UnifyConfigUtils.getConfigurableValue(ca), ca.autoInject(), ca.hidden());
+                    ub.setProperty(property, UnifyConfigUtils.getConfigurableValue(ca), ca.resolve(), ca.hidden());
                 }
             }
         }
