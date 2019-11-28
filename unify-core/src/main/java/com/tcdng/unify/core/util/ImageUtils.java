@@ -310,6 +310,47 @@ public final class ImageUtils {
     }
 
     /**
+     * Flips image horizontally and returns image in PNG
+     * 
+     * @param image
+     *            the image to flip
+     * @return the flipped image
+     * @throws Exception
+     *             if an erro occurs
+     */
+    public static byte[] flipPNGHorizontally(byte[] image) throws Exception {
+        return ImageUtils.flipImageHorizontally(image, "png");
+    }
+
+    /**
+     * Flips image vertically and returns image in PNG
+     * 
+     * @param image
+     *            the image to flip
+     * @return the flipped image
+     * @throws Exception
+     *             if an erro occurs
+     */
+    public static byte[] flipPNGVertically(byte[] image) throws Exception {
+        return ImageUtils.flipImageVertically(image, "png");
+    }
+
+    /**
+     * Rotates image by angle and returns image in PNG
+     * 
+     * @param image
+     *            the image to rotate
+     * @param angle
+     *            the angle to rotate by in degrees
+     * @return the rotated image
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static byte[] rotatePNG(byte[] image, double angle) throws Exception {
+        return ImageUtils.rotateImage(image, angle, "png");
+    }
+
+    /**
      * Flips image horizontally and returns image in JPEG
      * 
      * @param image
@@ -319,37 +360,7 @@ public final class ImageUtils {
      *             if an erro occurs
      */
     public static byte[] flipJPEGHorizontally(byte[] image) throws Exception {
-        ImageIO.setUseCache(false);
-        byte[] result = image;
-        ByteArrayInputStream instream = null;
-        ByteArrayOutputStream outstream = null;
-        Graphics2D g = null;
-        try {
-            instream = new ByteArrayInputStream(image);
-            outstream = new ByteArrayOutputStream();
-            BufferedImage bi = ImageIO.read(instream);
-            int w = bi.getWidth();
-            int h = bi.getHeight();
-
-            BufferedImage nbi = new BufferedImage(w, h, bi.getType());
-            g = nbi.createGraphics();
-            g.drawImage(bi, 0, 0, w, h, 0, h, w, 0, null);
-            ImageIO.write(nbi, "jpg", outstream);
-            result = outstream.toByteArray();
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (g != null) {
-                try {
-                    g.dispose();
-                } catch (Exception e) {
-                }
-            }
-            IOUtils.close(instream);
-            IOUtils.close(outstream);
-        }
-
-        return result;
+        return ImageUtils.flipImageHorizontally(image, "jpg");
     }
 
     /**
@@ -361,38 +372,8 @@ public final class ImageUtils {
      * @throws Exception
      *             if an erro occurs
      */
-    public static byte[] flipJPEGVertically(byte[] image, float quality) throws Exception {
-        ImageIO.setUseCache(false);
-        byte[] result = image;
-        ByteArrayInputStream instream = null;
-        ByteArrayOutputStream outstream = null;
-        Graphics2D g = null;
-        try {
-            instream = new ByteArrayInputStream(image);
-            outstream = new ByteArrayOutputStream();
-            BufferedImage bi = ImageIO.read(instream);
-            int w = bi.getWidth();
-            int h = bi.getHeight();
-
-            BufferedImage nbi = new BufferedImage(w, h, bi.getType());
-            g = nbi.createGraphics();
-            g.drawImage(bi, 0, 0, w, h, w, 0, 0, h, null);
-            ImageIO.write(nbi, "jpg", outstream);
-            result = outstream.toByteArray();
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (g != null) {
-                try {
-                    g.dispose();
-                } catch (Exception e) {
-                }
-            }
-            IOUtils.close(instream);
-            IOUtils.close(outstream);
-        }
-
-        return result;
+    public static byte[] flipJPEGVertically(byte[] image) throws Exception {
+        return ImageUtils.flipImageVertically(image, "jpg");
     }
 
     /**
@@ -407,38 +388,7 @@ public final class ImageUtils {
      *             if an error occurs
      */
     public static byte[] rotateJPEG(byte[] image, double angle) throws Exception {
-        ImageIO.setUseCache(false);
-        byte[] result = image;
-        ByteArrayInputStream instream = null;
-        ByteArrayOutputStream outstream = null;
-        Graphics2D g = null;
-        try {
-            instream = new ByteArrayInputStream(image);
-            outstream = new ByteArrayOutputStream();
-            BufferedImage bi = ImageIO.read(instream);
-            int w = bi.getWidth();
-            int h = bi.getHeight();
-
-            BufferedImage nbi = new BufferedImage(w, h, bi.getType());
-            g = nbi.createGraphics();
-            g.rotate(Math.toRadians(angle), w / 2, h / 2);
-            g.drawImage(bi, null, 0, 0);
-            ImageIO.write(nbi, "jpg", outstream);
-
-            result = outstream.toByteArray();
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (g != null) {
-                try {
-                    g.dispose();
-                } catch (Exception e) {
-                }
-            }
-            IOUtils.close(instream);
-            IOUtils.close(outstream);
-        }
-        return result;
+        return ImageUtils.rotateImage(image, angle, "jpg");
     }
 
     /**
@@ -465,5 +415,108 @@ public final class ImageUtils {
      */
     public static byte[] decodeImageFromBase64String(String base64Str) throws Exception {
         return Base64.decodeBase64(base64Str.getBytes("UTF-8"));
+    }
+
+    private static byte[] flipImageHorizontally(byte[] image, String format) throws Exception {
+        ImageIO.setUseCache(false);
+        byte[] result = image;
+        ByteArrayInputStream instream = null;
+        ByteArrayOutputStream outstream = null;
+        Graphics2D g = null;
+        try {
+            instream = new ByteArrayInputStream(image);
+            outstream = new ByteArrayOutputStream();
+            BufferedImage bi = ImageIO.read(instream);
+            int w = bi.getWidth();
+            int h = bi.getHeight();
+
+            BufferedImage nbi = new BufferedImage(w, h, bi.getType());
+            g = nbi.createGraphics();
+            g.drawImage(bi, 0, 0, w, h, 0, h, w, 0, null);
+            ImageIO.write(nbi, format, outstream);
+            result = outstream.toByteArray();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (g != null) {
+                try {
+                    g.dispose();
+                } catch (Exception e) {
+                }
+            }
+            IOUtils.close(instream);
+            IOUtils.close(outstream);
+        }
+
+        return result;
+    }
+
+    public static byte[] flipImageVertically(byte[] image, String format) throws Exception {
+        ImageIO.setUseCache(false);
+        byte[] result = image;
+        ByteArrayInputStream instream = null;
+        ByteArrayOutputStream outstream = null;
+        Graphics2D g = null;
+        try {
+            instream = new ByteArrayInputStream(image);
+            outstream = new ByteArrayOutputStream();
+            BufferedImage bi = ImageIO.read(instream);
+            int w = bi.getWidth();
+            int h = bi.getHeight();
+
+            BufferedImage nbi = new BufferedImage(w, h, bi.getType());
+            g = nbi.createGraphics();
+            g.drawImage(bi, 0, 0, w, h, w, 0, 0, h, null);
+            ImageIO.write(nbi, format, outstream);
+            result = outstream.toByteArray();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (g != null) {
+                try {
+                    g.dispose();
+                } catch (Exception e) {
+                }
+            }
+            IOUtils.close(instream);
+            IOUtils.close(outstream);
+        }
+
+        return result;
+    }
+
+    private static byte[] rotateImage(byte[] image, double angle, String format) throws Exception {
+        ImageIO.setUseCache(false);
+        byte[] result = image;
+        ByteArrayInputStream instream = null;
+        ByteArrayOutputStream outstream = null;
+        Graphics2D g = null;
+        try {
+            instream = new ByteArrayInputStream(image);
+            outstream = new ByteArrayOutputStream();
+            BufferedImage bi = ImageIO.read(instream);
+            int w = bi.getWidth();
+            int h = bi.getHeight();
+
+            BufferedImage nbi = new BufferedImage(w, h, bi.getType());
+            g = nbi.createGraphics();
+            g.rotate(Math.toRadians(angle), w / 2, h / 2);
+            g.drawImage(bi, null, 0, 0);
+            ImageIO.write(nbi, format, outstream);
+
+            result = outstream.toByteArray();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (g != null) {
+                try {
+                    g.dispose();
+                } catch (Exception e) {
+                }
+            }
+            IOUtils.close(instream);
+            IOUtils.close(outstream);
+        }
+        return result;
     }
 }
