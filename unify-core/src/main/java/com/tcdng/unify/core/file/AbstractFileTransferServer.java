@@ -35,9 +35,9 @@ import com.tcdng.unify.core.util.IOUtils;
 public abstract class AbstractFileTransferServer extends AbstractUnifyComponent implements FileTransferServer {
 
     @Override
-    public List<FileInfo> getLocalFileList(FileTransferInfo fileTransferInfo) throws UnifyException {
-        FileFilter fileFilter = new FileFilter(fileTransferInfo);
-        File[] files = new File(fileTransferInfo.getLocalPath()).listFiles(fileFilter);
+    public List<FileInfo> getLocalFileList(FileTransferSetup fileTransferSetup) throws UnifyException {
+        FileFilter fileFilter = new FileFilter(fileTransferSetup);
+        File[] files = new File(fileTransferSetup.getLocalPath()).listFiles(fileFilter);
         if (files == null || files.length == 0) {
             return Collections.emptyList();
         }
@@ -52,10 +52,10 @@ public abstract class AbstractFileTransferServer extends AbstractUnifyComponent 
     }
 
     @Override
-    public void createLocalFile(FileTransferInfo fileTransferInfo, String localFile) throws UnifyException {
+    public void createLocalFile(FileTransferSetup fileTransferSetup, String localFile) throws UnifyException {
         FileInputStream fileInputStream = null;
         try {
-            File file = getLocalFile(fileTransferInfo, localFile);
+            File file = getLocalFile(fileTransferSetup, localFile);
             fileInputStream = new FileInputStream(file);
         } catch (UnifyException e) {
             throw e;
@@ -67,26 +67,26 @@ public abstract class AbstractFileTransferServer extends AbstractUnifyComponent 
     }
 
     @Override
-    public void createLocalDirectory(FileTransferInfo fileTransferInfo) throws UnifyException {
-        File dir = new File(fileTransferInfo.getLocalPath());
+    public void createLocalDirectory(FileTransferSetup fileTransferSetup) throws UnifyException {
+        File dir = new File(fileTransferSetup.getLocalPath());
         if (!dir.isDirectory()) {
             dir.mkdirs();
         }
     }
 
     @Override
-    public void deleteLocalFile(FileTransferInfo fileTransferInfo, String localFile) throws UnifyException {
-        File file = getLocalFile(fileTransferInfo, localFile);
+    public void deleteLocalFile(FileTransferSetup fileTransferSetup, String localFile) throws UnifyException {
+        File file = getLocalFile(fileTransferSetup, localFile);
         file.delete();
     }
 
     @Override
-    public byte[] readLocalBlock(FileTransferInfo fileTransferInfo, String localFile, long index, int size)
+    public byte[] readLocalBlock(FileTransferSetup fileTransferSetup, String localFile, long index, int size)
             throws UnifyException {
         byte[] block = null;
         InputStream inputStream = null;
         try {
-            File file = getLocalFile(fileTransferInfo, localFile);
+            File file = getLocalFile(fileTransferSetup, localFile);
             inputStream = IOUtils.openFileInputStream(file.getAbsolutePath(), index);
             block = new byte[size];
             IOUtils.read(block, inputStream);
@@ -106,8 +106,8 @@ public abstract class AbstractFileTransferServer extends AbstractUnifyComponent 
 
     }
 
-    protected String getNormalizedRemotePath(FileTransferInfo fileTransferInfo) throws UnifyException {
-        return getNormalizedRemotePath(fileTransferInfo.getRemotePath());
+    protected String getNormalizedRemotePath(FileTransferSetup fileTransferSetup) throws UnifyException {
+        return getNormalizedRemotePath(fileTransferSetup.getRemotePath());
     }
 
     protected String getNormalizedRemotePath(String remotePath) throws UnifyException {
@@ -122,18 +122,18 @@ public abstract class AbstractFileTransferServer extends AbstractUnifyComponent 
         return remotePath;
     }
 
-    protected String getNormalizedLocalPath(FileTransferInfo fileTransferInfo) throws UnifyException {
-        return getNormalizedLocalPath(fileTransferInfo.getLocalPath());
+    protected String getNormalizedLocalPath(FileTransferSetup fileTransferSetup) throws UnifyException {
+        return getNormalizedLocalPath(fileTransferSetup.getLocalPath());
     }
 
     protected String getNormalizedLocalPath(String localPath) throws UnifyException {
         return IOUtils.conformFilePath(localPath);
     }
 
-    protected File getLocalFile(FileTransferInfo fileTransferInfo, String localFile) throws UnifyException {
+    protected File getLocalFile(FileTransferSetup fileTransferSetup, String localFile) throws UnifyException {
         String filename = localFile;
-        if (fileTransferInfo.getLocalPath() != null) {
-            filename = IOUtils.buildFilename(fileTransferInfo.getLocalPath(), filename);
+        if (fileTransferSetup.getLocalPath() != null) {
+            filename = IOUtils.buildFilename(fileTransferSetup.getLocalPath(), filename);
         }
         return new File(filename);
     }

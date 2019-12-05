@@ -47,12 +47,12 @@ import com.tcdng.unify.core.util.IOUtils;
 public class FtpFileTransferServer extends AbstractFileTransferServer {
 
     @Override
-    public List<FileInfo> getRemoteFileList(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public List<FileInfo> getRemoteFileList(FileTransferSetup fileTransferSetup) throws UnifyException {
         List<FileInfo> list = Collections.emptyList();
-        FtpFileFilter ftpFileFilter = new FtpFileFilter(fileTransferInfo);
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+        FtpFileFilter ftpFileFilter = new FtpFileFilter(fileTransferSetup);
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            FTPFile[] files = ftpClient.listFiles(getNormalizedRemotePath(fileTransferInfo), ftpFileFilter);
+            FTPFile[] files = ftpClient.listFiles(getNormalizedRemotePath(fileTransferSetup), ftpFileFilter);
             if (files != null && files.length > 0) {
                 list = new ArrayList<FileInfo>();
                 for (FTPFile file : files) {
@@ -69,16 +69,16 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public boolean remoteDirectoryExists(FileTransferInfo fileTransferInfo) throws UnifyException {
-        return remoteDirectoryExists(fileTransferInfo, getNormalizedRemotePath(fileTransferInfo));
+    public boolean remoteDirectoryExists(FileTransferSetup fileTransferSetup) throws UnifyException {
+        return remoteDirectoryExists(fileTransferSetup, getNormalizedRemotePath(fileTransferSetup));
     }
 
     @Override
-    public boolean remoteFileExists(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+    public boolean remoteFileExists(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         InputStream inputStream = null;
         try {
-            inputStream = ftpClient.retrieveFileStream(getNormalizedRemotePath(fileTransferInfo) + serverFile);
+            inputStream = ftpClient.retrieveFileStream(getNormalizedRemotePath(fileTransferSetup) + serverFile);
             if (inputStream == null || ftpClient.getReplyCode() == 550) {
                 return false;
             }
@@ -92,20 +92,20 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public void createRemoteDirectory(FileTransferInfo fileTransferInfo) throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+    public void createRemoteDirectory(FileTransferSetup fileTransferSetup) throws UnifyException {
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            makeRemoteDirectories(fileTransferInfo, ftpClient, getNormalizedRemotePath(fileTransferInfo));
+            makeRemoteDirectories(fileTransferSetup, ftpClient, getNormalizedRemotePath(fileTransferSetup));
         } finally {
             restoreFTPClient(ftpClient);
         }
     }
 
     @Override
-    public void createRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+    public void createRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            String pathName = getNormalizedRemotePath(fileTransferInfo) + serverFile;
+            String pathName = getNormalizedRemotePath(fileTransferSetup) + serverFile;
             boolean created = ftpClient.storeFile(pathName, new ByteArrayInputStream(DataUtils.ZEROLEN_BYTE_ARRAY));
             if (!created) {
                 throw new Exception("Failed to create file [" + ftpClient.getReplyString() + "].");
@@ -118,10 +118,10 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public void deleteRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+    public void deleteRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            String pathName = getNormalizedRemotePath(fileTransferInfo) + serverFile;
+            String pathName = getNormalizedRemotePath(fileTransferSetup) + serverFile;
             boolean deleted = ftpClient.deleteFile(pathName);
             if (!deleted) {
                 throw new Exception("Failed to delete file [" + ftpClient.getReplyCode() + "].");
@@ -134,75 +134,75 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public byte[] readRemoteBlock(FileTransferInfo fileTransferInfo, String serverFile, long index, int size)
+    public byte[] readRemoteBlock(FileTransferSetup fileTransferSetup, String serverFile, long index, int size)
             throws UnifyException {
         throwUnsupportedOperationException();
         return null;
     }
 
     @Override
-    public void uploadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile)
+    public void uploadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile)
             throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            String pathName = getNormalizedRemotePath(fileTransferInfo) + serverFile;
-            File actLocalFile = getLocalFile(fileTransferInfo, localFile);
-            uploadFile(ftpClient, pathName, actLocalFile, fileTransferInfo.isDeleteSourceOnTransfer());
+            String pathName = getNormalizedRemotePath(fileTransferSetup) + serverFile;
+            File actLocalFile = getLocalFile(fileTransferSetup, localFile);
+            uploadFile(ftpClient, pathName, actLocalFile, fileTransferSetup.isDeleteSourceOnTransfer());
         } finally {
             restoreFTPClient(ftpClient);
         }
     }
 
     @Override
-    public void uploadFiles(FileTransferInfo fileTransferInfo) throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+    public void uploadFiles(FileTransferSetup fileTransferSetup) throws UnifyException {
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            String remotePath = getNormalizedRemotePath(fileTransferInfo);
-            File localDir = new File(getNormalizedLocalPath(fileTransferInfo));
-            FileFilter fileFilter = new FileFilter(fileTransferInfo);
-            uploadFiles(fileTransferInfo, ftpClient, remotePath, localDir, fileFilter);
+            String remotePath = getNormalizedRemotePath(fileTransferSetup);
+            File localDir = new File(getNormalizedLocalPath(fileTransferSetup));
+            FileFilter fileFilter = new FileFilter(fileTransferSetup);
+            uploadFiles(fileTransferSetup, ftpClient, remotePath, localDir, fileFilter);
         } finally {
             restoreFTPClient(ftpClient);
         }
     }
 
     @Override
-    public void downloadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile)
+    public void downloadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile)
             throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            String pathName = getNormalizedRemotePath(fileTransferInfo) + serverFile;
-            File actLocalFile = getLocalFile(fileTransferInfo, localFile);
-            downloadFile(ftpClient, pathName, actLocalFile, fileTransferInfo.isDeleteSourceOnTransfer());
+            String pathName = getNormalizedRemotePath(fileTransferSetup) + serverFile;
+            File actLocalFile = getLocalFile(fileTransferSetup, localFile);
+            downloadFile(ftpClient, pathName, actLocalFile, fileTransferSetup.isDeleteSourceOnTransfer());
         } finally {
             restoreFTPClient(ftpClient);
         }
     }
 
     @Override
-    public void downloadFiles(FileTransferInfo fileTransferInfo) throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+    public void downloadFiles(FileTransferSetup fileTransferSetup) throws UnifyException {
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
-            String remotePath = getNormalizedRemotePath(fileTransferInfo);
-            File localDir = new File(getNormalizedLocalPath(fileTransferInfo));
-            FtpFileFilter ftpFileFilter = new FtpFileFilter(fileTransferInfo);
-            downloadFiles(ftpClient, remotePath, localDir, ftpFileFilter, fileTransferInfo.isDeleteSourceOnTransfer());
+            String remotePath = getNormalizedRemotePath(fileTransferSetup);
+            File localDir = new File(getNormalizedLocalPath(fileTransferSetup));
+            FtpFileFilter ftpFileFilter = new FtpFileFilter(fileTransferSetup);
+            downloadFiles(ftpClient, remotePath, localDir, ftpFileFilter, fileTransferSetup.isDeleteSourceOnTransfer());
         } finally {
             restoreFTPClient(ftpClient);
         }
     }
 
-    private void uploadFiles(FileTransferInfo fileTransferInfo, FTPClient ftpClient, String remotePath, File localDir,
+    private void uploadFiles(FileTransferSetup fileTransferSetup, FTPClient ftpClient, String remotePath, File localDir,
             FileFilter fileFilter) throws UnifyException {
-        makeRemoteDirectories(fileTransferInfo, ftpClient, remotePath);
+        makeRemoteDirectories(fileTransferSetup, ftpClient, remotePath);
         File[] files = localDir.listFiles(fileFilter);
         for (File file : files) {
             if (file.isDirectory()) {
                 String newRemotePath = remotePath + file.getName() + '/';
-                uploadFiles(fileTransferInfo, ftpClient, newRemotePath, file, fileFilter);
+                uploadFiles(fileTransferSetup, ftpClient, newRemotePath, file, fileFilter);
             } else {
                 String remoteFile = remotePath + file.getName();
-                uploadFile(ftpClient, remoteFile, file, fileTransferInfo.isDeleteSourceOnTransfer());
+                uploadFile(ftpClient, remoteFile, file, fileTransferSetup.isDeleteSourceOnTransfer());
             }
         }
     }
@@ -273,7 +273,7 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
         }
     }
 
-    private void makeRemoteDirectories(FileTransferInfo fileTransferInfo, FTPClient ftpClient, String remotePath)
+    private void makeRemoteDirectories(FileTransferSetup fileTransferSetup, FTPClient ftpClient, String remotePath)
             throws UnifyException {
         try {
             if (remotePath.startsWith("/")) {
@@ -290,7 +290,7 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
                 sb.append('/');
                 sb.append(elem);
                 String actRemotePath = sb.toString();
-                if (!remoteDirectoryExists(fileTransferInfo, actRemotePath)) {
+                if (!remoteDirectoryExists(fileTransferSetup, actRemotePath)) {
                     boolean created = ftpClient.makeDirectory(actRemotePath);
                     if (!created) {
                         throw new Exception("Failed to create directory [" + ftpClient.getReplyString() + "].");
@@ -303,8 +303,8 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
         }
     }
 
-    private boolean remoteDirectoryExists(FileTransferInfo fileTransferInfo, String remotePath) throws UnifyException {
-        FTPClient ftpClient = getFTPClient(fileTransferInfo);
+    private boolean remoteDirectoryExists(FileTransferSetup fileTransferSetup, String remotePath) throws UnifyException {
+        FTPClient ftpClient = getFTPClient(fileTransferSetup);
         try {
             ftpClient.changeWorkingDirectory(remotePath);
             if (ftpClient.getReplyCode() == 550) {
@@ -318,14 +318,14 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
         return true;
     }
 
-    private FTPClient getFTPClient(FileTransferInfo fileTransferInfo) throws UnifyException {
+    private FTPClient getFTPClient(FileTransferSetup fileTransferSetup) throws UnifyException {
         FTPClient ftpClient = null;
         try {
             ftpClient = new FTPClient();
-            ftpClient.connect(fileTransferInfo.getRemoteHost(), fileTransferInfo.getRemotePort());
-            if (!ftpClient.login(fileTransferInfo.getAuthenticationId(),
-                    fileTransferInfo.getAuthenticationPassword())) {
-                throw new Exception("Failed to log into FTP server [" + fileTransferInfo.getRemoteHost() + "].");
+            ftpClient.connect(fileTransferSetup.getRemoteHost(), fileTransferSetup.getRemotePort());
+            if (!ftpClient.login(fileTransferSetup.getAuthenticationId(),
+                    fileTransferSetup.getAuthenticationPassword())) {
+                throw new Exception("Failed to log into FTP server [" + fileTransferSetup.getRemoteHost() + "].");
             }
 
             ftpClient.enterLocalPassiveMode();
@@ -349,8 +349,8 @@ public class FtpFileTransferServer extends AbstractFileTransferServer {
 
     private class FtpFileFilter extends FileFilter implements FTPFileFilter {
 
-        public FtpFileFilter(FileTransferInfo fileTransferInfo) {
-            super(fileTransferInfo.getFilePrefixes(), fileTransferInfo.getFileSuffixes());
+        public FtpFileFilter(FileTransferSetup fileTransferSetup) {
+            super(fileTransferSetup.getFilePrefixes(), fileTransferSetup.getFileSuffixes());
         }
 
         @Override

@@ -34,8 +34,8 @@ public class FileFilter implements java.io.FileFilter {
 
     private boolean fileOnly;
 
-    public FileFilter(FileTransferInfo fileTransferInfo) {
-        this(fileTransferInfo.getFilePrefixes(), fileTransferInfo.getFileSuffixes());
+    public FileFilter(FileTransferSetup fileTransferSetup) {
+        this(fileTransferSetup.getFilePrefixes(), fileTransferSetup.getFileSuffixes());
     }
 
     public FileFilter(Set<String> prefixes, Set<String> suffixes) {
