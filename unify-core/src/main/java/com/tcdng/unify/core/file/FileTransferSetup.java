@@ -24,12 +24,12 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * File transfer information data object.
+ * File transfer setup data object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class FileTransferInfo {
+public class FileTransferSetup {
 
     private String remoteHost;
 
@@ -49,7 +49,7 @@ public class FileTransferInfo {
 
     private boolean deleteSourceOnTransfer;
 
-    private FileTransferInfo(String remoteHost, int remotePort, String authenticationId, String authenticationPassword,
+    private FileTransferSetup(String remoteHost, int remotePort, String authenticationId, String authenticationPassword,
             String remotePath, String localPath, Set<String> filePrefixes, Set<String> fileSuffixes,
             boolean deleteSourceOnTransfer) {
         this.remoteHost = remoteHost;
@@ -204,7 +204,7 @@ public class FileTransferInfo {
             return this;
         }
 
-        public FileTransferInfo build() throws UnifyException {
+        public FileTransferSetup build() throws UnifyException {
             if (filePrefixes == null) {
                 filePrefixes = Collections.emptySet();
             } else {
@@ -217,7 +217,7 @@ public class FileTransferInfo {
                 fileSuffixes = Collections.unmodifiableSet(fileSuffixes);
             }
 
-            return new FileTransferInfo(remoteHost, remotePort, authenticationId, authenticationPassword, remotePath,
+            return new FileTransferSetup(remoteHost, remotePort, authenticationId, authenticationPassword, remotePath,
                     localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer);
         }
     }

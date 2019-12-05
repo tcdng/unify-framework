@@ -48,66 +48,66 @@ public class TestFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public List<FileInfo> getLocalFileList(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public List<FileInfo> getLocalFileList(FileTransferSetup fileTransferSetup) throws UnifyException {
         return new ArrayList<FileInfo>(localFiles.values());
     }
 
     @Override
-    public void createLocalFile(FileTransferInfo fileTransferInfo, String localFile) throws UnifyException {
+    public void createLocalFile(FileTransferSetup fileTransferSetup, String localFile) throws UnifyException {
         if (!localFiles.containsKey(localFile)) {
             localFiles.put(localFile, new FileInfo(localFile, localFile, 0, 0, 0, true, false));
         }
     }
 
     @Override
-    public void createLocalDirectory(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public void createLocalDirectory(FileTransferSetup fileTransferSetup) throws UnifyException {
     }
 
     @Override
-    public void deleteLocalFile(FileTransferInfo fileTransferInfo, String localFile) throws UnifyException {
+    public void deleteLocalFile(FileTransferSetup fileTransferSetup, String localFile) throws UnifyException {
         remoteFiles.remove(localFile);
     }
 
     @Override
-    public List<FileInfo> getRemoteFileList(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public List<FileInfo> getRemoteFileList(FileTransferSetup fileTransferSetup) throws UnifyException {
         return new ArrayList<FileInfo>(remoteFiles.values());
     }
 
     @Override
-    public boolean remoteDirectoryExists(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public boolean remoteDirectoryExists(FileTransferSetup fileTransferSetup) throws UnifyException {
         return true;
     }
 
     @Override
-    public boolean remoteFileExists(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
+    public boolean remoteFileExists(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
         return remoteFiles.containsKey(serverFile);
     }
 
     @Override
-    public void createRemoteDirectory(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public void createRemoteDirectory(FileTransferSetup fileTransferSetup) throws UnifyException {
         throwUnsupportedOperationException();
     }
 
     @Override
-    public void createRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
+    public void createRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
         if (!remoteFiles.containsKey(serverFile)) {
             remoteFiles.put(serverFile, new FileInfo(serverFile, serverFile, 0, 0, 0, true, false));
         }
     }
 
     @Override
-    public void deleteRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
+    public void deleteRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
         remoteFiles.remove(serverFile);
     }
 
     @Override
-    public byte[] readRemoteBlock(FileTransferInfo fileTransferInfo, String serverFile, long index, int size)
+    public byte[] readRemoteBlock(FileTransferSetup fileTransferSetup, String serverFile, long index, int size)
             throws UnifyException {
         return null;
     }
 
     @Override
-    public void uploadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile)
+    public void uploadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile)
             throws UnifyException {
         if (!localFiles.containsKey(localFile)) {
             throwOperationErrorException(new FileNotFoundException(localFile));
@@ -115,7 +115,7 @@ public class TestFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public void downloadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile)
+    public void downloadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile)
             throws UnifyException {
         if (!remoteFiles.containsKey(serverFile)) {
             throwOperationErrorException(new FileNotFoundException(serverFile));
@@ -123,12 +123,12 @@ public class TestFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public void uploadFiles(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public void uploadFiles(FileTransferSetup fileTransferSetup) throws UnifyException {
 
     }
 
     @Override
-    public void downloadFiles(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public void downloadFiles(FileTransferSetup fileTransferSetup) throws UnifyException {
 
     }
 
