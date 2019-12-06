@@ -28,25 +28,25 @@ public interface SmsServer extends NotificationServer<SmsServerConfig> {
     /**
      * Sends an SMS.
      * 
-     * @param configurationCode
-     *            the code of the configuration to use
+     * @param configName
+     *            the name of the configuration to use
      * @param sms
      *            the sms to send
      * @throws UnifyException
-     *             if configuration with code is unknown. if an error occurs
+     *             if configuration with name is unknown. if an error occurs
      */
-    void sendSms(String configurationCode, Sms sms) throws UnifyException;
+    void sendSms(String configName, Sms sms) throws UnifyException;
 
     /**
      * Sends bulk SMS.
      * 
-     * @param configurationCode
-     *            the code of the configuration to use
+     * @param configName
+     *            the name of the configuration to use
      * @param bulkSms
      *            the bulk sms to send
      * @throws UnifyException
-     *             if configuration with code is unknown. if an error occurs
+     *             if configuration with name is unknown. if an error occurs
      */
-    void sendSms(String configurationCode, BulkSms bulkSms) throws UnifyException;
+    void sendSms(String configName, BulkSms bulkSms) throws UnifyException;
 
 }

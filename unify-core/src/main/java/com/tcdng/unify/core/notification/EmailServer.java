@@ -28,24 +28,24 @@ public interface EmailServer extends NotificationServer<EmailServerConfig> {
     /**
      * Sends an email.
      * 
-     * @param configurationCode
-     *            the code of the configuration to use
+     * @param configName
+     *            the name of the configuration to use
      * @param email
      *            the email to send
      * @throws UnifyException
-     *             if configuration with code is unknown. if an error occurs
+     *             if configuration with name is unknown. if an error occurs
      */
-    void sendEmail(String configurationCode, Email email) throws UnifyException;
+    void sendEmail(String configName, Email email) throws UnifyException;
 
     /**
      * Sends multiple e-mails.
      * 
-     * @param configurationCode
-     *            the code of the configuration to use
+     * @param configName
+     *            the name of the configuration to use
      * @param emails
      *            the e-mails to send
      * @throws UnifyException
-     *             if configuration with code is unknown. If an error occurs
+     *             if configuration with name is unknown. If an error occurs
      */
-    void sendEmail(String configurationCode, Email[] emails) throws UnifyException;
+    void sendEmail(String configName, Email[] emails) throws UnifyException;
 }
