@@ -24,7 +24,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface NotificationServer<T extends NotificationServerConfig> extends UnifyComponent {
+public interface NotificationServer<T extends AbstractNotifServerConfig> extends UnifyComponent {
 
     /**
      * Configures server replacing existing if necessary.
