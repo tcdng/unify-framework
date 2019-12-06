@@ -29,24 +29,24 @@ public interface EmailServer extends UnifyComponent {
     /**
      * Configures server replacing existing one if necessary.
      * 
-     * @param configurationCode
-     *            the configuration code
+     * @param configName
+     *            the configuration name
      * @param config
      *            the email server configuration
      * @throws UnifyException
      *             if an error occurs
      */
-    void configure(String configurationCode, EmailServerConfig config) throws UnifyException;
+    void configure(String configName, EmailServerConfig config) throws UnifyException;
 
     /**
      * Returns true if configuration with supplied code exists on server.
      * 
-     * @param configurationCode
-     *            the configuration code to check
+     * @param configName
+     *            the configuration name to check
      * @throws UnifyException
      *             if an error occurs
      */
-    boolean isConfigured(String configurationCode) throws UnifyException;
+    boolean isConfigured(String configName) throws UnifyException;
 
     /**
      * Sends an email.
