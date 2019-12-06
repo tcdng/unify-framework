@@ -32,6 +32,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.FileAttachmentType;
@@ -47,7 +48,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractEmailServer extends AbstractNotificationServer<EmailServerConfig> implements EmailServer {
+public abstract class AbstractEmailServer extends AbstractUnifyComponent implements EmailServer {
 
     private FactoryMap<String, InternalConfig> configurations;
 
@@ -100,6 +101,16 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
     @Override
     public boolean isConfigured(String configName) throws UnifyException {
         return configurations.isKey(configName);
+    }
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
     }
 
     protected void checkConfiguration(String configName) throws UnifyException {

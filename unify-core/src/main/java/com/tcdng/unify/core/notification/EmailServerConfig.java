@@ -17,6 +17,7 @@
 package com.tcdng.unify.core.notification;
 
 import com.tcdng.unify.core.constant.NetworkSecurityType;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Email server configuration.
@@ -24,9 +25,9 @@ import com.tcdng.unify.core.constant.NetworkSecurityType;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class EmailServerConfig extends NotificationServerConfig {
+public class EmailServerConfig extends AbstractNotifServerConfig {
 
-    public EmailServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
+    protected EmailServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType, String username,
             String password) {
         super(hostAddress, hostPort, securityType, username, password);
     }
@@ -36,8 +37,65 @@ public class EmailServerConfig extends NotificationServerConfig {
         super(hostAddress, hostPort, securityType, authentication);
     }
 
-    public EmailServerConfig(String hostAddress, Integer hostPort) {
-        super(hostAddress, hostPort);
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
+    public static class Builder {
+
+        private String hostAddress;
+
+        private Integer hostPort;
+
+        private NetworkSecurityType securityType;
+
+        private String authentication;
+
+        private String username;
+
+        private String password;
+
+        private Builder() {
+
+        }
+
+        public Builder hostAddress(String hostAddress) {
+            this.hostAddress = hostAddress;
+            return this;
+       }
+
+        public Builder hostPort(Integer hostPort) {
+            this.hostPort = hostPort;
+            return this;
+        }
+
+        public Builder useSecurityType(NetworkSecurityType securityType) {
+            this.securityType = securityType;
+            return this;
+        }
+
+        public Builder useAuthentication(String authentication) {
+            this.authentication = authentication;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+        
+        public EmailServerConfig build() {
+            if (!StringUtils.isBlank(authentication)) {
+                return new EmailServerConfig(hostAddress, hostPort, securityType, authentication);
+            }
+            
+            return new EmailServerConfig(hostAddress, hostPort, securityType, username,
+                    password);
+        }
+    }
 }

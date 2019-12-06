@@ -19,12 +19,12 @@ package com.tcdng.unify.core.notification;
 import com.tcdng.unify.core.constant.NetworkSecurityType;
 
 /**
- * Notification server configuration.
+ * Abstract notification server configuration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotificationServerConfig {
+public abstract class AbstractNotifServerConfig {
 
     private String hostAddress;
 
@@ -38,7 +38,7 @@ public class NotificationServerConfig {
 
     private String password;
 
-    public NotificationServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
+    protected AbstractNotifServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
             String username, String password) {
         this.hostAddress = hostAddress;
         this.hostPort = hostPort;
@@ -47,17 +47,12 @@ public class NotificationServerConfig {
         this.password = password;
     }
 
-    public NotificationServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
+    public AbstractNotifServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
             String authentication) {
         this.hostAddress = hostAddress;
         this.hostPort = hostPort;
         this.securityType = securityType;
         this.authentication = authentication;
-    }
-
-    public NotificationServerConfig(String hostAddress, Integer hostPort) {
-        this.hostAddress = hostAddress;
-        this.hostPort = hostPort;
     }
 
     public String getHostAddress() {

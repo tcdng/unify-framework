@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.notification;
 
+import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
@@ -23,7 +24,29 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SmsServer extends NotificationServer<SmsServerConfig> {
+public interface SmsServer extends UnifyComponent {
+
+    /**
+     * Configures server replacing existing one if necessary.
+     * 
+     * @param configurationCode
+     *            the configuration code
+     * @param config
+     *            the email server configuration
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void configure(String configurationCode, SmsServerConfig config) throws UnifyException;
+
+    /**
+     * Returns true if configuration with supplied code exists on server.
+     * 
+     * @param configurationCode
+     *            the configuration code to check
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isConfigured(String configurationCode) throws UnifyException;
 
     /**
      * Sends an SMS.
