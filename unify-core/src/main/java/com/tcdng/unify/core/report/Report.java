@@ -598,11 +598,11 @@ public class Report {
             return this;
         }
 
-        public Builder addReportParameter(String name, String description, Object value) {
-            return addReportParameter(name, description, null, value, false, false);
+        public Builder addParameter(String name, String description, Object value) {
+            return addParameter(name, description, null, value, false, false);
         }
 
-        public Builder addReportParameter(String name, String description, String formatter, Object value,
+        public Builder addParameter(String name, String description, String formatter, Object value,
                 boolean headerDetail, boolean footerDetail) {
             reportParameters
                     .setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));

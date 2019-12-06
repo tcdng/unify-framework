@@ -29,9 +29,12 @@ public abstract class AbstractBeanCollectionReportProcessor<T> extends AbstractR
 
     @Override
     public void process(Report report) throws UnifyException {
+        doProcess(report);
         List<T> beanCollection = getBeanCollection(report.getReportParameters());
         report.setBeanCollection(beanCollection);
     }
+
+    protected abstract void doProcess(Report report) throws UnifyException;
 
     protected abstract List<T> getBeanCollection(ReportParameters reportParameters) throws UnifyException;
 }
