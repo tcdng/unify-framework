@@ -6,16 +6,14 @@
 <img src="https://img.shields.io/github/license/tcdng/unify-framework" alt="License" title="">
 </p>
 
-Unify Framework is a full-stack server-side component-based framework for developing web applications in Java. The entire framework is built on the simple concept of a pool of configurable components interacting with each other at runtime to provide complete application functionality.
+Unify Framework is a server-side component-based framework for developing web applications in Java. The entire framework is built on the concept of a pool of configurable components interacting with each other at runtime to provide complete application functionality.
 
-The pool of components is maintained by a lightweight container that provides the necessary context for components to interact. The container, an inversion of control container, manages for the most part, the instantiation, configuration, initialization, pooling and termination of components. It does not provide any other major system functionality. All other core system functionality like transaction management, data persistence, task scheduling and intra-cluster communication, for instance, are provided indirectly by specialized components and not by the container itself.
+The framework makes available, to the developer, a solid set of reusable and extensible software components built using high level abstractions that effectively hide the details of underlying complexities from the developer.
 
-The framework makes available a pre-defined set of components that can be used or extended to develop your applications.
+The framework aims to avoid the mishmash of varying technologies by providing a unified full stack technology for web application development.
 
-The fundamental classes for the container and pre-defined components are provided in the two main framework libraries: unify-core and unify-web.
-
-### Unify Core
-* Dependency Injection
+## Features
+* Inversion of Control Container
 * Persistence Framework with ORM
 * Transaction Management
 * Business Service Framework
@@ -25,9 +23,7 @@ The fundamental classes for the container and pre-defined components are provide
 * File Transfer Framework
 * Notification Framework
 * Report Generation Framework
-* Unify Page Language
-
-### Unify Web
+* Page Template Language
 * Model-view-controller Framework
 * Single-page Application Framework
 * Rich library of user interface widgets
