@@ -329,11 +329,10 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
 
         private Query<T> query;
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
         public CrudData(Class<T> entityClass, String title) {
             this.title = title;
             recordList = new ArrayList<T>();
-            query = new Query(entityClass);
+            query = Query.of(entityClass);
         }
 
         public Long getParentId() {

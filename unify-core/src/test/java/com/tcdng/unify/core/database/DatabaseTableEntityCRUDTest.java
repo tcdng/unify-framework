@@ -69,22 +69,22 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
 
             Aggregate<?> aggregate =
-                    db.aggregate(AggregateType.SUM, new FruitQuery().select("price").ignoreEmptyCriteria(true));
+                    db.aggregate(AggregateType.SUM, new FruitQuery().addSelect("price").ignoreEmptyCriteria(true));
             assertNotNull(aggregate);
             assertEquals(4, aggregate.getCount());
             assertEquals(140.00, aggregate.getValue());
 
-            aggregate = db.aggregate(AggregateType.AVERAGE, new FruitQuery().like("name", "apple").select("price"));
+            aggregate = db.aggregate(AggregateType.AVERAGE, new FruitQuery().addLike("name", "apple").addSelect("price"));
             assertNotNull(aggregate);
             assertEquals(2, aggregate.getCount());
             assertEquals(40.00, aggregate.getValue());
 
-            aggregate = db.aggregate(AggregateType.MAXIMUM, new FruitQuery().select("price").ignoreEmptyCriteria(true));
+            aggregate = db.aggregate(AggregateType.MAXIMUM, new FruitQuery().addSelect("price").ignoreEmptyCriteria(true));
             assertNotNull(aggregate);
             assertEquals(4, aggregate.getCount());
             assertEquals(60.00, aggregate.getValue());
 
-            aggregate = db.aggregate(AggregateType.MINIMUM, new FruitQuery().like("name", "apple").select("price"));
+            aggregate = db.aggregate(AggregateType.MINIMUM, new FruitQuery().addLike("name", "apple").addSelect("price"));
             assertNotNull(aggregate);
             assertEquals(2, aggregate.getCount());
             assertEquals(20.00, aggregate.getValue());
@@ -104,7 +104,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Sum
             List<Aggregate<?>> list = db.aggregateMany(AggregateType.SUM,
-                    new FruitQuery().select("price", "quantity").ignoreEmptyCriteria(true));
+                    new FruitQuery().addSelect("price", "quantity").ignoreEmptyCriteria(true));
             assertNotNull(list);
             assertEquals(2, list.size());
 
@@ -121,7 +121,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Average
             list = db.aggregateMany(AggregateType.AVERAGE,
-                    new FruitQuery().like("name", "apple").select("quantity", "price"));
+                    new FruitQuery().addLike("name", "apple").addSelect("quantity", "price"));
             assertNotNull(list);
             assertEquals(2, list.size());
 
@@ -138,7 +138,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Maximum
             list = db.aggregateMany(AggregateType.MAXIMUM,
-                    new FruitQuery().select("price", "quantity").ignoreEmptyCriteria(true));
+                    new FruitQuery().addSelect("price", "quantity").ignoreEmptyCriteria(true));
             assertNotNull(list);
             assertEquals(2, list.size());
 
@@ -155,7 +155,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Minimum
             list = db.aggregateMany(AggregateType.MINIMUM,
-                    new FruitQuery().like("name", "apple").select("quantity", "price"));
+                    new FruitQuery().addLike("name", "apple").addSelect("quantity", "price"));
             assertNotNull(list);
             assertEquals(2, list.size());
 
@@ -186,7 +186,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Count
             Aggregate<?> countAggregate =
-                    db.aggregate(AggregateType.COUNT, new FruitQuery().select("color").lessEqual("price", 45.00));
+                    db.aggregate(AggregateType.COUNT, new FruitQuery().addSelect("color").addLessThanEqual("price", 45.00));
             assertNotNull(countAggregate);
             assertEquals("color", countAggregate.getFieldName());
             assertEquals(4, countAggregate.getCount());
@@ -194,7 +194,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Count with distinct
             countAggregate = db.aggregate(AggregateType.COUNT,
-                    new FruitQuery().select("color").lessEqual("price", 45.00).distinct(true));
+                    new FruitQuery().addSelect("color").addLessThanEqual("price", 45.00).setDistinct(true));
             assertNotNull(countAggregate);
             assertEquals("color", countAggregate.getFieldName());
             assertEquals(4, countAggregate.getCount());
@@ -214,8 +214,8 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(4, db.countAll(new FruitQuery().ignoreEmptyCriteria(true)));
-            assertEquals(2, db.countAll(new FruitQuery().lessEqual("price", 20.00)));
-            assertEquals(1, db.countAll(new FruitQuery().beginsWith("name", "ban")));
+            assertEquals(2, db.countAll(new FruitQuery().addLessThanEqual("price", 20.00)));
+            assertEquals(1, db.countAll(new FruitQuery().addBeginsWith("name", "ban")));
         } finally {
             tm.endTransaction();
         }
@@ -244,7 +244,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(Double.valueOf(20.00), db.min(Double.class, "price", new FruitQuery().like("name", "app")));
+            assertEquals(Double.valueOf(20.00), db.min(Double.class, "price", new FruitQuery().addLike("name", "app")));
         } finally {
             tm.endTransaction();
         }
@@ -258,7 +258,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertNull(db.min(Double.class, "price", new FruitQuery().equals("name", "tangerine")));
+            assertNull(db.min(Double.class, "price", new FruitQuery().addEquals("name", "tangerine")));
         } finally {
             tm.endTransaction();
         }
@@ -287,7 +287,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(Double.valueOf(45.00), db.max(Double.class, "price", new FruitQuery().notLike("name", "app")));
+            assertEquals(Double.valueOf(45.00), db.max(Double.class, "price", new FruitQuery().addNotLike("name", "app")));
         } finally {
             tm.endTransaction();
         }
@@ -301,7 +301,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertNull(db.max(Double.class, "price", new FruitQuery().equals("name", "tangerine")));
+            assertNull(db.max(Double.class, "price", new FruitQuery().addEquals("name", "tangerine")));
         } finally {
             tm.endTransaction();
         }
@@ -368,7 +368,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
         tm.beginTransaction();
         try {
-            List<Fruit> fruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("price"));
+            List<Fruit> fruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("price"));
             assertEquals(2, fruitList.size());
             assertEquals(apple, fruitList.get(0));
             assertEquals(banana, fruitList.get(1));
@@ -425,9 +425,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         tm.beginTransaction();
         try {
             Long id = (Long) db.create(new Fruit("apple", "red", 20.00));
-            assertEquals(1, db.countAll(new FruitQuery().equals("id", id)));
+            assertEquals(1, db.countAll(new FruitQuery().addEquals("id", id)));
             db.delete(Fruit.class, id);
-            assertEquals(0, db.countAll(new FruitQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new FruitQuery().addEquals("id", id)));
         } finally {
             tm.endTransaction();
         }
@@ -478,7 +478,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.deleteAll(new FruitQuery().notEqual("color", "cyan")));
+            assertEquals(3, db.deleteAll(new FruitQuery().addNotEqual("color", "cyan")));
             List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
@@ -496,9 +496,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.deleteAll(new FruitQuery().notEqual("color", "cyan")));
+            assertEquals(3, db.deleteAll(new FruitQuery().addNotEqual("color", "cyan")));
             // Order should be ignored
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().order("color").ignoreEmptyCriteria(true));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addOrder("color").ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
         } finally {
@@ -518,7 +518,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(susan);
 
             // Delete all parklane authors with list only property (telephone)
-            assertEquals(2, db.deleteAll(new AuthorQuery().equals("officeTelephone", "+2348888888")));
+            assertEquals(2, db.deleteAll(new AuthorQuery().addEquals("officeTelephone", "+2348888888")));
 
             // Only Susan should be left
             List<Author> testAuthorList = db.findAll(new AuthorQuery().ignoreEmptyCriteria(true));
@@ -544,8 +544,8 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("tampico", "red", 4.50));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).order("name").limit(9));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("name").setLimit(9));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(2, testFruitList.size());
             assertEquals("tampico", testFruitList.get(0).getName());
             assertEquals("strawberry", testFruitList.get(1).getName());
@@ -569,8 +569,8 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("tampico", "red", 4.50));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).order("name").offset(3));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("name").setOffset(3));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(3, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -595,8 +595,8 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("tampico", "red", 4.50));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).order("id").offset(6).limit(3));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            db.deleteAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id").setOffset(6).setLimit(3));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(8, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -719,7 +719,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             Fruit banana = new Fruit("banana", "yellow", 45.00);
             db.create(banana);
-            Fruit foundFruit = db.find(new FruitQuery().equals("color", "yellow"));
+            Fruit foundFruit = db.find(new FruitQuery().addEquals("color", "yellow"));
             assertEquals(banana, foundFruit);
         } finally {
             tm.endTransaction();
@@ -734,7 +734,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(apple);
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
-            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").min("price"));
+            Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMin("price"));
             assertEquals(apple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -749,7 +749,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(apple);
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
-            Fruit foundFruit = db.find(new FruitQuery().min("price"));
+            Fruit foundFruit = db.find(new FruitQuery().setMin("price"));
             assertEquals(apple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -764,7 +764,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(apple);
             db.create(new Fruit("pineapple", "cyan", 20.00));
             db.create(new Fruit("banana", "yellow", 45.00));
-            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").min("price"));
+            Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMin("price"));
             assertEquals(apple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -779,7 +779,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(apple);
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 20.00));
-            Fruit foundFruit = db.find(new FruitQuery().min("price"));
+            Fruit foundFruit = db.find(new FruitQuery().setMin("price"));
             assertEquals(apple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -794,7 +794,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
-            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").max("price"));
+            Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMax("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -809,7 +809,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
-            Fruit foundFruit = db.find(new FruitQuery().max("price"));
+            Fruit foundFruit = db.find(new FruitQuery().setMax("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -824,7 +824,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
-            Fruit foundFruit = db.find(new FruitQuery().like("name", "app").max("price"));
+            Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMax("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -839,7 +839,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit pineapple = new Fruit("pineapple", "cyan", 60.00);
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 60.00));
-            Fruit foundFruit = db.find(new FruitQuery().max("price"));
+            Fruit foundFruit = db.find(new FruitQuery().setMax("price"));
             assertEquals(pineapple, foundFruit);
         } finally {
             tm.endTransaction();
@@ -853,7 +853,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
-            Fruit foundFruit = db.find(new FruitQuery().equals("color", "cyan").select("name", "price"));
+            Fruit foundFruit = db.find(new FruitQuery().addEquals("color", "cyan").addSelect("name", "price"));
             assertNotNull(foundFruit);
             assertEquals("pineapple", foundFruit.getName());
             assertNull(foundFruit.getColor());
@@ -871,7 +871,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
-            db.find(new FruitQuery().like("name", "apple"));
+            db.find(new FruitQuery().addLike("name", "apple"));
         } finally {
             tm.endTransaction();
         }
@@ -884,7 +884,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
-            assertNull(db.find(new FruitQuery().like("name", "zing")));
+            assertNull(db.find(new FruitQuery().addLike("name", "zing")));
         } finally {
             tm.endTransaction();
         }
@@ -900,7 +900,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().lessEqual("price", 20.00).order("price"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addLessThanEqual("price", 20.00).addOrder("price"));
             assertEquals(2, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
             assertEquals(apple, testFruitList.get(1));
@@ -920,7 +920,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
             List<Fruit> testFruitList =
-                    db.findAll(new FruitQuery().lessEqual("price", 20.00).order(OrderType.DESCENDING, "price"));
+                    db.findAll(new FruitQuery().addLessThanEqual("price", 20.00).addOrder(OrderType.DESCENDING, "price"));
             assertEquals(2, testFruitList.size());
             assertEquals(apple, testFruitList.get(0));
             assertEquals(orange, testFruitList.get(1));
@@ -940,7 +940,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
             List<Fruit> testFruitList =
-                    db.findAll(new FruitQuery().lessEqual("price", 20.00).order("price").select("name", "quantity"));
+                    db.findAll(new FruitQuery().addLessThanEqual("price", 20.00).addOrder("price").addSelect("name", "quantity"));
             assertEquals(2, testFruitList.size());
 
             Fruit foundFruit = testFruitList.get(0);
@@ -972,7 +972,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
             Map<String, Fruit> testFruitMap =
-                    db.findAllMap(String.class, "name", new FruitQuery().lessEqual("price", 20.00).order("price"));
+                    db.findAllMap(String.class, "name", new FruitQuery().addLessThanEqual("price", 20.00).addOrder("price"));
             assertEquals(2, testFruitMap.size());
             assertEquals(orange, testFruitMap.get("orange"));
             assertEquals(apple, testFruitMap.get("apple"));
@@ -991,7 +991,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().amongst("name", Arrays.asList("orange")));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addAmongst("name", Arrays.asList("orange")));
             assertEquals(1, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
         } finally {
@@ -1010,7 +1010,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
             List<Fruit> testFruitList =
-                    db.findAll(new FruitQuery().amongst("name", Arrays.asList("apple", "orange")).order("price"));
+                    db.findAll(new FruitQuery().addAmongst("name", Arrays.asList("apple", "orange")).addOrder("price"));
             assertEquals(2, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
             assertEquals(apple, testFruitList.get(1));
@@ -1029,7 +1029,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit orange = new Fruit("orange", "orange", 15.00);
             db.create(orange);
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().amongst("name", Arrays.asList()));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addAmongst("name", Arrays.asList()));
             assertEquals(1, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
         } finally {
@@ -1047,14 +1047,14 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("mango", "green", 52.00));
             db.create(new Fruit("pineapple", "green", 63.00));
             db.create(new Fruit("peach", "peach", 11.50));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id").limit(4));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id").setLimit(4));
             assertEquals(4, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
             assertEquals("orange", testFruitList.get(2).getName());
             assertEquals("mango", testFruitList.get(3).getName());
 
-            testFruitList = db.findAll(new FruitQuery().greater("price", 20.0).order("id").limit(2));
+            testFruitList = db.findAll(new FruitQuery().addGreaterThan("price", 20.0).addOrder("id").setLimit(2));
             assertEquals(2, testFruitList.size());
             assertEquals("banana", testFruitList.get(0).getName());
             assertEquals("orange", testFruitList.get(1).getName());
@@ -1079,7 +1079,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
             List<Fruit> testFruitList =
-                    db.findAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).order("id"));
+                    db.findAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).addOrder("id"));
             assertEquals(8, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -1108,7 +1108,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("avocado", "purple", 99.20));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(10, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -1143,7 +1143,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             FruitQuery query = (FruitQuery) new FruitQuery().ignoreEmptyCriteria(true);
             Restriction restriction = query.getRestrictions();
             Query<Fruit> copyQuery =
-                    query.copyNoCriteria().add(restriction).like("name", "apple").order("name");
+                    query.copyNoCriteria().addRestriction(restriction).addLike("name", "apple").addOrder("name");
             
             List<Fruit> testFruitList = db.findAll(copyQuery);
             
@@ -1266,7 +1266,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, testOfficeId));
 
-            Author foundAuthor = db.list(new AuthorQuery().equals("age", 45));
+            Author foundAuthor = db.list(new AuthorQuery().addEquals("age", 45));
             assertEquals("Susan Bramer", foundAuthor.getName());
             assertEquals(Integer.valueOf(45), foundAuthor.getAge());
             assertEquals(Gender.FEMALE, foundAuthor.getGender());
@@ -1288,7 +1288,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, testOfficeId));
 
-            Author foundAuthor = db.list(new AuthorQuery().equals("age", 45).select("name", "gender", "retiredDesc",
+            Author foundAuthor = db.list(new AuthorQuery().addEquals("age", 45).addSelect("name", "gender", "retiredDesc",
                     "officeId", "officeAddress"));
             assertEquals("Susan Bramer", foundAuthor.getName());
             assertEquals(Gender.FEMALE, foundAuthor.getGender());
@@ -1312,7 +1312,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             testOfficeId = (Long) db.create(warehouseOffice);
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, testOfficeId));
 
-            Author foundAuthor = db.list(new AuthorQuery().equals("officeTelephone", "+2345555555"));
+            Author foundAuthor = db.list(new AuthorQuery().addEquals("officeTelephone", "+2345555555"));
             assertEquals("Susan Bramer", foundAuthor.getName());
             assertEquals(Integer.valueOf(45), foundAuthor.getAge());
             assertEquals(Gender.FEMALE, foundAuthor.getGender());
@@ -1334,7 +1334,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, testOfficeId));
             db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, testOfficeId));
-            db.list(new AuthorQuery().less("age", 60));
+            db.list(new AuthorQuery().addLessThan("age", 60));
         } finally {
             tm.endTransaction();
         }
@@ -1348,7 +1348,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, testOfficeId));
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, testOfficeId));
             db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, testOfficeId));
-            assertNull(db.list(new AuthorQuery().greater("age", 100)));
+            assertNull(db.list(new AuthorQuery().addGreaterThan("age", 100)));
         } finally {
             tm.endTransaction();
         }
@@ -1366,7 +1366,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
 
             // Pick authors with age less or equals 50 and order by name
-            List<Author> testAuthorList = db.listAll(new AuthorQuery().lessEqual("age", 50).order("name"));
+            List<Author> testAuthorList = db.listAll(new AuthorQuery().addLessThanEqual("age", 50).addOrder("name"));
             assertEquals(2, testAuthorList.size());
 
             // Should pick the Bramers with different offices
@@ -1407,7 +1407,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Pick authors with age less or equals 50 and order by name
             List<Author> testAuthorList =
-                    db.listAll(new AuthorQuery().lessEqual("age", 50).order(OrderType.DESCENDING, "name"));
+                    db.listAll(new AuthorQuery().addLessThanEqual("age", 50).addOrder(OrderType.DESCENDING, "name"));
             assertEquals(2, testAuthorList.size());
 
             // Should pick the Bramers with different offices
@@ -1447,7 +1447,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
 
             // Pick authors with age less or equals 50 and order by name
-            List<Author> testAuthorList = db.listAll(new AuthorQuery().lessEqual("age", 50).order("name").select("age",
+            List<Author> testAuthorList = db.listAll(new AuthorQuery().addLessThanEqual("age", 50).addOrder("name").addSelect("age",
                     "retired", "gender", "officeTelephone"));
             assertEquals(2, testAuthorList.size());
 
@@ -1487,7 +1487,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Pick authors with age less or equals 50 and order by name
             Map<String, Author> testAuthorMap =
-                    db.listAllMap(String.class, "name", new AuthorQuery().lessEqual("age", 50).order("name"));
+                    db.listAllMap(String.class, "name", new AuthorQuery().addLessThanEqual("age", 50).addOrder("name"));
             assertNotNull(testAuthorMap);
             assertEquals(2, testAuthorMap.size());
 
@@ -1526,14 +1526,14 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("mango", "green", 52.00));
             db.create(new Fruit("pineapple", "green", 63.00));
             db.create(new Fruit("peach", "peach", 11.50));
-            List<Fruit> testFruitList = db.listAll(new FruitQuery().ignoreEmptyCriteria(true).order("id").limit(4));
+            List<Fruit> testFruitList = db.listAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id").setLimit(4));
             assertEquals(4, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
             assertEquals("orange", testFruitList.get(2).getName());
             assertEquals("mango", testFruitList.get(3).getName());
 
-            testFruitList = db.findAll(new FruitQuery().greater("price", 20.0).order("id").limit(2));
+            testFruitList = db.findAll(new FruitQuery().addGreaterThan("price", 20.0).addOrder("id").setLimit(2));
             assertEquals(2, testFruitList.size());
             assertEquals("banana", testFruitList.get(0).getName());
             assertEquals("orange", testFruitList.get(1).getName());
@@ -1558,7 +1558,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
             List<Fruit> testFruitList =
-                    db.listAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).order("id"));
+                    db.listAll(new FruitQuery().ignoreEmptyCriteria(true).applyAppQueryLimit(true).addOrder("id"));
             assertEquals(8, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -1587,7 +1587,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("avocado", "purple", 99.20));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            List<Fruit> testFruitList = db.listAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            List<Fruit> testFruitList = db.listAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(10, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
@@ -1618,7 +1618,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // Pick authors with parklane telephone (view-only) and order by
             // name
             List<Author> testAuthorList =
-                    db.listAll(new AuthorQuery().equals("officeTelephone", "+2348888888").order("name"));
+                    db.listAll(new AuthorQuery().addEquals("officeTelephone", "+2348888888").addOrder("name"));
             assertEquals(2, testAuthorList.size());
 
             // Should pick the Brian and Winfield with different offices
@@ -1929,8 +1929,8 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.updateAll(new FruitQuery().lessEqual("price", 45.00), new Update().add("price", 30.00)));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("name"));
+            assertEquals(3, db.updateAll(new FruitQuery().addLessThanEqual("price", 45.00), new Update().add("price", 30.00)));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("name"));
             assertEquals(4, testFruitList.size());
 
             assertEquals("apple", testFruitList.get(0).getName());
@@ -1954,9 +1954,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.updateAll(new FruitQuery().lessEqual("price", 45.00).order("id"),
+            assertEquals(3, db.updateAll(new FruitQuery().addLessThanEqual("price", 45.00).addOrder("id"),
                     new Update().add("price", 30.00)));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("name"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("name"));
             assertEquals(4, testFruitList.size());
 
             assertEquals("apple", testFruitList.get(0).getName());
@@ -1985,10 +1985,10 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Update the age of all parklane authors with list only property
             // (telephone) to 100
-            assertEquals(2, db.updateAll(new AuthorQuery().equals("officeTelephone", "+2348888888"),
+            assertEquals(2, db.updateAll(new AuthorQuery().addEquals("officeTelephone", "+2348888888"),
                     new Update().add("age", 100)));
 
-            List<Author> testAuthorList = db.findAll(new AuthorQuery().ignoreEmptyCriteria(true).order("age", "name"));
+            List<Author> testAuthorList = db.findAll(new AuthorQuery().ignoreEmptyCriteria(true).addOrder("age", "name"));
             assertEquals(3, testAuthorList.size());
 
             // Susan's age should be first and remain same at 45
@@ -2018,9 +2018,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("avocado", "purple", 99.20));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            db.updateAll(new FruitQuery().ignoreEmptyCriteria(true).order("name").limit(9),
+            db.updateAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("name").setLimit(9),
                     new Update().add("price", 99.99));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(10, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals(Double.valueOf(99.99), testFruitList.get(0).getPrice());
@@ -2061,9 +2061,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("avocado", "purple", 99.20));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            db.updateAll(new FruitQuery().ignoreEmptyCriteria(true).order("name").offset(3),
+            db.updateAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("name").setOffset(3),
                     new Update().add("price", 99.99));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(10, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals(Double.valueOf(20.00), testFruitList.get(0).getPrice());
@@ -2104,9 +2104,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("avocado", "purple", 99.20));
             db.create(new Fruit("grape", "yellow", 4.50));
             db.create(new Fruit("strawberry", "red", 4.50));
-            db.updateAll(new FruitQuery().ignoreEmptyCriteria(true).order("name").offset(6).limit(3),
+            db.updateAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("name").setOffset(6).setLimit(3),
                     new Update().add("price", 99.99));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).order("id"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true).addOrder("id"));
             assertEquals(10, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals(Double.valueOf(20.00), testFruitList.get(0).getPrice());
@@ -2162,7 +2162,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             User user = new User("tiger", "scott");
             db.create(user);
 
-            List<User> userList = db.findAll(new UserQuery().equals("password", "scott"));
+            List<User> userList = db.findAll(new UserQuery().addEquals("password", "scott"));
             assertEquals(1, userList.size());
 
             User fetchedUser = userList.get(0);
@@ -2181,7 +2181,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             User user = new User("tiger", "scott");
             db.create(user);
 
-            List<User> userList = db.listAll(new UserQuery().equals("password", "scott"));
+            List<User> userList = db.listAll(new UserQuery().addEquals("password", "scott"));
             assertEquals(1, userList.size());
 
             User fetchedUser = userList.get(0);
@@ -2220,7 +2220,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Long id = (Long) db.create(user);
             User fetchedUser = db.find(User.class, id);
 
-            db.updateAll(new UserQuery().equals("id", id), new Update().add("password", "tyler"));
+            db.updateAll(new UserQuery().addEquals("id", id), new Update().add("password", "tyler"));
 
             User refetchedUser = db.find(User.class, id);
 
@@ -2241,7 +2241,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(user1);
             db.create(user2);
 
-            int deleteCount = db.deleteAll(new UserQuery().equals("password", "brown"));
+            int deleteCount = db.deleteAll(new UserQuery().addEquals("password", "brown"));
             assertEquals(1, deleteCount);
 
             List<User> userList = db.findAll(new UserQuery().ignoreEmptyCriteria(true));
@@ -2281,7 +2281,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             ServerConfig serverConfig = new ServerConfig("alan", "greenspan");
             db.create(serverConfig);
 
-            List<ServerConfig> serverConfigList = db.findAll(new ServerConfigQuery().equals("password", "greenspan"));
+            List<ServerConfig> serverConfigList = db.findAll(new ServerConfigQuery().addEquals("password", "greenspan"));
             assertEquals(1, serverConfigList.size());
 
             ServerConfig fetchedServerConfig = serverConfigList.get(0);
@@ -2320,7 +2320,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Long id = (Long) db.create(serverConfig);
             ServerConfig fetchedServerConfig = db.find(ServerConfig.class, id);
 
-            db.updateAll(new ServerConfigQuery().equals("id", id), new Update().add("password", "bluebridge"));
+            db.updateAll(new ServerConfigQuery().addEquals("id", id), new Update().add("password", "bluebridge"));
 
             ServerConfig refetchedServerConfig = db.find(ServerConfig.class, id);
 
@@ -2341,7 +2341,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(serverConfig1);
             db.create(serverConfig2);
 
-            int deleteCount = db.deleteAll(new ServerConfigQuery().equals("password", "jones"));
+            int deleteCount = db.deleteAll(new ServerConfigQuery().addEquals("password", "jones"));
             assertEquals(1, deleteCount);
 
             List<ServerConfig> serverConfigList = db.findAll(new ServerConfigQuery().ignoreEmptyCriteria(true));
@@ -2631,7 +2631,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("beanEditor"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.findLean(new ReportQuery().equals("id", id));
+            Report foundReport = db.findLean(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -2651,7 +2651,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
                     .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.findLean(new ReportQuery().equals("id", id));
+            Report foundReport = db.findLean(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -2670,7 +2670,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("beanEditor"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.find(new ReportQuery().equals("id", id));
+            Report foundReport = db.find(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -2691,7 +2691,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
                     .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.find(new ReportQuery().equals("id", id));
+            Report foundReport = db.find(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -2723,7 +2723,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("beanEditor"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.find(new ReportQuery().equals("id", id).select("name", "reportForm"));
+            Report foundReport = db.find(new ReportQuery().addEquals("id", id).addSelect("name", "reportForm"));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertNull(foundReport.getDescription());
@@ -2744,7 +2744,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
                     .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.find(new ReportQuery().equals("id", id).select("name", "parameters"));
+            Report foundReport = db.find(new ReportQuery().addEquals("id", id).addSelect("name", "parameters"));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertNull(foundReport.getDescription());
@@ -2839,7 +2839,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             rpEnd.addOption(rpo20);
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.find(new ReportQuery().equals("id", id));
+            Report foundReport = db.find(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -3029,7 +3029,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("grayEditor"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.listLean(new ReportQuery().equals("id", id));
+            Report foundReport = db.listLean(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -3048,7 +3048,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.listLean(new ReportQuery().equals("id", id));
+            Report foundReport = db.listLean(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -3067,7 +3067,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("grayEditor"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.list(new ReportQuery().equals("id", id));
+            Report foundReport = db.list(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -3087,7 +3087,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.list(new ReportQuery().equals("id", id));
+            Report foundReport = db.list(new ReportQuery().addEquals("id", id));
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -3109,7 +3109,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("grayEditor"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.list(new ReportQuery().equals("id", id).select("description", "reportForm"));
+            Report foundReport = db.list(new ReportQuery().addEquals("id", id).addSelect("description", "reportForm"));
             assertNotNull(foundReport);
             assertNull(foundReport.getName());
             assertEquals("Weekly Report", foundReport.getDescription());
@@ -3129,7 +3129,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.list(new ReportQuery().equals("id", id).select("parameters"));
+            Report foundReport = db.list(new ReportQuery().addEquals("id", id).addSelect("parameters"));
             assertNotNull(foundReport);
             assertNull(foundReport.getName());
             assertNull(foundReport.getDescription());
@@ -3217,7 +3217,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             rpEnd.addOption(rpo20);
             Long id = (Long) db.create(report);
 
-            Report foundReport = db.list(new ReportQuery().equals("id", id));
+            Report foundReport = db.list(new ReportQuery().addEquals("id", id));
 
             assertNotNull(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
@@ -3414,7 +3414,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setParameters(new ArrayList<ReportParameter>());
             Long id = (Long) db.create(report);
             db.delete(Report.class, id);
-            assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new ReportQuery().addEquals("id", id)));
         } finally {
             tm.endTransaction();
         }
@@ -3428,7 +3428,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setParameters(null);
             Long id = (Long) db.create(report);
             db.delete(Report.class, id);
-            assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new ReportQuery().addEquals("id", id)));
         } finally {
             tm.endTransaction();
         }
@@ -3442,7 +3442,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("sampleEditor"));
             Long id = (Long) db.create(report);
             db.delete(Report.class, id);
-            assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new ReportQuery().addEquals("id", id)));
             assertEquals(0, db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true)));
         } finally {
             tm.endTransaction();
@@ -3457,7 +3457,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
             Long id = (Long) db.create(report);
             db.delete(Report.class, id);
-            assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new ReportQuery().addEquals("id", id)));
             assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
         } finally {
             tm.endTransaction();
@@ -3478,7 +3478,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             db.delete(Report.class, id);
 
-            assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new ReportQuery().addEquals("id", id)));
             assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
             assertEquals(0, db.countAll(new ReportParameterOptionsQuery().ignoreEmptyCriteria(true)));
         } finally {
@@ -3495,7 +3495,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Long id = (Long) db.create(report);
             report = db.find(Report.class, id);
             db.deleteByIdVersion(report);
-            assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new ReportQuery().addEquals("id", id)));
             assertEquals(0, db.countAll(new ReportFormQuery().ignoreEmptyCriteria(true)));
         } finally {
             tm.endTransaction();
@@ -3512,7 +3512,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Long id = (Long) db.create(report);
             report = db.find(Report.class, id);
             db.deleteByIdVersion(report);
-            assertEquals(0, db.countAll(new ReportQuery().equals("id", id)));
+            assertEquals(0, db.countAll(new ReportQuery().addEquals("id", id)));
             assertEquals(0, db.countAll(new ReportParameterQuery().ignoreEmptyCriteria(true)));
         } finally {
             tm.endTransaction();
@@ -3597,7 +3597,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new ReportForm("editor2"));
             Long id2 = (Long) db.create(report);
 
-            db.deleteAll(new ReportQuery().equals("id", id1));
+            db.deleteAll(new ReportQuery().addEquals("id", id1));
 
             int count = db.countAll(new ReportQuery().ignoreEmptyCriteria(true));
             assertEquals(1, count);
@@ -3626,7 +3626,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             report.addParameter(new ReportParameter("staffNo"));
             Long id2 = (Long) db.create(report);
 
-            db.deleteAll(new ReportQuery().equals("id", id1));
+            db.deleteAll(new ReportQuery().addEquals("id", id1));
 
             int count = db.countAll(new ReportQuery().ignoreEmptyCriteria(true));
             assertEquals(1, count);
@@ -3663,7 +3663,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             rpStaff.addOption(rpo20);
             Long id2 = (Long) db.create(report);
 
-            db.deleteAll(new ReportQuery().equals("id", id1));
+            db.deleteAll(new ReportQuery().addEquals("id", id1));
 
             int count = db.countAll(new ReportQuery().ignoreEmptyCriteria(true));
             assertEquals(1, count);
@@ -3696,10 +3696,10 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00, 45));
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
-            String color = db.value(String.class, "color", new FruitQuery().equals("name", "apple"));
+            String color = db.value(String.class, "color", new FruitQuery().addEquals("name", "apple"));
             assertEquals("red", color);
 
-            Double price = db.value(Double.class, "price", new FruitQuery().equals("name", "banana"));
+            Double price = db.value(Double.class, "price", new FruitQuery().addEquals("name", "banana"));
             assertEquals(Double.valueOf(45.00), price);
         } finally {
             tm.endTransaction();
@@ -3715,7 +3715,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00, 45));
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
-            db.value(String.class, "color", new FruitQuery().like("name", "apple"));
+            db.value(String.class, "color", new FruitQuery().addLike("name", "apple"));
         } finally {
             tm.endTransaction();
         }
@@ -3730,7 +3730,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00, 45));
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
-            List<String> colorList = db.valueList(String.class, "color", new FruitQuery().like("name", "apple"));
+            List<String> colorList = db.valueList(String.class, "color", new FruitQuery().addLike("name", "apple"));
             assertEquals(2, colorList.size());
             assertTrue(colorList.contains("red"));
             assertTrue(colorList.contains("cyan"));
@@ -3749,7 +3749,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             Set<String> nameSet =
-                    db.valueSet(String.class, "name", new FruitQuery().greater("price", Double.valueOf(15.00)));
+                    db.valueSet(String.class, "name", new FruitQuery().addGreaterThan("price", Double.valueOf(15.00)));
             assertEquals(3, nameSet.size());
             assertTrue(nameSet.contains("apple"));
             assertTrue(nameSet.contains("pineapple"));
@@ -3769,7 +3769,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             Map<String, Double> priceByFruit = db.valueMap(String.class, "name", Double.class, "price",
-                    new FruitQuery().greater("price", Double.valueOf(15.00)));
+                    new FruitQuery().addGreaterThan("price", Double.valueOf(15.00)));
             assertEquals(3, priceByFruit.size());
             assertEquals(Double.valueOf(20.00), priceByFruit.get("apple"));
             assertEquals(Double.valueOf(60.00), priceByFruit.get("pineapple"));
@@ -3789,7 +3789,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "red", 15.00, 11));
 
             Map<String, List<String>> fruitsByColor = db.valueListMap(String.class, "color", String.class, "name",
-                    new FruitQuery().order("name").ignoreEmptyCriteria(true));
+                    new FruitQuery().addOrder("name").ignoreEmptyCriteria(true));
             assertNotNull(fruitsByColor);
             assertEquals(2, fruitsByColor.size());
 
@@ -3820,7 +3820,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 25.00));
             Fruit starApple = new Fruit("starapple", "purple", 20.00);
             db.create(starApple);
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().like("name", "apple").min("price").order("name"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addLike("name", "apple").setMin("price").addOrder("name"));
             assertEquals(2, testFruitList.size());
             assertEquals(apple, testFruitList.get(0));
             assertEquals(starApple, testFruitList.get(1));
@@ -3839,7 +3839,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("apple", "red", 20.00));
             db.create(new Fruit("orange", "orange", 25.00));
             db.create(new Fruit("starapple", "purple", 20.00));
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().min("price"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().setMin("price"));
             assertEquals(1, testFruitList.size());
             assertEquals(banana, testFruitList.get(0));
         } finally {
@@ -3860,7 +3860,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Pick authors with age less or equals 50 and order by name
             List<Author> testAuthorList =
-                    db.listAll(new AuthorQuery().lessEqual("age", 50).min("officeSize").order("name"));
+                    db.listAll(new AuthorQuery().addLessThanEqual("age", 50).setMin("officeSize").addOrder("name"));
             assertEquals(1, testAuthorList.size());
 
             // Should pick the Brian brammer because office has smaller size
@@ -3890,7 +3890,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
 
             // Pick authors with smallest office size
-            List<Author> testAuthorList = db.listAll(new AuthorQuery().min("officeSize").order("name"));
+            List<Author> testAuthorList = db.listAll(new AuthorQuery().setMin("officeSize").addOrder("name"));
             assertEquals(2, testAuthorList.size());
 
             // Should pick the authors in parklane
@@ -3929,7 +3929,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 25.00));
             Fruit starApple = new Fruit("starapple", "purple", 20.00);
             db.create(starApple);
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().like("name", "apple").max("price").order("name"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addLike("name", "apple").setMax("price").addOrder("name"));
             assertEquals(1, testFruitList.size());
             assertEquals(apple, testFruitList.get(0));
         } finally {
@@ -3948,7 +3948,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 25.00));
             Fruit starApple = new Fruit("starapple", "purple", 60.20);
             db.create(starApple);
-            List<Fruit> testFruitList = db.findAll(new FruitQuery().max("price").order("name"));
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().setMax("price").addOrder("name"));
             assertEquals(2, testFruitList.size());
             assertEquals(banana, testFruitList.get(0));
             assertEquals(starApple, testFruitList.get(1));
@@ -3970,7 +3970,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             // Pick authors with age less or equals 50 and order by name
             List<Author> testAuthorList =
-                    db.listAll(new AuthorQuery().equals("gender", Gender.MALE).max("age").order("name"));
+                    db.listAll(new AuthorQuery().addEquals("gender", Gender.MALE).setMax("age").addOrder("name"));
             assertEquals(1, testAuthorList.size());
 
             // Should pick the Winfield Hill because is male with max age
@@ -4000,7 +4000,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
 
             // Pick authors with largest office size
-            List<Author> testAuthorList = db.listAll(new AuthorQuery().max("officeSize").order("name"));
+            List<Author> testAuthorList = db.listAll(new AuthorQuery().setMax("officeSize").addOrder("name"));
             assertEquals(1, testAuthorList.size());
 
             // Should pick the authors in warehouse

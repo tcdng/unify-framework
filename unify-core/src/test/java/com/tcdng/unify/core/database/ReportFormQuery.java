@@ -28,6 +28,6 @@ public class ReportFormQuery extends AbstractTestTableEntityQuery<ReportForm> {
     }
 
     public ReportFormQuery reportId(Long reportId) {
-        return (ReportFormQuery) equals("reportId", reportId);
+        return (ReportFormQuery) addEquals("reportId", reportId);
     }
 }

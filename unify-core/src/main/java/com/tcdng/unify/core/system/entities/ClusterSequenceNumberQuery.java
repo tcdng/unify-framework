@@ -30,6 +30,6 @@ public class ClusterSequenceNumberQuery extends Query<ClusterSequenceNumber> {
     }
 
     public ClusterSequenceNumberQuery sequenceName(String sequenceName) {
-        return (ClusterSequenceNumberQuery) equals("sequenceName", sequenceName);
+        return (ClusterSequenceNumberQuery) addEquals("sequenceName", sequenceName);
     }
 }

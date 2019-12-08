@@ -30,6 +30,6 @@ public class ParametersDefQuery extends Query<ParametersDef> {
     }
 
     public ParametersDefQuery typeName(String typeName) {
-        return (ParametersDefQuery) equals("typeName", typeName);
+        return (ParametersDefQuery) addEquals("typeName", typeName);
     }
 }
