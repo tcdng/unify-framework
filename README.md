@@ -10,7 +10,7 @@ Unify Framework is a server-side component-based framework for developing web ap
 
 The framework makes available, to the developer, a solid set of reusable and extensible software components built using high level abstractions that effectively hide the details of underlying complexities from the developer.
 
-The framework aims to avoid the mishmash of varying technologies by providing a unified full stack platform for web application development.
+The framework aims to avoid the mishmash of varying technologies by providing a unified full stack platform.
 
 ## Features
 * Inversion of Control Container
