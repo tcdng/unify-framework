@@ -88,6 +88,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertNotNull(aggregate);
             assertEquals(2, aggregate.getCount());
             assertEquals(20.00, aggregate.getValue());
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -169,6 +172,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("price", priceAggregate.getFieldName());
             assertEquals(2, priceAggregate.getCount());
             assertEquals(20.00, priceAggregate.getValue());
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -200,6 +206,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(4, countAggregate.getCount());
             assertEquals("3", countAggregate.getValue());
 
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -216,6 +225,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(4, db.countAll(new FruitQuery().ignoreEmptyCriteria(true)));
             assertEquals(2, db.countAll(new FruitQuery().addLessThanEqual("price", 20.00)));
             assertEquals(1, db.countAll(new FruitQuery().addBeginsWith("name", "ban")));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -231,6 +243,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(Double.valueOf(15.00),
                     db.min(Double.class, "price", new FruitQuery().ignoreEmptyCriteria(true)));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -245,6 +260,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(Double.valueOf(20.00), db.min(Double.class, "price", new FruitQuery().addLike("name", "app")));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -259,6 +277,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
             assertNull(db.min(Double.class, "price", new FruitQuery().addEquals("name", "tangerine")));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -274,6 +295,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(Double.valueOf(60.00),
                     db.max(Double.class, "price", new FruitQuery().ignoreEmptyCriteria(true)));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -288,6 +312,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(Double.valueOf(45.00), db.max(Double.class, "price", new FruitQuery().addNotLike("name", "app")));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -302,6 +329,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
             assertNull(db.max(Double.class, "price", new FruitQuery().addEquals("name", "tangerine")));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -323,6 +353,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Office bingoOffice = new Office("24, Parklane Apapa", "+2348888888", 20);
             bingoOffice.setWorkDays(new String[] { "mon", "tue", "wed" });
 
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -349,6 +382,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(originalDays[0], createdDays[0]);
             assertEquals(originalDays[1], createdDays[1]);
             assertEquals(originalDays[2], createdDays[2]);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -362,6 +398,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         try {
             db.create(apple);
             db.create(banana);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -372,6 +411,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(2, fruitList.size());
             assertEquals(apple, fruitList.get(0));
             assertEquals(banana, fruitList.get(1));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -428,6 +470,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(1, db.countAll(new FruitQuery().addEquals("id", id)));
             db.delete(Fruit.class, id);
             assertEquals(0, db.countAll(new FruitQuery().addEquals("id", id)));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -439,6 +484,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.delete(Fruit.class, 20L);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -451,6 +499,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Long id = (Long) db.create(new Fruit("apple", "red", 20.00));
             Fruit fruitData = db.find(Fruit.class, id);
             db.deleteByIdVersion(fruitData);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -464,6 +515,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Fruit fruitData = db.find(Fruit.class, id);
             fruitData.setVersion(20L);
             db.deleteByIdVersion(fruitData);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -482,6 +536,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -501,6 +558,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             List<Fruit> testFruitList = db.findAll(new FruitQuery().addOrder("color").ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -524,6 +584,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             List<Author> testAuthorList = db.findAll(new AuthorQuery().ignoreEmptyCriteria(true));
             assertEquals(1, testAuthorList.size());
             assertEquals(susan, testAuthorList.get(0));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -549,6 +612,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(2, testFruitList.size());
             assertEquals("tampico", testFruitList.get(0).getName());
             assertEquals("strawberry", testFruitList.get(1).getName());
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -575,6 +641,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("apple", testFruitList.get(0).getName());
             assertEquals("banana", testFruitList.get(1).getName());
             assertEquals("avocado", testFruitList.get(2).getName());
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -606,6 +675,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("peach", testFruitList.get(5).getName());
             assertEquals("grape", testFruitList.get(6).getName());
             assertEquals("strawberry", testFruitList.get(7).getName());
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -635,6 +707,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertNotNull(testAuthorList.size());
             assertEquals(1, testAuthorList.size());
             assertEquals(susan, testAuthorList.get(0));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -648,6 +723,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Long id = (Long) db.create(apple);
             Fruit foundApple = db.find(Fruit.class, id);
             assertEquals(apple, foundApple);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -659,6 +737,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         try {
             db.create(new Fruit("apple", "red", 20.00));
             db.find(Fruit.class, 20L);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -672,6 +753,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Long id = (Long) db.create(apple);
             Fruit foundApple = db.find(Fruit.class, id, 1L);
             assertEquals(apple, foundApple);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -683,6 +767,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         try {
             Long id = (Long) db.create(new Fruit("apple", "red", 20.00));
             db.find(Fruit.class, id, 20L);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -706,6 +793,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("apple", constraint.getName());
             assertEquals("red", constraint.getColor());
             assertEquals(Double.valueOf(20.00), constraint.getPrice());
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -721,6 +811,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(banana);
             Fruit foundFruit = db.find(new FruitQuery().addEquals("color", "yellow"));
             assertEquals(banana, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -736,6 +829,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMin("price"));
             assertEquals(apple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -751,6 +847,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit foundFruit = db.find(new FruitQuery().setMin("price"));
             assertEquals(apple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -766,6 +865,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMin("price"));
             assertEquals(apple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -781,6 +883,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 20.00));
             Fruit foundFruit = db.find(new FruitQuery().setMin("price"));
             assertEquals(apple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -796,6 +901,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMax("price"));
             assertEquals(pineapple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -811,6 +919,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit foundFruit = db.find(new FruitQuery().setMax("price"));
             assertEquals(pineapple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -826,6 +937,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             Fruit foundFruit = db.find(new FruitQuery().addLike("name", "app").setMax("price"));
             assertEquals(pineapple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -841,6 +955,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 60.00));
             Fruit foundFruit = db.find(new FruitQuery().setMax("price"));
             assertEquals(pineapple, foundFruit);
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -859,6 +976,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertNull(foundFruit.getColor());
             assertEquals(Double.valueOf(60.00), foundFruit.getPrice());
             assertNull(foundFruit.getQuantity());
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
@@ -872,6 +992,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("pineapple", "cyan", 60.00));
             db.create(new Fruit("banana", "yellow", 45.00));
             db.find(new FruitQuery().addLike("name", "apple"));
+        } catch(Exception e) {
+            tm.setRollback();
+            throw e;
         } finally {
             tm.endTransaction();
         }
