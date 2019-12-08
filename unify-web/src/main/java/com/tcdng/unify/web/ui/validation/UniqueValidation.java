@@ -43,7 +43,7 @@ import com.tcdng.unify.web.ui.Widget;
         @UplAttribute(name = "idType", type = Class.class, defaultVal = "java.lang.Long") })
 public class UniqueValidation extends AbstractPageValidation {
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked"})
     @Override
     public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
         Class<? extends Entity> validationClazz = (Class<? extends Entity>) getUplAttribute(Class.class, "type");
@@ -57,11 +57,11 @@ public class UniqueValidation extends AbstractPageValidation {
         }
 
         if (validationClazz != null) {
-            Query<? extends Entity> criteria = new Query(validationClazz);
+            Query<? extends Entity> criteria = Query.of(validationClazz);
             String idProperty = getUplAttribute(String.class, "idProperty");
             Object id = getTransferValue(idClazz, idProperty, dataTransfer);
             if (id != null) {
-                criteria.notEqual("id", id);
+                criteria.addNotEqual("id", id);
             }
 
             StringBuilder sb = new StringBuilder();
@@ -72,7 +72,7 @@ public class UniqueValidation extends AbstractPageValidation {
                     if (transferBlock != null) {
                         Object value = transferBlock.getValue();
                         if (value != null) {
-                            criteria.equals(transferBlock.getShortProperty(), value);
+                            criteria.addEquals(transferBlock.getShortProperty(), value);
 
                             if (appendSymbol) {
                                 sb.append(',');

@@ -62,17 +62,16 @@ public abstract class AbstractDBSearchProvider extends AbstractSearchProviderLis
         return execute(getSessionLocale(), new SearchProviderParams(null, filter));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<? extends Listable> execute(Locale locale, SearchProviderParams params) throws UnifyException {
         String key = params.getKey();
         if (StringUtils.isNotBlank(key)) {
-            return genericService.listAll(new Query(recordType).equals(keyProperty, key).limit(searchLimit));
+            return genericService.listAll(Query.of(recordType).addEquals(keyProperty, key).setLimit(searchLimit));
         }
 
         String filter = params.getFilter();
         if (StringUtils.isNotBlank(filter)) {
-            Query<?> query = new Query(recordType).like(descProperty, filter).limit(searchLimit);
+            Query<?> query = Query.of(recordType).addLike(descProperty, filter).setLimit(searchLimit);
             addQueryFilters(query);
             return genericService.listAll(query);
         }

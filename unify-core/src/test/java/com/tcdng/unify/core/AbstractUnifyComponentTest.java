@@ -312,7 +312,6 @@ public abstract class AbstractUnifyComponentTest {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void deleteAll(Class<? extends Entity>... typeList) throws Exception {
         Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
@@ -321,9 +320,9 @@ public abstract class AbstractUnifyComponentTest {
         try {
             for (Class<? extends Entity> type : typeList) {
                 if (AbstractSequencedEntity.class.isAssignableFrom(type)) {
-                    db.deleteAll(new Query(type).greater("id", 0L));
+                    db.deleteAll(Query.of(type).addGreaterThan("id", 0L));
                 } else {
-                    db.deleteAll(new Query(type).ignoreEmptyCriteria(true));
+                    db.deleteAll(Query.of(type).ignoreEmptyCriteria(true));
                 }
             }
         } finally {
@@ -331,14 +330,13 @@ public abstract class AbstractUnifyComponentTest {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected int countAll(Class<? extends Entity> typeClass) throws Exception {
         Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
                 (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
-            return db.countAll(new Query(typeClass).greater("id", 0L).ignoreEmptyCriteria(true));
+            return db.countAll(Query.of(typeClass).addGreaterThan("id", 0L).ignoreEmptyCriteria(true));
         } finally {
             tm.endTransaction();
         }

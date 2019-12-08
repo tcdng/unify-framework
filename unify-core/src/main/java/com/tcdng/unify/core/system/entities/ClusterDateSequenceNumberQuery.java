@@ -32,10 +32,10 @@ public class ClusterDateSequenceNumberQuery extends Query<ClusterDateSequenceNum
     }
 
     public ClusterDateSequenceNumberQuery sequenceName(String sequenceName) {
-        return (ClusterDateSequenceNumberQuery) equals("sequenceName", sequenceName);
+        return (ClusterDateSequenceNumberQuery) addEquals("sequenceName", sequenceName);
     }
 
     public ClusterDateSequenceNumberQuery sequenceDate(Date sequenceDate) {
-        return (ClusterDateSequenceNumberQuery) equals("sequenceDate", sequenceDate);
+        return (ClusterDateSequenceNumberQuery) addEquals("sequenceDate", sequenceDate);
     }
 }

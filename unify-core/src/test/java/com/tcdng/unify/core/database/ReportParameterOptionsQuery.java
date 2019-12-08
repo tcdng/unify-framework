@@ -28,7 +28,7 @@ public class ReportParameterOptionsQuery extends AbstractTestTableEntityQuery<Re
     }
 
     public ReportParameterOptionsQuery reportParameterId(Long reportParameterId) {
-        return (ReportParameterOptionsQuery) this.equals("reportParameterId", reportParameterId);
+        return (ReportParameterOptionsQuery) this.addEquals("reportParameterId", reportParameterId);
     }
 
 }

@@ -37,7 +37,7 @@ public class StaticReferenceQuery extends Query<StaticReference> {
     }
 
     public StaticReferenceQuery code(String code) {
-        return (StaticReferenceQuery) this.equals("code", code);
+        return (StaticReferenceQuery) this.addEquals("code", code);
     }
 
 }

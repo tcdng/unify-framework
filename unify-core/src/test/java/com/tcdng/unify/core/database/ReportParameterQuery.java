@@ -28,6 +28,6 @@ public class ReportParameterQuery extends AbstractTestTableEntityQuery<ReportPar
     }
 
     public ReportParameterQuery reportId(Long reportId) {
-        return (ReportParameterQuery) equals("reportId", reportId);
+        return (ReportParameterQuery) addEquals("reportId", reportId);
     }
 }

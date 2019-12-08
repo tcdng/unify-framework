@@ -89,101 +89,114 @@ public class Query<T extends Entity> implements Cloneable {
         mustMatch = true;
     }
 
+    public static <U extends Entity> Query<U> of(Class<U> entityClass) {
+        return new Query<U>(entityClass);
+    }
+
+    public static <U extends Entity> Query<U> of(Class<U> entityClass, boolean applyAppQueryLimit) {
+        return new Query<U>(entityClass, applyAppQueryLimit);
+    }
+
+    public static <U extends Entity> Query<U> of(Class<U> entityClass, CompoundRestriction restrictions,
+            boolean applyAppQueryLimit) {
+        return new Query<U>(entityClass, restrictions, applyAppQueryLimit);
+    }
+
     public Class<T> getEntityClass() {
         return entityClass;
     }
 
-    public Query<T> amongst(String field, Collection<? extends Object> values) {
+    public Query<T> addAmongst(String field, Collection<? extends Object> values) {
         restrictions.add(new Amongst(field, values));
         return this;
     }
 
-    public Query<T> between(String field, Object lowerValue, Object upperValue) {
+    public Query<T> addBetween(String field, Object lowerValue, Object upperValue) {
         restrictions.add(new Between(field, lowerValue, upperValue));
         return this;
     }
 
-    public Query<T> equals(String field, Object value) {
+    public Query<T> addEquals(String field, Object value) {
         restrictions.add(new Equals(field, value));
         return this;
     }
 
-    public Query<T> greater(String field, Object value) {
+    public Query<T> addGreaterThan(String field, Object value) {
         restrictions.add(new Greater(field, value));
         return this;
     }
 
-    public Query<T> greaterEqual(String field, Object value) {
+    public Query<T> addGreaterThanEqual(String field, Object value) {
         restrictions.add(new GreaterOrEqual(field, value));
         return this;
     }
 
-    public Query<T> isNotNull(String field) {
+    public Query<T> addIsNotNull(String field) {
         restrictions.add(new IsNotNull(field));
         return this;
     }
 
-    public Query<T> isNull(String field) {
+    public Query<T> addIsNull(String field) {
         restrictions.add(new IsNull(field));
         return this;
     }
 
-    public Query<T> less(String field, Object value) {
+    public Query<T> addLessThan(String field, Object value) {
         restrictions.add(new Less(field, value));
         return this;
     }
 
-    public Query<T> lessEqual(String field, Object value) {
+    public Query<T> addLessThanEqual(String field, Object value) {
         restrictions.add(new LessOrEqual(field, value));
         return this;
     }
 
-    public Query<T> like(String field, String value) {
+    public Query<T> addLike(String field, String value) {
         restrictions.add(new Like(field, value));
         return this;
     }
 
-    public Query<T> beginsWith(String field, String value) {
+    public Query<T> addBeginsWith(String field, String value) {
         restrictions.add(new BeginsWith(field, value));
         return this;
     }
 
-    public Query<T> endsWith(String field, String value) {
+    public Query<T> addEndsWith(String field, String value) {
         restrictions.add(new EndsWith(field, value));
         return this;
     }
 
-    public Query<T> notAmongst(String field, Collection<? extends Object> values) {
+    public Query<T> addNotAmongst(String field, Collection<? extends Object> values) {
         restrictions.add(new NotAmongst(field, values));
         return this;
     }
 
-    public Query<T> notBetween(String field, Object lowerValue, Object upperValue) {
+    public Query<T> addNotBetween(String field, Object lowerValue, Object upperValue) {
         restrictions.add(new NotBetween(field, lowerValue, upperValue));
         return this;
     }
 
-    public Query<T> notEqual(String field, Object value) {
+    public Query<T> addNotEqual(String field, Object value) {
         restrictions.add(new NotEqual(field, value));
         return this;
     }
 
-    public Query<T> notLike(String field, String value) {
+    public Query<T> addNotLike(String field, String value) {
         restrictions.add(new NotLike(field, value));
         return this;
     }
 
-    public Query<T> notBeginWith(String field, String value) {
+    public Query<T> addNotBeginWith(String field, String value) {
         restrictions.add(new NotBeginWith(field, value));
         return this;
     }
 
-    public Query<T> notEndWith(String field, String value) {
+    public Query<T> addNotEndWith(String field, String value) {
         restrictions.add(new NotEndWith(field, value));
         return this;
     }
 
-    public Query<T> add(Restriction restriction) {
+    public Query<T> addRestriction(Restriction restriction) {
         if (!restriction.isEmpty()) {
             restrictions.add(restriction);
         }
@@ -191,43 +204,43 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
-    public Query<T> select(String field) {
+    public Query<T> addSelect(String field) {
         innerGetSelect().add(field);
         return this;
     }
 
-    public Query<T> select(String... fields) {
+    public Query<T> addSelect(String... fields) {
         for (String field : fields) {
             innerGetSelect().add(field);
         }
         return this;
     }
 
-    public Query<T> order(String field) {
+    public Query<T> addOrder(String field) {
         getOrder().add(field);
         return this;
     }
 
-    public Query<T> order(String... fields) {
+    public Query<T> addOrder(String... fields) {
         for (String field : fields) {
             getOrder().add(field);
         }
         return this;
     }
 
-    public Query<T> order(OrderType type, String field) {
+    public Query<T> addOrder(OrderType type, String field) {
         getOrder().add(field, type);
         return this;
     }
 
-    public Query<T> order(OrderType type, String... fields) {
+    public Query<T> addOrder(OrderType type, String... fields) {
         for (String field : fields) {
             getOrder().add(field, type);
         }
         return this;
     }
 
-    public Query<T> max(String field) {
+    public Query<T> setMax(String field) {
         maxProperty = field;
         return this;
     }
@@ -240,7 +253,7 @@ public class Query<T extends Entity> implements Cloneable {
         return maxProperty != null;
     }
 
-    public Query<T> min(String field) {
+    public Query<T> setMin(String field) {
         minProperty = field;
         return this;
     }
@@ -290,7 +303,7 @@ public class Query<T extends Entity> implements Cloneable {
         return offset;
     }
 
-    public Query<T> offset(int offset) {
+    public Query<T> setOffset(int offset) {
         this.offset = offset;
         return this;
     }
@@ -299,7 +312,7 @@ public class Query<T extends Entity> implements Cloneable {
         return limit;
     }
 
-    public Query<T> limit(int limit) {
+    public Query<T> setLimit(int limit) {
         this.limit = limit;
         return this;
     }
@@ -347,7 +360,7 @@ public class Query<T extends Entity> implements Cloneable {
         return innerGetSelect().isDistinct();
     }
 
-    public Query<T> distinct(boolean distinct) {
+    public Query<T> setDistinct(boolean distinct) {
         innerGetSelect().setDistinct(distinct);
         return this;
     }

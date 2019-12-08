@@ -60,8 +60,8 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             Author susan = new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId);
             db.create(susan);
             assertEquals(3, db.countAll(new AuthorViewQuery().ignoreEmptyCriteria(true)));
-            assertEquals(2, db.countAll(new AuthorViewQuery().equals("authorOfficeId", parklaneOfficeId)));
-            assertEquals(2, db.countAll(new AuthorViewQuery().endsWith("authorName", "Bramer")));
+            assertEquals(2, db.countAll(new AuthorViewQuery().addEquals("authorOfficeId", parklaneOfficeId)));
+            assertEquals(2, db.countAll(new AuthorViewQuery().addEndsWith("authorName", "Bramer")));
         } finally {
             tm.endTransaction();
         }
@@ -142,7 +142,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             Long authorId = (Long) db
                     .create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
-            AuthorView authorView = db.find(new AuthorViewQuery().equals("authorGender", Gender.FEMALE));
+            AuthorView authorView = db.find(new AuthorViewQuery().addEquals("authorGender", Gender.FEMALE));
             assertNotNull(authorView);
             assertEquals(authorId, authorView.getAuthorId());
             assertEquals(warehouseOfficeId, authorView.getAuthorOfficeId());
@@ -166,7 +166,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Paul Horowitz", 72, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
             Long warehouseOfficeId = (Long) db.create(warehouseOffice);
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
-            db.find(new AuthorViewQuery().like("authorName", "Bramer"));
+            db.find(new AuthorViewQuery().addLike("authorName", "Bramer"));
         } finally {
             tm.endTransaction();
         }
@@ -179,7 +179,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
             db.create(new Author("Paul Horowitz", 72, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
-            assertNull(db.find(new AuthorViewQuery().equals("authorGender", Gender.FEMALE)));
+            assertNull(db.find(new AuthorViewQuery().addEquals("authorGender", Gender.FEMALE)));
         } finally {
             tm.endTransaction();
         }
@@ -198,7 +198,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
             List<AuthorView> authorViewList =
-                    db.findAll(new AuthorViewQuery().equals("authorGender", Gender.MALE).order("authorId"));
+                    db.findAll(new AuthorViewQuery().addEquals("authorGender", Gender.MALE).addOrder("authorId"));
             assertNotNull(authorViewList);
             assertEquals(2, authorViewList.size());
 
@@ -240,8 +240,8 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
                     .create(new Author("Paul Horowitz", 72, Gender.MALE, BooleanType.FALSE, warehouseOfficeId));
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
-            List<AuthorView> authorViewList = db.findAll(new AuthorViewQuery().equals("authorGender", Gender.MALE)
-                    .order("authorId").select("authorName", "officeAddress"));
+            List<AuthorView> authorViewList = db.findAll(new AuthorViewQuery().addEquals("authorGender", Gender.MALE)
+                    .addOrder("authorId").addSelect("authorName", "officeAddress"));
             assertNotNull(authorViewList);
             assertEquals(2, authorViewList.size());
 
@@ -284,7 +284,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
                     .create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
             Map<String, AuthorView> authorViewMap = db.findAllMap(String.class, "authorName",
-                    new AuthorViewQuery().equals("authorOfficeId", warehouseOfficeId));
+                    new AuthorViewQuery().addEquals("authorOfficeId", warehouseOfficeId));
             assertEquals(2, authorViewMap.size());
 
             AuthorView authorView = authorViewMap.get("Susan Bramer");
@@ -363,7 +363,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             Long authorId = (Long) db
                     .create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
-            AuthorView authorView = db.list(new AuthorViewQuery().equals("authorGender", Gender.FEMALE));
+            AuthorView authorView = db.list(new AuthorViewQuery().addEquals("authorGender", Gender.FEMALE));
             assertNotNull(authorView);
             assertEquals(authorId, authorView.getAuthorId());
             assertEquals(warehouseOfficeId, authorView.getAuthorOfficeId());
@@ -387,7 +387,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Paul Horowitz", 72, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
             Long warehouseOfficeId = (Long) db.create(warehouseOffice);
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
-            db.list(new AuthorViewQuery().like("authorName", "Bramer"));
+            db.list(new AuthorViewQuery().addLike("authorName", "Bramer"));
         } finally {
             tm.endTransaction();
         }
@@ -400,7 +400,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
             db.create(new Author("Paul Horowitz", 72, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
-            assertNull(db.list(new AuthorViewQuery().equals("authorGender", Gender.FEMALE)));
+            assertNull(db.list(new AuthorViewQuery().addEquals("authorGender", Gender.FEMALE)));
         } finally {
             tm.endTransaction();
         }
@@ -419,7 +419,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
             List<AuthorView> authorViewList =
-                    db.listAll(new AuthorViewQuery().equals("authorGender", Gender.MALE).order("authorId"));
+                    db.listAll(new AuthorViewQuery().addEquals("authorGender", Gender.MALE).addOrder("authorId"));
             assertNotNull(authorViewList);
             assertEquals(2, authorViewList.size());
 
@@ -461,8 +461,8 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
                     .create(new Author("Paul Horowitz", 72, Gender.MALE, BooleanType.FALSE, warehouseOfficeId));
             db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
-            List<AuthorView> authorViewList = db.listAll(new AuthorViewQuery().equals("authorGender", Gender.MALE)
-                    .order("authorId").select("authorName", "officeAddress"));
+            List<AuthorView> authorViewList = db.listAll(new AuthorViewQuery().addEquals("authorGender", Gender.MALE)
+                    .addOrder("authorId").addSelect("authorName", "officeAddress"));
             assertNotNull(authorViewList);
             assertEquals(2, authorViewList.size());
 
@@ -505,7 +505,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
                     .create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
 
             Map<String, AuthorView> authorViewMap = db.listAllMap(String.class, "authorName",
-                    new AuthorViewQuery().equals("authorOfficeId", warehouseOfficeId));
+                    new AuthorViewQuery().addEquals("authorOfficeId", warehouseOfficeId));
             assertEquals(2, authorViewMap.size());
 
             AuthorView authorView = authorViewMap.get("Susan Bramer");
@@ -557,7 +557,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
             db.create(new Author("Susan Bramer", 48, Gender.FEMALE, BooleanType.FALSE, parklaneOfficeId));
-            db.updateAll(new AuthorViewQuery().equals("authorGender", Gender.MALE), new Update().add("authorAge", 52));
+            db.updateAll(new AuthorViewQuery().addEquals("authorGender", Gender.MALE), new Update().add("authorAge", 52));
         } finally {
             tm.endTransaction();
         }
@@ -571,11 +571,11 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
             db.create(new Author("Susan Bramer", 48, Gender.FEMALE, BooleanType.FALSE, parklaneOfficeId));
 
-            Gender gender = db.value(Gender.class, "authorGender", new AuthorViewQuery().equals("authorAge", 48));
+            Gender gender = db.value(Gender.class, "authorGender", new AuthorViewQuery().addEquals("authorAge", 48));
             assertEquals(Gender.FEMALE, gender);
 
             String name =
-                    db.value(String.class, "authorName", new AuthorViewQuery().equals("authorGender", Gender.MALE));
+                    db.value(String.class, "authorName", new AuthorViewQuery().addEquals("authorGender", Gender.MALE));
             assertEquals("Brian Bramer", name);
         } finally {
             tm.endTransaction();
@@ -591,7 +591,7 @@ public class DatabaseViewEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Author("Susan Bramer", 48, Gender.FEMALE, BooleanType.FALSE, parklaneOfficeId));
 
             List<String> nameList =
-                    db.valueList(String.class, "authorName", new AuthorViewQuery().equals("authorOfficeId", parklaneOfficeId));
+                    db.valueList(String.class, "authorName", new AuthorViewQuery().addEquals("authorOfficeId", parklaneOfficeId));
             assertNotNull(nameList);
             assertEquals(2, nameList.size());
             assertTrue(nameList.contains("Susan Bramer"));

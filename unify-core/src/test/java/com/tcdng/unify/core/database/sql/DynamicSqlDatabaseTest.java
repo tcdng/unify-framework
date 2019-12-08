@@ -133,9 +133,9 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         tm.beginTransaction();
         try {
             String id = (String) db.create(new AccountDetails("Bill Ray", "9200567689", BigDecimal.valueOf(5200.00)));
-            assertEquals(1, db.countAll(new AccountDetailsQuery().equals("accountName", id)));
+            assertEquals(1, db.countAll(new AccountDetailsQuery().addEquals("accountName", id)));
             db.delete(AccountDetails.class, id);
-            assertEquals(0, db.countAll(new AccountDetailsQuery().equals("accountName", id)));
+            assertEquals(0, db.countAll(new AccountDetailsQuery().addEquals("accountName", id)));
         } finally {
             tm.endTransaction();
         }

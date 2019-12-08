@@ -30,6 +30,6 @@ public class ClusterUniqueStringQuery extends Query<ClusterUniqueString> {
     }
 
     public ClusterUniqueStringQuery uniqueString(String uniqueString) {
-        return (ClusterUniqueStringQuery) equals("uniqueString", uniqueString);
+        return (ClusterUniqueStringQuery) addEquals("uniqueString", uniqueString);
     }
 }
