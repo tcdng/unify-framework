@@ -86,6 +86,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
+    @Override
     public UnifyComponentContext getUnifyComponentContext() throws UnifyException {
         return unifyComponentContext;
     }
