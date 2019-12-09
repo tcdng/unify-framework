@@ -25,34 +25,34 @@ import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.web.ui.PushType;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
-import com.tcdng.unify.web.ui.control.CheckBoxList;
+import com.tcdng.unify.web.ui.control.CheckList;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 
 /**
- * Check box list writer.
+ * Checklist writer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Writes(CheckBoxList.class)
-@Component("checkboxlist-writer")
-public class CheckBoxListWriter extends AbstractControlWriter {
+@Writes(CheckList.class)
+@Component("checklist-writer")
+public class CheckListWriter extends AbstractControlWriter {
 
     @SuppressWarnings("unchecked")
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        CheckBoxList checkBoxList = (CheckBoxList) widget;
-        writeHiddenPush(writer, checkBoxList, PushType.CHECKBOX);
+        CheckList checkList = (CheckList) widget;
+        writeHiddenPush(writer, checkList, PushType.CHECKBOX);
 
-        List<String> values = checkBoxList.getValue(ArrayList.class, String.class);
-        List<? extends Listable> listableList = checkBoxList.getListables();
+        List<String> values = checkList.getValue(ArrayList.class, String.class);
+        List<? extends Listable> listableList = checkList.getListables();
         int breaks = listableList.size();
-        boolean appendSym = !checkBoxList.getUplAttribute(boolean.class, "flow");
+        boolean appendSym = !checkList.getUplAttribute(boolean.class, "flow");
         for (Listable listable : listableList) {
             writer.write("<input type=\"checkbox\"");
-            writeTagName(writer, checkBoxList);
-            writeTagStyleClass(writer, checkBoxList);
-            writeTagStyle(writer, checkBoxList);
+            writeTagName(writer, checkList);
+            writeTagStyleClass(writer, checkList);
+            writeTagStyle(writer, checkList);
 
             String key = listable.getListKey();
             if (values != null && values.contains(key)) {

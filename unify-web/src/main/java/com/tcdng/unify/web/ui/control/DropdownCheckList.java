@@ -31,11 +31,11 @@ import com.tcdng.unify.web.constant.ExtensionType;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("ui-dropdowncheckboxlist")
+@Component("ui-dropdownchecklist")
 @UplAttributes({ @UplAttribute(name = "selectAllOption", type = String.class),
         @UplAttribute(name = "columns", type = int.class),
         @UplAttribute(name = "popupAlways", type = boolean.class, defaultVal = "true") })
-public class DropdownCheckBoxList extends AbstractListPopupTextField {
+public class DropdownCheckList extends AbstractListPopupTextField {
 
     @Override
     public boolean isMultiple() {

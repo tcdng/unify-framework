@@ -24,8 +24,8 @@ import com.tcdng.unify.web.ui.AbstractGroupListControl;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("ui-checkboxlist")
-public class CheckBoxList extends AbstractGroupListControl {
+@Component("ui-checklist")
+public class CheckList extends AbstractGroupListControl {
 
     @Override
     public boolean isMultiple() {

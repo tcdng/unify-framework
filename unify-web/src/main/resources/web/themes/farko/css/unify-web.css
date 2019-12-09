@@ -443,11 +443,11 @@ z-index:400;}
 .ui-minibutton-alert:disabled {cursor:default;}
 .ui-minibutton-alert:hover:enabled {color: #FFF; background-color: #F06060;}
 
-/** Check box*/
+/** Checkbox*/
 .ui-checkbox {width:16px; height:16px;}
 
-/** Check box list */
-.ui-checkboxlist {}
+/** Check list */
+.ui-checklist {}
 
 
 /** Date field */
@@ -480,9 +480,9 @@ z-index:400;}
     padding:4px 4px; vertical-align:middle; margin-bottom:8px;}
 .ui-downloadlinkgrid .dlglink{font-size:14px; text-decoration:underline;cursor: pointer;}
 
-/** Drop-down with checkbox list */
-.ui-dropdowncheckboxlist {width:180px;}
-.ui-dropdowncheckboxlist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
+/** Drop-down with check list */
+.ui-dropdownchecklist {width:180px;}
+.ui-dropdownchecklist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
 
 /** File attachment */
 .ui-fileattachment {}

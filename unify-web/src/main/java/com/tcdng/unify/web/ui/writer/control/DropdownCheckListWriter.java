@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.ListControlJsonData;
 import com.tcdng.unify.web.ui.PushType;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
-import com.tcdng.unify.web.ui.control.DropdownCheckBoxList;
+import com.tcdng.unify.web.ui.control.DropdownCheckList;
 
 /**
  * Dropdown multi-select writer.
@@ -35,15 +35,15 @@ import com.tcdng.unify.web.ui.control.DropdownCheckBoxList;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Writes(DropdownCheckBoxList.class)
-@Component("dropdowncheckboxlist-writer")
-public class DropdownCheckBoxListWriter extends AbstractPopupTextFieldWriter {
+@Writes(DropdownCheckList.class)
+@Component("dropdownchecklist-writer")
+public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
 
     @SuppressWarnings("unchecked")
     @Override
     protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
-        DropdownCheckBoxList dropdownCheckList = (DropdownCheckBoxList) popupTextField;
+        DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
         List<? extends Listable> listableList = dropdownCheckList.getListables();
         int length = listableList.size();
         if (length > 0) {
@@ -112,7 +112,7 @@ public class DropdownCheckBoxListWriter extends AbstractPopupTextFieldWriter {
     @Override
     protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
-        DropdownCheckBoxList dropdownCheckList = (DropdownCheckBoxList) popupTextField;
+        DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
 
         // If select option, add select all behavior also
         if (dropdownCheckList.getSelectAllOption() != null) {
@@ -138,7 +138,7 @@ public class DropdownCheckBoxListWriter extends AbstractPopupTextFieldWriter {
 
     @Override
     protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
-        DropdownCheckBoxList dropdownCheckList = (DropdownCheckBoxList) popupTextField;
+        DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
         ListControlJsonData listControlData = dropdownCheckList.getListControlJsonData(true, false, true);
         StringBuilder psb = new StringBuilder();
         psb.append("{\"id\":\"").append(dropdownCheckList.getId()).append("\"");
