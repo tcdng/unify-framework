@@ -96,7 +96,7 @@ public interface PageManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Map<String, BindingInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException;
+    Map<String, PropertyInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException;
 
     /**
      * Returns the page name for supplied long name. The same page name is always

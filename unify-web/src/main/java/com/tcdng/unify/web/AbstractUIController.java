@@ -25,14 +25,22 @@ public abstract class AbstractUIController extends AbstractController implements
 
     private boolean readOnly;
 
-    public AbstractUIController(boolean secured, boolean readOnly) {
+    private boolean resetOnWrite;
+
+    public AbstractUIController(boolean secured, boolean readOnly, boolean resetOnWrite) {
         super(secured);
         this.readOnly = readOnly;
+        this.resetOnWrite = resetOnWrite;
     }
 
     @Override
     public boolean isReadOnly() {
-        return this.readOnly;
+        return readOnly;
+    }
+
+    @Override
+    public boolean isResetOnWrite() {
+        return resetOnWrite;
     }
 
 }

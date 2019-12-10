@@ -45,7 +45,7 @@ public class AuthorPageController extends AbstractPageController<AuthorPageBean>
     private Map<String, Author> authorDatabase;
 
     public AuthorPageController() {
-        super(AuthorPageBean.class, false, false);
+        super(AuthorPageBean.class);
     }
 
     @Action

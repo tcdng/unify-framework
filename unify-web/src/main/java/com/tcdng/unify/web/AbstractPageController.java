@@ -57,17 +57,18 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     private Class<T> pageBeanClass;
 
     public AbstractPageController(Class<T> pageBeanClass) {
-        this(pageBeanClass, false, false);
+        this(pageBeanClass, false, false, false);
     }
 
-    public AbstractPageController(Class<T> pageBeanClass, boolean secured, boolean readOnly) {
-        super(secured, readOnly);
+    public AbstractPageController(Class<T> pageBeanClass, boolean secured, boolean readOnly, boolean resetOnWrite) {
+        super(secured, readOnly, resetOnWrite);
         this.pageBeanClass = pageBeanClass;
     }
 
     @Override
-    public void reset() throws UnifyException{
-        getPageBean().reset();;
+    public void reset() throws UnifyException {
+        getPageBean().reset();
+        ;
     }
 
     @Override

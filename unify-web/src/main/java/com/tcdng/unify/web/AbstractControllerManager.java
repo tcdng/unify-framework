@@ -67,7 +67,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallParams;
 import com.tcdng.unify.web.remotecall.RemoteCallResult;
 import com.tcdng.unify.web.remotecall.RemoteCallBinaryMessageStreamer;
 import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
-import com.tcdng.unify.web.ui.BindingInfo;
+import com.tcdng.unify.web.ui.PropertyInfo;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
@@ -228,7 +228,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     @Override
     public void updatePageControllerInfo(String controllerName, String standalonePanelName) throws UnifyException {
         PageControllerInfo pbbi = getPageControllerInfo(controllerName);
-        Map<String, BindingInfo> bindings = pageManager.getStandalonePanelPropertyBindings(standalonePanelName);
+        Map<String, PropertyInfo> bindings = pageManager.getStandalonePanelPropertyBindings(standalonePanelName);
         pbbi.addBindings(standalonePanelName, bindings);
     }
 
@@ -375,7 +375,11 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                     if (validate(page, dataTransfer)) {
                         synchronized (page) {
                             populate(pageController, dataTransfer);
-                            resultName = executePageCall(pageController, request.getPath());
+                            if (pathParts.isActionPath()) {
+                                resultName = executePageCall(pageController, pathParts.getActionName());
+                            } else {
+                                resultName = executePageCall(pageController, "/indexPage");
+                            }
                         }
 
                         // Check if action result needs to be routed to containing
@@ -566,7 +570,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             logDebug("Populating controller [{0}]", uiController.getName());
 
             // Reset first
-            uiController.reset();
+            if (uiController.isResetOnWrite()) {
+                uiController.reset();
+            }
 
             // Populate controller
             for (DataTransferBlock dataTransferBlock : dataTransfer.getDataTransferBlocks()) {
@@ -606,9 +612,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         return successful;
     }
 
-    protected String executePageCall(PageController<?> pageController, String action) throws UnifyException {
+    protected String executePageCall(PageController<?> pageController, String actionName) throws UnifyException {
         try {
-            return (String) pageControllerInfoMap.get(pageController.getName()).getAction(action).getMethod()
+            return (String) pageControllerInfoMap.get(pageController.getName()).getAction(actionName).getMethod()
                     .invoke(pageController);
         } catch (UnifyException e) {
             throw e;
@@ -785,19 +791,14 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private PageControllerInfo createPageControllerInfo(String controllerName) throws UnifyException {
         // Process action handlers
-        Map<String, Action> actionMap = new HashMap<String, Action>();
-        Class<? extends PageController> typeClass =
-                getComponentType(PageController.class, controllerName);
+        Map<String, Action> actionByNameMap = new HashMap<String, Action>();
+        Class<? extends PageController> typeClass = getComponentType(PageController.class, controllerName);
         for (Method method : pageControllerActionInfoMap.get(typeClass).getActionMethods()) {
-            actionMap.put(controllerName + '/' + method.getName(), new Action(method));
+            actionByNameMap.put("/" + method.getName(), new Action(method));
         }
 
-        // Set auto routing to index action
-        Action action = actionMap.get(controllerName + "/index");
-        actionMap.put(controllerName, action);
-
         // Process result mappings
-        Map<String, Result> resultMap = new ConcurrentHashMap<String, Result>();
+        Map<String, Result> resultByNameMap = new ConcurrentHashMap<String, Result>();
         List<Class<?>> classList = ReflectUtils.getClassHierachyList(typeClass);
         for (Class<?> clazz : classList) {
             // Grab results definition by super class hierarchy with subclass
@@ -820,7 +821,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                     responses.add(refreshMenuResponse);
 
                     // Set result object
-                    resultMap.put(ra.name(),
+                    resultByNameMap.put(ra.name(),
                             new Result(responses.toArray(new PageControllerResponse[responses.size()])));
                 }
             }
@@ -829,17 +830,17 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         // Resolve category
         List<String> categoryList = DataUtils.convert(ArrayList.class, String.class,
                 getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT), null);
-        UnifyConfigUtils.resolveConfigurationOverrides(resultMap, categoryList);
+        UnifyConfigUtils.resolveConfigurationOverrides(resultByNameMap, categoryList);
 
-        resultMap.putAll(defaultResultMap); // Set result mappings that can
+        resultByNameMap.putAll(defaultResultMap); // Set result mappings that can
                                             // not be overridden
 
         // Set page name bindings
-        Map<String, BindingInfo> pageNamePropertyBindingMap = new HashMap<String, BindingInfo>();
+        Map<String, PropertyInfo> pageNamePropertyBindingMap = new HashMap<String, PropertyInfo>();
         pageNamePropertyBindingMap.putAll(pageManager.getStandalonePanelPropertyBindings(controllerName));
         setIdRequestParameterBindings(typeClass, pageNamePropertyBindingMap);
 
-        return new PageControllerInfo(controllerName, actionMap, resultMap, pageNamePropertyBindingMap);
+        return new PageControllerInfo(controllerName, actionByNameMap, resultByNameMap, pageNamePropertyBindingMap);
     }
 
     private RemoteCallControllerInfo createRemoteCallControllerInfo(String controllerName) throws UnifyException {
@@ -876,7 +877,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     private ResourceControllerInfo createResourceControllerInfo(String controllerName) throws UnifyException {
         Class<? extends ResourceController> resourceControllerClass =
                 getComponentType(ResourceController.class, controllerName);
-        Map<String, BindingInfo> propertyBindingMap = new HashMap<String, BindingInfo>();
+        Map<String, PropertyInfo> propertyBindingMap = new HashMap<String, PropertyInfo>();
         setIdRequestParameterBindings(resourceControllerClass, propertyBindingMap);
         return new ResourceControllerInfo(controllerName, propertyBindingMap);
     }
@@ -911,7 +912,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         Class<?> validationIdClass = null;
         String actionId = (String) request.getParameter(RequestParameterConstants.VALIDATION_ACTION);
         Map<String, DataTransferBlock> transferBlocks = null;
-        UserInterfaceControllerInfo uiControllerInfo = null;
+        UIControllerInfo uiControllerInfo = null;
         if (ControllerType.RESOURCE_CONTROLLER.equals(uiController.getType())) {
             uiControllerInfo = resourceControllerInfoMap.get(uiController.getName());
         } else {
@@ -962,7 +963,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             DataTransferBlock transferBlock = createTransferBlock(transferId, header);
             String id = transferBlock.getId();
             header.setLongName(pageManager.getLongName(id));
-            header.setBindingInfo(uiControllerInfo.getBindingInfo(id));
+            header.setBindingInfo(uiControllerInfo.getPropertyInfo(id));
 
             DataTransferBlock eldestBlock = transferBlocks.get(id);
             if (eldestBlock == null) {
@@ -999,7 +1000,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     }
 
     private void setIdRequestParameterBindings(Class<? extends Controller> controllerClass,
-            Map<String, BindingInfo> propertyBindingMap) throws UnifyException {
+            Map<String, PropertyInfo> propertyBindingMap) throws UnifyException {
         // Request parameter bindings
         List<Class<?>> classHeirachyList = ReflectUtils.getClassHierachyList(controllerClass);
         for (Class<?> clazz : classHeirachyList) {
@@ -1008,7 +1009,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 if (field.isAnnotationPresent(RequestParameter.class)) {
                     String fieldName = field.getName();
                     propertyBindingMap.put(pageManager.getPageName(field.getName()),
-                            new BindingInfo(fieldName, fieldName, fieldName, false));
+                            new PropertyInfo(fieldName, fieldName, fieldName, false));
                 }
             }
         }

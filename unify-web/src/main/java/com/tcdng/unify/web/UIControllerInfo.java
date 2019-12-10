@@ -18,7 +18,7 @@ package com.tcdng.unify.web;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.web.ui.BindingInfo;
+import com.tcdng.unify.web.ui.PropertyInfo;
 
 /**
  * User interface controller information.
@@ -26,24 +26,24 @@ import com.tcdng.unify.web.ui.BindingInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class UserInterfaceControllerInfo extends ControllerInfo {
+public class UIControllerInfo extends ControllerInfo {
 
-    private Map<String, BindingInfo> idPropertyBindingMap;
+    private Map<String, PropertyInfo> pageNameToPropertyMap;
 
-    public UserInterfaceControllerInfo(String controllerName, Map<String, BindingInfo> idPropertyBindingMap) {
+    public UIControllerInfo(String controllerName, Map<String, PropertyInfo> pageNameToPropertyMap) {
         super(controllerName);
-        this.idPropertyBindingMap = idPropertyBindingMap;
+        this.pageNameToPropertyMap = pageNameToPropertyMap;
     }
 
     public Set<String> getPropertyIds() {
-        return idPropertyBindingMap.keySet();
+        return pageNameToPropertyMap.keySet();
     }
 
-    public BindingInfo getBindingInfo(String id) {
-        return idPropertyBindingMap.get(id);
+    public PropertyInfo getPropertyInfo(String pageName) {
+        return pageNameToPropertyMap.get(pageName);
     }
 
-    public void addBindings(Map<String, BindingInfo> pageNamePropertyBindingMap) {
-        idPropertyBindingMap.putAll(pageNamePropertyBindingMap);
+    public void addPageNameToPropertyMappings(Map<String, PropertyInfo> pageNameToPropertyMap) {
+        pageNameToPropertyMap.putAll(pageNameToPropertyMap);
     }
 }

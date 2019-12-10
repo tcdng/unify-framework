@@ -16,12 +16,12 @@
 package com.tcdng.unify.web.ui;
 
 /**
- * Binding information.
+ * Property information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BindingInfo {
+public class PropertyInfo {
 
     private String property;
 
@@ -31,7 +31,7 @@ public class BindingInfo {
 
     private boolean masked;
 
-    public BindingInfo(String property, String shortProperty, String longProperty, boolean masked) {
+    public PropertyInfo(String property, String shortProperty, String longProperty, boolean masked) {
         this.property = property;
         this.shortProperty = shortProperty;
         this.longProperty = longProperty;

@@ -70,7 +70,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
     private LocaleFactoryMaps<String, StandalonePanelInfo> standalonePanelInfoByNameMap;
 
     // Page name property bindings by standalone panel
-    private FactoryMap<String, Map<String, BindingInfo>> pageNamePropertyBindings;
+    private FactoryMap<String, Map<String, PropertyInfo>> pageNamePropertyBindings;
 
     // Expanded component references by component page name
     private Map<String, List<String>> expandedReferences;
@@ -221,11 +221,11 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
             }
         };
 
-        pageNamePropertyBindings = new FactoryMap<String, Map<String, BindingInfo>>() {
+        pageNamePropertyBindings = new FactoryMap<String, Map<String, PropertyInfo>>() {
 
             @Override
-            protected Map<String, BindingInfo> create(String name, Object... params) throws Exception {
-                Map<String, BindingInfo> propertyBindingMap = new HashMap<String, BindingInfo>();
+            protected Map<String, PropertyInfo> create(String name, Object... params) throws Exception {
+                Map<String, PropertyInfo> propertyBindingMap = new HashMap<String, PropertyInfo>();
                 StandalonePanel sp = createStandalonePanel(Locale.getDefault(), name);
                 for (String longName : sp.getWidgetLongNames()) {
                     Widget widget = sp.getWidgetByLongName(longName);
@@ -254,7 +254,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                         if (index >= 0) {
                             shortProperty = property.substring(index + 1);
                         }
-                        propertyBindingMap.put(id, new BindingInfo(property, shortProperty, longSb.toString(), masked));
+                        propertyBindingMap.put(id, new PropertyInfo(property, shortProperty, longSb.toString(), masked));
                     }
                 }
                 return propertyBindingMap;
@@ -348,7 +348,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
     }
 
     @Override
-    public Map<String, BindingInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException {
+    public Map<String, PropertyInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException {
         standalonePanelInfoByNameMap.get(Locale.getDefault(), name);
         return pageNamePropertyBindings.get(name);
     }

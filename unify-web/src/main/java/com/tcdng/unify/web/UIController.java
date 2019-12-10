@@ -26,7 +26,7 @@ import com.tcdng.unify.core.UnifyException;
 public interface UIController extends Controller {
 
     /**
-     * Tests if bean is read-only.
+     * Tests if controller is in read-only mode.
      * 
      * @return a true value means that this controller is not populated with request
      *         parameter values
@@ -34,8 +34,17 @@ public interface UIController extends Controller {
     boolean isReadOnly();
 
     /**
+     * Tests if controller resets on write.
+     * 
+     * @return a true value means that this controller is reset just before
+     *         population with request parameter values
+     */
+    boolean isResetOnWrite();
+
+    /**
      * Resets the controller. This method is called by the controller manager before
      * a call to the {@link #populate(DataTransferBlock)} method.
+     * 
      * @throws UnifyException
      *             if an error occurs
      */

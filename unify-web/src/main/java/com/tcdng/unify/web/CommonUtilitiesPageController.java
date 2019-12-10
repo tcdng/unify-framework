@@ -37,6 +37,6 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 public class CommonUtilitiesPageController extends AbstractPageController<CommonUtilitiesPageBean> {
 
     public CommonUtilitiesPageController() {
-        super(CommonUtilitiesPageBean.class, true, false);
+        super(CommonUtilitiesPageBean.class, true, false, false);
     }
 }

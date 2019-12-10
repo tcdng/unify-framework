@@ -57,7 +57,7 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
                     int actionPartIndex = path.lastIndexOf('/');
                     if (actionPartIndex > colIndex) {
                         pathId = path.substring(0, actionPartIndex);
-                        actionName = path.substring(actionPartIndex + 1);
+                        actionName = path.substring(actionPartIndex);
                     }
 
                     return new PathParts(path, pathId, controllerName, actionName);
@@ -65,7 +65,7 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
                         int actionPartIndex = path.lastIndexOf('/');
                         if (actionPartIndex > 0) {
                             String controllerName = path.substring(0, actionPartIndex);
-                            String actionName = path.substring(actionPartIndex + 1);
+                            String actionName = path.substring(actionPartIndex);
                             return new PathParts(path, controllerName, controllerName, actionName);
                         }
                 }

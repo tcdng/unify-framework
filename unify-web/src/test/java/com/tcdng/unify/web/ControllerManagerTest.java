@@ -55,23 +55,23 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testauthor");
 
         Set<String> actionNames = pbbi.getActionNames();
-        assertTrue(actionNames.contains("/testauthor/createAuthor"));
-        assertTrue(actionNames.contains("/testauthor/viewAuthor"));
-        assertTrue(actionNames.contains("/testauthor/newAuthor"));
+        assertTrue(actionNames.contains("/createAuthor"));
+        assertTrue(actionNames.contains("/viewAuthor"));
+        assertTrue(actionNames.contains("/newAuthor"));
 
-        Action action = pbbi.getAction("/testauthor/createAuthor");
+        Action action = pbbi.getAction("/createAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("createAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testauthor/viewAuthor");
+        action = pbbi.getAction("/viewAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("viewAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testauthor/newAuthor");
+        action = pbbi.getAction("/newAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
@@ -85,31 +85,31 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testtechnicalauthor");
 
         Set<String> actionNames = pbbi.getActionNames();
-        assertTrue(actionNames.contains("/testtechnicalauthor/createAuthor"));
-        assertTrue(actionNames.contains("/testtechnicalauthor/viewAuthor"));
-        assertTrue(actionNames.contains("/testtechnicalauthor/newAuthor"));
-        assertTrue(actionNames.contains("/testtechnicalauthor/printTechnicalSpec"));
-        assertFalse(actionNames.contains("/testtechnicalauthor/drawTechnicalSpec"));
+        assertTrue(actionNames.contains("/createAuthor"));
+        assertTrue(actionNames.contains("/viewAuthor"));
+        assertTrue(actionNames.contains("/newAuthor"));
+        assertTrue(actionNames.contains("/printTechnicalSpec"));
+        assertFalse(actionNames.contains("/drawTechnicalSpec"));
 
-        Action action = pbbi.getAction("/testtechnicalauthor/createAuthor");
+        Action action = pbbi.getAction("/createAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("createAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testtechnicalauthor/viewAuthor");
+        action = pbbi.getAction("/viewAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("viewAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testtechnicalauthor/newAuthor");
+        action = pbbi.getAction("/newAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("newAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testtechnicalauthor/printTechnicalSpec");
+        action = pbbi.getAction("/printTechnicalSpec");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
@@ -143,7 +143,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
         Set<String> properties = new HashSet<String>();
         for (String pageName : pageNames) {
-            properties.add(rbbi.getBindingInfo(pageName).getProperty());
+            properties.add(rbbi.getPropertyInfo(pageName).getProperty());
         }
         assertEquals(4 + 2, properties.size());
 

@@ -49,7 +49,7 @@ public abstract class AbstractResourceController extends AbstractUIController im
     private Map<String, String> metaDataMap;
 
     public AbstractResourceController(boolean secured) {
-        super(secured, false);
+        super(secured, false, false);
     }
 
     @Override
