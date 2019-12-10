@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Singleton;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(true)
+@Singleton
 public abstract class AbstractRemoteCallController extends AbstractController implements RemoteCallController {
 
     public AbstractRemoteCallController() {
@@ -33,10 +33,5 @@ public abstract class AbstractRemoteCallController extends AbstractController im
     @Override
     public final ControllerType getType() {
         return ControllerType.REMOTECALL_CONTROLLER;
-    }
-
-    @Override
-    public final boolean isBackUnifyPage() {
-        return false;
     }
 }

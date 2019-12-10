@@ -29,5 +29,9 @@ public enum ControllerType {
 
     RESOURCE_CONTROLLER,
 
-    REMOTECALL_CONTROLLER
+    REMOTECALL_CONTROLLER;
+
+    public boolean isUIController() {
+        return PAGE_CONTROLLER.equals(this) || RESOURCE_CONTROLLER.equals(this);
+    }
 }

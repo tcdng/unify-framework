@@ -15,22 +15,17 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Singleton;
-import com.tcdng.unify.core.util.DataUtils;
-
 /**
- * Convenient base class for unify page controller.
+ * Convenient base class for user interface controllers.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(false)
-public abstract class AbstractUnifyPageController extends AbstractController implements UserInterfaceController {
+public abstract class AbstractUIController extends AbstractController implements UIController {
 
     private boolean readOnly;
 
-    public AbstractUnifyPageController(boolean secured, boolean readOnly) {
+    public AbstractUIController(boolean secured, boolean readOnly) {
         super(secured);
         this.readOnly = readOnly;
     }
@@ -38,23 +33,6 @@ public abstract class AbstractUnifyPageController extends AbstractController imp
     @Override
     public boolean isReadOnly() {
         return this.readOnly;
-    }
-
-    @Override
-    public final boolean isBackUnifyPage() {
-        return true;
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        if (!readOnly) {
-            DataUtils.setNestedBeanProperty(this, transferBlock.getLongProperty(), transferBlock.getValue(), null);
-        }
     }
 
 }

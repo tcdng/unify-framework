@@ -79,10 +79,11 @@ public interface ControllerManager extends UnifyComponent {
      * 
      * @param controllerName
      *            the controller name
+     * @param isLoadPage indicates page loading
      * @throws UnifyException
      *             if an error occurs
      */
-    Controller getController(String controllerName) throws UnifyException;
+    Controller getController(PathParts pathParts, boolean isLoadPage) throws UnifyException;
 
     /**
      * Executes a client request using appropriate controller.
@@ -99,18 +100,16 @@ public interface ControllerManager extends UnifyComponent {
     /**
      * Executes a controller action.
      * 
-     * @param controllerName
-     *            the controller name
-     * @param actionName
-     *            the action name
-     * @return the action string
+     * @param fullActionPath
+     *            the full action path
+     * @return the response mapping string
      * @throws UnifyException
      *             if an error occurs
      */
-    String executeController(String controllerName, String actionName) throws UnifyException;
+    String executeController(String fullActionPath) throws UnifyException;
 
     /**
-     * Populates the property of a controller.
+     * Populates the property of a controller page bean.
      * 
      * @param controllerName
      *            the controller name
@@ -121,5 +120,5 @@ public interface ControllerManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void populateController(String controllerName, String propertyName, Object value) throws UnifyException;
+    void populateControllerPageBean(String controllerName, String propertyName, Object value) throws UnifyException;
 }

@@ -23,7 +23,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface UserInterfaceController extends Controller {
+public interface UIController extends Controller {
 
     /**
      * Tests if bean is read-only.
@@ -36,8 +36,10 @@ public interface UserInterfaceController extends Controller {
     /**
      * Resets the controller. This method is called by the controller manager before
      * a call to the {@link #populate(DataTransferBlock)} method.
+     * @throws UnifyException
+     *             if an error occurs
      */
-    void reset();
+    void reset() throws UnifyException;
 
     /**
      * Populates a controller property. This method is called by the framework for

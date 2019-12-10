@@ -15,16 +15,12 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.ui.Panel;
-
 /**
  * Document view controller.
  * 
  * @author Lateef Ojulari
  * @version 1.0
  */
-public interface DocViewController extends PageController {
+public interface DocViewController<T extends DocViewBean> extends PageController<T> {
 
-    Panel getDocViewPanel() throws UnifyException;
 }

@@ -77,22 +77,14 @@ public interface RequestContextUtil extends UnifyComponent {
     String getRequestPopupName() throws UnifyException;
 
     /**
-     * Sets the document page controller for the current request.
+     * Sets the document object for current request.
      * 
-     * @param pageController
-     *            the document page controller to set
+     * @param document
+     *            the document to set
      * @throws UnifyException
      *             if an error occurs
      */
-    void setRequestDocumentController(PageController pageController) throws UnifyException;
-
-    /**
-     * Returns document page controller in current request context.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    PageController getRequestDocumentController() throws UnifyException;
+    void setRequestDocument(Document document) throws UnifyException;
 
     /**
      * Returns document in current request context.
@@ -218,22 +210,22 @@ public interface RequestContextUtil extends UnifyComponent {
     boolean isRemoteViewer() throws UnifyException;
 
     /**
-     * Sets the response page controller information for current request context.
+     * Sets the response path parts information for current request context.
      * 
-     * @param info
-     *            the info to set
+     * @param respPathParts
+     *            the response path parts to set
      * @throws UnifyException
      *             if an error occurs
      */
-    void setResponsePageControllerInfo(ControllerResponseInfo info) throws UnifyException;
+    void setResponsePathParts(PathParts respPathParts) throws UnifyException;
 
     /**
-     * Returns the response page controller information for current request context
+     * Returns the response path parts information for current request context
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    ControllerResponseInfo getResponsePageControllerInfo() throws UnifyException;
+    PathParts getResponsePathParts() throws UnifyException;
 
     /**
      * Sets dynamic panel page name to request context.

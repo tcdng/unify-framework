@@ -34,9 +34,9 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
         @ResultMapping(
                 name = "showapplicationtaskmonitor",
                 response = { "!showpopupresponse popup:$s{taskMonitorInfoPopup}" }) })
-public class CommonUtilitiesPageController extends AbstractPageController {
+public class CommonUtilitiesPageController extends AbstractPageController<CommonUtilitiesPageBean> {
 
     public CommonUtilitiesPageController() {
-        super(true, false);
+        super(CommonUtilitiesPageBean.class, true, false);
     }
 }

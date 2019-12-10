@@ -20,8 +20,8 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.ControllerResponseInfo;
 import com.tcdng.unify.web.PageAttributeConstants;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.ui.Container;
 import com.tcdng.unify.web.ui.Page;
@@ -102,14 +102,13 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         if (contentPanel.getPageCount() > 0) {
             // Set response page controller
             RequestContextUtil rcu = getRequestContextUtil();
-            ControllerResponseInfo saveRespInfo = rcu.getResponsePageControllerInfo();
+            PathParts currentRespPathParts = rcu.getResponsePathParts();
             ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
-            rcu.setResponsePageControllerInfo(currentContentInfo.getRespInfo());
-
+            rcu.setResponsePathParts(currentContentInfo.getPathParts());
             writer.writeBehaviour(currentContentInfo.getPage());
 
             // Restore response controller
-            rcu.setResponsePageControllerInfo(saveRespInfo);
+            rcu.setResponsePathParts(currentRespPathParts);
         }
     }
 
@@ -244,14 +243,13 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         writer.write("<div style=\"display:table-cell;\">");
         writer.write("<div class=\"cpbody\">");
 
-        ControllerResponseInfo saveRespInfo = rcUtil.getResponsePageControllerInfo();
-        rcUtil.setResponsePageControllerInfo(currentContentInfo.getRespInfo());
-
+        PathParts currentRespPathParts = rcUtil.getResponsePathParts();
+        rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
         writer.writeStructureAndContent(currentContentInfo.getPage());
 
         // Restore response controller
-        rcUtil.setResponsePageControllerInfo(saveRespInfo);
-
+        rcUtil.setResponsePathParts(currentRespPathParts);
+        
         writer.write("</div>");
         writer.write("</div>");
         writer.write("</div>");

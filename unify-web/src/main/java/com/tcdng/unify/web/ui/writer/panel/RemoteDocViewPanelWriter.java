@@ -73,6 +73,6 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
 
     private String getResponseControllerWinId() throws UnifyException {
         return "win_" + getPageManager()
-                .getPageName(getRequestContextUtil().getResponsePageControllerInfo().getControllerId());
+                .getPageName(getRequestContextUtil().getResponsePathParts().getPathId());
     }
 }

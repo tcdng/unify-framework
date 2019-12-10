@@ -18,8 +18,8 @@ package com.tcdng.unify.web.response;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractPageControllerResponse;
-import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.ui.Document;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
@@ -32,9 +32,9 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class LoadDocumentResponse extends AbstractPageControllerResponse {
 
     @Override
-    public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
-        logDebug("Preparing load document response: controller = [{0}]", pageController.getName());
-        Document document = (Document) pageController.getPage();
+    public void generate(ResponseWriter writer, Page page) throws UnifyException {
+        logDebug("Preparing load document response: path ID = [{0}]", page.getPathId());
+        Document document = (Document) page;
         writer.writeStructureAndContent(document);
         writer.writeBehaviour(document);
     }

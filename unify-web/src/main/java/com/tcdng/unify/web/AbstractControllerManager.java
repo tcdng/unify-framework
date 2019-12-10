@@ -68,6 +68,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
 import com.tcdng.unify.web.remotecall.RemoteCallBinaryMessageStreamer;
 import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
 import com.tcdng.unify.web.ui.BindingInfo;
+import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
 import com.tcdng.unify.web.ui.PageManager;
@@ -84,6 +85,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     @Configurable
     private PageManager pageManager;
+
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
 
     @Configurable
     private RequestContextUtil requestContextUtil;
@@ -105,10 +109,11 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     private Map<RemoteCallFormat, ObjectStreamer> objectStreamers;
 
-    private Map<String, String> actionToControllerNameMap;
+    // private Map<String, String> actionToControllerNameMap;
 
     private Map<String, Result> defaultResultMap;
 
+    @SuppressWarnings("rawtypes")
     private FactoryMap<Class<? extends PageController>, PageControllerActionInfo> pageControllerActionInfoMap;
 
     private FactoryMap<String, PageControllerInfo> pageControllerInfoMap;
@@ -125,8 +130,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
     private String commonUtilitiesControllerName;
 
+    @SuppressWarnings("rawtypes")
     public AbstractControllerManager() {
-        actionToControllerNameMap = new ConcurrentHashMap<String, String>();
+        // actionToControllerNameMap = new ConcurrentHashMap<String, String>();
         skipOnPopulateSet = new HashSet<String>();
 
         pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>() {
@@ -168,9 +174,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             @Override
             protected PageControllerInfo create(String controllerName, Object... params) throws Exception {
                 PageControllerInfo pageControllerInfo = createPageControllerInfo(controllerName);
-                for (String actionName : pageControllerInfo.getActionNames()) {
-                    actionToControllerNameMap.put(actionName, controllerName);
-                }
+                // for (String actionName : pageControllerInfo.getActionNames()) {
+                // actionToControllerNameMap.put(actionName, controllerName);
+                // }
                 return pageControllerInfo;
             }
         };
@@ -179,9 +185,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             @Override
             protected RemoteCallControllerInfo create(String controllerName, Object... params) throws Exception {
                 RemoteCallControllerInfo remoteCallControllerInfo = createRemoteCallControllerInfo(controllerName);
-                for (String handlerName : remoteCallControllerInfo.getRemoteHandlerNames()) {
-                    actionToControllerNameMap.put(handlerName, controllerName);
-                }
+                // for (String handlerName : remoteCallControllerInfo.getRemoteHandlerNames()) {
+                // actionToControllerNameMap.put(handlerName, controllerName);
+                // }
                 return remoteCallControllerInfo;
             }
         };
@@ -190,7 +196,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             @Override
             protected ResourceControllerInfo create(String controllerName, Object... params) throws Exception {
                 ResourceControllerInfo resourceControllerInfo = createResourceControllerInfo(controllerName);
-                actionToControllerNameMap.put(controllerName, controllerName);
+                // actionToControllerNameMap.put(controllerName, controllerName);
                 return resourceControllerInfo;
             }
         };
@@ -237,63 +243,71 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     }
 
     @Override
-    public Controller getController(String path) throws UnifyException {
-        logDebug("Obtaining controller with name [{0}]", path);
-        PathParts pathParts = analyzePath(path);
+    public Controller getController(PathParts pathParts, boolean isLoadPage) throws UnifyException {
+        logDebug("Retrieving controller for path [{0}]...", pathParts.getFullPath());
 
-        SessionContext sessionContext = getSessionContext();
-        Controller controller = (Controller) sessionContext.getAttribute(pathParts.getBeanId());
-        if (controller == null) {
-            synchronized (sessionContext) {
-                controller = (Controller) sessionContext.getAttribute(pathParts.getBeanId());
-                if (controller == null) {
-                    UnifyComponentConfig unifyComponentConfig =
-                            getComponentConfig(Controller.class, pathParts.getActBeanName());
+        final String controllerName = pathParts.getControllerName();
+        UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, controllerName);
 
-                    if (unifyComponentConfig == null) {
-                        // May be a real path request
-                        File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
-                        if (file.exists()) {
-                            ResourceController realPathResourceController =
-                                    (ResourceController) this.getComponent("/resource/realpath");
-                            realPathResourceController.setResourceName(path);
-                            return realPathResourceController;
-                        }
-                    }
+        final String path = pathParts.getFullPath();
+        if (unifyComponentConfig == null) {
+            // May be a real path request
+            File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
+            if (file.exists()) {
+                ResourceController realPathResourceController =
+                        (ResourceController) this.getComponent("/resource/realpath");
+                realPathResourceController.setResourceName(path);
+                return realPathResourceController;
+            }
+        }
 
-                    if (unifyComponentConfig == null) {
-                        throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_UNKNOWN_COMP, path);
-                    }
+        if (unifyComponentConfig == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_UNKNOWN_COMP, path);
+        }
 
-                    controller = (Controller) getComponent(pathParts.getActBeanName());
-
-                    ControllerType type = controller.getType();
-                    if (ControllerType.PAGE_CONTROLLER.equals(type)) {
-                        PageController pageController = (PageController) controller;
-                        Page page = pageManager.createPage(sessionContext.getLocale(), pathParts.getActBeanName());
-                        page.setSessionId(pathParts.getBeanId());
-                        pageController.setPage(page);
-                        sessionContext.setAttribute(pathParts.getBeanId(), controller);
-                    } else if (ControllerType.REMOTECALL_CONTROLLER.equals(type)) {
-                        sessionContext.setAttribute(pathParts.getActBeanName(), controller);
+        Controller controller = (Controller) getComponent(controllerName);
+        if (ControllerType.PAGE_CONTROLLER.equals(controller.getType())) {
+            SessionContext sessionContext = getSessionContext();
+            Page page = getPage(pathParts);
+            if (page == null) {
+                Page currentPage = requestContextUtil.getRequestPage();
+                try {
+                    PageController<?> pageController = (PageController<?>) controller;
+                    Class<? extends PageBean> pageBeanClass = pageController.getPageBeanClass();
+                    page = pageManager.createPage(sessionContext.getLocale(), controllerName);
+                    page.setPathId(pathParts.getPathId());
+                    page.setPageBean(ReflectUtils.newInstance(pageBeanClass));
+                    requestContextUtil.setRequestPage(page);
+                    pageController.initPage();
+                    sessionContext.setAttribute(pathParts.getPathId(), page);
+                } finally {
+                    if (!isLoadPage) {
+                        requestContextUtil.setRequestPage(currentPage);
                     }
                 }
             }
         }
-        logDebug("Controller with name [{0}] retrieved", pathParts.getActBeanName());
+
+        logDebug("Controller with name [{0}] retrieved", controllerName);
         return controller;
     }
 
     @Override
     public void executeController(ClientRequest request, ClientResponse response) throws UnifyException {
         Controller controller = null;
+        PageController<?> docPageController = null;
         try {
-            controller = getController(request.getPath());
-            if (controller.isBackUnifyPage()) {
+            PathParts docPathParts = null;
+            PathParts pathParts = pathInfoRepository.getPathParts(request.getPath());
+            controller = getController(pathParts, false);
+
+            ControllerType controllerType = controller.getType();
+            if (controllerType.isUIController()) {
                 String documentPath = (String) request.getParameter(RequestParameterConstants.DOCUMENT);
                 if (documentPath != null) {
-                    PageController docPageController = (PageController) getController(documentPath);
-                    requestContextUtil.setRequestDocumentController(docPageController);
+                    docPathParts = pathInfoRepository.getPathParts(documentPath);
+                    docPageController = (PageController<?>) getController(docPathParts, false);
+                    requestContextUtil.setRequestDocument((Document) getPage(docPathParts));
                 }
 
                 requestContextUtil.extractRequestParameters(request);
@@ -311,10 +325,9 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, request.getPath());
             }
 
-            ControllerType type = controller.getType();
-            if (ControllerType.PLAIN_CONTROLLER.equals(type)) {
+            if (ControllerType.PLAIN_CONTROLLER.equals(controllerType)) {
                 ((PlainController) controller).execute(request, response);
-            } else if (ControllerType.REMOTECALL_CONTROLLER.equals(type)) {
+            } else if (ControllerType.REMOTECALL_CONTROLLER.equals(controllerType)) {
                 RemoteCallController remoteCallController = (RemoteCallController) controller;
                 RemoteCallFormat remoteCallFormat =
                         (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
@@ -330,7 +343,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 } else {
                     response.getOutputStream().write((byte[]) respBody);
                 }
-            } else if (ControllerType.RESOURCE_CONTROLLER.equals(type)) {
+            } else if (ControllerType.RESOURCE_CONTROLLER.equals(controllerType)) {
                 ResourceController resourceController = (ResourceController) controller;
                 if (!resourceController.isReadOnly()) {
                     DataTransfer dataTransfer = prepareDataTransfer(resourceController, request);
@@ -351,23 +364,25 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             } else {
                 ResponseWriter writer = responseWriterPool.getResponseWriter();
                 try {
-                    PageController pageController = (PageController) controller;
+                    PathParts respPathParts = pathParts;
+                    PageController<?> pageController = (PageController<?>) controller;
                     PageControllerInfo pbbInfo = pageControllerInfoMap.get(pageController.getName());
-                    requestContextUtil.setRequestPage(pageController.getPage());
+                    Page page = getPage(pathParts);
+                    requestContextUtil.setRequestPage(page);
                     String resultName = ResultMappingConstants.VALIDATION_ERROR;
 
                     DataTransfer dataTransfer = prepareDataTransfer(pageController, request);
-                    if (validate(pageController, dataTransfer)) {
-                        synchronized (pageController) {
+                    if (validate(page, dataTransfer)) {
+                        synchronized (page) {
                             populate(pageController, dataTransfer);
                             resultName = executePageCall(pageController, request.getPath());
                         }
 
                         // Check if action result needs to be routed to containing
                         // document controller
-                        if (!pbbInfo.hasResultWithName(resultName) && !pageController.getPage().isDocument()) {
-                            PageController docPageController = requestContextUtil.getRequestDocumentController();
+                        if (!pbbInfo.hasResultWithName(resultName) && !page.isDocument()) {
                             if (docPageController != null) {
+                                respPathParts = docPathParts;
                                 pageController = docPageController;
                                 pbbInfo = pageControllerInfoMap.get(pageController.getName());
                             }
@@ -375,17 +390,19 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
 
                         // Route to common utilities if necessary
                         if (!pbbInfo.hasResultWithName(resultName)) {
-                            pageController = (PageController) getController(commonUtilitiesControllerName);
-                            pbbInfo = pageControllerInfoMap.get(commonUtilitiesControllerName);
+                            respPathParts = pathInfoRepository.getPathParts(commonUtilitiesControllerName);
+                            pageController = (PageController<?>) getController(respPathParts, false);
+                            pbbInfo = pageControllerInfoMap.get(pageController.getName());
                         }
                     }
 
-                    requestContextUtil.setResponsePageControllerInfo(
-                            new ControllerResponseInfo(pageController.getName(), pageController.getSessionId()));
+                    // Write response using information from response path parts
+                    requestContextUtil.setResponsePathParts(respPathParts);
                     Result result = pbbInfo.getResult(resultName);
-                    writeResponse(writer, pageController, result);
+                    page = getPage(respPathParts);
+                    requestContextUtil.setRequestPage(page);
+                    writeResponse(writer, page, result);
 
-                    // logDebug("Page controller response: response = [{0}]", responseString);
                     response.setContentType(result.getMimeType().template());
                     if (request.getCharset() != null) {
                         response.setCharacterEncoding(request.getCharset().name());
@@ -397,14 +414,14 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 }
             }
         } catch (Exception e) {
-            boolean backUnifyPage = false;
+            boolean isUIRequest = false;
             if (controller != null) {
-                backUnifyPage = controller.isBackUnifyPage();
+                isUIRequest = controller.getType().isUIController();
             } else {
-                backUnifyPage = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY) == null;
+                isUIRequest = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY) == null;
             }
 
-            if (backUnifyPage) {
+            if (isUIRequest) {
                 writeExceptionResponseForUserInterface(request, response, e);
             } else {
                 // TODO
@@ -416,15 +433,25 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
     }
 
     @Override
-    public String executeController(String controllerName, String actionName) throws UnifyException {
-        Controller controller = getController(controllerName);
-        return executePageCall((PageController) controller, actionName);
+    public String executeController(String fullActionPath) throws UnifyException {
+        Page currentPage = requestContextUtil.getRequestPage();
+        try {
+            PathParts targetPathParts = pathInfoRepository.getPathParts(fullActionPath);
+            PageController<?> targetPageController = (PageController<?>) getController(targetPathParts, false);
+            Page targetPage = getPage(targetPathParts);
+            requestContextUtil.setRequestPage(targetPage);
+            return executePageCall(targetPageController, targetPathParts.getActionName());
+        } finally {
+            requestContextUtil.setRequestPage(currentPage); // Restore original page
+        }
     }
 
     @Override
-    public void populateController(String controllerName, String property, Object value) throws UnifyException {
-        Controller controller = getController(controllerName);
-        DataUtils.setNestedBeanProperty(controller, property, value);
+    public void populateControllerPageBean(String controllerName, String property, Object value) throws UnifyException {
+        PathParts targetPathParts = pathInfoRepository.getPathParts(controllerName);
+        getController(targetPathParts, false); // Force target page to be created in session if necessary
+        Page targetPage = getPage(targetPathParts);
+        DataUtils.setNestedBeanProperty(targetPage.getPageBean(), property, value);
     }
 
     @Override
@@ -469,9 +496,8 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                         (PageControllerResponse) getUplComponent(defaultLocale, "!unloadcontentresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 
-        defaultResultMap.put(ResultMappingConstants.REMOTE_VIEW,
-                new Result(new PageControllerResponse[] {
-                        (PageControllerResponse) getUplComponent(defaultLocale, "!docviewresponse", false) }));
+        defaultResultMap.put(ResultMappingConstants.REMOTE_VIEW, new Result(new PageControllerResponse[] {
+                (PageControllerResponse) getUplComponent(defaultLocale, "!docviewresponse", false) }));
 
         defaultResultMap.put(ResultMappingConstants.POST_RESPONSE,
                 new Result(new PageControllerResponse[] {
@@ -535,11 +561,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         return pageManager;
     }
 
-    protected String getControllerName(String actionPath) throws UnifyException {
-        return actionToControllerNameMap.get(actionPath);
-    }
-
-    protected void populate(UserInterfaceController uiController, DataTransfer dataTransfer) throws UnifyException {
+    protected void populate(UIController uiController, DataTransfer dataTransfer) throws UnifyException {
         if (!uiController.isReadOnly()) {
             logDebug("Populating controller [{0}]", uiController.getName());
 
@@ -560,15 +582,14 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         }
     }
 
-    protected boolean validate(PageController pageController, DataTransfer dataTransfer) throws UnifyException {
-        Page page = pageController.getPage();
+    protected boolean validate(Page page, DataTransfer dataTransfer) throws UnifyException {
         boolean successful = true;
         if (page.isValidationEnabled()) {
             String actionId = dataTransfer.getActionId();
             logDebug("Page validation is enabled. actionId = [{0}]", actionId);
 
             if (StringUtils.isNotBlank(actionId)) {
-                logDebug("Performing request parameter validation. Controller [{0}]", pageController.getName());
+                logDebug("Performing request parameter validation. path ID [{0}]", page.getPathId());
 
                 // Do validations
                 PageAction pageAction = page.getPageAction(pageManager.getLongName(actionId));
@@ -578,14 +599,14 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                     successful &= page.getPageWidgetValidator(pageManager, validationLongName).validate(dataTransfer);
                 }
 
-                logDebug("Request parameter validation completed. Controller [{0}]", pageController.getName());
+                logDebug("Request parameter validation completed. path ID [{0}]", page.getPathId());
             }
         }
 
         return successful;
     }
 
-    protected String executePageCall(PageController pageController, String action) throws UnifyException {
+    protected String executePageCall(PageController<?> pageController, String action) throws UnifyException {
         try {
             return (String) pageControllerInfoMap.get(pageController.getName()).getAction(action).getMethod()
                     .invoke(pageController);
@@ -682,22 +703,28 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         // Generate exception response
         ResponseWriter writer = responseWriterPool.getResponseWriter();
         try {
-            PageController pageController = null;
+            PageController<?> pageController = null;
+            PathParts respPathParts = null;
+            Page page = null;
             Result result = null;
             if (StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.DOCUMENT))
                     && !requestContextUtil.isRemoteViewer()) {
-                pageController = (PageController) getController(SystemInfoConstants.UNAUTHORISED_CONTROLLER_NAME);
+                respPathParts = pathInfoRepository.getPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+                pageController = (PageController<?>) getController(respPathParts, false);
+                page = getPage(respPathParts);
                 result = pageControllerInfoMap.get(pageController.getName()).getResult(ResultMappingConstants.INDEX);
             } else {
-                pageController = (PageController) getController(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
-                pageController.getPage().getWidgetByShortName("stackTrace").setVisible(!loginRequired);
+                respPathParts = pathInfoRepository.getPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
+                pageController = (PageController<?>) getController(respPathParts, false);
+                page = getPage(respPathParts);
+                page.setWidgetVisible("stackTrace", !loginRequired);
                 result = pageControllerInfoMap.get(pageController.getName())
                         .getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
             }
 
-            requestContextUtil.setResponsePageControllerInfo(
-                    new ControllerResponseInfo(pageController.getName(), pageController.getSessionId()));
-            writeResponse(writer, pageController, result);
+            requestContextUtil.setResponsePathParts(respPathParts);
+            requestContextUtil.setRequestPage(page);
+            writeResponse(writer, page, result);
 
             response.setContentType(result.getMimeType().template());
             writer.writeTo(response.getWriter());
@@ -731,18 +758,23 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         }
     }
 
+    private Page getPage(PathParts pathParts) throws UnifyException {
+        return (Page) getSessionContext().getAttribute(pathParts.getPathId());
+    }
+
     private boolean isActionHandlerSignature(Method method) throws UnifyException {
         return String.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0
                 && method.getExceptionTypes().length == 1
                 && UnifyException.class.isAssignableFrom(method.getExceptionTypes()[0]);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private boolean isSuperCommandMethod(Class<? extends PageController> pageControllerClass, String methodName)
             throws UnifyException {
         Class<?> clazz = pageControllerClass;
         while ((clazz = clazz.getSuperclass()) != null && PageController.class.isAssignableFrom(clazz)) {
-            if (pageControllerActionInfoMap.get((Class<? extends PageController>) clazz).isActionMethod(methodName)) {
+            if (pageControllerActionInfoMap.get((Class<? extends PageController<?>>) clazz)
+                    .isActionMethod(methodName)) {
                 return true;
             }
         }
@@ -750,11 +782,12 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         return false;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private PageControllerInfo createPageControllerInfo(String controllerName) throws UnifyException {
         // Process action handlers
         Map<String, Action> actionMap = new HashMap<String, Action>();
-        Class<? extends PageController> typeClass = getComponentType(PageController.class, controllerName);
+        Class<? extends PageController> typeClass =
+                getComponentType(PageController.class, controllerName);
         for (Method method : pageControllerActionInfoMap.get(typeClass).getActionMethods()) {
             actionMap.put(controllerName + '/' + method.getName(), new Action(method));
         }
@@ -848,8 +881,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         return new ResourceControllerInfo(controllerName, propertyBindingMap);
     }
 
-    private void writeResponse(ResponseWriter writer, PageController pageController, Result result)
-            throws UnifyException {
+    private void writeResponse(ResponseWriter writer, Page page, Result result) throws UnifyException {
         if (MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
             writer.write("{\"jsonResp\":[");
             boolean appendSym = false;
@@ -859,7 +891,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
                 } else {
                     appendSym = true;
                 }
-                pageControllerResponse.generate(writer, pageController);
+                pageControllerResponse.generate(writer, page);
             }
             writer.write("]");
             if (requestContextUtil.isRemoteViewer()) {
@@ -869,13 +901,12 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             writer.write("}");
         } else {
             for (PageControllerResponse pageControllerResponse : result.getResponses()) {
-                pageControllerResponse.generate(writer, pageController);
+                pageControllerResponse.generate(writer, page);
             }
         }
     }
 
-    private DataTransfer prepareDataTransfer(UserInterfaceController uiController, ClientRequest request)
-            throws UnifyException {
+    private DataTransfer prepareDataTransfer(UIController uiController, ClientRequest request) throws UnifyException {
         Class<?> validationClass = null;
         Class<?> validationIdClass = null;
         String actionId = (String) request.getParameter(RequestParameterConstants.VALIDATION_ACTION);
@@ -885,7 +916,7 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
             uiControllerInfo = resourceControllerInfoMap.get(uiController.getName());
         } else {
             uiControllerInfo = pageControllerInfoMap.get(uiController.getName());
-            Page page = ((PageController) uiController).getPage();
+            Page page = requestContextUtil.getRequestPage();
             validationClass = (Class<?>) page.getAttribute("validationClass");
             validationIdClass = (Class<?>) page.getAttribute("validationIdClass");
         }
@@ -983,54 +1014,12 @@ public abstract class AbstractControllerManager extends AbstractUnifyComponent i
         }
     }
 
-    private PathParts analyzePath(String path) throws UnifyException {
-        String actBeanName = actionToControllerNameMap.get(path);
-        if (actBeanName != null) {
-            return new PathParts(actBeanName, actBeanName);
-        }
-
-        int colIndex = path.lastIndexOf(':');
-        if (colIndex >= 0) {
-            String beanId = null;
-            actBeanName = path.substring(0, colIndex);
-
-            int slashIndex = path.lastIndexOf('/');
-            if (slashIndex > colIndex) {
-                beanId = path.substring(0, slashIndex);
-            } else {
-                beanId = path;
-            }
-
-            return new PathParts(actBeanName, beanId);
-        } else {
-            if (getComponentConfig(Controller.class, path) == null) {
-                int slashIndex = path.lastIndexOf('/');
-                if (slashIndex > 0) {
-                    actBeanName = path.substring(0, slashIndex);
-                    return new PathParts(actBeanName, actBeanName);
-                }
-            }
-        }
-        return new PathParts(path, path);
-    }
-
-    private class PathParts {
-
-        private String actBeanName;
-
-        private String beanId;
-
-        public PathParts(String actBeanName, String beanId) {
-            this.actBeanName = actBeanName;
-            this.beanId = beanId;
-        }
-
-        public String getActBeanName() {
-            return actBeanName;
-        }
-
-        public String getBeanId() {
-            return beanId;
-        }
-    }
+    // private PathParts getPathParts(String path) throws UnifyException {
+    // String controllerName = actionToControllerNameMap.get(path);
+    // if (controllerName != null) {
+    // return pathInfoRepository.getPathParts(controllerName);
+    // }
+    //
+    // return pathInfoRepository.getPathParts(path);
+    // }
 }

@@ -17,12 +17,12 @@
 package com.tcdng.unify.web;
 
 /**
- * Page controller path information.
+ * Page path information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PageControllerPathInfo {
+public class PagePathInfo {
 
     private String id;
 
@@ -36,7 +36,7 @@ public class PageControllerPathInfo {
 
     private boolean remoteSave;
 
-    public PageControllerPathInfo(String id, String colorScheme, String openPagePath, String savePagePath,
+    public PagePathInfo(String id, String colorScheme, String openPagePath, String savePagePath,
             String closePagePath, boolean remoteSave) {
         this.id = id;
         this.colorScheme = colorScheme;

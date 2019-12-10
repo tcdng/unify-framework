@@ -35,8 +35,4 @@ public abstract class AbstractPlainController extends AbstractController impleme
         return ControllerType.PLAIN_CONTROLLER;
     }
 
-    @Override
-    public final boolean isBackUnifyPage() {
-        return false;
-    }
 }

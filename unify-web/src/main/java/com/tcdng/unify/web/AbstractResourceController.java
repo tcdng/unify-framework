@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.annotation.RequestParameter;
 
 /**
@@ -28,7 +31,8 @@ import com.tcdng.unify.web.annotation.RequestParameter;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractResourceController extends AbstractUnifyPageController implements ResourceController {
+@Singleton(false)
+public abstract class AbstractResourceController extends AbstractUIController implements ResourceController {
 
     @RequestParameter
     private String resourceName;
@@ -54,6 +58,13 @@ public abstract class AbstractResourceController extends AbstractUnifyPageContro
     }
 
     @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        if (!isReadOnly()) {
+            DataUtils.setNestedBeanProperty(this, transferBlock.getLongProperty(), transferBlock.getValue(), null);
+        }
+    }
+
+    @Override
     public void setResourceName(String resourceName) {
         this.resourceName = resourceName;
     }
@@ -71,6 +82,11 @@ public abstract class AbstractResourceController extends AbstractUnifyPageContro
     @Override
     public void setAttachment(boolean attachment) {
         this.attachment = attachment;
+    }
+
+    @Override
+    public void reset() throws UnifyException{
+
     }
 
     public String getMorsic() {

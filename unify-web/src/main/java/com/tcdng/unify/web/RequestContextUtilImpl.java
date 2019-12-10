@@ -66,13 +66,13 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     private static final String SWITCHED_PANELS = "SWITCHED_PANELS";
 
-    private static final String REQUEST_DOCUMENT_PAGECONTROLLER = "REQUEST_DOCUMENT_PAGECONTROLLER";
+    private static final String REQUEST_DOCUMENT = "REQUEST_DOCUMENT";
 
     private static final String REQUEST_PAGE = "REQUEST_PAGE";
 
     private static final String REQUEST_POPUP_NAME = "REQUEST_POPUP_NAME";
 
-    private static final String RESULT_PAGECONTROLLER_INFO = "RESULT_PAGECONTROLLER_INFO";
+    private static final String RESPONSE_PATHPARTS = "RESPONSE_PATHPARTS";
 
     private static final String DYNAMICPANEL_PAGENAME = "DYNAMICPANEL_PAGENAME";
 
@@ -108,22 +108,13 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void setRequestDocumentController(PageController pageController) throws UnifyException {
-        setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, pageController);
-    }
-
-    @Override
-    public PageController getRequestDocumentController() throws UnifyException {
-        return (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
+    public void setRequestDocument(Document document) throws UnifyException {
+        setRequestAttribute(REQUEST_DOCUMENT, document);
     }
 
     @Override
     public Document getRequestDocument() throws UnifyException {
-        PageController pageController = (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
-        if (pageController != null) {
-            return (Document) pageController.getPage();
-        }
-        return null;
+        return (Document) getRequestAttribute(REQUEST_DOCUMENT);
     }
 
     @Override
@@ -201,13 +192,13 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void setResponsePageControllerInfo(ControllerResponseInfo info) throws UnifyException {
-        setRequestAttribute(RESULT_PAGECONTROLLER_INFO, info);
+    public void setResponsePathParts(PathParts respPathParts) throws UnifyException {
+        setRequestAttribute(RESPONSE_PATHPARTS, respPathParts);
     }
-
+    
     @Override
-    public ControllerResponseInfo getResponsePageControllerInfo() throws UnifyException {
-        return (ControllerResponseInfo) getRequestAttribute(RESULT_PAGECONTROLLER_INFO);
+    public PathParts getResponsePathParts() throws UnifyException {
+        return (PathParts) getRequestAttribute(RESPONSE_PATHPARTS);
     }
 
     @Override
@@ -444,9 +435,9 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
         setRequestAttribute(COMMAND_POSTRESPONSE_PATH, null);
         setRequestAttribute(PAGENAME_ALIASES, null);
         setRequestAttribute(REFRESH_PANEL_LONGNAMES, null);
-        setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, null);
+        setRequestAttribute(REQUEST_DOCUMENT, null);
         setRequestAttribute(REQUEST_PAGE, null);
-        setRequestAttribute(RESULT_PAGECONTROLLER_INFO, null);
+        setRequestAttribute(RESPONSE_PATHPARTS, null);
         setRequestAttribute(USER_HINT_LIST, null);
         setRequestAttribute(VALIDATION_INFO_LIST, null);
 

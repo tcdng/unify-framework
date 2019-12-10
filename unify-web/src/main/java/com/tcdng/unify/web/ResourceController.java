@@ -26,7 +26,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ResourceController extends UserInterfaceController {
+public interface ResourceController extends UIController {
 
     /**
      * Returns the resource content type.

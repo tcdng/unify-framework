@@ -185,28 +185,17 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetController() throws Exception {
-        ControllerManager bbm =
-                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-        Controller pbb = bbm.getController("/testauthor");
+        Controller pbb = (Controller) getComponent("/testauthor");
         assertNotNull(pbb);
 
-        Controller rbb = bbm.getController("/resource/mock");
+        Controller rbb = (Controller) getComponent("/resource/mock");
         assertNotNull(rbb);
-    }
-
-    @Test(expected = UnifyException.class)
-    public void testGetControllerUnknown() throws Exception {
-        ControllerManager bbm =
-                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-        bbm.getController("/snuffleupagus");
     }
 
     @Test
     public void testGetPageControllerSameSession() throws Exception {
-        ControllerManager bbm =
-                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-        Controller bb1 = bbm.getController("/testauthor");
-        Controller bb2 = bbm.getController("/testauthor");
+        Controller bb1 = (Controller) getComponent("/testauthor");
+        Controller bb2 = (Controller) getComponent("/testauthor");
         assertSame(bb1, bb2);
         assertEquals(bb1, bb2);
     }
@@ -215,16 +204,21 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     public void testPopulateControllerProperty() throws Exception {
         ControllerManager bbm =
                 (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-
+        PathInfoRepository pathInfoRepository = (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
+        
+        // Create page controller and load page to request context
+        bbm.getController(pathInfoRepository.getPathParts("/testauthor"), true);
+        
         Date birthDt = new Date();
-        bbm.populateController("/testauthor", "fullName", "Adrian Skim");
-        bbm.populateController("/testauthor", "birthDt", birthDt);
-        bbm.populateController("/testauthor", "height", Double.valueOf(25.34));
+        bbm.populateControllerPageBean("/testauthor", "fullName", "Adrian Skim");
+        bbm.populateControllerPageBean("/testauthor", "birthDt", birthDt);
+        bbm.populateControllerPageBean("/testauthor", "height", Double.valueOf(25.34));
 
-        AuthorPageController apbb = (AuthorPageController) bbm.getController("/testauthor");
-        assertEquals("Adrian Skim", apbb.getFullName());
-        assertEquals(birthDt, apbb.getBirthDt());
-        assertEquals(Double.valueOf(25.34), apbb.getHeight());
+        AuthorPageController apbb = (AuthorPageController) getComponent("/testauthor");
+        AuthorPageBean authorPageBean = (AuthorPageBean) apbb.getPage().getPageBean();
+        assertEquals("Adrian Skim", authorPageBean.getFullName());
+        assertEquals(birthDt, authorPageBean.getBirthDt());
+        assertEquals(Double.valueOf(25.34), authorPageBean.getHeight());
     }
 
     @Test
@@ -264,11 +258,12 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     public void testExecutePageController() throws Exception {
         ControllerManager bbm =
                 (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-
+        PathInfoRepository pathInfoRepository = (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
+        
         TestClientResponse response = new TestClientResponse();
         TestClientRequest request = new TestClientRequest("/testauthor/createAuthor");
         Date birthDt = new Date();
-        AuthorPageController apbb = (AuthorPageController) bbm.getController("/testauthor");
+        AuthorPageController apbb = (AuthorPageController) bbm.getController(pathInfoRepository.getPathParts("/testauthor"), true);
         Widget uic1 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.fullName");
         Widget uic2 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.birthDt");
         Widget uic3 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.height");
@@ -279,9 +274,10 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         bbm.executeController(request, response);
 
         // Ensure controller is populated
-        assertEquals("Tom Jones", apbb.getFullName());
-        assertEquals(birthDt, apbb.getBirthDt());
-        assertEquals(Double.valueOf(24.22), apbb.getHeight());
+        AuthorPageBean authorPageBean = (AuthorPageBean) apbb.getPage().getPageBean();
+        assertEquals("Tom Jones", authorPageBean.getFullName());
+        assertEquals(birthDt, authorPageBean.getBirthDt());
+        assertEquals(Double.valueOf(24.22), authorPageBean.getHeight());
 
         // Test result
         assertEquals("{\"jsonResp\":[{\"handler\":\"hintUserHdl\"},{\"handler\":\"refreshMenuHdl\"}]}",

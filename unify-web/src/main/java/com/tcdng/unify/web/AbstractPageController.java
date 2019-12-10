@@ -17,12 +17,10 @@ package com.tcdng.unify.web;
 
 import java.text.MessageFormat;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.data.DownloadFile;
-import com.tcdng.unify.core.data.FactoryMap;
-import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
@@ -34,7 +32,6 @@ import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.DataTransferWidget;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
-import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.WidgetCommandManager;
 import com.tcdng.unify.web.ui.data.Hint.MODE;
@@ -50,42 +47,27 @@ import com.tcdng.unify.web.ui.data.TaskMonitorInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractPageController extends AbstractUnifyPageController implements PageController {
+@Singleton
+public abstract class AbstractPageController<T extends PageBean> extends AbstractUIController
+        implements PageController<T> {
 
     @Configurable
     private TaskLauncher taskLauncher;
 
-    private Page page;
+    private Class<T> pageBeanClass;
 
-    private static final FactoryMap<String, PageControllerPathInfo> pathInfos;
-
-    static {
-        pathInfos = new FactoryMap<String, PageControllerPathInfo>() {
-
-            @Override
-            protected PageControllerPathInfo create(String beanId, Object... params) throws Exception {
-                return new PageControllerPathInfo(beanId, null, beanId + "/openPage", beanId + "/savePage",
-                        beanId + "/closePage", false);
-            }
-        };
+    public AbstractPageController(Class<T> pageBeanClass) {
+        this(pageBeanClass, false, false);
     }
 
-    public AbstractPageController() {
-        this(false, false);
-    }
-
-    public AbstractPageController(boolean secured, boolean readOnly) {
+    public AbstractPageController(Class<T> pageBeanClass, boolean secured, boolean readOnly) {
         super(secured, readOnly);
+        this.pageBeanClass = pageBeanClass;
     }
 
     @Override
-    public PageControllerPathInfo getPathInfo() throws UnifyException {
-        return pathInfos.get(getSessionId());
-    }
-
-    @Override
-    public String getSessionId() {
-        return page.getSessionId();
+    public void reset() throws UnifyException{
+        getPageBean().reset();;
     }
 
     @Override
@@ -94,30 +76,22 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     }
 
     @Override
-    public Page getPage() {
-        return page;
+    public final Class<T> getPageBeanClass() {
+        return pageBeanClass;
     }
 
     @Override
-    public final void setPage(Page page) throws UnifyException {
-        this.page = page;
-        page.setValueStore(((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(this, -1));
-        onSetPage();
+    public final Page getPage() throws UnifyException {
+        return getRequestContextUtil().getRequestPage();
     }
 
     @Override
-    public Panel getPanelByLongName(String longName) throws UnifyException {
-        return page.getPanelByLongName(longName);
-    }
-
-    @Override
-    public Panel getPanelByShortName(String shortName) throws UnifyException {
-        return page.getPanelByShortName(shortName);
+    public final void initPage() throws UnifyException {
+        onInitPage();
     }
 
     @Action
-    public final String index() throws UnifyException {
+    public final String indexPage() throws UnifyException {
         onIndexPage();
         return ResultMappingConstants.INDEX;
     }
@@ -126,10 +100,10 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     @Override
     public final String openPage() throws UnifyException {
         onOpenPage();
-        if(getRequestContextUtil().isRemoteViewer()) {
+        if (getRequestContextUtil().isRemoteViewer()) {
             return ResultMappingConstants.REMOTE_VIEW;
         }
-        
+
         return ResultMappingConstants.OPEN;
     }
 
@@ -147,8 +121,8 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
         if (!ClosePageMode.CLOSE_OTHERS.equals(mode)) {
             onClosePage();
 
-            // Remove controller from session, effectively terminating self
-            removeSessionAttribute(page.getSessionId());
+            // Remove current page from session, effectively terminating page
+            removeSessionAttribute(getRequestContextUtil().getRequestPage().getPathId());
         }
 
         return ResultMappingConstants.CLOSE;
@@ -175,7 +149,8 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
         if (requestCommand != null) {
             WidgetCommandManager uiCommandManager =
                     (WidgetCommandManager) getComponent(WebApplicationComponents.APPLICATION_UICOMMANDMANAGER);
-            Widget widget = getPageWidgetByLongName(Widget.class, requestCommand.getTargetId());
+            Widget widget = getRequestContextUtil().getRequestPage().getWidgetByLongName(Widget.class,
+                    requestCommand.getTargetId());
             if (widget.isRelayCommand()) {
                 widget = widget.getRelayWidget();
             }
@@ -192,13 +167,14 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
 
     @Action
     public String confirm() throws UnifyException {
-        String msg = getRequestContextUtil().getRequestConfirmMessage();
-        String param = getRequestContextUtil().getRequestConfirmParam();
+        RequestContextUtil requestContextUtil = getRequestContextUtil();
+        String msg = requestContextUtil.getRequestConfirmMessage();
+        String param = requestContextUtil.getRequestConfirmParam();
         if (StringUtils.isNotBlank(param)) {
             msg = MessageFormat.format(msg, param);
         }
 
-        return showMessageBox(getRequestContextUtil().getRequestConfirmMessageIcon(), MessageMode.YES_NO,
+        return showMessageBox(requestContextUtil.getRequestConfirmMessageIcon(), MessageMode.YES_NO,
                 getSessionMessage("messagebox.confirmation"), msg, "/confirmResult");
     }
 
@@ -213,9 +189,21 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
 
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        DataTransferWidget dataTransferWidget =
-                (DataTransferWidget) page.getWidgetByLongName(transferBlock.getLongName());
+        DataTransferWidget dataTransferWidget = (DataTransferWidget) getRequestContextUtil().getRequestPage()
+                .getWidgetByLongName(transferBlock.getLongName());
         dataTransferWidget.populate(transferBlock);
+    }
+
+    /**
+     * Gets the page bean from current page object.
+     * 
+     * @return the page binding bean
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    @SuppressWarnings("unchecked")
+    protected T getPageBean() throws UnifyException {
+        return (T) getRequestContextUtil().getRequestPage().getPageBean();
     }
 
     /**
@@ -362,7 +350,7 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      * @param onSuccessPath
      *            optional on task success forward to path
      * @param onFailurePath
-     *            optional on task faile forward to path
+     *            optional on task failure forward to path
      * @return the show application monitor box result mapping name
      * @throws UnifyException
      *             if an error occurs
@@ -379,23 +367,15 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
     /**
      * Fires action of a page controller in current session.
      * 
-     * @param controllerName
-     *            the target controller name
-     * @param actionName
-     *            the controller action to fire
+     * @param fullActionPath
+     *            the target full action path name
      * @return the action result mapping
      * @throws UnifyException
      *             if an error occurs
      */
-    protected String fireControllerAction(String controllerName, String actionName) throws UnifyException {
-        StringBuilder sb = new StringBuilder(controllerName);
-        if (actionName.charAt(0) != '/') {
-            sb.append('/');
-        }
-
-        sb.append(actionName);
+    protected String fireOtherControllerAction(String fullActionPath) throws UnifyException {
         return ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
-                .executeController(controllerName, sb.toString());
+                .executeController(fullActionPath);
     }
 
     /**
@@ -410,121 +390,10 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void writeControllerProperty(String controllerName, String propertyName, Object value)
+    protected void writeOtherControllerProperty(String controllerName, String propertyName, Object value)
             throws UnifyException {
         ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
-                .populateController(controllerName, propertyName, value);
-    }
-
-    /**
-     * Sets the disabled state of a widget in page associated with this controller.
-     * 
-     * @param shortName
-     *            the widget short name
-     * @param disabled
-     *            the disabled flag to set
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected void setDisabled(String shortName, boolean disabled) throws UnifyException {
-        page.getWidgetByShortName(shortName).setDisabled(disabled);
-    }
-
-    /**
-     * Returns the disabled state flag of a widget in page associated with this
-     * controller.
-     * 
-     * @param shortName
-     *            the widget short name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected boolean isDisabled(String shortName) throws UnifyException {
-        return page.getWidgetByShortName(shortName).isDisabled();
-    }
-
-    /**
-     * Sets the visible state of a widget in page associated with this controller.
-     * 
-     * @param shortName
-     *            the widget short name
-     * @param visible
-     *            the disabled flag to set
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected void setVisible(String shortName, boolean visible) throws UnifyException {
-        page.getWidgetByShortName(shortName).setVisible(visible);
-    }
-
-    /**
-     * Returns the visible state flag of a widget in page associated with this
-     * controller.
-     * 
-     * @param shortName
-     *            the widget short name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected boolean isVisible(String shortName) throws UnifyException {
-        return page.getWidgetByShortName(shortName).isVisible();
-    }
-
-    /**
-     * Sets the editable state of a widget in page associated with this controller.
-     * 
-     * @param shortName
-     *            the widget short name
-     * @param editable
-     *            the editable flag to set
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected void setEditable(String shortName, boolean editable) throws UnifyException {
-        page.getWidgetByShortName(shortName).setEditable(editable);
-    }
-
-    /**
-     * Returns the editable state flag of a widget in page associated with this
-     * controller.
-     * 
-     * @param shortName
-     *            the widget short name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected boolean isEditable(String shortName) throws UnifyException {
-        return page.getWidgetByShortName(shortName).isEditable();
-    }
-
-    /**
-     * Returns a widget from page associated with this controller by long name.
-     * 
-     * @param clazz
-     *            the widget type
-     * @param longName
-     *            the component long name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    @SuppressWarnings("unchecked")
-    protected <T> T getPageWidgetByLongName(Class<T> clazz, String longName) throws UnifyException {
-        return (T) page.getWidgetByLongName(longName);
-    }
-
-    /**
-     * Returns a widget from page associated with this controller by short name.
-     * 
-     * @param clazz
-     *            the widget type
-     * @param shortName
-     *            the component short name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    @SuppressWarnings("unchecked")
-    protected <T> T getPageWidgetByShortName(Class<T> clazz, String shortName) throws UnifyException {
-        return (T) page.getWidgetByShortName(shortName);
+                .populateControllerPageBean(controllerName, propertyName, value);
     }
 
     /**
@@ -593,69 +462,76 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      *             if an error occurs
      */
     @SuppressWarnings("unchecked")
-    protected <T> T getDocumentAttribute(Class<T> clazz, String name) throws UnifyException {
+    protected <U> U getDocumentAttribute(Class<U> clazz, String name) throws UnifyException {
         Document document = getRequestContextUtil().getRequestDocument();
         if (document != null) {
-            return (T) document.getAttribute(name);
+            return (U) document.getAttribute(name);
         }
         return null;
     }
 
     /**
-     * Sets the value of attribute in the page context associated with this
-     * controller.
+     * Sets the value of attribute in current request page.
      * 
      * @param name
      *            the attribute name
      * @param value
      *            the value to set
      */
-    protected void setPageAttribute(String name, Object value) {
-        page.setAttribute(name, value);
+    protected void setPageAttribute(String name, Object value) throws UnifyException {
+        getRequestContextUtil().getRequestPage().setAttribute(name, value);
     }
 
     /**
-     * Clears an attribute from the page context associated with this controller.
+     * Clears an attribute from the current request page.
      * 
      * @param name
      *            the attribute name
+     * @throws UnifyException
+     *             if an error occurs
      */
-    protected Object clearPageAttribute(String name) {
-        return page.clearAttribute(name);
+    protected Object clearPageAttribute(String name) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().clearAttribute(name);
     }
 
     /**
-     * Gets the value of attribute from the page context associated with this
-     * controller.
+     * Gets the value of attribute from the current request page.
      * 
      * @param name
      *            the attribute name
      * @return the attribute value if found, otherwise null.
+     * @throws UnifyException
+     *             if an error occurs
      */
-    protected Object getPageAttribute(String name) {
-        return page.getAttribute(name);
+    protected Object getPageAttribute(String name) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().getAttribute(name);
     }
 
     /**
-     * Gets the value of attribute, casted to specified type, from the page context
-     * associated with this controller.
+     * Gets the value of attribute, casted to specified type, from the current
+     * request page.
      * 
      * @param clazz
      *            the type to cast attribute value to
      * @param name
      *            the attribute name
      * @return the attribute value if found, otherwise null.
+     * @throws UnifyException
+     *             if an error occurs
      */
     @SuppressWarnings("unchecked")
-    protected <T> T getPageAttribute(Class<T> clazz, String name) {
-        return (T) page.getAttribute(name);
+    protected <U> U getPageAttribute(Class<U> clazz, String name) throws UnifyException {
+        return (U) getRequestContextUtil().getRequestPage().getAttribute(name);
     }
 
     /**
      * Returns true if page validation is enabled.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
      */
     protected boolean isPageValidationEnabled() throws UnifyException {
-        return page.isValidationEnabled();
+        return getRequestContextUtil().getRequestPage().isValidationEnabled();
     }
 
     /**
@@ -663,9 +539,43 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      * 
      * @param validationEnabled
      *            the flag to set
+     * @throws UnifyException
+     *             if an error occurs
      */
-    protected void setPageValidationEnabled(boolean validationEnabled) {
-        page.setValidationEnabled(validationEnabled);
+    protected void setPageValidationEnabled(boolean validationEnabled) throws UnifyException {
+        getRequestContextUtil().getRequestPage().setValidationEnabled(validationEnabled);
+    }
+
+    protected <U> U getPageWidgetByLongName(Class<U> clazz, String longName) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().getWidgetByLongName(clazz, longName);
+    }
+
+    protected <U> U getPageWidgetByShortName(Class<U> clazz, String shortName) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().getWidgetByShortName(clazz, shortName);
+    }
+
+    protected void setPageWidgetDisabled(String shortName, boolean disabled) throws UnifyException {
+        getRequestContextUtil().getRequestPage().setWidgetDisabled(shortName, disabled);
+    }
+
+    protected boolean isPageWidgetDisabled(String shortName) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().isWidgetDisabled(shortName);
+    }
+
+    protected void setPageWidgetVisible(String shortName, boolean visible) throws UnifyException {
+        getRequestContextUtil().getRequestPage().setWidgetVisible(shortName, visible);
+    }
+
+    protected boolean isPageWidgetVisible(String shortName) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().isWidgetVisible(shortName);
+    }
+
+    protected void setPageWidgetEditable(String shortName, boolean editable) throws UnifyException {
+        getRequestContextUtil().getRequestPage().setWidgetEditable(shortName, editable);
+    }
+
+    protected boolean isPageWidgetEditable(String shortName) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().isWidgetEditable(shortName);
     }
 
     /**
@@ -719,22 +629,22 @@ public abstract class AbstractPageController extends AbstractUnifyPageController
      * @throws UnifyException
      *             if an error occurs
      */
-    protected <T> T getRequestTarget(Class<T> clazz) throws UnifyException {
+    protected <U> U getRequestTarget(Class<U> clazz) throws UnifyException {
         return getRequestContextUtil().getRequestTargetValue(clazz);
     }
 
     /**
-     * Executes on {@link #setPage(Page)}
+     * Executes on {@link #initPage()}
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void onSetPage() throws UnifyException {
+    protected void onInitPage() throws UnifyException {
 
     }
 
     /**
-     * Executes on {@link #index()}
+     * Executes on {@link #indexPage()}
      * 
      * @throws UnifyException
      *             if an error occurs

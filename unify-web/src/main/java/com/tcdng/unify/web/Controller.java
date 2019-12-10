@@ -37,9 +37,4 @@ public interface Controller extends UnifyComponent {
      *         authenticated
      */
     boolean isSecured();
-
-    /**
-     * Returns true if controller backs a unify page or page resource
-     */
-    boolean isBackUnifyPage();
 }

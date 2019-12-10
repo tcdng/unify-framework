@@ -13,30 +13,52 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.web.ui.Page;
-import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
- * Component used to generate a page controller response.
+ * Path information repository.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface PageControllerResponse extends UplComponent {
+public interface PathInfoRepository extends UnifyComponent {
 
     /**
-     * Generates response.
+     * Gets page path information.
      * 
-     * @param writer
-     *            the response writer
      * @param page
-     *            the page
+     *            the page object.
+     * 
+     * @return the page path information
      * @throws UnifyException
      *             if an error occurs
      */
-    void generate(ResponseWriter writer, Page page) throws UnifyException;
+    PagePathInfo getPagePathInfo(Page page) throws UnifyException;
+
+    /**
+     * Gets the supplied page path parts
+     * 
+     * @param page
+     *            the page object
+     * @return the part parts
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    PathParts getPathParts(Page page) throws UnifyException;
+
+    /**
+     * Gets the supplied path path parts
+     * 
+     * @param path
+     *            the path
+     * @return the part parts
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    PathParts getPathParts(String path) throws UnifyException;
 }

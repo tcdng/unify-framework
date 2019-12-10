@@ -13,30 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.upl.UplComponent;
-import com.tcdng.unify.web.ui.Page;
-import com.tcdng.unify.web.ui.ResponseWriter;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Component used to generate a page controller response.
- * 
+ * Convenient base class for page bean.
+ *  
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface PageControllerResponse extends UplComponent {
+public abstract class AbstractPageBean implements PageBean {
 
-    /**
-     * Generates response.
-     * 
-     * @param writer
-     *            the response writer
-     * @param page
-     *            the page
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void generate(ResponseWriter writer, Page page) throws UnifyException;
+    @Override
+    public void reset() throws UnifyException {
+        DataUtils.clearAllBeanProperties(this);
+    }
+
 }

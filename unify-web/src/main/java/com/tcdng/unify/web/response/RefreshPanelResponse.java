@@ -20,7 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
@@ -38,14 +38,14 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         boolean useLongNames = false;
         String[] refreshList = getPanels();
         if (refreshList == null || refreshList.length == 0) {
             refreshList = getRequestContextUtil().getResponseRefreshPanels();
             useLongNames = true;
         }
-        appendRefreshPanelsJson(writer, pageController, refreshList, useLongNames);
+        appendRefreshPanelsJson(writer, page, refreshList, useLongNames);
         writer.write(",");
         appendRefreshAttributesJson(writer, false);
     }
@@ -54,9 +54,9 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
         return getUplAttribute(String[].class, "panels");
     }
 
-    private void appendRefreshPanelsJson(ResponseWriter writer, PageController pageController, String[] panelIds,
+    private void appendRefreshPanelsJson(ResponseWriter writer, Page page, String[] panelIds,
             boolean useLongNames) throws UnifyException {
-        logDebug("Preparing refresh panel response: controller = [{0}], useLongNames = [{1}]", pageController.getName(),
+        logDebug("Preparing refresh panel response: path ID = [{0}], useLongNames = [{1}]", page.getPathId(),
                 useLongNames);
         writer.write(",\"refreshPanels\":[");
         if (panelIds != null) {
@@ -69,9 +69,9 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
                 }
 
                 if (useLongNames) {
-                    writer.writeJsonPanel(pageController.getPanelByLongName(panelIds[i]), true);
+                    writer.writeJsonPanel(page.getPanelByLongName(panelIds[i]), true);
                 } else {
-                    writer.writeJsonPanel(pageController.getPanelByShortName(panelIds[i]), true);
+                    writer.writeJsonPanel(page.getPanelByShortName(panelIds[i]), true);
                 }
             }
         }

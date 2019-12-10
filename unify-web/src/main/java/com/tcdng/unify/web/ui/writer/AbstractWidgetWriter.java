@@ -98,7 +98,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     }
 
     protected String getCommandURL() throws UnifyException {
-        return getContextURL(getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), "/command");
+        return getContextURL(getRequestContextUtil().getResponsePathParts().getPathId(), "/command");
     }
 
     protected String getContextURL(String path, String... pathElement) throws UnifyException {

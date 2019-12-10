@@ -22,12 +22,12 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
-import com.tcdng.unify.web.ControllerResponseInfo;
-import com.tcdng.unify.web.PageController;
-import com.tcdng.unify.web.PageControllerPathInfo;
+import com.tcdng.unify.web.PathInfoRepository;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.constant.ClosePageMode;
 import com.tcdng.unify.web.response.HintUserResponse;
 import com.tcdng.unify.web.response.LoadContentResponse;
@@ -49,14 +49,17 @@ import com.tcdng.unify.web.ui.Widget;
         @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanel extends AbstractPanel {
 
-    private Map<String, ContentInfo> contentByBeanIdMap;
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
+
+    private Map<String, ContentInfo> contentByPathIdMap;
 
     private List<ContentInfo> contentList;
 
     private int contentIndex;
 
     public ContentPanel() {
-        contentByBeanIdMap = new HashMap<String, ContentInfo>();
+        contentByPathIdMap = new HashMap<String, ContentInfo>();
         contentList = new ArrayList<ContentInfo>();
     }
 
@@ -140,28 +143,27 @@ public class ContentPanel extends AbstractPanel {
         return contentList.get(contentIndex).getPage();
     }
 
-    public void addContent(PageController pageController) throws UnifyException {
-        PageControllerPathInfo pathInfo = pageController.getPathInfo();
-        ContentInfo contentInfo = contentByBeanIdMap.get(pathInfo.getId());
+    public void addContent(Page page) throws UnifyException {
+        ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
         if (contentInfo != null) {
             contentIndex = contentInfo.getPageIndex();
             return;
         }
 
         contentIndex = contentList.size();
-        contentInfo = new ContentInfo(pageController, contentIndex);
+        contentInfo = new ContentInfo(page, contentIndex);
         contentList.add(contentInfo);
-        contentByBeanIdMap.put(pathInfo.getId(), contentInfo);
+        contentByPathIdMap.put(page.getPathId(), contentInfo);
     }
 
-    public void removeContent(PageController pageController) throws UnifyException {
+    public void removeContent(Page page) throws UnifyException {
         ClosePageMode mode = getRequestTarget(ClosePageMode.class);
         if (mode == null) {
             mode = ClosePageMode.CLOSE;
         }
-        
+
         boolean removeSrc = false;
-        switch(mode) {
+        switch (mode) {
             case CLOSE:
                 removeSrc = true;
                 break;
@@ -170,26 +172,25 @@ public class ContentPanel extends AbstractPanel {
             case CLOSE_OTHERS:
                 // Close others
                 List<ContentInfo> refContentList = new ArrayList<ContentInfo>(contentList);
-                for(int i = 1; i < refContentList.size(); i++) {
-                    PageController refPageController = refContentList.get(i).getPageController();
-                    if (refPageController != pageController) {
-                        refPageController.closePage();
-                        actRemoveContent(refPageController);
-                    }                    
+                for (int i = 1; i < refContentList.size(); i++) {
+                    Page refPage = refContentList.get(i).getPage();
+                    if (refPage != page) {
+                        actRemoveContent(page);
+                    }
                 }
                 break;
             default:
-                break;   
+                break;
         }
-        
+
         if (removeSrc) {
-            actRemoveContent(pageController);
+            actRemoveContent(page);
         }
     }
-    
-    private void actRemoveContent(PageController pageController) throws UnifyException {
-        String beanId = pageController.getSessionId();
-        ContentInfo contentInfo = contentByBeanIdMap.remove(beanId);
+
+    private void actRemoveContent(Page page) throws UnifyException {
+        String pathId = page.getPathId();
+        ContentInfo contentInfo = contentByPathIdMap.remove(pathId);
         if (contentInfo == null) {
             // TODO throw some exception here instead of return
             return;
@@ -206,52 +207,44 @@ public class ContentPanel extends AbstractPanel {
             contentIndex--;
         }
     }
-    
 
     public class ContentInfo {
 
-        private ControllerResponseInfo respInfo;
-
-        private PageController pageController;
+        private Page page;
 
         private int pageIndex;
 
-        public ContentInfo(PageController pageController, int pageIndex) throws UnifyException {
-            respInfo = new ControllerResponseInfo(pageController.getName(), pageController.getPathInfo().getId());
-            this.pageController = pageController;
+        public ContentInfo(Page page, int pageIndex) throws UnifyException {
+            this.page = page;
             this.pageIndex = pageIndex;
         }
 
-        public ControllerResponseInfo getRespInfo() {
-            return respInfo;
-        }
-
         public String getColorScheme() throws UnifyException {
-            return pageController.getPathInfo().getColorScheme();
+            return pathInfoRepository.getPagePathInfo(page).getColorScheme();
         }
 
         public String getOpenPath() throws UnifyException {
-            return pageController.getPathInfo().getOpenPagePath();
+            return pathInfoRepository.getPagePathInfo(page).getOpenPagePath();
         }
 
         public String getClosePath() throws UnifyException {
-            return pageController.getPathInfo().getClosePagePath();
+            return pathInfoRepository.getPagePathInfo(page).getClosePagePath();
         }
 
         public String getSavePath() throws UnifyException {
-            return pageController.getPathInfo().getSavePagePath();
+            return pathInfoRepository.getPagePathInfo(page).getSavePagePath();
         }
 
         public boolean isRemoteSave() throws UnifyException {
-            return pageController.getPathInfo().isRemoteSave();
+            return pathInfoRepository.getPagePathInfo(page).isRemoteSave();
+        }
+
+        public PathParts getPathParts() throws UnifyException {
+            return pathInfoRepository.getPathParts(page);
         }
 
         public Page getPage() {
-            return pageController.getPage();
-        }
-
-        public PageController getPageController() {
-            return pageController;
+            return page;
         }
 
         public int getPageIndex() {

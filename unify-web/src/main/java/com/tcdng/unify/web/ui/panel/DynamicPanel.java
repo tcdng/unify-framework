@@ -77,7 +77,7 @@ public class DynamicPanel extends AbstractPanel {
             standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName);
             page.addStandalonePanel(uniqueName, standalonePanel);
             getControllerManager().updatePageControllerInfo(
-                    getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), uniqueName);
+                    getRequestContextUtil().getResponsePathParts().getPathId(), uniqueName);
             panelNames.add(uniqueName);
         }
         setValueStore(standalonePanel);
