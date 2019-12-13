@@ -13,36 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
 
-import java.lang.reflect.Method;
-
-import com.tcdng.unify.core.util.StringUtils;
+package com.tcdng.unify.web.ui;
 
 /**
- * Class representing a page controller action method that is marked with the
- * {@link com.tcdng.unify.web.annotation.Action} annotation.
+ * Convenient abstract base class for content panels.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Action {
+public abstract class AbstractContentPanel extends AbstractPanel implements ContentPanel {
 
-    private Method method;
-
-    public Action(Method method) {
-        this.method = method;
-    }
-
-    public String getMethodName() {
-        return method.getName();
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public String toString() {
-        return StringUtils.toXmlString(this);
-    }
 }

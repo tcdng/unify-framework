@@ -579,7 +579,7 @@ public final class StringUtils {
      * @param bean
      *            the supplied bean
      */
-    public static String beanToString(Object bean) {
+    public static String toXmlString(Object bean) {
         if (bean != null) {
             StringBuilder sb = new StringBuilder();
             sb.append("<").append(bean.getClass().getName()).append(">\n");

@@ -228,6 +228,25 @@ public interface RequestContextUtil extends UnifyComponent {
     PathParts getResponsePathParts() throws UnifyException;
 
     /**
+     * Sets the paths of pages closed in this request.
+     * 
+     * @param pathIdList
+     *            the closed pages path list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setClosedPagePaths(List<String> pathIdList) throws UnifyException;
+
+    /**
+     * Sets the paths of pages closed in this request.
+     * 
+     * @return the closed pages path list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> getClosedPagePaths() throws UnifyException;
+
+    /**
      * Sets dynamic panel page name to request context.
      * 
      * @param pageName

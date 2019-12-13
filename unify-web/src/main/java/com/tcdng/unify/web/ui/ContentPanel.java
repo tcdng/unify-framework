@@ -13,59 +13,69 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web.ui;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.constant.ClosePageMode;
 
 /**
- * BasicDocument panels.
+ * Document content panel.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DocumentPanels {
+public interface ContentPanel extends Panel {
 
     /**
-     * Returns the document id.
+     * Gets the busy indicator component ID for this content panel.
      * 
+     * @return the indicator ID
      * @throws UnifyException
      *             if an error occurs
      */
-    String getId() throws UnifyException;
+    String getBusyIndicatorId() throws UnifyException;
 
     /**
-     * Returns the document header panel.
+     * Gets the current active page.
      * 
-     * @return the header panel
+     * @return the current page
      * @throws UnifyException
      *             if an error occurs
      */
-    Panel getHeaderPanel() throws UnifyException;
+    Page getCurrentPage() throws UnifyException;
 
     /**
-     * Returns the document menu panel.
+     * Adds page to content.
      * 
-     * @return the menu panel
+     * @param page
+     *            the page to add
      * @throws UnifyException
      *             if an error occurs
      */
-    Panel getMenuPanel() throws UnifyException;
+    void addContent(Page page) throws UnifyException;
 
     /**
-     * Returns the document content panel.
+     * Evaluates page close event.
      * 
-     * @return the content panel
+     * @param page
+     *            the page with close event
+     * @param closePageMode
+     *            the close page mode
+     * @return list of path IDs for pages to be closed
+     * @throws UnifyException
+     */
+    List<String> evaluateRemoveContent(Page page, ClosePageMode closePageMode) throws UnifyException;
+
+    /**
+     * Remove pages specified by supplied path IDs
+     * 
+     * @param toRemovePathIdList
+     *            the path IDs to use
      * @throws UnifyException
      *             if an error occurs
      */
-    ContentPanel getContentPanel() throws UnifyException;
-
-    /**
-     * Returns the document footer panel.
-     * 
-     * @return the footer panel
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    Panel getFooterPanel() throws UnifyException;
+    void removeContent(List<String> toRemovePathIdList) throws UnifyException;
 }

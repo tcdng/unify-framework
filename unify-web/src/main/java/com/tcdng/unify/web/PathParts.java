@@ -33,12 +33,15 @@ public class PathParts {
     private String controllerName;
 
     private String actionName;
+    
+    private boolean variablePath;
 
-    public PathParts(String fullPath, String pathId, String controllerName, String actionName) {
+    public PathParts(String fullPath, String pathId, String controllerName, String actionName, boolean variablePath) {
         this.fullPath = fullPath;
         this.pathId = pathId;
         this.controllerName = controllerName;
         this.actionName = actionName;
+        this.variablePath = variablePath;
     }
 
     public String getFullPath() {
@@ -57,6 +60,10 @@ public class PathParts {
         return actionName;
     }
     
+    public boolean isVariablePath() {
+        return variablePath;
+    }
+
     public boolean isActionPath() {
         return !StringUtils.isBlank(actionName);
     }

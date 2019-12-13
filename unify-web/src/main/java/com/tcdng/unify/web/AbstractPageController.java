@@ -26,7 +26,6 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
-import com.tcdng.unify.web.constant.ClosePageMode;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.DataTransferWidget;
@@ -68,7 +67,6 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     @Override
     public void reset() throws UnifyException {
         getPageBean().reset();
-        ;
     }
 
     @Override
@@ -118,14 +116,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     @Action
     @Override
     public final String closePage() throws UnifyException {
-        ClosePageMode mode = getRequestTarget(ClosePageMode.class);
-        if (!ClosePageMode.CLOSE_OTHERS.equals(mode)) {
-            onClosePage();
-
-            // Remove current page from session, effectively terminating page
-            removeSessionAttribute(getRequestContextUtil().getRequestPage().getPathId());
-        }
-
+        onClosePage();
         return ResultMappingConstants.CLOSE;
     }
 

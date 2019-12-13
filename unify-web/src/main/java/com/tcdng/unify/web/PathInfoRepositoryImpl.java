@@ -60,24 +60,35 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
                         actionName = path.substring(actionPartIndex);
                     }
 
-                    return new PathParts(path, pathId, controllerName, actionName);
+                    return new PathParts(path, pathId, controllerName, actionName, true);
                 } else if (getComponentConfig(Controller.class, path) == null) {
                         int actionPartIndex = path.lastIndexOf('/');
                         if (actionPartIndex > 0) {
                             String controllerName = path.substring(0, actionPartIndex);
                             String actionName = path.substring(actionPartIndex);
-                            return new PathParts(path, controllerName, controllerName, actionName);
+                            return new PathParts(path, controllerName, controllerName, actionName, false);
                         }
                 }
                 
-                return new PathParts(path, path, path, null);
-            }           
+                return new PathParts(path, path, path, null, false);
+            }
+
+            @Override
+            protected boolean keep(PathParts pathParts) throws Exception {
+                return !pathParts.isVariablePath();
+            }
+            
         };
     }
 
     @Override
     public PagePathInfo getPagePathInfo(Page page) throws UnifyException {
         return pagePathInfos.get(page.getPathId());
+    }
+
+    @Override
+    public PagePathInfo getPagePathInfo(String path) throws UnifyException {
+        return pagePathInfos.get(path);
     }
 
     @Override

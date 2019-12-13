@@ -24,7 +24,7 @@ package com.tcdng.unify.web;
  */
 public class PagePathInfo {
 
-    private String id;
+    private String pathId;
 
     private String colorScheme;
 
@@ -36,9 +36,9 @@ public class PagePathInfo {
 
     private boolean remoteSave;
 
-    public PagePathInfo(String id, String colorScheme, String openPagePath, String savePagePath,
+    public PagePathInfo(String pathId, String colorScheme, String openPagePath, String savePagePath,
             String closePagePath, boolean remoteSave) {
-        this.id = id;
+        this.pathId = pathId;
         this.colorScheme = colorScheme;
         this.openPagePath = openPagePath;
         this.savePagePath = savePagePath;
@@ -46,8 +46,8 @@ public class PagePathInfo {
         this.remoteSave = remoteSave;
     }
 
-    public String getId() {
-        return id;
+    public String getPathId() {
+        return pathId;
     }
 
     public String getColorScheme() {

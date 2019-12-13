@@ -41,22 +41,33 @@ public interface PathInfoRepository extends UnifyComponent {
     PagePathInfo getPagePathInfo(Page page) throws UnifyException;
 
     /**
+     * Gets path path information.
+     * 
+     * @param path
+     *            the path
+     * @return the path  path information
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    PagePathInfo getPagePathInfo(String path) throws UnifyException;
+
+    /**
      * Gets the supplied page path parts
      * 
      * @param page
      *            the page object
-     * @return the part parts
+     * @return the path parts
      * @throws UnifyException
      *             if an error occurs
      */
     PathParts getPathParts(Page page) throws UnifyException;
 
     /**
-     * Gets the supplied path path parts
+     * Gets path path parts
      * 
      * @param path
      *            the path
-     * @return the part parts
+     * @return the path parts
      * @throws UnifyException
      *             if an error occurs
      */

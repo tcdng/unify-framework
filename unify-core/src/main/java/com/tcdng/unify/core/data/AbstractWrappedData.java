@@ -48,6 +48,6 @@ public abstract class AbstractWrappedData<T> implements WrappedData<T> {
     }
 
     public String toString() {
-        return StringUtils.beanToString(this);
+        return StringUtils.toXmlString(this);
     }
 }

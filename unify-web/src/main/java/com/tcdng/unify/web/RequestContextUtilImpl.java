@@ -74,6 +74,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     private static final String RESPONSE_PATHPARTS = "RESPONSE_PATHPARTS";
 
+    private static final String CLOSED_PAGEPATHS = "CLOSED_PAGEPATHS";
+    
     private static final String DYNAMICPANEL_PAGENAME = "DYNAMICPANEL_PAGENAME";
 
     private static final String USER_HINT_LIST = "USER_HINT_LIST";
@@ -199,6 +201,21 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     @Override
     public PathParts getResponsePathParts() throws UnifyException {
         return (PathParts) getRequestAttribute(RESPONSE_PATHPARTS);
+    }
+
+    @Override
+    public void setClosedPagePaths(List<String> pathIdList) throws UnifyException {
+        setRequestAttribute(CLOSED_PAGEPATHS, pathIdList);
+    }
+
+    @Override
+    public List<String> getClosedPagePaths() throws UnifyException {
+        List<String> pathIdList= (List<String>) getRequestAttribute(CLOSED_PAGEPATHS);
+        if (pathIdList != null) {
+            return pathIdList;
+        }
+        
+        return Collections.emptyList();
     }
 
     @Override

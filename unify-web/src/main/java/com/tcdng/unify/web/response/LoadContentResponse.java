@@ -18,10 +18,9 @@ package com.tcdng.unify.web.response;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.ui.Document;
+import com.tcdng.unify.web.ui.ContentPanel;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
-import com.tcdng.unify.web.ui.panel.ContentPanel;
 
 /**
  * Used for generating a load/refresh entire page content response.
@@ -39,8 +38,7 @@ public class LoadContentResponse extends AbstractJsonPageControllerResponse {
     @Override
     protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         logDebug("Preparing load content response: path ID = [{0}]", page.getPathId());
-        Document document = getRequestContextUtil().getRequestDocument();
-        ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
+        ContentPanel contentPanel = getRequestContextUtil().getRequestDocument().getContentPanel();
         appendRefreshPageJSON(writer, contentPanel, page);
         writer.write(",");
         appendRefreshAttributesJson(writer, true);
@@ -51,7 +49,6 @@ public class LoadContentResponse extends AbstractJsonPageControllerResponse {
     private void appendRefreshPageJSON(ResponseWriter writer, ContentPanel contentPanel, Page page)
             throws UnifyException {
         writer.write(",\"refreshPanels\":[");
-        contentPanel.addContent(page);
         writer.writeJsonPanel(contentPanel, true);
         writer.write("]");
     }

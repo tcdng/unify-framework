@@ -55,10 +55,10 @@ public abstract class AbstractDocument extends AbstractPage implements Document 
     }
 
     @Override
-    public Panel getContentPanel() throws UnifyException {
+    public ContentPanel getContentPanel() throws UnifyException {
         String contentPanelId = getUplAttribute(String.class, "contentPanel");
         if (contentPanelId != null) {
-            return getPanelByLongName(contentPanelId);
+            return (ContentPanel) getPanelByLongName(contentPanelId);
         }
         return null;
     }

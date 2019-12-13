@@ -31,7 +31,7 @@ import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.constant.ClosePageMode;
 import com.tcdng.unify.web.response.HintUserResponse;
 import com.tcdng.unify.web.response.LoadContentResponse;
-import com.tcdng.unify.web.ui.AbstractPanel;
+import com.tcdng.unify.web.ui.AbstractContentPanel;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Widget;
 
@@ -47,7 +47,7 @@ import com.tcdng.unify.web.ui.Widget;
         @UplAttribute(name = "pathBinding", type = String.class), @UplAttribute(name = "tabbed", type = boolean.class),
         @UplAttribute(name = "titlebar", type = boolean.class),
         @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
-public class ContentPanel extends AbstractPanel {
+public class ContentPanelImpl extends AbstractContentPanel {
 
     @Configurable
     private PathInfoRepository pathInfoRepository;
@@ -58,7 +58,7 @@ public class ContentPanel extends AbstractPanel {
 
     private int contentIndex;
 
-    public ContentPanel() {
+    public ContentPanelImpl() {
         contentByPathIdMap = new HashMap<String, ContentInfo>();
         contentList = new ArrayList<ContentInfo>();
     }
@@ -79,6 +79,7 @@ public class ContentPanel extends AbstractPanel {
         return getPrefixedId("hint_");
     }
 
+    @Override
     public String getBusyIndicatorId() throws UnifyException {
         return getPrefixedId("busy_");
     }
@@ -139,10 +140,12 @@ public class ContentPanel extends AbstractPanel {
         return contentList.get(contentIndex);
     }
 
+    @Override
     public Page getCurrentPage() {
         return contentList.get(contentIndex).getPage();
     }
 
+    @Override
     public void addContent(Page page) throws UnifyException {
         ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
         if (contentInfo != null) {
@@ -156,14 +159,15 @@ public class ContentPanel extends AbstractPanel {
         contentByPathIdMap.put(page.getPathId(), contentInfo);
     }
 
-    public void removeContent(Page page) throws UnifyException {
-        ClosePageMode mode = getRequestTarget(ClosePageMode.class);
-        if (mode == null) {
-            mode = ClosePageMode.CLOSE;
+    @Override
+    public List<String> evaluateRemoveContent(Page page, ClosePageMode closePageMode) throws UnifyException {
+        List<String> toRemovePathIdList = new ArrayList<String>();
+        if (closePageMode == null) {
+            closePageMode = ClosePageMode.CLOSE;
         }
 
         boolean removeSrc = false;
-        switch (mode) {
+        switch (closePageMode) {
             case CLOSE:
                 removeSrc = true;
                 break;
@@ -175,7 +179,7 @@ public class ContentPanel extends AbstractPanel {
                 for (int i = 1; i < refContentList.size(); i++) {
                     Page refPage = refContentList.get(i).getPage();
                     if (refPage != page) {
-                        actRemoveContent(page);
+                        toRemovePathIdList.add(refPage.getPathId());
                     }
                 }
                 break;
@@ -184,27 +188,30 @@ public class ContentPanel extends AbstractPanel {
         }
 
         if (removeSrc) {
-            actRemoveContent(page);
+            toRemovePathIdList.add(page.getPathId());
         }
+
+        return toRemovePathIdList;
     }
 
-    private void actRemoveContent(Page page) throws UnifyException {
-        String pathId = page.getPathId();
-        ContentInfo contentInfo = contentByPathIdMap.remove(pathId);
-        if (contentInfo == null) {
-            // TODO throw some exception here instead of return
-            return;
-        }
+    @Override
+    public void removeContent(List<String> toRemovePathIdList) throws UnifyException {
+        for (String removePathId : toRemovePathIdList) {
+            ContentInfo contentInfo = contentByPathIdMap.remove(removePathId);
+            if (contentInfo == null) {
+                // TODO throw some exception here
+            }
 
-        int pageIndex = contentInfo.getPageIndex();
-        contentList.remove(pageIndex);
-        int size = contentList.size();
-        for (int i = pageIndex; i < size; i++) {
-            contentList.get(i).decPageIndex();
-        }
+            int pageIndex = contentInfo.getPageIndex();
+            contentList.remove(pageIndex);
+            int size = contentList.size();
+            for (int i = pageIndex; i < size; i++) {
+                contentList.get(i).decPageIndex();
+            }
 
-        if (pageIndex <= contentIndex) {
-            contentIndex--;
+            if (pageIndex <= contentIndex) {
+                contentIndex--;
+            }
         }
     }
 

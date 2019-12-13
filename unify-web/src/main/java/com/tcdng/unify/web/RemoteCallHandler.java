@@ -68,6 +68,6 @@ public class RemoteCallHandler {
     }
 
     public String toString() {
-        return StringUtils.beanToString(this);
+        return StringUtils.toXmlString(this);
     }
 }
