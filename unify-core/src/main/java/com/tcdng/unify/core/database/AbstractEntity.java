@@ -58,7 +58,7 @@ public abstract class AbstractEntity implements Entity {
 
     @Override
     public String toString() {
-        return StringUtils.beanToString(this);
+        return StringUtils.toXmlString(this);
     }
 
     protected Set<String> ignore() {

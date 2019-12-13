@@ -13,40 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * User interface controller.
+ * Page bean
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface UserInterfaceController extends Controller {
+public interface PageBean {
 
     /**
-     * Tests if bean is read-only.
+     * Resets page bean.
      * 
-     * @return a true value means that this controller is not populated with request
-     *         parameter values
-     */
-    boolean isReadOnly();
-
-    /**
-     * Resets the controller. This method is called by the controller manager before
-     * a call to the {@link #populate(DataTransferBlock)} method.
-     */
-    void reset();
-
-    /**
-     * Populates a controller property. This method is called by the framework for
-     * processing request parameters.
-     * 
-     * @param transferBlock
-     *            the transfer sequence
      * @throws UnifyException
      *             if an error occurs
      */
-    void populate(DataTransferBlock transferBlock) throws UnifyException;
+    void reset() throws UnifyException;
+
 }

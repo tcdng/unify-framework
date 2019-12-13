@@ -58,7 +58,7 @@ public interface DocumentPanels {
      * @throws UnifyException
      *             if an error occurs
      */
-    Panel getContentPanel() throws UnifyException;
+    ContentPanel getContentPanel() throws UnifyException;
 
     /**
      * Returns the document footer panel.

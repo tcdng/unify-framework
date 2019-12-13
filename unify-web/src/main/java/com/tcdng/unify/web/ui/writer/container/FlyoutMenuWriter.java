@@ -27,7 +27,6 @@ import com.tcdng.unify.core.ui.MenuItem;
 import com.tcdng.unify.core.ui.MenuItemSet;
 import com.tcdng.unify.core.ui.MenuSet;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.ui.Container;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
@@ -79,12 +78,13 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
         writer.write(",\"pContId\":\"").write(flyoutMenu.getContainerId()).write('"');
         writer.write(",\"pCmdURL\":\"");
         // Resolves out of bean context error which usually happens of menu reload
-        Object valueObject = flyoutMenu.getValueStore().getValueObject();
-        if (valueObject instanceof PageController) {
-            writer.writeCommandURL(((PageController) valueObject).getSessionId());
-        } else {
-            writer.writeCommandURL();
-        }
+//        Object valueObject = flyoutMenu.getValueStore().getValueObject();
+//        if (valueObject instanceof PageController) {
+//            writer.writeCommandURL(((PageController) valueObject).getSessionId());
+//        } else {
+//            writer.writeCommandURL();
+//        }
+        writer.writeCommandURL();
 
         writer.write('"');
         writer.write(",\"pMenuWinId\":").writeJsonArray(menuWinIdList);

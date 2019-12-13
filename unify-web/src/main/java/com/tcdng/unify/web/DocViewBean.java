@@ -13,31 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
 /**
- * Controller response information.
+ * Document view page bean.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ControllerResponseInfo {
+public interface DocViewBean extends PageBean {
 
-    private String controllerName;
-
-    private String controllerId;
-
-    public ControllerResponseInfo(String controllerName, String controllerId) {
-        this.controllerName = controllerName;
-        this.controllerId = controllerId;
-    }
-
-    public String getControllerName() {
-        return controllerName;
-    }
-
-    public String getControllerId() {
-        return controllerId;
-    }
-
+    /**
+     * Get the document view panel short name.
+     * 
+     * @return the document view panel
+     */
+    String getDocViewPanelName();
 }

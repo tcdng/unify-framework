@@ -411,7 +411,7 @@ public final class ReflectUtils {
                     propertyName);
         }
     }
-
+    
     /**
      * Sets nested bean property by long name. Does a deep get until the last bean
      * then sets property which is the last name in supplied long name. For instance

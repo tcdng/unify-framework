@@ -32,12 +32,16 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
  * @since 1.0
  */
 @Singleton
-@Component(SystemInfoConstants.UNAUTHORISED_CONTROLLER_NAME)
-@UplBinding("web/reserved/upl/unauthorised.upl")
+@Component(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME)
+@UplBinding("web/reserved/upl/unauthorized.upl")
 @ResultMappings({ @ResultMapping(
         name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,
         response = { "!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }) })
-public class UnauthorisedPageController extends AbstractPageController {
+public class UnauthorizedPageController extends AbstractPageController<UnauthorizedPageBean> {
+
+    public UnauthorizedPageController() {
+        super(UnauthorizedPageBean.class);
+    }
 
     @Action
     public String closeBackdoor() throws UnifyException {

@@ -43,6 +43,6 @@ public class Action {
     }
 
     public String toString() {
-        return StringUtils.beanToString(this);
+        return StringUtils.toXmlString(this);
     }
 }

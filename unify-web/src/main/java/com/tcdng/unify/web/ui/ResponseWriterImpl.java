@@ -438,7 +438,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     @Override
     public ResponseWriter writeCommandURL() throws UnifyException {
-        writeContextURL(getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), "/command");
+        writeContextURL(getRequestContextUtil().getResponsePathParts().getPathId(), "/command");
         return this;
     }
 

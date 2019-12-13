@@ -37,6 +37,8 @@ public interface WebApplicationComponents {
 
     String APPLICATION_PAGEMANAGER = "application-pagemanager";
 
+    String APPLICATION_PATHINFOREPOSITORY = "application-pathinforepository";
+
     String APPLICATION_RESPONSEWRITER = "application-responsewriter";
 
     String APPLICATION_RESPONSEWRITERPOOL = "application-responsewriterpool";

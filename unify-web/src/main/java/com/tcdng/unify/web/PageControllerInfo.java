@@ -20,8 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.ui.BindingInfo;
-import com.tcdng.unify.web.util.WebUtils;
+import com.tcdng.unify.web.ui.PropertyInfo;
 
 /**
  * Encapsulates information about a page controller.
@@ -29,26 +28,27 @@ import com.tcdng.unify.web.util.WebUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PageControllerInfo extends UserInterfaceControllerInfo {
+public class PageControllerInfo extends UIControllerInfo {
 
-    private Map<String, Action> actionMap;
+    private Map<String, Action> actionByNameMap;
 
-    private Map<String, Result> resultMap;
+    private Map<String, Result> resultNameMap;
 
     private Set<String> dynamicPanels;
 
-    public PageControllerInfo(String pageBeanName, Map<String, Action> pageActionMap, Map<String, Result> resultMap,
-            Map<String, BindingInfo> pageNamePropertyBindingMap) {
-        super(pageBeanName, pageNamePropertyBindingMap);
-        actionMap = pageActionMap;
-        this.resultMap = resultMap;
+    public PageControllerInfo(String pageBeanName, Map<String, Action> actionByNameMap,
+            Map<String, Result> resultByNameMap, Map<String, PropertyInfo> pageNameToPropertyMap) {
+        super(pageBeanName, pageNameToPropertyMap);
+        this.actionByNameMap = actionByNameMap;
+        this.resultNameMap = resultByNameMap;
         dynamicPanels = new HashSet<String>();
     }
 
-    public synchronized void addBindings(String dynamicPanelName, Map<String, BindingInfo> pageNamePropertyBindingMap) {
+    public synchronized void addBindings(String dynamicPanelName,
+            Map<String, PropertyInfo> pageNamePropertyBindingMap) {
         if (!dynamicPanels.contains(dynamicPanelName)) {
             dynamicPanels.add(dynamicPanelName);
-            addBindings(pageNamePropertyBindingMap);
+            addPageNameToPropertyMappings(pageNamePropertyBindingMap);
         }
     }
 
@@ -56,29 +56,25 @@ public class PageControllerInfo extends UserInterfaceControllerInfo {
      * Retrieves all action names associated with the page controller.
      */
     public Set<String> getActionNames() {
-        return actionMap.keySet();
+        return actionByNameMap.keySet();
     }
 
     /**
      * Gets an action by specified name. Action names are full path names composed
      * of the page controller name, a forward slash and the handler method name.
      * 
-     * @param name
-     *            the action name
+     * @param actionName
+     *            the full action name
      * @return the page action
      * @throws UnifyException
      *             if page action info with name is unknown
      */
-    public Action getAction(String name) throws UnifyException {
-        Action action = actionMap.get(name);
+    public Action getAction(String actionName) throws UnifyException {
+        Action action = actionByNameMap.get(actionName);
         if (action == null) {
-            action = actionMap.get(WebUtils.extractPathFromBeanIndexedPath(name));
-            if (action != null) {
-                actionMap.put(name, action); // Indexed paths must be limited
-            } else {
-                throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION, getControllerName(), name);
-            }
+            throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION, getControllerName(), actionName);
         }
+
         return action;
     }
 
@@ -86,7 +82,7 @@ public class PageControllerInfo extends UserInterfaceControllerInfo {
      * Retrieves all result mapping names associated with the page controller.
      */
     public Set<String> getResultNames() {
-        return resultMap.keySet();
+        return resultNameMap.keySet();
     }
 
     /**
@@ -96,7 +92,7 @@ public class PageControllerInfo extends UserInterfaceControllerInfo {
      *            the name to test with
      */
     public boolean hasResultWithName(String name) {
-        return resultMap.containsKey(name);
+        return resultNameMap.containsKey(name);
     }
 
     /**
@@ -109,7 +105,7 @@ public class PageControllerInfo extends UserInterfaceControllerInfo {
      *             if result with name is unknown
      */
     public Result getResult(String name) throws UnifyException {
-        Result result = resultMap.get(name);
+        Result result = resultNameMap.get(name);
         if (result == null) {
             throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_UNKNOWN_RESULT, getControllerName(), name);
         }

@@ -18,8 +18,8 @@ package com.tcdng.unify.web.response;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.data.RefreshSection;
@@ -39,14 +39,14 @@ public class RefreshSectionResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         RefreshSection refreshSection =
                 (RefreshSection) this.getRequestAttribute(UnifyWebRequestAttributeConstants.REFRESH_SECTION);
         if (refreshSection != null) {
             Widget widget = refreshSection.getWidget();
             String sectionPageName = refreshSection.getSectionPageName();
-            logDebug("Preparing refresh section response: controller = [{0}], component = [{1}], section= [{2}]",
-                    pageController.getName(), widget.getLongName(), sectionPageName);
+            logDebug("Preparing refresh section response: path ID = [{0}], component = [{1}], section= [{2}]",
+                    page.getPathId(), widget.getLongName(), sectionPageName);
             writer.write(",\"section\":").writeJsonSection(widget, sectionPageName);
         } else {
             logDebug("Preparing refresh section response: Can not get section information from request context");

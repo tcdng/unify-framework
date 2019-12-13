@@ -94,6 +94,96 @@ public interface Container extends DataTransferWidget {
     List<String> getLayoutWidgetLongNames() throws UnifyException;
 
     /**
+     * Sets the disabled state of a widget in container.
+     * 
+     * @param shortName
+     *            the widget short name
+     * @param disabled
+     *            the disabled flag to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setWidgetDisabled(String shortName, boolean disabled) throws UnifyException;
+
+    /**
+     * Returns the disabled state flag of a widget in container.
+     * 
+     * @param shortName
+     *            the widget short name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isWidgetDisabled(String shortName) throws UnifyException;
+
+    /**
+     * Sets the visible state of a widget in container.
+     * 
+     * @param shortName
+     *            the widget short name
+     * @param visible
+     *            the disabled flag to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setWidgetVisible(String shortName, boolean visible) throws UnifyException;
+
+    /**
+     * Returns the visible state flag of a widget in container.
+     * 
+     * @param shortName
+     *            the widget short name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isWidgetVisible(String shortName) throws UnifyException;
+
+    /**
+     * Sets the editable state of a widget in container.
+     * 
+     * @param shortName
+     *            the widget short name
+     * @param editable
+     *            the editable flag to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setWidgetEditable(String shortName, boolean editable) throws UnifyException;
+
+    /**
+     * Returns the editable state flag of a widget in container.
+     * 
+     * @param shortName
+     *            the widget short name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isWidgetEditable(String shortName) throws UnifyException;
+
+    /**
+     * Returns a widget from page associated with this container by long name.
+     * 
+     * @param clazz
+     *            the widget type
+     * @param longName
+     *            the component long name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T getWidgetByLongName(Class<T> clazz, String longName) throws UnifyException;
+
+    /**
+     * Returns a widget from page associated with this container.
+     * 
+     * @param clazz
+     *            the widget type
+     * @param shortName
+     *            the component short name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T getWidgetByShortName(Class<T> clazz, String shortName) throws UnifyException;
+
+    /**
      * Returns repeat value stores.
      * 
      * @throws UnifyException

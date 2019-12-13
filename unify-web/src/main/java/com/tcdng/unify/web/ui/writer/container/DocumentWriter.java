@@ -17,10 +17,12 @@ package com.tcdng.unify.web.ui.writer.container;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.PathInfoRepository;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.ui.DocumentLayout;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -37,6 +39,9 @@ import com.tcdng.unify.web.ui.writer.AbstractPageWriter;
 @Writes(BasicDocument.class)
 @Component("document-writer")
 public class DocumentWriter extends AbstractPageWriter {
+
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
 
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
@@ -140,9 +145,9 @@ public class DocumentWriter extends AbstractPageWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
         writer.write("<script>");
-        PageController pageController = (PageController) document.getValueStore().getValueObject();
         // Set document properties
-        writer.write("ux.setupDocument(\"").write(pageController.getName()).write("\", \"")
+        PathParts pathParts = pathInfoRepository.getPathParts(document);
+        writer.write("ux.setupDocument(\"").write(pathParts.getControllerName()).write("\", \"")
                 .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
                 .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
 

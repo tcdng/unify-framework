@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
@@ -41,13 +41,14 @@ public class ForwardResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    public void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    public void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         String path = getUplAttribute(String.class, "path");
         if (StringUtils.isBlank(path)) {
             String pathBinding = getUplAttribute(String.class, "pathBinding");
-            path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathBinding);
+            path = (String) ReflectUtils.getNestedBeanProperty(page.getPageBean(), pathBinding);
         }
-        logDebug("Preparing forward response:controller = [{0}],  path = [{1}]", pageController.getName(), path);
+
+        logDebug("Preparing forward response: path ID = [{0}],  target path = [{1}]", page.getPathId(), path);
         writer.write(",");
         writer.writeJsonPathVariable("loadDocument", path);
     }

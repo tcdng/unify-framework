@@ -25,7 +25,7 @@ public interface SystemInfoConstants {
 
     String SYSTEMINFO_CONTROLLER_NAME = "/reserved/systeminfo";
 
-    String UNAUTHORISED_CONTROLLER_NAME = "/unauthorised";
+    String UNAUTHORIZED_CONTROLLER_NAME = "/unauthorized";
 
     String SHOW_SYSTEM_EXCEPTION_MAPPING = "showsystemexception";
 

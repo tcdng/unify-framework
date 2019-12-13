@@ -18,10 +18,9 @@ package com.tcdng.unify.web.response;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
-import com.tcdng.unify.web.ui.Document;
+import com.tcdng.unify.web.ui.ContentPanel;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
-import com.tcdng.unify.web.ui.panel.ContentPanel;
 
 /**
  * Used for generating a close page content response.
@@ -37,26 +36,23 @@ public class UnloadContentResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-        logDebug("Preparing unload content response: controller = [{0}]", pageController.getName());
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
+        logDebug("Preparing unload content response: path ID = [{0}]", page.getPathId());
         if (getRequestContextUtil().isRemoteViewer()) {
             writer.write(",\"closeRemoteTab\":true");
         } else {
-            Document document = getRequestContextUtil().getRequestDocument();
-            appendRefreshPageJSON(writer, document, pageController);
+            ContentPanel contentPanel = getRequestContextUtil().getRequestDocument().getContentPanel();
+            appendRefreshPageJSON(writer, contentPanel, page);
             writer.write(",");
             appendRefreshAttributesJson(writer, true);
-            ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
             writer.write(",\"busyIndicator\":\"").write(contentPanel.getBusyIndicatorId()).write("\"");
             writer.write(",\"scrollToTop\":true");
         }
     }
 
-    private void appendRefreshPageJSON(ResponseWriter writer, Document document, PageController pageController)
+    private void appendRefreshPageJSON(ResponseWriter writer, ContentPanel contentPanel, Page page)
             throws UnifyException {
         writer.write(",\"refreshPanels\":[");
-        ContentPanel contentPanel = (ContentPanel) document.getContentPanel();
-        contentPanel.removeContent(pageController);
         writer.writeJsonPanel(contentPanel, true);
         writer.write("]");
     }

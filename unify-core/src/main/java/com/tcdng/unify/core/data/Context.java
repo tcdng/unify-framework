@@ -15,9 +15,11 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * An abstract class that represents a context. Manages basic context attribute
@@ -38,6 +40,10 @@ public abstract class Context {
         return !attributes.isEmpty();
     }
 
+    public Set<String> getAttributeNames() {
+        return attributes.keySet();
+    }
+    
     public void setAttribute(String name, Object value) {
         attributes.put(name, new Attribute(value, false));
     }
@@ -66,6 +72,15 @@ public abstract class Context {
     }
 
     public void removeAttributes(String... names) {
+        for (String name : names) {
+            Attribute attr = attributes.get(name);
+            if (attr != null && !attr.isSticky()) {
+                attributes.remove(name);
+            }
+        }
+    }
+
+    public void removeAttributes(Collection<String> names) {
         for (String name : names) {
             Attribute attr = attributes.get(name);
             if (attr != null && !attr.isSticky()) {

@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.FormatHelper;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
@@ -38,10 +39,10 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
     }
 
     @Override
-    public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    public void generate(ResponseWriter writer, Page page) throws UnifyException {
         writer.write("{\"handler\":\"").write(handlerName).write("\"");
         RequestContextUtil reqUtils = getRequestContextUtil();
-        doGenerate(writer, pageController);
+        doGenerate(writer, page);
 
         if (reqUtils.isFocusOnWidget()) {
             writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetId()).write("\"");
@@ -59,5 +60,5 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
 
     }
 
-    protected abstract void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException;
+    protected abstract void doGenerate(ResponseWriter writer, Page page) throws UnifyException;
 }
