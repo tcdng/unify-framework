@@ -94,12 +94,22 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
     }
 
     @Override
+    protected boolean isAppendPopup(AbstractPopupTextField popupTextField) throws UnifyException {
+        if (super.isAppendPopup(popupTextField)) {
+            MoneyField moneyField = (MoneyField) popupTextField;
+            return moneyField.isMultiCurrency();
+        }
+
+        return false;
+    }
+
+    @Override
     protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
         MoneyField moneyField = (MoneyField) widget;
         writer.write("<button");
         writeTagId(writer, moneyField.getPopupButtonId());
         writeTagStyleClass(writer, "tplbutton");
-        if (!appendPopup(moneyField)) {
+        if (!isAppendPopup(moneyField)) {
             writer.write(" disabled");
         }
 
