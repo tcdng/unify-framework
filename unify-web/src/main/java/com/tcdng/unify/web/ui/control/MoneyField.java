@@ -37,7 +37,9 @@ import com.tcdng.unify.web.ui.ListParamType;
  */
 @Component("ui-money")
 @UplAttributes({ @UplAttribute(name = "currency", type = String.class, mandatory = true),
-        @UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
+        @UplAttribute(name = "multiCurrency", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "precision", type = int.class),
+        @UplAttribute(name = "scale", type = int.class),
         @UplAttribute(name = "acceptNegative", type = boolean.class),
         @UplAttribute(name = "useGrouping", type = boolean.class),
         @UplAttribute(name = "list", type = String.class, defaultVal = "currencylist"),
@@ -92,6 +94,10 @@ public class MoneyField extends AbstractListPopupTextField {
         return getUplAttribute(String.class, "currency");
     }
 
+    public boolean isMultiCurrency() throws UnifyException {
+        return getUplAttribute(boolean.class, "multiCurrency");
+    }
+    
     public String getFramePanelId() throws UnifyException {
         return getPrefixedId("frm_");
     }
