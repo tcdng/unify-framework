@@ -771,7 +771,7 @@ z-index:400;}
 .ui-time {width: 160px;}
 .ui-time .tfframe {padding:2px; border: solid 1px #A0A0A0; background-color: #FFF;}
 .ui-time .tfabutton {width: 75px; height:36px; padding-top: 5px; padding-bottom: 5px; margin-left:6px; border: 1px solid #C8C8C8;}
-.ui-time .tfabutton:hover {background-color: #D0D0D0;}
+.ui-time .tfabutton:hover:enabled {color: #FFF; background-color: #6080F0 !important;}
 .ui-time .tfbutton {width: 26px; height:36px; padding-top: 5px; padding-bottom: 5px; border: 1px solid #C8C8C8;}
 .ui-time .tfbutton:hover {background-color: #D0D0D0;}
 .ui-time .tftext {width: 22px; height:36px; border:none; text-align: right; padding-right:2px;}
