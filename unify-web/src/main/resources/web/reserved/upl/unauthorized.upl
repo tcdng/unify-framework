@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 !ui-document layout:$d{!ui-desktoptype1} contentPanel:$c{mainPanel}
 
-!ui-panel:mainPanel styleClass:$e{ui-system-exception} layout:$d{!ui-vertical}
+!ui-simplecontentpanel:mainPanel styleClass:$e{ui-system-exception} layout:$d{!ui-vertical}
     components:$c{titleBar message stackTrace actionPanel}
 
 !ui-titlebar:titleBar caption:$m{system.exception} components:$c{captionCancelBtn}

@@ -9,7 +9,7 @@
 !ui-label:headerLabel styleClass:$e{cm-banner-label} caption:$m{container.management}
 
 // Content
-!ui-panel:content styleClass:$e{cm-content} components:$c{innerContent}
+!ui-simplecontentpanel:content styleClass:$e{cm-content} components:$c{innerContent}
 !ui-panel:innerContent style:$s{width:980px;  margin-left: auto; margin-right: auto;}
     layout:$d{!ui-vertical style:$s{width:100%;}}
     components:$c{detailSection detailBody detailFooter}
