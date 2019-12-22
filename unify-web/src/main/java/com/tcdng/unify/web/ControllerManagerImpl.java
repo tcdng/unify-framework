@@ -901,8 +901,8 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         Map<String, RemoteCallHandler> remoteCallHandlerMap = new HashMap<String, RemoteCallHandler>();
         Method[] methods = typeClass.getMethods();
         for (Method method : methods) {
-            com.tcdng.unify.web.annotation.GatewayAction goa =
-                    method.getAnnotation(com.tcdng.unify.web.annotation.GatewayAction.class);
+            com.tcdng.unify.web.annotation.RemoteAction goa =
+                    method.getAnnotation(com.tcdng.unify.web.annotation.RemoteAction.class);
             if (goa != null) {
                 if (RemoteCallResult.class.isAssignableFrom(method.getReturnType())
                         && method.getParameterTypes().length == 1
