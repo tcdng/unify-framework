@@ -20,7 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.web.AbstractRemoteCallController;
 import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.annotation.GatewayAction;
+import com.tcdng.unify.web.annotation.RemoteAction;
 import com.tcdng.unify.web.discovery.gem.APIDiscoveryRemoteCallCodeConstants;
 import com.tcdng.unify.web.discovery.gem.data.APIDiscoveryRemoteCallInfo;
 import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallParams;
@@ -39,7 +39,7 @@ public class APIDiscoveryController extends AbstractRemoteCallController {
     @Configurable
     private APIDiscoveryManager aPIDiscoveryManager;
 
-    @GatewayAction(
+    @RemoteAction(
             name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL,
             description = "Discover Remote Call",
             restricted = false)

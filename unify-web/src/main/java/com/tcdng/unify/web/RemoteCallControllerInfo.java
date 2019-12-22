@@ -55,7 +55,7 @@ public class RemoteCallControllerInfo extends ControllerInfo {
     }
 
     /**
-     * Gets a remote-call handler by specified name. GatewayAction call handler
+     * Gets a remote-call handler by specified name. RemoteAction call handler
      * names are full path names composed of the remote-call controller name, a
      * forward slash and the handler method name.
      * 

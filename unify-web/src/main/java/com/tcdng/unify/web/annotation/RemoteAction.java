@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * Used to indicate that a method within a remote-call controller is a remote
- * gateway action handler.
+ * call action handler.
  * 
  * @author Lateef Ojulari
  * @since 1.0
@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GatewayAction {
+public @interface RemoteAction {
 
     String name();
 
