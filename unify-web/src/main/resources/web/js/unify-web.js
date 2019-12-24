@@ -3311,7 +3311,6 @@ ux.treeSelect = function(evp, tElem, selObj, i, select) {
 ux.buildFormParams = function(trgObj, evp) {
 	var param = {};
 	param.value = new FormData();
-	param.value.append("req_pag", "true");
 	param.isForm = true;
 	ux.buildObjParams(trgObj, evp, param);
 	return param;
@@ -3320,7 +3319,6 @@ ux.buildFormParams = function(trgObj, evp) {
 ux.buildReqParams = function(trgObj, evp) {
 	var param = {};
 	param.value = "morsic=" + new Date().getTime();
-	param.value += "&req_pag=true";
 	param.isForm = false;
 	ux.buildObjParams(trgObj, evp, param);
 	return param;

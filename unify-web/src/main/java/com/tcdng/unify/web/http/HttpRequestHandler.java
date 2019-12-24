@@ -17,6 +17,7 @@ package com.tcdng.unify.web.http;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.PathParts;
 
 /**
  * HTTP request handler component.
@@ -27,10 +28,23 @@ import com.tcdng.unify.core.UnifyException;
 public interface HttpRequestHandler extends UnifyComponent {
 
     /**
+     * Resolve request path.
+     * 
+     * @param requestObject
+     *            the request object
+     * @return the path parts
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    PathParts resolveRequestPath(Object requestObject) throws UnifyException;
+
+    /**
      * Handles HTTP request.
      * 
      * @param methodType
      *            the request method type
+     * @param pathParts
+     *            the path parts
      * @param requestObject
      *            the request object
      * @param responseObject
@@ -38,5 +52,6 @@ public interface HttpRequestHandler extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void handleRequest(HttpRequestMethodType methodType, Object requestObject, Object responseObject) throws UnifyException;
+    void handleRequest(HttpRequestMethodType methodType, PathParts pathParts, Object requestObject,
+            Object responseObject) throws UnifyException;
 }
