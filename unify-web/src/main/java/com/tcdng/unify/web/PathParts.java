@@ -33,14 +33,18 @@ public class PathParts {
     private String controllerName;
 
     private String actionName;
-    
+
+    private boolean uiController;
+
     private boolean variablePath;
 
-    public PathParts(String fullPath, String pathId, String controllerName, String actionName, boolean variablePath) {
+    public PathParts(String fullPath, String pathId, String controllerName, String actionName, boolean uiController,
+            boolean variablePath) {
         this.fullPath = fullPath;
         this.pathId = pathId;
         this.controllerName = controllerName;
         this.actionName = actionName;
+        this.uiController = uiController;
         this.variablePath = variablePath;
     }
 
@@ -59,7 +63,11 @@ public class PathParts {
     public String getActionName() {
         return actionName;
     }
-    
+
+    public boolean isUiController() {
+        return uiController;
+    }
+
     public boolean isVariablePath() {
         return variablePath;
     }

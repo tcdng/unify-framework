@@ -375,7 +375,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         for (String element : pathElement) {
             buf.append(element);
         }
-        buf.append('?').append(RequestParameterConstants.PAGE_INDICATOR).append("=true");
+        buf.append("?req_pag=true");
         return this;
     }
 

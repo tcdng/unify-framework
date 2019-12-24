@@ -17,6 +17,7 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
@@ -44,40 +45,48 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
                         false);
             }
         };
-        
+
         pathParts = new FactoryMap<String, PathParts>() {
 
             @Override
             protected PathParts create(String path, Object... params) throws Exception {
                 int colIndex = path.lastIndexOf(':');
+                String pathId = path;
+                String controllerName = path;
+                String actionName = null;
+                boolean variablePath = false;
                 if (colIndex >= 0) {
-                    String pathId = path;
-                    String controllerName = path.substring(0, colIndex);
-                    String actionName = null;
+                    controllerName = path.substring(0, colIndex);
                     int actionPartIndex = path.lastIndexOf('/');
                     if (actionPartIndex > colIndex) {
                         pathId = path.substring(0, actionPartIndex);
                         actionName = path.substring(actionPartIndex);
                     }
 
-                    return new PathParts(path, pathId, controllerName, actionName, true);
+                    variablePath = true;
                 } else if (getComponentConfig(Controller.class, path) == null) {
-                        int actionPartIndex = path.lastIndexOf('/');
-                        if (actionPartIndex > 0) {
-                            String controllerName = path.substring(0, actionPartIndex);
-                            String actionName = path.substring(actionPartIndex);
-                            return new PathParts(path, controllerName, controllerName, actionName, false);
-                        }
+                    int actionPartIndex = path.lastIndexOf('/');
+                    if (actionPartIndex > 0) {
+                        controllerName = path.substring(0, actionPartIndex);
+                        pathId = controllerName;
+                        actionName = path.substring(actionPartIndex);
+                    }
                 }
-                
-                return new PathParts(path, path, path, null, false);
+
+                boolean uiController = false;
+                UnifyComponentConfig ucc = getComponentConfig(Controller.class, controllerName);
+                if (ucc != null) {
+                    uiController = UIController.class.isAssignableFrom(ucc.getType());
+                }
+
+                return new PathParts(path, pathId, controllerName, actionName, uiController, variablePath);
             }
 
             @Override
             protected boolean keep(PathParts pathParts) throws Exception {
                 return !pathParts.isVariablePath();
             }
-            
+
         };
     }
 

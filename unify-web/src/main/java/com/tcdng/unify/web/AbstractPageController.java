@@ -367,7 +367,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
      */
     protected String fireOtherControllerAction(String fullActionPath) throws UnifyException {
         return ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
-                .executeController(fullActionPath);
+                .executePageController(fullActionPath);
     }
 
     /**
@@ -385,7 +385,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     protected void writeOtherControllerProperty(String controllerName, String propertyName, Object value)
             throws UnifyException {
         ((ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER))
-                .populateControllerPageBean(controllerName, propertyName, value);
+                .populatePageBean(controllerName, propertyName, value);
     }
 
     /**

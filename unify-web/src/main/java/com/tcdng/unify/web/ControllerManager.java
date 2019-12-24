@@ -98,7 +98,7 @@ public interface ControllerManager extends UnifyComponent {
     void executeController(ClientRequest request, ClientResponse response) throws UnifyException;
 
     /**
-     * Executes a controller action.
+     * Executes a page controller action.
      * 
      * @param fullActionPath
      *            the full action path
@@ -106,10 +106,10 @@ public interface ControllerManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String executeController(String fullActionPath) throws UnifyException;
+    String executePageController(String fullActionPath) throws UnifyException;
 
     /**
-     * Populates the property of a controller page bean.
+     * Populates the property of a page controller page bean.
      * 
      * @param controllerName
      *            the controller name
@@ -120,5 +120,5 @@ public interface ControllerManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void populateControllerPageBean(String controllerName, String propertyName, Object value) throws UnifyException;
+    void populatePageBean(String controllerName, String propertyName, Object value) throws UnifyException;
 }

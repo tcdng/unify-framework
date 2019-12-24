@@ -46,6 +46,7 @@ import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.UnifyWebInterface;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
@@ -218,8 +219,10 @@ public class HttpApplicationServlet extends HttpServlet {
             throws ServletException, IOException {
         if (!embedded || webInterface.isServicingRequests()) {
             try {
-                requestContextManager.loadRequestContext(getUserSession(request), request.getServletPath());
-                httpRequestHandler.handleRequest(type, request, response);
+                PathParts reqPathParts = httpRequestHandler.resolveRequestPath(request);
+                requestContextManager.loadRequestContext(getUserSession(request, reqPathParts.isUiController()),
+                        request.getServletPath());
+                httpRequestHandler.handleRequest(type, reqPathParts, request, response);
             } catch (Exception e) {
                 throw new ServletException(e);
             } finally {
@@ -232,10 +235,10 @@ public class HttpApplicationServlet extends HttpServlet {
         }
     }
 
-    private UserSession getUserSession(HttpServletRequest request) throws UnifyException {
+    private UserSession getUserSession(HttpServletRequest request, boolean isUIController) throws UnifyException {
         HttpUserSession userSession = null;
-        if (StringUtils.isBlank(request.getParameter(RequestParameterConstants.PAGE_INDICATOR))) {
-            // Handle sessionless remote call
+        if (!isUIController) {
+            // Non-UI controllers are session less. Handle sessionless remote call
             HttpSession httpSession = request.getSession(false);
             if (httpSession != null) {
                 httpSession.invalidate();
@@ -314,8 +317,9 @@ public class HttpApplicationServlet extends HttpServlet {
         }
 
         UserPlatform platform = detectRequestPlatform(request);
-        HttpUserSession userSession = new HttpUserSession( applicationLocale, applicationTimeZone, sessionId, uriBase.toString(),
-                contextPath, request.getRemoteHost(), remoteIpAddress, request.getRemoteUser(), platform);
+        HttpUserSession userSession =
+                new HttpUserSession(applicationLocale, applicationTimeZone, sessionId, uriBase.toString(), contextPath,
+                        request.getRemoteHost(), remoteIpAddress, request.getRemoteUser(), platform);
         userSession.getSessionContext().setStickyAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
                 uplComponentWriterManager.getWriters(platform));
         userSession.setTransient(userSessionManager);

@@ -55,6 +55,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
         assertNull(pathParts.getActionName());
+        assertTrue(pathParts.isUiController());
         assertFalse(pathParts.isActionPath());
         assertFalse(pathParts.isVariablePath());
     }
@@ -69,6 +70,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
         assertEquals("/createAuthor", pathParts.getActionName());
+        assertTrue(pathParts.isUiController());
         assertTrue(pathParts.isActionPath());
         assertFalse(pathParts.isVariablePath());
     }
@@ -83,6 +85,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor:20", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
         assertNull(pathParts.getActionName());
+        assertTrue(pathParts.isUiController());
         assertFalse(pathParts.isActionPath());
         assertTrue(pathParts.isVariablePath());
     }
@@ -97,6 +100,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor:35", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
         assertEquals("/createAuthor", pathParts.getActionName());
+        assertTrue(pathParts.isUiController());
         assertTrue(pathParts.isActionPath());
         assertTrue(pathParts.isVariablePath());
     }

@@ -206,8 +206,8 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         };
 
         skipOnPopulateSet.add(RequestParameterConstants.DOCUMENT);
-        skipOnPopulateSet.add(RequestParameterConstants.PAGE_INDICATOR);
         skipOnPopulateSet.add(RequestParameterConstants.TARGET_VALUE);
+        skipOnPopulateSet.add(RequestParameterConstants.PAGE_INDICATOR);
         skipOnPopulateSet.add(RequestParameterConstants.VALIDATION_ACTION);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSG);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSGICON);
@@ -302,8 +302,8 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         PageController<?> docPageController = null;
         try {
             PathParts docPathParts = null;
-            PathParts pathParts = pathInfoRepository.getPathParts(request.getPath());
-            controller = getController(pathParts, false);
+            final PathParts reqPathParts = request.getPathParts();
+            controller = getController(reqPathParts, false);
 
             ControllerType controllerType = controller.getType();
             if (controllerType.isUIController()) {
@@ -323,10 +323,11 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 String forceLogout =
                         (String) sessionContext.removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
                 if (forceLogout != null) {
-                    throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout), request.getPath());
+                    throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout),
+                            reqPathParts.getFullPath());
                 }
 
-                throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, request.getPath());
+                throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, reqPathParts.getFullPath());
             }
 
             if (ControllerType.PLAIN_CONTROLLER.equals(controllerType)) {
@@ -336,7 +337,8 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 RemoteCallFormat remoteCallFormat =
                         (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
                 Object reqBody = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-                Object respBody = executeRemoteCall(remoteCallController, remoteCallFormat, request.getPath(), reqBody);
+                Object respBody =
+                        executeRemoteCall(remoteCallController, remoteCallFormat, reqPathParts.getFullPath(), reqBody);
                 response.setContentType(remoteCallFormat.mimeType().template());
                 if (request.getCharset() != null) {
                     response.setCharacterEncoding(request.getCharset().name());
@@ -368,18 +370,18 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             } else {
                 ResponseWriter writer = responseWriterPool.getResponseWriter();
                 try {
-                    PathParts respPathParts = pathParts;
+                    PathParts respPathParts = reqPathParts;
                     PageController<?> pageController = (PageController<?>) controller;
                     PageControllerInfo pbbInfo = pageControllerInfoMap.get(pageController.getName());
-                    Page page = loadRequestPage(pathParts);
+                    Page page = loadRequestPage(reqPathParts);
                     String resultName = ResultMappingConstants.VALIDATION_ERROR;
 
                     DataTransfer dataTransfer = prepareDataTransfer(pageController, request);
                     if (validate(page, dataTransfer)) {
                         synchronized (page) {
                             populate(pageController, dataTransfer);
-                            if (pathParts.isActionPath()) {
-                                resultName = executePageCall(pageController, pathParts.getActionName());
+                            if (reqPathParts.isActionPath()) {
+                                resultName = executePageCall(pageController, reqPathParts.getActionName());
                             } else {
                                 resultName = executePageCall(pageController, "/indexPage");
                             }
@@ -444,7 +446,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
     }
 
     @Override
-    public String executeController(String fullActionPath) throws UnifyException {
+    public String executePageController(String fullActionPath) throws UnifyException {
         Page currentPage = requestContextUtil.getRequestPage();
         try {
             PathParts targetPathParts = pathInfoRepository.getPathParts(fullActionPath);
@@ -457,7 +459,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
     }
 
     @Override
-    public void populateControllerPageBean(String controllerName, String property, Object value) throws UnifyException {
+    public void populatePageBean(String controllerName, String property, Object value) throws UnifyException {
         Page currentPage = requestContextUtil.getRequestPage();
         try {
             PathParts targetPathParts = pathInfoRepository.getPathParts(controllerName);
@@ -1058,13 +1060,4 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             }
         }
     }
-
-    // private PathParts getPathParts(String path) throws UnifyException {
-    // String controllerName = actionToControllerNameMap.get(path);
-    // if (controllerName != null) {
-    // return pathInfoRepository.getPathParts(controllerName);
-    // }
-    //
-    // return pathInfoRepository.getPathParts(path);
-    // }
 }

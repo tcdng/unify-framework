@@ -43,6 +43,8 @@ import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerManager;
+import com.tcdng.unify.web.PathInfoRepository;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestHeaderConstants;
@@ -69,30 +71,39 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     @Configurable(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER)
     private ControllerManager controllerManager;
 
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
+
     private List<String> remoteViewerList;
 
     @Override
-    public void handleRequest(HttpRequestMethodType methodType, Object requestObject, Object responseObject)
-            throws UnifyException {
+    public PathParts resolveRequestPath(Object requestObject) throws UnifyException {
+        HttpServletRequest request = (HttpServletRequest) requestObject;
+        String resolvedPath = request.getPathInfo();
+        if (resolvedPath != null && resolvedPath.endsWith("/")) {
+            resolvedPath = resolvedPath.substring(0, resolvedPath.length() - 1);
+        }
+
+        if (StringUtils.isBlank(resolvedPath)) {
+            resolvedPath = getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_HOME,
+                    ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
+        }
+
+        return pathInfoRepository.getPathParts(resolvedPath);
+    }
+
+    @Override
+    public void handleRequest(HttpRequestMethodType methodType, PathParts pathParts, Object requestObject,
+            Object responseObject) throws UnifyException {
         try {
             HttpServletRequest request = (HttpServletRequest) requestObject;
-            String resolvedPath = request.getPathInfo();
-            if (resolvedPath != null && resolvedPath.endsWith("/")) {
-                resolvedPath = resolvedPath.substring(0, resolvedPath.length() - 1);
-            }
-
-            if (StringUtils.isBlank(resolvedPath)) {
-                resolvedPath = getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_HOME,
-                        ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
-            }
-
             Charset charset = StandardCharsets.UTF_8;
             if (request.getCharacterEncoding() != null) {
                 charset = Charset.forName(request.getCharacterEncoding());
             }
 
             ClientRequest clientRequest =
-                    new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
+                    new HttpClientRequest(methodType, pathParts, charset, extractRequestParameters(request, charset));
             ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
             if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
@@ -141,8 +152,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             try {
                 switch (remoteCallFormat) {
                     case OCTETSTREAM:
-                        result.put(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM,
-                                request.getInputStream());
+                        result.put(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM, request.getInputStream());
                         break;
                     case TAGGED_BINARYMESSAGE:
                         result.put(RequestParameterConstants.REMOTE_CALL_BODY,
