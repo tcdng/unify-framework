@@ -35,7 +35,7 @@ import com.tcdng.unify.web.UnifyWebErrorConstants;
 @Component("/resource/realpath")
 public class RealPathResourceController extends FileResourceController {
 
-    private static final String[] RESTRICTED_FOLDERS = {"WEB-INF", "\\WEB-INF", "/WEB-INF"};
+    private static final String[] RESTRICTED_FOLDERS = {"CONF", "\\CONF", "/CONF"};
 
     protected File file;
 
