@@ -12,7 +12,7 @@ The framework makes available, to the developer, a solid set of reusable and ext
 
 All components, from UI widgets to business logic and database components, share a common DNA allowing for the same basic simplicity across the framework. 
 
-Components are provided for the full web application stack making the need for the mishmash of varying technologies very minimal.
+Components are provided for the full web application stack which makes the need for the mishmash of varying technologies very minimal.
 
 ## Features
 * Inversion of Control Container
