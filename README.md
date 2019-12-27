@@ -30,5 +30,5 @@ All components, from UI widgets to business logic and database components, share
 
 ## Documentation
 
-* [Documentation](/tcdng/unify-framework/wiki)
+* [Documentation (Wiki)](https://github.com/tcdng/unify-framework/wiki)
  
