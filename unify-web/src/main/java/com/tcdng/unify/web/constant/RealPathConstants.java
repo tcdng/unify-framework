@@ -24,5 +24,5 @@ package com.tcdng.unify.web.constant;
  */
 public interface RealPathConstants {
 
-    String DOWNLOAD_FOLDER = "WEB-INF/download/";
+    String DOWNLOAD_FOLDER = "download/";
 }
