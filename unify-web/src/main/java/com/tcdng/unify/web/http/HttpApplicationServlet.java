@@ -112,7 +112,7 @@ public class HttpApplicationServlet extends HttpServlet {
             InputStream configInputStream = null;
             try {
                 contextPath = servletContext.getContextPath();
-                TypeRepository tr = WebTypeUtils.buildTypeRepositoryFromServletContext(servletContext);
+                TypeRepository tr = WebTypeUtils.getTypeRepositoryFromServletContext(servletContext);
                 UnifyContainerEnvironment uce = new UnifyContainerEnvironment(tr, workingFolder);
                 UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
 

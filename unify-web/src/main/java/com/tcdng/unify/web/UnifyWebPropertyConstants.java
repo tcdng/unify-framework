@@ -25,13 +25,13 @@ public interface UnifyWebPropertyConstants {
 
     String APPLICATION_HOME = "application.web.home";
 
-    String APPLICATION_COMMON_UTILITIES = "application.web.common.utilities";
+    String APPLICATION_COMMON_UTILITIES = "application.web.common";
 
-    String APPLICATION_DOCUMENT_STYLESHEET = "application.web.document.stylesheet";
+    String APPLICATION_DOCUMENT_STYLESHEET = "application.web.stylesheet";
 
-    String APPLICATION_DOCUMENT_SCRIPT = "application.web.document.script";
+    String APPLICATION_DOCUMENT_SCRIPT = "application.web.script";
 
-    String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing.enabled";
+    String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing";
 
     String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
 }

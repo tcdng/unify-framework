@@ -276,9 +276,9 @@ public class UnifyContainer {
         }
 
         toConsole = true;
-        if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE) != null) {
+        if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE) != null) {
             toConsole = Boolean.valueOf(
-                    String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE)));
+                    String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE)));
         }
         
         // Banner

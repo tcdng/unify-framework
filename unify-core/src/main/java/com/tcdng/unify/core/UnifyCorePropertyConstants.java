@@ -33,7 +33,7 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_TIMEZONE = "application.timezone";
 
-    String APPLICATION_CONTAINER_TOCONSOLE = "application.container.toconsole";
+    String APPLICATION_TOCONSOLE = "application.toconsole";
 
     String APPLICATION_BOOT = "application.boot.component";
 

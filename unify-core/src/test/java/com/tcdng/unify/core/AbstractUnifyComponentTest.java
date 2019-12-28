@@ -31,7 +31,6 @@ import com.tcdng.unify.core.database.TestSqlDataSource;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.ThreadUtils;
-import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.TypeUtils;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
 
@@ -44,8 +43,6 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
 public abstract class AbstractUnifyComponentTest {
 
     private static UnifyContainerEnvironment containerEnvironment;
-
-    private static TypeRepository typeRepository;
 
     private static UnifyContainerConfig containerConfig;
 
@@ -66,11 +63,7 @@ public abstract class AbstractUnifyComponentTest {
     @BeforeClass
     public static void setupClass() throws Exception {
         if (containerEnvironment == null) {
-            containerEnvironment = new UnifyContainerEnvironment(TypeUtils.buildTypeRepositoryFromClasspath());
-        }
-
-        if (typeRepository == null) {
-            typeRepository = TypeUtils.buildTypeRepositoryFromClasspath();
+            containerEnvironment = new UnifyContainerEnvironment(TypeUtils.getTypeRepositoryFromClasspath());
         }
 
         deleteSetup();
@@ -191,7 +184,7 @@ public abstract class AbstractUnifyComponentTest {
      *             if an error occurs
      */
     private static void addSettingsAndDependencies() throws Exception {
-        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE, "false");
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE, "false");
         addDependency(ApplicationComponents.APPLICATION_DATASOURCE, TestSqlDataSource.class);
 
         addContainerSetting(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE,
@@ -360,7 +353,7 @@ public abstract class AbstractUnifyComponentTest {
             uccb.deploymentVersion("1.0");
             uccb.deploymentMode(true);
             uccb.setProperty("logger.level", "off");
-            UnifyConfigUtils.readConfigFromTypeRepository(uccb, typeRepository);
+            UnifyConfigUtils.readConfigFromTypeRepository(uccb, TypeUtils.getTypeRepositoryFromClasspath());
 
             addSettingsAndDependencies();
             doAddSettingsAndDependencies();

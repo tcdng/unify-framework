@@ -43,7 +43,7 @@ public class UnifyConfigUtilsTest {
     @Test
     public void testScanTypeRepository() throws Exception {
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
-        TypeRepository typeRepository = TypeUtils.buildTypeRepositoryFromClasspath();
+        TypeRepository typeRepository = TypeUtils.getTypeRepositoryFromClasspath();
         UnifyConfigUtils.readConfigFromTypeRepository(uccb, typeRepository, "com.tcdng.unify.core");
 
         UnifyContainerConfig ucc = uccb.build();

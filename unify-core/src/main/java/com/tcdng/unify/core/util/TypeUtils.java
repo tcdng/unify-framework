@@ -35,26 +35,36 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class TypeUtils {
 
+    private static TypeRepository classPathTypeRepository;
+
     protected TypeUtils() {
 
     }
 
-    public static TypeRepository buildTypeRepositoryFromClasspath() throws UnifyException {
-        try {
-            AnnotationDB classpathDB = new AnnotationDB();
-            classpathDB.setScanFieldAnnotations(false);
-            classpathDB.setScanMethodAnnotations(false);
-            classpathDB.setScanParameterAnnotations(false);
+    public static TypeRepository getTypeRepositoryFromClasspath() throws UnifyException {
+        if (classPathTypeRepository == null) {
+            synchronized (TypeUtils.class) {
+                if (classPathTypeRepository == null) {
+                    try {
+                        AnnotationDB classpathDB = new AnnotationDB();
+                        classpathDB.setScanFieldAnnotations(false);
+                        classpathDB.setScanMethodAnnotations(false);
+                        classpathDB.setScanParameterAnnotations(false);
 
-            URL[] urls = ClasspathUrlFinder.findClassPaths();
-            classpathDB.scanArchives(urls);
-            return new TypeRepositoryImpl(classpathDB);
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);
+                        URL[] urls = ClasspathUrlFinder.findClassPaths();
+                        classpathDB.scanArchives(urls);
+                        classPathTypeRepository = new TypeRepositoryImpl(classpathDB);
+                    } catch (Exception e) {
+                        throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);
+                    }
+                }
+            }
         }
+
+        return classPathTypeRepository;
     }
 
-    public static class TypeRepositoryImpl implements TypeRepository {
+    protected static class TypeRepositoryImpl implements TypeRepository {
 
         private AnnotationDB annotationDB;
 
@@ -76,7 +86,8 @@ public class TypeUtils {
 
         @SuppressWarnings("unchecked")
         private <T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType,
-                Class<? extends Annotation> annotationClass, boolean exclude, String... packages) throws UnifyException {
+                Class<? extends Annotation> annotationClass, boolean exclude, String... packages)
+                throws UnifyException {
             List<Class<? extends T>> resultList = new ArrayList<Class<? extends T>>();
             try {
                 Set<String> annotatedClassNames = annotationDB.getAnnotationIndex().get(annotationClass.getName());
@@ -122,6 +133,6 @@ public class TypeUtils {
             }
             return resultList;
         }
-   }
+    }
 
 }

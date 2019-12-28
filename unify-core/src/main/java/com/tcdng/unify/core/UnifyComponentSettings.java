@@ -32,7 +32,7 @@ public class UnifyComponentSettings {
 
     private Map<String, Setting> settings;
 
-    public UnifyComponentSettings(Setting[] settings) {
+    public UnifyComponentSettings(Setting... settings) {
         this.settings = new HashMap<String, Setting>();
         for (Setting setting : settings) {
             this.settings.put(setting.getName(), setting);

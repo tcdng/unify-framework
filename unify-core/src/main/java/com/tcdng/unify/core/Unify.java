@@ -129,7 +129,7 @@ public class Unify {
         UnifyContainerEnvironment uce = null;
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         try {
-            TypeRepository tr = TypeUtils.buildTypeRepositoryFromClasspath();
+            TypeRepository tr = TypeUtils.getTypeRepositoryFromClasspath();
             uce = new UnifyContainerEnvironment(tr, workingFolder);
             UnifyConfigUtils.readConfigFromTypeRepository(uccb, tr);
             uccb.deploymentMode(deploymentMode);

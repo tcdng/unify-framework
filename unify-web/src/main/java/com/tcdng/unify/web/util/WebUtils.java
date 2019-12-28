@@ -15,19 +15,9 @@
  */
 package com.tcdng.unify.web.util;
 
-import java.net.URL;
-
-import javax.servlet.ServletContext;
-
-import org.scannotation.AnnotationDB;
-import org.scannotation.WarUrlFinder;
-
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
-import com.tcdng.unify.core.util.TypeRepository;
-import com.tcdng.unify.core.util.TypeUtils;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.constant.ShortcutFlagConstants;
 
@@ -164,26 +154,5 @@ public final class WebUtils {
             encodedShortcut = String.valueOf(encoded);
         }
         return encodedShortcut;
-    }
-
-    public static TypeRepository buildTypeRepositoryFromServletContext(ServletContext servletContext)
-            throws UnifyException {
-        try {
-            AnnotationDB servletContextDB = new AnnotationDB();
-            servletContextDB.setScanFieldAnnotations(false);
-            servletContextDB.setScanMethodAnnotations(false);
-            servletContextDB.setScanParameterAnnotations(false);
-
-            URL[] urls = WarUrlFinder.findWebInfLibClasspaths(servletContext);
-            servletContextDB.scanArchives(urls);
-
-            URL classPathUrl = WarUrlFinder.findWebInfClassesPath(servletContext);
-            if (classPathUrl != null) {
-                servletContextDB.scanArchives(classPathUrl);
-            }
-            return new TypeUtils.TypeRepositoryImpl(servletContextDB);
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);
-        }
     }
 }

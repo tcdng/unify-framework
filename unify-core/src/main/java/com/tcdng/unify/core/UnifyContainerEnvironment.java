@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core;
 
+import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
 
 /**
@@ -44,5 +46,13 @@ public class UnifyContainerEnvironment {
 
     public String getWorkingPath() {
         return workingPath;
+    }
+
+    public String getEnvironmentFilename(String relativeFilename) throws UnifyException {
+        if (!StringUtils.isBlank(workingPath)) {
+            return IOUtils.buildFilename(workingPath, relativeFilename);
+        }
+
+        return relativeFilename;
     }
 }
