@@ -45,6 +45,7 @@ import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.RequestContextUtil;
+import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
@@ -54,7 +55,6 @@ import com.tcdng.unify.web.ui.writer.DocumentLayoutWriter;
 import com.tcdng.unify.web.ui.writer.LayoutWriter;
 import com.tcdng.unify.web.ui.writer.PanelWriter;
 import com.tcdng.unify.web.ui.writer.WidgetWriter;
-import com.tcdng.unify.web.util.WebUtils;
 
 /**
  * Default implementation of a response writer.
@@ -66,6 +66,9 @@ import com.tcdng.unify.web.util.WebUtils;
 @Component(WebApplicationComponents.APPLICATION_RESPONSEWRITER)
 public class ResponseWriterImpl extends AbstractUnifyComponent implements ResponseWriter {
 
+    @Configurable
+    private ThemeManager themeManager;
+    
     @Configurable
     private RequestContextUtil requestContextUtil;
 
@@ -393,7 +396,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
         PageManager pageManager = getPageManager();
         buf.append('&').append(pageManager.getPageName("resourceName")).append("=")
-                .append(encodeURLParameter(expandThemeTag(resourceName)));
+                .append(encodeURLParameter(themeManager.expandThemeTag(resourceName)));
         if (StringUtils.isNotBlank(contentType)) {
             buf.append('&').append(pageManager.getPageName("contentType")).append("=")
                     .append(encodeURLParameter(contentType));
@@ -450,16 +453,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             writeCommandURL();
         }
         return this;
-    }
-
-    @Override
-    public String expandThemeTag(String resouceName) throws UnifyException {
-        String themePath = null;
-        if (getSessionContext().isUserLoggedIn()) {
-            themePath = getSessionContext().getUserToken().getThemePath();
-        }
-
-        return WebUtils.expandThemeTag(resouceName, themePath);
     }
 
     @Override
@@ -655,7 +648,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             throw new UnifyException(e, UnifyCoreErrorConstants.UTIL_ERROR);
         }
     }
-    
+
     private ResponseWriter writeJsonArray(Object[] arr, boolean quote) throws UnifyException {
         buf.append('[');
         if (arr != null) {
@@ -681,7 +674,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
                     } else {
                         appendSym = true;
                     }
-                    
+
                     buf.append(val);
                 }
             }

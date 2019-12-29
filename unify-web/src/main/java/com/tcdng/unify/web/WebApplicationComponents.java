@@ -45,6 +45,8 @@ public interface WebApplicationComponents {
 
     String APPLICATION_REQUESTCONTEXTUTIL = "application-requestcontextutil";
 
+    String APPLICATION_THEMEMANAGER = "application-thememanager";
+
     String APPLICATION_UICOMMANDMANAGER = "application-uicommandmanager";
 
     String APPLICATION_WEBCLIENT = "application-webclient";
