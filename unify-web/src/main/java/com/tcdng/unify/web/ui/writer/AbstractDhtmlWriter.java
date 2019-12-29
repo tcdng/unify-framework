@@ -26,6 +26,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.web.RequestContextUtil;
+import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
@@ -42,6 +43,9 @@ import com.tcdng.unify.web.util.WriterUtils;
  * @since 1.0
  */
 public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
+
+    @Configurable
+    private ThemeManager themeManager;
 
     @Configurable
     private PageManager pageManager;
@@ -481,7 +485,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         }
 
         writer.write(" src=\"");
-        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), writer.expandThemeTag(src));
+        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), themeManager.expandThemeTag(src));
         writer.write("\">");
     }
 

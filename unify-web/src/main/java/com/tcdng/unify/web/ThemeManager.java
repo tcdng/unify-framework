@@ -13,27 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+
 /**
- * Unify web property constants.
+ * Theme manager
  * 
  * @author Lateef Ojulari
- * @version 1.0
+ * @since 1.0
  */
-public interface UnifyWebPropertyConstants {
+public interface ThemeManager extends UnifyComponent {
 
-    String APPLICATION_HOME = "application.web.home";
+    /**
+     * Expands a theme tagged resource to a full theme resource URL
+     * 
+     * @param resouceName
+     *            the tagged resource
+     * @return the expanded them resource URL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String expandThemeTag(String resouceName) throws UnifyException;
 
-    String APPLICATION_COMMON_UTILITIES = "application.web.common";
-
-    String APPLICATION_THEME = "application.web.theme";
-
-    String APPLICATION_DOCUMENT_STYLESHEET = "application.web.stylesheet";
-
-    String APPLICATION_DOCUMENT_SCRIPT = "application.web.script";
-
-    String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing";
-
-    String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
 }

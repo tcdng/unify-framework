@@ -412,17 +412,6 @@ public interface ResponseWriter extends UnifyComponent {
     boolean isEmpty();
 
     /**
-     * Expands a theme tagged resource to a full theme resource URL
-     * 
-     * @param string
-     *            the tagged resource
-     * @return the expanded them resource URL
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String expandThemeTag(String string) throws UnifyException;
-
-    /**
      * Writes javascript REGEX that allows only alphanumeric characters and,
      * optionally, some special characters.
      * 

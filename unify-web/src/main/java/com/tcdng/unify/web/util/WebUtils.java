@@ -17,7 +17,6 @@ package com.tcdng.unify.web.util;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.constant.ShortcutFlagConstants;
 
@@ -29,41 +28,8 @@ import com.tcdng.unify.web.constant.ShortcutFlagConstants;
  */
 public final class WebUtils {
 
-    public static final String DEFAULT_THEME_PATH = "/web/themes/farko";
-
     private WebUtils() {
 
-    }
-
-    public static String expandThemeTag(String resouceName) throws UnifyException {
-        return WebUtils.expandThemeTag(resouceName, null);
-    }
-
-    public static String expandThemeTag(String resouceName, String themePath) throws UnifyException {
-        if (TokenUtils.isThemeTag(resouceName)) {
-            resouceName = TokenUtils.extractTokenValue(resouceName);
-            if (StringUtils.isBlank(themePath)) {
-                themePath = WebUtils.DEFAULT_THEME_PATH;
-            }
-
-            if (StringUtils.isNotBlank(themePath)) {
-                if (themePath.endsWith("/")) {
-                    if (resouceName.startsWith("/")) {
-                        return themePath + resouceName.substring("/".length());
-                    }
-
-                    return themePath + resouceName;
-                }
-
-                if (resouceName.startsWith("/")) {
-                    return themePath + resouceName;
-                }
-
-                return themePath + "/" + resouceName;
-            }
-        }
-
-        return resouceName;
     }
 
     public static String generateBeanIndexedPathFromPath(String path, Object index) throws UnifyException {
