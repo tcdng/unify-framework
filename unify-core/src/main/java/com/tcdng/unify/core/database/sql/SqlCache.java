@@ -24,6 +24,7 @@ package com.tcdng.unify.core.database.sql;
 public class SqlCache {
 
     private String findSql;
+    private String findViewSql;
     private String findByPkSql;
     private String findByPkVersionSql;
     private String listSql;
@@ -37,13 +38,15 @@ public class SqlCache {
     private String deleteByPkSql;
     private String deleteByPkVersionSql;
     private String countSql;
+    private String countViewSql;
     private String testSql;
 
-    public SqlCache(String findSql, String findByPkSql, final String findByPkVersionSql, String listSql,
+    public SqlCache(String findSql, String findViewSql, String findByPkSql, final String findByPkVersionSql, String listSql,
             final String listByPkSql, String listByPkVersionSql, final String createSql, String updateSql,
             final String updateByPkSql, String updateByPkVersionSql, final String deleteSql, String deleteByPkSql,
-            final String deleteByPkVersionSql, String countSql, final String testSql) {
+            final String deleteByPkVersionSql, String countSql, String countViewSql, final String testSql) {
         this.findSql = findSql;
+        this.findViewSql = findViewSql;
         this.findByPkSql = findByPkSql;
         this.findByPkVersionSql = findByPkVersionSql;
         this.listSql = listSql;
@@ -57,11 +60,16 @@ public class SqlCache {
         this.deleteByPkSql = deleteByPkSql;
         this.deleteByPkVersionSql = deleteByPkVersionSql;
         this.countSql = countSql;
+        this.countViewSql = countViewSql;
         this.testSql = testSql;
     }
 
     public String getFindSql() {
         return findSql;
+    }
+
+    public String getFindViewSql() {
+        return findViewSql;
     }
 
     public String getFindByPkSql() {
@@ -114,6 +122,10 @@ public class SqlCache {
 
     public String getCountSql() {
         return countSql;
+    }
+
+    public String getCountViewSql() {
+        return countViewSql;
     }
 
     public String getTestSql() {
