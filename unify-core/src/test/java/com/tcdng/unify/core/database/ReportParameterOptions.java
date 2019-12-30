@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
+import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
 
 /**
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Policy("testentitynorest-policy")
 @Table(name = "REPORT_PARAMETEROPT")
 public class ReportParameterOptions extends AbstractTestTableEntity {
 

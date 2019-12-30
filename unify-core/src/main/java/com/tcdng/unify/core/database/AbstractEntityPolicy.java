@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.Date;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -39,6 +41,41 @@ public abstract class AbstractEntityPolicy extends AbstractUnifyComponent implem
     @Override
     public boolean isSetNow() {
         return setNow;
+    }
+
+    @Override
+    public Object preCreate(Entity record, Date now) throws UnifyException {
+        return null;
+    }
+
+    @Override
+    public void preUpdate(Entity record, Date now) throws UnifyException {
+
+    }
+
+    @Override
+    public void preDelete(Entity record, Date now) throws UnifyException {
+
+    }
+
+    @Override
+    public void preQuery(Query<? extends Entity> query) throws UnifyException {
+
+    }
+
+    @Override
+    public void onCreateError(Entity record) {
+
+    }
+
+    @Override
+    public void onUpdateError(Entity record) {
+
+    }
+
+    @Override
+    public void onDeleteError(Entity record) {
+
     }
 
     @Override

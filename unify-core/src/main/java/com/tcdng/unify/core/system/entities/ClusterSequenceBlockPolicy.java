@@ -44,24 +44,9 @@ public class ClusterSequenceBlockPolicy extends AbstractEntityPolicy {
     }
 
     @Override
-    public void preDelete(Entity record, Date now) throws UnifyException {
-
-    }
-
-    @Override
-    public void onCreateError(Entity record) {
-
-    }
-
-    @Override
     public void onUpdateError(Entity record) {
         ClusterSequenceBlock clusterSequenceBlock = (ClusterSequenceBlock) record;
         clusterSequenceBlock.setVersionNo(clusterSequenceBlock.getVersionNo() - 1L);
-    }
-
-    @Override
-    public void onDeleteError(Entity record) {
-
     }
 
     @Override

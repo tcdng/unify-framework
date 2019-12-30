@@ -13,34 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.system.entities;
-
-import java.util.Date;
+package com.tcdng.unify.core.database;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.database.AbstractEntityPolicy;
-import com.tcdng.unify.core.database.Entity;
 
 /**
- * User session tracking entity.
+ * Policy class for test record with no restriction.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("usersessiontracking-entitypolicy")
-public class UserSessionTrackingPolicy extends AbstractEntityPolicy {
-
-    public UserSessionTrackingPolicy() {
-        super(true);
-    }
+@Component("testentitynorest-policy")
+public class TestEntityNoRestPolicy extends TestEntityPolicy {
 
     @Override
-    public Object preCreate(Entity record, Date now) throws UnifyException {
-        UserSessionTracking userSessionTracking = (UserSessionTracking) record;
-        userSessionTracking.setCreateTime(now);
-        userSessionTracking.setLastAccessTime(now);
-        return userSessionTracking.getId();
-    }
+    public void preQuery(Query<? extends Entity> query) throws UnifyException {
 
+    }
 }
