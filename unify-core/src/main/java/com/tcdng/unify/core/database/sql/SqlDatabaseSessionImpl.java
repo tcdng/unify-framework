@@ -164,7 +164,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
 
         // Check is fetch from table
-        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
             return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                     sqlDataSourceDialect.prepareFindStatement(query, false));
         }
@@ -184,7 +184,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
 
         // Check is fetch from table
-        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
             return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                     sqlDataSourceDialect.prepareFindStatement(query, false));
         }
@@ -204,7 +204,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
 
         // Check is fetch from table
-        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
             return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                     sqlDataSourceDialect.prepareFindStatement(query, false));
         }
@@ -496,7 +496,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
+                    || (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareUpdateStatement(query, update));
             }
@@ -668,7 +668,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
+                    || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(query));
             }
@@ -706,7 +706,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
 
         // Check is fetch from table
-        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
             return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
                     sqlDataSourceDialect.getSqlTypePolicy(int.class),
                     sqlDataSourceDialect.prepareCountStatement(query, false), true);
@@ -727,7 +727,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 entityPolicy.preQuery(query);
             }
 
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
                 return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
@@ -760,7 +760,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 entityPolicy.preQuery(query);
             }
 
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
                 return getSqlStatementExecutor().executeMultipleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
@@ -927,7 +927,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             // Check is fetch from table
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
                 record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                         sqlDataSourceDialect.prepareFindStatement(query, false), false);
             } else {

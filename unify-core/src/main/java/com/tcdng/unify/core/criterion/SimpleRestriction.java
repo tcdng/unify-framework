@@ -25,8 +25,9 @@ package com.tcdng.unify.core.criterion;
 public interface SimpleRestriction extends Restriction {
 
     /**
-     * Gets the simple restriction property name.
-     * @return the property name
+     * Gets the simple restriction field name.
+     * 
+     * @return the field name
      */
-    String getPropertyName();
+    String getFieldName();
 }

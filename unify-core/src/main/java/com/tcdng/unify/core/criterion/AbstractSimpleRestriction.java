@@ -26,25 +26,25 @@ import java.util.Set;
  */
 public abstract class AbstractSimpleRestriction extends AbstractRestriction implements SimpleRestriction {
 
-    private String propertyName;
+    private String fieldName;
 
-    public AbstractSimpleRestriction(String propertyName) {
-        this.propertyName = propertyName;
+    public AbstractSimpleRestriction(String fieldName) {
+        this.fieldName = fieldName;
     }
 
     @Override
-    public void writeProperties(Set<String> propertyBucket) {
-        propertyBucket.add(propertyName);
+    public void writeRestrictedFields(Set<String> restrictedFields) {
+        restrictedFields.add(fieldName);
     }
 
     @Override
-    public String getPropertyName() {
-        return propertyName;
+    public String getFieldName() {
+        return fieldName;
     }
 
     @Override
-    public boolean isProperty(String property) {
-        return propertyName.equals(property);
+    public boolean isRestrictedField(String fieldName) {
+        return this.fieldName.equals(fieldName);
     }
 
     @Override

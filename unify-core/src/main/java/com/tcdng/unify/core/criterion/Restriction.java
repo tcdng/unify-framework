@@ -34,21 +34,21 @@ public interface Restriction {
     RestrictionType getType();
 
     /**
-     * Writes properties that are part of this restriction into supplied bucket.
+     * Writes restricted fields into supplied bucket.
      * 
-     * @param propertyBucket
+     * @param restrictedFields
      *            the bucket to write to
      */
-    void writeProperties(Set<String> propertyBucket);
+    void writeRestrictedFields(Set<String> restrictedFields);
 
     /**
-     * Checks if property is part of this restriction.
+     * Checks if field is part of this restriction.
      * 
-     * @param property
-     *            the property
+     * @param fieldname
+     *            the field name
      * @return true is property is part of this restriction otherwise false
      */
-    boolean isProperty(String property);
+    boolean isRestrictedField(String fieldname);
 
     /**
      * Checks if restriction is empty.

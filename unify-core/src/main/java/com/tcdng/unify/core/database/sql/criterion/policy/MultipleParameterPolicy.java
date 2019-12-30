@@ -51,9 +51,9 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
         MultipleValueRestriction mvc = (MultipleValueRestriction) restriction;
-        String columnName = mvc.getPropertyName();
+        String columnName = mvc.getFieldName();
         if (sqlEntityInfo != null) {
-            columnName = sqlEntityInfo.getListFieldInfo(mvc.getPropertyName()).getPreferredColumnName();
+            columnName = sqlEntityInfo.getListFieldInfo(mvc.getFieldName()).getPreferredColumnName();
         }
         translate(sql, sqlEntityInfo.getTableAlias(), columnName, mvc.getValues(), null);
     }
@@ -62,7 +62,7 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         MultipleValueRestriction mvc = (MultipleValueRestriction) restriction;
-        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) mvc.getPropertyName());
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) mvc.getFieldName());
         Collection<Object> values = mvc.getValues();
         if (values == null || values.isEmpty()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_AT_LEAST_ONE_VALUE_EXPECTED,

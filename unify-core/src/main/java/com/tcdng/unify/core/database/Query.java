@@ -274,14 +274,14 @@ public class Query<T extends Entity> implements Cloneable {
         return restrictions;
     }
 
-    public Set<String> getProperties() {
-        Set<String> properties = new HashSet<String>();
-        restrictions.writeProperties(properties);
-        return properties;
+    public Set<String> getRestrictedFields() {
+        Set<String> restrictedFields = new HashSet<String>();
+        restrictions.writeRestrictedFields(restrictedFields);
+        return restrictedFields;
     }
 
-    public boolean isProperty(String property) {
-        return restrictions.isProperty(property);
+    public boolean isRestrictedField(String fieldName) {
+        return restrictions.isRestrictedField(fieldName);
     }
     
     public Select getSelect() {

@@ -31,10 +31,10 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
     private List<Restriction> restrictionList;
 
     @Override
-    public void writeProperties(Set<String> propertyBucket) {
+    public void writeRestrictedFields(Set<String> propertyBucket) {
         if (restrictionList != null) {
             for (Restriction restriction : restrictionList) {
-                restriction.writeProperties(propertyBucket);
+                restriction.writeRestrictedFields(propertyBucket);
             }
         }
     }
@@ -55,10 +55,10 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
     }
 
     @Override
-    public boolean isProperty(String property) {
+    public boolean isRestrictedField(String fieldName) {
         if (restrictionList != null) {
             for (Restriction restriction : restrictionList) {
-                if (restriction.isProperty(property)) {
+                if (restriction.isRestrictedField(fieldName)) {
                     return true;
                 }
             }
