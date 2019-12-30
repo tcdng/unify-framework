@@ -264,11 +264,12 @@ public class HttpApplicationServlet extends HttpServlet {
                     String roleCode = request.getParameter(RequestParameterConstants.REMOTE_ROLECD);
                     String branchCode = request.getParameter(RequestParameterConstants.REMOTE_BRANCH_CODE);
                     String zoneCode = request.getParameter(RequestParameterConstants.REMOTE_ZONE_CODE);
+                    String tenantCode = request.getParameter(RequestParameterConstants.REMOTE_TENANT_CODE);
                     String colorScheme = request.getParameter(RequestParameterConstants.REMOTE_COLOR_SCHEME);
                     boolean globalAccess =
                             Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
                     UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(),
-                            branchCode, zoneCode, colorScheme, globalAccess, true, true, true);
+                            branchCode, zoneCode, tenantCode, colorScheme, globalAccess, true, true, true);
                     userToken.setRoleCode(roleCode);
                     userSession.getSessionContext().setUserToken(userToken);
                 }

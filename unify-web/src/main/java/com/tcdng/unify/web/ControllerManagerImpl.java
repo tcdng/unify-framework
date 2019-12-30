@@ -222,6 +222,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_ZONE_CODE);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_GLOBAL_ACCESS);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_COLOR_SCHEME);
+        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_TENANT_CODE);
     }
 
     @Override

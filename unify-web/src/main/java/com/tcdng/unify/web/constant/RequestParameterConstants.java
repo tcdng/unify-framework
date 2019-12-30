@@ -65,5 +65,7 @@ public interface RequestParameterConstants {
 
     String REMOTE_GLOBAL_ACCESS = "req_gac";
 
+    String REMOTE_TENANT_CODE = "req_tnc";
+
     String REMOTE_COLOR_SCHEME = "req_csm";
 }

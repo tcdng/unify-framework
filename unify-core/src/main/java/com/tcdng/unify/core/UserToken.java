@@ -23,8 +23,6 @@ package com.tcdng.unify.core;
  */
 public class UserToken {
 
-    private String themePath;
-
     private String userLoginId;
 
     private String userName;
@@ -33,13 +31,17 @@ public class UserToken {
 
     private String branchCode;
 
-    private String zoneCode;
-
-    private String departmentCode;
+    private String tenantCode;
 
     private String colorScheme;
 
     private String ipAddress;
+
+    private String departmentCode;
+
+    private String themePath;
+
+    private String zoneCode;
 
     private boolean globalAccess;
 
@@ -50,25 +52,19 @@ public class UserToken {
     private boolean remote;
 
     public UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
-            String colorScheme, boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+            String tenantCode, String colorScheme, boolean globalAccess, boolean reservedUser,
+            boolean allowMultipleLogin, boolean remote) {
         this.userLoginId = userLoginId;
         this.userName = userName;
         this.zoneCode = zoneCode;
         this.branchCode = branchCode;
+        this.tenantCode = tenantCode;
         this.colorScheme = colorScheme;
         this.ipAddress = ipAddress;
         this.globalAccess = globalAccess;
         this.reservedUser = reservedUser;
         this.allowMultipleLogin = allowMultipleLogin;
         this.remote = remote;
-    }
-
-    public String getThemePath() {
-        return themePath;
-    }
-
-    public void setThemePath(String themePath) {
-        this.themePath = themePath;
     }
 
     public String getUserLoginId() {
@@ -83,12 +79,8 @@ public class UserToken {
         return branchCode;
     }
 
-    public String getRoleCode() {
-        return roleCode;
-    }
-
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
+    public String getTenantCode() {
+        return tenantCode;
     }
 
     public String getZoneCode() {
@@ -99,6 +91,10 @@ public class UserToken {
         return colorScheme;
     }
 
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
     public String getDepartmentCode() {
         return departmentCode;
     }
@@ -107,8 +103,20 @@ public class UserToken {
         this.departmentCode = departmentCode;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getThemePath() {
+        return themePath;
+    }
+
+    public void setThemePath(String themePath) {
+        this.themePath = themePath;
     }
 
     public boolean isGlobalAccess() {
