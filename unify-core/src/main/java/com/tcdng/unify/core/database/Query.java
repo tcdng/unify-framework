@@ -280,6 +280,10 @@ public class Query<T extends Entity> implements Cloneable {
         return properties;
     }
 
+    public boolean isProperty(String property) {
+        return restrictions.isProperty(property);
+    }
+    
     public Select getSelect() {
         return select;
     }
