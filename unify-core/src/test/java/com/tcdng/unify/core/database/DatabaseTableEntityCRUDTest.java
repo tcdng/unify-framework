@@ -1728,6 +1728,48 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindAllRecordWithListOnlyCriteria() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
+
+            // Pick authors with parklane telephone (view-only) and order by
+            // name
+            List<Author> testAuthorList =
+                    db.findAll(new AuthorQuery().addEquals("officeTelephone", "+2348888888").addOrder("name"));
+            assertEquals(2, testAuthorList.size());
+
+            // Should pick the Brian and Winfield with blank list-only properties
+            Author foundAuthor = testAuthorList.get(0);
+            assertEquals("Brian Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(50), foundAuthor.getAge());
+            assertEquals(Gender.MALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(parklaneOfficeId, foundAuthor.getOfficeId());
+            assertNull(foundAuthor.getRetiredDesc());
+            assertNull(foundAuthor.getOfficeAddress());
+            assertNull(foundAuthor.getOfficeTelephone());
+
+            foundAuthor = testAuthorList.get(1);
+            assertEquals("Winfield Hill", foundAuthor.getName());
+            assertEquals(Integer.valueOf(75), foundAuthor.getAge());
+            assertEquals(Gender.MALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(parklaneOfficeId, foundAuthor.getOfficeId());
+            assertNull(foundAuthor.getRetiredDesc());
+            assertNull(foundAuthor.getOfficeAddress());
+            assertNull(foundAuthor.getOfficeTelephone());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testListAllRecordWithListOnlyCriteria() throws Exception {
         tm.beginTransaction();
         try {

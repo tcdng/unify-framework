@@ -127,11 +127,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the query object
+     * @param useView
+     *            indicates view should be used
      * @return the find statement
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareFindStatement(Query<? extends Entity> query) throws UnifyException;
+    SqlStatement prepareFindStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
 
     /**
      * Prepares list record by primary key statement.
@@ -286,11 +288,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the record criteria
+     * @param useView
+     *            indicates view should be used
      * @return the count statement.
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareCountStatement(Query<? extends Entity> query) throws UnifyException;
+    SqlStatement prepareCountStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
 
     /**
      * Prepares select min statement.
@@ -355,7 +359,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * Returns the dialect SQL BLOB type.
      */
     String getSqlBlobType();
-    
+
     /**
      * Gets the maximum number of values the data source would accept for
      * multi-value conditions.
@@ -379,10 +383,11 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * Checks if object are all renamed to lower case in dialect.
      * 
      * @return true if all lower case objects
-     * @throws UnifyException if an error occurs
+     * @throws UnifyException
+     *             if an error occurs
      */
     boolean isAllObjectsInLowerCase() throws UnifyException;
-    
+
     /**
      * Restores a statement info. This applies to implementations that maintain a
      * statement info pool.
