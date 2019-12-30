@@ -43,6 +43,11 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
     }
 
     @Override
+    public boolean isProperty(String property) {
+        return propertyName.equals(property);
+    }
+
+    @Override
     public boolean isEmpty() {
         return false;
     }

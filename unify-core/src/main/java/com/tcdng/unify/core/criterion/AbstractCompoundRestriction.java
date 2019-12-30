@@ -55,6 +55,19 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
     }
 
     @Override
+    public boolean isProperty(String property) {
+        if (restrictionList != null) {
+            for (Restriction restriction : restrictionList) {
+                if (restriction.isProperty(property)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean isEmpty() {
         return restrictionList == null || restrictionList.isEmpty();
     }
