@@ -181,6 +181,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                         sqlDataSourceDialect.prepareFindStatement(query));
@@ -207,6 +212,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                         sqlDataSourceDialect.prepareFindStatement(query));
@@ -233,6 +243,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                         sqlDataSourceDialect.prepareFindStatement(query));
@@ -286,6 +301,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareListStatement(query));
     }
@@ -293,6 +313,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, U> listAll(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareListStatement(query));
     }
@@ -300,6 +325,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, List<U>> listAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareListStatement(query));
     }
@@ -308,6 +338,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T, U extends Entity> List<T> valueList(Class<T> fieldClass, String fieldName, final Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(fieldName));
@@ -323,6 +358,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(fieldName));
@@ -337,6 +377,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U, V extends Entity> Map<T, U> valueMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(keyName, valueName));
@@ -350,6 +395,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U, V extends Entity> Map<T, List<U>> valueListMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(keyName, valueName));
@@ -363,6 +413,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(fieldName));
@@ -377,6 +432,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
@@ -386,6 +446,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
@@ -470,6 +535,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.isViewOnly()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                         sqlEntityInfo.getEntityClass(), "UPDATE");
@@ -642,6 +712,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int deleteAll(Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.isViewOnly()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                         sqlEntityInfo.getEntityClass(), "DELETE");
@@ -681,6 +756,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int count(Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
@@ -708,6 +788,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
@@ -736,6 +821,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 return getSqlStatementExecutor().executeMultipleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
@@ -897,6 +987,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         T record = null;
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
                 record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                         sqlDataSourceDialect.prepareFindStatement(query), false);
@@ -959,6 +1054,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     private <T extends Entity> T list(Query<T> query, boolean fetchChild) throws UnifyException {
+        EntityPolicy entityPolicy =
+                sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query)).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareListStatement(query), false);
         if (fetchChild) {

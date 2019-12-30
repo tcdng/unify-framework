@@ -51,29 +51,4 @@ public class SequencedEntityPolicy extends AbstractEntityPolicy {
         return id;
     }
 
-    @Override
-    public void preUpdate(Entity record, Date now) throws UnifyException {
-
-    }
-
-    @Override
-    public void preDelete(Entity record, Date now) throws UnifyException {
-
-    }
-
-    @Override
-    public void onCreateError(Entity record) {
-
-    }
-
-    @Override
-    public void onUpdateError(Entity record) {
-
-    }
-
-    @Override
-    public void onDeleteError(Entity record) {
-
-    }
-
 }

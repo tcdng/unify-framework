@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system.entities;
 
 import java.util.Collection;
 
+import com.tcdng.unify.core.criterion.CompoundRestriction;
 import com.tcdng.unify.core.database.Query;
 
 /**
@@ -33,6 +34,10 @@ public class SequencedEntityQuery<T extends SequencedEntity> extends Query<T> {
 
     public SequencedEntityQuery(Class<T> entityClass, boolean applyAppQueryLimit) {
         super(entityClass, applyAppQueryLimit);
+    }
+
+    public SequencedEntityQuery(Class<T> entityClass, CompoundRestriction restrictions, boolean applyAppQueryLimit) {
+        super(entityClass, restrictions, applyAppQueryLimit);
     }
 
     public SequencedEntityQuery<T> id(Long id) {

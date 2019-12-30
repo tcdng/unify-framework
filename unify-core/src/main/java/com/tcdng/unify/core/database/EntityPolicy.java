@@ -65,6 +65,18 @@ public interface EntityPolicy extends UnifyComponent {
     void preDelete(Entity record, Date now) throws UnifyException;
 
     /**
+     * Called before usage of query object.
+     * 
+     * @param query
+     *            the query object which may be altered
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void preQuery(Query<? extends Entity> query) throws UnifyException;
+
+    /**
      * Called on creation of record error.
      * 
      * @param record
