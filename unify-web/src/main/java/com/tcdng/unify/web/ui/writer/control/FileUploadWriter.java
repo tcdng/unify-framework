@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,18 +40,25 @@ public class FileUploadWriter extends AbstractControlWriter {
         FileUpload fileUpload = (FileUpload) widget;
         writer.write("<div ");
         writeTagStyleClass(writer, fileUpload);
-        writeTagStyle(writer, fileUpload);
+        boolean isHidden = fileUpload.isHidden();
+        if (isHidden) {
+            writeTagStyle(writer, "width:0px;height:0px;overflow:hidden;");
+        } else {
+            writeTagStyle(writer, fileUpload);
+        }
         writer.write(">");
 
         // Actual HTML file control
+        if (!isHidden) {
+            writer.write("<div style=\"width:0px;height:0px;overflow:hidden;\">");
+        }
         writer.write("<input type=\"file\"");
         writeTagId(writer, fileUpload);
-        writeTagStyle(writer, "display:none;");
         String accept = fileUpload.getAccept();
-        if (!StringUtils.isBlank(accept)) {
+        if (StringUtils.isNotBlank(accept)) {
             FileAttachmentType fileAttachmentType = FileAttachmentType.fromName(accept);
             if (fileAttachmentType != null && !FileAttachmentType.WILDCARD.equals(fileAttachmentType)) {
-                writer.write(" accept=\"").write(fileAttachmentType.contentType()).write('"');
+                writer.write(" accept=\"").write(fileAttachmentType.mimeType().template()).write('"');
             }
         }
 
@@ -60,6 +67,10 @@ public class FileUploadWriter extends AbstractControlWriter {
         }
 
         writer.write("/>");
+
+        if (!isHidden) {
+            writer.write("</div>");
+        }
 
         // Facade
         if (!fileUpload.isHidden()) {

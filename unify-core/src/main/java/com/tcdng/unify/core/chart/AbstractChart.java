@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.chart;
 
+import com.tcdng.unify.core.constant.ColorPalette;
+
 /**
  * Abstract base class for charts.
  * 
@@ -25,18 +27,21 @@ package com.tcdng.unify.core.chart;
 public abstract class AbstractChart implements Chart {
 
     private int width;
-    
+
     private int height;
-    
-    private ChartBitmapFormat format;
-    
-    public AbstractChart(int width, int height) {
-        this(width, height, ChartBitmapFormat.PNG);
+
+    private ColorPalette colorPalette;
+
+    private ChartImageFormat format;
+
+    public AbstractChart(int width, int height, ColorPalette colorPalette) {
+        this(width, height, colorPalette, ChartImageFormat.PNG);
     }
-    
-    public AbstractChart(int width, int height, ChartBitmapFormat format) {
+
+    public AbstractChart(int width, int height, ColorPalette colorPalette, ChartImageFormat format) {
         this.width = width;
         this.height = height;
+        this.colorPalette = colorPalette;
         this.format = format;
     }
 
@@ -51,7 +56,12 @@ public abstract class AbstractChart implements Chart {
     }
 
     @Override
-    public ChartBitmapFormat getBitmapFormat() {
+    public ColorPalette getColorPalette() {
+        return colorPalette;
+    }
+
+    @Override
+    public ChartImageFormat getImageFormat() {
         return format;
     }
 

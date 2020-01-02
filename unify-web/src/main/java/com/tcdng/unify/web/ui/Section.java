@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -75,6 +75,14 @@ public interface Section extends UplComponent {
      *             if an error occurs
      */
     boolean isBinding() throws UnifyException;
+
+    /**
+     * Returns true if section does not display widgets captions
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isWidgetCaptionless() throws UnifyException;
 
     /**
      * Returns the section hidden attribute

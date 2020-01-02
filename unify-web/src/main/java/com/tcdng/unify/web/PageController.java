@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@ package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.Page;
-import com.tcdng.unify.web.ui.Panel;
 
 /**
  * Serves as the controller component of a page.
@@ -25,56 +24,29 @@ import com.tcdng.unify.web.ui.Panel;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface PageController extends UserInterfaceController {
+public interface PageController<T extends PageBean> extends UIController {
 
     /**
-     * Returns page controller path information.
+     * Gets the page bean class associated with this controller.
      * 
-     * @throws UnifyException
-     *             if an error occurs
+     * @return the page bean class
      */
-    PageControllerPathInfo getPathInfo() throws UnifyException;
+    Class<T> getPageBeanClass();
 
     /**
-     * Returns this page controller session ID
+     * Gets the current page associated with controller.
+     * @return the page object
+     * @throws UnifyException if an error occurs
      */
-    String getSessionId();
-
+    Page getPage() throws UnifyException;
+    
     /**
-     * Returns the controller page
-     */
-    Page getPage();
-
-    /**
-     * Sets the controller page
+     * Initializes current page.
      * 
-     * @param page
-     *            the page to bind to
-     * @throws UnifyException
-     *             if an error occurs
+     * @throws UnifyException if an error occurs
      */
-    void setPage(Page page) throws UnifyException;
-
-    /**
-     * Returns a panel in the controller view by long name.
-     * 
-     * @param longName
-     *            the panel long name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    Panel getPanelByLongName(String longName) throws UnifyException;
-
-    /**
-     * Returns a panel in the controller view by short name.
-     * 
-     * @param shortName
-     *            the panel short name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    Panel getPanelByShortName(String shortName) throws UnifyException;
-
+    void initPage() throws UnifyException;
+    
     /**
      * Executes a page index action.
      * 
@@ -82,5 +54,32 @@ public interface PageController extends UserInterfaceController {
      * @throws UnifyException
      *             if an error occurs
      */
-    String index() throws UnifyException;
+    String indexPage() throws UnifyException;
+
+    /**
+     * Executes a page open action.
+     * 
+     * @return the result mapping name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String openPage() throws UnifyException;
+
+    /**
+     * Executes a page save action.
+     * 
+     * @return the result mapping name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String savePage() throws UnifyException;
+
+    /**
+     * Executes a page close action.
+     * 
+     * @return the result mapping name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String closePage() throws UnifyException;
 }

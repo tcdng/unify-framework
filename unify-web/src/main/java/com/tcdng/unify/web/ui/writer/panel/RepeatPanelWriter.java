@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,7 +43,7 @@ public class RepeatPanelWriter extends AbstractPanelWriter {
         RepeatPanel repeatPanel = (RepeatPanel) widget;
         Widget innerWidget = repeatPanel.getWidgetByLongName(repeatPanel.getLayoutWidgetLongNames().get(0));
         List<ValueStore> valueStoreList = repeatPanel.getRepeatValueStores();
-        if (!DataUtils.isBlank(valueStoreList)) {
+        if (DataUtils.isNotBlank(valueStoreList)) {
             for (ValueStore valueStore : valueStoreList) {
                 if (innerWidget.isVisible()) {
                     innerWidget.setValueStore(valueStore);

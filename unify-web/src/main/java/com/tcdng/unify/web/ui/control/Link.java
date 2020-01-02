@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,9 @@ package com.tcdng.unify.web.ui.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.AbstractTargetControl;
 
 /**
@@ -26,6 +29,8 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-link")
+@UplAttributes({ @UplAttribute(name = "preferredCaption", type = String.class),
+        @UplAttribute(name = "preferredCaptionBinding", type = String.class) })
 public class Link extends AbstractTargetControl {
 
     @Override
@@ -38,4 +43,17 @@ public class Link extends AbstractTargetControl {
         return false;
     }
 
+    public String getPreferredCaption() throws UnifyException {
+        String preferredCaptionBinding = getUplAttribute(String.class, "preferredCaptionBinding");
+        if (preferredCaptionBinding != null) {
+            return getStringValue(preferredCaptionBinding);
+        }
+
+        return getUplAttribute(String.class, "preferredCaption");
+    }
+
+    public boolean isUsePreferredCaption() throws UnifyException {
+        return StringUtils.isNotBlank(getUplAttribute(String.class, "preferredCaption"))
+                || StringUtils.isNotBlank(getUplAttribute(String.class, "preferredCaptionBinding"));
+    }
 }

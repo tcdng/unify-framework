@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.tcdng.unify.core.business;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.database.AbstractTestEntity;
+import com.tcdng.unify.core.database.AbstractTestTableEntity;
 
 /**
  * Account entity.
@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.AbstractTestEntity;
  * @since 1.0
  */
 @Table
-public class Account extends AbstractTestEntity {
+public class Account extends AbstractTestTableEntity {
 
     @Column
     private String accountNo;

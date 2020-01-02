@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,9 +18,9 @@ package com.tcdng.unify.core.business;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * Generic business service.
@@ -167,5 +167,16 @@ public interface GenericService extends BusinessService {
      *             if an error occurs
      */
     <T extends Entity> int countAll(Query<T> query) throws UnifyException;
+
+    /**
+     * Finds constraining record that may prevent supplied record from being
+     * successfully created.
+     * 
+     * @param record
+     * @return constraining record if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T extends Entity> T findConstraint(T record) throws UnifyException;
 
 }

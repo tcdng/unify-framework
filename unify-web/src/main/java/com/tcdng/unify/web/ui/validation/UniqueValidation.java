@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,11 +39,11 @@ import com.tcdng.unify.web.ui.Widget;
  */
 @Component("ui-uniquevalidation")
 @UplAttributes({ @UplAttribute(name = "type", type = Class.class),
-        @UplAttribute(name = "idProperty", type = String.class, defaultValue = "id"),
-        @UplAttribute(name = "idType", type = Class.class, defaultValue = "java.lang.Long") })
+        @UplAttribute(name = "idProperty", type = String.class, defaultVal = "id"),
+        @UplAttribute(name = "idType", type = Class.class, defaultVal = "java.lang.Long") })
 public class UniqueValidation extends AbstractPageValidation {
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked"})
     @Override
     public boolean validate(List<Widget> widgets, DataTransfer dataTransfer) throws UnifyException {
         Class<? extends Entity> validationClazz = (Class<? extends Entity>) getUplAttribute(Class.class, "type");
@@ -57,22 +57,22 @@ public class UniqueValidation extends AbstractPageValidation {
         }
 
         if (validationClazz != null) {
-            Query<? extends Entity> criteria = new Query(validationClazz);
+            Query<? extends Entity> criteria = Query.of(validationClazz);
             String idProperty = getUplAttribute(String.class, "idProperty");
             Object id = getTransferValue(idClazz, idProperty, dataTransfer);
             if (id != null) {
-                criteria.notEqual("id", id);
+                criteria.addNotEqual("id", id);
             }
 
             StringBuilder sb = new StringBuilder();
             boolean appendSymbol = false;
             for (Widget widget : widgets) {
-                if (widget.isVisible()) {
+                if (widget.isVisible() || widget.isHidden()) {
                     DataTransferBlock transferBlock = dataTransfer.getDataTransferBlock(widget.getId());
                     if (transferBlock != null) {
                         Object value = transferBlock.getValue();
                         if (value != null) {
-                            criteria.equals(transferBlock.getShortProperty(), value);
+                            criteria.addEquals(transferBlock.getShortProperty(), value);
 
                             if (appendSymbol) {
                                 sb.append(',');
@@ -81,7 +81,7 @@ public class UniqueValidation extends AbstractPageValidation {
                             }
 
                             String caption = widget.getUplAttribute(String.class, "caption");
-                            sb.append(caption).append(" = '").append(value).append('\'');
+                            sb.append(caption).append(" '").append(value).append('\'');
                             continue;
                         }
                     }

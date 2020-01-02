@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -82,6 +82,20 @@ public final class StringUtils {
     }
 
     /**
+     * Split a string into tokens using the comma character.
+     * 
+     * @param string
+     *            the string to split
+     * @return the result tokens
+     */
+    public static String[] commaSplit(String string) {
+        if (string != null) {
+            return string.split(",");
+        }
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
      * Split a string into tokens using the dot character.
      * 
      * @param string
@@ -91,6 +105,21 @@ public final class StringUtils {
     public static String[] dotSplit(String string) {
         if (string != null) {
             return string.split("\\.");
+        }
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
+     * Split a string into tokens using supplied separator.
+     * 
+     * @param string
+     *            the string to split
+     * @param separator the separator
+     * @return the result tokens
+     */
+    public static String[] split(String string, String separator) {
+        if (string != null) {
+            return string.split(separator);
         }
         return DataUtils.ZEROLEN_STRING_ARRAY;
     }
@@ -290,13 +319,23 @@ public final class StringUtils {
     }
 
     /**
-     * Tests if supplied string is null or is blank.
+     * Tests if supplied string is null or is white space.
      * 
      * @param string
      *            the string to test
      */
     public static boolean isBlank(String string) {
         return string == null || string.trim().isEmpty();
+    }
+
+    /**
+     * Tests if supplied string is not null and is not white space.
+     * 
+     * @param string
+     *            the string to test
+     */
+    public static boolean isNotBlank(String string) {
+        return string != null && !string.trim().isEmpty();
     }
 
     /**
@@ -495,6 +534,21 @@ public final class StringUtils {
         }
         return null;
     }
+    
+    public static String toUpperCase(String text) {
+        if (text != null && text.length() > 0) {
+            return text.toUpperCase();
+        }
+        return text;
+    }
+    
+    public static String toLowerCase(String text) {
+        if (text != null && text.length() > 0) {
+            return text.toLowerCase();
+        }
+        return text;
+    }
+
 
     /**
      * Builds a string by concatenating supplied objects.
@@ -525,7 +579,7 @@ public final class StringUtils {
      * @param bean
      *            the supplied bean
      */
-    public static String beanToString(Object bean) {
+    public static String toXmlString(Object bean) {
         if (bean != null) {
             StringBuilder sb = new StringBuilder();
             sb.append("<").append(bean.getClass().getName()).append(">\n");
@@ -544,6 +598,16 @@ public final class StringUtils {
         }
 
         return "";
+    }
+    
+    public static String getFirstNonBlank(String... values) {
+        for(String val: values) {
+            if(StringUtils.isNotBlank(val)) {
+                return val;
+            }
+        }
+        
+        return null;
     }
 
     public static List<StringToken> breakdownParameterizedString(String string) {
@@ -598,6 +662,12 @@ public final class StringUtils {
         return sb.toString();
     }
 
+    public static void truncate(StringBuilder sb) {
+        if (sb != null) {
+            sb.delete(0, sb.length());
+        }
+    }
+    
     public static class StringToken {
 
         private String token;

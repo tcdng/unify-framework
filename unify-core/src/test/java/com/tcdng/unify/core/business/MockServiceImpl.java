@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
@@ -77,7 +78,50 @@ public class MockServiceImpl extends AbstractBusinessService implements MockServ
     }
 
     @Override
+    public Long createLoanAccountWithError(String accountNo, String accountName, Double amount) throws UnifyException {
+        Long accountId = (Long) db().create(new Account(accountNo, accountName));
+        anotherMockService.findLoanDisbursements((LoanDisbursementQuery) new LoanDisbursementQuery().ignoreEmptyCriteria(true));
+        return (Long) db().create(new LoanAccount(accountId, null));
+    }
+
+    @Override
     public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
         return anotherMockService.findLoanAccount(loanAccountId);
+    }
+
+    @Override
+    public Long createAccountWithCreditCheck(Account account, BigDecimal loanAmount) throws UnifyException {
+        Long accountId = (Long) db().create(account);
+        // Talk to third party database
+        db(CREDITCHECK_DATASOURCECONFIG)
+                .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
+        return accountId;
+    }
+
+    @Override
+    public Long createAccountWithCreditCheckRollbackAfter(Account account, BigDecimal loanAmount)
+            throws UnifyException {
+        Long accountId = (Long) db().create(account);
+        // Talk to third party database
+        db(CREDITCHECK_DATASOURCECONFIG)
+                .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
+        setRollbackTransactions();
+        return accountId;
+    }
+
+    @Override
+    public Long createAccountWithCreditCheckExceptionAfter(Account account, BigDecimal loanAmount)
+            throws UnifyException {
+        Long accountId = (Long) db().create(account);
+        // Talk to third party database
+        db(CREDITCHECK_DATASOURCECONFIG)
+                .create(new CreditCheck(account.getAccountName(), account.getAccountNo(), loanAmount));
+        throwOperationErrorException(new RuntimeException("Exception after"));
+        return accountId;
+    }
+
+    @Override
+    public String createBooking(Booking booking) throws UnifyException {
+        return (String) db().create(booking);
     }
 }

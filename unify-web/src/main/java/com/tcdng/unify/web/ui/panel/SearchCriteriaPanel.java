@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.panel;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.web.ui.AbstractPanel;
@@ -29,4 +30,11 @@ import com.tcdng.unify.web.ui.AbstractPanel;
 @UplBinding("web/panels/upl/searchcriteriapanel.upl")
 public class SearchCriteriaPanel extends AbstractPanel {
 
+    public void showActionButtons() throws UnifyException {
+        setVisible("buttonPanel", true);
+    }
+
+    public void hideActionButtons() throws UnifyException {
+        setVisible("buttonPanel", false);
+    }
 }

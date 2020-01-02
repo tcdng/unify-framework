@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,7 @@ public class RequestContext extends Context {
     }
 
     public String getContextPath() {
-        return this.sessionContext.getContextPath();
+        return sessionContext.getContextPath();
     }
 
     public String getRequestPath() {
@@ -51,7 +51,7 @@ public class RequestContext extends Context {
     }
 
     public Locale getLocale() {
-        return this.sessionContext.getLocale();
+        return sessionContext.getLocale();
     }
 
     public Object getQuickReference() {

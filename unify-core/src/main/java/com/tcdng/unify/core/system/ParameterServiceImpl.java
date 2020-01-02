@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -89,20 +89,25 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
 
     @Override
     public Map<String, ParameterDef> findParameterDefinitionsByName(String name) throws UnifyException {
-        Map<String, ParameterDef> map = new LinkedHashMap<String, ParameterDef>();
-        for (ParameterDef pd : db().find(new ParametersDefQuery().typeName(name)).getParameterDefs()) {
-            map.put(pd.getName(), pd);
+        ParametersDef pdd = db().find(new ParametersDefQuery().typeName(name));
+        if (pdd != null && !pdd.isEmpty()) {
+            Map<String, ParameterDef> map = new LinkedHashMap<String, ParameterDef>();
+            for (ParameterDef pd : pdd.getParameterDefs()) {
+                map.put(pd.getName(), pd);
+            }
+            return map;
         }
-        return map;
+
+        return Collections.emptyMap();
     }
 
     @Override
-    public List<Input> fetchInputList(String name) throws UnifyException {
-        ParametersDef parametersDefData = db().find(new ParametersDefQuery().typeName(name));
-        if (parametersDefData != null) {
-            List<Input> inputList = new ArrayList<Input>();
-            for (ParameterDef pdd : parametersDefData.getParameterDefs()) {
-                inputList.add(getParameterValue(pdd));
+    public List<Input<?>> fetchInputList(String name) throws UnifyException {
+        ParametersDef parametersDef = db().find(new ParametersDefQuery().typeName(name));
+        if (parametersDef != null) {
+            List<Input<?>> inputList = new ArrayList<Input<?>>();
+            for (ParameterDef pdd : parametersDef.getParameterDefs()) {
+                inputList.add(getInput(pdd));
             }
 
             return inputList;
@@ -113,22 +118,22 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
 
     @Override
     public Inputs fetchNormalizedInputs(String paramTypeName, String instTypeName, Long instId) throws UnifyException {
-        List<Input> inputList = null;
+        List<Input<?>> inputList = null;
         if (QueryUtils.isValidStringCriteria(paramTypeName)) {
-            inputList = new ArrayList<Input>();
+            inputList = new ArrayList<Input<?>>();
             Map<String, ParameterDef> parameterDefMap = findParameterDefinitionsByName(paramTypeName);
             Set<String> usedSet = new HashSet<String>();
-            ParameterValues parameterValuesData = db()
+            ParameterValues parameterValues = db()
                     .list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
-            if (parameterValuesData != null) {
-                for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
-                    String key = parameterValueData.getParamKey();
-                    ParameterDef parameterDefData = parameterDefMap.get(key);
-                    if (parameterDefData != null) {
+            if (parameterValues != null) {
+                for (ParameterValue parameterValue : parameterValues.getParameterValues()) {
+                    String key = parameterValue.getParamKey();
+                    ParameterDef parameterDef = parameterDefMap.get(key);
+                    if (parameterDef != null) {
                         usedSet.add(key);
-                        Input parameterValue = getParameterValue(parameterDefData);
-                        parameterValue.setValue(parameterValueData.getParamValue());
-                        inputList.add(parameterValue);
+                        Input<?> input = getInput(parameterDef);
+                        input.setStringValue(parameterValue.getParamValue());
+                        inputList.add(input);
                     }
                 }
             }
@@ -136,8 +141,8 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
             if (usedSet.size() < parameterDefMap.size()) {
                 for (Map.Entry<String, ParameterDef> entry : parameterDefMap.entrySet()) {
                     if (!usedSet.contains(entry.getKey())) {
-                        ParameterDef parameterDefData = entry.getValue();
-                        inputList.add(getParameterValue(parameterDefData));
+                        ParameterDef parameterDef = entry.getValue();
+                        inputList.add(getInput(parameterDef));
                     }
                 }
             }
@@ -172,32 +177,32 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
     }
 
     @Override
-    public void updateParameterValues(String paramTypeName, String instTypeName, Long instId, Inputs parameterValues)
+    public void updateParameterValues(String paramTypeName, String instTypeName, Long instId, Inputs inputs)
             throws UnifyException {
         ParametersDef pdd = db().find(new ParametersDefQuery().typeName(paramTypeName));
         if (pdd == null) {
             throw new UnifyException(UnifyCoreErrorConstants.PARAMETER_DEFINITION_UNKNOWN, paramTypeName);
         }
 
-        ParameterValues parameterValuesData =
+        ParameterValues parameterValues =
                 db().list(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
         Long parameterValuesId = null;
-        if (parameterValuesData == null) {
-            parameterValuesData = new ParameterValues();
-            parameterValuesData.setParametersDefId(pdd.getId());
-            parameterValuesData.setInstTypeName(instTypeName);
-            parameterValuesData.setInstId(instId);
-            parameterValuesId = (Long) db().create(parameterValuesData);
+        if (parameterValues == null) {
+            parameterValues = new ParameterValues();
+            parameterValues.setParametersDefId(pdd.getId());
+            parameterValues.setInstTypeName(instTypeName);
+            parameterValues.setInstId(instId);
+            parameterValuesId = (Long) db().create(parameterValues);
         } else {
-            parameterValuesId = parameterValuesData.getId();
+            parameterValuesId = parameterValues.getId();
         }
 
         List<ParameterValue> parameterValueList = new ArrayList<ParameterValue>();
         for (ParameterDef pddc : pdd.getParameterDefs()) {
-            Input paramValue = parameterValues.getInput(pddc.getName());
+            Input<?> input = inputs.getInput(pddc.getName());
             String value = null;
-            if (paramValue != null) {
-                value = paramValue.getValue();
+            if (input != null) {
+                value = input.getStringValue();
             }
 
             if (pddc.isMandatory() && !QueryUtils.isValidStringCriteria(value)) {
@@ -205,15 +210,15 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
                         paramTypeName, instTypeName);
             }
 
-            ParameterValue parameterValueData = new ParameterValue();
-            parameterValueData.setParameterValuesId(parameterValuesId);
-            parameterValueData.setParamKey(pddc.getName());
-            parameterValueData.setParamValue(value);
-            parameterValueList.add(parameterValueData);
+            ParameterValue parameterValue = new ParameterValue();
+            parameterValue.setParameterValuesId(parameterValuesId);
+            parameterValue.setParamKey(pddc.getName());
+            parameterValue.setParamValue(value);
+            parameterValueList.add(parameterValue);
         }
 
-        parameterValuesData.setParameterValues(parameterValueList);
-        db().updateByIdVersion(parameterValuesData);
+        parameterValues.setParameterValues(parameterValueList);
+        db().updateByIdVersion(parameterValues);
     }
 
     @Override
@@ -221,10 +226,10 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
         db().deleteAll(new ParameterValuesQuery().typeName(paramTypeName).instTypeName(instTypeName).instId(instId));
     }
 
-    private Input getParameterValue(ParameterDef parameterDefData) throws UnifyException {
-        Class<?> type = ReflectUtils.getClassForName(parameterDefData.getType());
-        return new Input(type, parameterDefData.getName(), resolveSessionMessage(parameterDefData.getDescription()),
-                parameterDefData.getEditor(), parameterDefData.isMandatory());
+    private Input<?> getInput(ParameterDef parameterDef) throws UnifyException {
+        Class<?> type = ReflectUtils.getClassForName(parameterDef.getType());
+        return DataUtils.newInput(type, parameterDef.getName(), resolveSessionMessage(parameterDef.getDescription()),
+                parameterDef.getEditor(), parameterDef.isMandatory());
     }
 
 }

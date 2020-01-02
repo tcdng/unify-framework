@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,16 +26,16 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table(name = "PARAMDEF", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "name" }) })
+@Table(name = "UNPARAMDEF", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "name" }) })
 public class ParameterDef extends AbstractSequencedEntity {
 
     @ForeignKey(ParametersDef.class)
     private Long parametersDefId;
 
-    @Column(length = 48)
+    @Column(length = 64)
     private String name;
 
-    @Column(length = 64)
+    @Column(length = 96)
     private String description;
 
     @Column(length = 128)

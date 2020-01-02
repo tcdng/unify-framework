@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,9 @@ package com.tcdng.unify.core;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +36,8 @@ public class ApplicationContextTest {
 
     @Before
     public void setup() throws Exception {
-        applicationContext = new ApplicationContext(null, null, "\n");
+        applicationContext =
+                new ApplicationContext(null, Locale.getDefault(), TimeZone.getDefault(), "\n");
     }
 
     @Test

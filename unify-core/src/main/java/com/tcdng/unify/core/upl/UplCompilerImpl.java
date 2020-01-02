@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -119,7 +119,7 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
                     if (uas != null) {
                         for (UplAttribute ua : uas.value()) {
                             uplAttributeInfoMap.put(ua.name(), new UplAttributeInfo(ua.type(),
-                                    AnnotationUtils.getAnnotationString(ua.defaultValue()), ua.mandatory()));
+                                    AnnotationUtils.getAnnotationString(ua.defaultVal()), ua.mandatory()));
                         }
                     }
                 }
@@ -472,7 +472,7 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
     private void parseDocument(ParserContext parserContext, UplElement uplElement,
             Class<? extends UnifyComponent> componentClass, String generatedUpl) throws UnifyException {
         // Add generated UPL if necessary 18/08/18
-        if (!StringUtils.isBlank(generatedUpl)) {
+        if (StringUtils.isNotBlank(generatedUpl)) {
             logDebug("Parsing generated document for component type [{0}]...", componentClass);
             uplElement.merge(parseUplSource(parserContext, new StringReader(generatedUpl), componentClass.getName()));
         }

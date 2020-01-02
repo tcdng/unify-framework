@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,9 +45,9 @@ public class SqlDistinctRowListCommand extends AbstractDynamicSqlDataSourceListC
             SqlDistinctRowListConfig config = manager.getSqlDistinctRowListConfig(params.getConfigName());
 
             String tableName = config.getTable();
-            NativeQuery query = new NativeQuery().schemaName(config.getSchema()).tableName(tableName)
+            NativeQuery query = NativeQuery.newBuilder().schemaName(config.getSchema()).tableName(tableName)
                     .addColumn(tableName, config.getKeyColumn()).addColumn(tableName, config.getDescColumn())
-                    .distinct(true);
+                    .distinct(true).build();
             List<Object[]> rows = getDsManager().getRows(config.getDataSource(), query);
 
             List<ListData> resultList = new ArrayList<ListData>();

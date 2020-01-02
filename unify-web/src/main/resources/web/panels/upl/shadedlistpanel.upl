@@ -1,0 +1,4 @@
+//Shaded List Panel UPL
+!ui-shadedlistpanel components:$c{detailsPanel}
+
+!ui-panel:detailsPanel layout:$d{!ui-shadedlist} components:$g{shadedDetailsList}

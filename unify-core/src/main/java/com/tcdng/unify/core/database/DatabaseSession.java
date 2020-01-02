@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * A database session.
@@ -45,7 +45,8 @@ public interface DatabaseSession {
     Object create(Entity record) throws UnifyException;
 
     /**
-     * Retrieves a record by ID. Fetches all attribute lists if any.
+     * Retrieves a record by ID. List-only properties of returned object are not
+     * populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
@@ -57,8 +58,8 @@ public interface DatabaseSession {
     <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException;
 
     /**
-     * Retrieves a record by id and version number. Fetches all attribute lists if
-     * any.
+     * Retrieves a record by id and version number. List-only properties of returned
+     * object are not populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
@@ -72,7 +73,8 @@ public interface DatabaseSession {
     <T extends Entity> T find(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
     /**
-     * Retrieves a record by query.
+     * Retrieves a record by query. List-only properties of returned object are not
+     * populated. Child and child list properties are populated.
      * 
      * @param query
      *            the query
@@ -81,6 +83,46 @@ public interface DatabaseSession {
      *             if multiple records are found. If an error occurs
      */
     <T extends Entity> T find(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves a record by ID. List-only properties of returned object are not
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T findLean(Class<T> clazz, Object id) throws UnifyException;
+
+    /**
+     * Retrieves a record by id and version number. List-only properties of returned
+     * object are not populated. Child and child list properties are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param versionNo
+     *            the version number
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T findLean(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+
+    /**
+     * Retrieves a record by query. List-only properties of returned object are not
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T findLean(Query<T> query) throws UnifyException;
 
     /**
      * Finds constraining record that may prevent supplied record from being
@@ -137,8 +179,8 @@ public interface DatabaseSession {
             throws UnifyException;
 
     /**
-     * Retrieves a record by id from associated view. Fetches all attribute lists if
-     * any.
+     * Retrieves a record by id from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
@@ -150,8 +192,9 @@ public interface DatabaseSession {
     <T extends Entity> T list(Class<T> clazz, Object id) throws UnifyException;
 
     /**
-     * Retrieves a record by id and version number from associated view. Fetches all
-     * attribute lists if any.
+     * Retrieves a record by id and version number from associated view. List-only
+     * properties of returned object are populated. Child and child list properties
+     * are populated.
      * 
      * @param clazz
      *            the record type
@@ -165,8 +208,8 @@ public interface DatabaseSession {
     <T extends Entity> T list(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
     /**
-     * Retrieves a record by query from associated view. Does not fetch attribute
-     * lists.
+     * Retrieves a record by query from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are populated.
      * 
      * @param query
      *            the query
@@ -175,6 +218,49 @@ public interface DatabaseSession {
      *             if multiple records are found. if an error occurs
      */
     <T extends Entity> T list(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves a record by id from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are not
+     * populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T listLean(Class<T> clazz, Object id) throws UnifyException;
+
+    /**
+     * Retrieves a record by id and version number from associated view. List-only
+     * properties of returned object are populated. Child and child list properties
+     * are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param versionNo
+     *            the version number
+     * @throws UnifyException
+     *             if record is not found
+     */
+    <T extends Entity> T listLean(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+
+    /**
+     * Retrieves a record by query from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are not
+     * populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. if an error occurs
+     */
+    <T extends Entity> T listLean(Query<T> query) throws UnifyException;
 
     /**
      * Retrieves list of record by query from associated view. Does not fetch
@@ -294,7 +380,7 @@ public interface DatabaseSession {
             String valueName, Query<V> query) throws UnifyException;
 
     /**
-     * Gets value of selected field for record fetched by query..
+     * Gets value of selected field for record fetched by query.
      * 
      * @param fieldClass
      *            the value class
@@ -308,6 +394,38 @@ public interface DatabaseSession {
      *             multiple or no record match criteria. If an error occurs
      */
     <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+
+    /**
+     * Gets minimum value of selected field for record fetched by query.
+     * 
+     * @param fieldClass
+     *            the value class
+     * @param fieldName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return the minimum value
+     * @throws UnifyException
+     *             if no field or multiple fields are selected in criteria. If
+     *             multiple or no record match criteria. If an error occurs
+     */
+    <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+
+    /**
+     * Gets maximum value of selected field for record fetched by query.
+     * 
+     * @param fieldClass
+     *            the value class
+     * @param fieldName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return the maximum value
+     * @throws UnifyException
+     *             if no field or multiple fields are selected in criteria. If
+     *             multiple or no record match criteria. If an error occurs
+     */
+    <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
     /**
      * Populate list-only fields of supplied record.
@@ -340,6 +458,29 @@ public interface DatabaseSession {
      *             if an error occurs during modify
      */
     int updateByIdVersion(Entity record) throws UnifyException;
+
+    /**
+     * Updates record in database by ID. Child records, if any, are not updated.
+     * 
+     * @param record
+     *            the record to update
+     * @return the number of record updated. Always 1.
+     * @throws UnifyException
+     *             if record with ID is not found. If an error occurs
+     */
+    int updateLeanById(Entity record) throws UnifyException;
+
+    /**
+     * Updates record in database by ID and version number. Child records, if any,
+     * are not updated.
+     * 
+     * @param record
+     *            the record to update
+     * @return the number of record updated.
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    int updateLeanByIdVersion(Entity record) throws UnifyException;
 
     /**
      * Updates a a record by ID
@@ -427,7 +568,22 @@ public interface DatabaseSession {
     int count(Query<? extends Entity> query) throws UnifyException;
 
     /**
-     * Executes an aggregate function (individually) for selected fields of record
+     * Executes an aggregate function for single selected field of records
+     * that match specified query.
+     * 
+     * @param aggregateType
+     *            the aggregate type
+     * @param query
+     *            the query to use
+     * @return the aggregate object
+     * @throws UnifyException
+     *             if selected field is not numeric. If no field is selected. If multiple fields are selected. If
+     *             an error occurs
+     */
+    Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+
+    /**
+     * Executes an aggregate function (individually) for selected fields of records
      * that match specified query.
      * 
      * @param aggregateType
@@ -439,16 +595,36 @@ public interface DatabaseSession {
      *             if selected fields are not numeric. If no field is selected. If
      *             an error occurs
      */
-    List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+    List<Aggregate<?>> aggregateMany(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
 
     /**
-     * Gets the current timestamp of session data source.
+     * Gets the current timestamp in UTC of data source based on session time zone.
      * 
-     * @return the timestamp
+     * @return the UTC timestamp
      * @throws UnifyException
      *             if an error occurs
      */
     Date getNow() throws UnifyException;
+
+    /**
+     * Executes callable procedure with no results.
+     * 
+     * @param callableProc
+     *            the callable procedure object.
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    void executeCallable(CallableProc callableProc) throws UnifyException;
+
+    /**
+     * Executes callable procedure with result lists.
+     * 
+     * @param callableProc
+     * @return list of result items
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<?>, List<?>> executeCallableWithResults(CallableProc callableProc) throws UnifyException;
 
     /**
      * Creates and sets a new save point on the session save point stack.

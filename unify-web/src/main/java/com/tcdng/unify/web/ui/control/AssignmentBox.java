@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,6 +42,10 @@ import com.tcdng.unify.web.ui.Control;
         @UplAttribute(name = "filterCaption2", type = String.class),
         @UplAttribute(name = "assignCaption", type = String.class, mandatory = true),
         @UplAttribute(name = "unassignCaption", type = String.class, mandatory = true),
+        @UplAttribute(name = "assignListKey", type = String.class),
+        @UplAttribute(name = "unassignListKey", type = String.class),
+        @UplAttribute(name = "assignListDesc", type = String.class),
+        @UplAttribute(name = "unassignListDesc", type = String.class),
         @UplAttribute(name = "multiSelectStyle", type = String.class) })
 public class AssignmentBox extends AbstractMultiControl {
 
@@ -72,15 +76,15 @@ public class AssignmentBox extends AbstractMultiControl {
     private List<String> assignedIdList;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         String filterList1 = getUplAttribute(String.class, "filterList1");
-        if (!StringUtils.isBlank(filterList1)) {
+        if (StringUtils.isNotBlank(filterList1)) {
             filterCtrl1 = (Control) addInternalChildControl("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
                     + filterList1 + " binding:filterId1 popupAlways:true");
         }
 
         String filterList2 = getUplAttribute(String.class, "filterList2");
-        if (!StringUtils.isBlank(filterList2)) {
+        if (StringUtils.isNotBlank(filterList2)) {
             filterCtrl2 = (Control) addInternalChildControl("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
                     + filterList2 + " listParams:$s{filterId1} binding:filterId2 popupAlways:true");
         }
@@ -91,12 +95,10 @@ public class AssignmentBox extends AbstractMultiControl {
             msStyle = "style:$s{" + multiSelectStyle + "}";
         }
 
-        assignedSelCtrl = (Control) addInternalChildControl("!ui-multiselect styleClass:$e{abmselect} " + msStyle
-                + " list:" + getUplAttribute(String.class, "assignList")
-                + " listParams:$l{assignedIdList filterId1 filterId2} binding:assignedSelList");
-        unassignedSelCtrl = (Control) addInternalChildControl("!ui-multiselect styleClass:$e{abmselect} " + msStyle
-                + " list:" + getUplAttribute(String.class, "unassignList")
-                + " listParams:$l{assignedIdList filterId1 filterId2} binding:unassignedSelList");
+        assignedSelCtrl = (Control) addInternalChildControl(
+                constructMultiSelect("assignList", "assignListKey", "assignListDesc", "assignedSelList", msStyle));
+        unassignedSelCtrl = (Control) addInternalChildControl(constructMultiSelect("unassignList", "unassignListKey",
+                "unassignListDesc", "unassignedSelList", msStyle));
         assignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assign}");
         assignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assignall}");
         unassignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassign}");
@@ -220,5 +222,24 @@ public class AssignmentBox extends AbstractMultiControl {
 
     public void setFilterId2(String filterId2) {
         this.filterId2 = filterId2;
+    }
+
+    private String constructMultiSelect(String listAttr, String listKeyAttr, String listDescAttr, String binding,
+            String msStyle) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("!ui-multiselect styleClass:$e{abmselect} ").append(msStyle).append(" list:")
+                .append(getUplAttribute(String.class, listAttr));
+        String listKey = getUplAttribute(String.class, listKeyAttr);
+        if (StringUtils.isNotBlank(listKey)) {
+            sb.append(" listKey:").append(listKey);
+        }
+
+        String listDesc= getUplAttribute(String.class, listDescAttr);
+        if (StringUtils.isNotBlank(listDesc)) {
+            sb.append(" listDescription:").append(listDesc);
+        }
+
+        sb.append(" listParams:$l{assignedIdList filterId1 filterId2} binding:").append(binding);
+        return sb.toString();
     }
 }

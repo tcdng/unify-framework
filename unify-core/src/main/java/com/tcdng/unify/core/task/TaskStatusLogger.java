@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,16 +44,4 @@ public interface TaskStatusLogger extends UnifyComponent {
      *            the exception to log
      */
     void logTaskException(Exception e);
-
-    /**
-     * Logs a critical task failure.
-     * 
-     * @param taskName
-     *            the task name
-     * @param parameters
-     *            the task parameters
-     * @param exception
-     *            the cause exception if any
-     */
-    void logCriticalFailure(String taskName, Map<String, Object> parameters, Exception exception);
 }

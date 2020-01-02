@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,7 +41,7 @@ import com.tcdng.unify.web.ui.control.Table;
  * @since 1.0
  */
 @UplBinding("web/panels/upl/tablecrudpanel.upl")
-@UplAttributes({ @UplAttribute(name = "createNext", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "createNext", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractPanel implements TableCrudPanel<T> {
 
     protected enum FORMMODE {
@@ -57,18 +57,18 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
 
     private boolean searchOnSwitchState;
 
-    public AbstractTableCrudPanel(Class<T> entityClass, String titleKey) {
-        this(entityClass, titleKey, false);
+    public AbstractTableCrudPanel(Class<T> entityClass, String title) {
+        this(entityClass, title, false);
     }
 
-    public AbstractTableCrudPanel(Class<T> entityClass, String titleKey, boolean searchOnSwitchState) {
+    public AbstractTableCrudPanel(Class<T> entityClass, String title, boolean searchOnSwitchState) {
         this.searchOnSwitchState = searchOnSwitchState;
-        crudData = new CrudData(entityClass, titleKey);
+        crudData = new CrudData(entityClass, title);
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         setFormMode(FORMMODE.CREATE, null);
     }
 
@@ -234,9 +234,9 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         }
 
         if (captionKey != null) {
-            String crudTypeTitleKey = crudData.getTitleKey();
-            if (crudTypeTitleKey != null) {
-                crudData.setCaption(getSessionMessage(captionKey, getSessionMessage(crudTypeTitleKey)));
+            String crudTypeTitle = crudData.getTitleKey();
+            if (crudTypeTitle != null) {
+                crudData.setCaption(getSessionMessage(captionKey, resolveSessionMessage(crudTypeTitle)));
             } else {
                 crudData.setCaption(getSessionMessage(captionKey));
             }
@@ -317,7 +317,7 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
 
         private Long parentId;
 
-        private String titleKey;
+        private String title;
 
         private String caption;
 
@@ -329,11 +329,10 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
 
         private Query<T> query;
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-        public CrudData(Class<T> entityClass, String titleKey) {
-            this.titleKey = titleKey;
+        public CrudData(Class<T> entityClass, String title) {
+            this.title = title;
             recordList = new ArrayList<T>();
-            query = new Query(entityClass);
+            query = Query.of(entityClass);
         }
 
         public Long getParentId() {
@@ -345,7 +344,7 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         }
 
         public String getTitleKey() {
-            return titleKey;
+            return title;
         }
 
         public Query<T> getQuery() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,13 +34,11 @@ public abstract class AbstractControlWriter extends AbstractWidgetWriter impleme
         super.doWriteBehavior(writer, widget, useFacade);
         Control control = (Control) widget;
         if (control.isFocus()) {
-            writer.write("ux.setFocus(\"");
             if (useFacade) {
-                writer.write(control.getFacadeId());
+                getRequestContextUtil().setFocusOnWidgetId(control.getFacadeId());
             } else {
-                writer.write(control.getId());
+                getRequestContextUtil().setFocusOnWidgetId(control.getId());
             }
-            writer.write("\");");
         }
     }
 

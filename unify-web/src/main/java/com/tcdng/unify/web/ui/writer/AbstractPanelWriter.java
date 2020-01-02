@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -72,9 +72,9 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
 
     protected void writePanelTagAttributes(ResponseWriter writer, Panel panel) throws UnifyException {
         String backImageSrc = panel.getBackImageSrc();
-        if (!StringUtils.isBlank(backImageSrc)) {
+        if (StringUtils.isNotBlank(backImageSrc)) {
             writeTagId(writer, panel);
-            writeTagStyleClass(writer, panel);
+            writeTagStyleClass(writer, panel, true, "ui-panel");
             writer.write(" style=\"background: url('");
             writer.writeFileImageContextURL(backImageSrc);
             writer.write("') no-repeat;background-size:100% 100%;");
@@ -91,7 +91,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
     protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
         String legend = panel.getLegend();
 
-        boolean isLegend = !StringUtils.isBlank(legend);
+        boolean isLegend = StringUtils.isNotBlank(legend);
         if (isLegend) {
             writer.write("<fieldset><legend>");
             writeAttributeWithEscape(writer, panel, "legend");

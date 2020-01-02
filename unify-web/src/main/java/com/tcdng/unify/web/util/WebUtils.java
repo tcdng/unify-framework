@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,8 @@
  */
 package com.tcdng.unify.web.util;
 
-import java.net.URL;
-
-import javax.servlet.ServletContext;
-
-import org.scannotation.AnnotationDB;
-import org.scannotation.WarUrlFinder;
-
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.core.util.TokenUtils;
-import com.tcdng.unify.core.util.TypeRepository;
-import com.tcdng.unify.core.util.TypeUtils;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.constant.ShortcutFlagConstants;
 
@@ -39,41 +28,8 @@ import com.tcdng.unify.web.constant.ShortcutFlagConstants;
  */
 public final class WebUtils {
 
-    public static final String DEFAULT_THEME_PATH = "/web/themes/farko";
-
     private WebUtils() {
 
-    }
-
-    public static String expandThemeTag(String resouceName) throws UnifyException {
-        return WebUtils.expandThemeTag(resouceName, null);
-    }
-
-    public static String expandThemeTag(String resouceName, String themePath) throws UnifyException {
-        if (TokenUtils.isThemeTag(resouceName)) {
-            resouceName = TokenUtils.extractTokenValue(resouceName);
-            if (StringUtils.isBlank(themePath)) {
-                themePath = WebUtils.DEFAULT_THEME_PATH;
-            }
-
-            if (!StringUtils.isBlank(themePath)) {
-                if (themePath.endsWith("/")) {
-                    if (resouceName.startsWith("/")) {
-                        return themePath + resouceName.substring("/".length());
-                    }
-
-                    return themePath + resouceName;
-                }
-
-                if (resouceName.startsWith("/")) {
-                    return themePath + resouceName;
-                }
-
-                return themePath + "/" + resouceName;
-            }
-        }
-
-        return resouceName;
     }
 
     public static String generateBeanIndexedPathFromPath(String path, Object index) throws UnifyException {
@@ -131,7 +87,7 @@ public final class WebUtils {
      */
     public static String encodeShortcut(String shortcut) throws UnifyException {
         String encodedShortcut = null;
-        if (!StringUtils.isBlank(shortcut)) {
+        if (StringUtils.isNotBlank(shortcut)) {
             int encoded = 0;
             String[] elements = shortcut.toUpperCase().split("\\+");
             boolean validShortcut = false;
@@ -164,26 +120,5 @@ public final class WebUtils {
             encodedShortcut = String.valueOf(encoded);
         }
         return encodedShortcut;
-    }
-
-    public static TypeRepository buildTypeRepositoryFromServletContext(ServletContext servletContext)
-            throws UnifyException {
-        try {
-            AnnotationDB servletContextDB = new AnnotationDB();
-            servletContextDB.setScanFieldAnnotations(false);
-            servletContextDB.setScanMethodAnnotations(false);
-            servletContextDB.setScanParameterAnnotations(false);
-
-            URL[] urls = WarUrlFinder.findWebInfLibClasspaths(servletContext);
-            servletContextDB.scanArchives(urls);
-
-            URL classPathUrl = WarUrlFinder.findWebInfClassesPath(servletContext);
-            if (classPathUrl != null) {
-                servletContextDB.scanArchives(classPathUrl);
-            }
-            return new TypeUtils.TypeRepositoryImpl(servletContextDB);
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);
-        }
     }
 }

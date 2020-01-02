@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,8 +28,8 @@ import com.tcdng.unify.web.ui.TabularLayout;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "cellType", type = TabularCellType.class, defaultValue = "top"),
-        @UplAttribute(name = "cellPadding", type = boolean.class, defaultValue = "true"),
+@UplAttributes({ @UplAttribute(name = "cellType", type = TabularCellType.class, defaultVal = "top"),
+        @UplAttribute(name = "cellPadding", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "widths", type = String[].class),
         @UplAttribute(name = "heights", type = String[].class), })
 public abstract class AbstractTabularLayout extends AbstractLayout implements TabularLayout {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,9 @@ package com.tcdng.unify.web.ui.panel;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.AbstractPanel;
 import com.tcdng.unify.web.ui.Widget;
 
@@ -28,24 +31,20 @@ import com.tcdng.unify.web.ui.Widget;
  * @since 1.0
  */
 @Component("ui-switchpanel")
+@UplAttributes({ @UplAttribute(name = "switchHandler", type = String.class) })
 public class SwitchPanel extends AbstractPanel {
 
     private String currentComponent;
 
-    public void switchContent(String shortName) throws UnifyException {
-        currentComponent = shortName;
-    }
-
-    public Widget getCurrentWidget() throws UnifyException {
-        if (currentComponent != null) {
-            return getWidgetByShortName(currentComponent);
-        }
-        return null;
-    }
+    private SwitchPanelHandler switchPanelHandler;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
+        String switchHandlerName = getUplAttribute(String.class, "switchHandler");
+        if (StringUtils.isNotBlank(switchHandlerName)) {
+            switchPanelHandler = (SwitchPanelHandler) getComponent(switchHandlerName);
+        }
 
         for (String longName : getLayoutWidgetLongNames()) {
             Widget widget = getWidgetByLongName(longName);
@@ -54,5 +53,25 @@ public class SwitchPanel extends AbstractPanel {
                 break;
             }
         }
+    }
+
+    public void switchContent(String shortName) throws UnifyException {
+        if (switchPanelHandler != null) {
+            switchPanelHandler.handleSwitchContent(this, shortName, getValueStore(),
+                    !shortName.equals(currentComponent));
+        }
+
+        currentComponent = shortName;
+    }
+
+    public String getCurrentWidgetShortName() throws UnifyException {
+        return currentComponent;
+    }
+
+    public Widget getCurrentWidget() throws UnifyException {
+        if (currentComponent != null) {
+            return getWidgetByShortName(currentComponent);
+        }
+        return null;
     }
 }

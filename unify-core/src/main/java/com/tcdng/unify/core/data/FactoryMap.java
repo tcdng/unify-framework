@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -101,7 +101,7 @@ public abstract class FactoryMap<T, U> {
                     value = map.get(key);
                     if (value == null) {
                         value = create(key, params);
-                        if (value != null) {
+                        if (value != null && keep(value)) {
                             map.put(key, value);
                         }
                     }
@@ -176,7 +176,7 @@ public abstract class FactoryMap<T, U> {
     }
 
     /**
-     * Returns true if factory map containts entry that matches supplied key.
+     * Returns true if factory map contains entry that matches supplied key.
      * 
      * @param key
      *            the key to match
@@ -221,5 +221,18 @@ public abstract class FactoryMap<T, U> {
      */
     protected boolean stale(T key, U value) throws Exception {
         return false;
+    }
+
+    /**
+     * Checks if created value should be kept in map.
+     * 
+     * @param value
+     *            the value to test
+     * @return a true if value is to be retained
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected boolean keep(U value) throws Exception {
+        return true;
     }
 }

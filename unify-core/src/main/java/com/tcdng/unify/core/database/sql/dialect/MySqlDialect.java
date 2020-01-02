@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+  * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,23 @@
  */
 package com.tcdng.unify.core.database.sql.dialect;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
-import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * MySQL SQL dialect.
@@ -33,11 +39,11 @@ import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(name = SqlDialectConstants.MYSQL, description = "$m{sqldialect.mysqldb}")
+@Component(name = SqlDialectNameConstants.MYSQL, description = "$m{sqldialect.mysqldb}")
 public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
     public MySqlDialect() {
-        super(true); // Append NULL on table create
+        super(true);
     }
 
     @Override
@@ -46,8 +52,8 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateNowSql() throws UnifyException {
-        return "SELECT CURRENT_TIMESTAMP";
+    public String generateUTCTimestampSql() throws UnifyException {
+        return "SELECT UTC_TIMESTAMP";
     }
 
     @Override
@@ -59,7 +65,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        String tableName = sqlRecordSchemaInfo.getTable();
+        String tableName = sqlRecordSchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
         if (format) {
             sb.append(getLineSeparator());
@@ -75,44 +81,67 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
         }
-        sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getColumn()).append(" ");
-        appendCreateTableColumnSQL(sb, sqlFieldSchemaInfo);
+        sb.append("CHANGE COLUMN ").append(oldSqlFieldSchemaInfo.getPreferredColumnName()).append(' ');
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
         return sb.toString();
     }
 
     @Override
-    public String generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
-        if (format) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
+    public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            throws UnifyException {
+        if (sqlColumnAlterInfo.isAltered()) {
+            List<String> sqlList = new ArrayList<String>();
+            StringBuilder sb = new StringBuilder();
+            SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+
+            if (sqlColumnAlterInfo.isNullableChange()) {
+                if (!sqlFieldSchemaInfo.isNullable()) {
+                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
+                    sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
+                    sqlList.add(sb.toString());
+                    StringUtils.truncate(sb);
+                }
+            }
+
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+            if (format) {
+                sb.append(getLineSeparator());
+            } else {
+                sb.append(' ');
+            }
+            sb.append("MODIFY ");
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
+            sqlList.add(sb.toString());
+            StringUtils.truncate(sb);
+            return sqlList;
         }
-        sb.append("MODIFY ");
-        appendAlterTableColumnSQL(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
-        return sb.toString();
+
+        return Collections.emptyList();
     }
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
         }
-        sb.append("MODIFY ").append(sqlColumnInfo.getColumnName()).append(" ").append(generateSqlType(sqlColumnInfo))
-                .append(" NULL");
+        sb.append("MODIFY ").append(sqlColumnInfo.getColumnName());
+        appendTypeSql(sb, sqlColumnInfo);
+        sb.append(" NULL");
         return sb.toString();
     }
 
@@ -156,6 +185,6 @@ class MySqlBlobPolicy extends BlobPolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("MEDIUMBLOB");
+        sb.append(" MEDIUMBLOB");
     }
 }

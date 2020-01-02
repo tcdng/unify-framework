@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package com.tcdng.unify.web.controller;
 
-import com.tcdng.unify.core.UnifyComponentInfo;
-import com.tcdng.unify.core.UnifyContainerInfo;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
@@ -37,13 +35,11 @@ import com.tcdng.unify.web.ui.control.Table;
 @ResultMappings({
         @ResultMapping(name = "showcomponentpopup", response = { "!showpopupresponse popup:$s{componentDtlPopup}" }),
         @ResultMapping(name = "refresh", response = { "!refreshpanelresponse panels:$l{content}" }) })
-public class ContainerInfoPageController extends AbstractPageController {
+public class ContainerInfoPageController extends AbstractPageController<ContainerInfoPageBean> {
 
-    private UnifyContainerInfo info;
-
-    private UnifyComponentInfo componentInfo;
-
-    private Table componentListTableState;
+    public ContainerInfoPageController() {
+        super(ContainerInfoPageBean.class);
+    }
 
     @Action
     public String refresh() throws UnifyException {
@@ -53,7 +49,9 @@ public class ContainerInfoPageController extends AbstractPageController {
 
     @Action
     public String prepareViewComponent() throws UnifyException {
-        componentInfo = info.getComponentInfoList().get(componentListTableState.getViewIndex());
+        ContainerInfoPageBean containerInfoPageBean = getPageBean();
+        containerInfoPageBean.setComponentInfo(containerInfoPageBean.getInfo().getComponentInfoList()
+                .get(getPageWidgetByShortName(Table.class, "componentTbl").getViewIndex()));
         return "showcomponentpopup";
     }
 
@@ -63,36 +61,12 @@ public class ContainerInfoPageController extends AbstractPageController {
     }
 
     @Override
-    protected void onSetPage() throws UnifyException {
-        componentListTableState = getPageWidgetByShortName(Table.class, "componentTbl");
-    }
-
-    @Override
-    public UnifyContainerInfo getContainerInfo() throws UnifyException {
-        return info = super.getContainerInfo();
-    }
-
-    public UnifyContainerInfo getInfo() {
-        return info;
-    }
-
-    public UnifyComponentInfo getComponentInfo() {
-        return componentInfo;
-    }
-
-    @Override
     protected void onIndexPage() throws UnifyException {
-        getContainerInfo();
+        getPageBean().setInfo(getContainerInfo());
     }
 
     @Override
     protected void onOpenPage() throws UnifyException {
-        getContainerInfo();
-    }
-
-    @Override
-    protected void onClosePage() throws UnifyException {
-        info = null;
-        componentInfo = null;
+        getPageBean().setInfo(getContainerInfo());
     }
 }

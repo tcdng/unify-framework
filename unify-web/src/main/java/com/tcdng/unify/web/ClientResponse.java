@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,8 @@ package com.tcdng.unify.web;
 
 import java.io.OutputStream;
 import java.io.Writer;
+
+import com.tcdng.unify.core.UnifyException;
 
 /**
  * A client response.
@@ -55,12 +57,12 @@ public interface ClientResponse {
     /**
      * Gets the response output stream
      */
-    OutputStream getOutputStream() throws Exception;
+    OutputStream getOutputStream() throws UnifyException;
 
     /**
      * Gets the response output stream
      */
-    Writer getWriter() throws Exception;
+    Writer getWriter() throws UnifyException;
 
     /**
      * Returns true if response output is used.

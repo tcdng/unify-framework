@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -98,4 +98,22 @@ public interface EventLogger extends UnifyComponent {
      *             occurs.
      */
     <T extends Entity> boolean logUserEvent(EventType eventType, T oldRecord, T newRecord) throws UnifyException;
+
+    /**
+     * Logs a user event using supplied event, record type and field audit.
+     * 
+     * @param eventType
+     *            the event type
+     * @param entityClass
+     *            the record type
+     * @param id
+     *            the record ID
+     * @param fieldAuditList
+     *            the field audit list
+     * @return true if event was successfully logged
+     * @throws UnifyException
+     *             If an error occurs.
+     */
+    boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object id,
+            List<FieldAudit> fieldAuditList) throws UnifyException;
 }

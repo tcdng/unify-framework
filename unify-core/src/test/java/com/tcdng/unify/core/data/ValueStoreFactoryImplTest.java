@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,10 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -64,12 +60,7 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
-        custDocConfig = new PackableDocConfig("customerConfig", new PackableDocConfig.FieldConfig("name", String.class),
-                new PackableDocConfig.FieldConfig("birthDt", Date.class),
-                new PackableDocConfig.FieldConfig("balance", BigDecimal.class),
-                new PackableDocConfig.FieldConfig("id", Long.class),
-                new PackableDocConfig.FieldConfig("address", Address.class),
-                new PackableDocConfig.FieldConfig("modeList", List.class));
+        custDocConfig = PackableDocConfig.buildFrom("customerConfig", Customer.class);
     }
 
     @Override

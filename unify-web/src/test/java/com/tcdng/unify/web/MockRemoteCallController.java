@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.web.annotation.GatewayAction;
+import com.tcdng.unify.web.annotation.RemoteAction;
 
 /**
  * Mock remote call controller.
@@ -30,7 +30,7 @@ import com.tcdng.unify.web.annotation.GatewayAction;
 @Component("/remotecall/mock")
 public class MockRemoteCallController extends AbstractRemoteCallController {
 
-    @GatewayAction(name = "mock-001", description = "Get Account Details")
+    @RemoteAction(name = "mock-001", description = "Get Account Details")
     public AccountDetailResult getAccountDetails(AccountDetailParams request) throws UnifyException {
         return new AccountDetailResult(request.getAccountNo(), "Edward Banfa", BigDecimal.valueOf(250000.00));
     }

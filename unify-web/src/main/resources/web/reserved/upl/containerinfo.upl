@@ -1,5 +1,5 @@
 // UPL template for container management page
-// Copyright 2018-2019 The Code Department.
+// Copyright 2018-2020 The Code Department.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 !ui-document layout:$d{!ui-desktoptype1} styleSheet:$t{css/cm.css} headerPanel:$c{topBanner} contentPanel:$c{content}
@@ -9,7 +9,7 @@
 !ui-label:headerLabel styleClass:$e{cm-banner-label} caption:$m{container.management}
 
 // Content
-!ui-panel:content styleClass:$e{cm-content} components:$c{innerContent}
+!ui-simplecontentpanel:content styleClass:$e{cm-content} components:$c{innerContent}
 !ui-panel:innerContent style:$s{width:980px;  margin-left: auto; margin-right: auto;}
     layout:$d{!ui-vertical style:$s{width:100%;}}
     components:$c{detailSection detailBody detailFooter}

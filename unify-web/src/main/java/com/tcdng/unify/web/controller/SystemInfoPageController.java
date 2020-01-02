@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@ package com.tcdng.unify.web.controller;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.web.AbstractPageController;
 import com.tcdng.unify.web.annotation.Action;
@@ -31,7 +30,6 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton
 @Component(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/systeminfo.upl")
 @ResultMappings({
@@ -44,7 +42,11 @@ import com.tcdng.unify.web.constant.SystemInfoConstants;
         @ResultMapping(
                 name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING,
                 response = { "!hidepopupresponse systemInfo:true" }) })
-public class SystemInfoPageController extends AbstractPageController {
+public class SystemInfoPageController extends AbstractPageController<SystemInfoPageBean> {
+
+    public SystemInfoPageController() {
+        super(SystemInfoPageBean.class);
+    }
 
     @Action
     public String closeSystemInfo() throws UnifyException {
@@ -55,7 +57,7 @@ public class SystemInfoPageController extends AbstractPageController {
     }
 
     @Override
-    protected void onSetPage() throws UnifyException {
-        setEditable("stackTrace", false);
+    protected void onInitPage() throws UnifyException {
+        setPageWidgetEditable("stackTrace", false);
     }
 }

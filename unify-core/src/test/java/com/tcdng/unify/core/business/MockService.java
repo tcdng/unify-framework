@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.business;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
@@ -27,6 +28,8 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface MockService extends BusinessService {
 
+    String CREDITCHECK_DATASOURCECONFIG = "creditcheck-config.PUBLIC";
+    
     String hello() throws UnifyException;
 
     int add(int a, int b) throws UnifyException;
@@ -41,5 +44,15 @@ public interface MockService extends BusinessService {
 
     Long createLoanAccount(String accountNo, String accountName, Double amount) throws UnifyException;
 
+    Long createLoanAccountWithError(String accountNo, String accountName, Double amount) throws UnifyException;
+
     LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException;
+
+    Long createAccountWithCreditCheck(Account account, BigDecimal loanAmount) throws UnifyException;
+
+    Long createAccountWithCreditCheckRollbackAfter(Account account, BigDecimal loanAmount) throws UnifyException;
+
+    Long createAccountWithCreditCheckExceptionAfter(Account account, BigDecimal loanAmount) throws UnifyException;
+    
+    String createBooking(Booking booking) throws UnifyException;
 }

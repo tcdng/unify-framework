@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -236,7 +236,7 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
             boolean isPlugin = pluginInfoList != null && !pluginInfoList.isEmpty();
             if (isPlugin) {
                 sb.append("\t\t\t").append(BusinessLogicInput.class.getCanonicalName()).append(" blin = new ")
-                        .append(BusinessLogicInput.class.getCanonicalName()).append("(null, tm().getName());\n");
+                        .append(BusinessLogicInput.class.getCanonicalName()).append("();\n");
                 for (int i = 0; i < parameterTypes.length; i++) {
                     sb.append("\t\t\tblin.setParameter(\"p").append(i).append("\", p").append(i).append(");\n");
                 }

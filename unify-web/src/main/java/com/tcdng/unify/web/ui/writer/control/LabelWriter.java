@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,7 +38,11 @@ public class LabelWriter extends AbstractControlWriter {
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         Label label = (Label) widget;
         writer.write("<span");
-        writeTagAttributes(writer, label);
+        if (writer.isTableMode()) {
+            writeTagStyle(writer, label);
+        } else {
+            writeTagAttributes(writer, label);
+        }
         writer.write(">");
         String value = label.getStringValue();
         if (value != null) {
@@ -48,7 +52,7 @@ public class LabelWriter extends AbstractControlWriter {
                 writer.write(value);
             }
         } else {
-            if (!StringUtils.isBlank(label.getBinding())) {
+            if (StringUtils.isNotBlank(label.getBinding())) {
                 writer.writeHtmlFixedSpace();
             } else if (!label.isLayoutCaption()) {
                 String caption = label.getCaption();

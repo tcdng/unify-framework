@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package com.tcdng.unify.core.data;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import com.tcdng.unify.core.constant.Gender;
 
 /**
  * Test customer bean.
@@ -39,12 +41,15 @@ public class Customer extends AbstractDocument {
 
     private List<String> modeList;
 
-    public Customer(String name, Date birthDt, BigDecimal balance, long id, Address address) {
+    private Gender gender;
+    
+    public Customer(String name, Date birthDt, BigDecimal balance, long id, Address address, Gender gender) {
         this.name = name;
         this.birthDt = birthDt;
         this.balance = balance;
         this.id = id;
         this.address = address;
+        this.gender = gender;
     }
 
     public Customer() {
@@ -62,7 +67,12 @@ public class Customer extends AbstractDocument {
     }
 
     @Override
-    public Object getOwnerId() {
+    public String getBranchCode() {
+        return null;
+    }
+
+    @Override
+    public String getDepartmentCode() {
         return null;
     }
 
@@ -108,5 +118,13 @@ public class Customer extends AbstractDocument {
 
     public void setModeList(List<String> modeList) {
         this.modeList = modeList;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

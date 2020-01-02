@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,7 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumber;
+import com.tcdng.unify.core.system.entities.ClusterSequenceBlock;
 import com.tcdng.unify.core.system.entities.ClusterSequenceNumber;
 import com.tcdng.unify.core.system.entities.ClusterUniqueString;
 import com.tcdng.unify.core.task.TaskManager;
@@ -49,72 +50,102 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
     }
 
     @Test
-    public void testGetNextSequenceNumber() throws Exception {
+    public void testGetCachedBlockNextSequenceNumber() throws Exception {
         SequenceNumberService snService = getSequenceNumberService();
 
-        assertEquals(Long.valueOf(1L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(2L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(3L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(1L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(2L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(3L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
 
-        assertEquals(Long.valueOf(4L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(5L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(6L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(7L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(8L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(9L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(10L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(11L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(12L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(4L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(5L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(6L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(7L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(8L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(9L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(10L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(11L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(12L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
 
-        assertEquals(Long.valueOf(13L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(13L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
 
-        assertEquals(Long.valueOf(1L), snService.getNextSequenceNumber("sequenceB"));
-        assertEquals(Long.valueOf(2L), snService.getNextSequenceNumber("sequenceB"));
-        assertEquals(Long.valueOf(3L), snService.getNextSequenceNumber("sequenceB"));
-        assertEquals(Long.valueOf(4L), snService.getNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(1L), snService.getCachedBlockNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(2L), snService.getCachedBlockNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(3L), snService.getCachedBlockNextSequenceNumber("sequenceB"));
+        assertEquals(Long.valueOf(4L), snService.getCachedBlockNextSequenceNumber("sequenceB"));
 
-        assertEquals(Long.valueOf(14L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(15L), snService.getNextSequenceNumber("sequenceA"));
-        assertEquals(Long.valueOf(16L), snService.getNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(14L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(15L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
+        assertEquals(Long.valueOf(16L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
     }
 
     @Test
-    public void testMultiThreadGetNextSequenceNumber() throws Exception {
+    public void testMultiThreadGetCachedBlockNextSequenceNumber() throws Exception {
         SequenceNumberService snService = getSequenceNumberService();
 
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         Map<String, Object> inputParameters1 = new HashMap<String, Object>();
-        inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
-        inputParameters1.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 215);
-        TaskMonitor taskMonitor1 = taskManager.startTask("sequencenumber-test", inputParameters1, false, null);
+        inputParameters1.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceA");
+        inputParameters1.put(SequenceTestTaskConstants.SEQUENCECOUNT, 215);
+        TaskMonitor taskMonitor1 = taskManager.startTask("clustersequenceblock-test", inputParameters1, false, null);
 
         Map<String, Object> inputParameters3 = new HashMap<String, Object>();
-        inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceB");
-        inputParameters3.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 128);
-        TaskMonitor taskMonitor3 = taskManager.startTask("sequencenumber-test", inputParameters3, false, null);
+        inputParameters3.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceB");
+        inputParameters3.put(SequenceTestTaskConstants.SEQUENCECOUNT, 128);
+        TaskMonitor taskMonitor3 = taskManager.startTask("clustersequenceblock-test", inputParameters3, false, null);
 
         Map<String, Object> inputParameters2 = new HashMap<String, Object>();
-        inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceA");
-        inputParameters2.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 186);
-        TaskMonitor taskMonitor2 = taskManager.startTask("sequencenumber-test", inputParameters2, false, null);
+        inputParameters2.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceA");
+        inputParameters2.put(SequenceTestTaskConstants.SEQUENCECOUNT, 186);
+        TaskMonitor taskMonitor2 = taskManager.startTask("clustersequenceblock-test", inputParameters2, false, null);
 
         Map<String, Object> inputParameters4 = new HashMap<String, Object>();
-        inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCEID, "sequenceC");
-        inputParameters4.put(SequenceNumberTestTaskConstants.SEQUENCECOUNT, 74);
-        TaskMonitor taskMonitor4 = taskManager.startTask("sequencenumber-test", inputParameters4, false, null);
+        inputParameters4.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceC");
+        inputParameters4.put(SequenceTestTaskConstants.SEQUENCECOUNT, 74);
+        TaskMonitor taskMonitor4 = taskManager.startTask("clustersequenceblock-test", inputParameters4, false, null);
 
         while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
             Thread.yield();
         }
 
-        Long sequenceNo = snService.getNextSequenceNumber("sequenceA");
+        Long sequenceNo = snService.getCachedBlockNextSequenceNumber("sequenceA");
         assertEquals(Long.valueOf(215L + 186L + 1L), sequenceNo);
 
-        sequenceNo = snService.getNextSequenceNumber("sequenceB");
+        sequenceNo = snService.getCachedBlockNextSequenceNumber("sequenceB");
         assertEquals(Long.valueOf(128L + 1L), sequenceNo);
 
-        sequenceNo = snService.getNextSequenceNumber("sequenceC");
+        sequenceNo = snService.getCachedBlockNextSequenceNumber("sequenceC");
         assertEquals(Long.valueOf(74L + 1L), sequenceNo);
+    }
+
+    @Test
+    public void testSameSequenceGetNextSequenceNumber() throws Exception {
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter");
+        Long sequenceNo2 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter");
+        Long sequenceNo3 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter");
+        assertEquals(Long.valueOf(1), sequenceNo1);
+        assertEquals(Long.valueOf(2), sequenceNo2);
+        assertEquals(Long.valueOf(3), sequenceNo3);
+    }
+
+    @Test
+    public void testDifferentSequenceGetNextSequenceNumber() throws Exception {
+        SequenceNumberService snService =
+                (SequenceNumberService) getComponent(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE);
+        Long sequenceNo1 = snService.getNextSequenceNumber("day-cheque-upload-batch-counter");
+        Long sequenceNo2 = snService.getNextSequenceNumber("day-rpt-batch-counter");
+        Long sequenceNo3 = snService.getNextSequenceNumber("day-outward-posting-batch-counter");
+        Long sequenceNo4 = snService.getNextSequenceNumber("day-rpt-batch-counter");
+        Long sequenceNo5 = snService.getNextSequenceNumber("day-outward-posting-batch-counter");
+        Long sequenceNo6 = snService.getNextSequenceNumber("day-outward-posting-batch-counter");
+        assertEquals(Long.valueOf(1), sequenceNo1);
+        assertEquals(Long.valueOf(1), sequenceNo2);
+        assertEquals(Long.valueOf(1), sequenceNo3);
+        assertEquals(Long.valueOf(2), sequenceNo4);
+        assertEquals(Long.valueOf(2), sequenceNo5);
+        assertEquals(Long.valueOf(3), sequenceNo6);
     }
 
     @Test
@@ -381,7 +412,7 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
     @SuppressWarnings({ "unchecked" })
     @Override
     protected void onTearDown() throws Exception {
-        this.deleteAll(ClusterSequenceNumber.class, ClusterUniqueString.class, ClusterDateSequenceNumber.class);
+        this.deleteAll(ClusterSequenceBlock.class, ClusterUniqueString.class, ClusterSequenceNumber.class, ClusterDateSequenceNumber.class);
     }
 
     private SequenceNumberService getSequenceNumberService() throws Exception {

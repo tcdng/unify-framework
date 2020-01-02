@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,23 +37,25 @@ import com.tcdng.unify.web.ui.ListParamType;
  */
 @Component("ui-money")
 @UplAttributes({ @UplAttribute(name = "currency", type = String.class, mandatory = true),
-        @UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
+        @UplAttribute(name = "multiCurrency", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "precision", type = int.class),
+        @UplAttribute(name = "scale", type = int.class),
         @UplAttribute(name = "acceptNegative", type = boolean.class),
         @UplAttribute(name = "useGrouping", type = boolean.class),
-        @UplAttribute(name = "list", type = String.class, defaultValue = "currencylist"),
-        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "immediate"),
-        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!decimalformat}"),
-        @UplAttribute(name = "extStyleClass", type = String.class, defaultValue = "tnread"),
-        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "list", type = String.class, defaultVal = "currencylist"),
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "immediate"),
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!decimalformat}"),
+        @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tnread"),
+        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultVal = "false") })
 public class MoneyField extends AbstractListPopupTextField {
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
         int scale = getUplAttribute(int.class, "scale");
         numberFormatter.setScale(scale);
 
-        super.onPageInitialize();
+        super.onPageConstruct();
     }
 
     @Override
@@ -92,6 +94,10 @@ public class MoneyField extends AbstractListPopupTextField {
         return getUplAttribute(String.class, "currency");
     }
 
+    public boolean isMultiCurrency() throws UnifyException {
+        return getUplAttribute(boolean.class, "multiCurrency");
+    }
+    
     public String getFramePanelId() throws UnifyException {
         return getPrefixedId("frm_");
     }

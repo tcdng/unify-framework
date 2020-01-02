@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import java.util.Date;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Id;
+import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
 
 /**
@@ -28,7 +29,8 @@ import com.tcdng.unify.core.annotation.Table;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table("USERSESSION")
+@Policy("usersessiontracking-entitypolicy")
+@Table("UNUSERSESSION")
 public class UserSessionTracking extends AbstractSystemEntity {
 
     @Id(length = 64)
@@ -52,10 +54,10 @@ public class UserSessionTracking extends AbstractSystemEntity {
     @Column(length = 32)
     private String node;
 
-    @Column(type = ColumnType.TIMESTAMP)
+    @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date createTime;
 
-    @Column(type = ColumnType.TIMESTAMP)
+    @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date lastAccessTime;
 
     @Override

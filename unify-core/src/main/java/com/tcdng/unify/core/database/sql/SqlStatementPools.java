@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.data.AbstractPool;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.transform.Transformer;
 
@@ -62,6 +63,8 @@ public class SqlStatementPools {
                     case CREATE:
                         return new CreateSqlStatementInfoPool();
                     case COUNT:
+                    case MIN:
+                    case MAX:
                         break;
                     case DELETE:
                         break;
@@ -101,6 +104,36 @@ public class SqlStatementPools {
 
     public void restore(SqlStatement sqlStatement) throws UnifyException {
         poolMap.get(sqlStatement.getType()).returnObject(sqlStatement);
+    }
+
+    private abstract class SqlStatementPool extends AbstractPool<SqlStatement> {
+
+        private List<SqlResult> sqlResultList;
+
+        public SqlStatementPool(long getTimeout, int minObjects, int maxObjects) {
+            super(getTimeout, minObjects, maxObjects, true);
+        }
+
+        @Override
+        protected void destroyObject(SqlStatement object) {
+
+        }
+
+        protected List<SqlResult> getSqlResultList(List<SqlFieldInfo> sqlFieldInfoList) {
+            if (sqlResultList == null) {
+                synchronized (SqlStatementPool.class) {
+                    if (sqlResultList == null) {
+                        sqlResultList = new ArrayList<SqlResult>();
+                        for (SqlFieldInfo sqlFieldInfo : sqlFieldInfoList) {
+                            sqlResultList.add(
+                                    new SqlResult(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), sqlFieldInfo));
+                        }
+                    }
+                }
+            }
+
+            return sqlResultList;
+        }
     }
 
     private class CreateSqlStatementInfoPool extends SqlStatementPool {
@@ -191,6 +224,10 @@ public class SqlStatementPools {
             List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
             parameterInfoList
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+            if (sqlEntityInfo.isViewOnly()) {
+                return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
+                        parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+            }
 
             return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
                     parameterInfoList, getSqlResultList(sqlEntityInfo.getFieldInfos()));
@@ -215,6 +252,13 @@ public class SqlStatementPools {
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
             parameterInfoList.add(
                     new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
+
+            if (sqlEntityInfo.isViewOnly()) {
+                return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
+                        sqlCache.getFindByPkVersionSql(), parameterInfoList,
+                        getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+            }
+
             return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
                     sqlCache.getFindByPkVersionSql(), parameterInfoList,
                     getSqlResultList(sqlEntityInfo.getFieldInfos()));
@@ -238,6 +282,7 @@ public class SqlStatementPools {
             List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
             parameterInfoList
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
+
             return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK, sqlCache.getListByPkSql(),
                     parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
         }
@@ -261,6 +306,7 @@ public class SqlStatementPools {
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
             parameterInfoList.add(
                     new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getVersionFieldInfo().getColumnType())));
+
             return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK_VERSION,
                     sqlCache.getListByPkVersionSql(), parameterInfoList,
                     getSqlResultList(sqlEntityInfo.getListFieldInfos()));
@@ -356,13 +402,5 @@ public class SqlStatementPools {
             parameterInfoList.get(i++).setValue(sqlEntityInfo.getIdFieldInfo().getGetter().invoke(params[0]));
             parameterInfoList.get(i).setValue(params[1]);
         }
-    }
-
-    private List<SqlResult> getSqlResultList(List<SqlFieldInfo> sqlFieldInfoList) {
-        List<SqlResult> resultInfoList = new ArrayList<SqlResult>();
-        for (SqlFieldInfo sqlFieldInfo : sqlFieldInfoList) {
-            resultInfoList.add(new SqlResult(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), sqlFieldInfo));
-        }
-        return resultInfoList;
     }
 }

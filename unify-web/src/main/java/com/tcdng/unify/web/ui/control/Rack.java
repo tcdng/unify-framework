@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.Control;
  * @since 1.0
  */
 @Component("ui-rack")
-@UplAttributes({ @UplAttribute(name = "rowSelectable", type = boolean.class, defaultValue = "true") })
+@UplAttributes({ @UplAttribute(name = "rowSelectable", type = boolean.class, defaultVal = "true") })
 public class Rack extends Table {
 
     private ShiftButtons shiftCtrl;
@@ -42,14 +42,14 @@ public class Rack extends Table {
     private int shiftDirection;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         StringBuilder sb = new StringBuilder(
                 "!ui-shiftbuttons  caption:$m{table.rack.shift} columnStyle:$s{width:100px;} style:$s{text-align:center;}");
         appendUplAttribute(sb, "binding");
         shiftCtrl = (ShiftButtons) addExternalChildControl(sb.toString());
         shiftDirectionCtrl = (Control) addInternalChildControl("!ui-hidden binding:shiftDirection");
 
-        super.onPageInitialize();
+        super.onPageConstruct();
     }
 
     @Override

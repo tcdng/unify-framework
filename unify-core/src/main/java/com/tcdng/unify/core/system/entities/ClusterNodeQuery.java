@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,18 +33,18 @@ public class ClusterNodeQuery extends Query<ClusterNode> {
     }
 
     public ClusterNodeQuery nodeId(String nodeId) {
-        return (ClusterNodeQuery) equals("nodeId", nodeId);
+        return (ClusterNodeQuery) addEquals("nodeId", nodeId);
     }
 
     public ClusterNodeQuery nodeIdIn(Collection<String> nodeId) {
-        return (ClusterNodeQuery) amongst("nodeId", nodeId);
+        return (ClusterNodeQuery) addAmongst("nodeId", nodeId);
     }
 
     public ClusterNodeQuery nodeNotEqual(String nodeId) {
-        return (ClusterNodeQuery) notEqual("nodeId", nodeId);
+        return (ClusterNodeQuery) addNotEqual("nodeId", nodeId);
     }
 
     public ClusterNodeQuery lastHeartBeatOlderThan(Date expiryDt) {
-        return (ClusterNodeQuery) less("lastHeartBeat", expiryDt);
+        return (ClusterNodeQuery) addLessThan("lastHeartBeat", expiryDt);
     }
 }

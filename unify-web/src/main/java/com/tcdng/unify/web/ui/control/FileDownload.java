@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -35,16 +35,17 @@ import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
  */
 @Component("ui-filedownload")
 @UplAttributes({ @UplAttribute(name = "fileSrc", type = String.class),
-        @UplAttribute(name = "fileBinding", type = String.class), @UplAttribute(name = "handler", type = String.class),
-        @UplAttribute(name = "imageSrc", type = String.class, defaultValue = "$t{images/download.png}"),
-        @UplAttribute(name = "caption", type = String.class, defaultValue = "$m{button.download}") })
+        @UplAttribute(name = "fileBinding", type = String.class),
+        @UplAttribute(name = "handler", type = String.class),
+        @UplAttribute(name = "imageSrc", type = String.class, defaultVal = "$t{images/download.png}"),
+        @UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.download}") })
 public class FileDownload extends Button {
 
     @Action
     public void download() throws UnifyException {
         DownloadFile downloadFile = null;
         String fileSrc = getUplAttribute(String.class, "fileSrc");
-        if (!StringUtils.isBlank(fileSrc)) {
+        if (StringUtils.isNotBlank(fileSrc)) {
             byte[] data = IOUtils.readFileResourceInputStream(fileSrc);
             String fileName = fileSrc;
             int index = fileName.lastIndexOf('/') + 1;
@@ -52,14 +53,14 @@ public class FileDownload extends Button {
                 fileName = fileName.substring(index);
             }
 
-            downloadFile = new DownloadFile(fileName, ContentTypeConstants.APPLICATION_OCTETSTREAM, data);
+            downloadFile = new DownloadFile(MimeType.APPLICATION_OCTETSTREAM, fileName, data);
         } else {
             String fileBinding = getUplAttribute(String.class, "fileBinding");
-            if (!StringUtils.isBlank(fileBinding)) {
+            if (StringUtils.isNotBlank(fileBinding)) {
                 downloadFile = (DownloadFile) getValue(fileBinding);
             } else {
                 String handler = getUplAttribute(String.class, "handler");
-                if (!StringUtils.isBlank(handler)) {
+                if (StringUtils.isNotBlank(handler)) {
                     FileDownloadHandler fileDownloadHandler = (FileDownloadHandler) getComponent(handler);
                     String id = getRequestTarget(String.class);
                     downloadFile = fileDownloadHandler.handleFileDownload(id);

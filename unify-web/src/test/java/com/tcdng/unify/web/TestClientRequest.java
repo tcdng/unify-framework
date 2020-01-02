@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,13 @@
  */
 package com.tcdng.unify.web;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.tcdng.unify.core.UnifyException;
 
 /**
  * Test controller request.
@@ -26,20 +29,25 @@ import java.util.Set;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TestClientRequest implements ClientRequest {
+public class TestClientRequest extends AbstractClientRequest {
 
-    private String path;
+    private PathParts pathParts;
 
     private Map<String, Object> parameters;
 
-    public TestClientRequest(String path) {
-        this.path = path;
+    public TestClientRequest(PathParts pathParts) {
+        this.pathParts = pathParts;
         parameters = new HashMap<String, Object>();
     }
 
     @Override
-    public String getPath() {
-        return path;
+    public ClientRequestType getType() {
+        return ClientRequestType.GET;
+    }
+
+    @Override
+    public PathParts getPathParts() {
+        return pathParts;
     }
 
     @Override
@@ -59,5 +67,10 @@ public class TestClientRequest implements ClientRequest {
 
     public void setParameter(String name, Object value) {
         parameters.put(name, value);
+    }
+
+    @Override
+    public InputStream getInputStream() throws UnifyException {
+        return null;
     }
 }

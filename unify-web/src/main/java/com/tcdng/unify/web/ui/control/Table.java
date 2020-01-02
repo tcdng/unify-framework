@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,9 +24,12 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.AbstractValueStore;
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractValueListMultiControl;
@@ -43,13 +46,20 @@ import com.tcdng.unify.web.ui.EventHandler;
 @Component("ui-table")
 @UplAttributes({ @UplAttribute(name = "bodyStyle", type = String.class),
         @UplAttribute(name = "selectBinding", type = String.class),
-        @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "summarySrc", type = String.class),
+        @UplAttribute(name = "summaryProcList", type = String[].class),
+        @UplAttribute(name = "summaryDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "contentDependentList", type = UplElementReferences.class),
         @UplAttribute(name = "multiSelDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "selDependentList", type = UplElementReferences.class),
+        @UplAttribute(name = "multiSelect", type = boolean.class),
+        @UplAttribute(name = "multiSelectCheckboxes", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "pagination", type = boolean.class),
+        @UplAttribute(name = "rowSelectable", type = boolean.class),
         @UplAttribute(name = "serialNumbers", type = boolean.class),
         @UplAttribute(name = "windowed", type = boolean.class),
-        @UplAttribute(name = "rowSelectable", type = boolean.class),
-        @UplAttribute(name = "multiSelect", type = boolean.class),
+        @UplAttribute(name = "headerEllipsis", type = boolean.class),
+        @UplAttribute(name = "contentEllipsis", type = boolean.class),
         @UplAttribute(name = "rowEventHandler", type = EventHandler[].class) })
 public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
@@ -105,14 +115,18 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     private int visibleColumnCount;
 
+    private List<String> contentDependentList;
+
     private List<String> selDependentList;
 
     private List<String> multiSelDependentList;
 
+    private List<String> summaryDependentList;
+
     private String dataGroupId;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         viewIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:viewIndex");
         if (isPagination()) {
             currentPageCtrl = (Control) addInternalChildControl("!ui-hidden binding:currentPage");
@@ -145,7 +159,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             Control control = (Control) childControlInfo.getControl();
 
             if (childControlInfo.isExternal()) {
-                control.setValueStore(getValueList().get(childBlock.getItemIndex()).getItemValueStore());
+                control.setValueStore(getValueList().get(childBlock.getItemIndex()).getRowValueStore());
             } else {
                 if (control == multiSelectCtrl) {
                     control.setValueStore(getValueList().get(childBlock.getItemIndex()).getRowValueStore());
@@ -163,7 +177,9 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public void reset() throws UnifyException {
         currentPage = 0;
         for (Column column : getColumnList()) {
-            column.setAscending(true);
+            if (column.isVisible()) {
+                column.setAscending(true);
+            }
         }
     }
 
@@ -175,6 +191,14 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return getUplAttribute(String.class, "bodyStyle");
     }
 
+    public String getSummarySrc() throws UnifyException {
+        return getUplAttribute(String.class, "summarySrc");
+    }
+
+    public String[] getSummaryProcList() throws UnifyException {
+        return getUplAttribute(String[].class, "summaryProcList");
+    }
+    
     public boolean isPagination() throws UnifyException {
         return getUplAttribute(boolean.class, "pagination");
     }
@@ -185,6 +209,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public boolean isMultiSelect() throws UnifyException {
         return getUplAttribute(boolean.class, "multiSelect");
+    }
+
+    public boolean isShowMultiSelectCheckboxes() throws UnifyException {
+        return getUplAttribute(boolean.class, "multiSelectCheckboxes");
     }
 
     public boolean isWindowed() throws UnifyException {
@@ -199,8 +227,28 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return sortable;
     }
 
+    public boolean isHeaderEllipsis() throws UnifyException {
+        return getUplAttribute(boolean.class, "headerEllipsis");
+    }
+
+    public boolean isContentEllipsis() throws UnifyException {
+        return getUplAttribute(boolean.class, "contentEllipsis");
+    }
+
     public String getDataGroupId() {
         return dataGroupId;
+    }
+
+    public List<String> getContentDependentList() throws UnifyException {
+        if (contentDependentList == null) {
+            UplElementReferences uer = getUplAttribute(UplElementReferences.class, "contentDependentList");
+            if (uer != null) {
+                contentDependentList = getPageManager().getPageNames(uer.getLongNames());
+            } else {
+                contentDependentList = Collections.emptyList();
+            }
+        }
+        return contentDependentList;
     }
 
     public List<String> getSelDependentList() throws UnifyException {
@@ -213,6 +261,18 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             }
         }
         return selDependentList;
+    }
+
+    public List<String> getSummaryDependentList() throws UnifyException {
+        if (summaryDependentList == null) {
+            UplElementReferences uer = getUplAttribute(UplElementReferences.class, "summaryDependentList");
+            if (uer != null) {
+                summaryDependentList = getPageManager().getPageNames(uer.getLongNames());
+            } else {
+                summaryDependentList = Collections.emptyList();
+            }
+        }
+        return summaryDependentList;
     }
 
     public List<String> getMultiSelDependentList() throws UnifyException {
@@ -363,6 +423,15 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         this.columnIndex = columnIndex;
     }
 
+    public void setColumnVisible(String shortName, boolean visible) throws UnifyException {
+        for (Column column : getColumnList()) {
+            if (shortName.equals(column.getShortName())) {
+                column.setVisible(visible);
+                break;
+            }
+        }
+    }
+
     public boolean isSortDirection() {
         return sortDirection;
     }
@@ -395,12 +464,24 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return selectedRowCount;
     }
 
+    public Object getSelectedItem() throws UnifyException {
+        if (viewIndex >= 0) {
+            List<Row> rowList = getValueList();
+            if (rowList != null && viewIndex < rowList.size()) {
+                return rowList.get(viewIndex).getItem();
+            }
+        }
+
+        return null;
+    }
+
     public Integer[] getSelectedRowIndexes() throws UnifyException {
         getValue();
         List<Row> rowList = getValueList();
         if (rowList == null || rowList.isEmpty()) {
             return DataUtils.ZEROLEN_INTEGER_ARRAY;
         }
+
         List<Integer> indexList = new ArrayList<Integer>();
         for (int i = 0; i < rowList.size(); i++) {
             if (rowList.get(i).isSelected()) {
@@ -408,6 +489,42 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             }
         }
         return indexList.toArray(new Integer[indexList.size()]);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getSelectedItems(Class<T> itemClazz) throws UnifyException {
+        getValue();
+        List<Row> rowList = getValueList();
+        if (rowList == null || rowList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<T> selectedItems = new ArrayList<T>();
+        for (Row row : rowList) {
+            if (row.isSelected()) {
+                selectedItems.add((T) row.getItem());
+            }
+        }
+
+        return selectedItems;
+    }
+
+    public <T> List<T> getSelectedItemsColumnValues(Class<T> itemColumnClazz, String columnProperty)
+            throws UnifyException {
+        getValue();
+        List<Row> rowList = getValueList();
+        if (rowList == null || rowList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<T> selectedItems = new ArrayList<T>();
+        for (Row row : rowList) {
+            if (row.isSelected()) {
+                selectedItems.add(row.getRowValueStore().retrieve(itemColumnClazz, columnProperty));
+            }
+        }
+
+        return selectedItems;
     }
 
     public int getVisibleColumnCount() {
@@ -565,18 +682,18 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public class Row implements RowState {
 
-        private ValueStore rowValueStore;
+        private RowValueStore rowValueStore;
 
-        private ValueStore itemValueStore;
+        private Object item;
 
         private boolean selected;
 
         public Row(Object item, int index) throws UnifyException {
-            rowValueStore = createValueStore(this, index);
-            itemValueStore = createValueStore(item, index);
+            this.item = item;
+            rowValueStore = new RowValueStore(this, index);
             String selectBinding = getUplAttribute(String.class, "selectBinding");
             if (selectBinding != null) {
-                selected = (Boolean) itemValueStore.retrieve(selectBinding);
+                selected = (Boolean) ReflectUtils.findNestedBeanProperty(item, selectBinding);
                 if (selected) {
                     selectedRowCount++;
                 }
@@ -588,17 +705,20 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             return selected;
         }
 
+        public Object getItem() {
+            return item;
+        }
+
+        public void setRowValueStore(RowValueStore rowValueStore) {
+            this.rowValueStore = rowValueStore;
+        }
+
         public void setIndex(int index) {
             rowValueStore.setDataIndex(index);
-            itemValueStore.setDataIndex(index);
         }
 
-        public ValueStore getRowValueStore() {
+        public RowValueStore getRowValueStore() {
             return rowValueStore;
-        }
-
-        public ValueStore getItemValueStore() {
-            return itemValueStore;
         }
 
         public void setSelected(boolean selected) throws UnifyException {
@@ -606,8 +726,9 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
                 this.selected = selected;
                 String selectBinding = getUplAttribute(String.class, "selectBinding");
                 if (selectBinding != null) {
-                    itemValueStore.store(selectBinding, selected);
+                    DataUtils.setNestedBeanProperty(item, selectBinding, selected);
                 }
+
                 if (selected) {
                     selectedRowCount++;
                 } else {
@@ -618,18 +739,68 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     }
 
+    public class RowValueStore extends AbstractValueStore<Row> {
+
+        private RowValueStore(Row row) {
+            this(row, -1);
+        }
+
+        private RowValueStore(Row row, int dataIndex) {
+            super(row, dataIndex);
+        }
+
+        @Override
+        public boolean isGettable(String name) throws UnifyException {
+            if ("selected".equals(name)) {
+                return true;
+            }
+
+            return ReflectUtils.isGettableField(storage.item.getClass(), name);
+        }
+
+        @Override
+        public boolean isSettable(String name) throws UnifyException {
+            if ("selected".equals(name)) {
+                return true;
+            }
+
+            return ReflectUtils.isSettableField(storage.item.getClass(), name);
+        }
+
+        @Override
+        protected Object doRetrieve(String property) throws UnifyException {
+            if ("selected".equals(property)) {
+                return storage.selected;
+            }
+
+            return ReflectUtils.findNestedBeanProperty(storage.item, property);
+        }
+
+        @Override
+        protected void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException {
+            if ("selected".equals(property)) {
+                storage.setSelected(DataUtils.convert(Boolean.class, value, formatter));
+                return;
+            }
+
+            DataUtils.setNestedBeanProperty(storage.item, property, value, formatter);
+        }
+
+        public Object getItem() {
+            return storage.item;
+        }
+    }
+
     public class Column implements ColumnState {
 
         private Control control;
+
+        private String strippedStyle;
 
         private boolean ascending;
 
         public Column(Control control) {
             this.control = control;
-        }
-
-        public Control getControl() {
-            return control;
         }
 
         @Override
@@ -650,6 +821,47 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         public String getFieldName() throws UnifyException {
             return control.getBinding();
         }
+
+        public Control getControl() {
+            return control;
+        }
+
+        public String getShortName() throws UnifyException {
+            return control.getShortName();
+        }
+
+        public void setVisible(boolean visible) {
+            control.setVisible(visible);
+        }
+
+        public boolean isVisible() throws UnifyException {
+            return control.isVisible();
+        }
+
+        public boolean isColumnSelectSummary() throws UnifyException {
+            return control.getColumnSelectSummary();
+        }
+
+        public String getStrippedStyle() throws UnifyException {
+            if (strippedStyle == null) {
+                String style = control.getColumnStyle();
+                int index = 0;
+                if (StringUtils.isNotBlank(style) && (index = style.indexOf("width:")) >= 0) {
+                    int endIndex = style.indexOf(';', index);
+                    if (endIndex > index) {
+                        return strippedStyle = (style.substring(0, index) + style.substring(endIndex + 1)).trim();
+                    }
+                }
+
+                strippedStyle = "";
+            }
+
+            return strippedStyle;
+        }
+
+        public boolean isWithStrippedStyle() throws UnifyException {
+            return StringUtils.isNotBlank(getStrippedStyle());
+        }
     }
 
     private class RowComparator implements Comparator<Row> {
@@ -667,8 +879,8 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         @Override
         public int compare(Row row1, Row row2) {
             try {
-                return DataUtils.compareForSort((Comparable<Object>) row1.getItemValueStore().retrieve(property),
-                        (Comparable<Object>) row2.getItemValueStore().retrieve(property), ascending);
+                return DataUtils.compareForSort((Comparable<Object>) row1.getRowValueStore().retrieve(property),
+                        (Comparable<Object>) row2.getRowValueStore().retrieve(property), ascending);
             } catch (UnifyException e) {
             }
             return 0;

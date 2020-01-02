@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,10 +16,8 @@
 package com.tcdng.unify.core.system.entities;
 
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.Id;
-import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.annotation.Version;
+import com.tcdng.unify.core.annotation.UniqueConstraint;
 
 /**
  * Entity for storing sequence number generation information.
@@ -27,26 +25,14 @@ import com.tcdng.unify.core.annotation.Version;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Policy("sequencenumber-policy")
-@Table(name = "CLUSTERSEQ")
-public class ClusterSequenceNumber extends AbstractSystemEntity {
+@Table(name = "UNCLUSTERSEQ", uniqueConstraints = { @UniqueConstraint({ "sequenceName"}) })
+public class ClusterSequenceNumber extends AbstractSystemSequencedEntity {
 
-    @Id(name = "SEQUENCE_NM", length = 256)
+    @Column(name = "SEQUENCE_NM", length = 256)
     private String sequenceName;
 
     @Column
-    private long nextBlock;
-
-    @Column
-    private int blockSize;
-
-    @Version
-    private long versionNo;
-
-    @Override
-    public Object getId() {
-        return sequenceName;
-    }
+    private Long sequenceCounter;
 
     public String getSequenceName() {
         return sequenceName;
@@ -56,27 +42,12 @@ public class ClusterSequenceNumber extends AbstractSystemEntity {
         this.sequenceName = sequenceName;
     }
 
-    public long getNextBlock() {
-        return nextBlock;
+    public Long getSequenceCounter() {
+        return sequenceCounter;
     }
 
-    public void setNextBlock(long nextBlock) {
-        this.nextBlock = nextBlock;
+    public void setSequenceCounter(Long sequenceCounter) {
+        this.sequenceCounter = sequenceCounter;
     }
 
-    public int getBlockSize() {
-        return blockSize;
-    }
-
-    public void setBlockSize(int blockSize) {
-        this.blockSize = blockSize;
-    }
-
-    public long getVersionNo() {
-        return versionNo;
-    }
-
-    public void setVersionNo(long versionNo) {
-        this.versionNo = versionNo;
-    }
 }

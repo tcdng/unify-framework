@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,9 @@
 package com.tcdng.unify.core.report;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Reports format util.
@@ -35,7 +38,15 @@ public final class ReportFormatUtils {
         ReportFormatUtils.reportFormatterStore = reportFormatterStore;
     }
 
+    public static Formatter<Object> getFormatter(String formatterUpl) throws UnifyException {
+        if (StringUtils.isNotBlank(formatterUpl)) {
+            return reportFormatterStore.getFormatter(formatterUpl);
+        }
+        
+        return null;
+    }
+    
     public static String format(String formatterUpl, Object value) throws UnifyException {
-        return reportFormatterStore.getFormatter(formatterUpl).format(value);
+        return DataUtils.convert(String.class, value, getFormatter(formatterUpl));
     }
 }

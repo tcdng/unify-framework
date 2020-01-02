@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Default implementation of a two-way string cryptograph.
@@ -26,6 +27,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(description = "Default Two-way String Cryptograph")
 @Component(name = "twoway-stringcryptograph", description = "$m{twowaycryptograph.default}")
 public class TwoWayStringCryptographImpl extends AbstractTwoWayCryptograph implements TwoWayStringCryptograph {
 

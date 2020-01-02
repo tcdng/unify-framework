@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +32,10 @@ public class SqlParameter {
 
     private Object value;
 
+    private boolean isInput;
+
+    private boolean isOutput;
+
     private boolean isMultiple;
 
     public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy) {
@@ -48,6 +52,13 @@ public class SqlParameter {
         this.isMultiple = isMultiple;
     }
 
+    public SqlParameter(SqlDataTypePolicy sqlDataTypePolicy, boolean isInput,
+            boolean isOutput) {
+        this.sqlDataTypePolicy = sqlDataTypePolicy;
+        this.isInput = isInput;
+        this.isOutput = isOutput;
+    }
+
     public SqlDataTypePolicy getSqlTypePolicy() {
         return this.sqlDataTypePolicy;
     }
@@ -62,6 +73,14 @@ public class SqlParameter {
 
     public boolean isMultiple() {
         return isMultiple;
+    }
+
+    public boolean isInput() {
+        return isInput;
+    }
+
+    public boolean isOutput() {
+        return isOutput;
     }
 
     @Override

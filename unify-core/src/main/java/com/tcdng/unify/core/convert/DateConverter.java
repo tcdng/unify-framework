@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.core.convert;
 import java.util.Date;
 
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A value to date converter.
@@ -32,10 +33,17 @@ public class DateConverter extends AbstractConverter<Date> {
         if (value instanceof Date) {
             return (Date) value;
         }
+
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
-                return doConvert(formatter.parse((String) value), null);
+                if (formatter == null) {
+                    formatter = DataUtils.getDefaultDateTimeFormatter();
+                }
+
+                if (formatter != null) {
+                    return doConvert(formatter.parse((String) value), null);
+                }
             }
         }
         return null;

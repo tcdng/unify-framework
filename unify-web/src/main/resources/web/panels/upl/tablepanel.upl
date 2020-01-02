@@ -1,11 +1,18 @@
 //Table Panel UPL
 !ui-tablepanel layout:$d{!ui-vertical} components:$c{contentTbl}
-    tableStyleClass:$e{ui-table}
+    tableStyleClass:$e{ui-table} tableMultiSelectCheckboxes:true
     
 !ui-table:contentTbl bodyStyle:$f{tableBodyStyle} serialNumbers:$f{tableSerialNumbers} styleClass:$f{tableStyleClass}
     rowSelectable:$f{tableRowSelectable} selDependentList:$f{tableSelDependentList}
     rowEventHandler:$f{tableRowEventHandler}
     windowed:$f{tableWindowed} pagination:$f{tablePagination}
     multiSelect:$f{tableMultiSelect} multiSelDependentList:$f{tableMultiSelDependentList}
+    multiSelectCheckboxes:$f{tableMultiSelectCheckboxes} 
     sortable:$f{tableSortable}
+    headerEllipsis:$f{tableHeaderEllipsis}
+    contentEllipsis:$f{tableContentEllipsis}
     binding:$f{tableBinding} components:$f{tableColumnList}
+    summarySrc:$f{tableSummarySrc}
+    summaryProcList:$f{tableSummaryProcList}
+    summaryDependentList:$f{tableSummaryDependentList} 
+    

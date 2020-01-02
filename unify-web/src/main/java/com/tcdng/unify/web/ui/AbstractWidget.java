@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.tcdng.unify.web.ui;
 
 import java.util.Collection;
 
-import com.tcdng.unify.core.PrivilegeSettings;
+import com.tcdng.unify.core.ViewDirective;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
@@ -35,18 +35,23 @@ import com.tcdng.unify.web.util.WidgetUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "binding", type = String.class),
-        @UplAttribute(name = "styleClass", type = String.class, defaultValue = "$e{}"),
+@UplAttributes({
+        @UplAttribute(name = "binding", type = String.class),
+        @UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
         @UplAttribute(name = "styleClassBinding", type = String.class),
-        @UplAttribute(name = "style", type = String.class), @UplAttribute(name = "caption", type = String.class),
+        @UplAttribute(name = "style", type = String.class),
+        @UplAttribute(name = "caption", type = String.class),
         @UplAttribute(name = "captionBinding", type = String.class),
-        @UplAttribute(name = "columnStyle", type = String.class), @UplAttribute(name = "hint", type = String.class),
+        @UplAttribute(name = "columnStyle", type = String.class),
+        @UplAttribute(name = "columnSelectSummary", type = boolean.class),
+        @UplAttribute(name = "hint", type = String.class),
         @UplAttribute(name = "hintBinding", type = String.class),
-        @UplAttribute(name = "readOnly", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "ignoreParentState", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "privilege", type = String.class),
-        @UplAttribute(name = "fixedConforming", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "behaviorAlways", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "fixedConforming", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "hidden", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "behaviorAlways", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "eventHandler", type = EventHandler[].class) })
 public abstract class AbstractWidget extends AbstractUplComponent implements Widget {
 
@@ -129,6 +134,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
+    public boolean getColumnSelectSummary() throws UnifyException {
+        return getUplAttribute(boolean.class, "columnSelectSummary");
+    }
+
+    @Override
     public String getStyleClass() throws UnifyException {
         return getUplAttribute(String.class, "styleClass");
     }
@@ -159,19 +169,17 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public String getHint() throws UnifyException {
-        String hint = getUplAttribute(String.class, "hint");
-        if (StringUtils.isBlank(hint)) {
-            String hintBinding = getUplAttribute(String.class, "hintBinding");
-            if (!StringUtils.isBlank(hintBinding)) {
-                hint = getValue(String.class, hintBinding);
-            }
-        }
-        return hint;
+        return getUplAttribute(String.class, "hint", "hintBinding");
     }
 
     @Override
     public boolean isHidden() throws UnifyException {
         return getUplAttribute(boolean.class, "hidden");
+    }
+
+    @Override
+    public boolean isIgnoreParentState() throws UnifyException {
+        return getUplAttribute(boolean.class, "ignoreParentState");
     }
 
     @Override
@@ -256,7 +264,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isDisabled() throws UnifyException {
-        return disabled || getPrivilegeSettings().isDisabled();
+        return disabled || getViewDirective().isDisabled();
     }
 
     @Override
@@ -266,7 +274,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isContainerDisabled() throws UnifyException {
-        if (container != null) {
+        if (container != null && !isIgnoreParentState()) {
             return container.isContainerDisabled() || isDisabled();
         }
         return isDisabled();
@@ -274,7 +282,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isEditable() throws UnifyException {
-        return editable && !getUplAttribute(boolean.class, "readOnly") && getPrivilegeSettings().isEditable();
+        return editable && !getUplAttribute(boolean.class, "readOnly") && getViewDirective().isEditable();
     }
 
     @Override
@@ -284,7 +292,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isContainerEditable() throws UnifyException {
-        if (container != null) {
+        if (container != null && !isIgnoreParentState()) {
             return container.isContainerEditable() && isEditable();
         }
         return isEditable();
@@ -292,7 +300,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isVisible() throws UnifyException {
-        return visible && getPrivilegeSettings().isVisible();
+        return visible && getViewDirective().isVisible();
     }
 
     @Override
@@ -302,7 +310,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     @Override
     public boolean isContainerVisible() throws UnifyException {
-        if (container != null) {
+        if (container != null && !isIgnoreParentState()) {
             return container.isContainerVisible() && isVisible();
         }
         return isVisible();
@@ -324,7 +332,12 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public boolean isSupportDisabled() {
+        return true;
+    }
+
+    @Override
+    public void onPageConstruct() throws UnifyException {
 
     }
 
@@ -413,8 +426,25 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         return null;
     }
 
-    protected PrivilegeSettings getPrivilegeSettings() throws UnifyException {
-        return getPrivilegeSettings(getUplAttribute(String.class, "privilege"));
+    protected void setPageAttribute(String name, Object value) throws UnifyException {
+        getRequestContextUtil().getRequestPage().setAttribute(name, value);
+    }
+
+    protected Object clearPageAttribute(String name) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().clearAttribute(name);
+    }
+
+    protected Object getPageAttribute(String name) throws UnifyException {
+        return getRequestContextUtil().getRequestPage().getAttribute(name);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T getPageAttribute(Class<T> clazz, String name) throws UnifyException {
+        return (T) getRequestContextUtil().getRequestPage().getAttribute(name);
+    }
+
+    protected ViewDirective getViewDirective() throws UnifyException {
+        return getViewDirective(getUplAttribute(String.class, "privilege"));
     }
 
     protected <T> T getRequestTarget(Class<T> clazz) throws UnifyException {
@@ -469,5 +499,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         if (value != null) {
             sb.append(' ').append(attribute).append(':').append(value);
         }
+    }
+    
+    protected <T> T getUplAttribute(Class<T> type, String attribute, String attributeBinding) throws UnifyException {
+        T list = getUplAttribute(type, attribute);
+        if (list == null) {
+            String listBinding = getUplAttribute(String.class, attributeBinding);
+            if (StringUtils.isNotBlank(listBinding)) {
+                list = getValue(type, listBinding);
+            }
+        }
+        return list;
     }
 }

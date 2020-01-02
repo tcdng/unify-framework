@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.constant.ExtensionType;
 import com.tcdng.unify.web.ui.ListControlJsonData;
 
@@ -56,7 +57,7 @@ public class SingleSelect extends AbstractListPopupTextField {
     @Override
     public String getFacadeStringValue() throws UnifyException {
         ListControlJsonData listControlJsonData = getListControlJsonData(false, false, false);
-        return listControlJsonData.getValueLabel();
+        return DataUtils.convert(String.class, listControlJsonData.getValueLabel(), getFormatter());
     }
 
     public String getBlankOption() throws UnifyException {

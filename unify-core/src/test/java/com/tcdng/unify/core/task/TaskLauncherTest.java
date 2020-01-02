@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,7 @@ public class TaskLauncherTest extends AbstractUnifyComponentTest {
         while (!monitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, monitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
         assertEquals("Elmer Fudd", monitor.getTaskOutput(0).getResult(String.class, "message"));
     }
 
@@ -45,7 +45,7 @@ public class TaskLauncherTest extends AbstractUnifyComponentTest {
         while (!monitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, monitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
         assertEquals(Integer.valueOf(250000),
                 monitor.getTaskOutput(0).getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
     }
@@ -58,7 +58,7 @@ public class TaskLauncherTest extends AbstractUnifyComponentTest {
         while (!monitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, monitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
         assertEquals(Integer.valueOf(0),
                 monitor.getTaskOutput(0).getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
     }

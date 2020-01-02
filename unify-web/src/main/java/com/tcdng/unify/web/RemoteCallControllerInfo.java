@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -55,7 +55,7 @@ public class RemoteCallControllerInfo extends ControllerInfo {
     }
 
     /**
-     * Gets a remote-call handler by specified name. GatewayAction call handler
+     * Gets a remote-call handler by specified name. RemoteAction call handler
      * names are full path names composed of the remote-call controller name, a
      * forward slash and the handler method name.
      * 

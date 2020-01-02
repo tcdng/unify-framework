@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,10 +34,13 @@ import com.tcdng.unify.web.ui.ListParamType;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "list", type = String.class, mandatory = true),
-        @UplAttribute(name = "listParams", type = String[].class), @UplAttribute(name = "listKey", type = String.class),
+@UplAttributes({
+        @UplAttribute(name = "list", type = String.class),
+        @UplAttribute(name = "listBinding", type = String.class),
+        @UplAttribute(name = "listParams", type = String[].class),
+        @UplAttribute(name = "listKey", type = String.class),
         @UplAttribute(name = "listDescription", type = String.class),
-        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "control") })
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "control") })
 public abstract class AbstractListPopupTextField extends AbstractPopupTextField implements ListControl {
 
     @Override
@@ -63,7 +66,7 @@ public abstract class AbstractListPopupTextField extends AbstractPopupTextField 
 
     @Override
     public String getList() throws UnifyException {
-        return getUplAttribute(String.class, "list");
+        return getUplAttribute(String.class, "list", "listBinding");
     }
 
     @Override

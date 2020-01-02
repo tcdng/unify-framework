@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,8 +19,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Inputs data object.
@@ -30,53 +32,68 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class Inputs {
 
-    private List<Input> inputList;
+    private List<Input<?>> inputList;
 
-    private Map<String, Input> inputByName;
+    private Map<String, Input<?>> inputByName;
 
-    public Inputs(List<Input> inputList) {
+    public Inputs(List<Input<?>> inputList) {
         this.inputList = Collections.unmodifiableList(inputList);
-        this.inputByName = new HashMap<String, Input>();
-        for (Input input : inputList) {
+        this.inputByName = new HashMap<String, Input<?>>();
+        for (Input<?> input : inputList) {
             inputByName.put(input.getName(), input);
         }
     }
-
-    public Input getInput(String name) {
-        return this.inputByName.get(name);
-    }
-
-    public String getInputValue(String name) {
-        Input input = this.inputByName.get(name);
+    
+    public String getInputValue(String name) throws UnifyException {
+        Input<?> input = inputByName.get(name);
         if (input != null) {
-            return input.getValue();
+            return input.getStringValue();
         }
+        
         return null;
     }
 
-    public boolean setInputValue(String name, String value) {
-        Input input = this.inputByName.get(name);
+    public boolean setInputValue(String name, String value) throws UnifyException {
+        Input<?> input = inputByName.get(name);
         if (input != null) {
-            input.setValue(value);
+            input.setStringValue(value);
             return true;
         }
+        
         return false;
     }
 
-    public List<Input> getInputList() {
-        return inputList;
+    public Set<String> getInputNames() {
+        return inputByName.keySet();
+    }
+    
+    public Input<?> getInput(String name) {
+        return inputByName.get(name);
     }
 
-    public Map<String, Object> getInputValues() throws UnifyException {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (Input input : this.inputList) {
-            map.put(input.getName(), input.getTypeValue());
-        }
-
-        return map;
+    public List<Input<?>> getInputList() {
+        return inputList;
     }
 
     public int size() {
         return inputList.size();
+    }
+    
+    public Map<String, Object> getTypeValuesByName() {
+        return Inputs.getTypeValuesByName(inputList);
+    }  
+    
+    public static Map<String, Object> getTypeValuesByName(List<Input<?>> inputList) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Inputs.getTypeValuesByNameIntoMap(inputList, map);
+        return map;
+    }
+    
+    public static void getTypeValuesByNameIntoMap(List<Input<?>> inputList, Map<String, Object> map) {
+        if(DataUtils.isNotBlank(inputList)) {
+            for(Input<?> input: inputList) {
+                map.put(input.getName(), input.getTypeValue());
+            }
+        }
     }
 }

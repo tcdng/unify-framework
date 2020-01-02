@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,17 +16,15 @@
 package com.tcdng.unify.core.report;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Stack;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
-import com.tcdng.unify.core.operation.Operator;
 
 /**
  * Used to define a report for generation at runtime.
@@ -48,29 +46,29 @@ public class Report {
 
     private String query;
 
-    private Collection<?> beanCollection;
+    private String theme;
 
-    private ReportTable table;
+    private String layout;
+
+    private List<?> beanCollection;
 
     private List<ReportTableJoin> joins;
 
     private List<ReportColumn> columns;
 
-    private List<ReportColumnFilter> filters;
+    private ReportTable table;
+
+    private ReportFilter filter;
 
     private ReportFormat format;
 
-    private ReportLayout layout;
-
     private ReportParameters reportParameters;
 
-    private String columnFontName;
+    private ReportTheme reportTheme;
 
-    private int columnFontSize;
+    private int pageWidth;
 
-    private int columnHeaderHeight;
-
-    private int detailHeight;
+    private int pageHeight;
 
     private String summationLegend;
 
@@ -80,6 +78,12 @@ public class Report {
 
     private boolean printColumnNames;
 
+    private boolean printGroupColumnNames;
+
+    private boolean invertGroupColors;
+
+    private boolean showParameterHeader;
+
     private boolean underlineRows;
 
     private boolean shadeOddRows;
@@ -87,33 +91,36 @@ public class Report {
     private boolean landscape;
 
     private Report(String code, String title, String template, String processor, String dataSource, String query,
-            Collection<?> beanCollection, ReportTable table, List<ReportTableJoin> joins, List<ReportColumn> columns,
-            List<ReportColumnFilter> filters, ReportFormat format, ReportLayout layout,
-            ReportParameters reportParameters, String columnFontName, int columnFontSize, int columnHeaderHeight,
-            int detailHeight, String summationLegend, String groupSummationLegend, boolean dynamicDataSource,
-            boolean printColumnNames, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
+            String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
+            List<ReportColumn> columns, ReportFilter filter, ReportFormat format, String layout,
+            ReportParameters reportParameters, int pageWidth, int pageHeight, String summationLegend,
+            String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
+            boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
+            boolean underlineRows, boolean shadeOddRows, boolean landscape) {
         this.code = code;
         this.title = title;
         this.template = template;
         this.processor = processor;
         this.dataSource = dataSource;
         this.query = query;
+        this.theme = theme;
         this.beanCollection = beanCollection;
         this.table = table;
         this.joins = joins;
         this.columns = columns;
-        this.filters = filters;
+        this.filter = filter;
         this.format = format;
         this.layout = layout;
         this.reportParameters = reportParameters;
-        this.columnFontName = columnFontName;
-        this.columnFontSize = columnFontSize;
-        this.columnHeaderHeight = columnHeaderHeight;
-        this.detailHeight = detailHeight;
+        this.pageWidth = pageWidth;
+        this.pageHeight = pageHeight;
         this.summationLegend = summationLegend;
         this.groupSummationLegend = groupSummationLegend;
         this.dynamicDataSource = dynamicDataSource;
         this.printColumnNames = printColumnNames;
+        this.printGroupColumnNames = printGroupColumnNames;
+        this.invertGroupColors = invertGroupColors;
+        this.showParameterHeader = showParameterHeader;
         this.underlineRows = underlineRows;
         this.shadeOddRows = shadeOddRows;
         this.landscape = landscape;
@@ -127,7 +134,7 @@ public class Report {
         return format;
     }
 
-    public ReportLayout getLayout() {
+    public String getLayout() {
         return layout;
     }
 
@@ -163,28 +170,36 @@ public class Report {
         this.query = query;
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
     public ReportTable getTable() {
         return table;
     }
 
-    public Collection<?> getBeanCollection() {
+    public void setBeanCollection(List<?> beanCollection) {
+        this.beanCollection = beanCollection;
+    }
+
+    public List<?> getBeanCollection() {
         return beanCollection;
     }
 
-    public String getColumnFontName() {
-        return columnFontName;
+    public ReportTheme getReportTheme() {
+        return reportTheme;
     }
 
-    public int getColumnFontSize() {
-        return columnFontSize;
+    public void setReportTheme(ReportTheme reportTheme) {
+        this.reportTheme = reportTheme;
     }
 
-    public int getColumnHeaderHeight() {
-        return columnHeaderHeight;
+    public int getPageWidth() {
+        return pageWidth;
     }
 
-    public int getDetailHeight() {
-        return detailHeight;
+    public int getPageHeight() {
+        return pageHeight;
     }
 
     public String getSummationLegend() {
@@ -207,6 +222,18 @@ public class Report {
         return printColumnNames;
     }
 
+    public boolean isPrintGroupColumnNames() {
+        return printGroupColumnNames;
+    }
+
+    public boolean isInvertGroupColors() {
+        return invertGroupColors;
+    }
+
+    public boolean isShowParameterHeader() {
+        return showParameterHeader;
+    }
+
     public boolean isUnderlineRows() {
         return underlineRows;
     }
@@ -223,7 +250,7 @@ public class Report {
         return !columns.isEmpty();
     }
 
-    public boolean isBeanCollection() {
+    public boolean isWithBeanCollection() {
         return beanCollection != null;
     }
 
@@ -239,12 +266,34 @@ public class Report {
         this.reportParameters = reportParameters;
     }
 
-    public void setParameter(String name, Object value) {
-        reportParameters.setParameter(name, value);
+    public void setParameter(String name, String description, Object value) {
+        setParameter(name, description, null, value, false, false);
     }
 
-    public Object getParameter(String name) {
+    public void setParameter(String name, String description, String formatter, Object value, boolean headerDetail,
+            boolean footerDetail) {
+        setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
+    }
+
+    public void setParameter(ReportParameter reportParameter) {
+        reportParameters.setParameter(reportParameter);
+    }
+
+    public boolean isParameter(String name) {
+        return reportParameters.isParameter(name);
+    }
+
+    public ReportParameter getParameter(String name) {
         return reportParameters.getParameter(name);
+    }
+
+    public Object getParameterValue(String name) {
+        ReportParameter reportParameter = reportParameters.getParameter(name);
+        if (reportParameter != null) {
+            return reportParameter.getValue();
+        }
+
+        return null;
     }
 
     public List<ReportTableJoin> getJoins() {
@@ -255,8 +304,8 @@ public class Report {
         return Collections.unmodifiableList(columns);
     }
 
-    public List<ReportColumnFilter> getFilters() {
-        return filters;
+    public ReportFilter getFilter() {
+        return filter;
     }
 
     public void addColumn(ReportColumn reportColumn) {
@@ -268,14 +317,6 @@ public class Report {
     }
 
     public static class Builder {
-
-        public static String DEFAULT_COLUMN_FONTNAME = "Arial";
-
-        public static int DEFAULT_COLUMN_FONTSIZE = 10;
-
-        public static int DEFAULT_COLUMNHEADER_HEIGHT = 20;
-
-        public static int DEFAULT_DETAIL_HEIGHT = 20;
 
         private String code;
 
@@ -289,27 +330,29 @@ public class Report {
 
         private String query;
 
+        private String theme;
+
         private ReportTable table;
 
-        private Collection<?> beanCollection;
+        private ReportFilter rootFilter;
+
+        private ReportFormat format;
+
+        private ReportParameters reportParameters;
+
+        private List<?> beanCollection;
 
         private List<ReportTableJoin> joins;
 
         private List<ReportColumn> columns;
 
-        private List<ReportColumnFilter> filters;
+        private Stack<ReportFilter> filters;
 
-        private ReportFormat format;
+        private String layout;
 
-        private ReportLayout layout;
+        private int pageWidth;
 
-        private String columnFontName;
-
-        private int columnFontSize;
-
-        private int columnHeaderHeight;
-
-        private int detailHeight;
+        private int pageHeight;
 
         private String summationLegend;
 
@@ -319,26 +362,28 @@ public class Report {
 
         private boolean printColumnNames;
 
+        private boolean printGroupColumnNames;
+
+        private boolean invertGroupColors;
+
+        private boolean showParameterHeader;
+
         private boolean underlineRows;
 
         private boolean shadeOddRows;
 
         private boolean landscape;
 
-        private Map<String, Object> parameters;
-
         private Builder() {
             this.format = ReportFormat.PDF;
-            this.layout = ReportLayout.TABULAR;
+            this.layout = ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER;
+            this.reportParameters = new ReportParameters();
             this.joins = new ArrayList<ReportTableJoin>();
             this.columns = new ArrayList<ReportColumn>();
-            this.filters = new ArrayList<ReportColumnFilter>();
-            this.parameters = new HashMap<String, Object>();
+            this.filters = new Stack<ReportFilter>();
             this.printColumnNames = true;
-            this.columnFontName = DEFAULT_COLUMN_FONTNAME;
-            this.columnFontSize = DEFAULT_COLUMN_FONTSIZE;
-            this.columnHeaderHeight = DEFAULT_COLUMNHEADER_HEIGHT;
-            this.detailHeight = DEFAULT_DETAIL_HEIGHT;
+            this.printGroupColumnNames = true;
+            this.showParameterHeader = true;
         }
 
         public Builder code(String code) {
@@ -371,7 +416,12 @@ public class Report {
             return this;
         }
 
-        public Builder beanCollection(Collection<?> beanCollection) {
+        public Builder theme(String theme) {
+            this.theme = theme;
+            return this;
+        }
+
+        public Builder beanCollection(List<?> beanCollection) {
             this.beanCollection = beanCollection;
             return this;
         }
@@ -381,28 +431,18 @@ public class Report {
             return this;
         }
 
-        public Builder layout(ReportLayout layout) {
+        public Builder layout(String layout) {
             this.layout = layout;
             return this;
         }
 
-        public Builder columnFontName(String columnFontName) {
-            this.columnFontName = columnFontName;
+        public Builder pageWidth(int pageWidth) {
+            this.pageWidth = pageWidth;
             return this;
         }
 
-        public Builder columnFontSize(int columnFontSize) {
-            this.columnFontSize = columnFontSize;
-            return this;
-        }
-
-        public Builder columnHeaderHeight(int columnHeaderHeight) {
-            this.columnHeaderHeight = columnHeaderHeight;
-            return this;
-        }
-
-        public Builder detailHeight(int detailHeight) {
-            this.detailHeight = detailHeight;
+        public Builder pageHeight(int pageHeight) {
+            this.pageHeight = pageHeight;
             return this;
         }
 
@@ -423,6 +463,21 @@ public class Report {
 
         public Builder printColumnNames(boolean printColumnNames) {
             this.printColumnNames = printColumnNames;
+            return this;
+        }
+
+        public Builder printGroupColumnNames(boolean printGroupColumnNames) {
+            this.printGroupColumnNames = printGroupColumnNames;
+            return this;
+        }
+
+        public Builder invertGroupColors(boolean invertGroupColors) {
+            this.invertGroupColors = invertGroupColors;
+            return this;
+        }
+
+        public Builder showParameterHeader(boolean showParameterHeader) {
+            this.showParameterHeader = showParameterHeader;
             return this;
         }
 
@@ -479,48 +534,91 @@ public class Report {
             return this;
         }
 
-        public Builder addColumn(String title, String name, String className, String formatterUpl, OrderType order,
-                HAlignType hAlignType, int widthRatio, boolean group, boolean sum) throws UnifyException {
-            addColumn(title, null, name, className, formatterUpl, order, hAlignType, widthRatio, group, sum);
-            return this;
-        }
-
-        public Builder addColumn(String title, String table, String name, String className, String formatterUpl,
-                OrderType order, HAlignType hAlignType, int widthRatio, boolean group, boolean sum)
-                throws UnifyException {
+        public Builder addColumn(String title, String table, String name, String className, String sqlBlobTypeName,
+                String formatterUpl, OrderType order, HAlignType hAlignType, int widthRatio, boolean group,
+                boolean groupOnNewPage, boolean sum) throws UnifyException {
             ReportColumn rc = ReportColumn.newBuilder().title(title).table(table).name(name).className(className)
-                    .horizontalAlignment(hAlignType).widthRatio(widthRatio).formatter(formatterUpl).order(order)
-                    .group(group).sum(sum).build();
+                    .horizontalAlignment(hAlignType).widthRatio(widthRatio).sqlBlobTypeName(sqlBlobTypeName)
+                    .formatter(formatterUpl).order(order).group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
             columns.add(rc);
             return this;
         }
 
-        public Builder addFilter(ReportColumnFilter reportFilter) {
-            filters.add(reportFilter);
+        public Builder beginCompoundFilter(RestrictionType op) {
+            if (!op.isCompound()) {
+                throw new IllegalArgumentException(op + " is not a compound restriction type.");
+            }
+
+            if (rootFilter != null) {
+                throw new IllegalStateException("Can not have multiple root compound filter.");
+            }
+
+            ReportFilter reportFilter = new ReportFilter(op);
+            if (!filters.isEmpty()) {
+                filters.peek().getSubFilterList().add(reportFilter);
+            }
+
+            filters.push(reportFilter);
             return this;
         }
 
-        public Builder addFilter(Operator op, String tableName, String columnName, Object param1, Object param2) {
-            filters.add(new ReportColumnFilter(op, tableName, columnName, param1, param2));
+        public Builder endCompoundFilter() {
+            if (filters.isEmpty()) {
+                throw new IllegalStateException("No compound filter context currently open.");
+            }
+
+            ReportFilter reportFilter = filters.pop();
+            if (filters.isEmpty()) {
+                rootFilter = reportFilter;
+            }
+
             return this;
         }
 
-        public Builder setParameter(String name, Object value) {
-            parameters.put(name, value);
+        public Builder addSimpleFilter(RestrictionType op, String tableName, String columnName, Object param1,
+                Object param2) {
+            return addSimpleFilter(new ReportFilter(op, tableName, columnName, param1, param2));
+        }
+
+        public Builder addSimpleFilter(ReportFilter reportFilter) {
+            if (reportFilter.isCompound()) {
+                throw new IllegalArgumentException(reportFilter.getOp() + " is not a simple restriction type.");
+            }
+
+            if (filters.isEmpty()) {
+                throw new IllegalStateException("No compound filter context currently open.");
+            }
+
+            filters.peek().getSubFilterList().add(reportFilter);
             return this;
         }
 
-        public Builder setParameters(Map<String, Object> parameters) {
-            parameters.putAll(parameters);
+        public Builder addParameter(ReportParameter reportParameter) {
+            reportParameters.setParameter(reportParameter);
+            return this;
+        }
+
+        public Builder addParameter(String name, String description, Object value) {
+            return addParameter(name, description, null, value, false, false);
+        }
+
+        public Builder addParameter(String name, String description, String formatter, Object value,
+                boolean headerDetail, boolean footerDetail) {
+            reportParameters
+                    .setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
             return this;
         }
 
         public Report build() throws UnifyException {
-            Report report = new Report(code, title, template, processor, dataSource, query, beanCollection, table,
-                    Collections.unmodifiableList(joins), columns, filters, format, layout,
-                    new ReportParameters(parameters), columnFontName, columnFontSize, columnHeaderHeight, detailHeight,
-                    summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames, underlineRows,
-                    shadeOddRows, landscape);
+            if (rootFilter == null) {
+                rootFilter = new ReportFilter(RestrictionType.AND);
+            }
+            
+            Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
+                    table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout, reportParameters,
+                    pageWidth, pageHeight, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,
+                    printGroupColumnNames, invertGroupColors, showParameterHeader, underlineRows, shadeOddRows,
+                    landscape);
             return report;
         }
     }

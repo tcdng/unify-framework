@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.tcdng.unify.core.data;
+
+import java.util.List;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
@@ -63,6 +65,25 @@ public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements Val
             }
 
             return new BeanValueArrayStore(storageObject, dataIndex);
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> ValueStore getListValueStore(Class<T> clazz, List<T> storageObject, int dataIndex)
+            throws UnifyException {
+        if (storageObject != null) {
+            if (PackableDoc.class.equals(clazz)) {
+                return new PackableDocListStore((List<PackableDoc>) storageObject, dataIndex);
+            }
+
+            if (MapValues.class.equals(clazz)) {
+                return new MapValuesListStore((List<MapValues>) storageObject, dataIndex);
+            }
+
+            return new BeanValueListStore((List<Object>) storageObject, dataIndex);
         }
 
         return null;

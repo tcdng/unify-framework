@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.tcdng.unify.core.data;
+
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -62,4 +64,19 @@ public interface ValueStoreFactory extends UnifyComponent {
      *             if an error occurs
      */
     ValueStore getArrayValueStore(Object[] sourceObject, int dataIndex) throws UnifyException;
+
+    /**
+     * Gets an list value store instance based on a supplied source object.
+     * 
+     * @param clazz
+     *            the list data type
+     * @param sourceObject
+     *            the value store source object.
+     * @param dataIndex
+     *            the data index
+     * @return A null value is returned if supplied source object is null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> ValueStore getListValueStore(Class<T> clazz, List<T> sourceObject, int dataIndex) throws UnifyException;
 }

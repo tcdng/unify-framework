@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -400,7 +400,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                 runTasks();
             } catch (Exception e) {
             } finally {
-                if (!StringUtils.isBlank(lockToRelease)) {
+                if (StringUtils.isNotBlank(lockToRelease)) {
                     try {
                         ClusterService clusterManager =
                                 (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
@@ -437,7 +437,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                         tasks[i].execute(taskMonitor, taskInfo.getTaskInput(), taskInfo.getTaskOutput());
 
                         if (!taskMonitor.isCanceled()) {
-                            removeTask(taskInfo, TaskStatus.COMPLETED, periodic);
+                            removeTask(taskInfo, TaskStatus.SUCCESSFUL, periodic);
                         }
                     }
 
@@ -517,7 +517,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
             this.taskID = taskID;
             this.taskInput = taskInput;
             this.taskOutput = taskOutput;
-            taskStatus = TaskStatus.INITIALISED;
+            taskStatus = TaskStatus.INITIALIZED;
         }
 
         public TaskStatus getTaskStatus() {
@@ -564,10 +564,10 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
         public TaskMonitorImpl(TaskStatusLogger taskStatusLogger, boolean logMessages) {
             this.taskStatusLogger = taskStatusLogger;
             this.logMessages = logMessages;
-            taskInfoList = new ArrayList<TaskInfo>();
+            this.exceptions = new ArrayList<Exception>();
+            this.taskInfoList = new ArrayList<TaskInfo>();
             if (this.logMessages) {
                 messages = new ArrayList<String>();
-                exceptions = new ArrayList<Exception>();
             }
         }
 
@@ -596,7 +596,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
         public boolean isPending() {
             if (!canceled) {
                 TaskStatus taskStatus = taskInfoList.get(taskInfoList.size() - 1).getTaskStatus();
-                return TaskStatus.INITIALISED.equals(taskStatus) || TaskStatus.RUNNING.equals(taskStatus);
+                return TaskStatus.INITIALIZED.equals(taskStatus) || TaskStatus.RUNNING.equals(taskStatus);
             }
 
             return false;
@@ -610,7 +610,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
         @Override
         public boolean isDone() {
             TaskStatus taskStatus = taskInfoList.get(taskInfoList.size() - 1).getTaskStatus();
-            return TaskStatus.COMPLETED.equals(taskStatus) || TaskStatus.CANCELED.equals(taskStatus)
+            return TaskStatus.SUCCESSFUL.equals(taskStatus) || TaskStatus.CANCELED.equals(taskStatus)
                     || TaskStatus.FAILED.equals(taskStatus) || TaskStatus.ABORTED.equals(taskStatus);
         }
 
@@ -651,22 +651,12 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
         @Override
         public void addException(Exception exception) {
-            if (logMessages) {
-                if (exceptions.size() >= maxMonitorMessages) {
-                    exceptions.remove(0);
-                }
-
-                exceptions.add(exception);
-            }
+            exceptions.add(exception);
         }
 
         @Override
         public Exception[] getExceptions() {
-            if (logMessages) {
-                return exceptions.toArray(new Exception[exceptions.size()]);
-            }
-
-            return new Exception[0];
+            return exceptions.toArray(new Exception[exceptions.size()]);
         }
 
         @Override

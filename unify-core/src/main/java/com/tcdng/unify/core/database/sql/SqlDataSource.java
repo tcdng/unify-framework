@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.DataSource;
@@ -29,16 +30,7 @@ import com.tcdng.unify.core.database.NativeQuery;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SqlDataSource extends DataSource {
-
-    /**
-     * Gets the data source primary application schema.
-     * 
-     * @return the primary schema name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String getApplicationSchema() throws UnifyException;
+public interface SqlDataSource extends DataSource, NameSqlDataSourceSchema {
 
     /**
      * Gets a list of schemas in this data source.
@@ -105,6 +97,20 @@ public interface SqlDataSource extends DataSource {
      *             if an error occurs
      */
     Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException;
+
+    /**
+     * Returns table column names..
+     * 
+     * @param schemaName
+     *            the schema name
+     * @param tableName
+     *            the table name
+     * @return set of column names. Empty set is returned if schemaName or
+     *         tableName is null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Set<String> getColumns(String schemaName, String tableName) throws UnifyException;
 
     /**
      * Executes supplied native query and returns rows.

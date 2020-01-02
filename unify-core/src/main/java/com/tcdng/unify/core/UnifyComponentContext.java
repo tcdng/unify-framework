@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.list.ListManager;
 import com.tcdng.unify.core.logging.Logger;
@@ -217,7 +218,27 @@ public class UnifyComponentContext {
      */
     public <T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType,
             Class<? extends Annotation> annotationClass, String... basePackages) throws UnifyException {
-        return applicationContext.getContainer().getAnnotatedClasses(classType, annotationClass);
+        return applicationContext.getContainer().getAnnotatedClasses(classType, annotationClass, basePackages);
+    }
+
+    /**
+     * Returns classes of a particular type annotated with a specific type of
+     * annotation.
+     * 
+     * @param classType
+     *            the annotated class type
+     * @param annotationClass
+     *            the annotation
+     * @param excludePackages
+     *            packages to exclude search from. This parameter is optional.
+     * @return list of annotated classes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public <T> List<Class<? extends T>> getAnnotatedClassesExcluded(Class<T> classType,
+            Class<? extends Annotation> annotationClass, String... excludePackages) throws UnifyException {
+        return applicationContext.getContainer().getAnnotatedClassesExcluded(classType, annotationClass,
+                excludePackages);
     }
 
     /**
@@ -311,12 +332,23 @@ public class UnifyComponentContext {
     /**
      * Gets application locale
      * 
-     * @return the application local
+     * @return the application locale
      * @throws UnifyException
      *             if an error occurs
      */
     protected Locale getApplicationLocale() throws UnifyException {
         return applicationContext.getApplicationLocale();
+    }
+
+    /**
+     * Gets application time zone
+     * 
+     * @return the application time zone
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected TimeZone getApplicationTimeZone() throws UnifyException {
+        return applicationContext.getTimeZone();
     }
 
     /**
@@ -331,8 +363,7 @@ public class UnifyComponentContext {
     }
 
     /**
-     * Returns privilege settings for supplied privilege code and current session
-     * role.
+     * Returns view directive for supplied privilege code and current session role.
      * 
      * @param privilege
      *            the privilege to test
@@ -340,12 +371,27 @@ public class UnifyComponentContext {
      * @throws UnifyException
      *             if an error occurs
      */
-    public PrivilegeSettings getRolePrivilegeSettings(String privilege) throws UnifyException {
+    public ViewDirective getRoleViewDirective(String privilege) throws UnifyException {
         UserToken userToken = getSessionContext().getUserToken();
         if (userToken != null) {
-            return applicationContext.getPrivilegeSettings(userToken.getRoleCode(), privilege);
+            return applicationContext.getRoleViewDirective(userToken.getRoleCode(), privilege);
         }
-        return applicationContext.getPrivilegeSettings(null, privilege);
+        return applicationContext.getRoleViewDirective(null, privilege);
+    }
+
+    /**
+     * Returns privilege codes for supplied privilege category and role.
+     * 
+     * @param roleCode
+     *            the role code
+     * @param privilegeCategoryCode
+     *            the privilege category code
+     * @return set of privilege codes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public Set<String> getRolePrivilegeCodes(String roleCode, String privilegeCategoryCode) throws UnifyException {
+        return applicationContext.getPrivilegeCodes(roleCode, privilegeCategoryCode);
     }
 
     /**
@@ -358,7 +404,7 @@ public class UnifyComponentContext {
      * @throws UnifyException
      *             if an error occurs
      */
-    public Set<String> getRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
+    public Set<String> getCurrentRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
         return applicationContext.getPrivilegeCodes(getSessionContext().getUserToken().getRoleCode(),
                 privilegeCategoryCode);
     }
@@ -374,10 +420,10 @@ public class UnifyComponentContext {
      * @throws UnifyException
      *             if an error occurs
      */
-    public boolean isRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
+    public boolean isCurrentRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
         UserToken userToken = getSessionContext().getUserToken();
         if (userToken != null && userToken.getRoleCode() != null) {
-            Set<String> privileges = getRolePrivilegeCodes(privilegeCategoryCode);
+            Set<String> privileges = getRolePrivilegeCodes(userToken.getRoleCode(), privilegeCategoryCode);
             if (privileges != null) {
                 return privileges.contains(privilegeCode);
             }
@@ -438,6 +484,32 @@ public class UnifyComponentContext {
     }
 
     /**
+     * Begins a cluster synchronization block with specified lock. Blocks until
+     * synchronization handle is obtained or an error occurs. Lock should be
+     * released by calling {@link #endClusterLock(String)}.
+     * 
+     * @param lockName
+     *            the lock name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void beginClusterLock(String lockName) throws UnifyException {
+        applicationContext.getContainer().beginClusterLock(lockName);
+    }
+
+    /**
+     * Ends a cluster synchronization block for specified lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void endClusterLock(String lockName) throws UnifyException {
+        applicationContext.getContainer().endClusterLock(lockName);
+    }
+
+    /**
      * Tries to grab the cluster master synchronization lock.
      * 
      * @return a true value is lock is obtained otherwise false
@@ -460,6 +532,19 @@ public class UnifyComponentContext {
      */
     public boolean grabClusterLock(String lockName) throws UnifyException {
         return applicationContext.getContainer().grabClusterLock(lockName);
+    }
+
+    /**
+     * Checks if current node has a hold on a cluster synchronization lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @return a true value is lock is held otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public boolean isWithClusterLock(String lockName) throws UnifyException {
+        return applicationContext.getContainer().isWithClusterLock(lockName);
     }
 
     /**

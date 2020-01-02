@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,12 +33,15 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.logging.EventLogger;
 import com.tcdng.unify.core.logging.EventType;
+import com.tcdng.unify.core.logging.FieldAudit;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.data.Hint;
+import com.tcdng.unify.web.ui.data.MessageIcon;
 import com.tcdng.unify.web.ui.data.ValidationInfo;
 
 /**
@@ -63,14 +66,16 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     private static final String SWITCHED_PANELS = "SWITCHED_PANELS";
 
-    private static final String REQUEST_DOCUMENT_PAGECONTROLLER = "REQUEST_DOCUMENT_PAGECONTROLLER";
+    private static final String REQUEST_DOCUMENT = "REQUEST_DOCUMENT";
 
     private static final String REQUEST_PAGE = "REQUEST_PAGE";
 
     private static final String REQUEST_POPUP_NAME = "REQUEST_POPUP_NAME";
 
-    private static final String RESULT_PAGECONTROLLER_INFO = "RESULT_PAGECONTROLLER_INFO";
+    private static final String RESPONSE_PATHPARTS = "RESPONSE_PATHPARTS";
 
+    private static final String CLOSED_PAGEPATHS = "CLOSED_PAGEPATHS";
+    
     private static final String DYNAMICPANEL_PAGENAME = "DYNAMICPANEL_PAGENAME";
 
     private static final String USER_HINT_LIST = "USER_HINT_LIST";
@@ -78,6 +83,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     private static final String VALIDATION_INFO_LIST = "VALIDATION_INFO_LIST";
 
     private static final String ON_SAVE_LIST = "ON_SAVE_LIST";
+
+    private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
 
     @Configurable(ApplicationComponents.APPLICATION_EVENTSLOGGER)
     private EventLogger eventLogger;
@@ -103,22 +110,13 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void setRequestDocumentController(PageController pageController) throws UnifyException {
-        setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, pageController);
-    }
-
-    @Override
-    public PageController getRequestDocumentController() throws UnifyException {
-        return (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
+    public void setRequestDocument(Document document) throws UnifyException {
+        setRequestAttribute(REQUEST_DOCUMENT, document);
     }
 
     @Override
     public Document getRequestDocument() throws UnifyException {
-        PageController pageController = (PageController) getRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER);
-        if (pageController != null) {
-            return (Document) pageController.getPage();
-        }
-        return null;
+        return (Document) getRequestAttribute(REQUEST_DOCUMENT);
     }
 
     @Override
@@ -157,8 +155,12 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
                 request.getParameter(RequestParameterConstants.TARGET_VALUE));
         setRequestAttribute(RequestParameterConstants.CONFIRM_MSG,
                 request.getParameter(RequestParameterConstants.CONFIRM_MSG));
+        setRequestAttribute(RequestParameterConstants.CONFIRM_MSGICON,
+                request.getParameter(RequestParameterConstants.CONFIRM_MSGICON));
         setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM,
                 request.getParameter(RequestParameterConstants.CONFIRM_PARAM));
+        setRequestAttribute(RequestParameterConstants.REMOTE_VIEWER,
+                request.getParameter(RequestParameterConstants.REMOTE_VIEWER));
     }
 
     @Override
@@ -172,28 +174,48 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
+    public MessageIcon getRequestConfirmMessageIcon() throws UnifyException {
+        return MessageIcon.getIconByInt(DataUtils.convert(int.class, getRequestAttribute(RequestParameterConstants.CONFIRM_MSGICON), null));
+    }
+
+    @Override
     public String getRequestConfirmParam() throws UnifyException {
         return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.CONFIRM_PARAM), null);
     }
 
     @Override
     public String getRemoteViewer() throws UnifyException {
-        return getSessionContext().getRemoteViewer();
+        return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.REMOTE_VIEWER), null);
     }
 
     @Override
     public boolean isRemoteViewer() throws UnifyException {
-        return getSessionContext().isRemoteViewer();
+        return StringUtils.isNotBlank(getRemoteViewer());
     }
 
     @Override
-    public void setResponsePageControllerInfo(ControllerResponseInfo info) throws UnifyException {
-        setRequestAttribute(RESULT_PAGECONTROLLER_INFO, info);
+    public void setResponsePathParts(PathParts respPathParts) throws UnifyException {
+        setRequestAttribute(RESPONSE_PATHPARTS, respPathParts);
+    }
+    
+    @Override
+    public PathParts getResponsePathParts() throws UnifyException {
+        return (PathParts) getRequestAttribute(RESPONSE_PATHPARTS);
     }
 
     @Override
-    public ControllerResponseInfo getResponsePageControllerInfo() throws UnifyException {
-        return (ControllerResponseInfo) getRequestAttribute(RESULT_PAGECONTROLLER_INFO);
+    public void setClosedPagePaths(List<String> pathIdList) throws UnifyException {
+        setRequestAttribute(CLOSED_PAGEPATHS, pathIdList);
+    }
+
+    @Override
+    public List<String> getClosedPagePaths() throws UnifyException {
+        List<String> pathIdList= (List<String>) getRequestAttribute(CLOSED_PAGEPATHS);
+        if (pathIdList != null) {
+            return pathIdList;
+        }
+        
+        return Collections.emptyList();
     }
 
     @Override
@@ -212,7 +234,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public String getDynamicPanelPageName() throws UnifyException {
         List<DynamicPanelNames> dynamicPanelNameList =
                 (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
-        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+        if (DataUtils.isNotBlank(dynamicPanelNameList)) {
             return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getPageName();
         }
 
@@ -223,7 +245,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public String getDynamicPanelParentPageName() throws UnifyException {
         List<DynamicPanelNames> dynamicPanelNameList =
                 (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
-        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+        if (DataUtils.isNotBlank(dynamicPanelNameList)) {
             return ((List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME)).get(0).getParentPageName();
         }
 
@@ -234,7 +256,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public void clearDynamicPanelPageName() throws UnifyException {
         List<DynamicPanelNames> dynamicPanelNameList =
                 (List<DynamicPanelNames>) getRequestAttribute(DYNAMICPANEL_PAGENAME);
-        if (!DataUtils.isBlank(dynamicPanelNameList)) {
+        if (DataUtils.isNotBlank(dynamicPanelNameList)) {
             dynamicPanelNameList.remove(0);
         }
     }
@@ -349,18 +371,19 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void hintUser(String messageKey, Object... params) throws UnifyException {
-        hintUser(Hint.MODE.INFO, messageKey, params);
+    public void hintUser(String message, Object... params) throws UnifyException {
+        hintUser(Hint.MODE.INFO, message, params);
     }
 
     @Override
-    public void hintUser(Hint.MODE mode, String messageKey, Object... params) throws UnifyException {
+    public void hintUser(Hint.MODE mode, String message, Object... params) throws UnifyException {
         List<Hint> hintList = (List<Hint>) getRequestAttribute(USER_HINT_LIST);
         if (hintList == null) {
             hintList = new ArrayList<Hint>();
             setRequestAttribute(USER_HINT_LIST, hintList);
         }
-        hintList.add(new Hint(mode, getSessionMessage(messageKey, params)));
+
+        hintList.add(new Hint(mode, resolveSessionMessage(message, params)));
     }
 
     @Override
@@ -394,17 +417,44 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
+    public void logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object recordId,
+            List<FieldAudit> fieldAuditList) throws UnifyException {
+        eventLogger.logUserEvent(eventType, entityClass, recordId, fieldAuditList);
+    }
+
+    @Override
+    public boolean setFocusOnWidgetId(String id) throws UnifyException {
+        if(!isRequestAttribute(FOCUS_ON_WIDGET)) {
+            setRequestAttribute(FOCUS_ON_WIDGET, id);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isFocusOnWidget() throws UnifyException {
+        return isRequestAttribute(FOCUS_ON_WIDGET);
+    }
+
+    @Override
+    public String getFocusOnWidgetId() throws UnifyException {
+        return (String) getRequestAttribute(FOCUS_ON_WIDGET);
+    }
+
+    @Override
     public void clearRequestContext() throws UnifyException {
         setRequestAttribute(RequestParameterConstants.TARGET_VALUE, null);
         setRequestAttribute(RequestParameterConstants.CONFIRM_MSG, null);
+        setRequestAttribute(RequestParameterConstants.CONFIRM_MSGICON, null);
         setRequestAttribute(RequestParameterConstants.CONFIRM_PARAM, null);
         setRequestAttribute(COMMAND, null);
         setRequestAttribute(COMMAND_POSTRESPONSE_PATH, null);
         setRequestAttribute(PAGENAME_ALIASES, null);
         setRequestAttribute(REFRESH_PANEL_LONGNAMES, null);
-        setRequestAttribute(REQUEST_DOCUMENT_PAGECONTROLLER, null);
+        setRequestAttribute(REQUEST_DOCUMENT, null);
         setRequestAttribute(REQUEST_PAGE, null);
-        setRequestAttribute(RESULT_PAGECONTROLLER_INFO, null);
+        setRequestAttribute(RESPONSE_PATHPARTS, null);
         setRequestAttribute(USER_HINT_LIST, null);
         setRequestAttribute(VALIDATION_INFO_LIST, null);
 

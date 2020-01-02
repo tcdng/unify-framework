@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,6 +33,14 @@ import com.tcdng.unify.web.ui.Control;
         @UplAttribute(name = "sortable", type = boolean.class), @UplAttribute(name = "space", type = boolean.class) })
 public class GroupControl extends AbstractMultiControl implements Control {
 
+    private String dataGroupId;
+
+    @Override
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
+        dataGroupId = getPrefixedId("data_");
+    }
+
     @Override
     public boolean isFocus() throws UnifyException {
         return false;
@@ -41,6 +49,17 @@ public class GroupControl extends AbstractMultiControl implements Control {
     @Override
     public void updateState() throws UnifyException {
 
+    }
+
+    @Override
+    public void addPageAliases() throws UnifyException {
+        if (isContainerEditable()) {
+            addPageAlias(getDataGroupId());
+        }
+    }
+
+    public String getDataGroupId() {
+        return dataGroupId;
     }
 
     public boolean isSpace() throws UnifyException {

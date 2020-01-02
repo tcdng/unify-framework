@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
+import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.constant.BooleanType;
 
@@ -31,8 +32,9 @@ import com.tcdng.unify.core.constant.BooleanType;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Policy("testentitynorest-policy")
 @Table(name = "REPORT_PARAMETER")
-public class ReportParameter extends AbstractTestEntity {
+public class ReportParameter extends AbstractTestTableEntity {
 
     @ForeignKey(Report.class)
     private Long reportId;

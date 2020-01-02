@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,8 @@ package com.tcdng.unify.core;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.UserPlatform;
@@ -30,6 +32,10 @@ import com.tcdng.unify.core.util.ApplicationUtils;
  */
 @Component(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER)
 public class RequestContextManagerImpl extends AbstractUnifyComponent implements RequestContextManager {
+
+    private static Locale applicationLocale;
+
+    private static TimeZone applicationTimeZone;
 
     private static final ThreadLocal<ThreadRequestContextInfo> requestContextThreadLocal =
             new ThreadLocal<ThreadRequestContextInfo>() {
@@ -59,6 +65,11 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
 
     @Override
     public void unloadRequestContext() {
+        RequestContext requestContext = requestContextThreadLocal.get().getRequestContext();
+        if (requestContext != null) {
+            requestContext.removeAllAttributes();
+        }
+
         requestContextThreadLocal.remove();
     }
 
@@ -69,7 +80,8 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
 
     @Override
     protected void onInitialize() throws UnifyException {
-
+        applicationLocale = getApplicationLocale();
+        applicationTimeZone = getApplicationTimeZone();
     }
 
     @Override
@@ -81,8 +93,9 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             return new RequestContext(null,
-                    new SessionContext(ApplicationUtils.generateSessionContextId(), "http://localhost", "/default",
-                            inetAddress.getHostName(), inetAddress.getHostAddress(), null, null, UserPlatform.DEFAULT));
+                    new SessionContext(ApplicationUtils.generateSessionContextId(), applicationLocale,
+                            applicationTimeZone, "http://localhost", "/default", inetAddress.getHostName(),
+                            inetAddress.getHostAddress(), null, UserPlatform.DEFAULT));
         } catch (UnknownHostException e) {
         }
         return null;

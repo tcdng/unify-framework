@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,13 +26,13 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table(name = "PARAMVALUE", uniqueConstraints = { @UniqueConstraint({ "parameterValuesId", "paramKey" }) })
+@Table(name = "UNPARAMVALUE", uniqueConstraints = { @UniqueConstraint({ "parameterValuesId", "paramKey" }) })
 public class ParameterValue extends AbstractSystemSequencedEntity {
 
     @ForeignKey(ParameterValues.class)
     private Long parameterValuesId;
 
-    @Column
+    @Column(length = 64)
     private String paramKey;
 
     @Column(length = 128, nullable = true)

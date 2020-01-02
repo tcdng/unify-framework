@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system.entities;
 
 import com.tcdng.unify.core.annotation.Id;
 import com.tcdng.unify.core.annotation.Policy;
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.database.AbstractEntity;
 
 /**
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.database.AbstractEntity;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(name = "plainSequenced", description = "Plain Sequenced")
 @Policy("sequencedentity-policy")
 public abstract class AbstractSequencedEntity extends AbstractEntity implements SequencedEntity {
 

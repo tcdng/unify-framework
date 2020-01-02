@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.AbstractContainer;
 import com.tcdng.unify.web.ui.Section;
 import com.tcdng.unify.web.ui.Widget;
@@ -36,10 +35,10 @@ import com.tcdng.unify.web.ui.Widget;
  * @since 1.0
  */
 @Component("ui-form")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class, defaultValue = "1"),
+@UplAttributes({ @UplAttribute(name = "columns", type = int.class, defaultVal = "1"),
         @UplAttribute(name = "section", type = Section[].class, mandatory = true),
-        @UplAttribute(name = "requiredSymbol", type = String.class, defaultValue = "*"),
-        @UplAttribute(name = "captionSuffix", type = String.class, defaultValue = ":") })
+        @UplAttribute(name = "requiredSymbol", type = String.class, defaultVal = "*"),
+        @UplAttribute(name = "captionSuffix", type = String.class, defaultVal = ":") })
 public class Form extends AbstractContainer {
 
     private FormSection[] formSections;
@@ -51,8 +50,8 @@ public class Form extends AbstractContainer {
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
 
         Section[] sections = getUplAttribute(Section[].class, "section");
         formSections = new FormSection[sections.length];
@@ -94,10 +93,10 @@ public class Form extends AbstractContainer {
 
                             formSection.valueStoreList = valueList;
                         } else if (newValue instanceof List) {
-                            Object[] list = DataUtils.getArrayFromList((List<Object>) newValue);
-                            List<ValueStore> valueList = new ArrayList<ValueStore>(list.length);
-                            for (int i = 0; i < list.length; i++) {
-                                valueList.add(createArrayValueStore(list, i));
+                            List<Object> list = (List<Object>) newValue;
+                            List<ValueStore> valueList = new ArrayList<ValueStore>(list.size());
+                            for (int i = 0; i < list.size(); i++) {
+                                valueList.add(createListValueStore(list, i));
                             }
 
                             formSection.valueStoreList = valueList;

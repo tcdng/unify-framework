@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,13 +16,17 @@
 package com.tcdng.unify.web.ui;
 
 import java.io.Writer;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.NumberSymbols;
 import com.tcdng.unify.core.format.Pattern;
+import com.tcdng.unify.core.upl.UplComponent;
+import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.web.data.WebStringWriter;
 
 /**
@@ -167,22 +171,72 @@ public interface ResponseWriter extends UnifyComponent {
     /**
      * Writes a JSON string array.
      * 
-     * @param valueArray
-     *            the array values which are converted to strings
+     * @param stringArr
+     *            the string array to write
      * @throws UnifyException
      *             if an error occurs
      */
-    ResponseWriter writeJsonStringArray(Object... valueArray) throws UnifyException;
+    ResponseWriter writeJsonArray(String... stringArr) throws UnifyException;
 
     /**
-     * Writes a JSON string array.
+     * Writes a JSON integer array.
      * 
-     * @param valueList
-     *            the value list which are converted to strings
+     * @param intArr
+     *            the integer array to write
      * @throws UnifyException
      *             if an error occurs
      */
-    ResponseWriter writeJsonStringArray(List<?> valueList) throws UnifyException;
+    ResponseWriter writeJsonArray(Integer... intArr) throws UnifyException;
+
+    /**
+     * Writes a JSON long array.
+     * 
+     * @param longArr
+     *            the long array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Long... longArr) throws UnifyException;
+
+    /**
+     * Writes a JSON big decimal array.
+     * 
+     * @param bigArr
+     *            the big decimal array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(BigDecimal... bigArr) throws UnifyException;
+
+    /**
+     * Writes a JSON double array.
+     * 
+     * @param doubleArr
+     *            the double array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Double... doubleArr) throws UnifyException;
+
+    /**
+     * Writes a JSON boolean array.
+     * 
+     * @param boolArr
+     *            the boolean array to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Boolean... boolArr) throws UnifyException;
+
+    /**
+     * Writes a JSON array form a collection of objects.
+     * 
+     * @param col
+     *            the collection of objects to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeJsonArray(Collection<?> col) throws UnifyException;
 
     /**
      * Writes a JSON pattern object.
@@ -358,17 +412,6 @@ public interface ResponseWriter extends UnifyComponent {
     boolean isEmpty();
 
     /**
-     * Expands a theme tagged resource to a full theme resource URL
-     * 
-     * @param string
-     *            the tagged resource
-     * @return the expanded them resource URL
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String expandThemeTag(String string) throws UnifyException;
-
-    /**
      * Writes javascript REGEX that allows only alphanumeric characters and,
      * optionally, some special characters.
      * 
@@ -459,6 +502,24 @@ public interface ResponseWriter extends UnifyComponent {
 
     /**
      * Resets this response writer for reuse.
+     * 
+     * @param writers
+     *            the writers to use
      */
-    void reset();
+    void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers);
+
+    /**
+     * Sets the response write table mode.
+     * 
+     * @param enabled
+     *            the value to set
+     */
+    void setTableMode(boolean enabled);
+
+    /**
+     * Tests if writing should use table mode.
+     * 
+     * @return a true value if table mode is set
+     */
+    boolean isTableMode();
 }

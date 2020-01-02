@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,7 +38,7 @@ import com.tcdng.unify.web.ui.Widget;
 @Component("ui-dynamicpanel")
 @UplAttributes({ @UplAttribute(name = "panelNameBinding", type = String.class, mandatory = true),
         @UplAttribute(name = "panelValueBinding", type = String.class),
-        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultVal = "false") })
 public class DynamicPanel extends AbstractPanel {
 
     private Set<String> panelNames;
@@ -77,10 +77,14 @@ public class DynamicPanel extends AbstractPanel {
             standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName);
             page.addStandalonePanel(uniqueName, standalonePanel);
             getControllerManager().updatePageControllerInfo(
-                    getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), uniqueName);
+                    getRequestContextUtil().getResponsePathParts().getPathId(), uniqueName);
             panelNames.add(uniqueName);
         }
         setValueStore(standalonePanel);
+
+        //Set stand-alone panel container. Allows stand-alone panel to inherit container state where necessary.
+        standalonePanel.setContainer(this);
+
         return standalonePanel;
     }
 

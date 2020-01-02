@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,12 +21,14 @@ import java.io.InputStream;
 import java.io.Reader;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.sax.SAXSource;
 
 import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -55,19 +57,25 @@ public final class XMLConfigUtils {
                 }
             });
 
+            XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+            // Disable JAXB DTD validation
+            xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            xmlReader.setFeature("http://xml.org/sax/features/validation", false);
+
             if (xmlSrcObject instanceof String) {
                 Reader reader = new CharArrayReader(((String) xmlSrcObject).toCharArray());
-                return (T) jaxbUnmarshaller.unmarshal(reader);
+                return (T) jaxbUnmarshaller.unmarshal(new SAXSource(xmlReader, new InputSource(reader)));
             } else if (xmlSrcObject instanceof Reader) {
-                return (T) jaxbUnmarshaller.unmarshal((Reader) xmlSrcObject);
+                return (T) jaxbUnmarshaller.unmarshal(new SAXSource(xmlReader, new InputSource((Reader) xmlSrcObject)));
             } else if (xmlSrcObject instanceof InputStream) {
-                return (T) jaxbUnmarshaller.unmarshal((InputStream) xmlSrcObject);
+                return (T) jaxbUnmarshaller
+                        .unmarshal(new SAXSource(xmlReader, new InputSource((InputStream) xmlSrcObject)));
             } else if (xmlSrcObject instanceof InputSource) {
                 return (T) jaxbUnmarshaller.unmarshal((InputSource) xmlSrcObject);
             }
 
             return (T) jaxbUnmarshaller.unmarshal((File) xmlSrcObject);
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                     UnifyConfigUtils.class.getName());
         }

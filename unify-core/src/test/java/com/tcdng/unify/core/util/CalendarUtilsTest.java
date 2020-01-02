@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,9 @@
 package com.tcdng.unify.core.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -79,5 +82,244 @@ public class CalendarUtilsTest {
         assertEquals(2, difference.getHours());
         assertEquals(2, difference.getMinutes());
         assertEquals(0, difference.getSeconds());
+    }
+
+    @Test
+    public void testGetRawUTCOffset() throws Exception {
+        Long rawOffset = CalendarUtils.getRawOffset(null);
+        assertNull(rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("Africa/Luanda");
+        assertNull(rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("00:00");
+        assertEquals(Long.valueOf(0), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+00:00");
+        assertEquals(Long.valueOf(0), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+01:00");
+        assertEquals(Long.valueOf(1 * 60 * 60 * 1000), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+02:00");
+        assertEquals(Long.valueOf(2 * 60 * 60 * 1000), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("+02:45");
+        assertEquals(Long.valueOf((2 * 60 + 45) * 60 * 1000), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("-02:00");
+        assertEquals(Long.valueOf(-(2 * 60 * 60 * 1000)), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("-03:30");
+        assertEquals(Long.valueOf(-((3 * 60 + 30) * 60 * 1000)), rawOffset);
+
+        rawOffset = CalendarUtils.getRawOffset("-09:30");
+        assertEquals(Long.valueOf(-((9 * 60 + 30) * 60 * 1000)), rawOffset);
+    }
+
+    @Test
+    public void testNextEligibleDateNormalSkip() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.DAY_OF_YEAR, 1);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(cal1.get(Calendar.DAY_OF_YEAR) + 1, cal2.get(Calendar.DAY_OF_YEAR));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateNewYear() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        int daysInYear = cal1.getActualMaximum(Calendar.DAY_OF_YEAR);
+        cal1.set(Calendar.DAY_OF_YEAR, daysInYear);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(1, cal2.get(Calendar.DAY_OF_YEAR));
+        assertEquals(cal1.get(Calendar.YEAR) + 1, cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateMonthLimitsNormalSkip() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DATE, 1);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Jan" }, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(cal1.get(Calendar.MONTH), cal2.get(Calendar.MONTH));
+        assertEquals(cal1.get(Calendar.DATE) + 1, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateMonthLimitsNewNextMonth() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DATE, 31);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Jan", "Feb" }, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.FEBRUARY, cal2.get(Calendar.MONTH));
+        assertEquals(1, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateMonthLimitsNewFarMonth() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DATE, 31);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Jan", "Jun" }, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.JUNE, cal2.get(Calendar.MONTH));
+        assertEquals(1, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateMonthLimitsNewYear() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JUNE);
+        cal1.set(Calendar.DATE, 30);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, null, new String[] { "Feb", "Jun" }, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.FEBRUARY, cal2.get(Calendar.MONTH));
+        assertEquals(1, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR) + 1, cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateWeekdayLimitsNormalSkip() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date nextDt = CalendarUtils.getNextEligibleDate(new String[] { "Mon", "Tue" }, null, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.TUESDAY, cal2.get(Calendar.DAY_OF_WEEK));
+    }
+
+    @Test
+    public void testNextEligibleDateWeekdayLimitsNewWeek() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date nextDt = CalendarUtils.getNextEligibleDate(new String[] { "Mon" }, null, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.MONDAY, cal2.get(Calendar.DAY_OF_WEEK));
+        assertNotSame(cal1.get(Calendar.DATE), cal2.get(Calendar.DATE));
+    }
+
+    @Test
+    public void testNextEligibleDateDayLimitsNormalSkip() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DATE, 1);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "1", "2" }, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.JANUARY, cal2.get(Calendar.MONTH));
+        assertEquals(cal1.get(Calendar.DATE) + 1, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateDayLimitsFarDay() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DATE, 1);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "1", "18", "22" }, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.JANUARY, cal2.get(Calendar.MONTH));
+        assertEquals(18, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateDayLimitsNewMonth() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DATE, 25);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "2", "18", "22" }, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.FEBRUARY, cal2.get(Calendar.MONTH));
+        assertEquals(2, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateDayLimitsNewYear() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal1.set(Calendar.DATE, 30);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "6", "18", "22" }, null, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.JANUARY, cal2.get(Calendar.MONTH));
+        assertEquals(6, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR) + 1, cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateMonthLimitsDayLimitsNewMonth() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.JANUARY);
+        cal1.set(Calendar.DATE, 25);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "4", "18", "22" },
+                new String[] { "Apr", "Jun" }, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.APRIL, cal2.get(Calendar.MONTH));
+        assertEquals(4, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR), cal2.get(Calendar.YEAR));
+    }
+
+    @Test
+    public void testNextEligibleDateMonthLimitsDayLimitsNewYear() throws Exception {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal1.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal1.set(Calendar.DATE, 30);
+        Date nextDt = CalendarUtils.getNextEligibleDate(null, new String[] { "6", "18", "22" },
+                new String[] { "May", "Jun" }, cal1.getTime());
+        assertNotNull(nextDt);
+        cal2.setTime(nextDt);
+        assertEquals(Calendar.MAY, cal2.get(Calendar.MONTH));
+        assertEquals(6, cal2.get(Calendar.DATE));
+        assertEquals(cal1.get(Calendar.YEAR) + 1, cal2.get(Calendar.YEAR));
     }
 }

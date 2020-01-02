@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,13 @@ package com.tcdng.unify.core.database;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ReportFormQuery extends AbstractTestEntityQuery<ReportForm> {
+public class ReportFormQuery extends AbstractTestTableEntityQuery<ReportForm> {
 
     public ReportFormQuery() {
         super(ReportForm.class);
     }
 
     public ReportFormQuery reportId(Long reportId) {
-        return (ReportFormQuery) equals("reportId", reportId);
+        return (ReportFormQuery) addEquals("reportId", reportId);
     }
 }

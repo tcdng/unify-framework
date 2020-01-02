@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.file.AbstractFileTransferServer;
 import com.tcdng.unify.core.file.FileInfo;
 import com.tcdng.unify.core.file.FileFilter;
-import com.tcdng.unify.core.file.FileTransferInfo;
+import com.tcdng.unify.core.file.FileTransferSetup;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.jcifs.JCIFSApplicationComponents;
 
@@ -54,11 +54,11 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     private int bufferSize;
 
     @Override
-    public List<FileInfo> getRemoteFileList(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public List<FileInfo> getRemoteFileList(FileTransferSetup fileTransferSetup) throws UnifyException {
         List<FileInfo> list = Collections.emptyList();
         try {
-            SmbFile smbFile = getSmbFile(fileTransferInfo, null);
-            SmbFile[] files = smbFile.listFiles(new SMBFileFilter(fileTransferInfo));
+            SmbFile smbFile = getSmbFile(fileTransferSetup, null);
+            SmbFile[] files = smbFile.listFiles(new SMBFileFilter(fileTransferSetup));
             if (files != null && files.length > 0) {
                 list = new ArrayList<FileInfo>();
                 for (SmbFile file : files) {
@@ -79,9 +79,9 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public boolean remoteDirectoryExists(FileTransferInfo fileTransferInfo) throws UnifyException {
+    public boolean remoteDirectoryExists(FileTransferSetup fileTransferSetup) throws UnifyException {
         try {
-            SmbFile smbFile = getSmbFile(fileTransferInfo, null);
+            SmbFile smbFile = getSmbFile(fileTransferSetup, null);
             return smbFile.exists() && smbFile.isDirectory();
         } catch (UnifyException e) {
             throw e;
@@ -92,9 +92,9 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public boolean remoteFileExists(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
+    public boolean remoteFileExists(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
         try {
-            SmbFile smbFile = getSmbFile(fileTransferInfo, serverFile);
+            SmbFile smbFile = getSmbFile(fileTransferSetup, serverFile);
             return smbFile.exists() && smbFile.isFile();
         } catch (UnifyException e) {
             throw e;
@@ -105,15 +105,15 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public void createRemoteDirectory(FileTransferInfo fileTransferInfo) throws UnifyException {
-        createRemoteDirectories(getSmbFile(fileTransferInfo, null));
+    public void createRemoteDirectory(FileTransferSetup fileTransferSetup) throws UnifyException {
+        createRemoteDirectories(getSmbFile(fileTransferSetup, null));
     }
 
     @Override
-    public void createRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
+    public void createRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
         SmbFileOutputStream smbFileOutputStream = null;
         try {
-            SmbFile smbFile = getSmbFile(fileTransferInfo, serverFile);
+            SmbFile smbFile = getSmbFile(fileTransferSetup, serverFile);
             smbFileOutputStream = new SmbFileOutputStream(smbFile);
         } catch (UnifyException e) {
             throw e;
@@ -125,9 +125,9 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public void deleteRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
+    public void deleteRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
         try {
-            SmbFile smbFile = getSmbFile(fileTransferInfo, serverFile);
+            SmbFile smbFile = getSmbFile(fileTransferSetup, serverFile);
             smbFile.delete();
         } catch (UnifyException e) {
             throw e;
@@ -137,13 +137,13 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public byte[] readRemoteBlock(FileTransferInfo fileTransferInfo, String serverFile, long index, int size)
+    public byte[] readRemoteBlock(FileTransferSetup fileTransferSetup, String serverFile, long index, int size)
             throws UnifyException {
         byte[] block = null;
         SmbFileInputStream smbFileInputStream = null;
         try {
             // Prepare remote file stream
-            SmbFile smbFile = getSmbFile(fileTransferInfo, serverFile);
+            SmbFile smbFile = getSmbFile(fileTransferSetup, serverFile);
             smbFileInputStream = new SmbFileInputStream(smbFile);
             smbFileInputStream.skip(index);
 
@@ -161,51 +161,51 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     }
 
     @Override
-    public void uploadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile)
+    public void uploadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile)
             throws UnifyException {
-        SmbFile remoteSmbFile = getSmbFile(fileTransferInfo, serverFile);
-        File actLocalFile = getLocalFile(fileTransferInfo, localFile);
-        uploadFile(remoteSmbFile, actLocalFile, fileTransferInfo.isDeleteSourceOnTransfer());
+        SmbFile remoteSmbFile = getSmbFile(fileTransferSetup, serverFile);
+        File actLocalFile = getLocalFile(fileTransferSetup, localFile);
+        uploadFile(remoteSmbFile, actLocalFile, fileTransferSetup.isDeleteSourceOnTransfer());
     }
 
     @Override
-    public void uploadFiles(FileTransferInfo fileTransferInfo) throws UnifyException {
-        String remotePath = getNormalizedRemotePath(fileTransferInfo);
-        NtlmPasswordAuthentication auth = getAuthentication(fileTransferInfo);
-        File localDir = new File(getNormalizedLocalPath(fileTransferInfo));
-        FileFilter fileFilter = new FileFilter(fileTransferInfo);
-        uploadFiles(fileTransferInfo, auth, remotePath, localDir, fileFilter);
+    public void uploadFiles(FileTransferSetup fileTransferSetup) throws UnifyException {
+        String remotePath = getNormalizedRemotePath(fileTransferSetup);
+        NtlmPasswordAuthentication auth = getAuthentication(fileTransferSetup);
+        File localDir = new File(getNormalizedLocalPath(fileTransferSetup));
+        FileFilter fileFilter = new FileFilter(fileTransferSetup);
+        uploadFiles(fileTransferSetup, auth, remotePath, localDir, fileFilter);
     }
 
     @Override
-    public void downloadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile)
+    public void downloadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile)
             throws UnifyException {
-        SmbFile remoteSmbFile = getSmbFile(fileTransferInfo, serverFile);
-        File actLocalFile = getLocalFile(fileTransferInfo, localFile);
-        downloadFile(remoteSmbFile, actLocalFile, fileTransferInfo.isDeleteSourceOnTransfer());
+        SmbFile remoteSmbFile = getSmbFile(fileTransferSetup, serverFile);
+        File actLocalFile = getLocalFile(fileTransferSetup, localFile);
+        downloadFile(remoteSmbFile, actLocalFile, fileTransferSetup.isDeleteSourceOnTransfer());
     }
 
     @Override
-    public void downloadFiles(FileTransferInfo fileTransferInfo) throws UnifyException {
-        String remotePath = getNormalizedRemotePath(fileTransferInfo);
-        NtlmPasswordAuthentication auth = getAuthentication(fileTransferInfo);
-        File localDir = new File(getNormalizedLocalPath(fileTransferInfo));
-        SMBFileFilter smbFileFilter = new SMBFileFilter(fileTransferInfo);
-        downloadFiles(fileTransferInfo, auth, remotePath, localDir, smbFileFilter);
+    public void downloadFiles(FileTransferSetup fileTransferSetup) throws UnifyException {
+        String remotePath = getNormalizedRemotePath(fileTransferSetup);
+        NtlmPasswordAuthentication auth = getAuthentication(fileTransferSetup);
+        File localDir = new File(getNormalizedLocalPath(fileTransferSetup));
+        SMBFileFilter smbFileFilter = new SMBFileFilter(fileTransferSetup);
+        downloadFiles(fileTransferSetup, auth, remotePath, localDir, smbFileFilter);
     }
 
-    private void uploadFiles(FileTransferInfo fileTransferInfo, NtlmPasswordAuthentication auth, String remotePath,
+    private void uploadFiles(FileTransferSetup fileTransferSetup, NtlmPasswordAuthentication auth, String remotePath,
             File localDir, FileFilter fileFilter) throws UnifyException {
-        SmbFile remoteFile = getSmbFile(fileTransferInfo, auth, remotePath, null);
+        SmbFile remoteFile = getSmbFile(fileTransferSetup, auth, remotePath, null);
         createRemoteDirectories(remoteFile);
         File[] files = localDir.listFiles(fileFilter);
         for (File file : files) {
             if (file.isDirectory()) {
                 String newRemotePath = remotePath + file.getName() + '/';
-                uploadFiles(fileTransferInfo, auth, newRemotePath, file, fileFilter);
+                uploadFiles(fileTransferSetup, auth, newRemotePath, file, fileFilter);
             } else {
-                SmbFile remoteSmbFile = getSmbFile(fileTransferInfo, auth, remotePath, file.getName());
-                uploadFile(remoteSmbFile, file, fileTransferInfo.isDeleteSourceOnTransfer());
+                SmbFile remoteSmbFile = getSmbFile(fileTransferSetup, auth, remotePath, file.getName());
+                uploadFile(remoteSmbFile, file, fileTransferSetup.isDeleteSourceOnTransfer());
             }
         }
     }
@@ -241,20 +241,20 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
         }
     }
 
-    private void downloadFiles(FileTransferInfo fileTransferInfo, NtlmPasswordAuthentication auth, String remotePath,
+    private void downloadFiles(FileTransferSetup fileTransferSetup, NtlmPasswordAuthentication auth, String remotePath,
             File localDir, SMBFileFilter smbFileFilter) throws UnifyException {
         try {
             localDir.mkdirs();
-            SmbFile remoteFile = getSmbFile(fileTransferInfo, auth, remotePath, null);
+            SmbFile remoteFile = getSmbFile(fileTransferSetup, auth, remotePath, null);
             SmbFile[] files = remoteFile.listFiles(smbFileFilter);
             for (SmbFile file : files) {
                 File localFile = new File(getNormalizedLocalPath(localDir.getAbsolutePath()) + file.getName());
                 if (file.isDirectory()) {
                     String newRemotePath = remotePath + file.getName() + '/';
-                    downloadFiles(fileTransferInfo, auth, newRemotePath, localFile, smbFileFilter);
+                    downloadFiles(fileTransferSetup, auth, newRemotePath, localFile, smbFileFilter);
                 } else {
-                    SmbFile actRemoteFile = getSmbFile(fileTransferInfo, auth, remotePath, file.getName());
-                    downloadFile(actRemoteFile, localFile, fileTransferInfo.isDeleteSourceOnTransfer());
+                    SmbFile actRemoteFile = getSmbFile(fileTransferSetup, auth, remotePath, file.getName());
+                    downloadFile(actRemoteFile, localFile, fileTransferSetup.isDeleteSourceOnTransfer());
                 }
             }
         } catch (IOException e) {
@@ -303,20 +303,20 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
         }
     }
 
-    private SmbFile getSmbFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException {
-        String remotePath = getNormalizedRemotePath(fileTransferInfo);
-        NtlmPasswordAuthentication auth = getAuthentication(fileTransferInfo);
-        return getSmbFile(fileTransferInfo, auth, remotePath, serverFile);
+    private SmbFile getSmbFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException {
+        String remotePath = getNormalizedRemotePath(fileTransferSetup);
+        NtlmPasswordAuthentication auth = getAuthentication(fileTransferSetup);
+        return getSmbFile(fileTransferSetup, auth, remotePath, serverFile);
     }
 
-    private SmbFile getSmbFile(FileTransferInfo fileTransferInfo, NtlmPasswordAuthentication auth, String remotePath,
+    private SmbFile getSmbFile(FileTransferSetup fileTransferSetup, NtlmPasswordAuthentication auth, String remotePath,
             String serverFile) throws UnifyException {
         SmbFile smbFile = null;
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append("smb://").append(fileTransferInfo.getRemoteHost());
-            if (fileTransferInfo.getRemotePort() > 0) {
-                sb.append(':').append(fileTransferInfo.getRemotePort());
+            sb.append("smb://").append(fileTransferSetup.getRemoteHost());
+            if (fileTransferSetup.getRemotePort() > 0) {
+                sb.append(':').append(fileTransferSetup.getRemotePort());
             }
 
             sb.append(remotePath);
@@ -337,11 +337,11 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
         return smbFile;
     }
 
-    private NtlmPasswordAuthentication getAuthentication(FileTransferInfo fileTransferInfo) {
+    private NtlmPasswordAuthentication getAuthentication(FileTransferSetup fileTransferSetup) {
         NtlmPasswordAuthentication auth = null;
-        if (fileTransferInfo.getAuthenticationId() != null) {
+        if (fileTransferSetup.getAuthenticationId() != null) {
             String domain = null;
-            String loginId = fileTransferInfo.getAuthenticationId();
+            String loginId = fileTransferSetup.getAuthenticationId();
             int domainIndex = loginId.indexOf('\\');
             if (domainIndex < 0) {
                 domainIndex = loginId.indexOf('/');
@@ -352,7 +352,7 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
                 loginId = loginId.substring(domainIndex + 1);
             }
 
-            auth = new NtlmPasswordAuthentication(domain, loginId, fileTransferInfo.getAuthenticationPassword());
+            auth = new NtlmPasswordAuthentication(domain, loginId, fileTransferSetup.getAuthenticationPassword());
         }
 
         return auth;
@@ -360,8 +360,8 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
 
     private class SMBFileFilter extends FileFilter implements SmbFileFilter {
 
-        public SMBFileFilter(FileTransferInfo fileTransferInfo) {
-            super(fileTransferInfo.getFilePrefixes(), fileTransferInfo.getFileSuffixes());
+        public SMBFileFilter(FileTransferSetup fileTransferSetup) {
+            super(fileTransferSetup.getFilePrefixes(), fileTransferSetup.getFileSuffixes());
         }
 
         @Override

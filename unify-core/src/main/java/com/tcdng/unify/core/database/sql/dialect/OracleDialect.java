@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,22 +20,27 @@ import java.io.StringReader;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
-import com.tcdng.unify.core.database.sql.policy.BlobPolicy;
-import com.tcdng.unify.core.database.sql.policy.ClobPolicy;
-import com.tcdng.unify.core.database.sql.policy.IntegerPolicy;
-import com.tcdng.unify.core.database.sql.policy.LongPolicy;
-import com.tcdng.unify.core.database.sql.policy.ShortPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.LongPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ShortPolicy;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Oracle SQL dialect.
@@ -43,8 +48,12 @@ import com.tcdng.unify.core.database.sql.policy.ShortPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(name = SqlDialectConstants.ORACLE, description = "$m{sqldialect.oracledb}")
+@Component(name = SqlDialectNameConstants.ORACLE, description = "$m{sqldialect.oracledb}")
 public class OracleDialect extends AbstractSqlDataSourceDialect {
+
+    public OracleDialect() {
+        super(false); // useCallableFunctionMode
+    }
 
     @Override
     public String generateTestSql() throws UnifyException {
@@ -52,8 +61,13 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateNowSql() throws UnifyException {
-        return "SELECT LOCALTIMESTAMP FROM DUAL";
+    public String generateUTCTimestampSql() throws UnifyException {
+        return "SELECT SYS_EXTRACT_UTC(SYSTIMESTAMP) FROM DUAL";
+    }
+
+    @Override
+    public String getSqlBlobType() {
+        return "oracle.jdbc.OracleBlob";
     }
 
     @Override
@@ -65,43 +79,81 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
         }
-        sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getColumn());
+        sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
         return sb.toString();
     }
 
     @Override
-    public String generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException {
+    public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
         }
-        sb.append("MODIFY ");
-        appendAlterTableColumnSQL(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
+        sb.append("ADD ");
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
         return sb.toString();
+    }
+
+    @Override
+    public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            throws UnifyException {
+        if (sqlColumnAlterInfo.isAltered()) {
+            List<String> sqlList = new ArrayList<String>();
+            StringBuilder sb = new StringBuilder();
+            SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+
+            if (sqlColumnAlterInfo.isNullableChange()) {
+                if (!sqlFieldSchemaInfo.isNullable()) {
+                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
+                    sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
+                    sqlList.add(sb.toString());
+                    StringUtils.truncate(sb);
+                }
+            }
+
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+            if (format) {
+                sb.append(getLineSeparator());
+            } else {
+                sb.append(' ');
+            }
+            sb.append("MODIFY ");
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
+            sqlList.add(sb.toString());
+            StringUtils.truncate(sb);
+            return sqlList;
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
         }
-        sb.append("MODIFY ").append(sqlColumnInfo.getColumnName()).append(" ").append(generateSqlType(sqlColumnInfo))
-                .append(" NULL");
+        sb.append("MODIFY ").append(sqlColumnInfo.getColumnName());
+        appendTypeSql(sb, sqlColumnInfo);
+        sb.append(" NULL");
         return sb.toString();
     }
 
@@ -153,7 +205,7 @@ class OracleLongPolicy extends LongPolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("NUMBER(").append(precision).append(")");
+        sb.append(" NUMBER(").append(precision).append(")");
     }
 
     @Override
@@ -171,7 +223,7 @@ class OracleIntegerPolicy extends IntegerPolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("NUMBER(").append(precision).append(")");
+        sb.append(" NUMBER(").append(precision).append(")");
     }
 
     @Override
@@ -189,7 +241,7 @@ class OracleShortPolicy extends ShortPolicy {
 
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append("NUMBER(").append(precision).append(")");
+        sb.append(" NUMBER(").append(precision).append(")");
     }
 
     @Override
@@ -206,7 +258,7 @@ class OracleShortPolicy extends ShortPolicy {
 class OracleBlobPolicy extends BlobPolicy {
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset) throws Exception {
         if (data == null || ((byte[]) data).length == 0) {
             ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
         } else {
@@ -220,7 +272,7 @@ class OracleBlobPolicy extends BlobPolicy {
 class OracleClobPolicy extends ClobPolicy {
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset) throws Exception {
         if (data == null || ((String) data).isEmpty()) {
             ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
         } else {

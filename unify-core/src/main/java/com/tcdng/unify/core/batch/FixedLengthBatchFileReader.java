@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,11 +29,11 @@ public class FixedLengthBatchFileReader extends AbstractMultiLineTextFileRecordR
 
     @Override
     protected String[] parseEntry(String entry) throws UnifyException {
-        String[] result = new String[getBatchFileConfig().getFieldConfigs().size()];
+        String[] result = new String[getBatchFileConfig().getFieldConfigList().size()];
         logDebug("Parsing fixed length [{0}] in line number = {1}", entry, getEntryCounter());
         int index = 0;
         int beginIndex = 0;
-        for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigs()) {
+        for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigList()) {
             int endIndex = beginIndex + fieldConfig.getLength();
             result[index] = entry.substring(beginIndex, endIndex);
 

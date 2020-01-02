@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Default implementation of a one-way string cryptograph.
@@ -26,6 +27,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(description = "Default One-way String Cryptograph")
 @Component("oneway-stringcryptograph")
 public class OneWayStringCryptographImpl extends AbstractOneWayCryptograph implements OneWayStringCryptograph {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -96,7 +96,7 @@ public interface PageManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Map<String, BindingInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException;
+    Map<String, PropertyInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException;
 
     /**
      * Returns the page name for supplied long name. The same page name is always
@@ -154,6 +154,30 @@ public interface PageManager extends UnifyComponent {
      *             If component with supplied page name is unknown
      */
     List<String> getExpandedReferences(String pageName) throws UnifyException;
+
+    /**
+     * Gets the expanded component page name list of a UPL component by collection of long names.
+     * 
+     * @param longNames
+     *            the UPL component long names
+     * @return the expanded component list if one exists for supplied long names,
+     *         otherwise null
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    List<String> getExpandedReferencesForLongNames(Collection<String> longNames) throws UnifyException;
+
+    /**
+     * Gets the expanded component page name list of a UPL component by collection of page names.
+     * 
+     * @param pageNames
+     *            the UPL component page names
+     * @return the expanded component list if one exists for supplied page names,
+     *         otherwise null
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    List<String> getExpandedReferencesForPageNames(Collection<String> pageNames) throws UnifyException;
 
     /**
      * Gets the value component page name list of a UPL component by page name.

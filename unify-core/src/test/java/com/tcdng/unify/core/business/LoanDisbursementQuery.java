@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.business;
 
-import com.tcdng.unify.core.database.AbstractTestEntityQuery;
+import com.tcdng.unify.core.database.AbstractTestTableEntityQuery;
 
 /**
  * Loan disbursement query.
@@ -23,13 +23,13 @@ import com.tcdng.unify.core.database.AbstractTestEntityQuery;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LoanDisbursementQuery extends AbstractTestEntityQuery<LoanDisbursement> {
+public class LoanDisbursementQuery extends AbstractTestTableEntityQuery<LoanDisbursement> {
 
     public LoanDisbursementQuery() {
         super(LoanDisbursement.class);
     }
 
     public LoanDisbursementQuery loanAccountId(Long loanAccountId) {
-        return (LoanDisbursementQuery) equals("loanAccountId", loanAccountId);
+        return (LoanDisbursementQuery) addEquals("loanAccountId", loanAccountId);
     }
 }

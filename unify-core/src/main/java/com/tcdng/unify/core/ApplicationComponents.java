@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +23,6 @@ package com.tcdng.unify.core;
  */
 public interface ApplicationComponents {
 
-    String APPLICATION_BATCHFILEREADERWRITERFACTORY = "application-batchfilereaderwriterfactory";
-
     String APPLICATION_BYTEARRAYCRYPTOGRAPH = "application-bytearraycryptograph";
 
     String APPLICATION_CLUSTERSERVICE = "application-clusterservice";
@@ -33,6 +31,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_DATABASE = "application-database";
 
+    String APPLICATION_DATABASETRANSACTIONMANAGER = "application-databasetxnmanager";
+
     String APPLICATION_DATASOURCE = "application-datasource";
 
     String APPLICATION_DATASOURCEMANAGER = "application-datasourcemanager";
@@ -40,6 +40,10 @@ public interface ApplicationComponents {
     String APPLICATION_DEFAULTBOOTSERVICE = "default-bootservice";
 
     String APPLICATION_DEFAULTEMAILSERVER = "default-emailserver";
+
+    String APPLICATION_DYNAMICSQLDATABASE = "application-dynamicsqldatabase";
+
+    String APPLICATION_DYNAMICSQLDATABASEMANAGER = "application-dynamicsqldatabasemanager";
 
     String APPLICATION_DYNAMICSQLDATASOURCE = "application-dynamicsqldatasource";
 
@@ -64,8 +68,6 @@ public interface ApplicationComponents {
     String APPLICATION_MENULOADER = "application-menuloader";
 
     String APPLICATION_MESSAGES = "application-messages";
-
-    String APPLICATION_NETWORKINTERFACE = "application-networkinterface";
 
     String APPLICATION_PARAMETERSERVICE = "parameterservice";
 

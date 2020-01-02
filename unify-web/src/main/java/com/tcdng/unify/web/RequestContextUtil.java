@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,10 +24,12 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.logging.EventType;
+import com.tcdng.unify.core.logging.FieldAudit;
 import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.data.Hint;
+import com.tcdng.unify.web.ui.data.MessageIcon;
 import com.tcdng.unify.web.ui.data.ValidationInfo;
 
 /**
@@ -75,22 +77,14 @@ public interface RequestContextUtil extends UnifyComponent {
     String getRequestPopupName() throws UnifyException;
 
     /**
-     * Sets the document page controller for the current request.
+     * Sets the document object for current request.
      * 
-     * @param pageController
-     *            the document page controller to set
+     * @param document
+     *            the document to set
      * @throws UnifyException
      *             if an error occurs
      */
-    void setRequestDocumentController(PageController pageController) throws UnifyException;
-
-    /**
-     * Returns document page controller in current request context.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    PageController getRequestDocumentController() throws UnifyException;
+    void setRequestDocument(Document document) throws UnifyException;
 
     /**
      * Returns document in current request context.
@@ -182,6 +176,15 @@ public interface RequestContextUtil extends UnifyComponent {
     String getRequestConfirmMessage() throws UnifyException;
 
     /**
+     * Returns the message icon of confirmation message from current request
+     * context.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    MessageIcon getRequestConfirmMessageIcon() throws UnifyException;
+
+    /**
      * Returns a converted value of the request confirm message from current request
      * context.
      * 
@@ -207,22 +210,41 @@ public interface RequestContextUtil extends UnifyComponent {
     boolean isRemoteViewer() throws UnifyException;
 
     /**
-     * Sets the response page controller information for current request context.
+     * Sets the response path parts information for current request context.
      * 
-     * @param info
-     *            the info to set
+     * @param respPathParts
+     *            the response path parts to set
      * @throws UnifyException
      *             if an error occurs
      */
-    void setResponsePageControllerInfo(ControllerResponseInfo info) throws UnifyException;
+    void setResponsePathParts(PathParts respPathParts) throws UnifyException;
 
     /**
-     * Returns the response page controller information for current request context
+     * Returns the response path parts information for current request context
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    ControllerResponseInfo getResponsePageControllerInfo() throws UnifyException;
+    PathParts getResponsePathParts() throws UnifyException;
+
+    /**
+     * Sets the paths of pages closed in this request.
+     * 
+     * @param pathIdList
+     *            the closed pages path list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setClosedPagePaths(List<String> pathIdList) throws UnifyException;
+
+    /**
+     * Sets the paths of pages closed in this request.
+     * 
+     * @return the closed pages path list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> getClosedPagePaths() throws UnifyException;
 
     /**
      * Sets dynamic panel page name to request context.
@@ -373,14 +395,14 @@ public interface RequestContextUtil extends UnifyComponent {
      * Adds a user hint message to current request in {@link Hint.MODE#INFO} mode
      * using supplied message key and optional parameters.
      * 
-     * @param messageKey
-     *            the resource bundle message key
+     * @param message
+     *            the message to hint user
      * @param params
      *            the message parameters
      * @throws UnifyException
      *             if an error occurs
      */
-    void hintUser(String messageKey, Object... params) throws UnifyException;
+    void hintUser(String message, Object... params) throws UnifyException;
 
     /**
      * Adds a user hint message to current request using supplied hint mode, message
@@ -388,14 +410,14 @@ public interface RequestContextUtil extends UnifyComponent {
      * 
      * @param mode
      *            the hint mode
-     * @param messageKey
-     *            the resource bundle message key
+     * @param message
+     *            the message to hint user
      * @param params
      *            the message parameters
      * @throws UnifyException
      *             if an error occurs
      */
-    void hintUser(Hint.MODE mode, String messageKey, Object... params) throws UnifyException;
+    void hintUser(Hint.MODE mode, String message, Object... params) throws UnifyException;
 
     /**
      * Returns all user hints associated with current request.
@@ -471,10 +493,57 @@ public interface RequestContextUtil extends UnifyComponent {
     <T extends Entity> void logUserEvent(EventType eventType, T oldRecord, T newRecord) throws UnifyException;
 
     /**
+     * Logs a user event using supplied event, record type and audit list.
+     * 
+     * @param eventType
+     *            the event type
+     * @param entityClass
+     *            the record type
+     * @param recordId
+     *            the record ID
+     * @param fieldAuditList
+     *            the field audit list
+     * @throws UnifyException
+     *             If an error occurs.
+     */
+    void logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object recordId,
+            List<FieldAudit> fieldAuditList) throws UnifyException;
+
+    /**
      * Clears all request context data.
      * 
      * @throws UnifyException
      *             if an error occurs
      */
     void clearRequestContext() throws UnifyException;
+
+    /**
+     * Sets the ID of widget to focus on. Accepts only widget ID supplied on first
+     * call for request. All subsequent calls are ignored.
+     * 
+     * @param id
+     *            the widget ID to set
+     * @return a true value if set otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean setFocusOnWidgetId(String id) throws UnifyException;
+
+    /**
+     * Checks if widget focus is associated with this request.
+     * 
+     * @return a true value if widget focus is associated otherwise false.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isFocusOnWidget() throws UnifyException;
+
+    /**
+     * Gets the ID of widget to focus on.
+     * 
+     * @return the widget ID otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getFocusOnWidgetId() throws UnifyException;
 }

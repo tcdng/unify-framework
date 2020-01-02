@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,20 +48,18 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
         writer.writeCommandURL();
         writer.write('"');
         writer.write(",\"pActTabId\":\"").write(tabbedPanel.getActiveTabId()).write('"');
-        writer.write(",\"pActTabIdList\":");
-        writer.writeJsonStringArray(tabbedPanel.getActiveTabExpandedIdList());
+        writer.write(",\"pActTabIdList\":").writeJsonArray(tabbedPanel.getActiveTabExpandedIdList());
         writer.write(",\"pSelTabId\":\"").write(tabbedPanel.getSelectedTabId()).write('"');
-        writer.write(",\"pTabIdList\":");
-        writer.writeJsonStringArray(tabbedPanel.getTabIds());
+        writer.write(",\"pTabIdList\":").writeJsonArray(tabbedPanel.getTabIds());
         writer.write(",\"pTabCapIdList\":");
         List<String> captionIds = new ArrayList<String>();
         for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
             Widget tabWidget = tabbedPanel.getWidgetByLongName(longName);
-            if (!tabWidget.isHidden()) {
+            if (!tabWidget.isHidden() && tabWidget.isVisible()) {
                 captionIds.add(tabWidget.getPrefixedId("cap_"));
             }
         }
-        writer.writeJsonStringArray(captionIds);
+        writer.writeJsonArray(captionIds);
         writer.write("});");
     }
 
@@ -130,7 +128,7 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
         writer.write("<ul class=\"ttab\">");
         for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
             Widget widget = tabbedPanel.getWidgetByLongName(longName);
-            if (!widget.isHidden()) {
+            if (!widget.isHidden() && widget.isVisible()) {
                 writer.write("<li id=\"").write(widget.getPrefixedId("cap_")).write("\"");
                 if (widget == currentWidget) {
                     writer.write("class=\"tactive\"");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.chart;
 
+import com.tcdng.unify.core.constant.ColorPalette;
+
 /**
  * Simple dial chart.
  * 
@@ -24,28 +26,20 @@ package com.tcdng.unify.core.chart;
  */
 public class SimpleDialChart extends AbstractChart {
 
-    private String seriesName;
+    private SingleValueSeries singleValueSeries;
 
-    private Double value;
-
-    private SimpleDialChart(int width, int height, ChartBitmapFormat format, String seriesName, Double value) {
-        super(width, height, format);
-        this.seriesName = seriesName;
-        this.value = value;
+    private SimpleDialChart(int width, int height, ChartImageFormat format, String seriesName, Double value) {
+        super(width, height, ColorPalette.DEFAULT, format);
+        this.singleValueSeries = new SingleValueSeries(seriesName, value);
     }
 
     private SimpleDialChart(int width, int height, String seriesName, Double value) {
-        super(width, height);
-        this.seriesName = seriesName;
-        this.value = value;
+        super(width, height, ColorPalette.DEFAULT);
+        this.singleValueSeries = new SingleValueSeries(seriesName, value);
     }
 
-    public String getSeriesName() {
-        return seriesName;
-    }
-
-    public Double getValue() {
-        return value;
+    public SingleValueSeries getSeries() {
+        return singleValueSeries;
     }
 
     public static Builder newBuilder(int width, int height) {
@@ -58,7 +52,7 @@ public class SimpleDialChart extends AbstractChart {
 
         private int height;
 
-        private ChartBitmapFormat format;
+        private ChartImageFormat format;
 
         private String seriesName;
 
@@ -69,7 +63,7 @@ public class SimpleDialChart extends AbstractChart {
             this.height = height;
         }
 
-        public Builder format(ChartBitmapFormat format) {
+        public Builder format(ChartImageFormat format) {
             this.format = format;
             return this;
         }

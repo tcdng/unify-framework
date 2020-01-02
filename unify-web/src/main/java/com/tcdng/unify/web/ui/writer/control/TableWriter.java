@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,11 +18,11 @@ package com.tcdng.unify.web.ui.writer.control;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.EventHandler;
 import com.tcdng.unify.web.ui.PushType;
@@ -32,6 +32,7 @@ import com.tcdng.unify.web.ui.control.ColumnState;
 import com.tcdng.unify.web.ui.control.Table;
 import com.tcdng.unify.web.ui.control.Table.Column;
 import com.tcdng.unify.web.ui.control.Table.Row;
+import com.tcdng.unify.web.ui.control.Table.RowValueStore;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 import com.tcdng.unify.web.util.HtmlUtils;
 
@@ -45,12 +46,18 @@ import com.tcdng.unify.web.util.HtmlUtils;
 @Component("table-writer")
 public class TableWriter extends AbstractControlWriter {
 
+    private static final String SELECT_CLASSNAME_BASE = "tsel";
+
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         Table table = (Table) widget;
         table.pageCalculations();
         writer.write("<div");
-        writeTagStyleClass(writer, table);
+        if (table.isContentEllipsis()) {
+            writeTagStyleClass(writer, table, false, "ui-table-cellipsis");
+        } else {
+            writeTagStyleClass(writer, table);
+        }
         writeTagStyle(writer, table);
         writer.write(">");
         if (table.isWindowed()) {
@@ -150,23 +157,27 @@ public class TableWriter extends AbstractControlWriter {
         int index = table.getPageItemIndex();
         int lastIndex = index + table.getPageItemCount();
         for (; index < lastIndex; index++) {
-            ValueStore itemValueStore = writeRowList.get(index).getItemValueStore();
+            ValueStore itemValueStore = writeRowList.get(index).getRowValueStore();
 
-            for (AbstractMultiControl.ChildControlInfo childControlInfo : table.getChildControlInfos()) {
-                if (childControlInfo.isExternal()) {
-                    Control control = childControlInfo.getControl();
+            for (Column column : table.getColumnList()) {
+                if (column.isVisible()) {
+                    Control control = column.getControl();
                     control.setValueStore(itemValueStore);
                     writer.writeBehaviour(control);
                 }
             }
         }
 
-        // Row behaviour if any
+        // Row behavior if any
         EventHandler[] rowEventHandlers = table.getUplAttribute(EventHandler[].class, "rowEventHandler");
         if (rowEventHandlers != null) {
             for (EventHandler rowEventHandler : rowEventHandlers) {
                 writer.writeBehavior(rowEventHandler, table.getRowId());
             }
+        }
+
+        // Get summary
+        if (table.isMultiSelect()) {
         }
 
         // Append table rigging
@@ -180,9 +191,8 @@ public class TableWriter extends AbstractControlWriter {
         writer.write(",\"pBaseIdx\":").write(table.getPageItemIndex());
         writer.write(",\"pSelectable\":").write(table.isRowSelectable());
         if (table.isRowSelectable()) {
-            writer.write(",\"pSelClassNm\":\"tselect\"");
-            writer.write(",\"pSelDepList\":");
-            writer.writeJsonStringArray(table.getSelDependentList());
+            writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
+            writer.write(",\"pSelDepList\":").writeJsonArray(table.getSelDependentList());
         }
         writer.write(",\"pWindowed\":").write(table.isWindowed());
         writer.write(",\"pPagination\":").write(table.isPagination());
@@ -196,14 +206,54 @@ public class TableWriter extends AbstractControlWriter {
             writer.write(",\"pNaviStop\":").write(table.getNaviPageStop());
         }
 
+        if (table.getPageItemCount() <= 0) {
+            writer.write(",\"pConDepList\":").writeJsonArray(table.getContentDependentList());
+        }
+
         writer.write(",\"pMultiSel\":").write(table.isMultiSelect());
         if (table.isMultiSelect()) {
+            // Normal multi-select details
+            if (!table.isRowSelectable()) {
+                writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
+            }
+
             writer.write(",\"pSelAllId\":\"").write(table.getSelectAllId()).write('"');
             writer.write(",\"pSelGrpId\":\"").write(table.getSelectGroupId()).write('"');
             writer.write(",\"pVisibleSel\":").write(table.getPageSelectedRowCount());
             writer.write(",\"pHiddenSel\":").write(table.getSelectedRows() - table.getPageSelectedRowCount());
-            writer.write(",\"pMultiSelDepList\":");
-            writer.writeJsonStringArray(table.getMultiSelDependentList());
+            writer.write(",\"pMultiSelDepList\":").writeJsonArray(table.getMultiSelDependentList());
+
+            // Summary columns
+            int summaryColIndex = 1; // Because of multi-select column
+            if (table.isSerialNumbers()) {
+                summaryColIndex++;
+            }
+
+            String summarySrc = table.getSummarySrc();
+            if (StringUtils.isNotBlank(summarySrc)) {
+                writer.write(",\"pSumSrc\":\"").write(summarySrc).write('"');
+                writer.write(",\"pSumProcList\":").writeJsonArray(table.getSummaryProcList());
+                writer.write(",\"pSumDepList\":").writeJsonArray(table.getSummaryDependentList());
+            }
+
+            writer.write(",\"pSumColList\":[");
+            boolean appendSym = false;
+            for (Column column : table.getColumnList()) {
+                if (column.isVisible()) {
+                    if (column.isColumnSelectSummary()) {
+                        Control control = column.getControl();
+                        if (appendSym) {
+                            writer.write(',');
+                        } else {
+                            appendSym = true;
+                        }
+                        writer.write("{\"idx\":").write(summaryColIndex);
+                        writer.write(",\"nm\":\"").write(control.getShortName()).write("\"}");
+                    }
+                    summaryColIndex++;
+                }
+            }
+            writer.write(']');
         }
 
         boolean shiftable = table.getShiftDirectionId() != null;
@@ -228,10 +278,12 @@ public class TableWriter extends AbstractControlWriter {
             for (int i = 0; i < columnStates.size(); i++) {
                 ColumnState columnState = columnStates.get(i);
                 if (columnState.isSortable()) {
-                    if (appendSym)
+                    if (appendSym) {
                         writer.write(',');
-                    else
+                    } else {
                         appendSym = true;
+                    }
+
                     writer.write('{');
                     writer.write("\"idx\":").write(i);
                     writer.write(",\"ascend\":").write(columnState.isAscending());
@@ -253,8 +305,17 @@ public class TableWriter extends AbstractControlWriter {
             table.incrementVisibleColumnCount();
         }
 
-        if (table.isMultiSelect()) {
-            writer.write("<th class=\"thselect tth\">");
+        boolean isMultiSelect = table.isMultiSelect();
+        boolean isShowMultiSelectCheckboxes = table.isShowMultiSelectCheckboxes();
+        boolean isHideMultiSelectBorder = isMultiSelect && !isShowMultiSelectCheckboxes;
+
+        if (isMultiSelect) {
+            if (isShowMultiSelectCheckboxes) {
+                writer.write("<th class=\"thselect tth\">");
+            } else {
+                writer.write("<th class=\"thselectx\">");
+            }
+
             Control multiSelectCtrl = table.getMultiSelectCtrl();
             multiSelectCtrl.setValueStore(null);
             multiSelectCtrl.setGroupId(null);
@@ -263,33 +324,46 @@ public class TableWriter extends AbstractControlWriter {
             table.incrementVisibleColumnCount();
         }
 
+        boolean isHeaderEllipsis = table.isHeaderEllipsis();
         for (Column column : table.getColumnList()) {
-            Control control = column.getControl();
-            writer.write("<th");
-            writeTagStyleClass(writer, "tth");
-            writeTagStyle(writer, HtmlUtils.extractStyleAttribute(control.getColumnStyle(), "width"));
-            writer.write("><span style=\"vertical-align:middle;\">");
-            String caption = control.getCaption();
-            if (caption != null) {
-                writer.write(caption);
-            } else {
-                writer.writeHtmlFixedSpace();
-            }
-
-            if (column.isSortable()) {
-                writer.write(
-                        "</span>&nbsp;&nbsp;<span style=\"display:inline-block;width:18px;vertical-align:middle;\">");
-                Control imageCtrl = null;
-                if (column.isAscending()) {
-                    imageCtrl = table.getAscImageCtrl();
-                } else {
-                    imageCtrl = table.getDescImageCtrl();
+            if (column.isVisible()) {
+                Control control = column.getControl();
+                writer.write("<th");
+                writeTagStyleClass(writer, "tth");
+                String columnStyle = HtmlUtils.extractStyleAttribute(control.getColumnStyle(), "width");
+                if (isHideMultiSelectBorder) {
+                    columnStyle += "border-left:0px;";
+                    isHideMultiSelectBorder = false;
                 }
-                writer.writeStructureAndContent(imageCtrl, imageCtrl.getPrefixedId(column.getFieldName() + '_'));
-                writer.write("</span>");
+                writeTagStyle(writer, columnStyle);
+
+                if (isHeaderEllipsis) {
+                    writer.write("><span class=\"theadtitle theadellipsis\">");
+                } else {
+                    writer.write("><span class=\"theadtitle\">");
+                }
+
+                String caption = control.getCaption();
+                if (caption != null) {
+                    writer.write(caption);
+                } else {
+                    writer.writeHtmlFixedSpace();
+                }
+
+                if (column.isSortable()) {
+                    writer.write("</span>&nbsp;&nbsp;<span class=\"theadwdg\">");
+                    Control imageCtrl = null;
+                    if (column.isAscending()) {
+                        imageCtrl = table.getAscImageCtrl();
+                    } else {
+                        imageCtrl = table.getDescImageCtrl();
+                    }
+                    writer.writeStructureAndContent(imageCtrl, imageCtrl.getPrefixedId(column.getFieldName() + '_'));
+                    writer.write("</span>");
+                }
+                writer.write("</th>");
+                table.incrementVisibleColumnCount();
             }
-            writer.write("</th>");
-            table.incrementVisibleColumnCount();
         }
         writer.write("</tr>");
     }
@@ -307,6 +381,8 @@ public class TableWriter extends AbstractControlWriter {
             boolean isMultiSelect = table.isMultiSelect();
             boolean isContainerDisabled = table.isContainerDisabled();
             boolean isContainerEditable = table.isContainerEditable();
+            boolean isShowMultiSelectCheckboxes = table.isShowMultiSelectCheckboxes();
+            boolean isHideMultiSelectBorder = isMultiSelect && !isShowMultiSelectCheckboxes;
 
             String dataGroupId = null;
             if (isContainerEditable) {
@@ -319,6 +395,22 @@ public class TableWriter extends AbstractControlWriter {
                 multiSelectCtrl.setGroupId(table.getSelectGroupId());
             }
 
+            // Set column mode
+            for (Column column : table.getColumnList()) {
+                if (column.isVisible()) {
+                    Control control = column.getControl();
+                    control.setDisabled(isContainerDisabled);
+                    control.setEditable(isContainerEditable);
+                    control.setGroupId(dataGroupId);
+                }
+            }
+
+            // Write rows
+            String columnStyle = null;
+            boolean firstRowWrite = true;
+            // Enter writer table mode. Column rendering will use table style if supported
+            // by column control.
+            writer.setTableMode(true);
             for (; index < lastIndex; index++) {
                 writer.write("<tr");
                 if (index % 2 == 0) {
@@ -333,9 +425,10 @@ public class TableWriter extends AbstractControlWriter {
                 int columnIndex = 0;
                 if (isSerialNo) {
                     writer.write("<td");
-                    writeTagStyleClass(writer, "thserialno ttd");
                     if (table.isWindowed()) {
-                        writeTagStyle(writer, "border-left:0px;");
+                        writeTagStyleClass(writer, "thserialnol");
+                    } else {
+                        writeTagStyleClass(writer, "thserialno");
                     }
                     writer.write(">");
                     writer.write(index + 1); // Localization?
@@ -344,48 +437,62 @@ public class TableWriter extends AbstractControlWriter {
                 }
 
                 Row row = writeRowList.get(index);
+                RowValueStore rowValueStore = row.getRowValueStore();
                 if (isMultiSelect) {
                     if (row.isSelected()) {
                         table.incrementPageSelectedRowCount();
                     }
 
-                    multiSelectCtrl.setValueStore(row.getRowValueStore());
+                    multiSelectCtrl.setValueStore(rowValueStore);
 
                     writer.write("<td");
-                    writeTagStyleClass(writer, "thselect ttd");
-                    if (table.isWindowed() && columnIndex == 0) {
-                        writeTagStyle(writer, "border-left:0px;");
+                    if (isShowMultiSelectCheckboxes) {
+                        if (table.isWindowed() && columnIndex == 0) {
+                            writeTagStyleClass(writer, "thselectl");
+                        } else {
+                            writeTagStyleClass(writer, "thselect");
+                        }
+                        columnIndex++;
+                    } else {
+                        writeTagStyleClass(writer, "thselectx");
+                        columnIndex = 0;
                     }
+
                     writer.write(">");
                     writer.writeStructureAndContent(multiSelectCtrl);
                     writer.write("</td>");
-                    columnIndex++;
                 }
 
-                ValueStore itemValueStore = row.getItemValueStore();
-                for (AbstractMultiControl.ChildControlInfo childControlInfo : table.getChildControlInfos()) {
-                    if (childControlInfo.isExternal()) {
-                        Control control = childControlInfo.getControl();
-                        control.setDisabled(isContainerDisabled);
-                        control.setEditable(isContainerEditable);
-                        control.setGroupId(dataGroupId);
-
-                        control.setValueStore(itemValueStore);
+                for (Column column : table.getColumnList()) {
+                    if (column.isVisible()) {
+                        Control control = column.getControl();
+                        control.setValueStore(rowValueStore);
                         writer.write("<td");
-                        writeTagStyleClass(writer, "ttd");
-                        String columnStyle = control.getColumnStyle();
-                        if (isWindowed) {
-                            writer.write(" style=\"");
-                            if (!StringUtils.isBlank(columnStyle)) {
-                                writer.write(columnStyle);
-                            }
+                        // Optimization : Do not set class for each TD element. Set in CSS file only.
+                        // writeTagStyleClass(writer, "ttd");
+                        // Optimization : write column style information for first row only
+                        if (firstRowWrite) {
+                            columnStyle = control.getColumnStyle();
+                        } else {
+                            columnStyle = column.getStrippedStyle();
+                        }
+
+                        if (isWindowed || isHideMultiSelectBorder) {
                             if (columnIndex == 0) {
-                                writer.write("border-left:0px;");
+                                writer.write(" style=\"border-left:0px;");
+                                if (StringUtils.isNotBlank(columnStyle)) {
+                                    writer.write(columnStyle);
+                                }
+                                writer.write("\"");
+                            } else {
+                                if (StringUtils.isNotBlank(columnStyle)) {
+                                    writer.write(" style=\"").write(columnStyle).write("\"");
+                                }
                             }
-                            writer.write("\"");
                         } else {
                             writeTagStyle(writer, columnStyle);
                         }
+
                         writer.write(">");
                         writer.writeStructureAndContent(control);
                         writer.write("</td>");
@@ -393,9 +500,14 @@ public class TableWriter extends AbstractControlWriter {
                     }
                 }
                 writer.write("</tr>");
+
+                firstRowWrite = false;
             }
+            // Disable writer table mode
+            writer.setTableMode(false);
+
         } else {
-            writer.write("<tr class=\"tnoitems\"><td");
+            writer.write("<tr class=\"tnoitems ").write(getSelectClassName()).write("\"><td");
             if (!table.isWindowed()) {
                 writer.write(" colspan = \"").write(table.getVisibleColumnCount()).write('"');
             }
@@ -403,6 +515,15 @@ public class TableWriter extends AbstractControlWriter {
             writer.write(getSessionMessage("table.no.items.to.display"));
             writer.write("</td></tr>");
         }
+    }
+
+    private String getSelectClassName() throws UnifyException {
+        UserToken userToken = getUserToken();
+        if (userToken != null && StringUtils.isNotBlank(userToken.getColorScheme())) {
+            return SELECT_CLASSNAME_BASE + userToken.getColorScheme();
+        }
+
+        return SELECT_CLASSNAME_BASE;
     }
 
     private void writePaginationRow(ResponseWriter writer, Table table) throws UnifyException {

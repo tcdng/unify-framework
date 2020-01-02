@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,6 +54,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.convert.BigDecimalConverter;
 import com.tcdng.unify.core.convert.BooleanConverter;
@@ -75,7 +76,21 @@ import com.tcdng.unify.core.convert.UploadedFileConverter;
 import com.tcdng.unify.core.data.Input;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.data.UploadedFile;
+import com.tcdng.unify.core.format.DateTimeFormatter;
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.input.BigDecimalInput;
+import com.tcdng.unify.core.input.BooleanInput;
+import com.tcdng.unify.core.input.ByteArrayInput;
+import com.tcdng.unify.core.input.ByteInput;
+import com.tcdng.unify.core.input.CharacterInput;
+import com.tcdng.unify.core.input.DateInput;
+import com.tcdng.unify.core.input.DoubleInput;
+import com.tcdng.unify.core.input.FloatInput;
+import com.tcdng.unify.core.input.IntegerInput;
+import com.tcdng.unify.core.input.LongInput;
+import com.tcdng.unify.core.input.MoneyInput;
+import com.tcdng.unify.core.input.ShortInput;
+import com.tcdng.unify.core.input.StringInput;
 import com.tcdng.unify.core.list.ZeroParams;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.json.JsonBigDecimalArrayConverter;
@@ -119,152 +134,249 @@ public final class DataUtils {
 
     public static final String EMPTY_STRING = "";
 
-    private static final Map<Class<?>, ColumnType> classToColumnMap = new HashMap<Class<?>, ColumnType>();
+    private static final Map<Class<?>, DataType> classToDataTypeMap;
+
+    private static DateTimeFormatter defaultDateTimeFormatter;
 
     static {
-        classToColumnMap.put(byte[].class, ColumnType.BLOB);
-        classToColumnMap.put(Boolean.class, ColumnType.BOOLEAN);
-        classToColumnMap.put(Boolean[].class, ColumnType.BOOLEAN_ARRAY);
-        classToColumnMap.put(boolean.class, ColumnType.BOOLEAN);
-        classToColumnMap.put(char.class, ColumnType.CHARACTER);
-        classToColumnMap.put(Character.class, ColumnType.CHARACTER);
-        classToColumnMap.put(Date.class, ColumnType.DATE);
-        classToColumnMap.put(BigDecimal.class, ColumnType.DECIMAL);
-        classToColumnMap.put(Double.class, ColumnType.DOUBLE);
-        classToColumnMap.put(Double[].class, ColumnType.DOUBLE_ARRAY);
-        classToColumnMap.put(double.class, ColumnType.DOUBLE);
-        classToColumnMap.put(Float.class, ColumnType.FLOAT);
-        classToColumnMap.put(Float[].class, ColumnType.FLOAT_ARRAY);
-        classToColumnMap.put(float.class, ColumnType.FLOAT);
-        classToColumnMap.put(Integer.class, ColumnType.INTEGER);
-        classToColumnMap.put(Integer[].class, ColumnType.INTEGER_ARRAY);
-        classToColumnMap.put(int.class, ColumnType.INTEGER);
-        classToColumnMap.put(Long.class, ColumnType.LONG);
-        classToColumnMap.put(Long[].class, ColumnType.LONG_ARRAY);
-        classToColumnMap.put(long.class, ColumnType.LONG);
-        classToColumnMap.put(Short.class, ColumnType.SHORT);
-        classToColumnMap.put(Short[].class, ColumnType.SHORT_ARRAY);
-        classToColumnMap.put(short.class, ColumnType.SHORT);
-        classToColumnMap.put(String.class, ColumnType.STRING);
-        classToColumnMap.put(String[].class, ColumnType.STRING_ARRAY);
+        Map<Class<?>, DataType> map = new HashMap<Class<?>, DataType>();
+        map.put(byte[].class, DataType.BLOB);
+        map.put(Boolean.class, DataType.BOOLEAN);
+        map.put(boolean.class, DataType.BOOLEAN);
+        map.put(char.class, DataType.CHAR);
+        map.put(Character.class, DataType.CHAR);
+        map.put(Date.class, DataType.DATE);
+        map.put(BigDecimal.class, DataType.DECIMAL);
+        map.put(Double.class, DataType.DOUBLE);
+        map.put(double.class, DataType.DOUBLE);
+        map.put(Float.class, DataType.FLOAT);
+        map.put(float.class, DataType.FLOAT);
+        map.put(Integer.class, DataType.INTEGER);
+        map.put(int.class, DataType.INTEGER);
+        map.put(Long.class, DataType.LONG);
+        map.put(long.class, DataType.LONG);
+        map.put(Short.class, DataType.SHORT);
+        map.put(short.class, DataType.SHORT);
+        map.put(String.class, DataType.STRING);
+        classToDataTypeMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, Converter<?>> classToConverterMap = new HashMap<Class<?>, Converter<?>>();
+    private static final Map<Class<?>, ColumnType> classToColumnMap;
 
     static {
-        classToConverterMap.put(boolean.class, new BooleanConverter());// ByteArrayConverter
-        classToConverterMap.put(Boolean.class, new BooleanConverter());
-        classToConverterMap.put(byte.class, new ByteConverter());
-        classToConverterMap.put(Byte.class, new ByteConverter());
-        classToConverterMap.put(byte[].class, new ByteArrayConverter());
-        classToConverterMap.put(char.class, new CharacterConverter());
-        classToConverterMap.put(Character.class, new CharacterConverter());
-        classToConverterMap.put(short.class, new ShortConverter());
-        classToConverterMap.put(Short.class, new ShortConverter());
-        classToConverterMap.put(int.class, new IntegerConverter());
-        classToConverterMap.put(Integer.class, new IntegerConverter());
-        classToConverterMap.put(long.class, new LongConverter());
-        classToConverterMap.put(Long.class, new LongConverter());
-        classToConverterMap.put(float.class, new FloatConverter());
-        classToConverterMap.put(Float.class, new FloatConverter());
-        classToConverterMap.put(double.class, new DoubleConverter());
-        classToConverterMap.put(Double.class, new DoubleConverter());
-        classToConverterMap.put(BigDecimal.class, new BigDecimalConverter());
-        classToConverterMap.put(Date.class, new DateConverter());
-        classToConverterMap.put(Money.class, new MoneyConverter());
-        classToConverterMap.put(String.class, new StringConverter());
-        classToConverterMap.put(UplElementReferences.class, new UplElementReferencesConverter());
-        classToConverterMap.put(UploadedFile.class, new UploadedFileConverter());
-        classToConverterMap.put(Class.class, new ClassConverter());
+        Map<Class<?>, ColumnType> map = new HashMap<Class<?>, ColumnType>();
+        map.put(byte[].class, ColumnType.BLOB);
+        map.put(Boolean.class, ColumnType.BOOLEAN);
+        map.put(Boolean[].class, ColumnType.BOOLEAN_ARRAY);
+        map.put(boolean.class, ColumnType.BOOLEAN);
+        map.put(char.class, ColumnType.CHARACTER);
+        map.put(Character.class, ColumnType.CHARACTER);
+        map.put(Date.class, ColumnType.DATE);
+        map.put(BigDecimal.class, ColumnType.DECIMAL);
+        map.put(Double.class, ColumnType.DOUBLE);
+        map.put(Double[].class, ColumnType.DOUBLE_ARRAY);
+        map.put(double.class, ColumnType.DOUBLE);
+        map.put(Float.class, ColumnType.FLOAT);
+        map.put(Float[].class, ColumnType.FLOAT_ARRAY);
+        map.put(float.class, ColumnType.FLOAT);
+        map.put(Integer.class, ColumnType.INTEGER);
+        map.put(Integer[].class, ColumnType.INTEGER_ARRAY);
+        map.put(int.class, ColumnType.INTEGER);
+        map.put(Long.class, ColumnType.LONG);
+        map.put(Long[].class, ColumnType.LONG_ARRAY);
+        map.put(long.class, ColumnType.LONG);
+        map.put(Short.class, ColumnType.SHORT);
+        map.put(Short[].class, ColumnType.SHORT_ARRAY);
+        map.put(short.class, ColumnType.SHORT);
+        map.put(String.class, ColumnType.STRING);
+        map.put(String[].class, ColumnType.STRING_ARRAY);
+        classToColumnMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, Object> classToNullMap = new HashMap<Class<?>, Object>();
+    private static final Map<Class<?>, Converter<?>> classToConverterMap;
 
     static {
-        classToNullMap.put(boolean.class, false);
-        classToNullMap.put(byte.class, Byte.valueOf((byte) 0));
-        classToNullMap.put(char.class, Character.valueOf((char) 0));
-        classToNullMap.put(short.class, Short.valueOf((short) 0));
-        classToNullMap.put(int.class, Integer.valueOf(0));
-        classToNullMap.put(long.class, Long.valueOf(0));
-        classToNullMap.put(float.class, Float.valueOf((float) 0.0));
-        classToNullMap.put(double.class, Double.valueOf(0.0));
+        Map<Class<?>, Converter<?>> map = new HashMap<Class<?>, Converter<?>>();
+        map.put(boolean.class, new BooleanConverter());// ByteArrayConverter
+        map.put(Boolean.class, new BooleanConverter());
+        map.put(byte.class, new ByteConverter());
+        map.put(Byte.class, new ByteConverter());
+        map.put(byte[].class, new ByteArrayConverter());
+        map.put(char.class, new CharacterConverter());
+        map.put(Character.class, new CharacterConverter());
+        map.put(short.class, new ShortConverter());
+        map.put(Short.class, new ShortConverter());
+        map.put(int.class, new IntegerConverter());
+        map.put(Integer.class, new IntegerConverter());
+        map.put(long.class, new LongConverter());
+        map.put(Long.class, new LongConverter());
+        map.put(float.class, new FloatConverter());
+        map.put(Float.class, new FloatConverter());
+        map.put(double.class, new DoubleConverter());
+        map.put(Double.class, new DoubleConverter());
+        map.put(BigDecimal.class, new BigDecimalConverter());
+        map.put(Date.class, new DateConverter());
+        map.put(Money.class, new MoneyConverter());
+        map.put(String.class, new StringConverter());
+        map.put(UplElementReferences.class, new UplElementReferencesConverter());
+        map.put(UploadedFile.class, new UploadedFileConverter());
+        map.put(Class.class, new ClassConverter());
+        classToConverterMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, Class<?>> classToWrapperMap = new HashMap<Class<?>, Class<?>>();
+    private static final Map<Class<?>, Class<? extends Input>> classToInputMap;
 
     static {
-        classToWrapperMap.put(boolean.class, Boolean.class);
-        classToWrapperMap.put(char.class, Character.class);
-        classToWrapperMap.put(byte.class, Byte.class);
-        classToWrapperMap.put(short.class, Short.class);
-        classToWrapperMap.put(int.class, Integer.class);
-        classToWrapperMap.put(long.class, Long.class);
-        classToWrapperMap.put(float.class, Float.class);
-        classToWrapperMap.put(double.class, Double.class);
+        Map<Class<?>, Class<? extends Input>> map = new HashMap<Class<?>, Class<? extends Input>>();
+        map.put(boolean.class, BooleanInput.class);
+        map.put(Boolean.class, BooleanInput.class);
+        map.put(byte.class, ByteInput.class);
+        map.put(Byte.class, ByteInput.class);
+        map.put(byte[].class, ByteArrayInput.class);
+        map.put(char.class, CharacterInput.class);
+        map.put(Character.class, CharacterInput.class);
+        map.put(short.class, ShortInput.class);
+        map.put(Short.class, ShortInput.class);
+        map.put(int.class, IntegerInput.class);
+        map.put(Integer.class, IntegerInput.class);
+        map.put(long.class, LongInput.class);
+        map.put(Long.class, LongInput.class);
+        map.put(float.class, FloatInput.class);
+        map.put(Float.class, FloatInput.class);
+        map.put(double.class, DoubleInput.class);
+        map.put(Double.class, DoubleInput.class);
+        map.put(BigDecimal.class, BigDecimalInput.class);
+        map.put(Date.class, DateInput.class);
+        map.put(Money.class, MoneyInput.class);
+        map.put(String.class, StringInput.class);
+        classToInputMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, String> typeToFormatterMap = new HashMap<Class<?>, String>();
+    private static final Map<Class<?>, Object> classToNullMap;
 
     static {
-        typeToFormatterMap.put(Short.class, "!integerformat");
-        typeToFormatterMap.put(short.class, "!integerformat");
-        typeToFormatterMap.put(Integer.class, "!integerformat");
-        typeToFormatterMap.put(int.class, "!integerformat");
-        typeToFormatterMap.put(Long.class, "!longformat");
-        typeToFormatterMap.put(long.class, "!longformat");
-        typeToFormatterMap.put(Float.class, "!decimalformat");
-        typeToFormatterMap.put(float.class, "!decimalformat");
-        typeToFormatterMap.put(Double.class, "!decimalformat");
-        typeToFormatterMap.put(double.class, "!decimalformat");
-        typeToFormatterMap.put(BigDecimal.class, "!decimalformat");
-        typeToFormatterMap.put(Date.class, "!dateformat");
+        Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
+        map.put(boolean.class, false);
+        map.put(byte.class, Byte.valueOf((byte) 0));
+        map.put(char.class, Character.valueOf((char) 0));
+        map.put(short.class, Short.valueOf((short) 0));
+        map.put(int.class, Integer.valueOf(0));
+        map.put(long.class, Long.valueOf(0));
+        map.put(float.class, Float.valueOf((float) 0.0));
+        map.put(double.class, Double.valueOf(0.0));
+        classToNullMap = Collections.unmodifiableMap(map);
     }
 
-    private static Map<Class<? extends Collection>, Class<? extends Collection>> collectionInterfaceToClassMap;
+    private static final Map<Class<?>, Class<?>> classToWrapperMap;
 
     static {
-        collectionInterfaceToClassMap = new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
-        collectionInterfaceToClassMap.put(Collection.class, ArrayList.class);
-        collectionInterfaceToClassMap.put(List.class, ArrayList.class);
-        collectionInterfaceToClassMap.put(Set.class, HashSet.class);
-        collectionInterfaceToClassMap.put(Queue.class, LinkedList.class);
-        collectionInterfaceToClassMap.put(Deque.class, LinkedList.class);
+        Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>();
+        map.put(boolean.class, Boolean.class);
+        map.put(char.class, Character.class);
+        map.put(byte.class, Byte.class);
+        map.put(short.class, Short.class);
+        map.put(int.class, Integer.class);
+        map.put(long.class, Long.class);
+        map.put(float.class, Float.class);
+        map.put(double.class, Double.class);
+        classToWrapperMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, JsonValueConverter> jsonConverrerMap =
-            new HashMap<Class<?>, JsonValueConverter>();
+    private static final Map<Class<?>, String> typeToFormatterMap;
 
     static {
-        jsonConverrerMap.put(Boolean.class, new JsonBooleanConverter());
-        jsonConverrerMap.put(Boolean[].class, new JsonBooleanArrayConverter());
-        jsonConverrerMap.put(boolean.class, new JsonBooleanConverter());
-        jsonConverrerMap.put(byte[].class, new JsonByteArrayConverter());
-        jsonConverrerMap.put(char.class, new JsonCharacterConverter());
-        jsonConverrerMap.put(Character.class, new JsonCharacterConverter());
-        jsonConverrerMap.put(BigDecimal.class, new JsonBigDecimalConverter());
-        jsonConverrerMap.put(BigDecimal[].class, new JsonBigDecimalArrayConverter());
-        jsonConverrerMap.put(Double.class, new JsonDoubleConverter());
-        jsonConverrerMap.put(Double[].class, new JsonDoubleArrayConverter());
-        jsonConverrerMap.put(double.class, new JsonDoubleConverter());
-        jsonConverrerMap.put(Float.class, new JsonFloatConverter());
-        jsonConverrerMap.put(Float[].class, new JsonFloatArrayConverter());
-        jsonConverrerMap.put(float.class, new JsonFloatConverter());
-        jsonConverrerMap.put(Integer.class, new JsonIntConverter());
-        jsonConverrerMap.put(Integer[].class, new JsonIntArrayConverter());
-        jsonConverrerMap.put(int.class, new JsonIntConverter());
-        jsonConverrerMap.put(Long.class, new JsonLongConverter());
-        jsonConverrerMap.put(Long[].class, new JsonLongArrayConverter());
-        jsonConverrerMap.put(long.class, new JsonLongConverter());
-        jsonConverrerMap.put(Short.class, new JsonShortConverter());
-        jsonConverrerMap.put(Short[].class, new JsonShortArrayConverter());
-        jsonConverrerMap.put(short.class, new JsonShortConverter());
-        jsonConverrerMap.put(String.class, new JsonStringConverter());
-        jsonConverrerMap.put(String[].class, new JsonStringArrayConverter());
+        Map<Class<?>, String> map = new HashMap<Class<?>, String>();
+        map.put(Short.class, "!integerformat");
+        map.put(short.class, "!integerformat");
+        map.put(Integer.class, "!integerformat");
+        map.put(int.class, "!integerformat");
+        map.put(Long.class, "!longformat");
+        map.put(long.class, "!longformat");
+        map.put(Float.class, "!decimalformat");
+        map.put(float.class, "!decimalformat");
+        map.put(Double.class, "!decimalformat");
+        map.put(double.class, "!decimalformat");
+        map.put(BigDecimal.class, "!decimalformat");
+        map.put(Date.class, "!dateformat");
+        typeToFormatterMap = Collections.unmodifiableMap(map);
+    }
+
+    private static final Map<Class<? extends Collection>, Class<? extends Collection>> collectionInterfaceToClassMap;
+
+    static {
+        Map<Class<? extends Collection>, Class<? extends Collection>> map =
+                new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
+        map.put(Collection.class, ArrayList.class);
+        map.put(List.class, ArrayList.class);
+        map.put(Set.class, HashSet.class);
+        map.put(Queue.class, LinkedList.class);
+        map.put(Deque.class, LinkedList.class);
+        collectionInterfaceToClassMap = Collections.unmodifiableMap(map);
+    }
+
+    private static final Map<Class<?>, JsonValueConverter> jsonConverrerMap;
+
+    static {
+        Map<Class<?>, JsonValueConverter> map = new HashMap<Class<?>, JsonValueConverter>();
+        map.put(Boolean.class, new JsonBooleanConverter());
+        map.put(Boolean[].class, new JsonBooleanArrayConverter());
+        map.put(boolean.class, new JsonBooleanConverter());
+        map.put(byte[].class, new JsonByteArrayConverter());
+        map.put(char.class, new JsonCharacterConverter());
+        map.put(Character.class, new JsonCharacterConverter());
+        map.put(BigDecimal.class, new JsonBigDecimalConverter());
+        map.put(BigDecimal[].class, new JsonBigDecimalArrayConverter());
+        map.put(Double.class, new JsonDoubleConverter());
+        map.put(Double[].class, new JsonDoubleArrayConverter());
+        map.put(double.class, new JsonDoubleConverter());
+        map.put(Float.class, new JsonFloatConverter());
+        map.put(Float[].class, new JsonFloatArrayConverter());
+        map.put(float.class, new JsonFloatConverter());
+        map.put(Integer.class, new JsonIntConverter());
+        map.put(Integer[].class, new JsonIntArrayConverter());
+        map.put(int.class, new JsonIntConverter());
+        map.put(Long.class, new JsonLongConverter());
+        map.put(Long[].class, new JsonLongArrayConverter());
+        map.put(long.class, new JsonLongConverter());
+        map.put(Short.class, new JsonShortConverter());
+        map.put(Short[].class, new JsonShortArrayConverter());
+        map.put(short.class, new JsonShortConverter());
+        map.put(String.class, new JsonStringConverter());
+        map.put(String[].class, new JsonStringArrayConverter());
+        jsonConverrerMap = Collections.unmodifiableMap(map);
     }
 
     private DataUtils() {
 
+    }
+
+    public static void registerDefaultFormatters(DateTimeFormatter defaultDateTimeFormatter) {
+        DataUtils.defaultDateTimeFormatter = defaultDateTimeFormatter;
+    }
+
+    public static DateTimeFormatter getDefaultDateTimeFormatter() {
+        return DataUtils.defaultDateTimeFormatter;
+    }
+
+    /**
+     * Checks if two objects are equal.
+     * 
+     * @param a
+     *            the first object
+     * @param b
+     *            the second object
+     * @return a true value of both parameters are equal
+     */
+    public static boolean equals(Object a, Object b) {
+        if (a == b) {
+            return true;
+        }
+
+        if (a == null) {
+            return false;
+        }
+
+        return a.equals(b);
     }
 
     /**
@@ -304,7 +416,39 @@ public final class DataUtils {
             }
             return ca.type();
         }
-        return null;
+
+        return DataUtils.getColumnType(field.getType());
+    }
+
+    /**
+     * Returns the data type equivalence of supplied data type.
+     * 
+     * @param clazz
+     *            the data type
+     * @return the equivalent data type
+     * @throws UnifyException
+     *             if data type is unsupported
+     */
+    public static DataType getDataType(Class<?> clazz) throws UnifyException {
+        DataType dataType = classToDataTypeMap.get(clazz);
+
+        if (dataType == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_UNSUPPORTED_PROPERTY_TYPE, clazz);
+        }
+        return dataType;
+    }
+
+    /**
+     * Finds the data type equivalence of supplied data type.
+     * 
+     * @param clazz
+     *            the data type
+     * @return the equivalent data type if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static DataType findDataType(Class<?> clazz) throws UnifyException {
+        return classToDataTypeMap.get(clazz);
     }
 
     /**
@@ -396,8 +540,13 @@ public final class DataUtils {
      * @param className
      *            the data type class name
      */
-    public static boolean isNumberType(String className) throws UnifyException {
-        return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.getClassForName(className)));
+    public static boolean isNumberType(String className) {
+        try {
+            return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.getClassForName(className)));
+        } catch (UnifyException e) {
+        }
+
+        return false;
     }
 
     /**
@@ -413,6 +562,15 @@ public final class DataUtils {
 
     public static <T> T getBeanProperty(Class<T> targetClazz, Object bean, String propertyName) throws UnifyException {
         return DataUtils.convert(targetClazz, ReflectUtils.getBeanProperty(bean, propertyName), null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Input<T> newInput(Class<T> type, String name, String description, String editor,
+            boolean mandatory) throws UnifyException {
+        Class<? extends Input> inputClass = classToInputMap.get(type);
+        return (Input<T>) ReflectUtils.newInstance(inputClass,
+                new Class<?>[] { String.class, String.class, String.class, boolean.class }, name, description, editor,
+                mandatory);
     }
 
     @SuppressWarnings("unchecked")
@@ -458,6 +616,10 @@ public final class DataUtils {
             }
 
             if (targetClazz.equals(value.getClass())) {
+                if (formatter != null && String.class.equals(targetClazz)) {
+                    return (T) classToConverterMap.get(targetClazz).convert(value, formatter);
+                }
+
                 return (T) value;
             }
 
@@ -590,7 +752,7 @@ public final class DataUtils {
             Collection<Object> result = ReflectUtils.newInstance(DataUtils.getCollectionConcreteType(collectionClazz));
             if (valueClass.isArray()) {
                 int length = Array.getLength(value);
-                if (dataClass.equals(valueClass.getComponentType())) {
+                if (dataClass.isAssignableFrom(DataUtils.getWrapperClass(valueClass.getComponentType()))) {
                     for (int i = 0; i < length; i++) {
                         result.add(Array.get(value, i));
                     }
@@ -788,21 +950,6 @@ public final class DataUtils {
     }
 
     /**
-     * Returns input holder values by name.
-     * 
-     * @param parameterList
-     *            the parameter holder list
-     * @return map of values by name
-     */
-    public static Map<String, Object> getInputHolderNameValueMap(List<Input> parameterList) throws UnifyException {
-        Map<String, Object> result = new HashMap<String, Object>();
-        for (Input parameterHolder : parameterList) {
-            result.put(parameterHolder.getName(), parameterHolder.getTypeValue());
-        }
-        return result;
-    }
-
-    /**
      * Sets nested bean property by long name.
      * 
      * @param bean
@@ -980,6 +1127,31 @@ public final class DataUtils {
     }
 
     /**
+     * Clears all the properties if a bean.
+     * 
+     * @param bean
+     *            the bean object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static void clearAllBeanProperties(Object bean) throws UnifyException {
+        if (bean != null) {
+            try {
+                for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterMap(bean.getClass()).values()) {
+                    if (getterSetterInfo.isSetter()) {
+                        Object nullVal = classToNullMap.get(getterSetterInfo.getType());
+                        getterSetterInfo.getSetter().invoke(bean, nullVal);
+                    }
+                }
+            } catch (UnifyException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new UnifyException(e, UnifyCoreErrorConstants.REFLECT_REFLECTION_ERROR, bean.getClass());
+            }
+        }
+    }
+
+    /**
      * Reads a JSON object. Has no support for collections.
      * 
      * @param type
@@ -1149,14 +1321,23 @@ public final class DataUtils {
     }
 
     /**
-     * Returns true if supplied collection is null or is empty, otherwise a null is
-     * returned
+     * Returns true if supplied collection is null or is empty.
      * 
      * @param coll
      *            the collection to check
      */
     public static boolean isBlank(Collection<?> coll) {
         return coll == null || coll.isEmpty();
+    }
+
+    /**
+     * Returns true if supplied collection is not null and is not empty.
+     * 
+     * @param coll
+     *            the collection to check
+     */
+    public static boolean isNotBlank(Collection<?> coll) {
+        return coll != null && !coll.isEmpty();
     }
 
     public static <T> List<T> unmodifiableList(List<T> list) {

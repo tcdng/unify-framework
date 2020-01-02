@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,11 +15,13 @@
  */
 package com.tcdng.unify.core.database.sql;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -34,9 +36,12 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.Aggregate;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.transform.Transformer;
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Default implementation of an SQL statement executor.
@@ -52,7 +57,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         int result = 0;
         PreparedStatement pStmt = null;
         try {
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             result = pStmt.executeUpdate();
         } catch (UnifyException e) {
             throw e;
@@ -73,10 +79,11 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
-                result = (T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1);
+                result = (T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1, timeZoneOffset);
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
@@ -106,7 +113,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             pStmt = connection.prepareStatement(sqlQuery);
             rs = pStmt.executeQuery();
             if (rs.next()) {
-                result = (T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1);
+                long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+                result = (T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1, timeZoneOffset);
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
@@ -174,16 +182,17 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
-                T keyValue = getSqlResultValue(keySqlResult, rs);
+                T keyValue = getSqlResultValue(keySqlResult, rs, timeZoneOffset);
                 if (resultMap.containsKey(keyValue)) {
                     throw new UnifyException(UnifyCoreErrorConstants.VALUE_MULTIPLE_SAME_KEY_FOUND, keyValue,
                             sqlEntityInfo.getEntityClass());
                 }
 
-                U valueValue = getSqlResultValue(valueSqlResult, rs);
+                U valueValue = getSqlResultValue(valueSqlResult, rs, timeZoneOffset);
                 resultMap.put(keyValue, valueValue);
             }
         } catch (UnifyException e) {
@@ -234,11 +243,12 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
-                T keyValue = getSqlResultValue(keySqlResult, rs);
-                U valueValue = getSqlResultValue(valueSqlResult, rs);
+                T keyValue = getSqlResultValue(keySqlResult, rs, timeZoneOffset);
+                U valueValue = getSqlResultValue(valueSqlResult, rs, timeZoneOffset);
 
                 List<U> list = resultMap.get(keyValue);
                 if (list == null) {
@@ -267,7 +277,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
         try {
             SqlEntityInfo sqlEntityInfo = sqlStatement.getSqlEntityInfo();
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
                 if (sqlEntityInfo.isEnumConst()) {
@@ -277,7 +288,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 }
 
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
-                    sqlResult.getSetter().invoke(result, getSqlResultValue(sqlResult, rs));
+                    sqlResult.getSetter().invoke(result, getSqlResultValue(sqlResult, rs, timeZoneOffset));
                 }
 
                 if (rs.next()) {
@@ -312,7 +323,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
                 T record = null;
@@ -323,7 +335,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 }
 
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
-                    sqlResult.getSetter().invoke(record, getSqlResultValue(sqlResult, rs));
+                    sqlResult.getSetter().invoke(record, getSqlResultValue(sqlResult, rs, timeZoneOffset));
                 }
                 resultList.add(record);
             }
@@ -369,7 +381,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
                 U record = null;
@@ -380,7 +393,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 }
 
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
-                    sqlResult.getSetter().invoke(record, getSqlResultValue(sqlResult, rs));
+                    sqlResult.getSetter().invoke(record, getSqlResultValue(sqlResult, rs, timeZoneOffset));
                 }
 
                 T keyVal = (T) keySQLFieldInfo.getGetter().invoke(record);
@@ -433,7 +446,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
                 U record = null;
@@ -444,7 +458,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 }
 
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
-                    sqlResult.getSetter().invoke(record, getSqlResultValue(sqlResult, rs));
+                    sqlResult.getSetter().invoke(record, getSqlResultValue(sqlResult, rs, timeZoneOffset));
                 }
 
                 T keyVal = (T) keySQLFieldInfo.getGetter().invoke(record);
@@ -469,20 +483,70 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
+    public Aggregate<?> executeSingleAggregateResultQuery(Connection connection,
+            SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+        try {
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
+            rs = pStmt.executeQuery();
+            if (rs.next()) {
+                int resultIndex = 0;
+                int count =
+                        ((Number) countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex, timeZoneOffset))
+                                .intValue();
+                List<SqlResult> sqlResultList = sqlStatement.getResultInfoList();
+                if (sqlResultList.isEmpty() || sqlResultList.size() > 1) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_OR_NOFIELD_SELECTED);
+                }
+                
+                SqlResult sqlResult = sqlResultList.get(0);
+                Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
+                        ++resultIndex, timeZoneOffset);
+                if (value == null) {
+                    value = DataUtils.convert(sqlResult.getType(), 0, null);
+                }
+
+                if (rs.next()) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
+                }
+
+                return new Aggregate(sqlResult.getName(), count, value);
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pStmt);
+        }
+        return null;
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
     public List<Aggregate<?>> executeMultipleAggregateResultQuery(Connection connection,
             SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
         List<Aggregate<?>> resultList = new ArrayList<Aggregate<?>>();
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
                 int resultIndex = 0;
-                int count = ((Number) countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex)).intValue();
+                int count =
+                        ((Number) countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex, timeZoneOffset))
+                                .intValue();
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
-                    Object value =
-                            sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(), ++resultIndex);
+                    Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
+                            ++resultIndex, timeZoneOffset);
+                    if (value == null) {
+                        value = DataUtils.convert(sqlResult.getType(), 0, null);
+                    }
                     resultList.add(new Aggregate(sqlResult.getName(), count, value));
                 }
 
@@ -502,6 +566,106 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     @Override
+    public void executeCallable(Connection connection, CallableProc callableProc,
+            SqlCallableStatement sqlCallableStatement) throws UnifyException {
+        CallableStatement cStmt = null;
+        ResultSet rs = null;
+        try {
+            // Prepare and execute callable statement
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            cStmt = getCallableStatement(connection, sqlCallableStatement, timeZoneOffset);
+
+            if (sqlCallableStatement.isWithReturn() && sqlCallableStatement.isFunctionMode()) {
+                cStmt.execute();
+                rs = cStmt.getResultSet();
+                if (rs.next()) {
+                    SqlCallableInfo sqlCallableInfo = sqlCallableStatement.getSqlCallableInfo();
+                    SqlCallableFieldInfo returnValueInfo = sqlCallableInfo.getReturnValueInfo();
+                    Object val = sqlCallableStatement.getReturnTypePolicy().executeGetResult(rs,
+                            returnValueInfo.getGetter().getReturnType(), 1, timeZoneOffset);
+                    returnValueInfo.getSetter().invoke(callableProc, val);
+                }
+            } else {
+                cStmt.executeUpdate();
+            }
+
+            // Populate output parameters. Based on recommendations do this after results.
+            populateCallableOutParameters(cStmt, callableProc, sqlCallableStatement, timeZoneOffset);
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(cStmt);
+        }
+    }
+
+    @Override
+    public Map<Class<?>, List<?>> executeCallableWithResults(Connection connection, CallableProc callableProc,
+            SqlCallableStatement sqlCallableStatement) throws UnifyException {
+        CallableStatement cStmt = null;
+        ResultSet rs = null;
+        try {
+            // Prepare and execute callable statement
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            cStmt = getCallableStatement(connection, sqlCallableStatement, timeZoneOffset);
+
+            boolean isResults = cStmt.execute();
+            if (!isResults) {
+                isResults = cStmt.getMoreResults();
+            }
+
+            // Construct and populate results
+            Map<Class<?>, List<?>> results = Collections.emptyMap();
+            Map<Class<?>, SqlCallableResult> resultInfoMap = sqlCallableStatement.getResultInfoListByType();
+            if (isResults && resultInfoMap.size() > 0) {
+                results = new LinkedHashMap<Class<?>, List<?>>();
+                for (Class<?> resultClass : resultInfoMap.keySet()) {
+                    SqlCallableResult sqlCallableResult = resultInfoMap.get(resultClass);
+                    List<Object> resultItemList = new ArrayList<Object>();
+                    rs = cStmt.getResultSet();
+                    while (rs.next()) {
+                        Object item = resultClass.newInstance();
+                        if (sqlCallableResult.isUseIndexing()) {
+                            int index = 0;
+                            for (SqlCallableResultField resultField : sqlCallableResult.getFieldList()) {
+                                resultField.getSetter().invoke(item, resultField.getSqlDataTypePolicy()
+                                        .executeGetResult(rs, resultField.getType(), ++index, timeZoneOffset));
+                            }
+                        } else {
+                            for (SqlCallableResultField resultField : sqlCallableResult.getFieldList()) {
+                                resultField.getSetter().invoke(item,
+                                        resultField.getSqlDataTypePolicy().executeGetResult(rs, resultField.getType(),
+                                                resultField.getColumnName(), timeZoneOffset));
+                            }
+                        }
+
+                        resultItemList.add(item);
+                    }
+
+                    results.put(resultClass, resultItemList);
+                    cStmt.getMoreResults();
+                }
+            }
+
+            // Populate output parameters. Based on recommendations do this after results.
+            populateCallableOutParameters(cStmt, callableProc, sqlCallableStatement, timeZoneOffset);
+
+            return results;
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(cStmt);
+        }
+
+        return Collections.emptyMap();
+    }
+
+    @Override
     protected void onInitialize() throws UnifyException {
 
     }
@@ -512,7 +676,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     @SuppressWarnings("unchecked")
-    private PreparedStatement getPreparedStatement(Connection connection, SqlStatement sqlStatement) throws Exception {
+    private PreparedStatement getPreparedStatement(Connection connection, SqlStatement sqlStatement,
+            long timeZoneOffset) throws Exception {
         logDebug("Preparing SQl: statement = {0}", sqlStatement);
         PreparedStatement pStmt = connection.prepareStatement(sqlStatement.getSql());
         int index = 0;
@@ -520,19 +685,45 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Object value = sqlParameter.getValue();
             if (sqlParameter.isMultiple()) {
                 for (Object arrValue : (Collection<Object>) value) {
-                    sqlParameter.getSqlTypePolicy().executeSetPreparedStatement(pStmt, ++index, arrValue);
+                    sqlParameter.getSqlTypePolicy().executeSetPreparedStatement(pStmt, ++index, arrValue,
+                            timeZoneOffset);
                 }
             } else {
-                sqlParameter.getSqlTypePolicy().executeSetPreparedStatement(pStmt, ++index, value);
+                sqlParameter.getSqlTypePolicy().executeSetPreparedStatement(pStmt, ++index, value, timeZoneOffset);
             }
         }
         return pStmt;
     }
 
+    private CallableStatement getCallableStatement(Connection connection, SqlCallableStatement sqlCallableStatement,
+            long timeZoneOffset) throws Exception {
+        logDebug("Preparing SQl: callable statement = {0}", sqlCallableStatement);
+        CallableStatement cStmt = connection.prepareCall(sqlCallableStatement.getSql());
+        int sqlIndex = 1;
+        if (sqlCallableStatement.isWithReturn() && !sqlCallableStatement.isFunctionMode()) {
+            sqlCallableStatement.getReturnTypePolicy().executeRegisterOutParameter(cStmt, sqlIndex);
+            sqlIndex++;
+        }
+
+        for (SqlParameter sqlParameter : sqlCallableStatement.getParameterInfoList()) {
+            if (sqlParameter.isInput()) {
+                Object value = sqlParameter.getValue();
+                sqlParameter.getSqlTypePolicy().executeSetPreparedStatement(cStmt, sqlIndex, value, timeZoneOffset);
+            }
+
+            if (sqlParameter.isOutput()) {
+                sqlParameter.getSqlTypePolicy().executeRegisterOutParameter(cStmt, sqlIndex);
+            }
+
+            sqlIndex++;
+        }
+        return cStmt;
+    }
+
     @SuppressWarnings("unchecked")
-    private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs) throws Exception {
-        Object value =
-                sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(), sqlResult.getColumn());
+    private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs, long timeZoneOffset) throws Exception {
+        Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
+                sqlResult.getColumnName(), timeZoneOffset);
         if (sqlResult.isTransformed()) {
             value = ((Transformer<Object, Object>) sqlResult.getTransformer()).reverseTransform(value);
         }
@@ -545,7 +736,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            pStmt = getPreparedStatement(connection, sqlStatement);
+            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
 
             rs = pStmt.executeQuery();
 
@@ -553,11 +745,12 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                     (Transformer<Object, Object>) sqlStatement.getResultInfoList().get(0).getTransformer();
             if (transformer == null) {
                 while (rs.next()) {
-                    result.add((T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1));
+                    result.add((T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1, timeZoneOffset));
                 }
             } else {
                 while (rs.next()) {
-                    result.add((T) transformer.reverseTransform(sqlDataTypePolicy.executeGetResult(rs, clazz, 1)));
+                    result.add((T) transformer
+                            .reverseTransform(sqlDataTypePolicy.executeGetResult(rs, clazz, 1, timeZoneOffset)));
                 }
             }
         } catch (UnifyException e) {
@@ -569,5 +762,35 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(pStmt);
         }
         return (U) result;
+    }
+
+    private void populateCallableOutParameters(CallableStatement cStmt, CallableProc callableProc,
+            SqlCallableStatement sqlCallableStatement, long timeZoneOffset) throws Exception {
+        while (cStmt.getMoreResults()) {
+            // Nothing here. Just clearing results if any left.
+        }
+
+        // Return value if any
+        SqlCallableInfo sqlCallableInfo = sqlCallableStatement.getSqlCallableInfo();
+        int sqlIndex = 1;
+        if (sqlCallableStatement.isWithReturn() && !sqlCallableStatement.isFunctionMode()) {
+            SqlCallableFieldInfo returnValueInfo = sqlCallableInfo.getReturnValueInfo();
+            Object val = sqlCallableStatement.getReturnTypePolicy().executeGetOutput(cStmt,
+                    returnValueInfo.getGetter().getReturnType(), sqlIndex++, timeZoneOffset);
+            returnValueInfo.getSetter().invoke(callableProc, val);
+        }
+
+        // Populate out parameters
+        int index = 0;
+        for (SqlParameter sqlParameter : sqlCallableStatement.getParameterInfoList()) {
+            if (sqlParameter.isOutput()) {
+                SqlCallableParamInfo sqlCallableParamInfo = sqlCallableInfo.getParamInfoList().get(index);
+                Object val = sqlParameter.getSqlTypePolicy().executeGetOutput(cStmt,
+                        sqlCallableParamInfo.getField().getType(), sqlIndex, timeZoneOffset);
+                sqlCallableParamInfo.getSetter().invoke(callableProc, val);
+            }
+            sqlIndex++;
+            index++;
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,36 +23,34 @@ package com.tcdng.unify.core.format;
  */
 public class Pattern {
 
-    private String pattern;
+    private Base base;
 
     private String target;
-
-    private boolean filler;
-
-    private boolean quoted;
 
     public Pattern(String pattern, boolean filler) {
         this(pattern, filler, false);
     }
 
     public Pattern(String pattern, boolean filler, boolean quoted) {
-        this.pattern = pattern;
-        this.filler = filler;
-        this.quoted = quoted;
+        this(new Base(pattern, filler, quoted));
+    }
+
+    public Pattern(Base base) {
+        this.base = base;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (this.filler) {
+        if (base.filler) {
             sb.append('f');
-            if (this.quoted) {
+            if (base.quoted) {
                 sb.append('q');
             }
         } else {
             sb.append('p');
         }
-        sb.append('[').append(pattern).append(']');
+        sb.append('[').append(base.pattern).append(']');
         return sb.toString();
     }
 
@@ -65,14 +63,45 @@ public class Pattern {
     }
 
     public String getPattern() {
-        return pattern;
+        return base.pattern;
     }
 
     public boolean isFiller() {
-        return filler;
+        return base.filler;
     }
 
     public boolean isQuoted() {
-        return quoted;
+        return base.quoted;
+    }
+    
+    public static class Base {
+
+        private String pattern;
+
+        private boolean filler;
+
+        private boolean quoted;
+
+        public Base(String pattern, boolean filler) {
+            this(pattern, filler, false);
+        }
+
+        public Base(String pattern, boolean filler, boolean quoted) {
+            this.pattern = pattern;
+            this.filler = filler;
+            this.quoted = quoted;
+        }
+
+        public String getPattern() {
+            return pattern;
+        }
+
+        public boolean isFiller() {
+            return filler;
+        }
+
+        public boolean isQuoted() {
+            return quoted;
+        }
     }
 }

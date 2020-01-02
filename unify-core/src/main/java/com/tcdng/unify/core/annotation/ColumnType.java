@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,6 +46,7 @@ public enum ColumnType implements EnumConst {
     LONG_ARRAY("LNA"),
     STRING("STR"),
     STRING_ARRAY("STA"),
+    TIMESTAMP_UTC("TSU"),
     TIMESTAMP("TSP"),
     ENUMCONST("ECT");
 
@@ -58,6 +59,11 @@ public enum ColumnType implements EnumConst {
     @Override
     public String code() {
         return this.code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return AUTO.code;
     }
 
     public static ColumnType fromCode(String code) {

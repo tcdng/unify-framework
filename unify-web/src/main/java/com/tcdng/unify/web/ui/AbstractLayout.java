@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,9 +26,9 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "styleClass", type = String.class, defaultValue = "$e{}"),
+@UplAttributes({ @UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
         @UplAttribute(name = "style", type = String.class),
-        @UplAttribute(name = "showCaption", type = boolean.class, defaultValue = "false"),
+        @UplAttribute(name = "showCaption", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "captionStyle", type = String.class),
         @UplAttribute(name = "captionSuffix", type = String.class),
         @UplAttribute(name = "inlineCaption", type = boolean.class) })

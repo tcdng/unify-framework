@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,12 +17,13 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.criterion.RestrictionType;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.AggregateType;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.operation.Operator;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * SQL data source dialect component. Used to generate native SQL, maintain SQL
@@ -56,12 +57,12 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     /**
      * Returns the SQL criteria policy for an operator.
      * 
-     * @param operator
+     * @param restrictionType
      *            the operator
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlCriteriaPolicy getSqlCriteriaPolicy(Operator operator) throws UnifyException;
+    SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) throws UnifyException;
 
     /**
      * Returns the SQL entity information for an entity.
@@ -72,6 +73,16 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      *             if an error occurs
      */
     SqlEntityInfo getSqlEntityInfo(Class<?> clazz) throws UnifyException;
+
+    /**
+     * Returns the SQL callable information for a callable type.
+     * 
+     * @param clazz
+     *            the callable type
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> clazz) throws UnifyException;
 
     /**
      * Returns data source initialization statements.
@@ -116,11 +127,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the query object
+     * @param useView
+     *            indicates view should be used
      * @return the find statement
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareFindStatement(Query<? extends Entity> query) throws UnifyException;
+    SqlStatement prepareFindStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
 
     /**
      * Prepares list record by primary key statement.
@@ -275,11 +288,41 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the record criteria
+     * @param useView
+     *            indicates view should be used
      * @return the count statement.
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareCountStatement(Query<? extends Entity> query) throws UnifyException;
+    SqlStatement prepareCountStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
+
+    /**
+     * Prepares select min statement.
+     * 
+     * @param columnName
+     *            the value column.
+     * 
+     * @param query
+     *            the record criteria
+     * @return the count statement.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlStatement prepareMinStatement(String columnName, Query<? extends Entity> query) throws UnifyException;
+
+    /**
+     * Prepares select max statement.
+     * 
+     * @param columnName
+     *            the value column.
+     * 
+     * @param query
+     *            the record criteria
+     * @return the count statement.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlStatement prepareMaxStatement(String columnName, Query<? extends Entity> query) throws UnifyException;
 
     /**
      * Prepares an aggregate field statement.
@@ -292,6 +335,30 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      */
     SqlStatement prepareAggregateStatement(AggregateType aggregateType, Query<? extends Entity> query)
             throws UnifyException;
+
+    /**
+     * Prepares an SQL callable statement.
+     * 
+     * @param callableProc
+     *            the callable procedure object
+     * @return the callable statement object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlCallableStatement prepareCallableStatement(CallableProc callableProc) throws UnifyException;
+
+    /**
+     * Returns the preferred name for dialect.
+     * 
+     * @param name
+     *            the name
+     */
+    String getPreferredName(String name);
+
+    /**
+     * Returns the dialect SQL BLOB type.
+     */
+    String getSqlBlobType();
 
     /**
      * Gets the maximum number of values the data source would accept for
@@ -313,6 +380,15 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     boolean isQueryOffsetOrLimit(Query<? extends Entity> query) throws UnifyException;
 
     /**
+     * Checks if object are all renamed to lower case in dialect.
+     * 
+     * @return true if all lower case objects
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isAllObjectsInLowerCase() throws UnifyException;
+
+    /**
      * Restores a statement info. This applies to implementations that maintain a
      * statement info pool.
      * 
@@ -322,6 +398,17 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      *             if an error occurs
      */
     void restoreStatement(SqlStatement sqlStatement) throws UnifyException;
+
+    /**
+     * Restores a callable statement info. This applies to implementations that
+     * maintain a statement info pool.
+     * 
+     * @param sqlCallableStatement
+     *            the statement info to restore
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void restoreCallableStatement(SqlCallableStatement sqlCallableStatement) throws UnifyException;
 
     /**
      * Gets the data source shutdown hook.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +34,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.NumberSymbols;
@@ -44,17 +45,16 @@ import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.RequestContextUtil;
+import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
-import com.tcdng.unify.web.constant.SessionAttributeConstants;
 import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.writer.BehaviorWriter;
 import com.tcdng.unify.web.ui.writer.DocumentLayoutWriter;
 import com.tcdng.unify.web.ui.writer.LayoutWriter;
 import com.tcdng.unify.web.ui.writer.PanelWriter;
 import com.tcdng.unify.web.ui.writer.WidgetWriter;
-import com.tcdng.unify.web.util.WebUtils;
 
 /**
  * Default implementation of a response writer.
@@ -67,6 +67,9 @@ import com.tcdng.unify.web.util.WebUtils;
 public class ResponseWriterImpl extends AbstractUnifyComponent implements ResponseWriter {
 
     @Configurable
+    private ThemeManager themeManager;
+    
+    @Configurable
     private RequestContextUtil requestContextUtil;
 
     @Configurable("8192")
@@ -77,6 +80,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     private List<WebStringWriter> secordaryList;
 
     private Map<Class<? extends UplComponent>, UplComponentWriter> writers;
+
+    private boolean tableMode;
 
     @Override
     public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
@@ -154,42 +159,55 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
-    public ResponseWriter writeJsonStringArray(Object... valueArray) throws UnifyException {
-        buf.append('[');
-        if (valueArray != null) {
-            boolean appendSym = false;
-            for (Object value : valueArray) {
-                if (appendSym) {
-                    buf.append(',');
-                } else {
-                    appendSym = true;
-                }
-                if (value == null) {
-                    buf.append(value);
-                } else {
-                    writeJsonQuote(String.valueOf(value));
-                }
-            }
-        }
-        buf.append(']');
-        return this;
+    public ResponseWriter writeJsonArray(String... stringArr) throws UnifyException {
+        return writeJsonArray((Object[]) stringArr, true);
     }
 
     @Override
-    public ResponseWriter writeJsonStringArray(List<?> valueList) throws UnifyException {
+    public ResponseWriter writeJsonArray(Integer... intArr) throws UnifyException {
+        return writeJsonArray((Object[]) intArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Long... longArr) throws UnifyException {
+        return writeJsonArray((Object[]) longArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(BigDecimal... bigArr) throws UnifyException {
+        return writeJsonArray((Object[]) bigArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Double... doubleArr) throws UnifyException {
+        return writeJsonArray((Object[]) doubleArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Boolean... boolArr) throws UnifyException {
+        return writeJsonArray((Object[]) boolArr, false);
+    }
+
+    @Override
+    public ResponseWriter writeJsonArray(Collection<?> col) throws UnifyException {
         buf.append('[');
-        if (valueList != null) {
+        if (col != null) {
             boolean appendSym = false;
-            for (Object value : valueList) {
+            for (Object val : col) {
                 if (appendSym) {
                     buf.append(',');
                 } else {
                     appendSym = true;
                 }
-                if (value == null) {
-                    buf.append(value);
+
+                if (val == null) {
+                    buf.append(val);
                 } else {
-                    writeJsonQuote(String.valueOf(value));
+                    if (val instanceof Number || val instanceof Boolean) {
+                        buf.append(val);
+                    } else {
+                        writeJsonQuote(String.valueOf(val));
+                    }
                 }
             }
         }
@@ -286,8 +304,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
                 }
                 buf.append("{\"pn\":\"").append(entry.getKey()).append("\",");
                 buf.append("\"aliases\":");
-                Collection<String> stringCol = entry.getValue();
-                writeJsonStringArray(stringCol.toArray(new Object[stringCol.size()]));
+                writeJsonArray(entry.getValue());
                 buf.append('}');
             }
         }
@@ -356,11 +373,12 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             buf.append(getSessionContext().getUriBase());
         }
 
-        buf.append(requestContext.getContextPath()); // .append(requestContext.getRequestPath())
+        buf.append(requestContext.getContextPath());
         buf.append(path);
         for (String element : pathElement) {
             buf.append(element);
         }
+        buf.append("?req_pag=true");
         return this;
     }
 
@@ -377,14 +395,14 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         writeContextURL(path);
 
         PageManager pageManager = getPageManager();
-        buf.append("?").append(pageManager.getPageName("resourceName")).append("=")
-                .append(encodeURLParameter(expandThemeTag(resourceName)));
-        if (!StringUtils.isBlank(contentType)) {
+        buf.append('&').append(pageManager.getPageName("resourceName")).append("=")
+                .append(encodeURLParameter(themeManager.expandThemeTag(resourceName)));
+        if (StringUtils.isNotBlank(contentType)) {
             buf.append('&').append(pageManager.getPageName("contentType")).append("=")
                     .append(encodeURLParameter(contentType));
         }
 
-        if (!StringUtils.isBlank(scope)) {
+        if (StringUtils.isNotBlank(scope)) {
             buf.append('&').append(pageManager.getPageName("scope")).append("=").append(encodeURLParameter(scope));
         }
 
@@ -399,8 +417,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         if (requestContextUtil.isRemoteViewer()) {
             buf.append('&').append(RequestParameterConstants.REMOTE_VIEWER).append("=")
                     .append(requestContextUtil.getRemoteViewer());
-            buf.append('&').append(RequestParameterConstants.REMOTE_SESSION_ID).append("=")
-                    .append(getSessionContext().getId());
         }
         return this;
     }
@@ -413,19 +429,19 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     @Override
     public ResponseWriter writeFileImageContextURL(String src) throws UnifyException {
-        writeContextResourceURL("/resource/file", ContentTypeConstants.IMAGE, src);
+        writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), src);
         return this;
     }
 
     @Override
     public ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException {
-        writeContextResourceURL("/resource/scope", ContentTypeConstants.IMAGE, imageName);
+        writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName);
         return this;
     }
 
     @Override
     public ResponseWriter writeCommandURL() throws UnifyException {
-        writeContextURL(getRequestContextUtil().getResponsePageControllerInfo().getControllerId(), "/command");
+        writeContextURL(getRequestContextUtil().getResponsePathParts().getPathId(), "/command");
         return this;
     }
 
@@ -437,16 +453,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             writeCommandURL();
         }
         return this;
-    }
-
-    @Override
-    public String expandThemeTag(String resouceName) throws UnifyException {
-        String themePath = null;
-        if (getSessionContext().isUserLoggedIn()) {
-            themePath = getSessionContext().getUserToken().getThemePath();
-        }
-
-        return WebUtils.expandThemeTag(resouceName, themePath);
     }
 
     @Override
@@ -586,7 +592,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
-    public void reset() {
+    public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
+        this.writers = writers;
         if (buf == null || secordaryList == null || !buf.isEmpty() || !secordaryList.isEmpty()) {
             buf = new WebStringWriter(initialBufferCapacity);
             secordaryList = new ArrayList<WebStringWriter>();
@@ -594,16 +601,23 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
+    public boolean isTableMode() {
+        return tableMode;
+    }
+
+    @Override
+    public void setTableMode(boolean parentStyleMode) {
+        this.tableMode = parentStyleMode;
+    }
+
+    @Override
     public String toString() {
         return buf.toString();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void onInitialize() throws UnifyException {
-        writers = (Map<Class<? extends UplComponent>, UplComponentWriter>) this
-                .getSessionAttribute(SessionAttributeConstants.UPLCOMPONENT_WRITERS);
-        reset();
+
     }
 
     @Override
@@ -633,6 +647,40 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         } catch (UnsupportedEncodingException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.UTIL_ERROR);
         }
+    }
+
+    private ResponseWriter writeJsonArray(Object[] arr, boolean quote) throws UnifyException {
+        buf.append('[');
+        if (arr != null) {
+            if (quote) {
+                boolean appendSym = false;
+                for (Object val : arr) {
+                    if (appendSym) {
+                        buf.append(',');
+                    } else {
+                        appendSym = true;
+                    }
+                    if (val == null) {
+                        buf.append(val);
+                    } else {
+                        writeJsonQuote(String.valueOf(val));
+                    }
+                }
+            } else {
+                boolean appendSym = false;
+                for (Object val : arr) {
+                    if (appendSym) {
+                        buf.append(',');
+                    } else {
+                        appendSym = true;
+                    }
+
+                    buf.append(val);
+                }
+            }
+        }
+        buf.append(']');
+        return this;
     }
 
     private void appendRangeOption(String pattern, int range) {

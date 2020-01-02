@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,11 +24,11 @@ import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.RemoteCallController;
-import com.tcdng.unify.web.RemoteCallParams;
-import com.tcdng.unify.web.RemoteCallResult;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.discovery.gem.data.APIDiscoveryRemoteCallInfo;
+import com.tcdng.unify.web.remotecall.RemoteCallParams;
+import com.tcdng.unify.web.remotecall.RemoteCallResult;
 
 /**
  * Default API discovery manager implementation.
@@ -69,22 +69,22 @@ public class APIDiscoveryManagerImpl extends AbstractUnifyComponent implements A
 
             this.logDebug("Detecting API methods for [{0}]...", name);
             for (Method method : methods) {
-                com.tcdng.unify.web.annotation.GatewayAction goa =
-                        method.getAnnotation(com.tcdng.unify.web.annotation.GatewayAction.class);
-                if (goa != null && goa.discoverable()) {
+                com.tcdng.unify.web.annotation.RemoteAction raa =
+                        method.getAnnotation(com.tcdng.unify.web.annotation.RemoteAction.class);
+                if (raa != null && raa.discoverable()) {
                     if (RemoteCallResult.class.isAssignableFrom(method.getReturnType())
                             && method.getParameterTypes().length == 1
                             && RemoteCallParams.class.isAssignableFrom(method.getParameterTypes()[0])) {
-                        RemoteCallInfo existRci = this.remoteCallInfos.get(goa.name());
+                        RemoteCallInfo existRci = this.remoteCallInfos.get(raa.name());
                         if (existRci != null) {
                             throw new UnifyException(UnifyWebErrorConstants.APIDISCOVERY_REMOTECALL_CODE_EXISTS,
-                                    goa.name(), name, existRci.getComponentName());
+                                    raa.name(), name, existRci.getComponentName());
                         }
 
                         String path = name + '/' + method.getName();
                         this.logDebug("... method [{0}] detected.", path);
-                        this.remoteCallInfos.put(goa.name(), new RemoteCallInfo(name, goa.name(),
-                                this.resolveApplicationMessage(goa.description()), path, goa.restricted()));
+                        this.remoteCallInfos.put(raa.name(), new RemoteCallInfo(name, raa.name(),
+                                this.resolveApplicationMessage(raa.description()), path, raa.restricted()));
                     } else {
                         throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_INVALID_REMOTECALL_HANDLER_SIGNATURE,
                                 name, method.getName());

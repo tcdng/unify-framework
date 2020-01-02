@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,8 +18,8 @@ package com.tcdng.unify.web.response;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.DocViewController;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.DocViewBean;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
@@ -37,8 +37,10 @@ public class DocViewResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-        Panel docViewPanel = ((DocViewController) pageController).getDocViewPanel();
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
+        logDebug("Preparing document view response: path ID = [{0}]", page.getPathId());
+        DocViewBean docViewBean = (DocViewBean) page.getPageBean();
+        Panel docViewPanel = page.getPanelByShortName(docViewBean.getDocViewPanelName());
         writer.write(",\"remoteTarget\":\"").write(getRequestContextUtil().getRemoteViewer());
         writer.write("\",\"docView\":");
         writer.writeJsonPanel(docViewPanel, false);

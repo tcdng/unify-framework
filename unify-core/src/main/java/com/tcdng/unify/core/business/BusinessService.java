@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.tcdng.unify.core.business;
+
+import java.util.Date;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -38,4 +40,22 @@ public interface BusinessService extends UnifyComponent {
      *             if an error occurs
      */
     DatabaseTransactionManager tm() throws UnifyException;
+
+    /**
+     * Returns the today's date.
+     * 
+     * @return the midnight date
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Date getToday() throws UnifyException;
+
+    /**
+     * Returns the current UTC timestamp based on current session.
+     * 
+     * @return now
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Date getNow() throws UnifyException;
 }

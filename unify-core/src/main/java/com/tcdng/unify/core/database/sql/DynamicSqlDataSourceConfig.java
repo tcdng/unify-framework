@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,7 +40,8 @@ public class DynamicSqlDataSourceConfig {
     private boolean shutdownOnTerminate;
 
     public DynamicSqlDataSourceConfig(String name, String dialect, String driver, String connectionUrl,
-            String dbUsername, String dbPassword, int maxConnection, boolean shutdownOnTerminate) {
+            String dbUsername, String dbPassword, int maxConnection,
+            boolean shutdownOnTerminate) {
         this.name = name;
         this.dialect = dialect;
         this.driver = driver;

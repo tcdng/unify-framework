@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,15 @@ package com.tcdng.unify.core.database.sql;
  * @since 1.0
  */
 public interface SqlDataTypePolicy {
+
+    /**
+     * Gets the policy alternative default SQL string.
+     * 
+     * @param fieldType the field data type.
+     * 
+     * @return the alternative default
+     */
+    String getAltDefault(Class<?> fieldType);
 
     /**
      * Gets the java SQL data type.
@@ -52,16 +61,30 @@ public interface SqlDataTypePolicy {
     void appendTypeSql(StringBuilder sb, int length, int precision, int scale);
 
     /**
-     * Appends default value SQL
+     * Appends default SQL
      * 
      * @param sb
      *            the builder to append to
-     * @param type
-     *            the column type
+     * @param fieldType
+     *            the field type
      * @param defaultVal
-     *            the default value
+     *            the optional default value. If null or blank, Alternative default
+     *            values are used.
      */
-    void appendSpecifyDefaultValueSql(StringBuilder sb, Class<?> type, String defaultVal);
+    void appendDefaultSql(StringBuilder sb, Class<?> fieldType, String defaultVal);
+
+    /**
+     * Appends default value
+     * 
+     * @param sb
+     *            the builder to append to
+     * @param fieldType
+     *            the field type
+     * @param defaultVal
+     *            the optional default value. If null or blank, Alternative default
+     *            values are used.
+     */
+    void appendDefaultVal(StringBuilder sb, Class<?> fieldType, String defaultVal);
 
     /**
      * Executes the setter of a prepared statement.
@@ -72,13 +95,27 @@ public interface SqlDataTypePolicy {
      *            the data index
      * @param data
      *            the data to set
+     * @param utcOffset
+     *            UTC offset for timestamp type
      * @throws Exception
      *             if an error occurs
      */
-    void executeSetPreparedStatement(Object pstmt, int index, Object data) throws Exception;
+    void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception;
 
     /**
-     * Executes resultset getter using supplied column name.
+     * Executes the register output parameter of a callable statement.
+     * 
+     * @param cstmt
+     *            the callable statement
+     * @param index
+     *            the data index
+     * @throws Exception
+     *             if an error occurs
+     */
+    void executeRegisterOutParameter(Object cstmt, int index) throws Exception;
+
+    /**
+     * Executes result set getter using supplied column name.
      * 
      * @param rs
      *            the result set
@@ -86,14 +123,16 @@ public interface SqlDataTypePolicy {
      *            the result type
      * @param column
      *            tthe result column
+     * @param utcOffset
+     *            UTC offset for timestamp type
      * @return the result value
      * @throws Exception
      *             if an error occurs
      */
-    Object executeGetResult(Object rs, Class<?> type, String column) throws Exception;
+    Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception;
 
     /**
-     * Executes resultset getter using supplied column index.
+     * Executes result set getter using supplied column index.
      * 
      * @param rs
      *            the result set
@@ -101,9 +140,28 @@ public interface SqlDataTypePolicy {
      *            the result type
      * @param index
      *            the result column index
+     * @param utcOffset
+     *            UTC offset for timestamp type
      * @return the result value
      * @throws Exception
      *             if an error occurs
      */
-    Object executeGetResult(Object rs, Class<?> type, int index) throws Exception;
+    Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception;
+
+    /**
+     * Executes callable statement output using supplied column index.
+     * 
+     * @param cstmt
+     *            the callable statement
+     * @param type
+     *            the result type
+     * @param index
+     *            the result column index
+     * @param utcOffset
+     *            UTC offset for timestamp type
+     * @return the result value
+     * @throws Exception
+     *             if an error occurs
+     */
+    Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception;
 }

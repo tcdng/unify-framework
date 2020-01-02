@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,16 @@
  */
 package com.tcdng.unify.web.ui;
 
+import java.util.Map;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.data.AbstractPool;
-import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.upl.UplComponent;
+import com.tcdng.unify.core.upl.UplComponentWriter;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 
 /**
@@ -33,37 +36,34 @@ import com.tcdng.unify.web.WebApplicationComponents;
 @Component(WebApplicationComponents.APPLICATION_RESPONSEWRITERPOOL)
 public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements ResponseWriterPool {
 
-    @Configurable("2000") // 2 seconds
+    @Configurable("4000") // 4 seconds
     private long getTimeout;
 
-    @Configurable("128")
+    @Configurable("256")
     private int maxSize;
 
     @Configurable("8")
     private int minSize;
 
-    private FactoryMap<UserPlatform, InternalPool> internalPools = new FactoryMap<UserPlatform, InternalPool>() {
+    private InternalPool internalPool;
 
-        @Override
-        protected InternalPool create(UserPlatform key, Object... params) throws Exception {
-            return new InternalPool();
-        }
-
-    };
-
+    @SuppressWarnings("unchecked")
     @Override
     public ResponseWriter getResponseWriter() throws UnifyException {
-        return internalPools.get(getSessionContext().getPlatform()).borrowObject();
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers =
+                (Map<Class<? extends UplComponent>, UplComponentWriter>) getSessionAttribute(
+                        UnifyWebSessionAttributeConstants.UPLCOMPONENT_WRITERS);
+        return internalPool.borrowObject(writers);
     }
 
     @Override
     public boolean restore(ResponseWriter writer) throws UnifyException {
-        return internalPools.get(getSessionContext().getPlatform()).returnObject(writer);
+        return internalPool.returnObject(writer);
     }
 
     @Override
     protected void onInitialize() throws UnifyException {
-
+        internalPool = new InternalPool();
     }
 
     @Override
@@ -82,13 +82,14 @@ public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements Re
             return (ResponseWriter) getComponent(WebApplicationComponents.APPLICATION_RESPONSEWRITER);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
-        protected void onGetObject(ResponseWriter writer, Object... params) throws Exception {
-            writer.reset();
+        protected void onGetObject(ResponseWriter responseWriter, Object... params) throws Exception {
+            responseWriter.reset((Map<Class<? extends UplComponent>, UplComponentWriter>) params[0]);
         }
 
         @Override
-        protected void destroyObject(ResponseWriter object) {
+        protected void destroyObject(ResponseWriter responseWriter) {
 
         }
     }

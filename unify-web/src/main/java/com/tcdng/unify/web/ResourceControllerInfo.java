@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.tcdng.unify.web;
 
 import java.util.Map;
 
-import com.tcdng.unify.web.ui.BindingInfo;
+import com.tcdng.unify.web.ui.PropertyInfo;
 
 /**
  * Encapsulates information about a resource controller.
@@ -25,9 +25,9 @@ import com.tcdng.unify.web.ui.BindingInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ResourceControllerInfo extends UserInterfaceControllerInfo {
+public class ResourceControllerInfo extends UIControllerInfo {
 
-    public ResourceControllerInfo(String controllerName, Map<String, BindingInfo> propertyBindingMap) {
+    public ResourceControllerInfo(String controllerName, Map<String, PropertyInfo> propertyBindingMap) {
         super(controllerName, propertyBindingMap);
     }
 }

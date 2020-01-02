@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -74,7 +74,7 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         xosm.marshal(book, baos, null);
-       // assertEquals(BOOK_XML, new String(baos.toByteArray()));
+        assertEquals(BOOK_XML, new String(baos.toByteArray()));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         StringWriter writer = new StringWriter();
         xosm.marshal(book, writer);
-       // assertEquals(BOOK_XML, writer.toString());
+        assertEquals(BOOK_XML, writer.toString());
     }
 
     @Test

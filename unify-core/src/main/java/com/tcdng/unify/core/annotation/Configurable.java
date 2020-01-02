@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -53,4 +53,10 @@ public @interface Configurable {
      * Indicates that configurable property is hidden.
      */
     boolean hidden() default false;
+
+    /**
+     * Indicates annotated component type is automatically resolved and injected if
+     * no default is specified and there's no explicit configuration.
+     */
+    boolean resolve() default true;
 }

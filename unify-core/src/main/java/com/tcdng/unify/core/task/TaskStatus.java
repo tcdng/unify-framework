@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("taskstatuslist")
 public enum TaskStatus implements EnumConst {
 
-    INITIALISED("I"), RUNNING("R"), COMPLETED("C"), CANCELED("X"), FAILED("F"), ABORTED("A"), CRITICAL("T");
+    INITIALIZED("I"), RUNNING("R"), SUCCESSFUL("S"), CANCELED("X"), FAILED("F"), ABORTED("A"), CRITICAL("T");
 
     private final String code;
 
@@ -39,6 +39,11 @@ public enum TaskStatus implements EnumConst {
     @Override
     public String code() {
         return this.code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return INITIALIZED.code;
     }
 
     public static TaskStatus fromCode(String code) {

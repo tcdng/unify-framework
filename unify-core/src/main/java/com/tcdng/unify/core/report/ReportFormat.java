@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.report;
 
 import com.tcdng.unify.core.annotation.StaticList;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
@@ -28,29 +28,34 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 @StaticList("reportformatlist")
 public enum ReportFormat implements EnumConst {
-    CSV("CSV", ".csv", ContentTypeConstants.TEXT_CSV),
-    DOC("DOC", ".doc", ContentTypeConstants.APPLICATION_DOC),
-    DOCX("DOCX", ".docx", ContentTypeConstants.APPLICATION_DOCX),
-    PDF("PDF", ".pdf", ContentTypeConstants.APPLICATION_PDF),
-    XLS("XLS", ".xls", ContentTypeConstants.APPLICATION_XLS),
-    XLSX("XLSX", ".xlsx", ContentTypeConstants.APPLICATION_XLSX),
-    XML("XML", ".xml", ContentTypeConstants.APPLICATION_XML);
+    CSV("CSV", ".csv", MimeType.TEXT_CSV),
+    DOC("DOC", ".doc", MimeType.APPLICATION_DOC),
+    DOCX("DOCX", ".docx", MimeType.APPLICATION_DOCX),
+    PDF("PDF", ".pdf", MimeType.APPLICATION_PDF),
+    XLS("XLS", ".xls", MimeType.APPLICATION_XLS),
+    XLSX("XLSX", ".xlsx", MimeType.APPLICATION_XLSX),
+    XML("XML", ".xml", MimeType.APPLICATION_XML);
 
     private final String code;
 
     private final String fileExtension;
 
-    private final String contentType;
+    private final MimeType mimeType;
 
-    private ReportFormat(String code, String fileExtension, String contentType) {
+    private ReportFormat(String code, String fileExtension, MimeType mimeType) {
         this.code = code;
         this.fileExtension = fileExtension;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
     }
 
     @Override
     public String code() {
         return this.code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return PDF.code;
     }
 
     public static ReportFormat fromCode(String code) {
@@ -65,7 +70,7 @@ public enum ReportFormat implements EnumConst {
         return this.fileExtension;
     }
 
-    public String contentType() {
-        return this.contentType;
+    public MimeType mimeType() {
+        return this.mimeType;
     }
 }

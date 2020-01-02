@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.Date;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -25,6 +27,56 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public abstract class AbstractEntityPolicy extends AbstractUnifyComponent implements EntityPolicy {
+
+    private boolean setNow;
+
+    public AbstractEntityPolicy() {
+        this(false);
+    }
+
+    public AbstractEntityPolicy(boolean setNow) {
+        this.setNow = setNow;
+    }
+
+    @Override
+    public boolean isSetNow() {
+        return setNow;
+    }
+
+    @Override
+    public Object preCreate(Entity record, Date now) throws UnifyException {
+        return null;
+    }
+
+    @Override
+    public void preUpdate(Entity record, Date now) throws UnifyException {
+
+    }
+
+    @Override
+    public void preDelete(Entity record, Date now) throws UnifyException {
+
+    }
+
+    @Override
+    public void preQuery(Query<? extends Entity> query) throws UnifyException {
+
+    }
+
+    @Override
+    public void onCreateError(Entity record) {
+
+    }
+
+    @Override
+    public void onUpdateError(Entity record) {
+
+    }
+
+    @Override
+    public void onDeleteError(Entity record) {
+
+    }
 
     @Override
     protected void onInitialize() throws UnifyException {

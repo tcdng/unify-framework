@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,7 +34,7 @@ public class Action {
         this.method = method;
     }
 
-    public String getName() {
+    public String getMethodName() {
         return method.getName();
     }
 
@@ -43,6 +43,6 @@ public class Action {
     }
 
     public String toString() {
-        return StringUtils.beanToString(this);
+        return StringUtils.toXmlString(this);
     }
 }

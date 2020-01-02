@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package com.tcdng.unify.web;
 import java.lang.reflect.Method;
 
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.remotecall.RemoteCallParams;
+import com.tcdng.unify.web.remotecall.RemoteCallResult;
 
 /**
  * Remote call handler.
@@ -66,6 +68,6 @@ public class RemoteCallHandler {
     }
 
     public String toString() {
-        return StringUtils.beanToString(this);
+        return StringUtils.toXmlString(this);
     }
 }

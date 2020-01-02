@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ public class StaticReferenceQuery extends Query<StaticReference> {
     }
 
     public StaticReferenceQuery code(String code) {
-        return (StaticReferenceQuery) this.equals("code", code);
+        return (StaticReferenceQuery) this.addEquals("code", code);
     }
 
 }

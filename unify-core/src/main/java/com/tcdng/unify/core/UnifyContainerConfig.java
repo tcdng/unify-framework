@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +27,8 @@ import java.util.Set;
 
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.TypeRepository;
+import com.tcdng.unify.core.util.UnifyConfigUtils;
 
 /**
  * A unify container configuration.
@@ -193,6 +197,12 @@ public class UnifyContainerConfig {
         }
 
         public Builder addComponentConfig(String name, String description, Class<? extends UnifyComponent> type,
+                boolean singleton) throws UnifyException {
+            addComponentConfig(name, description, type, singleton, new UnifyComponentSettings());
+            return this;
+        }
+
+        public Builder addComponentConfig(String name, String description, Class<? extends UnifyComponent> type,
                 boolean singleton, UnifyComponentSettings settings) throws UnifyException {
             addComponentConfig(name, description, type, singleton, false, settings);
             return this;
@@ -212,6 +222,26 @@ public class UnifyContainerConfig {
             UnifyComponentConfig unifyComponentConfig =
                     new UnifyComponentConfig(settings, name, description, type, singleton);
             unifyComponentConfigs.put(name, unifyComponentConfig);
+            return this;
+        }
+
+        public Builder readXml(File xmlFile) throws UnifyException {
+            UnifyConfigUtils.readConfigFromXml(this, xmlFile);
+            return this;
+        }
+
+        public Builder readXml(InputStream xmlInputStream) throws UnifyException {
+            UnifyConfigUtils.readConfigFromXml(this, xmlInputStream);
+            return this;
+        }
+
+        public Builder readXml(String xmlConfig) throws UnifyException {
+            UnifyConfigUtils.readConfigFromXml(this, xmlConfig);
+            return this;
+        }
+
+        public Builder scan(TypeRepository typeRepository) throws UnifyException {
+            UnifyConfigUtils.readConfigFromTypeRepository(this, typeRepository);
             return this;
         }
 

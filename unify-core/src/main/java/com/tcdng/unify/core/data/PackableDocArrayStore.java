@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,13 +43,13 @@ public class PackableDocArrayStore extends AbstractArrayValueStore<PackableDoc> 
 
     @Override
     protected Object doRetrieve(PackableDoc storage, String property) throws UnifyException {
-        return storage.readFieldValue(property);
+        return storage.read(property);
     }
 
     @Override
     protected void doStore(PackableDoc storage, String property, Object value, Formatter<?> formatter)
             throws UnifyException {
-        storage.writeFieldValue(property, value, formatter);
+        storage.write(property, value, formatter);
     }
 
 }

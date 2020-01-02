@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.core;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.data.Context;
@@ -37,6 +38,8 @@ public class SessionContext extends Context {
 
     private Locale locale;
 
+    private TimeZone timeZone;
+
     private String id;
 
     private String uriBase;
@@ -49,26 +52,25 @@ public class SessionContext extends Context {
 
     private String remoteUser;
 
-    private String remoteViewer;
-
     private UserPlatform platform;
 
     private Date lastAccessTime;
 
-    public SessionContext(String id, String uriBase, String contextPath, String remoteHost, String remoteAddress,
-            String remoteUser, String remoteViewer, UserPlatform platform) {
+    private boolean useDaylightSavings;
+    
+    public SessionContext(String id, Locale locale, TimeZone timeZone, String uriBase, String contextPath,
+            String remoteHost, String remoteAddress, String remoteUser, UserPlatform platform) {
         this.id = id;
-        this.locale = Locale.getDefault();
+        this.locale = locale;
+        this.timeZone = timeZone;
         this.uriBase = uriBase;
         this.contextPath = contextPath;
         this.remoteHost = remoteHost;
         this.remoteAddress = remoteAddress;
         this.remoteUser = remoteUser;
         this.platform = platform;
-        this.lastAccessTime = new Date();
-        this.remoteViewer = remoteViewer;
-        this.getAttributes().put(TRUE_ATTRIBUTE, Boolean.TRUE);
-        this.getAttributes().put(FALSE_ATTRIBUTE, Boolean.FALSE);
+        setAttribute(TRUE_ATTRIBUTE, Boolean.TRUE);
+        setAttribute(FALSE_ATTRIBUTE, Boolean.FALSE);
     }
 
     public UserToken getUserToken() {
@@ -111,27 +113,43 @@ public class SessionContext extends Context {
         return remoteUser;
     }
 
-    public String getRemoteViewer() {
-        return remoteViewer;
-    }
-
     public UserPlatform getPlatform() {
         return platform;
     }
 
-    public boolean isRemoteViewer() {
-        return this.remoteViewer != null;
-    }
-
     public boolean isUserLoggedIn() {
-        return this.userToken != null || this.isRemoteViewer();
+        return userToken != null;
     }
 
     public Date getLastAccessTime() {
         return lastAccessTime;
     }
 
-    public void accessed() {
-        this.lastAccessTime = new Date();
+    public void setLastAccessTime(Date lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public boolean isUseDaylightSavings() {
+        return useDaylightSavings;
+    }
+
+    public void setUseDaylightSavings(boolean useDaylightSavings) {
+        this.useDaylightSavings = useDaylightSavings;
+    }
+
+    public long getTimeZoneOffset() {
+        if (useDaylightSavings) {
+            return timeZone.getRawOffset() + timeZone.getDSTSavings();
+        }
+
+        return timeZone.getRawOffset();
     }
 }

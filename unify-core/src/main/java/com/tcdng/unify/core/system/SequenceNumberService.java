@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,12 +30,25 @@ import com.tcdng.unify.core.business.BusinessService;
 public interface SequenceNumberService extends BusinessService {
 
     /**
-     * Returns the next available sequence number for sequence with supplied name.
-     * Creates a new sequence if one does not exist. All sequences start from 1L.
+     * Returns the next available sequence number from cached block for sequence
+     * with supplied name. Creates a new sequence if one does not exist. All
+     * sequences start from 1L. Does not guarantee an uninterrupted sequence.
      * 
      * @param sequenceName
      *            the sequence name
      * @return the next sequence number
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Long getCachedBlockNextSequenceNumber(String sequenceName) throws UnifyException;
+
+    /**
+     * Returns the next number in sequence specified by supplied sequence name.
+     * Creates a new sequence if no sequence exists for supplied parameters. All
+     * sequences start from 1L. Guarantees an uninterrupted sequence.
+     * 
+     * @param sequenceName
+     *            the sequence name
      * @throws UnifyException
      *             if an error occurs
      */
@@ -44,7 +57,7 @@ public interface SequenceNumberService extends BusinessService {
     /**
      * Returns the next number in sequence specified by supplied sequence name and
      * date. Creates a new sequence if no sequence exists for supplied parameters.
-     * All sequences start from 1L.
+     * All sequences start from 1L. Guarantees an uninterrupted sequence.
      * 
      * @param sequenceName
      *            the sequence name

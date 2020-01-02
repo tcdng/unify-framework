@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,9 @@
  */
 package com.tcdng.unify.core.data;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +25,11 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.DataType;
+import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.GetterSetterInfo;
+import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Packable document configuration.
@@ -38,16 +43,13 @@ public class PackableDocConfig {
 
     private Map<String, FieldConfig> fieldConfigs;
 
-    public PackableDocConfig(String name, FieldConfig... fieldConfigs) {
-        this(name, Arrays.asList(fieldConfigs));
-    }
+    private Map<Class<?>, BeanMappingConfig> beanMappingConfigs;
 
-    public PackableDocConfig(String name, List<FieldConfig> fieldConfigList) {
+    private PackableDocConfig(String name, Map<String, FieldConfig> fieldConfigs,
+            Map<Class<?>, BeanMappingConfig> beanMappingConfigs) {
         this.name = name;
-        fieldConfigs = new HashMap<String, FieldConfig>();
-        for (FieldConfig fieldConfig : fieldConfigList) {
-            fieldConfigs.put(fieldConfig.getName(), fieldConfig);
-        }
+        this.fieldConfigs = fieldConfigs;
+        this.beanMappingConfigs = beanMappingConfigs;
     }
 
     public String getName() {
@@ -57,7 +59,7 @@ public class PackableDocConfig {
     public FieldConfig getFieldConfig(String fieldName) throws UnifyException {
         FieldConfig fc = fieldConfigs.get(fieldName);
         if (fc == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_NO_SUCH_FIELD, fieldName);
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_NO_SUCH_FIELD, fieldName);
         }
 
         return fc;
@@ -79,96 +81,204 @@ public class PackableDocConfig {
         return fieldConfigs.size();
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{name=\"").append(name).append("\", fieldConfigs=\n");
-        for (Map.Entry<String, FieldConfig> entry : fieldConfigs.entrySet()) {
-            sb.append(entry.getValue()).append("\n");
+    public Set<Class<?>> getBeanMappingClasses() {
+        return beanMappingConfigs.keySet();
+    }
+
+    public BeanMappingConfig getBeanMapping(Class<?> beanClass) throws UnifyException {
+        BeanMappingConfig bc = beanMappingConfigs.get(beanClass);
+        if (bc == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_NO_SUCH_BEANCONFIG, beanClass);
         }
-        sb.append("}");
-        return sb.toString();
+
+        return bc;
+    }
+
+    public boolean isBeanConfig(Class<?> beanClass) {
+        return beanMappingConfigs.containsKey(beanClass);
+    }
+
+    public static PackableDocConfig buildFrom(String configName, Class<?> beanClass) throws UnifyException {
+        PackableDocConfig.Builder pdcb = PackableDocConfig.newBuilder(configName);
+        BeanMappingConfig.Builder bmcb = BeanMappingConfig.newBuilder(beanClass);
+        for (GetterSetterInfo gsInfo : ReflectUtils.getGetterSetterList(beanClass)) {
+            if (gsInfo.isProperty()) {
+                String fieldName = gsInfo.getName();
+                bmcb.addMapping(fieldName, fieldName);
+
+                Class<?> dataClass = gsInfo.getType();
+                boolean isList = gsInfo.isParameterArgumented();
+                if (isList) {
+                    dataClass = gsInfo.getArgumentType();
+                } else if (dataClass.isArray() && !dataClass.equals(byte[].class)) {
+                    dataClass = dataClass.getComponentType();
+                    isList = true;
+                }
+
+                DataType dataType = DataUtils.findDataType(dataClass);
+                if (dataType != null) {
+                    pdcb.addFieldConfig(fieldName, dataType, isList);
+                } else if (EnumConst.class.isAssignableFrom(dataClass)) {
+                    pdcb.addFieldConfig(fieldName, DataType.STRING, isList);
+                } else {
+                    pdcb.addComplexFieldConfig(fieldName,
+                            PackableDocConfig.buildFrom(StringUtils.dotify(configName, fieldName), dataClass), isList);
+                }
+            }
+        }
+
+        return pdcb.addBeanConfig(bmcb.build()).build();
+    }
+
+    public static Builder newBuilder(String configName) {
+        return new Builder(configName);
+    }
+
+    public static class Builder {
+
+        private String name;
+
+        private Map<String, FieldConfig> fieldConfigs;
+
+        private Map<Class<?>, BeanMappingConfig> beanMappings;
+
+        private Builder(String name) {
+            this.name = name;
+            this.fieldConfigs = new LinkedHashMap<String, FieldConfig>();
+            this.beanMappings = new HashMap<Class<?>, BeanMappingConfig>();
+        }
+
+        public Builder addFieldConfig(String fieldName, DataType dataType) throws UnifyException {
+            return addFieldConfig(fieldName, dataType, false);
+        }
+
+        public Builder addFieldConfig(String fieldName, DataType dataType, boolean list) throws UnifyException {
+            if (fieldConfigs.containsKey(fieldName)) {
+                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_FIELD_EXISTS, fieldName);
+            }
+
+            fieldConfigs.put(fieldName, new FieldConfig(fieldName, dataType.javaClass(), list));
+            return this;
+        }
+
+        public Builder addComplexFieldConfig(String fieldName, PackableDocConfig packableDocConfig)
+                throws UnifyException {
+            return addComplexFieldConfig(fieldName, packableDocConfig, false);
+        }
+
+        public Builder addComplexFieldConfig(String fieldName, PackableDocConfig packableDocConfig, boolean list)
+                throws UnifyException {
+            if (fieldConfigs.containsKey(fieldName)) {
+                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_FIELD_EXISTS, fieldName);
+            }
+
+            fieldConfigs.put(fieldName, new FieldConfig(fieldName, packableDocConfig, list));
+            return this;
+        }
+
+        public Builder addBeanConfig(BeanMappingConfig beanMappingConfig) throws UnifyException {
+            Class<?> beanClass = beanMappingConfig.getBeanClass();
+            if (beanMappings.containsKey(beanClass)) {
+                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_BEANCONFIG_EXISTS, beanClass);
+            }
+
+            for (String beanProperty : beanMappingConfig.getBeanProperties()) {
+                String fieldName = beanMappingConfig.getMappedField(beanProperty);
+                FieldConfig fc = fieldConfigs.get(fieldName);
+                if (fc == null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_NO_SUCH_FIELDCONFIG, fieldName);
+                }
+
+                // Ensure bean type has appropriate setters and getters
+                GetterSetterInfo gsInfo = ReflectUtils.getGetterSetterInfo(beanClass, beanProperty);
+
+                // Ensure type is the same
+                if (!fc.isComplex()) {
+                    if (fc.isList()) {
+                        if (gsInfo.isParameterArgumented()) {
+                            if (!List.class.equals(gsInfo.getType())
+                                    || !fc.getDataType().equals(getPackableType(gsInfo.getArgumentType()))) {
+                                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
+                                        beanClass, beanProperty, fc.getDataType());
+                            }
+                        } else {
+                            if (!gsInfo.getType().isArray()
+                                    || !fc.getDataType().equals(getPackableType(gsInfo.getType().getComponentType()))) {
+                                throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
+                                        beanClass, beanProperty, fc.getDataType());
+                            }
+                        }
+                    } else {
+                        if (!fc.getDataType().equals(getPackableType(gsInfo.getType()))) {
+                            throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
+                                    beanClass, beanProperty, fc.getDataType());
+                        }
+                    }
+                }
+            }
+
+            beanMappings.put(beanClass, beanMappingConfig);
+            return this;
+        }
+
+        public PackableDocConfig build() {
+            return new PackableDocConfig(name, DataUtils.unmodifiableMap(fieldConfigs),
+                    DataUtils.unmodifiableMap(beanMappings));
+        }
+
+        private Class<?> getPackableType(Class<?> valueClass) throws UnifyException {
+            if (EnumConst.class.isAssignableFrom(valueClass)) {
+                return String.class;
+            }
+
+            return DataUtils.getWrapperClass(valueClass);
+        }
     }
 
     public static class FieldConfig {
 
-        private String name;
+        private String fieldName;
 
-        private Class<?> type;
+        private Class<?> dataType;
 
         private PackableDocConfig packableDocConfig;
 
-        private int repeat;
+        private boolean list;
 
-        public FieldConfig(String name, Class<?> type) throws UnifyException {
-            this.name = name;
-            this.type = type;
-            this.repeat = -1;
+        private FieldConfig(String fieldName, Class<?> dataType, boolean list) {
+            this.fieldName = fieldName;
+            this.dataType = dataType;
+            this.list = list;
         }
 
-        public FieldConfig(String name, DataType type) throws UnifyException {
-            this(name, type, -1);
+        private FieldConfig(String fieldName, PackableDocConfig packableDocConfig) {
+            this(fieldName, packableDocConfig, false);
         }
 
-        public FieldConfig(String name, DataType type, int repeat) throws UnifyException {
-            this.name = name;
-            this.type = type.javaClass(repeat >= 0);
-            this.repeat = repeat;
-            if (this.repeat < 0) {
-                this.repeat = 0;
-            }
+        private FieldConfig(String fieldName, PackableDocConfig packableDocConfig, boolean list) {
+            this.fieldName = fieldName;
+            this.packableDocConfig = packableDocConfig;
+            this.list = list;
         }
 
-        public FieldConfig(String name, FieldConfig... fieldConfigs) {
-            this(name, -1, fieldConfigs);
+        public String getFieldName() {
+            return fieldName;
         }
 
-        public FieldConfig(String name, int repeat, FieldConfig... fieldConfigs) {
-            this(name, repeat, Arrays.asList(fieldConfigs));
-        }
-
-        public FieldConfig(String name, List<FieldConfig> fieldConfigList) {
-            this(name, -1, fieldConfigList);
-        }
-
-        public FieldConfig(String name, int repeat, List<FieldConfig> fieldConfigList) {
-            this.name = name;
-            this.type = DataType.COMPLEX.javaClass(repeat >= 0);
-            this.repeat = repeat;
-            this.packableDocConfig = new PackableDocConfig(name, fieldConfigList);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Class<?> getType() {
-            return type;
-        }
-
-        public int getRepeat() {
-            return repeat;
+        public Class<?> getDataType() {
+            return dataType;
         }
 
         public PackableDocConfig getPackableDocConfig() {
             return packableDocConfig;
         }
 
+        public boolean isList() {
+            return list;
+        }
+
         public boolean isComplex() {
             return packableDocConfig != null;
-        }
-
-        public boolean isArray() {
-            return type.isArray();
-        }
-
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("{name=\"").append(name).append("\", type=\"").append(type).append("\"");
-            if (packableDocConfig != null) {
-                sb.append("\n").append(packableDocConfig);
-            }
-            sb.append("}");
-            return sb.toString();
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -72,10 +72,10 @@ public class StringUtilsTest {
 
     @Test
     public void testIsNotBlank() throws Exception {
-        assertFalse(!StringUtils.isBlank(null));
-        assertFalse(!StringUtils.isBlank(""));
-        assertFalse(!StringUtils.isBlank("  "));
-        assertTrue(!StringUtils.isBlank("Snuffleupagus"));
+        assertFalse(StringUtils.isNotBlank(null));
+        assertFalse(StringUtils.isNotBlank(""));
+        assertFalse(StringUtils.isNotBlank("  "));
+        assertTrue(StringUtils.isNotBlank("Snuffleupagus"));
     }
 
     @Test
@@ -454,5 +454,21 @@ public class StringUtilsTest {
         token = tokenList.get(2);
         assertEquals("adj", token.getToken());
         assertTrue(token.isParam());
+    }
+    
+    @Test
+    public void testFirstNonBlank() throws Exception {
+        assertNull(StringUtils.getFirstNonBlank());
+        assertNull(StringUtils.getFirstNonBlank((String) null));
+        assertNull(StringUtils.getFirstNonBlank(""));
+        assertNull(StringUtils.getFirstNonBlank("", (String) null));
+        assertNull(StringUtils.getFirstNonBlank("  "));
+        assertEquals("Red", StringUtils.getFirstNonBlank("Red"));
+        assertEquals("Orange", StringUtils.getFirstNonBlank("Orange", (String) null));
+        assertEquals("Yellow", StringUtils.getFirstNonBlank(" ", "Yellow", (String) null));
+        assertEquals("Green", StringUtils.getFirstNonBlank(" ", "Green"));
+        assertEquals("Blue", StringUtils.getFirstNonBlank(" ", "Blue", "Green"));
+        assertEquals("Indigo", StringUtils.getFirstNonBlank("Indigo", "Blue", "Green"));
+        assertEquals("Violet", StringUtils.getFirstNonBlank((String) null, "  ", "Violet"));
     }
 }

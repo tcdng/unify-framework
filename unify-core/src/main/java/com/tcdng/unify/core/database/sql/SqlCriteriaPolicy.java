@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.operation.Criteria;
+import com.tcdng.unify.core.criterion.Restriction;
 
 /**
  * SQL generation policy.
@@ -29,7 +29,7 @@ import com.tcdng.unify.core.operation.Criteria;
 public interface SqlCriteriaPolicy {
     /**
      * Generates a native prepared statement SQL with parameter information based on
-     * supplied criteria.
+     * supplied restriction.
      * 
      * @param sql
      *            generated native SQL are appended to this buffer
@@ -37,28 +37,28 @@ public interface SqlCriteriaPolicy {
      *            parameter information is added to this list
      * @param sqlEntityInfo
      *            the record type information object
-     * @param criteria
-     *            the criteria object
+     * @param restriction
+     *            the restriction object
      * @throws UnifyException
      *             if an error occurs
      */
     void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException;
+            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException;
 
     /**
-     * Translates a criteria object to native SQL and appends to supplied string
+     * Translates a restriction object to native SQL and appends to supplied string
      * buffer..
      * 
      * @param sql
      *            the buffer to write to
      * @param sqlEntityInfo
      *            the record info
-     * @param criteria
-     *            the criteria
+     * @param restriction
+     *            the restriction
      * @throws UnifyException
      *             if an error occurs
      */
-    void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Criteria criteria) throws UnifyException;
+    void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException;
 
     /**
      * Translates a criteria to native SQL and appends to supplied string buffer..
@@ -70,9 +70,9 @@ public interface SqlCriteriaPolicy {
      * @param columnName
      *            the column name
      * @param param1
-     *            the primary parameter
+     *            the first parameter
      * @param param2
-     *            the secondary parameter
+     *            the second parameter
      * @throws UnifyException
      *             if an error occurs
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,7 +29,11 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_BANNER = "application.banner";
 
-    String APPLICATION_CONTAINER_TOCONSOLE = "application.container.toconsole";
+    String APPLICATION_LOCALE = "application.locale";
+
+    String APPLICATION_TIMEZONE = "application.timezone";
+
+    String APPLICATION_TOCONSOLE = "application.toconsole";
 
     String APPLICATION_BOOT = "application.boot.component";
 
@@ -43,7 +47,7 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_LAYOUT = "application.layout";
 
-    String APPLICATION_CUSTOMIZATION = "application.customisation";
+    String APPLICATION_CUSTOMIZATION = "application.customization";
 
     String APPLICATION_MESSAGES_BASE = "application.messages.base";
 

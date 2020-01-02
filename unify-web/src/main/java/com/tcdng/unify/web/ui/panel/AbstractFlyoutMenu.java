@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,9 +31,9 @@ import com.tcdng.unify.web.ui.Control;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "sliderGap", type = int.class, defaultValue = "3"),
-        @UplAttribute(name = "scrollRate", type = int.class, defaultValue = "200"),
-        @UplAttribute(name = "scrollStepRate", type = int.class, defaultValue = "50"),
+@UplAttributes({ @UplAttribute(name = "sliderGap", type = int.class, defaultVal = "3"),
+        @UplAttribute(name = "scrollRate", type = int.class, defaultVal = "200"),
+        @UplAttribute(name = "scrollStepRate", type = int.class, defaultVal = "50"),
         @UplAttribute(name = "backImgSrc", type = String.class),
         @UplAttribute(name = "forwardImgSrc", type = String.class) })
 public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements FlyoutMenu {
@@ -49,8 +49,8 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         currentSelCtrl = (Control) addInternalControl("!ui-hidden binding:currentSel");
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,12 @@ public class Biometric extends AbstractDocument {
     }
 
     @Override
-    public Object getOwnerId() {
+    public String getBranchCode() {
+        return null;
+    }
+
+    @Override
+    public String getDepartmentCode() {
         return null;
     }
 

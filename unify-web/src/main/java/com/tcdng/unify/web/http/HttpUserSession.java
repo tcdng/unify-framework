@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,9 @@
  */
 package com.tcdng.unify.web.http;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
@@ -24,6 +27,7 @@ import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.core.util.ApplicationUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * HTTP user session.
@@ -37,10 +41,14 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     private SessionContext sessionContext;
 
-    public HttpUserSession(String uriBase, String contextPath, String remoteHost, String remoteIpAddress,
-            String remoteUser, String remoteViewer, UserPlatform platform) {
-        sessionContext = new SessionContext(ApplicationUtils.generateSessionContextId(), uriBase, contextPath,
-                remoteHost, remoteIpAddress, remoteUser, remoteViewer, platform);
+    public HttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase, String contextPath,
+            String remoteHost, String remoteIpAddress, String remoteUser, UserPlatform platform) {
+        if (StringUtils.isBlank(sessionId)) {
+            sessionId = ApplicationUtils.generateSessionContextId();
+        }
+
+        sessionContext = new SessionContext(sessionId, locale, timeZone, uriBase, contextPath, remoteHost,
+                remoteIpAddress, remoteUser, platform);
     }
 
     @Override
@@ -59,21 +67,13 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
     }
 
     @Override
-    public String getRemoteViewer() {
-        return sessionContext.getRemoteViewer();
-    }
-
-    @Override
     public SessionContext getSessionContext() {
         return sessionContext;
     }
 
     @Override
     public void valueBound(HttpSessionBindingEvent event) {
-        try {
-            userSessionManager.addUserSession(this);
-        } catch (UnifyException e) {
-        }
+
     }
 
     @Override

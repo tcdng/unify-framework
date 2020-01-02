@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,11 +15,17 @@
  */
 package com.tcdng.unify.web.http;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.web.ClientRequest;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.AbstractClientRequest;
+import com.tcdng.unify.web.ClientRequestType;
+import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.UnifyWebErrorConstants;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 
 /**
  * HTTP client request.
@@ -27,23 +33,32 @@ import com.tcdng.unify.web.ClientRequest;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class HttpClientRequest implements ClientRequest {
+public class HttpClientRequest extends AbstractClientRequest {
 
-    private String path;
+    private HttpRequestMethodType methodType;
+
+    private PathParts pathParts;
 
     private Charset charset;
 
     private Map<String, Object> parameters;
 
-    public HttpClientRequest(String path, Charset charset, Map<String, Object> parameters) {
-        this.path = path;
+    public HttpClientRequest(HttpRequestMethodType methodType, PathParts pathParts, Charset charset,
+            Map<String, Object> parameters) {
+        this.pathParts = pathParts;
         this.charset = charset;
         this.parameters = parameters;
+        this.methodType = methodType;
     }
 
     @Override
-    public String getPath() {
-        return path;
+    public ClientRequestType getType() {
+        return methodType.clientRequestType();
+    }
+
+    @Override
+    public PathParts getPathParts() {
+        return pathParts;
     }
 
     @Override
@@ -59,5 +74,15 @@ public class HttpClientRequest implements ClientRequest {
     @Override
     public Object getParameter(String name) {
         return parameters.get(name);
+    }
+
+    @Override
+    public InputStream getInputStream() throws UnifyException {
+        InputStream in = (InputStream) parameters.get(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM);
+        if (in == null) {
+            throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_NOT_INPUTSTREAM);
+        }
+
+        return in;
     }
 }

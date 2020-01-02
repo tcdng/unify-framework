@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,30 +33,19 @@ public class BusinessLogicInput {
 
     private TaskMonitor taskMonitor;
 
-    private String dbName;
-
     private Map<String, Object> parameters;
 
     public BusinessLogicInput() {
         this.parameters = new HashMap<String, Object>();
     }
 
-    public BusinessLogicInput(TaskMonitor taskMonitor, String dbName) {
+    public BusinessLogicInput(TaskMonitor taskMonitor) {
         this.taskMonitor = taskMonitor;
-        this.dbName = dbName;
         this.parameters = new HashMap<String, Object>();
-    }
-
-    public BusinessLogicInput(String pm) {
-        this(null, pm);
     }
 
     public TaskMonitor getTaskMonitor() {
         return taskMonitor;
-    }
-
-    public String getDbName() {
-        return dbName;
     }
 
     public void setParameters(Map<String, Object> parameters) {
@@ -73,5 +62,9 @@ public class BusinessLogicInput {
 
     public <T> T getParameter(Class<T> valueType, String name) throws UnifyException {
         return DataUtils.convert(valueType, parameters.get(name), null);
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
 }

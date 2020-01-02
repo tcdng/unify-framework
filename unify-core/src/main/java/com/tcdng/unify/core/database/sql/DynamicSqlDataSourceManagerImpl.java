@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,6 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
-import com.tcdng.unify.core.database.DataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 
 /**
@@ -71,44 +70,44 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
 
     @Override
     public boolean testConfiguration(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
-        DynamicSqlDataSource dsds = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
+        DynamicSqlDataSource dynamicSqlDataSource = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
         try {
-            return dsds.testConnection();
+            return dynamicSqlDataSource.testConnection();
         } finally {
-            dsds.terminate();
+            dynamicSqlDataSource.terminate();
         }
     }
 
     @Override
     public int testNativeQuery(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, NativeQuery query)
             throws UnifyException {
-        DynamicSqlDataSource dsds = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
+        DynamicSqlDataSource dynamicSqlDataSource = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
         try {
-            return dsds.testNativeQuery(query);
+            return dynamicSqlDataSource.testNativeQuery(query);
         } finally {
-            dsds.terminate();
+            dynamicSqlDataSource.terminate();
         }
     }
 
     @Override
     public int testNativeQuery(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, String nativeSql)
             throws UnifyException {
-        DynamicSqlDataSource dsds = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
+        DynamicSqlDataSource dynamicSqlDataSource = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
         try {
-            return dsds.testNativeQuery(nativeSql);
+            return dynamicSqlDataSource.testNativeQuery(nativeSql);
         } finally {
-            dsds.terminate();
+            dynamicSqlDataSource.terminate();
         }
     }
 
     @Override
     public int testNativeUpdate(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, String updateSql)
             throws UnifyException {
-        DynamicSqlDataSource dsds = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
+        DynamicSqlDataSource dynamicSqlDataSource = newDynamicSqlDataSource(dynamicSqlDataSourceConfig);
         try {
-            return dsds.testNativeUpdate(updateSql);
+            return dynamicSqlDataSource.testNativeUpdate(updateSql);
         } finally {
-            dsds.terminate();
+            dynamicSqlDataSource.terminate();
         }
     }
 
@@ -148,7 +147,7 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
     }
 
     @Override
-    public DataSource getDataSource(String configName) throws UnifyException {
+    public SqlDataSource getDataSource(String configName) throws UnifyException {
         return getDynamicSqlDataSource(configName);
     }
 
@@ -164,9 +163,9 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
 
     @Override
     public void terminateConfiguration(String configName) throws UnifyException {
-        DynamicSqlDataSource dsds = getDynamicSqlDataSource(configName);
+        DynamicSqlDataSource dynamicSqlDataSource = getDynamicSqlDataSource(configName);
         try {
-            dsds.terminate();
+            dynamicSqlDataSource.terminate();
         } finally {
             dynamicSqlDataSoureMap.remove(configName);
         }
@@ -199,9 +198,9 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
 
     private DynamicSqlDataSource newDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
             throws UnifyException {
-        DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) this.getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-        dsds.configure(dynamicSqlDataSourceConfig);
-        return dsds;
+        DynamicSqlDataSource dynamicSqlDataSource =
+                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        dynamicSqlDataSource.configure(dynamicSqlDataSourceConfig);
+        return dynamicSqlDataSource;
     }
 }

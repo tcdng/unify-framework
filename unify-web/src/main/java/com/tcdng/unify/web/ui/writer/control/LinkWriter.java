@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.TargetControl;
 import com.tcdng.unify.web.ui.control.Link;
@@ -36,10 +37,22 @@ public class LinkWriter extends AbstractTargetControlWriter {
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
         Link link = (Link) targetControl;
+        String caption = null;
+        if (link.isUsePreferredCaption()) {
+            caption = link.getPreferredCaption();
+            if (StringUtils.isBlank(caption)) {
+                return;
+            }
+        }
+        
         writer.write("<a");
         writeTagAttributes(writer, link);
         writer.write(">");
-        writeCaption(writer, link);
+        if(StringUtils.isNotBlank(caption)) {
+            writer.writeWithHtmlEscape(caption);
+        } else {
+            writeCaption(writer, link);
+        }
         writer.write("</a>");
     }
 }

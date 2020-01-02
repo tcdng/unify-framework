@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.operation.Criteria;
+import com.tcdng.unify.core.criterion.Restriction;
 
 /**
  * A data source dialect component.
@@ -29,15 +29,15 @@ import com.tcdng.unify.core.operation.Criteria;
  */
 public interface DataSourceDialect extends UnifyComponent {
     /**
-     * Translates specified criteria to data source dialect.
+     * Translates specified restriction to data source dialect.
      * 
-     * @param criteria
-     *            the criteria to translate
+     * @param restriction
+     *            the restriction to translate
      * @return the translation
      * @throws UnifyException
      *             if an error occurs
      */
-    String translateCriteria(Criteria criteria) throws UnifyException;
+    String translateCriteria(Restriction restriction) throws UnifyException;
 
     /**
      * Translates specified value to data source dialect.

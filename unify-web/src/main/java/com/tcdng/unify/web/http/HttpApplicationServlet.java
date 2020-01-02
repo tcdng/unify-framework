@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package com.tcdng.unify.web.http;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -29,21 +31,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.ApplicationController;
 import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyContainer;
 import com.tcdng.unify.core.UnifyContainerConfig;
 import com.tcdng.unify.core.UnifyContainerEnvironment;
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.system.UserSessionManager;
+import com.tcdng.unify.core.upl.UplComponentWriterManager;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
-import com.tcdng.unify.web.RemoteCallClient;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.UnifyWebInterface;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
@@ -64,7 +67,7 @@ public class HttpApplicationServlet extends HttpServlet {
     /** The serial version ID */
     private static final long serialVersionUID = 3971544226497014269L;
 
-    private static final String CONFIGURATION_FILE = "config/unify.xml";
+    private static final String CONFIGURATION_FILE = "conf/unify.xml";
 
     private UnifyContainer unifyContainer;
 
@@ -72,27 +75,33 @@ public class HttpApplicationServlet extends HttpServlet {
 
     private RequestContextManager requestContextManager;
 
-    private ApplicationController applicationController;
+    private HttpRequestHandler httpRequestHandler;
 
     private UserSessionManager userSessionManager;
 
+    private UplComponentWriterManager uplComponentWriterManager;
+
+    private Locale applicationLocale;
+
+    private TimeZone applicationTimeZone;
+
     private String contextPath;
 
-    private boolean standalone;
+    private boolean embedded;
 
     public HttpApplicationServlet() {
         this(false);
     }
 
-    public HttpApplicationServlet(boolean standalone) {
-        this.standalone = standalone;
+    public HttpApplicationServlet(boolean embedded) {
+        this.embedded = embedded;
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        if (!standalone) {
+        if (!embedded) {
             ServletContext servletContext = config.getServletContext();
             String workingFolder = servletContext.getRealPath("");
             String configFilename = config.getInitParameter("application-config-file");
@@ -103,7 +112,7 @@ public class HttpApplicationServlet extends HttpServlet {
             InputStream configInputStream = null;
             try {
                 contextPath = servletContext.getContextPath();
-                TypeRepository tr = WebTypeUtils.buildTypeRepositoryFromServletContext(servletContext);
+                TypeRepository tr = WebTypeUtils.getTypeRepositoryFromServletContext(servletContext);
                 UnifyContainerEnvironment uce = new UnifyContainerEnvironment(tr, workingFolder);
                 UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
 
@@ -121,13 +130,18 @@ public class HttpApplicationServlet extends HttpServlet {
                 UnifyContainerConfig ucc = uccb.build();
                 unifyContainer = new UnifyContainer();
                 unifyContainer.startup(uce, ucc);
+                applicationLocale = unifyContainer.getApplicationLocale();
+                applicationTimeZone = unifyContainer.getApplicationTimeZone();
                 requestContextManager = (RequestContextManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-                applicationController = (ApplicationController) unifyContainer
-                        .getComponent(WebApplicationComponents.APPLICATION_HTTPCONTROLLER);
+                httpRequestHandler = (HttpRequestHandler) unifyContainer
+                        .getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER);
                 userSessionManager = (UserSessionManager) unifyContainer
                         .getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
+                uplComponentWriterManager = (UplComponentWriterManager) unifyContainer
+                        .getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
             } catch (Exception e) {
+                e.printStackTrace();
                 if (unifyContainer != null && unifyContainer.isStarted()) {
                     unifyContainer.shutdown();
                 }
@@ -146,28 +160,69 @@ public class HttpApplicationServlet extends HttpServlet {
         super.destroy();
     }
 
-    public void setup(UnifyWebInterface webInterface, RequestContextManager requestContextManager,
-            ApplicationController applicationController, UserSessionManager userSessionManager) {
+    public void setup(Locale applicationLocale, TimeZone applicationTimeZone, UnifyWebInterface webInterface,
+            RequestContextManager requestContextManager, HttpRequestHandler applicationController,
+            UserSessionManager userSessionManager, UplComponentWriterManager uplComponentWriterManager) {
+        this.applicationLocale = applicationLocale;
+        this.applicationTimeZone = applicationTimeZone;
         this.webInterface = webInterface;
         this.requestContextManager = requestContextManager;
-        this.applicationController = applicationController;
+        this.httpRequestHandler = applicationController;
         this.userSessionManager = userSessionManager;
+        this.uplComponentWriterManager = uplComponentWriterManager;
         contextPath = webInterface.getContextPath();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        doRequestMethod(HttpRequestMethodType.GET, request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!standalone || webInterface.isServicingRequests()) {
+        doRequestMethod(HttpRequestMethodType.POST, request, response);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.DELETE, request, response);
+    }
+
+    @Override
+    protected void doHead(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.HEAD, request, response);
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.OPTIONS, request, response);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.PUT, request, response);
+    }
+
+    @Override
+    protected void doTrace(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doRequestMethod(HttpRequestMethodType.TRACE, request, response);
+    }
+
+    private void doRequestMethod(HttpRequestMethodType type, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if (!embedded || webInterface.isServicingRequests()) {
             try {
-                requestContextManager.loadRequestContext(getUserSession(request), request.getServletPath());
-                applicationController.execute(request, response);
+                PathParts reqPathParts = httpRequestHandler.resolveRequestPath(request);
+                requestContextManager.loadRequestContext(getUserSession(request, reqPathParts.isUiController()),
+                        request.getServletPath());
+                httpRequestHandler.handleRequest(type, reqPathParts, request, response);
             } catch (Exception e) {
                 throw new ServletException(e);
             } finally {
@@ -180,18 +235,18 @@ public class HttpApplicationServlet extends HttpServlet {
         }
     }
 
-    private UserSession getUserSession(HttpServletRequest request) throws UnifyException {
+    private UserSession getUserSession(HttpServletRequest request, boolean isUIController) throws UnifyException {
         HttpUserSession userSession = null;
-        if (RemoteCallClient.USER_AGENT_ID.equalsIgnoreCase(request.getHeader("User-Agent"))) {
-            // Handle remote call
+        if (!isUIController) {
+            // Non-UI controllers are session less. Handle sessionless remote call
             HttpSession httpSession = request.getSession(false);
             if (httpSession != null) {
                 httpSession.invalidate();
             }
             // Create single use session object
-            userSession = createHttpUserSession(request);
+            userSession = createHttpUserSession(request, null);
         } else {
-            if (!StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+            if (StringUtils.isNotBlank(request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
                 // Handle remote view
                 HttpSession httpSession = request.getSession(false);
                 if (httpSession != null) {
@@ -199,26 +254,25 @@ public class HttpApplicationServlet extends HttpServlet {
                 }
 
                 String sessionId = (String) request.getParameter(RequestParameterConstants.REMOTE_SESSION_ID);
-                if (!StringUtils.isBlank(sessionId)) {
-                    userSession = (HttpUserSession) userSessionManager.getUserSession(sessionId);
-                }
-
+                userSession = (HttpUserSession) userSessionManager.getUserSession(sessionId);
                 if (userSession == null) {
-                    userSession = createHttpUserSession(request);
+                    userSession = createHttpUserSession(request, sessionId);
                     userSessionManager.addUserSession(userSession);
 
                     String userLoginId = request.getParameter(RequestParameterConstants.REMOTE_USERLOGINID);
                     String userName = request.getParameter(RequestParameterConstants.REMOTE_USERNAME);
                     String roleCode = request.getParameter(RequestParameterConstants.REMOTE_ROLECD);
                     String branchCode = request.getParameter(RequestParameterConstants.REMOTE_BRANCH_CODE);
+                    String zoneCode = request.getParameter(RequestParameterConstants.REMOTE_ZONE_CODE);
+                    String tenantCode = request.getParameter(RequestParameterConstants.REMOTE_TENANT_CODE);
+                    String colorScheme = request.getParameter(RequestParameterConstants.REMOTE_COLOR_SCHEME);
                     boolean globalAccess =
                             Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
-                    UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(), null,
-                            branchCode, globalAccess, true, true, true);
+                    UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(),
+                            branchCode, zoneCode, tenantCode, colorScheme, globalAccess, true, true, true);
                     userToken.setRoleCode(roleCode);
                     userSession.getSessionContext().setUserToken(userToken);
                 }
-
             } else {
                 // Handle document request
                 HttpSession httpSession = request.getSession();
@@ -227,7 +281,7 @@ public class HttpApplicationServlet extends HttpServlet {
                     synchronized (httpSession) {
                         userSession = (HttpUserSession) httpSession.getAttribute(HttpConstants.USER_SESSION);
                         if (userSession == null) {
-                            userSession = createHttpUserSession(request);
+                            userSession = createHttpUserSession(request, null);
                             httpSession.setAttribute(HttpConstants.USER_SESSION, userSession);
                         }
                     }
@@ -239,7 +293,7 @@ public class HttpApplicationServlet extends HttpServlet {
         return userSession;
     }
 
-    private HttpUserSession createHttpUserSession(HttpServletRequest request) throws UnifyException {
+    private HttpUserSession createHttpUserSession(HttpServletRequest request, String sessionId) throws UnifyException {
         String remoteIpAddress = request.getHeader("X-FORWARDED-FOR");
         if (remoteIpAddress == null || remoteIpAddress.trim().isEmpty()
                 || "unknown".equalsIgnoreCase(remoteIpAddress)) {
@@ -256,23 +310,27 @@ public class HttpApplicationServlet extends HttpServlet {
             remoteIpAddress = request.getRemoteAddr();
         }
 
-        String uriBase = request.getScheme() + "://" + request.getServerName();
+        StringBuilder uriBase = new StringBuilder();
+        uriBase.append(request.getScheme()).append("://").append(request.getServerName());
         if (!(("http".equals(request.getScheme()) && request.getServerPort() == 80)
                 || ("https".equals(request.getScheme()) && request.getServerPort() == 443))) {
-            uriBase = uriBase + ":" + request.getServerPort();
+            uriBase.append(":").append(request.getServerPort());
         }
 
         UserPlatform platform = detectRequestPlatform(request);
-        HttpUserSession userSession = new HttpUserSession(uriBase, contextPath, request.getRemoteHost(),
-                remoteIpAddress, request.getRemoteUser(),
-                (String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER), platform);
+        HttpUserSession userSession =
+                new HttpUserSession(applicationLocale, applicationTimeZone, sessionId, uriBase.toString(), contextPath,
+                        request.getRemoteHost(), remoteIpAddress, request.getRemoteUser(), platform);
+        userSession.getSessionContext().setStickyAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
+                uplComponentWriterManager.getWriters(platform));
         userSession.setTransient(userSessionManager);
         return userSession;
     }
 
     private UserPlatform detectRequestPlatform(HttpServletRequest request) {
         UserPlatform platform = UserPlatform.DEFAULT;
-        if (request.getHeader("User-Agent").indexOf("Mobile") >= 0) {
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent != null && userAgent.indexOf("Mobile") >= 0) {
             platform = UserPlatform.MOBILE;
         }
         return platform;

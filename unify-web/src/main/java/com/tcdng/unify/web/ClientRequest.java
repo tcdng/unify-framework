@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,11 @@
  */
 package com.tcdng.unify.web;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Set;
+
+import com.tcdng.unify.core.UnifyException;
 
 /**
  * A client request.
@@ -27,9 +30,14 @@ import java.util.Set;
 public interface ClientRequest {
 
     /**
-     * Returns the request path
+     * Returns the client request type.
      */
-    String getPath();
+    ClientRequestType getType();
+
+    /**
+     * Returns the request path parts
+     */
+    PathParts getPathParts();
 
     /**
      * Returns the request character set.
@@ -42,11 +50,31 @@ public interface ClientRequest {
     Set<String> getParameterNames();
 
     /**
-     * Returns a request parameter
+     * Gets a request parameter
      * 
      * @param name
      *            the parameter name
      * @return object if found otherwise false
      */
     Object getParameter(String name);
+
+    /**
+     * Gets a request parameter
+     * 
+     * @param clazz
+     *            type
+     * @param name
+     *            the parameter name
+     * @return object if found otherwise false
+     */
+    <T> T getParameter(Class<T> clazz, String name) throws UnifyException;
+
+    /**
+     * Gets input stream associated with this request.
+     * 
+     * @return the input stream
+     * @throws UnifyException
+     *             if not octet-stream request
+     */
+    InputStream getInputStream() throws UnifyException;
 }

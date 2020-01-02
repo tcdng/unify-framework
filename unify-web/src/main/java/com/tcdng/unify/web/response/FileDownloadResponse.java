@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,8 +19,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
@@ -37,13 +37,13 @@ public class FileDownloadResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         DownloadFile downloadFile = (DownloadFile) getRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE);
         setSessionAttribute(downloadFile.getFilename(), downloadFile.getData());
         writer.write(",\"downloadPath\":\"");
-        writer.writeContextResourceURL("/resource/scope", downloadFile.getContentType(), downloadFile.getFilename(),
-                null, true, true); // Download is true. Clear on read is
-                                   // true
+        writer.writeContextResourceURL("/resource/scope", downloadFile.getMimeType().template(),
+                downloadFile.getFilename(), null, true, true); // Download is true. Clear on read is
+                                                               // true
         writer.write("\"");
     }
 }

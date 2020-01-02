@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -70,7 +70,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
     private LocaleFactoryMaps<String, StandalonePanelInfo> standalonePanelInfoByNameMap;
 
     // Page name property bindings by standalone panel
-    private FactoryMap<String, Map<String, BindingInfo>> pageNamePropertyBindings;
+    private FactoryMap<String, Map<String, PropertyInfo>> pageNamePropertyBindings;
 
     // Expanded component references by component page name
     private Map<String, List<String>> expandedReferences;
@@ -149,6 +149,10 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                             reusablePageValidations.put(longName, pageValidation);
                         }
                     } else {
+                        if(uea.isAttribute("dataComponents")) {
+                            expandReferences(uplDocumentAttributes, uea);
+                        }
+
                         nonreusableComponentLongNames.add(longName);
                     }
                 }
@@ -217,11 +221,11 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
             }
         };
 
-        pageNamePropertyBindings = new FactoryMap<String, Map<String, BindingInfo>>() {
+        pageNamePropertyBindings = new FactoryMap<String, Map<String, PropertyInfo>>() {
 
             @Override
-            protected Map<String, BindingInfo> create(String name, Object... params) throws Exception {
-                Map<String, BindingInfo> propertyBindingMap = new HashMap<String, BindingInfo>();
+            protected Map<String, PropertyInfo> create(String name, Object... params) throws Exception {
+                Map<String, PropertyInfo> propertyBindingMap = new HashMap<String, PropertyInfo>();
                 StandalonePanel sp = createStandalonePanel(Locale.getDefault(), name);
                 for (String longName : sp.getWidgetLongNames()) {
                     Widget widget = sp.getWidgetByLongName(longName);
@@ -250,7 +254,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                         if (index >= 0) {
                             shortProperty = property.substring(index + 1);
                         }
-                        propertyBindingMap.put(id, new BindingInfo(property, shortProperty, longSb.toString(), masked));
+                        propertyBindingMap.put(id, new PropertyInfo(property, shortProperty, longSb.toString(), masked));
                     }
                 }
                 return propertyBindingMap;
@@ -294,6 +298,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         String spLongName = uplDocumentAttributes.getLongName();
         String id = getPageName(spLongName);
 
+        // Construct
         StandalonePanelContext ctx =
                 new StandalonePanelContext(standalonePanelInfoByNameMap.get(locale, name, uplDocumentAttributes));
         StandalonePanelInfo standalonePanelInfo = ctx.getStandalonePanelInfo();
@@ -333,17 +338,17 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
             }
         }
 
-        // Perform page initialization
+        // Perform page on construction
         for (Widget widget : ctx.getWidgets()) {
-            widget.onPageInitialize();
+            widget.onPageConstruct();
         }
-        standalonePanel.onPageInitialize();
+        standalonePanel.onPageConstruct();
 
         return standalonePanel;
     }
 
     @Override
-    public Map<String, BindingInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException {
+    public Map<String, PropertyInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException {
         standalonePanelInfoByNameMap.get(Locale.getDefault(), name);
         return pageNamePropertyBindings.get(name);
     }
@@ -355,13 +360,14 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     @Override
     public List<String> getPageNames(Collection<String> longNames) throws UnifyException {
-        List<String> pageNameList = new ArrayList<String>();
-        if (longNames != null) {
+        if (DataUtils.isNotBlank(longNames)) {
+            List<String> resultList = new ArrayList<String>();
             for (String longName : longNames) {
-                pageNameList.add(pageNameMap.get(longName));
+                resultList.add(pageNameMap.get(longName));
             }
+            return resultList;
         }
-        return pageNameList;
+        return Collections.emptyList();
     }
 
     @Override
@@ -380,7 +386,45 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     @Override
     public List<String> getExpandedReferences(String pageName) throws UnifyException {
-        return expandedReferences.get(pageName);
+        List<String> resultList = expandedReferences.get(pageName);
+        if (resultList != null) {
+            return resultList;
+        }
+        
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> getExpandedReferencesForLongNames(Collection<String> longNames) throws UnifyException {
+        if (DataUtils.isNotBlank(longNames)) {
+            List<String> resultList = new ArrayList<String>();
+            for (String longName : longNames) {
+                List<String> list = expandedReferences.get(pageNameMap.get(longName));
+                if (DataUtils.isNotBlank(list)) {
+                    resultList.addAll(list);
+                }
+            }
+
+            return resultList;
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> getExpandedReferencesForPageNames(Collection<String> pageNames) throws UnifyException {
+        if (DataUtils.isNotBlank(pageNames)) {
+            List<String> resultList = new ArrayList<String>();
+            for (String pageName : pageNames) {
+                List<String> list = expandedReferences.get(pageName);
+                if (DataUtils.isNotBlank(list)) {
+                    resultList.addAll(list);
+                }
+            }
+
+            return resultList;
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -481,7 +525,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         String pageName = getPageName(uea.getLongName());
         if (!expandedReferences.containsKey(pageName)) {
             List<String> expandedList = new ArrayList<String>();
-            expandReferences(expandedList, uplDocumentAttributes, uea);
+            subExpandReferences(expandedList, uplDocumentAttributes, uea);
             expandedList = StringUtils.removeDuplicates(expandedList);
             expandedList.remove(uea.getLongName());
             expandedReferences.put(pageName, Collections.unmodifiableList(getPageNames(expandedList)));
@@ -489,27 +533,34 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
     }
 
     @SuppressWarnings("unchecked")
-    private void expandReferences(List<String> expandedList, UplDocumentAttributes uplDocumentAttributes,
+    private void subExpandReferences(List<String> expandedList, UplDocumentAttributes uplDocumentAttributes,
             UplElementAttributes uea) throws UnifyException {
         for (String longName : uea.getShallowReferencedLongNames("components")) {
-            expandReferences(expandedList, uplDocumentAttributes,
+            subExpandReferences(expandedList, uplDocumentAttributes,
+                    uplDocumentAttributes.getChildElementByLongName(longName));
+        }
+
+        for (String longName : uea.getShallowReferencedLongNames("dataComponents")) {
+            subExpandReferences(expandedList, uplDocumentAttributes,
                     uplDocumentAttributes.getChildElementByLongName(longName));
         }
 
         if (uea.isAttribute("section")) {
             Section[] sections = uea.getAttributeValue(Section[].class, "section");
-            for (Section section : sections) {
-                UplElementReferences uplRef = section.getUplAttribute(UplElementReferences.class, "components");
-                for (String longName : uplRef.getLongNames()) {
-                    expandReferences(expandedList, uplDocumentAttributes,
-                            uplDocumentAttributes.getChildElementByLongName(longName));
+            if (sections != null) {
+                for (Section section : sections) {
+                    UplElementReferences uplRef = section.getUplAttribute(UplElementReferences.class, "components");
+                    for (String longName : uplRef.getLongNames()) {
+                        subExpandReferences(expandedList, uplDocumentAttributes,
+                                uplDocumentAttributes.getChildElementByLongName(longName));
+                    }
                 }
             }
         }
 
         Set<UplElementAttributes> childElements = uea.getChildElements();
         for (UplElementAttributes ueaInner : childElements) {
-            expandReferences(expandedList, uplDocumentAttributes, ueaInner);
+            subExpandReferences(expandedList, uplDocumentAttributes, ueaInner);
         }
 
         if (childElements.isEmpty() && !expandedList.contains(uea.getLongName())) {

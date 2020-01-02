@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.TriState;
+import com.tcdng.unify.web.ui.control.ControlColorMode;
 
 /**
  * A user interface component that users can interact with.
@@ -77,10 +78,43 @@ public interface Control extends DataTransferWidget {
     void updateState() throws UnifyException;
 
     /**
-     * Tests if control requires focus
+     * Sets focus on this control.
+     * 
+     * @return a true value if focused otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean setFocus() throws UnifyException;
+
+    /**
+     * Tests if control focus attribute is true.
      * 
      * @throws UnifyException
      *             if an error occurs
      */
     boolean isFocus() throws UnifyException;
+
+    /**
+     * Sets the control color mode.
+     * 
+     * @param colorMode
+     *            the color mode to set
+     */
+    void setColorMode(ControlColorMode colorMode);
+
+    /**
+     * Gets the control color mode.
+     * 
+     * @return the color mode
+     */
+    ControlColorMode getColorMode();
+
+    /**
+     * Checks of control color mode should be rendered on layout.
+     * 
+     * @return a true value is layout color mode should be used
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isLayoutColorMode() throws UnifyException;
 }

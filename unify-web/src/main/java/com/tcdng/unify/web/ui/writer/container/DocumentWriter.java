@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,10 +17,12 @@ package com.tcdng.unify.web.ui.writer.container;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.PathInfoRepository;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.ui.DocumentLayout;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -38,17 +40,23 @@ import com.tcdng.unify.web.ui.writer.AbstractPageWriter;
 @Component("document-writer")
 public class DocumentWriter extends AbstractPageWriter {
 
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
+
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
         writer.write("<!DOCTYPE html>");
         writer.write("<html ");
         writeTagAttributes(writer, document);
-        writer.write("><head>");
+        writer.write(">");
+
+        // Head
+        writer.write("<head>");
         // Write title
         writer.write("<title>");
         String title = document.getUplAttribute(String.class, "caption");
-        if (!StringUtils.isBlank(title)) {
+        if (StringUtils.isNotBlank(title)) {
             writer.write(title);
         } else {
             writer.write(getUnifyComponentContext().getInstanceName());
@@ -96,8 +104,27 @@ public class DocumentWriter extends AbstractPageWriter {
                 writeJavascript(writer, script);
             }
         }
+        writer.write("</head>");
 
-        writer.write("</head><body class=\"dBody\">");
+        // Body
+        writer.write("<body class=\"dBody\"");
+        String style = document.getStyle();
+        String backImageSrc = document.getBackImageSrc();
+        if (StringUtils.isNotBlank(backImageSrc)) {
+            writer.write(" style=\"background: url('");
+            writer.writeFileImageContextURL(backImageSrc);
+            writer.write("') no-repeat;background-size:100% 100%;");
+            if (style != null) {
+                writer.write(style);
+            }
+            writer.write("\"");
+        } else {
+            if (style != null) {
+                writer.write(" style=\"").write(style).write("\"");
+            }
+        }
+
+        writer.write(">");
 
         // Popup base
         writer.write("<div id=\"").write(document.getPopupBaseId()).write("\" class=\"dcpopbase\">");
@@ -118,11 +145,11 @@ public class DocumentWriter extends AbstractPageWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
         writer.write("<script>");
-        PageController pageController = (PageController) document.getValueStore().getValueObject();
         // Set document properties
-        writer.write("ux.setupDocument(\"").write(pageController.getName()).write("\", \"")
+        PathParts pathParts = pathInfoRepository.getPathParts(document);
+        writer.write("ux.setupDocument(\"").write(pathParts.getControllerName()).write("\", \"")
                 .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
-                .write(document.getPopupSysId()).write("\");");
+                .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
 
         // Write layout behaviour
         DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
@@ -154,13 +181,13 @@ public class DocumentWriter extends AbstractPageWriter {
 
     private void writeStyleSheet(ResponseWriter writer, String styleSheet) throws UnifyException {
         writer.write("<link href=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.TEXT_CSS, styleSheet);
+        writer.writeContextResourceURL("/resource/file", MimeType.TEXT_CSS.template(), styleSheet);
         writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
     }
 
     private void writeJavascript(ResponseWriter writer, String script) throws UnifyException {
         writer.write("<script src=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.TEXT_JAVASCRIPT, script);
+        writer.writeContextResourceURL("/resource/file", MimeType.TEXT_JAVASCRIPT.template(), script);
         writer.write("\"></script>");
     }
 

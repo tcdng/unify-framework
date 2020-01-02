@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.database.CallableProc;
 
 /**
  * SQL entity information factory.
@@ -29,6 +30,14 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
     String VIEW_PREFIX = "V_";
 
     /**
+     * Sets the factory SQL data source dialect.
+     * 
+     * @param sqlDataSourceDialect
+     *            the dialect to set
+     */
+    void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect);
+
+    /**
      * Returns the SQL entity information for a entity type.
      * 
      * @param entityClass
@@ -38,4 +47,15 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
      *             if an error occurs
      */
     SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException;
+
+    /**
+     * Returns the SQL callable information for type.
+     * 
+     * @param callableClass
+     *            the callable type
+     * @return callable information for specified type.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> callableClass) throws UnifyException;
 }

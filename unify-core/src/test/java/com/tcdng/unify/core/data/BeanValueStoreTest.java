@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,7 +43,7 @@ public class BeanValueStoreTest {
     public void testRetrieveNestedBeanPropertyValue() throws Exception {
         Date birthDt = new Date();
         Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20,
-                new Address("38 Warehouse Road", "Apapa Lagos"));
+                new Address("38 Warehouse Road", "Apapa Lagos"), null);
         BeanValueStore bvs = new BeanValueStore(customer);
         assertEquals("Amos Quito", bvs.retrieve("name"));
         assertEquals(birthDt, bvs.retrieve("birthDt"));

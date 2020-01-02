@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,8 @@ import com.tcdng.unify.core.upl.UplElementReferences;
         @UplAttribute(name = "binding", type = String.class),
         @UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true),
         @UplAttribute(name = "privilege", type = String.class),
-        @UplAttribute(name = "hidden", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "widgetCaptionless", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "hidden", type = boolean.class, defaultVal = "false") })
 public class SectionImpl extends AbstractUplComponent implements Section {
 
     @Override
@@ -66,6 +67,11 @@ public class SectionImpl extends AbstractUplComponent implements Section {
     @Override
     public List<String> getReferences() throws UnifyException {
         return getUplAttribute(UplElementReferences.class, "components").getLongNames();
+    }
+
+    @Override
+    public boolean isWidgetCaptionless() throws UnifyException {
+        return getUplAttribute(boolean.class, "widgetCaptionless");
     }
 
     @Override

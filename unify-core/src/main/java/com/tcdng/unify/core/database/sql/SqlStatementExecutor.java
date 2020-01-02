@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.Aggregate;
+import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 
 /**
@@ -233,6 +234,24 @@ public interface SqlStatementExecutor extends UnifyComponent {
             String key, SqlStatement sqlStatement) throws UnifyException;
 
     /**
+     * Executes an aggregate statement that returns a single aggregate via supplied
+     * connection. The first select field must be a COUNT aggregate followed by
+     * a single aggregated field.
+     * 
+     * @param connection
+     *            the database connection
+     * @param countSqlDataTypePolicy
+     *            count field SQL data type policy
+     * @param sqlStatement
+     *            the criteria statement object
+     * @return aggregate result
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Aggregate<?> executeSingleAggregateResultQuery(Connection connection,
+            SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
+
+    /**
      * Executes an aggregate statement that returns an aggregate list via supplied
      * connection. The first select field must be a COUNT aggregate followed by
      * other aggregated fields.
@@ -249,4 +268,38 @@ public interface SqlStatementExecutor extends UnifyComponent {
      */
     List<Aggregate<?>> executeMultipleAggregateResultQuery(Connection connection,
             SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
+
+    /**
+     * Executes a callable statement.
+     * 
+     * @param connection
+     *            the database connection
+     * @param callableProc
+     *            the callable procedure object which may have its output parameter
+     *            fields set.
+     * @param sqlCallableStatement
+     *            the callable statement to execute
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void executeCallable(Connection connection, CallableProc callableProc, SqlCallableStatement sqlCallableStatement)
+            throws UnifyException;
+
+    /**
+     * Executes a callable statement with results.
+     * 
+     * @param connection
+     *            the database connection
+     * @param callableProc
+     *            the callable procedure object which may have its output parameter
+     *            fields set.
+     * @param sqlCallableStatement
+     *            the callable statement to execute
+     * @return map of result items by type
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<?>, List<?>> executeCallableWithResults(Connection connection, CallableProc callableProc,
+            SqlCallableStatement sqlCallableStatement) throws UnifyException;
+
 }

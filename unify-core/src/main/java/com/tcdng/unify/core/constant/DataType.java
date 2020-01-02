@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.tcdng.unify.core.annotation.StaticList;
-import com.tcdng.unify.core.data.PackableDoc;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
@@ -31,29 +30,25 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("datatypelist")
 public enum DataType implements EnumConst {
 
-    CHAR("CH", Character.class, Character[].class),
-    BOOLEAN("BL", Boolean.class, Boolean[].class),
-    BYTE("BT", Byte.class, Byte[].class),
-    SHORT("SH", Short.class, Short[].class),
-    INTEGER("IN", Integer.class, Integer[].class),
-    LONG("LN", Long.class, Long[].class),
-    FLOAT("FL", Float.class, Float[].class),
-    DOUBLE("DB", Double.class, Double[].class),
-    DECIMAL("DC", BigDecimal.class, BigDecimal[].class),
-    DATE("DT", Date.class, Date[].class),
-    STRING("ST", String.class, String[].class),
-    COMPLEX("CX", PackableDoc.class, PackableDoc[].class);
+    CHAR("CH", Character.class),
+    BOOLEAN("BL", Boolean.class),
+    SHORT("SH", Short.class),
+    INTEGER("IN", Integer.class),
+    LONG("LN", Long.class),
+    FLOAT("FL", Float.class),
+    DOUBLE("DB", Double.class),
+    DECIMAL("DC", BigDecimal.class),
+    DATE("DT", Date.class),
+    STRING("ST", String.class),
+    BLOB("BT", byte[].class);
 
     private final String code;
 
     private final Class<?> javaClass;
 
-    private final Class<?> javaArrClass;
-
-    private DataType(String code, Class<?> javaClass, Class<?> javaArrClass) {
+    private DataType(String code, Class<?> javaClass) {
         this.code = code;
         this.javaClass = javaClass;
-        this.javaArrClass = javaArrClass;
     }
 
     @Override
@@ -61,20 +56,13 @@ public enum DataType implements EnumConst {
         return this.code;
     }
 
-    public Class<?> javaClass(boolean isArray) {
-        if (isArray) {
-            return javaArrClass;
-        }
-
-        return javaClass;
+    @Override
+    public String defaultCode() {
+        return STRING.code;
     }
 
     public Class<?> javaClass() {
         return javaClass;
-    }
-
-    public Class<?> javaArrayClass() {
-        return javaArrClass;
     }
 
     public static DataType fromCode(String code) {

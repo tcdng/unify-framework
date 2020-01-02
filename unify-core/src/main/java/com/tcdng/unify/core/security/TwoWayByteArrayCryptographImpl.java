@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.core.security;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Default implementation of a byte array cryptograph.
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(description = "Default Two-way Bytes Cryptograph")
 @Component(ApplicationComponents.APPLICATION_BYTEARRAYCRYPTOGRAPH)
 public class TwoWayByteArrayCryptographImpl extends AbstractTwoWayCryptograph implements TwoWayByteArrayCryptograph {
 

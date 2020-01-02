@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 
 package com.tcdng.unify.core.chart;
+
+import com.tcdng.unify.core.constant.ColorPalette;
 
 /**
  * Chart object.
@@ -39,9 +41,16 @@ public interface Chart {
     int getHeight();
 
     /**
-     * Gets the chart bitmap format.
+     * Gets the color palette for this chart.
      * 
-     * @return the chart bitmap format
+     * @return the palette
      */
-    ChartBitmapFormat getBitmapFormat();
+    ColorPalette getColorPalette();
+
+    /**
+     * Gets the chart image format.
+     * 
+     * @return the chart image format
+     */
+    ChartImageFormat getImageFormat();
 }

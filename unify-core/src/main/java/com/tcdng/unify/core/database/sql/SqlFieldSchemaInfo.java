@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,12 @@ public interface SqlFieldSchemaInfo {
     /**
      * Returns the field column name.
      */
-    String getColumn();
+    String getColumnName();
+
+    /**
+     * Returns the field preferred column name.
+     */
+    String getPreferredColumnName();
 
     /**
      * Returns the constraint name.
@@ -79,12 +84,12 @@ public interface SqlFieldSchemaInfo {
     /**
      * Returns the field default value.
      */
-    String getDefaultValue();
+    String getDefaultVal();
 
     /**
      * Returns if field has default value.
      */
-    boolean isWithDefaultValue();
+    boolean isWithDefaultVal();
 
     /**
      * Returns true if the field is a primary key otherwise false;
@@ -119,6 +124,11 @@ public interface SqlFieldSchemaInfo {
      * Returns the foreign field schema information.
      */
     SqlFieldSchemaInfo getForeignFieldInfo();
+
+    /**
+     * Returns the foreign entity preferred table alias.
+     */
+    String getForeignEntityPreferredAlias();
 
     /**
      * Returns the foreign key field schema information.

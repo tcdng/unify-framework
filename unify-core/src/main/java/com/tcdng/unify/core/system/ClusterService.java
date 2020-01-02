@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,7 +45,8 @@ public interface ClusterService extends BusinessService {
 
     /**
      * Begins a synchronization block with specified lock. Blocks until
-     * synchronization handle is obtained or an error occurs.
+     * synchronization handle is obtained or an error occurs. Lock should be release
+     * by calling {@link #endSynchronization(String)}.
      * 
      * @param lockName
      *            the lock name
@@ -55,7 +56,7 @@ public interface ClusterService extends BusinessService {
     void beginSynchronization(String lockName) throws UnifyException;
 
     /**
-     * Ends a synchronisation block for specified lock.
+     * Ends a synchronization block for specified lock.
      * 
      * @param lockName
      *            the lock name
@@ -75,7 +76,8 @@ public interface ClusterService extends BusinessService {
 
     /**
      * Tries to grab a cluster synchronization lock with specified name. Does not
-     * block.
+     * block.Lock should be release by calling
+     * {@link #releaseSynchronizationLock(String)}.
      * 
      * @param lockName
      *            the lock name
@@ -84,6 +86,17 @@ public interface ClusterService extends BusinessService {
      *             if an error occurs
      */
     boolean grabSynchronizationLock(String lockName) throws UnifyException;
+    
+    /**
+     * Checks if current node has a hold on a cluster synchronization lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @return a true value is lock is held otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isWithSynchronizationLock(String lockName) throws UnifyException;
 
     /**
      * Releases a cluster synchronization lock.

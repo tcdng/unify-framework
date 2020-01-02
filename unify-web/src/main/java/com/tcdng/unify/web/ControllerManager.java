@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -77,12 +77,13 @@ public interface ControllerManager extends UnifyComponent {
     /**
      * Returns an instance of a controller component by name.
      * 
-     * @param controllerName
-     *            the controller name
+     * @param pathParts
+     *            the resource parts
+     * @param isLoadPage indicates page loading
      * @throws UnifyException
      *             if an error occurs
      */
-    Controller getController(String controllerName) throws UnifyException;
+    Controller getController(PathParts pathParts, boolean isLoadPage) throws UnifyException;
 
     /**
      * Executes a client request using appropriate controller.
@@ -97,7 +98,18 @@ public interface ControllerManager extends UnifyComponent {
     void executeController(ClientRequest request, ClientResponse response) throws UnifyException;
 
     /**
-     * Populates the property of a controller.
+     * Executes a page controller action.
+     * 
+     * @param fullActionPath
+     *            the full action path
+     * @return the response mapping string
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String executePageController(String fullActionPath) throws UnifyException;
+
+    /**
+     * Populates the property of a page controller page bean.
      * 
      * @param controllerName
      *            the controller name
@@ -108,5 +120,5 @@ public interface ControllerManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void populateController(String controllerName, String propertyName, Object value) throws UnifyException;
+    void populatePageBean(String controllerName, String propertyName, Object value) throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -146,6 +146,15 @@ public interface Widget extends UplComponent {
      *             if an error occurs
      */
     String getColumnStyle() throws UnifyException;
+
+    /**
+     * Check if widget is marked for column summary.
+     * 
+     * @return a true value if marked otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean getColumnSelectSummary() throws UnifyException;
 
     /**
      * Returns widget hint.
@@ -333,13 +342,26 @@ public interface Widget extends UplComponent {
      * but are not visible.
      * 
      * @return a true value if component is hidden
+     * @throws UnifyException
+     *             if an error occurs
      */
     boolean isHidden() throws UnifyException;
+
+    /**
+     * Indicates if container state of widget ignores state of container.
+     * 
+     * @return a true value if widget ignores parent state otherwise false.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isIgnoreParentState() throws UnifyException;
 
     /**
      * Indicates that a component is masked.
      * 
      * @return a true value if component is hidden
+     * @throws UnifyException
+     *             if an error occurs
      */
     boolean isMasked() throws UnifyException;
 
@@ -466,6 +488,12 @@ public interface Widget extends UplComponent {
     boolean isSupportReadOnly();
 
     /**
+     * Returns true if component's rendered element supports HTML disabled attribute
+     * otherwise false. Subclasses should override this if necessary.
+     */
+    boolean isSupportDisabled();
+
+    /**
      * Returns true if this components caption is layout based.
      */
     boolean isLayoutCaption() throws UnifyException;
@@ -479,11 +507,11 @@ public interface Widget extends UplComponent {
     void addPageAliases() throws UnifyException;
 
     /**
-     * Executed on page initialization. Called by framework after all component
-     * properties have been set and containing page is initialized.
+     * Executed on page construction. Called by framework after all component
+     * properties have been set and containing page is constructed.
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    void onPageInitialize() throws UnifyException;
+    void onPageConstruct() throws UnifyException;
 }

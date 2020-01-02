@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,11 +21,10 @@ import java.io.Reader;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessLogicInput;
 import com.tcdng.unify.core.data.ValueStore;
 
 /**
- * Batch file reader. This component typically a non-singleton.
+ * Batch file reader. This component should be implemented as a non-singleton.
  * 
  * @author Lateef Ojulari
  * @since 1.0
@@ -35,10 +34,8 @@ public interface BatchFileReader extends UnifyComponent {
     /**
      * Opens batch file reader for reading using supplied configuration.
      * 
-     * @param input
-     *            the logic input
-     * @param configuration
-     *            the batch file configuration
+     * @param batchFileReadConfig
+     *            the batch file read configuration
      * @param file
      *            the array of file objects that constitutes a batch. Supported file
      *            objects are {@link InputStream}, {@link Reader}, {@link File} and
@@ -46,7 +43,28 @@ public interface BatchFileReader extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException;
+    void open(BatchFileReadConfig batchFileReadConfig, Object... file) throws UnifyException;
+
+    /**
+     * Detects if there is a preferred bean for reader instance. Utilized after
+     * {@link #open(BatchFileReadConfig, Object...)} when information about batch
+     * file would have been known and reader can suggest a preferred bean for
+     * creating the {@link #readNextRecord(ValueStore)} value store.
+     * 
+     * @return a true value if there is a preferred bean, otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean detectPreferredBean() throws UnifyException;
+
+    /**
+     * Gets preferred bean for reader instance.
+     * 
+     * @return a preferred bean if any, otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Class<?> getPreferredBean() throws UnifyException;
 
     /**
      * Reads next record from batch.

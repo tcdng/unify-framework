@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,12 +16,25 @@
 
 package com.tcdng.unify.core.notification;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * Convenient base class for SMS server.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractSmsServer extends AbstractNotificationServer<SmsServerConfig> implements SmsServer {
+public abstract class AbstractSmsServer extends AbstractUnifyComponent implements SmsServer {
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+        
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+        
+    }
 
 }

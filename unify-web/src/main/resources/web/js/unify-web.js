@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 The Code Department
+ * Copyright 2018-2020 The Code Department
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,37 @@
  */
 
 /**
- * Unify Framework Javascript.
+ * Unify Framework Javascript functions.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 var ux = {};
 
-var UNIFY_SHIFT = 0x0100;
-var UNIFY_CTRL = 0x0200;
-var UNIFY_ALT = 0x0400;
+const UNIFY_SHIFT = 0x0100;
+const UNIFY_CTRL = 0x0200;
+const UNIFY_ALT = 0x0400;
 
-var UNIFY_RIGHT_BUTTON = 0x02;
+const UNIFY_RIGHT_BUTTON = 0x02;
 
-var UNIFY_DEFAULT_POPUP_Y_OFFSET = -40; // Negative offset in pixels
+const UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 
-var UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
-var UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
-var UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
-var UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
-var UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
-var UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
-var UNIFY_TREEDOUBLECLICK_DELAY = 200; // .2 seconds.
-var UNIFY_LASTUSERACT_EFFECT_PERIOD = 180000; // 3 minutes.
+const UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
+const UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
+const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
+const UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
+const UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
+const UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
+const UNIFY_TREEDOUBLECLICK_DELAY = 250; // .25 seconds.
+const UNIFY_LASTUSERACT_EFFECT_PERIOD = 180000; // 3 minutes.
 
-var UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
+const UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 
 ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
 ux.docSysInfoId = null;
+ux.docSessionId = null;
 
 ux.popupVisible = false;
 
@@ -56,6 +57,7 @@ ux.busyCounter = 0;
 ux.cntHintId = null
 ux.cntTabCloseId = null;
 ux.cntOpenPath = null;
+ux.cntSaveIsRemote = false;
 ux.cntSavePath = null;
 ux.cntSaveList = null;
 ux.cntSaveRemoteView = null;
@@ -64,10 +66,10 @@ ux.remoteView = null;
 ux.shortcuts = [];
 ux.pagenamealiases = [];
 ux.delayedpanelposting = [];
-ux.resizefunctions = {};
-ux.remoteviewsessions = [];
 
-ux.confirmStore = {};
+ux.resizefunctions = {};
+ux.confirmstore = {};
+ux.extensionregistry = {};
 
 ux.lastUserActTime=0;
 
@@ -85,25 +87,39 @@ function _enc(value) {
 	return encodeURIComponent(value);
 }
 
+function _proc(name) {
+	var i = name.indexOf('.');
+	if (i > 0) {
+		return ux.extensionregistry[name.substring(0, i)][name.substring(i + 1)];
+	}
+	
+	return ux.extensionregistry["ux"][name];
+}
+
+/** Extensions */
+ux.registerExtension = function(extLiteral, extObj) {
+	ux.extensionregistry[extLiteral] = extObj;
+}
+
 /** Basic * */
-ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId) {
+ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docSessionId) {
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
 	ux.docSysInfoId = docSysInfoId;
+	ux.docSessionId = docSessionId;
 }
 
 ux.processJSON = function(jsonstring) {
 	var jsonEval = eval("(" + jsonstring + ")");
 	ux.remoteView = jsonEval.remoteView;
-	if (ux.remoteView) {
-		ux.remoteviewsessions[ux.remoteView.view] = ux.remoteView.sessionID;
-	}
-
 	if (jsonEval.jsonResp) {
 		for (var j = 0; j < jsonEval.jsonResp.length; j++) {
 			var resp = jsonEval.jsonResp[j];
 			ux.respHandler[resp.handler](resp);
+			if (resp.focusOnWidget) {
+				ux.setFocus(resp.focusOnWidget);
+			}
 		}
 		ux.cascadeStretch();
 	}
@@ -115,13 +131,13 @@ ux.processJSON = function(jsonstring) {
 ux.newEvPrm = function(rgp) {
 	var evp = {};
 	if (ux.remoteView) {
-		evp.uSessionID = ux.remoteView.sessionID;
 		evp.uViewer = ux.remoteView.view;
 	}
 
 	if (rgp.pCmdURL) {
 		evp.uURL = rgp.pCmdURL;
 	}
+
 	return evp;
 }
 
@@ -149,11 +165,11 @@ ux.respHandler = {
 
 	firePreConfirmHdl : function(resp) {
 		if (resp.fire) {
-			if (ux.confirmStore.handler) {
-				var handler = ux.confirmStore.handler;
-				var normEvt = ux.confirmStore.normEvt;
-				normEvt.evp = ux.confirmStore.evp;
-				ux.confirmStore = {};
+			if (ux.confirmstore.handler) {
+				var handler = ux.confirmstore.handler;
+				var normEvt = ux.confirmstore.normEvt;
+				normEvt.evp = ux.confirmstore.evp;
+				ux.confirmstore = {};
 				handler(normEvt);
 			}
 		}
@@ -374,8 +390,6 @@ ux.refreshPageGlobals = function(resp) {
 	if (resp.pSaveList) {
 		ux.cntSaveList = resp.pSaveList;
 	}
-
-	ux.cntSaveRemoteView = ux.remoteView;
 
 	if (resp.clearShortcuts) {
 		ux.shortcuts = [];
@@ -612,7 +626,8 @@ ux.clear = function(uEv) {
 	var trgNms = uEv.evp.uRef;
 	if (trgNms) {
 		for (var i = 0; i < trgNms.length; i++) {
-			var elem = _id(trgNms[i]);
+			var pgNm = trgNms[i]
+			var elem = _id(pgNm);
 			if (elem) {
 				if (!elem.disabled && elem.type != "button") {
 					if (elem.type == "checkbox" || elem.type == "radio") {
@@ -622,6 +637,12 @@ ux.clear = function(uEv) {
 							elem.options[k].selected = "";
 						}
 					} else {
+						elem.value = "";
+					}
+					
+					// Check for facade 21/08/19
+					var elem = _id("fac_" + pgNm);
+					if (elem) {
 						elem.value = "";
 					}
 				}
@@ -721,6 +742,7 @@ ux.setFocus = function(id) {
 	var elem = _id(id);
 	if (elem) {
 		elem.focus();
+		ux.setCaretPosition(elem, 10000, 10000);
 	}
 }
 
@@ -730,14 +752,14 @@ ux.setCheckedPatternValue = function(prm) {
 		if (prm.chkIds && prm.fillValues) {
 			var chkIds = prm.chkIds;
 			var fillValues = prm.fillValues;
-			var appendSym = false;
+			var sym = false;
 			for (var i = 0; i < chkIds.length; i++) {
 				var elem = _id(chkIds[i]);
 				if (elem && elem.checked) {
-					if (appendSym) {
+					if (sym) {
 						patternValue += ",";
 					} else {
-						appendSym = true;
+						sym = true;
 					}
 					patternValue += fillValues[i];
 				}
@@ -781,13 +803,18 @@ ux.rigDragAndDropPopup = function(rgp) {
 ux.loadRemoteDocViewPanel = function(rgp) {
 	var evp = {};
 	evp.uViewer = rgp.pWinPgNm;
-	evp.uSessionID = ux.remoteviewsessions[evp.uViewer];
 	evp.uURL = rgp.pRemoteURL;
-	evp.uLoginId = rgp.pRemoteLoginId;
-	evp.uUserName = rgp.pRemoteUserName;
-	evp.uRole = rgp.pRemoteRoleCode;
-	evp.uBranch = rgp.pRemoteBranchCode;
-	evp.uGlobal = rgp.pRemoteGlobalFlag;
+	evp.uLoginId = rgp.pLoginId;
+	evp.uUserName = rgp.pUserName;
+	evp.uRole = rgp.pRoleCode;
+	evp.uBranch = rgp.pBranchCode;
+	evp.uGlobal = rgp.pGlobalFlag;
+	evp.uColor = rgp.pColorScheme;
+
+	// Resolve save path viewer
+	ux.cntSaveRemoteView = {};
+	ux.cntSaveRemoteView.view = evp.uViewer;
+	
 	ux.postCommit(evp);
 }
 
@@ -1012,14 +1039,30 @@ ux.rigContentPanel = function(rgp) {
 	ux.cntHintId = rgp.pHintPanelId;
 	ux.cntTabCloseId = rgp.pCloseImgId;
 	ux.cntSavePath = rgp.pSavePath;
+	ux.cntSaveIsRemote = rgp.pSaveIsRem;
 
 	if (rgp.pImmURL) {
 		ux.postToPath(rgp.pImmURL);
 	} else {
 		var currIdx = rgp.pCurIdx;
+		var menuId = rgp.pMenuId;
+		var uId = rgp.pId;
 		for(var i = 0; i < rgp.pContent.length; i++) {
 			var cnt = rgp.pContent[i];
-			if (i != currIdx) {
+			if (i == currIdx) {
+				if (i > 0) {
+					var evp = {};
+					evp.uTabPaneId = rgp.pTabPaneId;
+					evp.uMenuId = menuId;
+					ux.attachEventHandler(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
+							evp);
+					
+					// Wire menu events
+					ux.contentAttachClose(uId, cnt, "mic_", "CL");
+					ux.contentAttachClose(uId, cnt, "mico_", "CLO");
+					ux.contentAttachClose(uId, cnt, "mica_", "CLA");
+				}
+			} else {
 				var evp = {};
 				evp.uOpenPath = cnt.openPath;
 				ux.attachEventHandler(_id(cnt.tabId), "click", ux.contentOpen,
@@ -1037,18 +1080,30 @@ ux.rigContentPanel = function(rgp) {
 	}
 }
 
+ux.contentOpenTabMenu = function(uEv) {
+	var evp = uEv.evp;
+	var loc = ux.getExactPointerCoordinates(uEv);
+	// Show menu
+	var openPrm = {};
+	openPrm.popupId = evp.uMenuId;
+	openPrm.relFrameId = evp.uTabPaneId;
+	openPrm.stayOpenForMillSec = UNIFY_DEFAULT_POPUP_TIMEOUT;
+	openPrm.forceReopen = true;
+	openPrm.uTrg = uEv.uTrg;
+	openPrm.uLoc = loc;
+	ux.doOpenPopup(openPrm);
+}
+
 ux.contentOpen  = function(uEv) {
 	var evp = uEv.evp;
 	var path = evp.uOpenPath;
 	evp.uRef = [];
 	evp.uViewer = null;
-	evp.uSessionID = null;
 	if (ux.cntSaveList && ux.cntSavePath) {
 		ux.cntOpenPath = evp.uOpenPath;
 		path = ux.cntSavePath;
 		evp.uRef = ux.cntSaveList;
-		if (ux.cntSaveRemoteView) {
-			evp.uSessionID = ux.cntSaveRemoteView.sessionID;
+		if (ux.cntSaveIsRemote && ux.cntSaveRemoteView) {
 			evp.uViewer = ux.cntSaveRemoteView.view;
 		}
 	}
@@ -1057,17 +1112,50 @@ ux.contentOpen  = function(uEv) {
 	ux.post(uEv);
 }
 
+ux.contentAttachClose = function(uId, cnt, type, mode) {
+	var evp = {};
+	evp.uSendTrg = mode;
+	evp.uURL = cnt.closePath;
+	ux.attachEventHandler(_id(type + uId), "click", ux.post,
+			evp);
+}
+
+/** Fixed content panel */
+ux.rigFixedContentPanel = function(rgp) {
+	ux.cntHintId = rgp.pHintPanelId;
+	ux.busyIndicator = rgp.pBusyIndId;
+}
+
 /** Split panel */
 ux.rigSplitPanel = function(rgp) {
 	var evp = {};
 	evp.uCtrlId = rgp.pCtrlId;
 	evp.uMinorId = rgp.pMinorId;
 	evp.uMinorScrId = rgp.pMinorScrId;
+	evp.uMajorScrId = rgp.pMajorScrId;
 	evp.uMax = rgp.pMax;
 	evp.uMin = rgp.pMin;
 	evp.uVert = rgp.pVert;
-	ux.attachEventHandler(_id(rgp.pId), "mousedown", ux.splitEngage,
+	ux.attachEventHandler(_id(rgp.pCtrlId), "mousedown", ux.splitEngage,
 					evp);
+	ux.registerResizeFunc(rgp.pId, ux.splitFitContent, evp);
+	ux.splitFitContent(evp);
+}
+
+ux.splitFitContent = function(evp) {
+	var minWElm = _id(evp.uMinorId);
+	var minElm = _id(evp.uMinorScrId);
+	var majElm = _id(evp.uMajorScrId);
+	
+	minElm.style.display = "none";
+	majElm.style.display = "none";
+	
+	var dim = ux.boundingRect(minWElm);
+	minElm.style.height = dim.height + "px";
+	majElm.style.height = dim.height + "px";
+
+	minElm.style.display = "inline-block";
+	majElm.style.display = "inline-block";
 }
 
 ux.splCtrl = null;
@@ -1356,9 +1444,13 @@ ux.dateTodayClickHandler = function(uEv) {
 
 ux.dateSetCurrent = function(id) {
 	var df = _id(id);
-	df.uDay = parseInt(_id("day_" + id).value);
-	df.uMonth = parseInt(_id("mon_" + id).value) - 1;
-	df.uYear = parseInt(_id("year_" + id).value);
+	if (df) {
+		if (_id("day_" + id)) {
+			df.uDay = parseInt(_id("day_" + id).value);
+			df.uMonth = parseInt(_id("mon_" + id).value) - 1;
+			df.uYear = parseInt(_id("year_" + id).value);
+		}
+	}
 }
 
 ux.dateSetupScroll = function(rgp, scrIdPrefix, valueIdPrefix, step) {
@@ -1405,6 +1497,10 @@ ux.dateScrollHandler = function(uEv) {
 
 ux.datePopulateCalendar = function(evp) {
 	var id = evp.uId;
+	if (!_id("mon_" + id)) {
+		return;
+	}
+
 	var month = parseInt(_id("mon_" + id).value) - 1;
 	var year = parseInt(_id("year_" + id).value);
 
@@ -2111,6 +2207,8 @@ ux.ssSelectOpt = function(ssCom, index, select) {
 			var txt = aElem.innerHTML;
 			if (txt == "&nbsp;") {
 				txt = "";
+			} else {
+				txt = ux.decodeHtml(txt);
 			}
 
 			ssCom.uFacObj.value = txt;
@@ -2160,7 +2258,8 @@ ux.rigTable = function(rgp) {
 		ux.registerResizeFunc(id, ux.tableResizeHeight, rgp);
 	}
 
-	if (tblToRig.rows && rgp.pSelectable) {
+	var selectable = rgp.pSelectable && !rgp.pMultiSel;
+	if (tblToRig.rows && (selectable || rgp.pShiftable)) {
 		tblToRig.uIdxId = rgp.pIdxCtrlId;
 		tblToRig.uBaseIdx = rgp.pBaseIdx;
 		tblToRig.uSelCls = rgp.pSelClassNm;
@@ -2228,34 +2327,69 @@ ux.rigTable = function(rgp) {
 	}
 
 	if (rgp.pMultiSel) {
+		tblToRig.uSelCls = rgp.pSelClassNm;
 		tblToRig.uVisibleSel = rgp.pVisibleSel;
 		tblToRig.uHiddenSel = rgp.pHiddenSel;
 		tblToRig.uMultiSelDepList = rgp.pMultiSelDepList;
 		tblToRig.uItemCount = rgp.pItemCount;
 		tblToRig.uSelAllId = rgp.pSelAllId;
+		tblToRig.uSumColList = rgp.pSumColList;
+		tblToRig.uSumSrc = rgp.pSumSrc;
+		tblToRig.uSumDepList = rgp.pSumDepList;
+		if (rgp.pSumProcList) {
+			var procList = rgp.pSumProcList;
+			var sumProcs = [];
+			for(var i = 0; i < procList.length; i++) {
+				sumProcs[i] = _proc(procList[i]);
+			}
+			tblToRig.uSumProcs = sumProcs;
+		}
 
+		// Disable dependencies if required
 		ux.setDisabledById(tblToRig.uMultiSelDepList,
 				(tblToRig.uVisibleSel + tblToRig.uHiddenSel) <= 0);
 
+		// Rig select/ de-select all
+		var selBoxes = _name(rgp.pSelGrpId);
+		var rowOffset = 1;
+		if (rgp.pWindowed) {
+			rowOffset = 0;
+		}
+
 		var evp = {};
 		evp.uRigTbl = tblToRig;
-		ux.attachEventHandler(_id(rgp.pSelAllId), "click",
-				ux.tableSelAllClick, evp);
-
-		evp = {};
-		evp.uRef = [ rgp.pSelGrpId ];
+		tblToRig.uSelBoxes = selBoxes;
 		ux.attachEventHandler(_id(rgp.pSelAllId),
-				"click", ux.setAllChecked, evp);
-
-		var selBoxes = _name(rgp.pSelGrpId);
+				"click", ux.tableSelAllClick, evp);
+		
 		for (var i = 0; i < selBoxes.length; i++) {
-			evp = {};
-			evp.uRigTbl = tblToRig;
-			ux.attachEventHandler(selBoxes[i], "click", ux.tableMultiSelClick,
+			var selBox = selBoxes[i];
+			var tRow = tblToRig.rows[i + rowOffset];
+			selBox.uRowClass = tRow.className;
+			selBox.uRow = tRow; 
+			selBox.uIndex = i;
+			
+			// Wire handlers
+			ux.attachEventHandler(selBox, "click", ux.tableMultiSelClick,
 					evp);
+			if (!rgp.pShiftable) {
+				var evpRw = {};
+				evpRw.uRigTbl = tblToRig;
+				evpRw.uSelBox = selBox;
+				ux.attachEventHandler(tRow, "click", ux.tableMultiRowClickHandler,
+						evpRw);
+			}
+			
+			// Highlight already selected from back-end
+			if (selBox.checked == true) {
+				tRow.className = tblToRig.uSelCls;
+			}
 		}
+		
+		// Fire summary proc
+		ux.tableSummaryProc(tblToRig);
 	}
-
+	
 	if (rgp.pSortable) {
 		if (rgp.pSortColList) {
 			for (var i = 0; i < rgp.pSortColList.length; i++) {
@@ -2302,14 +2436,19 @@ ux.rigTable = function(rgp) {
 			if (rgp.pWindowed) {
 				viewIndex--;
 			}
+			
 			ux.fireEvent(tblToRig.rows[viewIndex], "click", true);
 		}
 	} else {
-		if (rgp.pSelectable) {
+		if (selectable) {
 			if (tblToRig.uFirstRow) {
 				ux.fireEvent(tblToRig.uFirstRow, "click", true);
 			}
 		}
+	}
+	
+	if (rgp.pItemCount <= 0) {
+		ux.setDisabledById(rgp.pConDepList, true);
 	}
 }
 
@@ -2342,30 +2481,196 @@ ux.tableSortClickHandler = function(uEv) {
 }
 
 ux.tableSelAllClick = function(uEv) {
-	var selBox = uEv.uTrg;
-	if (selBox.type == "checkbox") {
-		var evp = uEv.evp;
-		var rigTbl = evp.uRigTbl;
-		if (selBox.checked == true) {
+	var selAllBox = uEv.uTrg;
+	if (selAllBox) {
+		var rigTbl = uEv.evp.uRigTbl;
+		// Update table values
+		if (selAllBox.checked == true) {
 			rigTbl.uVisibleSel = rigTbl.uItemCount;
 		} else {
 			rigTbl.uVisibleSel = 0;
 		}
+		
+		// Update visuals for rows
+		var selBoxes = rigTbl.uSelBoxes;
+		if (selBoxes) {
+			if (selAllBox.checked ==  true) {
+				for (var i = 0; i < selBoxes.length; i++) {
+					var selBox = selBoxes[i];
+					selBox.checked = selAllBox.checked;
+					selBox.uRow.className = rigTbl.uSelCls;
+				}
+			} else {
+				for (var i = 0; i < selBoxes.length; i++) {
+					var selBox = selBoxes[i];
+					selBox.checked = selAllBox.checked;
+					selBox.uRow.className = selBox.uRowClass;
+				}
+			}
+		}
+		
+		// Update dependencies
 		ux.tableDisableMultiSelElements(rigTbl);
+		
+		// Fire summary
+		ux.tableSummaryProc(rigTbl);
 	}
 }
 
 ux.tableMultiSelClick = function(uEv) {
+	var changed = false;
 	var selBox = uEv.uTrg;
-	if (selBox.type == "checkbox") {
-		var evp = uEv.evp;
-		var rigTbl = evp.uRigTbl;
+	if (selBox) {
+		var rigTbl = uEv.evp.uRigTbl;
+		rigTbl.uLastSelClick = null;
 		if (selBox.checked == true) {
+			selBox.uRow.className = rigTbl.uSelCls;
 			rigTbl.uVisibleSel++;
 		} else {
+			selBox.uRow.className = selBox.uRowClass;
 			rigTbl.uVisibleSel--;
 		}
+
+		changed = true;
 		ux.tableDisableMultiSelElements(rigTbl);
+	}
+	
+	uEv.uSelClick = true;
+	
+	if (changed) {
+		// Fire summary
+		ux.tableSummaryProc(rigTbl);
+	}
+}
+
+ux.tableMultiRowClickHandler =  function(uEv) {
+	if (!uEv.uSelClick) {
+		var tRow = uEv.uTrg;
+		if (tRow) {
+			if (!(uEv.shiftKey && uEv.ctrlKey)) {
+				var rigTbl = uEv.evp.uRigTbl;
+				var selBox = uEv.evp.uSelBox;
+				if (uEv.ctrlKey) {
+					ux.tableMultiRowSelect(selBox, rigTbl, false, false);
+				} else {
+					if (uEv.shiftKey) {
+						ux.tableMultiRowSelect(selBox, rigTbl, false, true);
+					} else {
+						ux.tableMultiRowSelect(selBox, rigTbl, true, false);
+					}
+				}
+
+				ux.tableDisableMultiSelElements(rigTbl);
+			}
+		}
+	}
+}
+
+ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
+	var changed = false;
+	if (selBox != rigTbl.uLastSelClick && selBox.checked != true) {
+		selBox.checked = true;
+		selBox.uRow.className = rigTbl.uSelCls;
+		rigTbl.uVisibleSel++;
+		
+		if (wideSelect && rigTbl.uLastSelClick) {
+			var start = selBox.uIndex;
+			var end = rigTbl.uLastSelClick.uIndex;
+			if (start > end) {
+				var temp = start;
+				start = end;
+				end = temp;
+			}
+			
+			var selBoxes = rigTbl.uSelBoxes;
+			for (var i = start; i <= end; i++) {
+				var cSelBox = selBoxes[i];
+				if (cSelBox.checked != true) {
+					cSelBox.checked = true;
+					cSelBox.uRow.className = rigTbl.uSelCls;
+					rigTbl.uVisibleSel++;
+				}
+			}
+		}
+		
+		rigTbl.uLastSelClick = selBox;
+		changed = true;
+	}
+
+	if (uncheckOthers) {
+		var selBoxes = rigTbl.uSelBoxes;
+		for(var i = 0; i < selBoxes.length; i++) {
+			var unSelBox = selBoxes[i];
+			if (unSelBox.checked == true) {
+				if (unSelBox != selBox) {
+					unSelBox.checked = false;
+					unSelBox.uRow.className = unSelBox.uRowClass;
+					changed = true;
+				}
+			}
+		}
+		
+		rigTbl.uVisibleSel = 1;
+	}
+	
+	if (changed) {
+		// Fire summary
+		ux.tableSummaryProc(rigTbl);
+	}
+}
+
+ux.tableSummaryProc = function(rigTbl) {
+	// No need to perform summary if there are no handlers or targets
+	if (!rigTbl.uSumProcs || !rigTbl.uSumDepList) {		
+		return;
+	}
+
+	var sumProcs = rigTbl.uSumProcs
+	var sumDeps = rigTbl.uSumDepList
+	var procLen = sumProcs.length;
+	if (procLen > sumDeps.length) {
+		procLen = sumDeps.length;
+	}
+	
+	if (procLen == 0) {
+		return;
+	}
+	
+	// Do summary
+	var sumCols = rigTbl.uSumColList;
+	var selBoxes = rigTbl.uSelBoxes;
+	
+	//Initialize
+	var summary = {};
+	for (var i = 0; i < sumCols.length; i++) {
+		summary[sumCols[i].nm] = 0.0;
+	}
+	
+	// Do calculations
+	for(var i = 0; i < selBoxes.length; i++) {
+		if (selBoxes[i].checked == true) {
+			for (var j = 0; j < sumCols.length; j++) {
+				var sumCol = sumCols[j];
+				// Get cell value and add
+				var cVal = 0.0;
+				var cell = selBoxes[i].uRow.cells[sumCol.idx];
+				if (cell) {
+					var cnt = cell.innerHTML;
+					if (cnt.charAt(0) == '<') {
+						var sIndex = cnt.indexOf(">");
+						cnt = cnt.substring(sIndex + 1, cnt.indexOf("<", sIndex));
+					}
+					cVal = parseFloat(cnt.replace(",", ""));
+				}
+				summary[sumCol.nm] = cVal + summary[sumCol.nm];
+			}
+		}
+	}
+
+	// Fire summary handlers
+	var src =rigTbl.uSumSrc;
+	for(var i = 0; i < sumProcs.length; i++) {
+		sumProcs[i](sumDeps[i], src, summary);
 	}
 }
 
@@ -2539,127 +2844,386 @@ ux.timeScrollHandler = function(uEv) {
 }
 
 /** Tree */
-var TREE_CLICK = 0;
-var TREE_DBLCLICK = 1;
-var TREE_RTCLICK = 2;
-var TREE_MENUCLICK = 3;
+const TREEITEM_CLICK = {code:'TCL', mask:0x0001};
+const TREEITEM_RIGHTCLICK = {code:'TRC', mask:0x0002};
+const TREEITEM_DBCLICK = {code:'TDC', mask:0x0004};
+const TREEITEM_DRAG = {code:'TDG"', mask:0x0008};
+const TREEITEM_DROP = {code:'TDP', mask:0x0010};
+const MENUITEM_CLICK = {code:'MCL', mask:0x0020};
 
-var treeDataMap = {};
+Object.freeze(TREEITEM_CLICK);
+Object.freeze(TREEITEM_RIGHTCLICK);
+Object.freeze(TREEITEM_DBCLICK);
+Object.freeze(TREEITEM_DRAG);
+Object.freeze(TREEITEM_DROP);
+Object.freeze(MENUITEM_CLICK);
 
-ux.rigTree = function(rgp) {
-	var id = rgp.pId;
-	var selList = [];
-	if (rgp.pItemList) {
-		var pItemList = rgp.pItemList;
-		var selObj = _id(rgp.pSelItemId);
-		for (var i = 0; i < pItemList.length; i++) {
-			var itemInfo = pItemList[i];
-			if (itemInfo.parent) {
-				var evp = ux.newEvPrm(rgp);
-				evp.uPanels = [ rgp.pContId ];
-				evp.uRef = [ rgp.pSelCtrlId ];
-				evp.uSelCtrlId = rgp.pSelCtrlId;
-				evp.uIdx = itemInfo.idx;
-				if (itemInfo.expanded) {
-					evp.uCmd = id + "->collapse";
-				} else {
-					evp.uCmd = id + "->expand";
-				}
-				ux.attachEventHandler(_id(rgp.pCtrlBase + itemInfo.idx),
-						"click", ux.treeCtrlImageClickHandler, evp);
-			}
+const TREE_PARENT_FLAG = 0x0001;
+const TREE_EXPANDED_FLAG = 0x0002;
 
-			var tElem = _id(rgp.pLblBase + itemInfo.idx);
-			var evp = ux.treeNewEvPrm(rgp, pItemList, i, TREE_CLICK);
-			ux.attachEventHandler(tElem, "click", ux.treeDelayItemClickHandler, evp);
-
-			evp = ux.treeNewEvPrm(rgp, pItemList, i, TREE_DBLCLICK);
-			ux.attachEventHandler(tElem, "dblclick", ux.treeItemClickHandler, evp);
-				
-			evp = ux.treeNewEvPrm(rgp, pItemList, i, TREE_RTCLICK);
-			ux.attachEventHandler(tElem, "rtclick", ux.treeItemClickHandler, evp);
-			
-			if (selObj.options[i].selected) {
-				selList.push(i);
-			}
-		}
+ux.treedatmap = {};
+ux.srcTreeId = null;
+ux.treeDatCreate = function(rgp) {
+	var tdat = {};
+	tdat.uId = rgp.pId;
+	tdat.uPanels = [ rgp.pContId ];
+	tdat.uCmd = rgp.pId + "->executeEventPath";
+	tdat.uSelItemId = rgp.pSelItemId;
+	tdat.uDropTrgItemId = rgp.pDropTrgItemId;
+	tdat.uDropSrcId = rgp.pDropSrcId;
+	tdat.uDropSrcItemId = rgp.pDropSrcItemId;
+	tdat.uEventTypeId = rgp.pEventTypeId;
+	tdat.uMenuCodeCtrlId = rgp.pMenuCodeCtrlId;
+	tdat.uSel = rgp.pSel;
+	tdat.uNorm = rgp.pNorm;
+	tdat.uIco = rgp.pIco;
+	tdat.uIcod = rgp.pIcod;
+	tdat.uLblBase = rgp.pLblBase;
+    tdat.uIconBase=rgp.pIconBase;
+	tdat.uItemList = rgp.pItemList;
+	tdat.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pDropTrgItemId, rgp.pDropSrcId, rgp.pDropSrcItemId, rgp.pMenuCodeCtrlId ];
+	if(rgp.pEventRef) {
+		tdat.uRef = tdat.uRef.concat(rgp.pEventRef);
 	}
-	
-	if(rgp.pMenu) {
-		ux.rigTreeMenu(rgp, rgp.pMenu);
-	}
-	
-	if(rgp.pMenus) {
-		for(var i = 0; i < rgp.pMenus.length; i++) {
-			ux.rigTreeMenu(rgp, rgp.pMenus[i]);
-		}
-	}
-	
-	var treeData = {};
-	treeData.selList = selList;
-	treeData.lastSelIdx = -1;
-	treeDataMap[id] = treeData;
-	
-	ux.disableWinContextMenu();
+	tdat.uMenu = rgp.pMenu;
+	tdat.uLastSelIdx = -1;
+	ux.treedatmap[tdat.uId] = tdat;
+	return tdat;
 }
 
-ux.rigTreeMenu = function(rgp, menu) {
-	for(var i = 0; i < menu.items.length; i++) {
-		var menuItem = menu.items[i];
-		var evp = ux.treeMenuEvPrm(rgp, menuItem, TREE_MENUCLICK);
-		ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
-	}
+ux.getTreeDat = function(evp) {
+	return ux.treedatmap[evp.uId];
 }
 
-ux.treeMenuEvPrm = function(rgp, menuItem, eventCodeIdx) {
+ux.newTreeEvPrm = function(rgp) {
 	var evp = ux.newEvPrm(rgp);
-	evp.uPanels = [ rgp.pContId ];
-	evp.uRef = [ rgp.pSelItemId, rgp.pEventTypeId, rgp.pMenuCodeCtrlId ];
-	evp.uEventTypeId = rgp.pEventTypeId;
-	evp.uMenuCodeCtrlId = rgp.pMenuCodeCtrlId;
-	evp.uEvCode = rgp.pEventCode[eventCodeIdx];
-	evp.uMenuCode = menuItem.code;
-	evp.uCmd = rgp.pId + "->executeEventPath";
+	var tdat = ux.treedatmap[rgp.pId]
+	evp.uId = tdat.uId;
+	evp.uPanels = tdat.uPanels;
+	evp.uCmd = tdat.uCmd;
+	evp.uRef = tdat.uRef;
 	return evp;
 }
 
+ux.rigTreeExplorer = function(rgp) {
+	var tdat = ux.treeDatCreate(rgp);
+	var selList = [];
+	
+	// Wire menu
+	if(rgp.pMenu) {
+		var menu = rgp.pMenu;
+		for(var i = 0; i < menu.items.length; i++) {
+			var menuItem = menu.items[i];
+			var evp = ux.newTreeEvPrm(rgp);
+			evp.uMenuCode = menuItem.code;
+			ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
+		}
+	}
+	
+	// Wire tree items
+	var pItemTypeList = rgp.pItemTypeList;
+	if (pItemTypeList) {
+		// Do setup
+		var typeMap = {};
+		for(var i = 0; i < pItemTypeList.length; i++) {
+			var type = pItemTypeList[i];
+			typeMap[type.code] = type;
+		}
+		
+		// Do wire tree items
+		if (rgp.pItemList) {
+			var pItemList = rgp.pItemList;
+			var selObj = _id(rgp.pSelItemId);
+			for (var i = 0; i < pItemList.length; i++) {
+				var tItem = pItemList[i];
+				tItem.treeId = rgp.pId;
+				tItem.typeInfo = typeMap[tItem.type];
+				tItem.frmId = rgp.pLblBase + tItem.idx;
+				if ((tItem.flags & TREE_PARENT_FLAG) > 0) {
+					var evp = ux.newEvPrm(rgp);
+					evp.uPanels = [ rgp.pContId ];
+					evp.uRef = [ rgp.pSelCtrlId ];
+					evp.uSelCtrlId = rgp.pSelCtrlId;
+					evp.uIdx = tItem.idx;
+					if ((tItem.flags & TREE_EXPANDED_FLAG) > 0) {
+						evp.uCmd = rgp.pId + "->collapse";
+					} else {
+						evp.uCmd = rgp.pId + "->expand";
+					}
+					ux.attachEventHandler(_id(rgp.pCtrlBase + tItem.idx),
+							"click", ux.treeCtrlImageClickHandler, evp);
+				}
+
+				var evp = ux.newTreeEvPrm(rgp);
+				evp.uItemIdx = i;
+
+				var flags = tItem.typeInfo.flags;
+				var elm = _id(tItem.frmId);
+				if ((flags & TREEITEM_CLICK.mask) > 0) {
+					ux.attachEventHandler(elm, "click", ux.treeItemClickHandler, evp);
+				}
+				
+				if ((flags & TREEITEM_DBCLICK.mask) > 0) {
+					ux.attachEventHandler(elm, "dblclick", ux.treeItemDbClickHandler, evp);
+				}
+
+				if ((flags & TREEITEM_RIGHTCLICK.mask) > 0) {
+					ux.attachEventHandler(elm, "rtclick", ux.treeItemRightClickHandler, evp);
+				}
+
+				if ((flags & TREEITEM_DRAG.mask) > 0) {
+					ux.attachEventHandler(elm, "dragstart", ux.treeItemDragStartHandler, evp);
+					ux.attachEventHandler(elm, "dragexit", ux.treeItemDragExitHandler, evp);
+				}
+
+				if ((flags & TREEITEM_DROP.mask) > 0) {
+					ux.attachEventHandler(elm, "dragenter", ux.treeItemDragEnterHandler, evp);
+					ux.attachEventHandler(elm, "dragover", ux.treeItemDragOverHandler, evp);
+					ux.attachEventHandler(elm, "drop", ux.treeItemDropHandler, evp);
+					ux.attachEventHandler(elm, "dragleave", ux.treeItemDragLeaveHandler, evp);
+				}
+
+				if (selObj.options[i].selected) {
+					selList.push(i);
+				}
+			}
+		}
+	}
+	
+	tdat.selList = selList;
+}
+
 ux.treeMenuClickHandler = function(uEv) {
-	var evp = uEv.evp;
-	var tElem = _id(evp.uEventTypeId);
-	if(tElem) {
-		tElem.value = evp.uEvCode;
+	var tdat = ux.getTreeDat(uEv.evp);
+	var elem = _id(tdat.uEventTypeId);
+	if(elem) {
+		elem.value = MENUITEM_CLICK.code;
 	}
 
-	var mElem = _id(evp.uMenuCodeCtrlId);
-	if(mElem) {
-		mElem.value = evp.uMenuCode;
+	elem = _id(tdat.uMenuCodeCtrlId);
+	if(elem) {
+		elem.value = uEv.evp.uMenuCode;
 	}
 
 	ux.hidePopup(null);
 	ux.post(uEv);
 }
 
-ux.treeNewEvPrm = function(rgp, pItemList, visualIdx, eventCodeIdx) {
-	var evp = ux.newEvPrm(rgp);
-	evp.uPanels = [ rgp.pContId ];
-	evp.uRef = [ rgp.pSelItemId, rgp.pEventTypeId ];
-	evp.uSelItemId = rgp.pSelItemId;
-	evp.uEventTypeId = rgp.pEventTypeId;
-	evp.uSel = rgp.pSel;
-	evp.uNorm = rgp.pNorm;
-	evp.uVisualIdx = visualIdx;
-	evp.uItemList = pItemList;
-	evp.uLblBase = rgp.pLblBase;
-	evp.uFrameId = rgp.pLblBase + pItemList[visualIdx].idx;
-	evp.uEvCodeIdx = eventCodeIdx;
-	evp.uEvCode = rgp.pEventCode[eventCodeIdx];
-	if (rgp.pMenu) {
-		evp.uPopupId = rgp.pMenu.popupId;
+ux.treeItemClickHandler = function(uEv) {
+	ux.treeItemClickEventHandler(uEv, TREEITEM_CLICK.code, true);
+}
+
+ux.treeItemDbClickHandler = function(uEv) {
+	ux.treeItemClickEventHandler(uEv, TREEITEM_DBCLICK.code, false);
+}
+
+ux.treeItemRightClickHandler = function(uEv) {
+	ux.treeItemClickEventHandler(uEv, TREEITEM_RIGHTCLICK.code, false);
+}
+
+ux.treeItemDragStartHandler = function(uEv) {
+	var srctdat = ux.getTreeDat(uEv.evp);
+	if (srctdat.timeoutId) {
+		window.clearTimeout(srctdat.timeoutId);
+		srctdat.timeoutId = null;
+	}
+
+	var i = uEv.evp.uItemIdx;
+	if (srctdat.selList.includes(i)) {
+		// Do multi-select drag if item is part of selected group
+		srctdat.dragitems = [];
+		for(var j = 0; j < srctdat.selList.length; j++) {
+			srctdat.dragitems[j] = srctdat.uItemList[srctdat.selList[j]];
+		}
+	} else {
+		//Do single item drag
+		srctdat.dragitems = [srctdat.uItemList[i]];
 	}
 	
-	evp.uId = rgp.pId;
-	evp.uCmd = rgp.pId + "->executeEventPath";
-	return evp;
+	ux.srcTreeId = srctdat.uId;
+	uEv.dataTransfer.setData("srcTreeId", srctdat.uId); //Must do this for mozilla
+	uEv.dataTransfer.dropEffect = "move";
+}
+
+ux.treeItemDragExitHandler = function(uEv) {
+	ux.srcTreeId = null;
+}
+
+ux.treeItemDragEnterHandler = function(uEv) {
+	if (ux.treeItemAcceptDropLoad(uEv)) {
+
+	}
+}
+
+ux.treeItemDragOverHandler = function(uEv) {
+	if (ux.treeItemAcceptDropLoad(uEv)) {
+		// Show indicator
+		var trgtdat = ux.getTreeDat(uEv.evp);
+		var trgitem = trgtdat.uItemList[uEv.evp.uItemIdx];
+		_id(trgtdat.uIconBase + trgitem.idx).className = trgtdat.uIcod;
+		uEv.dataTransfer.dropEffect = "move";
+	}
+}
+
+ux.treeItemDragLeaveHandler = function(uEv) {
+	if (ux.treeItemAcceptDropLoad(uEv)) {
+		// Hide indicator
+		var trgtdat = ux.getTreeDat(uEv.evp);
+		var trgitem = trgtdat.uItemList[uEv.evp.uItemIdx];
+		_id(trgtdat.uIconBase + trgitem.idx).className = trgtdat.uIco;
+	}
+}
+
+ux.treeItemDropHandler = function(uEv) {
+	var srctdat = ux.treeItemAcceptDropLoad(uEv);
+	if (srctdat) {
+		var trgtdat = ux.getTreeDat(uEv.evp);
+		var trgitem = trgtdat.uItemList[uEv.evp.uItemIdx];
+
+		// Send command to target
+		_id(trgtdat.uEventTypeId).value = TREEITEM_DROP.code;
+		_id(trgtdat.uDropTrgItemId).value = trgitem.idx;
+		_id(trgtdat.uDropSrcId).value = srctdat.uId;
+		var srcIds = ''; var sym = false;
+		for(var i = 0; i < srctdat.dragitems.length; i++) {
+			if (sym) {
+				srcIds += ',';
+			} else {
+				sym = true;
+			}
+			srcIds += srctdat.dragitems[i].idx;
+		}
+		_id(trgtdat.uDropSrcItemId).value = srcIds;
+		
+		ux.post(uEv);
+	}
+}
+
+ux.treeItemAcceptDropLoad = function(uEv) {
+	var trgtdat = ux.getTreeDat(uEv.evp);
+	var trgitem = trgtdat.uItemList[uEv.evp.uItemIdx];
+	if ((trgtdat.selList.length > 1) && trgtdat.selList.includes(trgitem.idx)) {
+		return null; // Target is part of multi-select. Not allowed.
+	}
+	
+	var accept = trgitem.typeInfo.acceptdrop;
+	if (accept && accept.length > 0) {
+		var srctdat = ux.treedatmap[ux.srcTreeId];
+		if (srctdat && srctdat.dragitems && srctdat.dragitems.length > 0) {
+			var lastPidx = -1;
+			for(var i = 0; i < srctdat.dragitems.length; i++) {
+				var srcitem = srctdat.dragitems[i];
+				if (lastPidx >=0 && lastPidx != srcitem.pidx) {
+					return null; //Don't accept items with different parents
+				}
+
+				if ((srcitem.idx == trgitem.idx) && (srcitem.treeId == trgitem.treeId)) {
+					return null; //Same object
+				}
+				
+				if (!accept.includes(srcitem.typeInfo.code)) {
+					return null; // Unacceptable type
+				}
+				
+				lastPidx = srcitem.pidx;
+			}
+			uEv.preventDefault();
+			return srctdat;
+		}
+	}
+	return null;
+}
+
+ux.treeItemClickEventHandler = function(uEv, eventCode, delay) {
+	var tdat = ux.getTreeDat(uEv.evp);
+	if (tdat.timeoutId) {
+		window.clearTimeout(tdat.timeoutId);
+		tdat.timeoutId = null;
+	}
+
+	tdat.uEv = uEv;
+	tdat.evp = uEv.evp;
+	tdat.eventCode = eventCode;
+	tdat.uLoc = ux.getExactPointerCoordinates(uEv);
+	if (delay) {
+		tdat.timeoutId = window.setTimeout("ux.treeItemProcessEvent(\""+ tdat.uId + "\");"
+				, UNIFY_TREEDOUBLECLICK_DELAY); 
+	} else {
+		ux.treeItemProcessEvent(tdat.uId); 
+	}
+}
+
+ux.treeItemProcessEvent = function(treeId) {
+	var tdat = ux.treedatmap[treeId];	
+	var evp = tdat.evp;
+	var tItem = tdat.uItemList[evp.uItemIdx];
+	if (tdat.eventCode == TREEITEM_CLICK.code) {
+		if (tdat.uEv.ctrlKey) {
+			ux.treeSelectItem(evp, false, true);
+		} else if (tdat.uEv.shiftKey) {
+			if (tdat.selList.length > 0 && tdat.uLastSelIdx >= 0) {
+				ux.treeSelectItemRange(evp, tdat.uLastSelIdx, evp.uItemIdx);
+			} else {
+				ux.treeSelectItem(evp, true, false);
+			}
+		} else {
+			ux.treeSelectItem(evp, true, false);
+			ux.treeSendCommand(tdat);
+		}
+	} else {
+		if (tdat.eventCode == TREEITEM_DBCLICK.code) {
+			ux.treeSelectItem(evp, true, false);
+			ux.treeSendCommand(tdat);
+		} else {
+			if (tdat.eventCode == TREEITEM_RIGHTCLICK.code) {
+				var selObj = _id(tdat.uSelItemId);
+				if (!selObj.options[evp.uItemIdx].selected) {
+					ux.treeSelectItem(evp, true, false);
+				}
+	
+				if (tdat.uMenu) {
+					var showMenu = false;
+					// Hide all menu items
+					var menu = tdat.uMenu;
+					ux.setDisplayModeByName(menu.sepId, "none");
+					
+					// Show menu items based on tree item type
+					var tItem = tdat.uItemList[evp.uItemIdx];
+					var typeInfo= tItem.typeInfo;
+					if (typeInfo.menu && typeInfo.menu.length > 0) {
+						var gIndex = -1;
+						for(var i = 0; i < typeInfo.menu.length; i++) {
+							var mitem = menu.items[typeInfo.menu[i]];
+							var miElem = _id(mitem.id);
+							if (gIndex >= 0 && gIndex != mitem.grpIdx) {
+								miElem.className = menu.sepCls;
+							} else {
+								miElem.className = menu.normCls;
+							}
+							miElem.style.display = "block";
+							gIndex = mitem.grpIdx;
+						}
+						showMenu = true;
+					}
+
+					if (showMenu) {
+						// Show menu
+						var openPrm = {};
+						openPrm.popupId = menu.id;
+						openPrm.relFrameId = tItem.frmId;
+						openPrm.stayOpenForMillSec = -1;
+						openPrm.forceReopen = true;
+						openPrm.uTrg = tdat.uEv.uTrg;
+						openPrm.uLoc = tdat.uLoc;
+						ux.doOpenPopup(openPrm);
+					}
+				}
+			}
+		}
+	}
+
+	tdat.uEv = null;
+	tdat.evp = null;
 }
 
 ux.treeCtrlImageClickHandler = function(uEv) {
@@ -2668,105 +3232,18 @@ ux.treeCtrlImageClickHandler = function(uEv) {
 	if (tSelCtrlElem) {
 		tSelCtrlElem.value = evp.uIdx;
 	}
-
 	ux.post(uEv);
 }
 
-ux.treeDelayItemClickHandler = function(uEv) {
-	var treeData = treeDataMap[uEv.evp.uId];
-	if (treeData.timeoutId) {
-		window.clearTimeout(treeData.timeoutId);
-	}
-
-	treeData.uEv = uEv;
-	treeData.evp = uEv.evp;
-	treeData.evp.mCoord = ux.getExactPointerCoordinates(uEv);
-	treeData.timeoutId = window.setTimeout("ux.treeItemEventHandler(\""+ uEv.evp.uId + "\");"
-			, UNIFY_TREEDOUBLECLICK_DELAY); 
-}
-
-ux.treeItemClickHandler = function(uEv) {
-	var treeData = treeDataMap[uEv.evp.uId];
-	if (treeData.timeoutId) {
-		window.clearTimeout(treeData.timeoutId);
-		treeData.timeoutId = null;
-	}
-
-	treeData.uEv = uEv;
-	treeData.evp = uEv.evp;
-	treeData.evp.mCoord = ux.getExactPointerCoordinates(uEv);
-	ux.treeItemEventHandler(uEv.evp.uId); 
-}
-
-ux.treeItemEventHandler = function(treeId) {
-	var treeData = treeDataMap[treeId];	
-	var evp = treeData.evp;
-	var itemInfo = evp.uItemList[evp.uVisualIdx];
-	
-	if (evp.uEvCodeIdx == TREE_CLICK) {
-		if (treeData.uEv.ctrlKey) {
-			ux.treeSelectItem(evp, false, true);
-		} else if (treeData.uEv.shiftKey) {
-			if (treeData.selList.length > 0 && treeData.lastSelIdx >= 0) {
-				ux.treeSelectItemRange(evp, treeData.lastSelIdx, evp.uVisualIdx);
-			} else {
-				ux.treeSelectItem(evp, true, false);
-			}
-		} else {
-			ux.treeSelectItem(evp, true, false);
-			if(itemInfo.pClick) {
-				ux.treeSendCommand(treeData);
-			}
-		}
-	} else if (evp.uEvCodeIdx == TREE_DBLCLICK) {
-		ux.treeSelectItem(evp, true, false);
-		if(itemInfo.pDblClick) {
-			ux.treeSendCommand(treeData);
-		}
-
-	} else if (evp.uEvCodeIdx == TREE_RTCLICK) {
-		var selObj = _id(evp.uSelItemId);
-		if (!selObj.options[evp.uVisualIdx].selected) {
-			ux.treeSelectItem(evp, true, false);
-		}
-
-		var showMenu = false;
-		var popupId = itemInfo.popupId;
-		for (var j = 0; j < treeData.selList.length; j++) {
-			var i = treeData.selList[j];
-			if (popupId != evp.uItemList[i].popupId) {
-				popupId = evp.uPopupId;
-				showMenu = true;
-				break;
-			}
-		}
-		
-		if (showMenu || itemInfo.pRtClick) {
-			if (popupId) {
-				var openPrm = {};
-				openPrm.popupId = popupId;
-				openPrm.relFrameId = evp.uFrameId;
-				openPrm.stayOpenForMillSec = -1;
-				openPrm.forceReopen = true;
-				openPrm.uTrg = treeData.uEv.uTrg;
-				openPrm.mCoord = evp.mCoord;
-				ux.doOpenPopup(openPrm);
-			}
-		}
-	}
-
-	treeData.uEv = null;
-	treeData.evp = null;
-}
-
 ux.treeSelectItem = function(evp, single, toggle) {
-	var i = evp.uVisualIdx;
-	treeDataMap[evp.uId].lastSelIdx = i;
+	var tdat = ux.getTreeDat(evp);
+	var i = evp.uItemIdx;
+	tdat.uLastSelIdx = i;
 	if (single) {
 		ux.treeSelectItemRange(evp, i, i);
 	} else{
-		var tElem = _id(evp.uLblBase + evp.uItemList[i].idx)
-		var selObj = _id(evp.uSelItemId);
+		var tElem = _id(tdat.uLblBase + tdat.uItemList[i].idx)
+		var selObj = _id(tdat.uSelItemId);
 		if (toggle) {
 			if(selObj.options[i].selected) {
 				ux.treeSelect(evp, tElem, selObj, i, false);
@@ -2786,9 +3263,10 @@ ux.treeSelectItemRange = function(evp, start, end) {
 		start = temp;
 	}
 
-	var selObj = _id(evp.uSelItemId);
-	for(var i = 0; i < evp.uItemList.length; i++) {
-		var tElem = _id(evp.uLblBase + evp.uItemList[i].idx)
+	var tdat = ux.getTreeDat(evp);
+	var selObj = _id(tdat.uSelItemId);
+	for(var i = 0; i < tdat.uItemList.length; i++) {
+		var tElem = _id(tdat.uLblBase + tdat.uItemList[i].idx)
 		if(i >= start && i <= end) {
 			ux.treeSelect(evp, tElem, selObj, i, true);
 		} else {
@@ -2797,36 +3275,35 @@ ux.treeSelectItemRange = function(evp, start, end) {
 	}
 }
 
-ux.treeSendCommand = function(treeData) {
-	var evp = treeData.evp;
-	var tTypeElem = _id(evp.uEventTypeId);
-	if(tTypeElem) {
-		tTypeElem.value = evp.uEvCode;
+ux.treeSendCommand = function(tdat) {
+	var evp = tdat.evp;
+	var elem = _id(tdat.uEventTypeId);
+	if(elem) {
+		elem.value = tdat.eventCode;
 	}
 
-	var uEv = treeData.uEv;
+	var uEv = tdat.uEv;
 	uEv.evp = evp;
 	ux.post(uEv);
 }
 
 ux.treeSelect = function(evp, tElem, selObj, i, select) {
-	var treeData = treeDataMap[evp.uId];
-	var j = treeData.selList.indexOf(i);
+	var tdat = ux.getTreeDat(evp);
+	var j = tdat.selList.indexOf(i);
 	if (j >= 0) {
 		if(!select) {
-			treeData.selList = treeData.selList.splice(j + 1, 1);
+			tdat.selList = tdat.selList.splice(j + 1, 1);
 		}
 	} else if (select) {
-		treeData.selList.push(i);
+		tdat.selList.push(i);
 	}
 
 	if (select) {
-		tElem.className = evp.uSel;
+		tElem.className = tdat.uSel;
 	} else {
-		tElem.className = evp.uNorm;
+		tElem.className = tdat.uNorm;
 	}
 	selObj.options[i].selected = select;
-
 }
 
 /** ************************* PARAMETERS ********************************** */
@@ -2863,7 +3340,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			pb.append("req_uid", evp.uLoginId);
 			pb.append("req_unm", evp.uUserName);
 			if (evp.uRole) {
-				pb.append("req_rcd", evp.uRole);
+				pb.append("req_rcd", evp.uRole); 
 			}
 			if (evp.uBranch) {
 				pb.append("req_bcd", evp.uBranch);
@@ -2871,17 +3348,23 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			if (evp.uGlobal) {
 				pb.append("req_gac", evp.uGlobal);
 			}
+			if (evp.uColor) {
+				pb.append("req_csm", evp.uColor);
+			}
 		} else {
 			pb += ("&req_uid=" + _enc(evp.uLoginId));
 			pb += ("&req_unm=" + _enc(evp.uUserName));
 			if (evp.uRole) {
-				param.value += ("&req_rcd=" + _enc(evp.uRole));
+				pb += ("&req_rcd=" + _enc(evp.uRole));
 			}
 			if (evp.uBranch) {
-				param.value += ("&req_bcd=" + _enc(evp.uBranch));
+				pb += ("&req_bcd=" + _enc(evp.uBranch));
 			}
 			if (evp.uGlobal) {
-				param.value += ("&req_gac=" + _enc(evp.uGlobal));
+				pb += ("&req_gac=" + _enc(evp.uGlobal));
+			}
+			if (evp.uColor) {
+				pb += ("&req_csm=" + _enc(evp.uColor));
 			}
 		}
 	}
@@ -2889,8 +3372,10 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	if (evp.uConfMsg) {
 		if (isForm) {
 			pb.append("req_cmsg", evp.uConfMsg);
+			pb.append("req_cmsgicon", evp.uIconIndex);
 		} else {
 			pb += ("&req_cmsg=" + _enc(evp.uConfMsg));
+			pb += ("&req_cmsgicon=" + _enc(evp.uIconIndex));
 		}
 	}
 
@@ -2941,11 +3426,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	if (isForm) {
 		if (evp.uViewer) {
 			pb.append("req_rv", evp.uViewer);
-			if (evp.uSessionID) {
-				pb.append("req_rsi", evp.uSessionID);
-			} else if (ux.remoteviewsessions[evp.uViewer]) {
-				pb.append("req_rsi", ux.remoteviewsessions[evp.uViewer]);
-			}
+			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
 		}
@@ -2963,11 +3444,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	} else {
 		if (evp.uViewer) {
 			pb += ("&req_rv=" + _enc(evp.uViewer));
-			if (evp.uSessionID) {
-				pb += ("&req_rsi=" + _enc(evp.uSessionID));
-			} else if (ux.remoteviewsessions[evp.uViewer]) {
-				pb += ("&req_rsi=" + _enc(ux.remoteviewsessions[evp.uViewer]));
-			}
+			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
 		}
@@ -3106,7 +3583,17 @@ ux.setDisabledById = function(ids, disabled) {
 			var id = ids[i];
 			var elem = _id(id);
 			if (elem) {
-				elem.disabled = disabled;
+				// 27/08/19 Enable only if disabled by this function
+				if (elem.disabled != disabled) {
+					if(elem.disabled) {
+						if(elem.localDisable) {
+							elem.disabled = false;
+						}
+					} else {
+						elem.localDisable = true;
+						elem.disabled = true;
+					}
+				}
 			}
 
 			var grpElems = _name(id);
@@ -3127,11 +3614,15 @@ ux.setDisabledById = function(ids, disabled) {
 ux.setDisplayModeByNames = function(names, mode) {
 	if (names) {
 		for (var i = 0; i < names.length; i++) {
-			var elems = _name(names[i]);
-			for (var j = 0; j < elems.length; j++) {
-				elems[j].style.display = mode;
-			}
+			ux.setDisplayModeByName(names[i], mode);
 		}
+	}
+}
+
+ux.setDisplayModeByName = function(name, mode) {
+	var elems = _name(name);
+	for (var j = 0; j < elems.length; j++) {
+		elems[j].style.display = mode;
 	}
 }
 
@@ -3187,13 +3678,6 @@ ux.listKeydownHit = function(sCom) {
 }
 
 ux.listKeydownEnter = function(sCom) {
-	/*
-	if(sCom.uIndexes && sCom.uIndexes.length > 0) {
-		sCom.uSelHandler(sCom, sCom.uIndexes[0], true);
-	} else {
-		sCom.uSelHandler(sCom, sCom.uOldSelIdx, true);
-	}
-	*/
 	sCom.uSelHandler(sCom, sCom.uOldSelIdx, true);
 	ux.hidePopup(null);
 }
@@ -3347,8 +3831,7 @@ ux.centralize = function(baseElem, elem) {
 	else
 		elem.style.left = x + "px";
 
-	var y = Math.floor((baseElem.offsetHeight - elem.offsetHeight) / 2)
-			+ UNIFY_DEFAULT_POPUP_Y_OFFSET;
+	var y = Math.floor((baseElem.offsetHeight - elem.offsetHeight) / UNIFY_DEFAULT_POPUP_Y_SCALE);
 	if (y < 0)
 		elem.style.top = "0px";
 	else
@@ -3594,6 +4077,7 @@ ux.padRight = function(text, ch, length) {
 }
 
 /** Mouse */
+ux.actRightClick = false;
 ux.wireRightClickHandler = function(evp, handler) {
 	evp.uRightHandler = handler;
 	return ux.onRightClickHandler;
@@ -3601,6 +4085,7 @@ ux.wireRightClickHandler = function(evp, handler) {
 
 ux.onRightClickHandler = function(uEv) {
 	if (uEv.mButton == UNIFY_RIGHT_BUTTON) {
+		ux.actRightClick = true;
 		uEv.evp.uRightHandler(uEv);
 	}
 }
@@ -3668,22 +4153,26 @@ ux.extractLabels = function(trgIdArr, upperCase) {
 
 ux.popupWireClear = function(rgp, btnId, trgArr) {
 	var clearBtn = _id(btnId);
-	if (rgp.pClearable) {
-		var evp = {};
-		evp.uRef = trgArr;
-		ux.attachEventHandler(clearBtn, "click", function(uEv) {
-			ux.clear(uEv);
-			ux.hidePopup(uEv);
-		}, evp);
-	} else {
-		clearBtn.disabled = true;
+	if (clearBtn) {
+		if (rgp.pClearable) {
+			var evp = {};
+			evp.uRef = trgArr;
+			ux.attachEventHandler(clearBtn, "click", function(uEv) {
+				ux.clear(uEv);
+				ux.hidePopup(uEv);
+			}, evp);
+		} else {
+			clearBtn.disabled = true;
+		}
 	}
 }
 
 ux.popupWireCancel = function(btnId) {
 	var cancelBtn = _id(btnId);
-	var evp = {};
-	ux.attachEventHandler(cancelBtn, "click", ux.hidePopup, evp);
+	if (cancelBtn) {
+		var evp = {};
+		ux.attachEventHandler(cancelBtn, "click", ux.hidePopup, evp);
+	}
 }
 
 ux.setPatternValue = function(rgp) {
@@ -3723,23 +4212,25 @@ ux.setHiddenValues = function(references, hiddenValues) {
 }
 
 /** Document functions and event handlers */
-var menuContextOff = false;
-
 ux.init = function() {
 	ux.resizeTimeout = null;
+	// Set document keydown handler
 	var evp = {};
 	ux.attachEventHandler(document, "keydown", ux.documentKeydownHandler,
 					evp);
-}
-
-ux.disableWinContextMenu = function() {
-	if (!menuContextOff) {
-		window.oncontextmenu = function () {
-		    return false; // Cancel default menu
+	
+	// Register self as extension
+	ux.registerExtension("ux", ux);
+	
+	// Override window menu context
+	window.oncontextmenu = function (uEv) {
+		if (ux.actRightClick) {
+			return ux.actRightClick = false;
 		}
-
-		menuContextOff = true;
+		
+	    return true; // Do default
 	}
+
 }
 
 ux.documentKeydownHandler = function(uEv) {
@@ -3766,7 +4257,13 @@ ux.documentKeydownHandler = function(uEv) {
 }
 
 
-/** DOM search functions */
+/** DOM functions */
+ux.decodeHtml = function(html) {
+    var elem = document.createElement("textarea");
+    elem.innerHTML = html;
+    return elem.value;	
+}
+
 ux.findParent = function(domObject, tagName) {
 	while (domObject = domObject.parentNode) {
 		if (domObject.tagName.toLowerCase() == tagName.toLowerCase()) {
@@ -3777,24 +4274,24 @@ ux.findParent = function(domObject, tagName) {
 }
 
 /** Drag and drop */
-var dragElem = null;
-var dragElemPos = {
+ux.dragElem = null;
+ux.dragElemPos = {
 	x : 0,
 	y : 0
 };
-var dragPointerPos = {
+ux.dragPointerPos = {
 	x : 0,
 	y : 0
 };
 
 ux.dragDropEngage = function(ev) {
 	var evp = ev.evp;
-	dragElem = _id(evp.uTargetPnlId);
-	dragElemPos = {
-		x : parseInt(dragElem.style.left),
-		y : parseInt(dragElem.style.top)
+	ux.dragElem = _id(evp.uTargetPnlId);
+	ux.dragElemPos = {
+		x : parseInt(ux.dragElem.style.left),
+		y : parseInt(ux.dragElem.style.top)
 	};
-	dragPointerPos = ux.getPointerCoordinates(ev);
+	ux.dragPointerPos = ux.getPointerCoordinates(ev);
 	ux.attachDirectEventHandler(document, "mouseup", ux.dragDropDisengage);
 	ux.attachDirectEventHandler(document, "mousemove", ux.dragDropAction);
 }
@@ -3806,12 +4303,12 @@ ux.dragDropDisengage = function(ev) {
 
 ux.dragDropAction = function(ev) {
 	var newPointerPos = ux.getPointerCoordinates(ev);
-	var x = dragElemPos.x + newPointerPos.x - dragPointerPos.x
-	var y = dragElemPos.y + newPointerPos.y - dragPointerPos.y
+	var x = ux.dragElemPos.x + newPointerPos.x - ux.dragPointerPos.x
+	var y = ux.dragElemPos.y + newPointerPos.y - ux.dragPointerPos.y
 
 	// Restrict to view port
 	var viewRect = ux.getWindowRect();
-	var dragElemRect = ux.boundingRect(dragElem);
+	var dragElemRect = ux.boundingRect(ux.dragElem);
 
 	var xFar = x + dragElemRect.width;
 	if (xFar > viewRect.right)
@@ -3825,8 +4322,8 @@ ux.dragDropAction = function(ev) {
 	if (y < viewRect.top)
 		y = viewRect.top;
 
-	dragElem.style.left = x + "px";
-	dragElem.style.top = y + "px";
+	ux.dragElem.style.left = x + "px";
+	ux.dragElem.style.top = y + "px";
 }
 
 /** Coordinates and sizes */
@@ -3875,11 +4372,11 @@ ux.getExactPointerCoordinates = function(ev) {
 }
 
 ux.getRelPointerCoordinates = function(ev) {
-	var mCoord = ux.getExactPointerCoordinates(ev);
+	var uLoc = ux.getExactPointerCoordinates(ev);
 	var tCoord = ux.getElementPosition(ev.uTrg);
 	return {
-		x : mCoord.x = tCoord.x,
-		y : mCoord.y = tCoord.y
+		x : uLoc.x = tCoord.x,
+		y : uLoc.y = tCoord.y
 	};
 }
 
@@ -3934,16 +4431,17 @@ ux.attachEventHandler = function(domObject, eventName, handler, evp) {
 ux.handleOrConfirmRedirect = function(event, handler, evp) {
 	if (evp.uConf) {
 		// Store action
-		ux.confirmStore.handler = handler;
-		ux.confirmStore.normEvt = ux.normaliseEvent(event, evp);
-		ux.confirmStore.evp = evp;
+		ux.confirmstore.handler = handler;
+		ux.confirmstore.normEvt = ux.normaliseEvent(event, evp);
+		ux.confirmstore.evp = evp;
 
 		// Execute confirmation redirect
 		var evPrmConf = {};
 		evPrmConf.uURL = evp.uConfURL;
 		evPrmConf.uConfMsg = evp.uConf;
+		evPrmConf.uIconIndex = evp.uIconIndex;
 		evPrmConf.uViewer = evp.uViewer;
-		var hiddenElem = _id(ux.confirmStore.normEvt.uTrg.id + "_a");
+		var hiddenElem = _id(ux.confirmstore.normEvt.uTrg.id + "_a");
 		if (hiddenElem) {
 			evPrmConf.uConfPrm = hiddenElem.value;
 		}
@@ -4136,9 +4634,9 @@ ux.doOpenPopup = function(openPrm) {
 			var frameRect = ux.boundingRect(_id(openPrm.relFrameId));
 			var x = frameRect.left;
 			var y = frameRect.bottom;
-			if (openPrm.mCoord) {
-				x = openPrm.mCoord.x;
-				y = openPrm.mCoord.y;
+			if (openPrm.uLoc) {
+				x = openPrm.uLoc.x;
+				y = openPrm.uLoc.y;
 			}
 			
 			ux.popCurr.style.left = x + 'px';
@@ -4235,13 +4733,13 @@ ux.attachEventHandler(window, "resize", function() {
 			UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY);
 }, {});
 
-/** Initialisation */
+/** Initialization */
 ux.init();
 
 /** Types */
 // Transformation
-var DEFAULT_TRANSFORMATION_STEP_RATE = 20;
-var LINEAR_TRANSLATION = 0;
+const DEFAULT_TRANSFORMATION_STEP_RATE = 20;
+const LINEAR_TRANSLATION = 0;
 
 function Transformation(element, stepRate) {
 	var thisInst = this;

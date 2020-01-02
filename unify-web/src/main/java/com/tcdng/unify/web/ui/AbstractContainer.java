@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.util.WidgetUtils;
@@ -37,8 +38,8 @@ import com.tcdng.unify.web.util.WidgetUtils;
  */
 @UplAttributes({ @UplAttribute(name = "layout", type = Layout.class),
         @UplAttribute(name = "components", type = UplElementReferences.class),
-        @UplAttribute(name = "arrayCascade", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "space", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "arrayCascade", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "space", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractContainer extends AbstractWidget implements Container {
 
     private WidgetRepository widgetRepository;
@@ -92,6 +93,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     }
 
     @Override
+    public boolean isWidget(String longName) throws UnifyException {
+        return widgetRepository.isWidget(longName);
+    }
+
+    @Override
     public Widget getWidgetByLongName(String longName) throws UnifyException {
         Widget widget = widgetRepository.getWidget(longName);
         if (widget == null) {
@@ -102,23 +108,63 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     }
 
     @Override
-    public boolean isWidget(String longName) throws UnifyException {
-        return widgetRepository.isWidget(longName);
-    }
-
-    @Override
     public Widget getWidgetByShortName(String shortName) throws UnifyException {
         Widget widget = widgetRepository.getWidget(getLongName(), shortName);
         if (widget != null) {
             return widget;
         }
 
-        widget = widgetRepository.getWidget(getParentLongName(), shortName);
-        if (widget != null) {
-            return widget;
+        String parentLongName = getParentLongName();
+        if (StringUtils.isNotBlank(parentLongName)) {
+            widget = widgetRepository.getWidget(parentLongName, shortName);
+            if (widget != null) {
+                return widget;
+            }
         }
 
         throw new UnifyException(UnifyWebErrorConstants.WIDGET_WITH_SHORTNAME_UNKNOWN, shortName, getLongName());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getWidgetByLongName(Class<T> clazz, String longName) throws UnifyException {
+        return (T) getWidgetByLongName(longName);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getWidgetByShortName(Class<T> clazz, String shortName) throws UnifyException {
+        return (T) getWidgetByShortName(shortName);
+    }
+
+    @Override
+    public void setWidgetDisabled(String shortName, boolean disabled) throws UnifyException {
+        getWidgetByShortName(shortName).setDisabled(disabled);
+    }
+
+    @Override
+    public boolean isWidgetDisabled(String shortName) throws UnifyException {
+        return getWidgetByShortName(shortName).isDisabled();
+    }
+
+    @Override
+    public void setWidgetVisible(String shortName, boolean visible) throws UnifyException {
+        getWidgetByShortName(shortName).setVisible(visible);
+    }
+
+    @Override
+    public boolean isWidgetVisible(String shortName) throws UnifyException {
+        return getWidgetByShortName(shortName).isVisible();
+    }
+
+    @Override
+    public void setWidgetEditable(String shortName, boolean editable) throws UnifyException {
+        getWidgetByShortName(shortName).setEditable(editable);
+    }
+
+    @Override
+    public boolean isWidgetEditable(String shortName) throws UnifyException {
+        return getWidgetByShortName(shortName).isEditable();
     }
 
     @Override
@@ -219,11 +265,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
             }
         }
     }
-    
+
     protected Set<String> getAllWidgetLongNames() throws UnifyException {
         return widgetRepository.getWidgetLongNames();
     }
-    
+
     /**
      * Adds an internal child control to this container.
      * 
@@ -242,7 +288,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         int childIndex = internalControls.size();
         String childId = WidgetUtils.getChildId(getId(), control.getId(), childIndex);
         control.setId(childId);
-        control.onPageInitialize();
+        control.onPageConstruct();
         control.setContainer(getContainer());
         setWidgetValueBeanToThis(control);
         internalControls.put(childId, control);

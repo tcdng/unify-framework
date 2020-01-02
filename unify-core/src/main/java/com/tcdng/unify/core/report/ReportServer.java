@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,6 +28,30 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public interface ReportServer extends UnifyComponent {
+
+    /**
+     * Registers a report theme.
+     * 
+     * @param themeName
+     *            the theme name
+     * @param reportTheme
+     *            the report theme
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void registerReportTheme(String themeName, ReportTheme reportTheme) throws UnifyException;
+
+    /**
+     * Registers a report layout manager.
+     * 
+     * @param layoutName
+     *            the layout name
+     * @param reportLayoutManager
+     *            the manager component
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void registerReportLayoutManager(String layoutName, ReportLayoutManager reportLayoutManager) throws UnifyException;
 
     /**
      * Generates a report to file with specified file name.

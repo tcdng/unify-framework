@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.tcdng.unify.core.database.sql.dialect;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.constant.SqlDialectConstants;
+import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 
 /**
  * Oracle 12c SQL dialect.
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.constant.SqlDialectConstants;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(name = SqlDialectConstants.ORACLE_12C, description = "$m{sqldialect.oracle12cdb}")
+@Component(name = SqlDialectNameConstants.ORACLE_12C, description = "$m{sqldialect.oracle12cdb}")
 public class Oracle12cDialect extends OracleDialect {
 
     @Override

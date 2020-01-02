@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Parameters;
-import com.tcdng.unify.core.business.BusinessLogicInput;
 
 /**
  * Delimited batch file reader.
@@ -38,21 +37,21 @@ public class DelimitedBatchFileReader extends AbstractMultiLineTextFileRecordRea
     private FieldDelimiterType fieldDelimiterType;
 
     @Override
-    public void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException {
-        super.open(input, configuration, file);
-        fieldDelimiterType =
-                input.getParameter(FieldDelimiterType.class, DelimitedBatchFileReaderInputConstants.FIELDDELIMITER);
+    public void open(BatchFileReadConfig batchFileReadConfig, Object... file) throws UnifyException {
+        super.open(batchFileReadConfig, file);
+        fieldDelimiterType = batchFileReadConfig.getParameter(FieldDelimiterType.class,
+                DelimitedBatchFileReaderInputConstants.FIELDDELIMITER);
     }
 
     @Override
     protected String[] parseEntry(String entry) throws UnifyException {
-        String[] result = new String[getBatchFileConfig().getFieldConfigs().size()];
+        String[] result = new String[getBatchFileConfig().getFieldConfigList().size()];
         logDebug("Parsing delimited [{0}] in line number = {1}, delimiter = [{2}]", entry, getEntryCounter(),
                 fieldDelimiterType);
         int index = 0;
         int beginIndex = 0;
         char ch = fieldDelimiterType.getCharacter();
-        for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigs()) {
+        for (BatchFileFieldConfig fieldConfig : getBatchFileConfig().getFieldConfigList()) {
             int endIndex = 0;
             if (entry.charAt(beginIndex) == '"') {
                 // Take care of quoted value

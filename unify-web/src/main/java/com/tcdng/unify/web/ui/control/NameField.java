@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,10 +28,10 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @Component("ui-name")
-@UplAttributes({ @UplAttribute(name = "underscore", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "dollar", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "period", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "dash", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "underscore", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "dollar", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "period", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "dash", type = boolean.class, defaultVal = "false") })
 public class NameField extends TextField {
 
     public boolean isAcceptUnderscore() throws UnifyException {

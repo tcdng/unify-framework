@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,7 +43,7 @@ public class UnifyConfigUtilsTest {
     @Test
     public void testScanTypeRepository() throws Exception {
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
-        TypeRepository typeRepository = TypeUtils.buildTypeRepositoryFromClasspath();
+        TypeRepository typeRepository = TypeUtils.getTypeRepositoryFromClasspath();
         UnifyConfigUtils.readConfigFromTypeRepository(uccb, typeRepository, "com.tcdng.unify.core");
 
         UnifyContainerConfig ucc = uccb.build();

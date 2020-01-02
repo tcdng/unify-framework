@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,9 +23,15 @@ package com.tcdng.unify.web;
  */
 public enum ControllerType {
 
+    PLAIN_CONTROLLER,
+
     PAGE_CONTROLLER,
 
     RESOURCE_CONTROLLER,
 
-    REMOTECALL_CONTROLLER
+    REMOTECALL_CONTROLLER;
+
+    public boolean isUIController() {
+        return PAGE_CONTROLLER.equals(this) || RESOURCE_CONTROLLER.equals(this);
+    }
 }

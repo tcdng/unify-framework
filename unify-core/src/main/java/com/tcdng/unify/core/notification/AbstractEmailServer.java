@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,9 +32,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.FileAttachmentType;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.NetworkSecurityType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.security.Authentication;
@@ -46,7 +48,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractEmailServer extends AbstractNotificationServer<EmailServerConfig> implements EmailServer {
+public abstract class AbstractEmailServer extends AbstractUnifyComponent implements EmailServer {
 
     private FactoryMap<String, InternalConfig> configurations;
 
@@ -54,7 +56,7 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
         configurations = new FactoryMap<String, InternalConfig>() {
 
             @Override
-            protected InternalConfig create(String configurationCode, Object... params) throws Exception {
+            protected InternalConfig create(String configName, Object... params) throws Exception {
                 EmailServerConfig emailServerConfig = (EmailServerConfig) params[0];
                 Properties properties = new Properties(System.getProperties());
                 Authenticator authenticator = null;
@@ -63,20 +65,24 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
                     properties.put("mail.smtp.port", emailServerConfig.getHostPort());
                 }
 
-                if (!StringUtils.isBlank(emailServerConfig.getUsername())) {
+                if (StringUtils.isNotBlank(emailServerConfig.getUsername())) {
                     authenticator =
                             new SessionAuthenticator(emailServerConfig.getUsername(), emailServerConfig.getPassword());
                 }
 
-                if (authenticator != null || !StringUtils.isBlank(emailServerConfig.getAuthentication())) {
+                if (authenticator != null || StringUtils.isNotBlank(emailServerConfig.getAuthentication())) {
                     if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
                         if (emailServerConfig.getHostPort() != null) {
                             properties.put("mail.smtp.socketFactory.port", emailServerConfig.getHostPort());
                         }
+
+                        properties.put("mail.smtp.ssl.enable", "true");
+
                         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
                     } else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
                         properties.put("mail.smtp.starttls.enable", "true");
                     }
+
                     properties.put("mail.smtp.auth", "true");
                 }
 
@@ -87,28 +93,38 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
     }
 
     @Override
-    public void configure(String configurationCode, EmailServerConfig emailServerConfig) throws UnifyException {
-        configurations.remove(configurationCode);
-        configurations.get(configurationCode, emailServerConfig);
+    public void configure(String configName, EmailServerConfig emailServerConfig) throws UnifyException {
+        configurations.remove(configName);
+        configurations.get(configName, emailServerConfig);
     }
 
     @Override
-    public boolean isConfigured(String configurationCode) throws UnifyException {
-        return configurations.isKey(configurationCode);
+    public boolean isConfigured(String configName) throws UnifyException {
+        return configurations.isKey(configName);
     }
 
-    protected void checkConfiguration(String configurationCode) throws UnifyException {
-        if (!configurations.isKey(configurationCode)) {
-            throw new UnifyException(UnifyCoreErrorConstants.EMAILSERVER_CONFIGURATION_UNKNOWN, configurationCode);
+    @Override
+    protected void onInitialize() throws UnifyException {
+
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
+    }
+
+    protected void checkConfiguration(String configName) throws UnifyException {
+        if (!configurations.isKey(configName)) {
+            throw new UnifyException(UnifyCoreErrorConstants.EMAILSERVER_CONFIGURATION_UNKNOWN, configName);
         }
     }
 
-    protected Session getSession(String configurationCode) throws UnifyException {
-        checkConfiguration(configurationCode);
+    protected Session getSession(String configName) throws UnifyException {
+        checkConfiguration(configName);
 
-        InternalConfig internalConfig = configurations.get(configurationCode);
+        InternalConfig internalConfig = configurations.get(configName);
         Authenticator authenthicator = internalConfig.getAuthenticator();
-        if (authenthicator == null && !StringUtils.isBlank(internalConfig.getOrigConfig().getAuthentication())) {
+        if (authenthicator == null && StringUtils.isNotBlank(internalConfig.getOrigConfig().getAuthentication())) {
             Authentication passwordAuthentication =
                     (Authentication) getComponent(internalConfig.getOrigConfig().getAuthentication());
             authenthicator = new SessionAuthenticator(passwordAuthentication.getUsername(),
@@ -122,8 +138,8 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
         return Session.getInstance(internalConfig.getProperties());
     }
 
-    protected MimeMessage createMimeMessage(String configurationCode, Email email) throws UnifyException {
-        return createMimeMessage(getSession(configurationCode), email);
+    protected MimeMessage createMimeMessage(String configName, Email email) throws UnifyException {
+        return createMimeMessage(getSession(configName), email);
     }
 
     protected MimeMessage createMimeMessage(Session session, Email email) throws UnifyException {
@@ -205,15 +221,15 @@ public abstract class AbstractEmailServer extends AbstractNotificationServer<Ema
                 for (EmailAttachment emailAttachment : attachments) {
                     if (emailAttachment.getBlob() != null) {
                         messageBodyPart = new MimeBodyPart();
-                        String contentType = FileAttachmentType.WILDCARD.contentType();
+                        MimeType mimeType = FileAttachmentType.WILDCARD.mimeType();
                         FileAttachmentType type = emailAttachment.getType();
                         if (type != null) {
-                            contentType = type.contentType();
+                            mimeType = type.mimeType();
                         }
 
-                        messageBodyPart.setDataHandler(
-                                new DataHandler(new ByteArrayDataSource(emailAttachment.getBlob(), contentType)));
-                        messageBodyPart.setHeader("Content-Type", contentType);
+                        messageBodyPart.setDataHandler(new DataHandler(
+                                new ByteArrayDataSource(emailAttachment.getBlob(), mimeType.template())));
+                        messageBodyPart.setHeader("Content-Type", mimeType.template());
                         multipart.addBodyPart(messageBodyPart);
                     } else if (emailAttachment.getFile() != null) {
                         messageBodyPart = new MimeBodyPart();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,15 +30,15 @@ import com.tcdng.unify.core.format.NumberFormatter;
  */
 @Component("ui-decimal")
 @UplAttributes({ @UplAttribute(name = "scale", type = int.class),
-        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!decimalformat}") })
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!decimalformat}") })
 public class DecimalField extends IntegerField {
 
     @Override
-    public void onPageInitialize() throws UnifyException {
+    public void onPageConstruct() throws UnifyException {
         NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
         int scale = getUplAttribute(int.class, "scale");
         numberFormatter.setScale(scale);
 
-        super.onPageInitialize();
+        super.onPageConstruct();
     }
 }

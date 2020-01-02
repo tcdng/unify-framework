@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.tcdng.unify.web.ui.writer.container;
 
 import java.util.List;
 
-import com.tcdng.unify.core.PrivilegeSettings;
+import com.tcdng.unify.core.ViewDirective;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
@@ -55,10 +55,10 @@ public class FormWriter extends AbstractContainerWriter {
         boolean isFormDisabled = form.isDisabled();
         boolean isFormEditable = form.isEditable();
         for (FormSection formSection : form.getSections()) {
-            PrivilegeSettings ps = getPrivilegeSettings(formSection.getPrivilege());
-            if (ps.isVisible() && formSection.isVisible()) {
-                form.setDisabled(isFormDisabled || ps.isDisabled() || formSection.isDisabled());
-                form.setEditable(isFormEditable && ps.isEditable() && formSection.isEditable());
+            ViewDirective viewDirective = getViewDirective(formSection.getPrivilege());
+            if (viewDirective.isVisible() && formSection.isVisible()) {
+                form.setDisabled(isFormDisabled || viewDirective.isDisabled() || formSection.isDisabled());
+                form.setEditable(isFormEditable && viewDirective.isEditable() && formSection.isEditable());
 
                 if (formSection.isBinding()) {
                     if (formSection.isBindingValueList()) {
@@ -86,8 +86,8 @@ public class FormWriter extends AbstractContainerWriter {
     protected void writeContainedWidgetsBehavior(ResponseWriter writer, Container container) throws UnifyException {
         Form form = (Form) container;
         for (FormSection formSection : form.getSections()) {
-            PrivilegeSettings ps = getPrivilegeSettings(formSection.getPrivilege());
-            if (ps.isVisible() && formSection.isVisible()) {
+            ViewDirective viewDirective = getViewDirective(formSection.getPrivilege());
+            if (viewDirective.isVisible() && formSection.isVisible()) {
                 if (formSection.isBinding()) {
                     if (formSection.isBindingValueList()) {
                         for (ValueStore valueStore : formSection.getValueStoreList()) {
@@ -160,12 +160,13 @@ public class FormWriter extends AbstractContainerWriter {
             rows++;
         }
 
+        boolean isWidgetCaptionless = section.isWidgetCaptionless();
         RequestContextUtil requestContextUtil = getRequestContextUtil();
         int columnWidth = 100 / columns;
         for (int i = 0; i < itemCount;) {
             writer.write("<td class=\"secColumn\" style=\"width:");
             writer.write(columnWidth);
-            writer.write("%\"><table style:\"width:100%;\">");
+            writer.write("%\"><table style=\"width:100%;\">");
             int row = 0;
             while (row < rows && i < itemCount) {
                 Widget widget = form.getWidgetByLongName(refList.get(i));
@@ -184,26 +185,28 @@ public class FormWriter extends AbstractContainerWriter {
                         caption = widget.getUplAttribute(String.class, "caption");
                     }
 
-                    writer.write("<td class=\"secLabel\">");
-                    if (caption != null) {
-                        writer.writeWithHtmlEscape(caption);
-                        if (captionSuffix != null) {
-                            writer.write(captionSuffix);
+                    if (!isWidgetCaptionless) {
+                        writer.write("<td class=\"secLabel\">");
+                        if (caption != null) {
+                            writer.writeWithHtmlEscape(caption);
+                            if (captionSuffix != null) {
+                                writer.write(captionSuffix);
+                            }
                         }
-                    }
-                    writer.write("</td>");
+                        writer.write("</td>");
 
-                    writer.write("<td class=\"secInputReq\">");
-                    if (widget instanceof Control) {
-                        if (((Control) widget).getRequired().isTrue()) {
-                            writer.write("<span>").write(form.getUplAttribute(String.class, "requiredSymbol"))
-                                    .write("</span>");
+                        writer.write("<td class=\"secInputReq\">");
+                        if (widget instanceof Control) {
+                            if (((Control) widget).getRequired().isTrue()) {
+                                writer.write("<span>").write(form.getUplAttribute(String.class, "requiredSymbol"))
+                                        .write("</span>");
+                            }
+
+                            // Add to save list
+                            requestContextUtil.addOnSaveContentWidget(widget.getId());
                         }
-
-                        // Add to save list
-                        requestContextUtil.addOnSaveContentWidget(widget.getId());
+                        writer.write("</td>");
                     }
-                    writer.write("</td>");
 
                     writer.write("<td class=\"secInput\"><div>");
                     writer.writeStructureAndContent(widget);

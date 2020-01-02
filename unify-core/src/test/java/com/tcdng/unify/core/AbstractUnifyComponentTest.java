@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,6 @@ import com.tcdng.unify.core.database.TestSqlDataSource;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.ThreadUtils;
-import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.TypeUtils;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
 
@@ -44,8 +43,6 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
 public abstract class AbstractUnifyComponentTest {
 
     private static UnifyContainerEnvironment containerEnvironment;
-
-    private static TypeRepository typeRepository;
 
     private static UnifyContainerConfig containerConfig;
 
@@ -66,11 +63,7 @@ public abstract class AbstractUnifyComponentTest {
     @BeforeClass
     public static void setupClass() throws Exception {
         if (containerEnvironment == null) {
-            containerEnvironment = new UnifyContainerEnvironment(TypeUtils.buildTypeRepositoryFromClasspath());
-        }
-
-        if (typeRepository == null) {
-            typeRepository = TypeUtils.buildTypeRepositoryFromClasspath();
+            containerEnvironment = new UnifyContainerEnvironment(TypeUtils.getTypeRepositoryFromClasspath());
         }
 
         deleteSetup();
@@ -135,6 +128,20 @@ public abstract class AbstractUnifyComponentTest {
     }
 
     /**
+     * Returns a non-singleton component using supplied name and alternate settings.
+     * 
+     * @param name
+     *            the component name
+     * @param altSettings
+     *            the alternate settings
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected UnifyComponent getComponent(String name, Setting... altSettings) throws Exception {
+        return container.getComponent(name, altSettings);
+    }
+
+    /**
      * Returns a component using supplied name.
      * 
      * @param name
@@ -177,7 +184,7 @@ public abstract class AbstractUnifyComponentTest {
      *             if an error occurs
      */
     private static void addSettingsAndDependencies() throws Exception {
-        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_CONTAINER_TOCONSOLE, "false");
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE, "false");
         addDependency(ApplicationComponents.APPLICATION_DATASOURCE, TestSqlDataSource.class);
 
         addContainerSetting(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE,
@@ -268,48 +275,47 @@ public abstract class AbstractUnifyComponentTest {
         UnifyComponentSettings confSettings = UnifyConfigUtils.readComponentSettings(componentClass);
         UnifyComponentSettings.Builder ub = new UnifyComponentSettings.Builder(confSettings);
         for (Setting setting : settings) {
-            ub.setProperty(setting.getName(), setting.getValue(), setting.isHidden());
+            ub.setProperty(setting.getName(), setting.getValue(), setting.isAutoInject(), setting.isHidden());
         }
 
         uccb.addComponentConfig(name, "", componentClass, singleton, overwrite, ub.build());
     }
 
     protected Object createRecord(Entity record) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
-            return pm.create(record);
+            return db.create(record);
         } finally {
             tm.endTransaction();
         }
     }
 
     protected <T extends Entity> T findRecord(Class<T> clazz, Object id) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
-            return pm.list(clazz, id);
+            return db.list(clazz, id);
         } finally {
             tm.endTransaction();
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void deleteAll(Class<? extends Entity>... typeList) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
             for (Class<? extends Entity> type : typeList) {
                 if (AbstractSequencedEntity.class.isAssignableFrom(type)) {
-                    pm.deleteAll(new Query(type).greater("id", 0L));
+                    db.deleteAll(Query.of(type).addGreaterThan("id", 0L));
                 } else {
-                    pm.deleteAll(new Query(type).ignoreEmptyCriteria(true));
+                    db.deleteAll(Query.of(type).ignoreEmptyCriteria(true));
                 }
             }
         } finally {
@@ -317,14 +323,13 @@ public abstract class AbstractUnifyComponentTest {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected int countAll(Class<? extends Entity> typeClass) throws Exception {
-        Database pm = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+        Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASE);
+                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
-            return pm.countAll(new Query(typeClass).greater("id", 0L).ignoreEmptyCriteria(true));
+            return db.countAll(Query.of(typeClass).addGreaterThan("id", 0L).ignoreEmptyCriteria(true));
         } finally {
             tm.endTransaction();
         }
@@ -348,7 +353,7 @@ public abstract class AbstractUnifyComponentTest {
             uccb.deploymentVersion("1.0");
             uccb.deploymentMode(true);
             uccb.setProperty("logger.level", "off");
-            UnifyConfigUtils.readConfigFromTypeRepository(uccb, typeRepository);
+            UnifyConfigUtils.readConfigFromTypeRepository(uccb, TypeUtils.getTypeRepositoryFromClasspath());
 
             addSettingsAndDependencies();
             doAddSettingsAndDependencies();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "borderErrStyle", type = String.class, defaultValue = "2px solid #F0C0C0"),
+@UplAttributes({ @UplAttribute(name = "borderErrStyle", type = String.class, defaultVal = "2px solid #F0C0C0"),
         @UplAttribute(name = "components", type = UplElementReferences.class) })
 public abstract class AbstractPageValidation extends AbstractBehavior implements PageValidation {
 

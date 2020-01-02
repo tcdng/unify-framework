@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.Control;
  */
 @Component("ui-tilegroup")
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class),
-        @UplAttribute(name = "showTitleSection", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "showTitleSection", type = boolean.class, defaultVal = "false") })
 public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
 
     private Control imageCtrl;
@@ -46,8 +46,8 @@ public class TileGroup extends AbstractValueListContainer<ValueStore, Tile> {
     }
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         imageCtrl = addInternalControl("!ui-image srcBinding:imageSrc binding:image hintBinding:caption");
     }
 

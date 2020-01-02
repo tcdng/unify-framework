@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,11 +16,13 @@
 package com.tcdng.unify.core.convert;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A value to string converter.
@@ -35,7 +37,7 @@ public class StringConverter extends AbstractConverter<String> {
     protected String doConvert(Object value, Formatter<?> formatter) throws Exception {
         if (value != null) {
             if (value instanceof String) {
-                if (formatter != null && String.class.equals(formatter.getDataType())) {
+                if (formatter != null && formatter.getDataType().isAssignableFrom(String.class)) {
                     return ((Formatter<Object>) formatter).format(value);
                 }
 
@@ -76,7 +78,13 @@ public class StringConverter extends AbstractConverter<String> {
             }
 
             if (formatter == null) {
-                return String.valueOf(value);
+                if (value instanceof Date) {
+                    formatter = DataUtils.getDefaultDateTimeFormatter();
+                }
+                
+                if (formatter == null) {
+                    return String.valueOf(value);
+                }
             }
 
             return ((Formatter<Object>) formatter).format(value);

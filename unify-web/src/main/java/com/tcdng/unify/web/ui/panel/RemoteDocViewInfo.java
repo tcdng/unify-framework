@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,18 +25,25 @@ public class RemoteDocViewInfo {
 
     private String pageTitle;
 
+    private String colorScheme;
+
     private String remoteDocUrl;
 
     private String remoteSaveUrl;
 
-    public RemoteDocViewInfo(String pageTitle, String remoteDocUrl, String remoteSaveUrl) {
+    public RemoteDocViewInfo(String pageTitle, String colorScheme, String remoteDocUrl, String remoteSaveUrl) {
         this.pageTitle = pageTitle;
+        this.colorScheme = colorScheme;
         this.remoteDocUrl = remoteDocUrl;
         this.remoteSaveUrl = remoteSaveUrl;
     }
 
     public String getPageTitle() {
         return pageTitle;
+    }
+
+    public String getColorScheme() {
+        return colorScheme;
     }
 
     public String getRemoteDocUrl() {
@@ -47,4 +54,13 @@ public class RemoteDocViewInfo {
         return remoteSaveUrl;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{pageTitle = ").append(pageTitle);
+        sb.append(", colorScheme = ").append(colorScheme);
+        sb.append(", remoteDocUrl = ").append(remoteDocUrl);
+        sb.append(", remoteSaveUrl = ").append(remoteSaveUrl);
+        sb.append("}");
+        return sb.toString();
+    }
 }

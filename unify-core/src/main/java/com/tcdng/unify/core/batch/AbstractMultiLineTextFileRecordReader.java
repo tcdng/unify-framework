@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessLogicInput;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.IOUtils;
@@ -32,19 +31,29 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatchFileReader {
 
-    private BatchFileConfig batchFileConfig;
+    private BatchFileReadConfig batchFileReadConfig;
 
     private BufferedReader reader;
 
     private int entryCounter;
 
     @Override
-    public void open(BusinessLogicInput input, BatchFileConfig configuration, Object[] file) throws UnifyException {
-        batchFileConfig = configuration;
+    public void open(BatchFileReadConfig batchFileReadConfig, Object... file) throws UnifyException {
+        this.batchFileReadConfig = batchFileReadConfig;
         reader = IOUtils.detectAndOpenBufferedReader(file[0]);
-        if (configuration.isSkipFirstRecord()) {
+        if (batchFileReadConfig.isSkipFirstRecord()) {
             nextEntry();
         }
+    }
+
+    @Override
+    public boolean detectPreferredBean() throws UnifyException {
+        return false;
+    }
+
+    @Override
+    public Class<?> getPreferredBean() throws UnifyException {
+        return null;
     }
 
     @Override
@@ -58,13 +67,13 @@ public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatc
         String[] splitRecord = readNextRecord();
         if (splitRecord != null) {
             int index = 0;
-            for (BatchFileFieldConfig fieldConfig : batchFileConfig.getFieldConfigs()) {
+            for (BatchFileFieldConfig fieldConfig : batchFileReadConfig.getFieldConfigList()) {
                 Formatter<?> formatter = null;
                 if (fieldConfig.isFormatter()) {
                     formatter = getApplicationLocaleFormatter(fieldConfig.getFormatter());
                 }
 
-                recordStore.store(fieldConfig.getFieldName(), splitRecord[index++], formatter);
+                recordStore.store(fieldConfig.getBeanFieldName(), splitRecord[index++], formatter);
             }
             return true;
         }
@@ -76,8 +85,8 @@ public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatc
         return readNextRecord() != null;
     }
 
-    protected BatchFileConfig getBatchFileConfig() {
-        return batchFileConfig;
+    protected BatchFileReadConfig getBatchFileConfig() {
+        return batchFileReadConfig;
     }
 
     protected int getEntryCounter() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.panel;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
@@ -65,12 +66,12 @@ public class TaskMonitorPanel extends AbstractPanel {
             taskDonePath = taskMonitorInfo.getOnFailurePath();
         }
 
-        if (taskDonePath != null) {
+        if (StringUtils.isNotBlank(taskDonePath)) {
             setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, taskDonePath);
             setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
+        } else {
+            setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
         }
-
-        setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
     }
 
 }

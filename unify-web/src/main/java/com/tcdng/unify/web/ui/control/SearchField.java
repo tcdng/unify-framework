@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,9 +33,9 @@ import com.tcdng.unify.web.ui.data.RefreshSection;
  * @since 1.0
  */
 @Component("ui-search")
-@UplAttributes({ @UplAttribute(name = "filterLabel", type = String.class, defaultValue = "$m{search.filter}"),
-        @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/search.png}"),
-        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultValue = "immediate") })
+@UplAttributes({ @UplAttribute(name = "filterLabel", type = String.class, defaultVal = "$m{search.filter}"),
+        @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/search.png}"),
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "immediate") })
 public class SearchField extends AbstractListPopupTextField {
 
     private String filter;

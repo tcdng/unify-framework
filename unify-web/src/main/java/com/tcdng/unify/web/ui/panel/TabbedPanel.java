@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,29 +36,28 @@ import com.tcdng.unify.web.ui.Widget;
  */
 @Component("ui-tabbedpanel")
 @UplBinding("web/panels/upl/tabbedpanel.upl")
-@UplAttributes({ @UplAttribute(name = "tabPosition", type = TabPosition.class, defaultValue = "top") })
+@UplAttributes({ @UplAttribute(name = "tabPosition", type = TabPosition.class, defaultVal = "top") })
 public class TabbedPanel extends SwitchPanel {
 
     private String activeTabId;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         setComponentValueBeanToThis("selectedTabId");
-        for (String longName : getLayoutWidgetLongNames()) {
-            Widget widget = getWidgetByLongName(longName);
-            if (!widget.isHidden()) {
-                activeTabId = widget.getId();
-                break;
-            }
-        }
+        setDefaultActive();
     }
 
     @Override
     @Action
     public void switchState() throws UnifyException {
-        String shortName = getWidgetByLongName(getPageManager().getLongName(activeTabId)).getShortName();
-        switchContent(shortName);
+        super.switchState();
+        Widget widget = getWidgetByLongName(getPageManager().getLongName(activeTabId));
+        if (!widget.isVisible()) {
+            widget = setDefaultActive();
+        }
+
+        switchContent(widget.getShortName());
     }
 
     public TabPosition getTabPosition() throws UnifyException {
@@ -75,6 +74,19 @@ public class TabbedPanel extends SwitchPanel {
 
     public void setActiveTabId(String activeTabPageName) {
         activeTabId = activeTabPageName;
+    }
+    
+    private Widget setDefaultActive() throws UnifyException {
+        for (String longName : getLayoutWidgetLongNames()) {
+            Widget widget = getWidgetByLongName(longName);
+            if (!widget.isHidden() && widget.isVisible()) {
+                activeTabId = widget.getId();
+                return widget;
+            }
+        }
+        
+        // TODO Throw exception here; there must be at least on visible tab
+        return null;
     }
 
     public List<String> getActiveTabExpandedIdList() throws UnifyException {

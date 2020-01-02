@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,7 +28,8 @@ import com.tcdng.unify.web.ui.AbstractControl;
  * @since 1.0
  */
 @Component("ui-checkbox")
-@UplAttributes({ @UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false") })
 public class CheckBox extends AbstractControl {
 
     @Override

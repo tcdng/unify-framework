@@ -1,0 +1,45 @@
+<?xml encoding="UTF-8"?>
+<!--
+  Copyright 2018-2019 The Code Department.
+  
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<!--
+This is the XML DTD for the Unify container configuration XML file.
+Configuration files should include a DOCTYPE of the following form:
+
+  <!DOCTYPE unify PUBLIC
+	"-//The Code Department//DTD Unify Container 2.0//EN"
+	"https://tcdng.com/dtd/unify-config_2_0.dtd">
+-->
+
+<!ELEMENT unify (properties?,components?)>
+<!ATTLIST unify  cluster (true|false) #REQUIRED>
+<!ATTLIST unify  nodeId NMTOKEN #REQUIRED>
+<!ATTLIST unify  production (true|false) #REQUIRED>
+<!ATTLIST unify  version NMTOKEN #REQUIRED>
+
+<!ELEMENT components (component+)>
+
+<!ELEMENT component (properties)>
+<!ATTLIST component class CDATA #REQUIRED>
+<!ATTLIST component name NMTOKEN #REQUIRED>
+
+<!ELEMENT properties (property+)>
+
+<!ELEMENT property (value*)>
+<!ATTLIST property name NMTOKEN #REQUIRED>
+<!ATTLIST property value CDATA #IMPLIED>
+
+<!ELEMENT value (#PCDATA)>

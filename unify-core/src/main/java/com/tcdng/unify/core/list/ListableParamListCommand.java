@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,14 +30,14 @@ import com.tcdng.unify.core.data.Listable;
  * @since 1.0
  */
 @Component("listableparamlist")
-public class ListableParamListCommand extends AbstractListCommand<ListableListParams> {
+public class ListableParamListCommand extends AbstractListCommand<ListableListParam> {
 
     public ListableParamListCommand() {
-        super(ListableListParams.class);
+        super(ListableListParam.class);
     }
 
     @Override
-    public List<? extends Listable> execute(Locale locale, ListableListParams params) throws UnifyException {
+    public List<? extends Listable> execute(Locale locale, ListableListParam params) throws UnifyException {
         if (params.isListableList()) {
             return params.getListableList();
         }

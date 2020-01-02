@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,27 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.Collection;
-import java.util.EnumMap;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.FrequencyUnit;
+import com.tcdng.unify.core.database.DataSource;
+import com.tcdng.unify.core.database.DataSourceDialect;
+import com.tcdng.unify.core.database.NativeQuery;
+import com.tcdng.unify.core.report.AbstractReportServer;
+import com.tcdng.unify.core.report.Report;
+import com.tcdng.unify.core.report.ReportColumn;
+import com.tcdng.unify.core.report.ReportFilter;
+import com.tcdng.unify.core.report.ReportFormat;
+import com.tcdng.unify.core.report.ReportLayoutManagerConstants;
+import com.tcdng.unify.core.report.ReportTableJoin;
+import com.tcdng.unify.core.util.CalendarUtils;
+import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -49,24 +69,6 @@ import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsMetadataReportConfiguration;
 import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.FrequencyUnit;
-import com.tcdng.unify.core.database.DataSource;
-import com.tcdng.unify.core.database.DataSourceDialect;
-import com.tcdng.unify.core.database.NativeQuery;
-import com.tcdng.unify.core.report.AbstractReportServer;
-import com.tcdng.unify.core.report.Report;
-import com.tcdng.unify.core.report.ReportColumn;
-import com.tcdng.unify.core.report.ReportColumnFilter;
-import com.tcdng.unify.core.report.ReportFormat;
-import com.tcdng.unify.core.report.ReportTableJoin;
-import com.tcdng.unify.core.report.ReportLayout;
-import com.tcdng.unify.core.util.CalendarUtils;
-import com.tcdng.unify.core.util.IOUtils;
-import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
-
 /**
  * Implementation of a report server using JasperReports.
  * 
@@ -81,11 +83,8 @@ public class JasperReportsServer extends AbstractReportServer {
     @Configurable("20")
     private int reportExpirationPeriod;
 
-    private EnumMap<ReportLayout, JasperReportsLayoutManager> layoutManagers;
-
-    public JasperReportsServer() {
-        layoutManagers = new EnumMap<ReportLayout, JasperReportsLayoutManager>(ReportLayout.class);
-    }
+    @Configurable
+    private boolean logDebug;
 
     public void setJasperReportCache(JasperReportsCache jasperReportsCache) {
         this.jasperReportsCache = jasperReportsCache;
@@ -95,10 +94,18 @@ public class JasperReportsServer extends AbstractReportServer {
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
         jasperReportsCache = (JasperReportsCache) getComponent("jasperreports-cache");
-        layoutManagers.put(ReportLayout.TABULAR,
-                (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
-        layoutManagers.put(ReportLayout.COLUMNAR,
+        registerReportLayoutManager(ReportLayoutManagerConstants.COLUMNAR_REPORTLAYOUTMANAGER,
                 (JasperReportsLayoutManager) getComponent("jasperreports-columnarlayoutmanager"));
+        registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_IMAGESONLY_REPORTLAYOUTMANAGER,
+                (JasperReportsLayoutManager) getComponent("jasperreports-tabularimagesonlylayoutmanager"));
+        registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER,
+                (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
+
+        if (!logDebug) {
+            Logger.getLogger("net.sf.jasperreports").setLevel((Level) Level.ERROR);
+            Logger.getLogger("org.apache.commons.beanutils").setLevel((Level) Level.ERROR);
+            Logger.getLogger("org.apache.commons.digester").setLevel((Level) Level.ERROR);
+        }
     }
 
     @Override
@@ -117,12 +124,12 @@ public class JasperReportsServer extends AbstractReportServer {
             Collection<?> content = report.getBeanCollection();
             if (content != null) {
                 JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(content);
-                jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
-                        jrBeanDataSource);
+                jasperPrint = JasperFillManager.fillReport(jasperReport,
+                        report.getReportParameters().getParameterValues(), jrBeanDataSource);
             } else {
                 connection = (Connection) dataSource.getConnection();
-                jasperPrint = JasperFillManager.fillReport(jasperReport, report.getReportParameters().getParameters(),
-                        connection);
+                jasperPrint = JasperFillManager.fillReport(jasperReport,
+                        report.getReportParameters().getParameterValues(), connection);
             }
 
             Exporter<ExporterInput, ?, ?, ?> exporter = getExporter(report.getFormat(), outputStream);
@@ -166,29 +173,48 @@ public class JasperReportsServer extends AbstractReportServer {
                     getUnifyComponentContext().getWorkingPath());
 
             JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
+            if (ReportFormat.XLS.equals(report.getFormat()) || ReportFormat.XLSX.equals(report.getFormat())) {
+                jasperDesign.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
+            }
+
+            if (report.getPageWidth() > 0) {
+                jasperDesign.setPageWidth(report.getPageWidth());
+                jasperDesign.setColumnWidth(
+                        report.getPageWidth() - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin());
+            }
+
+            if (report.getPageHeight() > 0) {
+                jasperDesign.setPageHeight(report.getPageHeight());
+            }
+
             jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
-            if (!report.isBeanCollection()) {
+            if (!report.isWithBeanCollection()) {
                 String query = null;
                 if (report.isQuery()) {
                     query = report.getQuery();
                 } else {
                     DataSourceDialect dataSourceDialect = getDataSource(report).getDialect();
-                    NativeQuery nativeQuery = new NativeQuery();
-                    nativeQuery.tableName(report.getTable().getName());
+                    NativeQuery.Builder nqb = NativeQuery.newBuilder();
+                    nqb.tableName(report.getTable().getName());
                     for (ReportColumn rc : report.getColumns()) {
-                        nativeQuery.addColumn(rc.getTable(), rc.getName());
+                        nqb.addColumn(rc.getTable(), rc.getName());
+                        if (rc.getOrder() != null) {
+                            nqb.addOrderBy(rc.getOrder(), rc.getName());
+                        } else if (rc.isGroup()) {
+                            nqb.addOrderBy(rc.getName());
+                        }
                     }
 
                     for (ReportTableJoin rj : report.getJoins()) {
-                        nativeQuery.addJoin(rj.getType(), rj.getTableA(), rj.getColumnA(), rj.getTableB(),
-                                rj.getColumnB());
+                        nqb.addJoin(rj.getType(), rj.getTableA(), rj.getColumnA(), rj.getTableB(), rj.getColumnB());
                     }
 
-                    for (ReportColumnFilter rf : report.getFilters()) {
-                        nativeQuery.addFilter(rf.getOp(), rf.getTableName(), rf.getColumnName(), rf.getParam1(),
-                                rf.getParam2());
+                    ReportFilter rootFilter = report.getFilter();
+                    if (rootFilter != null && !(rootFilter.isCompound() && !rootFilter.isSubFilters())) {
+                        buildNativeQueryFilters(nqb, rootFilter);
                     }
-                    query = dataSourceDialect.generateNativeQuery(nativeQuery);
+
+                    query = dataSourceDialect.generateNativeQuery(nqb.build());
                 }
 
                 logDebug("Setting jasper reports query [{0}]...", query);
@@ -197,7 +223,9 @@ public class JasperReportsServer extends AbstractReportServer {
                 jasperDesign.setQuery(jRDesignQuery);
             }
 
-            JasperReportsLayoutManager jasperReportsLayoutManager = layoutManagers.get(report.getLayout());
+            JasperReportsLayoutManager jasperReportsLayoutManager =
+                    (JasperReportsLayoutManager) getReportLayoutManager(report.getLayout());
+            report.setReportTheme(getReportTheme(report.getTheme()));
             jasperReportsLayoutManager.applyLayout(jasperDesign, report);
             return JasperCompileManager.compileReport(jasperDesign);
         } catch (JRException e) {
@@ -255,7 +283,20 @@ public class JasperReportsServer extends AbstractReportServer {
         sxmrc.setRemoveEmptySpaceBetweenColumns(true);
         sxmrc.setRemoveEmptySpaceBetweenRows(true);
         sxmrc.setWhitePageBackground(false);
-        sxmrc.setDetectCellType(true);
+        // sxmrc.setDetectCellType(true);
         return sxmrc;
+    }
+
+    private void buildNativeQueryFilters(NativeQuery.Builder nqb, ReportFilter compoundFilter) throws UnifyException {
+        nqb.beginCompoundFilter(compoundFilter.getOp());
+        for (ReportFilter subFilter : compoundFilter.getSubFilterList()) {
+            if (subFilter.isCompound()) {
+                buildNativeQueryFilters(nqb, subFilter);
+            } else {
+                nqb.addSimpleFilter(subFilter.getOp(), subFilter.getTableName(), subFilter.getColumnName(),
+                        subFilter.getParam1(), subFilter.getParam2());
+            }
+        }
+        nqb.endCompoundFilter();
     }
 }

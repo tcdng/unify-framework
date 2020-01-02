@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,9 +18,12 @@ package com.tcdng.unify.web.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.data.ValueStoreFactory;
+import com.tcdng.unify.web.PageBean;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.ui.panel.AbstractStandalonePanel;
 import com.tcdng.unify.web.ui.panel.StandalonePanel;
@@ -31,25 +34,35 @@ import com.tcdng.unify.web.ui.panel.StandalonePanel;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "type", type = String.class, defaultValue = "ui-page"),
+@UplAttributes({ @UplAttribute(name = "type", type = String.class, defaultVal = "ui-page"),
         @UplAttribute(name = "caption", type = String.class, mandatory = true),
-        @UplAttribute(name = "remote", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "remote", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPage extends AbstractStandalonePanel implements Page {
 
     private Map<String, StandalonePanel> standalonePanels;
 
     private Map<String, Object> attributes;
 
-    private String sessionId;
+    private String pathId;
 
     @Override
-    public String getSessionId() {
-        return sessionId;
+    public String getPathId() {
+        return pathId;
     }
 
     @Override
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setPathId(String pathId) {
+        this.pathId = pathId;
+    }
+
+    @Override
+    public void setPageBean(PageBean pageBean) throws UnifyException {
+        setValueStore(((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+                .getValueStore(pageBean, -1));    }
+
+    @Override
+    public PageBean getPageBean() throws UnifyException {
+        return (PageBean) getValueStore().getValueObject();
     }
 
     @Override
@@ -84,14 +97,14 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
         }
 
         // Fix refresh panels bug #0001
-        // Check standalone panels
+        // Check stand-alone panels
         if (standalonePanels != null) {
             StandalonePanel panel = standalonePanels.get(longName);
             if (panel != null) {
                 return panel;
             }
             
-            // Check standalone panel widgets
+            // Check stand-alone panel widgets
             for(StandalonePanel standalonePanel: standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {
                     return (Panel) standalonePanel.getWidgetByLongName(longName);
@@ -148,7 +161,14 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
         if (isWidget(longName)) {
             return super.getWidgetByLongName(longName);
         }
-
+        
+        // Fix 30/09/19 Long name may be referring to stand-alone panel
+        StandalonePanel panel = standalonePanels.get(longName);
+        if (panel != null) {
+            return panel;
+        }
+        // End fix
+        
         if (standalonePanels != null) {
             for (StandalonePanel standalonePanel : standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {

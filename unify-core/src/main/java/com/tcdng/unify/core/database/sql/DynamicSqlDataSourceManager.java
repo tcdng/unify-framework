@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.DataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 
 /**
@@ -66,7 +65,7 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * Tests a runtime data source native query.
      * 
      * @param dynamicSqlDataSourceConfig
-     *            the datasource configuration.
+     *            the data source configuration.
      * @param query
      *            the native query object
      * @return the result count
@@ -184,7 +183,7 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    DataSource getDataSource(String configName) throws UnifyException;
+    SqlDataSource getDataSource(String configName) throws UnifyException;
 
     /**
      * Gets a connection object from configured data source connection pool.

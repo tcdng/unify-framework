@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.ListControlJsonData;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -68,6 +69,7 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
             writer.write("</a>");
         }
 
+        Formatter<Object> formatter = singleSelect.getFormatter();
         for (int i = 0; i < length; i++) {
             Listable listable = listableList.get(i);
             String key = listable.getListKey();
@@ -79,7 +81,11 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
                 writeTagStyleClass(writer, "norm");
             }
             writer.write(">");
-            writer.writeWithHtmlEscape(listable.getListDescription());
+            if (formatter != null) {
+                writer.writeWithHtmlEscape(formatter.format(listable.getListDescription()));
+            } else {
+                writer.writeWithHtmlEscape(listable.getListDescription());
+            }
             writer.write("</a>");
         }
         writer.write("</div>");

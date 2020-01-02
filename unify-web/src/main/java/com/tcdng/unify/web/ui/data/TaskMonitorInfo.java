@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,7 @@ public class TaskMonitorInfo {
     public TaskMonitorInfo(TaskMonitor taskMonitor, String caption, String onSuccessPath, String onFailurePath) {
         this.taskMonitor = taskMonitor;
         this.caption = caption;
-        this.onSuccessPath = onFailurePath;
+        this.onSuccessPath = onSuccessPath;
         this.onFailurePath = onFailurePath;
     }
 
@@ -83,12 +83,12 @@ public class TaskMonitorInfo {
             case CANCELED:
             case FAILED:
                 return FAIL;
-            case COMPLETED:
+            case SUCCESSFUL:
                 if (taskMonitor.isExceptions()) {
                     return ERROR;
                 }
                 return PASS;
-            case INITIALISED:
+            case INITIALIZED:
             default:
                 return BUSY;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,10 +20,12 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,9 +47,11 @@ import com.tcdng.unify.core.UnifyException;
  * 
  * @author Lateef Ojulari
  */
-public final class IOUtils {
+public class IOUtils {
 
     private static final int BUFFER_SIZE = 1024 * 4;
+
+    private static final File[] ZEROLEN_FILES = new File[0];
 
     private IOUtils() {
 
@@ -283,7 +287,7 @@ public final class IOUtils {
     public static File fileInstance(String filename, String optionPath) {
         File file = new File(filename);
         if (!file.exists()) {
-            if (!StringUtils.isBlank(optionPath)) {
+            if (StringUtils.isNotBlank(optionPath)) {
                 file = new File(IOUtils.buildFilename(optionPath, filename));
             }
             if (!file.exists()) {
@@ -693,6 +697,13 @@ public final class IOUtils {
         return path + fileSeparator + filename;
     }
 
+    /**
+     * Conforms supplied path to system format.
+     * 
+     * @param path
+     *            the path to conform
+     * @return the conformed path
+     */
     public static String conformFilePath(String path) {
         String fileSeparator = System.getProperty("file.separator");
         path = IOUtils.conform(fileSeparator, path);
@@ -712,6 +723,97 @@ public final class IOUtils {
     public static boolean isFile(String absoluteFilename) {
         File file = new File(absoluteFilename);
         return file.isFile();
+    }
+
+    /**
+     * Lists file names in supplied folder.
+     * 
+     * @param folder
+     *            the folder to list
+     * @return list of file names in folder
+     */
+    public static String[] listFolderFilenames(String folder) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.list();
+        }
+
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
+     * Lists file names in supplied folder using a filename filter.
+     * 
+     * @param folder
+     *            the folder to list
+     * @param filenameFilter
+     *            the filename filter
+     * @return list of file names in folder
+     */
+    public static String[] listFolderFilenames(String folder, FilenameFilter filenameFilter) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.list(filenameFilter);
+        }
+
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
+     * Lists files in supplied folder.
+     * 
+     * @param folder
+     *            the folder to list
+     * @return list of files in folder
+     */
+    public static File[] listFolderFiles(String folder) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.listFiles();
+        }
+
+        return ZEROLEN_FILES;
+    }
+
+    /**
+     * Lists files in supplied folder using a filename filter.
+     * 
+     * @param folder
+     *            the folder to list
+     * @param filenameFilter
+     *            the filename filter
+     * @return list of files in folder
+     */
+    public static File[] listFolderFiles(String folder, FilenameFilter filenameFilter) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.listFiles(filenameFilter);
+        }
+
+        return ZEROLEN_FILES;
+    }
+
+    /**
+     * Lists files in supplied folder using a file filter.
+     * 
+     * @param folder
+     *            the folder to list
+     * @param fileFilter
+     *            the file filter
+     * @return list of files in folder
+     */
+    public static File[] listFolderFiles(String folder, FileFilter fileFilter) {
+        String path = IOUtils.conformFilePath(folder);
+        File dir = new File(path);
+        if (dir.isDirectory()) {
+            return dir.listFiles(fileFilter);
+        }
+
+        return ZEROLEN_FILES;
     }
 
     /**
@@ -767,6 +869,85 @@ public final class IOUtils {
         bw.flush();
         bw.close();
         return baos.toByteArray();
+    }
+
+    /**
+     * Gets a new instance of a custom file name filter.
+     * 
+     * @param prefixes
+     *            the file name prefixes
+     * @param extensions
+     *            the file name extensions
+     * @return the custom file name filter
+     */
+    public static CustomFilenameFilter getCustomFilenameFilter(String prefixes, String extensions) {
+        return new CustomFilenameFilter(prefixes, extensions, "");
+    }
+
+    /**
+     * Gets a new instance of a custom file name filter.
+     * 
+     * @param prefixes
+     *            the file name prefixes
+     * @param extensions
+     *            the file name extensions
+     * @param signatures
+     *            the body signatures
+     * @return the custom file name filter
+     */
+    public static CustomFilenameFilter getCustomFilenameFilter(String prefixes, String extensions, String signatures) {
+        return new CustomFilenameFilter(prefixes, extensions, signatures);
+    }
+
+    public static class CustomFilenameFilter implements FilenameFilter {
+
+        private static String SEPERATOR = ",";
+
+        private String[] prefixList;
+
+        private String[] extensionList;
+
+        private String[] signatureList;
+
+        private CustomFilenameFilter(String prefixes, String extensions, String signatures) {
+            prefixList = StringUtils.split(prefixes.toLowerCase(), SEPERATOR);
+            extensionList = StringUtils.split(extensions.toLowerCase(), SEPERATOR);
+            signatureList = StringUtils.split(signatures.toLowerCase(), SEPERATOR);
+        }
+
+        @Override
+        public boolean accept(File dir, String filename) {
+            return accept(filename);
+        }
+
+        protected boolean accept(String filename) {
+            String lowerFileName = filename.toLowerCase();
+            boolean signaturePass = true;
+            for (String signature : signatureList) {
+                if ((signaturePass = (lowerFileName.indexOf(signature) >= 0))) {
+                    break;
+                }
+            }
+            if (signaturePass) {
+                boolean prefixPass = true;
+                for (String prefix : prefixList) {
+                    if (prefixPass = lowerFileName.startsWith(prefix)) {
+                        break;
+                    }
+                }
+                if (prefixPass) {
+                    boolean extensionPass = true;
+                    for (String extension : extensionList) {
+                        if (extensionPass = lowerFileName.endsWith(extension)) {
+                            break;
+                        }
+                    }
+                    return extensionPass;
+                }
+            }
+            return false;
+        }
+
     }
 
     private static String conformJarSeparator(String filename) {

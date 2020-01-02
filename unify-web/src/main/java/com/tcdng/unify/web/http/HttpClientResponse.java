@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,11 +15,14 @@
  */
 package com.tcdng.unify.web.http;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.ClientResponse;
 
@@ -40,6 +43,7 @@ public class HttpClientResponse implements ClientResponse {
     private boolean outUsed;
 
     public HttpClientResponse(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
         this.response = response;
     }
 
@@ -59,21 +63,29 @@ public class HttpClientResponse implements ClientResponse {
     }
 
     @Override
-    public OutputStream getOutputStream() throws Exception {
-        if (outputStream == null) {
-            outputStream = response.getOutputStream();
-            outUsed = true;
+    public OutputStream getOutputStream() throws UnifyException {
+        try {
+            if (outputStream == null) {
+                outputStream = response.getOutputStream();
+                outUsed = true;
+            }
+            return outputStream;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
         }
-        return outputStream;
     }
 
     @Override
-    public Writer getWriter() throws Exception {
-        if (writer == null) {
-            writer = response.getWriter();
-            outUsed = true;
+    public Writer getWriter() throws UnifyException {
+        try {
+            if (writer == null) {
+                writer = response.getWriter();
+                outUsed = true;
+            }
+            return writer;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
         }
-        return writer;
     }
 
     @Override
@@ -83,7 +95,6 @@ public class HttpClientResponse implements ClientResponse {
 
     @Override
     public void close() {
-        response.setStatus(HttpServletResponse.SC_OK);
         IOUtils.close(outputStream);
         IOUtils.close(writer);
     }

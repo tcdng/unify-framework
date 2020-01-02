@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,10 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.business.BusinessLogicInput;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.business.GenericService;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.database.Database;
-import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
@@ -34,6 +33,9 @@ import com.tcdng.unify.core.util.ReflectUtils;
 public abstract class AbstractDBBatchFileReadProcessor<T extends BatchRecord, U extends BatchItemRecord>
         extends AbstractBatchFileReadProcessor implements DBBatchFileReadProcessor {
 
+    @Configurable
+    private GenericService genericService;
+
     private Class<T> batchClass;
 
     private Class<U> batchItemClass;
@@ -44,61 +46,57 @@ public abstract class AbstractDBBatchFileReadProcessor<T extends BatchRecord, U 
     }
 
     @Override
-    protected Object doProcessBatchFile(BusinessLogicInput input, BatchFileConfig batchFileConfig,
-            BatchFileReader reader) throws UnifyException {
-        TaskMonitor tm = input.getTaskMonitor();
-        tm.addMessage("Processing batch file...");
+    protected Object doProcess(BatchFileReadConfig batchFileReadConfig, BatchFileReader reader) throws UnifyException {
         Map<String, T> batchMap = new HashMap<String, T>();
         // Start batch creation. May result in multiple batches
         // based on finding records belonging to more than one category.
-        Database db = getDatabase(input);
         U batchItem = ReflectUtils.newInstance(batchItemClass);
-        ValueStore itemStore = getValueStoreFactory().getValueStore(batchItem, 0);
+        ValueStore itemStore = getValueStore(batchItem);
         while (reader.readNextRecord(itemStore)) {
             Object batchId = null;
             String category = getBatchCategory(batchItem);
             T batch = batchMap.get(category);
             if (batch == null) {
                 batch = ReflectUtils.newInstance(batchClass);
-                preBatchCreate(input, batch, batchItem);
+                preBatchCreate(batchFileReadConfig, batch, batchItem);
                 batch.setCategory(category);
-                batchId = db.create(batch);
+                batchId = genericService.create(batch);
                 batchMap.put(category, batch);
             } else {
-                preBatchUpdate(input, batch, batchItem);
+                preBatchUpdate(batchFileReadConfig, batch, batchItem);
                 batch.setCategory(category);
-                db.updateByIdVersion(batch);
+                genericService.update(batch);
                 batchId = batch.getId();
             }
 
             batchItem.setBatchId(batchId);
-            preBatchItemCreate(input, batchItem);
-            db.create(batchItem);
-            postBatchItemCreate(input, batchItem);
+            preBatchItemCreate(batchFileReadConfig, batchItem);
+            genericService.create(batchItem);
+            postBatchItemCreate(batchFileReadConfig, batchItem);
         }
 
         for (T batch : batchMap.values()) {
-            postBatchCreate(input, batch);
+            postBatchCreate(batchFileReadConfig, batch);
         }
-
-        tm.addMessage("Batch file processing completed.");
-        tm.addMessage("Summary: batchCount = " + batchMap.size());
+        
         return batchMap;
     }
 
-    protected void preBatchItemCreate(BusinessLogicInput input, U batchItem) throws UnifyException {
+    protected void preBatchItemCreate(BatchFileReadConfig batchFileReadConfig, U batchItem) throws UnifyException {
 
     }
 
-    protected void postBatchItemCreate(BusinessLogicInput input, U batchItem) throws UnifyException {
+    protected void postBatchItemCreate(BatchFileReadConfig batchFileReadConfig, U batchItem) throws UnifyException {
 
     }
 
     protected abstract String getBatchCategory(U batchItem) throws UnifyException;
 
-    protected abstract void preBatchCreate(BusinessLogicInput input, T batch, U batchItem) throws UnifyException;
+    protected abstract void preBatchCreate(BatchFileReadConfig batchFileReadConfig, T batch, U batchItem)
+            throws UnifyException;
 
-    protected abstract void preBatchUpdate(BusinessLogicInput input, T batch, U batchItem) throws UnifyException;
+    protected abstract void preBatchUpdate(BatchFileReadConfig batchFileReadConfig, T batch, U batchItem)
+            throws UnifyException;
 
-    protected abstract void postBatchCreate(BusinessLogicInput input, T batch) throws UnifyException;
+    protected abstract void postBatchCreate(BatchFileReadConfig batchFileReadConfig, T batch) throws UnifyException;
 }

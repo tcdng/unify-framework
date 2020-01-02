@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
  */
 @Component("showpopupresponse")
 @UplAttributes({ @UplAttribute(name = "popup", type = String.class),
-        @UplAttribute(name = "systemInfo", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "systemInfo", type = boolean.class, defaultVal = "false") })
 public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
 
     public ShowPopupResponse() {
@@ -40,14 +40,14 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-        logDebug("Preparing show popup response: controller = [{0}]", pageController.getName());
-        appendPopupPanelsJSON(writer, pageController);
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
+        logDebug("Preparing show popup response: path ID = [{0}]", page.getPathId());
+        appendPopupPanelsJSON(writer, page);
         writer.write(",");
         appendRefreshAttributesJson(writer, false);
     }
 
-    protected void appendPopupPanelsJSON(ResponseWriter writer, PageController pageController) throws UnifyException {
+    protected void appendPopupPanelsJSON(ResponseWriter writer, Page page) throws UnifyException {
         if (getUplAttribute(boolean.class, "systemInfo")) {
             writer.write(",\"showSysInfoPopup\":");
         } else {
@@ -56,9 +56,9 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
         Panel panel = null;
         String popupShortName = getUplAttribute(String.class, "popup");
         if (popupShortName != null) {
-            panel = pageController.getPanelByShortName(popupShortName);
+            panel = page.getPanelByShortName(popupShortName);
         } else {
-            panel = pageController.getPanelByLongName(getRequestContextUtil().getRequestPopupName());
+            panel = page.getPanelByLongName(getRequestContextUtil().getRequestPopupName());
         }
         writer.writeJsonPanel(panel, false);
     }

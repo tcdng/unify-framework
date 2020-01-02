@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,10 +30,10 @@ public class ClusterCommandQuery extends SequencedEntityQuery<ClusterCommand> {
     }
 
     public ClusterCommandQuery nodeId(String nodeId) {
-        return (ClusterCommandQuery) this.equals("nodeId", nodeId);
+        return (ClusterCommandQuery) this.addEquals("nodeId", nodeId);
     }
 
     public ClusterCommandQuery nodeIdIn(Collection<String> nodeId) {
-        return (ClusterCommandQuery) this.amongst("nodeId", nodeId);
+        return (ClusterCommandQuery) this.addAmongst("nodeId", nodeId);
     }
 }

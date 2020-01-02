@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,11 +27,15 @@ public interface RequestParameterConstants {
 
     String TARGET_VALUE = "req_trg";
 
+    String PAGE_INDICATOR = "req_pag";
+
     String DOCUMENT = "req_doc";
 
     String COMMAND = "req_cmd";
 
     String CONFIRM_MSG = "req_cmsg";
+
+    String CONFIRM_MSGICON = "req_cmsgicon";
 
     String CONFIRM_PARAM = "req_cprm";
 
@@ -42,6 +46,8 @@ public interface RequestParameterConstants {
     String REMOTE_CALL_FORMAT = "req_rcf";
 
     String REMOTE_CALL_BODY = "req_rcb";
+
+    String REMOTE_CALL_INPUTSTREAM = "req_rcin";
 
     String REMOTE_VIEWER = "req_rv";
 
@@ -55,5 +61,11 @@ public interface RequestParameterConstants {
 
     String REMOTE_BRANCH_CODE = "req_bcd";
 
+    String REMOTE_ZONE_CODE = "req_zcd";
+
     String REMOTE_GLOBAL_ACCESS = "req_gac";
+
+    String REMOTE_TENANT_CODE = "req_tnc";
+
+    String REMOTE_COLOR_SCHEME = "req_csm";
 }

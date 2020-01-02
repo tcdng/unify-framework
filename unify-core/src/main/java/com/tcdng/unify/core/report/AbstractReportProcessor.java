@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,9 @@ package com.tcdng.unify.core.report;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.database.DataSource;
+import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
 
 /**
  * Convenient abstract report processor.
@@ -26,6 +29,9 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractReportProcessor extends AbstractUnifyComponent implements ReportProcessor {
 
+    @Configurable
+    private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
+
     @Override
     protected void onInitialize() throws UnifyException {
 
@@ -34,5 +40,33 @@ public abstract class AbstractReportProcessor extends AbstractUnifyComponent imp
     @Override
     protected void onTerminate() throws UnifyException {
 
+    }
+
+    protected DataSource getDataSource(Report report) throws UnifyException {
+        if (report.isDynamicDataSource()) {
+            return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
+        }
+
+        return (DataSource) getComponent(report.getDataSource());
+    }
+
+    protected void setReportHeaderParameter(Report report, String paramName, String paramDesc, Object paramValue)
+            throws UnifyException {
+        setReportHeaderParameter(report, paramName, paramDesc, null, paramValue);
+    }
+
+    protected void setReportHeaderParameter(Report report, String paramName, String paramDesc, String formatter,
+            Object paramValue) throws UnifyException {
+        report.setParameter(paramName, paramDesc, formatter, paramValue, true, false);
+    }
+
+    protected void setReportHeaderParameter(ReportParameters reportParameters, String paramName, String paramDesc,
+            Object paramValue) throws UnifyException {
+        setReportHeaderParameter(reportParameters, paramName, paramDesc, null, paramValue);
+    }
+
+    protected void setReportHeaderParameter(ReportParameters reportParameters, String paramName, String paramDesc,
+            String formatter, Object paramValue) throws UnifyException {
+        reportParameters.setParameter(paramName, paramDesc, formatter, paramValue, true, false);
     }
 }

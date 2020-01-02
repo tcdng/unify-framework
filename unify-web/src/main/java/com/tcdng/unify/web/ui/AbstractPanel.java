@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.ui.data.Hint.MODE;
 
 /**
  * Serves as the base class for a panel.
@@ -32,9 +33,9 @@ import com.tcdng.unify.web.annotation.Action;
 @UplAttributes({ @UplAttribute(name = "backImageSrc", type = String.class),
         @UplAttribute(name = "refreshPath", type = String.class),
         @UplAttribute(name = "refreshEvery", type = int.class),
-        @UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultValue = "true"),
+        @UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "legend", type = String.class),
-        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "hideOnNoComponents", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPanel extends AbstractContainer implements Panel {
 
     private List<PanelEventListener> listeners;
@@ -69,6 +70,16 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     @Override
     public boolean isAllowRefresh() {
         return allowRefresh;
+    }
+
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
+
+    @Override
+    public boolean isSupportDisabled() {
+        return false;
     }
 
     @Override
@@ -112,6 +123,36 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     @Override
     public String getLegend() throws UnifyException {
         return getUplAttribute(String.class, "legend");
+    }
+
+    /**
+     * Hints user in current request with supplied message in INFO mode.
+     * 
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            the message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void hintUser(String messageKey, Object... params) throws UnifyException {
+        getRequestContextUtil().hintUser(MODE.INFO, messageKey, params);
+    }
+
+    /**
+     * Hints user in current request with supplied message.
+     * 
+     * @param mode
+     *            the hint mode
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            the message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void hintUser(MODE mode, String messageKey, Object... params) throws UnifyException {
+        getRequestContextUtil().hintUser(mode, messageKey, params);
     }
 
     /**

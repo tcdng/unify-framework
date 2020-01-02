@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,7 +36,7 @@ public class SqlDataSourceTableListCommand extends AbstractDynamicSqlDataSourceL
 
     @Override
     public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-        if (!StringUtils.isBlank(params.getConfigName()) && !StringUtils.isBlank(params.getSchemaName())) {
+        if (StringUtils.isNotBlank(params.getConfigName()) && StringUtils.isNotBlank(params.getSchemaName())) {
             SqlTableType sqlTableType = SqlTableType.TABLE;
             if (params.getTableName() != null) {
                 sqlTableType = SqlTableType.fromName(params.getTableName());

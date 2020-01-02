@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,9 +17,12 @@ package com.tcdng.unify.core.database;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
+import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
-import com.tcdng.unify.core.operation.Operator;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A native query object.
@@ -33,7 +36,9 @@ public class NativeQuery {
 
     private List<Join> joinList;
 
-    private List<Filter> filterList;
+    private List<OrderBy> orderByList;
+
+    private Filter rootFilter;
 
     private String schemaName;
 
@@ -45,51 +50,17 @@ public class NativeQuery {
 
     private boolean distinct;
 
-    public NativeQuery() {
-        this.columnList = new ArrayList<Column>();
-        this.joinList = new ArrayList<Join>();
-        this.filterList = new ArrayList<Filter>();
-        this.limit = 0;
-    }
-
-    public NativeQuery schemaName(String schemaName) {
+    private NativeQuery(List<Column> columnList, List<Join> joinList, Filter rootFilter, List<OrderBy> orderByList,
+            String schemaName, String tableName, int offset, int limit, boolean distinct) {
+        this.columnList = columnList;
+        this.joinList = joinList;
+        this.rootFilter = rootFilter;
+        this.orderByList = orderByList;
         this.schemaName = schemaName;
-        return this;
-    }
-
-    public NativeQuery tableName(String tableName) {
         this.tableName = tableName;
-        return this;
-    }
-
-    public NativeQuery addColumn(String tableName, String columnName) {
-        columnList.add(new Column(tableName, columnName));
-        return this;
-    }
-
-    public NativeQuery addJoin(SqlJoinType type, String tableA, String columnA, String tableB, String columnB) {
-        joinList.add(new Join(type, tableA, columnA, tableB, columnB));
-        return this;
-    }
-
-    public NativeQuery addFilter(Operator op, String tableName, String columnName, Object param1, Object param2) {
-        filterList.add(new Filter(op, tableName, columnName, param1, param2));
-        return this;
-    }
-
-    public NativeQuery limit(int limit) {
-        this.limit = limit;
-        return this;
-    }
-
-    public NativeQuery offset(int offset) {
         this.offset = offset;
-        return this;
-    }
-
-    public NativeQuery distinct(boolean distinct) {
+        this.limit = limit;
         this.distinct = distinct;
-        return this;
     }
 
     public String getSchemaName() {
@@ -108,8 +79,12 @@ public class NativeQuery {
         return joinList;
     }
 
-    public List<Filter> getFilterList() {
-        return filterList;
+    public Filter getRootFilter() {
+        return rootFilter;
+    }
+
+    public List<OrderBy> getOrderByList() {
+        return orderByList;
     }
 
     public int getLimit() {
@@ -121,7 +96,7 @@ public class NativeQuery {
     }
 
     public int columns() {
-        return this.columnList.size();
+        return columnList.size();
     }
 
     public boolean isDistinct() {
@@ -132,11 +107,149 @@ public class NativeQuery {
         return !joinList.isEmpty();
     }
 
-    public boolean isFilter() {
-        return !filterList.isEmpty();
+    public boolean isRootFilter() {
+        return rootFilter != null;
     }
 
-    public class Column {
+    public boolean isOrderBy() {
+        return !orderByList.isEmpty();
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private List<Column> columnList;
+
+        private List<Join> joinList;
+
+        private List<OrderBy> orderByList;
+
+        private Stack<Filter> filters;
+
+        private String schemaName;
+
+        private String tableName;
+
+        private Filter rootFilter;
+
+        private int offset;
+
+        private int limit;
+
+        private boolean distinct;
+
+        private Builder() {
+            this.columnList = new ArrayList<Column>();
+            this.joinList = new ArrayList<Join>();
+            this.filters = new Stack<Filter>();
+            this.orderByList = new ArrayList<OrderBy>();
+            this.limit = 0;
+        }
+
+        public Builder schemaName(String schemaName) {
+            this.schemaName = schemaName;
+            return this;
+        }
+
+        public Builder tableName(String tableName) {
+            this.tableName = tableName;
+            return this;
+        }
+
+        public Builder addColumn(String tableName, String columnName) {
+            columnList.add(new Column(tableName, columnName));
+            return this;
+        }
+
+        public Builder addJoin(SqlJoinType type, String tableA, String columnA, String tableB, String columnB) {
+            joinList.add(new Join(type, tableA, columnA, tableB, columnB));
+            return this;
+        }
+
+        public Builder addOrderBy(String columnName) {
+            return addOrderBy(OrderType.ASCENDING, columnName);
+        }
+
+        public Builder addOrderBy(OrderType type, String columnName) {
+            orderByList.add(new OrderBy(type, columnName));
+            return this;
+        }
+
+        public Builder beginCompoundFilter(RestrictionType op) {
+            if (!op.isCompound()) {
+                throw new IllegalArgumentException(op + " is not a compound restriction type.");
+            }
+
+            if (rootFilter != null) {
+                throw new IllegalStateException("Can not have multiple root compound filter.");
+            }
+
+            Filter filter = new Filter(op, new ArrayList<Filter>());
+            if (!filters.isEmpty()) {
+                filters.peek().subFilterList.add(filter);
+            }
+
+            filters.push(filter);
+            return this;
+        }
+
+        public Builder endCompoundFilter() {
+            if (filters.isEmpty()) {
+                throw new IllegalStateException("No compound filter context currently open.");
+            }
+
+            Filter filter = filters.pop();
+            if (filters.isEmpty()) {
+                rootFilter = filter;
+            }
+
+            return this;
+        }
+
+        public Builder addSimpleFilter(RestrictionType op, String tableName, String columnName, Object param1,
+                Object param2) {
+            if (op.isCompound()) {
+                throw new IllegalArgumentException(op + " is not a simple restriction type.");
+            }
+
+            if (filters.isEmpty()) {
+                throw new IllegalStateException("No compound filter context currently open.");
+            }
+
+            filters.peek().subFilterList.add(new Filter(op, tableName, columnName, param1, param2));
+            return this;
+        }
+
+        public Builder limit(int limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        public Builder offset(int offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        public Builder distinct(boolean distinct) {
+            this.distinct = distinct;
+            return this;
+        }
+
+        public NativeQuery build() {
+            if (rootFilter == null && !filters.isEmpty()) {
+                throw new IllegalStateException("Compound filter context is still open.");
+            }
+
+            return new NativeQuery(DataUtils.unmodifiableList(columnList), DataUtils.unmodifiableList(joinList),
+                    rootFilter, DataUtils.unmodifiableList(orderByList), schemaName, tableName, offset, limit,
+                    distinct);
+        }
+    }
+
+    public static class Column {
 
         private String tableName;
 
@@ -156,7 +269,7 @@ public class NativeQuery {
         }
     }
 
-    public class Join {
+    public static class Join {
 
         private SqlJoinType type;
 
@@ -198,9 +311,9 @@ public class NativeQuery {
 
     }
 
-    public class Filter {
+    public static class Filter {
 
-        private Operator op;
+        private RestrictionType op;
 
         private String tableName;
 
@@ -210,7 +323,9 @@ public class NativeQuery {
 
         private Object param2;
 
-        public Filter(Operator op, String tableName, String columnName, Object param1, Object param2) {
+        private List<Filter> subFilterList;
+
+        public Filter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
             this.op = op;
             this.tableName = tableName;
             this.columnName = columnName;
@@ -218,8 +333,17 @@ public class NativeQuery {
             this.param2 = param2;
         }
 
-        public Operator getOp() {
+        public Filter(RestrictionType op, List<Filter> subFilterList) {
+            this.op = op;
+            this.subFilterList = subFilterList;
+        }
+
+        public RestrictionType getOp() {
             return op;
+        }
+
+        public boolean isCompound() {
+            return op.isCompound();
         }
 
         public String getTableName() {
@@ -236,6 +360,30 @@ public class NativeQuery {
 
         public Object getParam2() {
             return param2;
+        }
+
+        public List<Filter> getSubFilterList() {
+            return subFilterList;
+        }
+    }
+
+    public static class OrderBy {
+
+        private OrderType orderType;
+
+        private String columnName;
+
+        public OrderBy(OrderType orderType, String columnName) {
+            this.orderType = orderType;
+            this.columnName = columnName;
+        }
+
+        public OrderType getOrderType() {
+            return orderType;
+        }
+
+        public String getColumnName() {
+            return columnName;
         }
     }
 }

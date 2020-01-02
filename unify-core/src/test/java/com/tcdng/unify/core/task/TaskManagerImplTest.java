@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -138,7 +138,7 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
     public void testExecuteTask() throws Exception {
         parameters.put("paramA", "Hello World!");
         TaskMonitor taskMonitor = taskManager.executeTask("test-taska", parameters, false, null);
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Hello World!", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
     }
 
@@ -148,9 +148,9 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         parameters.put("paramB", "Tiger");
         TaskMonitor taskMonitor =
                 taskManager.executeTasks(Arrays.asList("test-taska", "test-taskb"), parameters, false, true, null);
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(1));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(1));
         assertEquals("Tiger", taskMonitor.getTaskOutput(1).getResult(String.class, "message"));
     }
 
@@ -160,10 +160,10 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         parameters.put("paramB", "Tiger");
         TaskMonitor taskMonitor = taskManager.executeTasks(Arrays.asList("test-taska", "test-taskc", "test-taskb"),
                 parameters, false, false, null);
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
         assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(2));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(2));
         assertEquals("Tiger", taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
     }
 
@@ -173,7 +173,7 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         parameters.put("paramB", "Tiger");
         TaskMonitor taskMonitor = taskManager.executeTasks(Arrays.asList("test-taska", "test-taskc", "test-taskb"),
                 parameters, false, true, null);
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
         assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
         assertEquals(TaskStatus.ABORTED, taskMonitor.getTaskStatus(2));
@@ -187,7 +187,7 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Hello World!", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
     }
 
@@ -200,9 +200,9 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(1));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(1));
         assertEquals("Tiger", taskMonitor.getTaskOutput(1).getResult(String.class, "message"));
     }
 
@@ -215,10 +215,10 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
         assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(2));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(2));
         assertEquals("Tiger", taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
     }
 
@@ -231,7 +231,7 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
         assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
         assertEquals(TaskStatus.ABORTED, taskMonitor.getTaskStatus(2));
@@ -247,7 +247,7 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Hello World!", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
     }
 
@@ -260,9 +260,9 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(1));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(1));
         assertEquals("Tiger", taskMonitor.getTaskOutput(1).getResult(String.class, "message"));
     }
 
@@ -275,10 +275,10 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
         assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(2));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(2));
         assertEquals("Tiger", taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
     }
 
@@ -291,7 +291,7 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.COMPLETED, taskMonitor.getTaskStatus(0));
+        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
         assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
         assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
         assertEquals(TaskStatus.ABORTED, taskMonitor.getTaskStatus(2));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.PageBean;
 import com.tcdng.unify.web.ui.panel.StandalonePanel;
 
 /**
@@ -25,6 +26,25 @@ import com.tcdng.unify.web.ui.panel.StandalonePanel;
  * @since 1.0
  */
 public interface Page extends StandalonePanel {
+
+    /**
+     * Sets the page bean for this page.
+     * 
+     * @param pageBean
+     *            the page bean to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setPageBean(PageBean pageBean) throws UnifyException;
+
+    /**
+     * Gets the page bean for this page.
+     * 
+     * @return the page bean
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    PageBean getPageBean() throws UnifyException;
 
     /**
      * Returns stand-alone panel with specified name.
@@ -106,17 +126,17 @@ public interface Page extends StandalonePanel {
     boolean isDocument();
 
     /**
-     * Sets this page session ID
+     * Sets this page path ID
      * 
-     * @param id
-     *            the ID to set
+     * @param pathId
+     *            the path ID to set
      */
-    void setSessionId(String id);
+    void setPathId(String pathId);
 
     /**
-     * Returns the page session ID
+     * Returns the page path ID
      */
-    String getSessionId();
+    String getPathId();
 
     /**
      * Returns popup base ID

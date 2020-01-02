@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.constant.TriState;
 import com.tcdng.unify.core.data.Context;
@@ -33,22 +34,25 @@ import com.tcdng.unify.core.data.Context;
  */
 public class ApplicationContext extends Context {
 
-    private static final PrivilegeSettings ALL_PRIVILEGES =
-            new PrivilegeSettings(true, true, false, TriState.CONFORMING);
+    private static final ViewDirective ALLOW_VIEW_DIRECTIVE =
+            new ViewDirective(true, true, false, TriState.CONFORMING);
 
-    private static final PrivilegeSettings NO_PRIVILEGES = new PrivilegeSettings(false, false, true, TriState.TRUE);
+    private static final ViewDirective DISALLOW_VIEW_DIRECTIVE = new ViewDirective(false, false, true, TriState.TRUE);
 
     private UnifyContainer container;
 
     private Locale applicationLocale;
+    
+    private TimeZone timeZone;
 
     private String lineSeparator;
 
     private Map<String, RoleAttributes> roleAttributes;
 
-    public ApplicationContext(UnifyContainer container, Locale applicationLocale, String lineSeparator) {
+    public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone, String lineSeparator) {
         this.container = container;
         this.applicationLocale = applicationLocale;
+        this.timeZone = timeZone;
         this.lineSeparator = lineSeparator;
         this.roleAttributes = new HashMap<String, RoleAttributes>();
     }
@@ -77,30 +81,30 @@ public class ApplicationContext extends Context {
     }
 
     /**
-     * Tests if supplied role has privilege code attribute.
+     * Gets supplied role privilege code view directive.
      * 
      * @param roleCode
      *            the role code
      * @param privilege
      *            the privilege to test
-     * @return true if role has privilege
+     * @return the role's view directive for supplied privilege
      */
-    public PrivilegeSettings getPrivilegeSettings(String roleCode, String privilege) {
+    public ViewDirective getRoleViewDirective(String roleCode, String privilege) {
         if (roleCode != null && privilege != null && !privilege.isEmpty()) {
             RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
             if (roleAttributes != null) {
-                if (roleAttributes.isAllAccessPrivilege(privilege)) {
-                    return ALL_PRIVILEGES;
+                if (roleAttributes.isStaticViewDirectivePrivilege(privilege)) {
+                    return ALLOW_VIEW_DIRECTIVE;
                 }
 
-                PrivilegeSettings pSettings = roleAttributes.getControlledAccessPrivilegeSettings(privilege);
-                if (pSettings != null) {
-                    return pSettings;
+                ViewDirective directive = roleAttributes.getDynamicViewDirective(privilege);
+                if (directive != null) {
+                    return directive;
                 }
             }
-            return NO_PRIVILEGES;
+            return DISALLOW_VIEW_DIRECTIVE;
         }
-        return ALL_PRIVILEGES;
+        return ALLOW_VIEW_DIRECTIVE;
     }
 
     public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {
@@ -124,29 +128,18 @@ public class ApplicationContext extends Context {
         return Collections.emptySet();
     }
 
-    /**
-     * Returns the application banner ASCII text
-     * 
-     * @return if an error occurs
-     */
     public List<String> getApplicationBanner() throws UnifyException {
         return container.getApplicationBanner();
     }
 
-    /**
-     * Gets the application locale.
-     * 
-     * @return the application locale
-     */
     public Locale getApplicationLocale() {
         return applicationLocale;
     }
 
-    /**
-     * Gets the application line separator.
-     * 
-     * @return the application line separator
-     */
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
     public String getLineSeparator() {
         return lineSeparator;
     }

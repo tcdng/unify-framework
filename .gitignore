@@ -1,2 +1,4 @@
-/.project
 /target/
+/.gitignore
+/.project
+/.README.md.html

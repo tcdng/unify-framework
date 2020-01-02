@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,18 +30,18 @@ public class ClusterCommandParamQuery extends SequencedEntityQuery<ClusterComman
     }
 
     public ClusterCommandParamQuery clusterCommandId(Long clusterCommandId) {
-        return (ClusterCommandParamQuery) equals("clusterCommandId", clusterCommandId);
+        return (ClusterCommandParamQuery) addEquals("clusterCommandId", clusterCommandId);
     }
 
     public ClusterCommandParamQuery clusterCommandIdIn(Collection<Long> clusterCommandId) {
-        return (ClusterCommandParamQuery) amongst("clusterCommandId", clusterCommandId);
+        return (ClusterCommandParamQuery) addAmongst("clusterCommandId", clusterCommandId);
     }
 
     public ClusterCommandParamQuery nodeId(String nodeId) {
-        return (ClusterCommandParamQuery) equals("nodeId", nodeId);
+        return (ClusterCommandParamQuery) addEquals("nodeId", nodeId);
     }
 
     public ClusterCommandParamQuery nodeIdIn(Collection<String> nodeId) {
-        return (ClusterCommandParamQuery) amongst("nodeId", nodeId);
+        return (ClusterCommandParamQuery) addAmongst("nodeId", nodeId);
     }
 }

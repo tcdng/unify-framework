@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.SessionAttributeConstants;
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.SessionAttributeValueConstants;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyContainer;
@@ -32,17 +32,15 @@ import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
-import com.tcdng.unify.core.operation.Update;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.system.entities.UserSessionTracking;
 import com.tcdng.unify.core.system.entities.UserSessionTrackingQuery;
 import com.tcdng.unify.core.task.TaskMonitor;
-import com.tcdng.unify.core.upl.UplComponentWriterManager;
 import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
@@ -54,9 +52,6 @@ import com.tcdng.unify.core.util.CalendarUtils;
 @Transactional
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)
 public class UserSessionManagerImpl extends AbstractBusinessService implements UserSessionManager {
-
-    @Configurable
-    private UplComponentWriterManager uplComponentWriterManager;
 
     private Map<String, UserSession> userSessions;
 
@@ -90,17 +85,13 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     @Override
     public void addUserSession(UserSession userSession) throws UnifyException {
         SessionContext sessionContext = userSession.getSessionContext();
-        UserSessionTracking userSessionData = new UserSessionTracking();
-        userSessionData.setSessionId(sessionContext.getId());
-        userSessionData.setRemoteHost(sessionContext.getRemoteHost());
-        userSessionData.setRemoteAddress(sessionContext.getRemoteAddress());
-        userSessionData.setRemoteUser(sessionContext.getRemoteUser());
-        userSessionData.setNode(getNodeId());
-        Date createTime = new Date();
-        userSessionData.setCreateTime(createTime);
-        userSessionData.setLastAccessTime(createTime);
-        db().create(userSessionData);
-        setRequiredAttributes(sessionContext);
+        UserSessionTracking userSessionTracking = new UserSessionTracking();
+        userSessionTracking.setSessionId(sessionContext.getId());
+        userSessionTracking.setRemoteHost(sessionContext.getRemoteHost());
+        userSessionTracking.setRemoteAddress(sessionContext.getRemoteAddress());
+        userSessionTracking.setRemoteUser(sessionContext.getRemoteUser());
+        userSessionTracking.setNode(getNodeId());
+        db().create(userSessionTracking);
         userSessions.put(sessionContext.getId(), userSession);
     }
 
@@ -113,7 +104,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
 
     @Override
     public void updateCurrentSessionLastAccessTime() throws UnifyException {
-        getSessionContext().accessed();
+        getSessionContext().setLastAccessTime(db().getNow());
     }
 
     @Override
@@ -129,7 +120,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     @Override
-    public void logIn(UserToken userToken) throws UnifyException {
+    public void login(UserToken userToken) throws UnifyException {
         SessionContext sessionContext = getRequestContext().getSessionContext();
 
         // Add user session if not existing
@@ -152,7 +143,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
                 db().updateAll(new UserSessionTrackingQuery().idAmongst(sessionIdList),
                         new Update().add("userLoginId", null).add("userLoginId", null).add("userName", null));
 
-                forceLogOut(sessionIdList.toArray(new String[sessionIdList.size()]));
+                forceLogout(sessionIdList.toArray(new String[sessionIdList.size()]));
             }
         }
 
@@ -161,7 +152,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     @Override
-    public void logOut(boolean clearCompleteSession) throws UnifyException {
+    public void logout(boolean clearCompleteSession) throws UnifyException {
         if (clearCompleteSession) {
             logOut(userSessions.get(getRequestContext().getSessionContext().getId()));
         } else {
@@ -170,19 +161,19 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     @Override
-    public void logOut(String sessionId) throws UnifyException {
+    public void logout(String sessionId) throws UnifyException {
         logOut(userSessions.get(sessionId));
     }
 
     @Broadcast
     @Override
-    public void forceLogOut(String... sessionIds) throws UnifyException {
+    public void forceLogout(String... sessionIds) throws UnifyException {
         // Force logout specific sessions in this node
         for (String otherSessionId : sessionIds) {
-            logOut(otherSessionId);
+            logout(otherSessionId);
             UserSession userSession = userSessions.get(otherSessionId);
             if (userSession != null) {
-                userSession.getSessionContext().setAttribute(SessionAttributeConstants.FORCE_LOGOUT,
+                userSession.getSessionContext().setAttribute(UnifyCoreSessionAttributeConstants.FORCE_LOGOUT,
                         SessionAttributeValueConstants.FORCE_LOGOUT_NO_MULTIPLE_LOGIN);
             }
         }
@@ -192,15 +183,15 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     @Transactional(TransactionAttribute.REQUIRES_NEW)
     public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
         // Update active session records and remove inactive ones
-        Date workingDt = new Date();
+        Date now = db().getNow();
         List<String> activeSessionList = new ArrayList<String>();
         int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
                 UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT);
         expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
-        Date expiryTime = CalendarUtils.getDateWithOffset(workingDt, -(expirationInSeconds * 1000));
+        Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
         for (UserSession userSession : userSessions.values()) {
             SessionContext sessionContext = userSession.getSessionContext();
-            if (expiryTime.before(sessionContext.getLastAccessTime())) {
+            if (sessionContext.getLastAccessTime() == null || expiryTime.before(sessionContext.getLastAccessTime())) {
                 activeSessionList.add(sessionContext.getId());
             } else {
                 userSessions.remove(sessionContext.getId());
@@ -209,7 +200,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
 
         if (!activeSessionList.isEmpty()) {
             db().updateAll(new UserSessionTrackingQuery().idAmongst(activeSessionList),
-                    new Update().add("node", getNodeId()).add("lastAccessTime", workingDt));
+                    new Update().add("node", getNodeId()).add("lastAccessTime", now));
         }
 
         if (grabClusterMasterLock()) {
@@ -220,7 +211,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
 
     private void broadcast(UserSession userSession, String attribute, Object value) throws UnifyException {
         if (userSession != null) {
-            if (SessionAttributeConstants.FORCE_LOGOUT.equals(attribute)) {
+            if (UnifyCoreSessionAttributeConstants.FORCE_LOGOUT.equals(attribute)) {
                 logOut(userSession);
             }
             userSession.getSessionContext().setAttribute(attribute, value);
@@ -233,14 +224,8 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
             db().updateAll(new UserSessionTrackingQuery().id(sessionContext.getId()),
                     new Update().add("userLoginId", null).add("userName", null));
             sessionContext.setUserToken(null);
-            sessionContext.clearAttributes();
-            setRequiredAttributes(sessionContext);
+            sessionContext.removeAllAttributes();
         }
-    }
-
-    private void setRequiredAttributes(SessionContext sessionContext) throws UnifyException {
-        sessionContext.setAttribute(SessionAttributeConstants.UPLCOMPONENT_WRITERS,
-                uplComponentWriterManager.getWriters(sessionContext.getPlatform()));
     }
 
     private class LocalUserSession implements UserSession {
@@ -264,11 +249,6 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         @Override
         public String getRemoteUser() {
             return sessionContext.getRemoteUser();
-        }
-
-        @Override
-        public String getRemoteViewer() {
-            return sessionContext.getRemoteViewer();
         }
 
         @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.annotation.RequestParameter;
 
 /**
@@ -28,7 +31,8 @@ import com.tcdng.unify.web.annotation.RequestParameter;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractResourceController extends AbstractUserInterfaceController implements ResourceController {
+@Singleton(false)
+public abstract class AbstractResourceController extends AbstractUIController implements ResourceController {
 
     @RequestParameter
     private String resourceName;
@@ -45,12 +49,19 @@ public abstract class AbstractResourceController extends AbstractUserInterfaceCo
     private Map<String, String> metaDataMap;
 
     public AbstractResourceController(boolean secured) {
-        super(secured, false);
+        super(secured, false, false);
     }
 
     @Override
-    public ControllerType getType() {
+    public final ControllerType getType() {
         return ControllerType.RESOURCE_CONTROLLER;
+    }
+
+    @Override
+    public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        if (!isReadOnly()) {
+            DataUtils.setNestedBeanProperty(this, transferBlock.getLongProperty(), transferBlock.getValue(), null);
+        }
     }
 
     @Override
@@ -71,6 +82,11 @@ public abstract class AbstractResourceController extends AbstractUserInterfaceCo
     @Override
     public void setAttachment(boolean attachment) {
         this.attachment = attachment;
+    }
+
+    @Override
+    public void reset() throws UnifyException{
+
     }
 
     public String getMorsic() {

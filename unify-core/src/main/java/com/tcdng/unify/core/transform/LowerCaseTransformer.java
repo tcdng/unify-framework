@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.core.transform;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 
 /**
  * Forward transforms a string to lower case letters. Performs no transformation
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(name = "lowerCaseTrans", description = "Lower Case Transformer")
 @Component("lowercase-transformer")
 public class LowerCaseTransformer extends AbstractStringTransformer {
 

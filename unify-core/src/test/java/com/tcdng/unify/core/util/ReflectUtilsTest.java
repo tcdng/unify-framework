@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Test;
@@ -60,14 +61,21 @@ public class ReflectUtilsTest {
         ContactAddress contactAddressD = new ContactAddress();
         contactAddressD.setAddressLine1(null);
         contactAddressD.setAddressLine2("Carey");
-        assertEquals(ReflectUtils.hashCode(contactAddressA), ReflectUtils.hashCode(contactAddressB));
-        assertNotSame(ReflectUtils.hashCode(contactAddressA), ReflectUtils.hashCode(contactAddressC));
-        assertNotSame(ReflectUtils.hashCode(contactAddressB), ReflectUtils.hashCode(contactAddressC));
-        assertEquals(ReflectUtils.hashCode(contactAddressD), ReflectUtils.hashCode(contactAddressC));
+        assertEquals(ReflectUtils.beanHashCode(contactAddressA), ReflectUtils.beanHashCode(contactAddressB));
+        assertNotSame(ReflectUtils.beanHashCode(contactAddressA), ReflectUtils.beanHashCode(contactAddressC));
+        assertNotSame(ReflectUtils.beanHashCode(contactAddressB), ReflectUtils.beanHashCode(contactAddressC));
+        assertEquals(ReflectUtils.beanHashCode(contactAddressD), ReflectUtils.beanHashCode(contactAddressC));
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testObjectEqualsMatch() throws Exception {
+        assertTrue(ReflectUtils.objectEquals("Hello", "Hello"));
+        assertTrue(ReflectUtils.objectEquals(null, null));
+        assertTrue(ReflectUtils.objectEquals(BigDecimal.valueOf(2039.22), BigDecimal.valueOf(2039.22)));
+    }
+
+    @Test
+    public void testBeanEqualsMatch() throws Exception {
         Address addressA = new Address();
         addressA.setAddressLine1("Main");
         addressA.setAddressLine2("Carey");
@@ -80,23 +88,23 @@ public class ReflectUtilsTest {
         Address addressD = new Address();
         addressD.setAddressLine1(null);
         addressD.setAddressLine2("Carey");
-        assertTrue(ReflectUtils.equals(addressA, addressB));
-        assertTrue(ReflectUtils.equals(addressC, addressD));
+        assertTrue(ReflectUtils.beanEquals(addressA, addressB));
+        assertTrue(ReflectUtils.beanEquals(addressC, addressD));
     }
 
     @Test
-    public void testNotEquals() throws Exception {
+    public void testBeanEqualsNotMatch() throws Exception {
         Address addressA = new Address();
         addressA.setAddressLine1("Main");
         addressA.setAddressLine2("Carey");
         Address addressB = new ContactAddress();
         addressB.setAddressLine1(null);
         addressB.setAddressLine2("Carey");
-        assertFalse(ReflectUtils.equals(addressA, addressB));
+        assertFalse(ReflectUtils.beanEquals(addressA, addressB));
     }
 
     @Test
-    public void testEqualsWithIgnore() throws Exception {
+    public void testBeanEqualsWithIgnoreMatch() throws Exception {
         ContactAddress contactAddressA = new ContactAddress();
         contactAddressA.setAddressLine1("Main");
         contactAddressA.setAddressLine2("Carey");
@@ -105,11 +113,11 @@ public class ReflectUtilsTest {
         contactAddressB.setAddressLine1("Main");
         contactAddressB.setAddressLine2("Carey");
         contactAddressA.setVersionNo(20);
-        assertTrue(ReflectUtils.equals(contactAddressA, contactAddressB, "versionNo"));
+        assertTrue(ReflectUtils.beanEquals(contactAddressA, contactAddressB, "versionNo"));
     }
 
     @Test
-    public void testNotEqualsWithIgnore() throws Exception {
+    public void testBeanEqualsWithIgnoreNotMatch() throws Exception {
         ContactAddress contactAddressA = new ContactAddress();
         contactAddressA.setAddressLine1("Main");
         contactAddressA.setAddressLine2("Carey");
@@ -118,7 +126,7 @@ public class ReflectUtilsTest {
         contactAddressB.setAddressLine1("Main");
         contactAddressB.setAddressLine2("Tom");
         contactAddressA.setVersionNo(20);
-        assertFalse(ReflectUtils.equals(contactAddressA, contactAddressB, "versionNo"));
+        assertFalse(ReflectUtils.beanEquals(contactAddressA, contactAddressB, "versionNo"));
     }
 
     @Test

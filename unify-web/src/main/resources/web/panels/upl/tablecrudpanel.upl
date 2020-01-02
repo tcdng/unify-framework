@@ -52,6 +52,10 @@
     formCaptionSuffix:$f{formCaptionSuffix} formBinding:$f{formBinding} formColumns:$f{formColumns}
     footerComponentList:$c{createNextFrmBtn createFrmBtn saveFrmBtn deleteFrmBtn cancelFrmBtn doneFrmBtn}
     footerComponentList:$f{moreFormFooterComponentList}
+    formSection:$d{!ui-section components:$c{frmId} hidden:true}
+
+//Form hidden defaults
+!ui-hidden:frmId binding:id
     
 //Form buttons
 !ui-button:createFrmBtn caption:$f{createFrmBtnLabel} eventHandler:$d{!ui-event event:onclick action:$c{createAct}}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.batch;
 
+import com.tcdng.unify.core.constant.PadDirection;
+
 /**
  * Batch file reader utilities for tests.
  * 
@@ -27,23 +29,39 @@ public class BatchFileReaderTestUtils {
 
     }
 
-    public static BatchFileConfig createSampleFixedLengthBatchConfig(boolean trim) throws Exception {
-        BatchFileConfig fileBulkConfig = new BatchFileConfig();
-        fileBulkConfig.setReader("fixedlength-batchfilereader");
-        fileBulkConfig.addFieldConfig("accountNo", 10, trim);
-        fileBulkConfig.addFieldConfig("beneficiary", 20, trim);
-        fileBulkConfig.addFieldConfig("currency", 3, trim);
-        fileBulkConfig.addFieldConfig("amount", 13, trim);
-        return fileBulkConfig;
+    public static BatchFileReadConfig createSampleFixedLengthBatchConfig(ConstraintAction cAction, boolean trim,
+            boolean formattedAmt) throws Exception {
+        BatchFileReadConfig.Builder bb =
+                BatchFileReadConfig.newBuilder().reader("fixedlength-batchfilereader").addFieldConfig("accountNo", 10, trim)
+                        .addFieldConfig("beneficiary", 20, trim).addFieldConfig("currency", 3, trim);
+        if (formattedAmt) {
+            bb.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true, '0');
+        } else {
+            bb.addFieldConfig("amount", 13, trim);
+        }
+
+        if (cAction != null) {
+            bb.onConstraint(cAction);
+        }
+        return bb.build();
     }
 
-    public static BatchFileConfig createSampleDelimitedFileBatchConfig(boolean trim) throws Exception {
-        BatchFileConfig fileBulkConfig = new BatchFileConfig();
-        fileBulkConfig.setReader("delimited-batchfilereader");
-        fileBulkConfig.addFieldConfig("accountNo", 10, trim);
-        fileBulkConfig.addFieldConfig("beneficiary", 20, trim);
-        fileBulkConfig.addFieldConfig("currency", 3, trim);
-        fileBulkConfig.addFieldConfig("amount", 13, trim);
-        return fileBulkConfig;
+    public static BatchFileReadConfig createSampleDelimitedFileBatchConfig(ConstraintAction cAction, boolean trim,
+            boolean formattedAmt) throws Exception {
+        BatchFileReadConfig.Builder bb =
+                BatchFileReadConfig.newBuilder().reader("delimited-batchfilereader").addFieldConfig("accountNo", 10, trim)
+                        .addFieldConfig("beneficiary", 20, trim).addFieldConfig("currency", 3, trim);
+        if (formattedAmt) {
+            bb.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true, '0');
+        } else {
+            bb.addFieldConfig("amount", 13, trim);
+        }
+
+        if (cAction != null) {
+            bb.onConstraint(cAction);
+        }
+
+        bb.addParam(DelimitedBatchFileReaderInputConstants.FIELDDELIMITER, FieldDelimiterType.COMMA);
+        return bb.build();
     }
 }

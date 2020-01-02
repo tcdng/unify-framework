@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,7 +38,7 @@ public class SqlDataSourceSchemaListCommand extends AbstractDynamicSqlDataSource
 
     @Override
     public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-        if (!StringUtils.isBlank(params.getConfigName())) {
+        if (StringUtils.isNotBlank(params.getConfigName())) {
             List<Listable> schemaList = new ArrayList<Listable>();
             for (String schema : getDsManager().getSchemas(params.getConfigName())) {
                 schemaList.add(new ListData(schema, schema));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,8 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
-import com.tcdng.unify.core.operation.Criteria;
+import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -37,17 +38,36 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
         this.opSql = opSql;
     }
 
+    @Override
+    public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+            throws UnifyException {
+        doTranslate(sql, tableName, columnName, resolveParam(param1), resolveParam(param2));
+    }
+
     /**
-     * Returns the SQL criteria policy for supplied criteria's operator.
+     * Returns the SQL restriction policy for supplied restriction.
      * 
-     * @param criteria
-     *            the criteria object
+     * @param restriction
+     *            the restriction object
      * @return the criteria policy
      * @throws UnifyException
      *             if an error occurs
      */
-    protected SqlCriteriaPolicy getOperatorPolicy(Criteria criteria) throws UnifyException {
-        return sqlDataSourceDialect.getSqlCriteriaPolicy(criteria.getOperator());
+    protected SqlCriteriaPolicy getOperatorPolicy(Restriction restriction) throws UnifyException {
+        return sqlDataSourceDialect.getSqlCriteriaPolicy(restriction.getType());
+    }
+
+    /**
+     * Returns the SQL criteria policy for supplied restriction type.
+     * 
+     * @param type
+     *            the restriction type
+     * @return the criteris policy
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected SqlCriteriaPolicy getOperatorPolicy(RestrictionType type) throws UnifyException {
+        return sqlDataSourceDialect.getSqlCriteriaPolicy(type);
     }
 
     /**
@@ -63,7 +83,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     }
 
     /**
-     * Converts a value to its SQL string equivalent.
+     * Converts a value to its native SQL string equivalent.
      * 
      * @param value
      *            the value to convert
@@ -71,7 +91,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected String getSqlStringValue(Object value) throws UnifyException {
+    protected String getNativeSqlStringValue(Object value) throws UnifyException {
         return sqlDataSourceDialect.translateValue(value);
     }
 
@@ -99,5 +119,30 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
         }
 
         return postOp;
+    }
+
+    /**
+     * Resolves parameter.
+     * 
+     * @param param
+     *            the parameter to resolve
+     * @return the resolved parameter
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected Object resolveParam(Object param) throws UnifyException {
+        if (param instanceof SqlViewColumnInfo) {
+            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
+            return sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
+        }
+        
+        return param;
+    }
+
+    protected abstract void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1,
+            Object param2) throws UnifyException;
+
+    protected SqlDataSourceDialect getSqlDataSourceDialect() {
+        return sqlDataSourceDialect;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.tcdng.unify.core.business;
+
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -37,6 +39,11 @@ public class AnotherMockServiceImpl extends AbstractBusinessService implements A
     @Override
     public LoanAccount findLoanAccount(Long loanAccountId) throws UnifyException {
         return db().list(LoanAccount.class, loanAccountId);
+    }
+
+    @Override
+    public List<LoanDisbursement> findLoanDisbursements(LoanDisbursementQuery query) throws UnifyException {
+        return db().findAll(query);
     }
 
 }

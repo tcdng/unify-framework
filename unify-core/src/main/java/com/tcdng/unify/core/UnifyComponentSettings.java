@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,7 @@ public class UnifyComponentSettings {
 
     private Map<String, Setting> settings;
 
-    public UnifyComponentSettings(Setting[] settings) {
+    public UnifyComponentSettings(Setting... settings) {
         this.settings = new HashMap<String, Setting>();
         for (Setting setting : settings) {
             this.settings.put(setting.getName(), setting);
@@ -62,6 +62,15 @@ public class UnifyComponentSettings {
         }
 
         return null;
+    }
+
+    public boolean isAutoInject(String property) {
+        Setting setting = settings.get(property);
+        if (setting != null) {
+            return setting.isAutoInject();
+        }
+
+        return true;
     }
 
     public boolean isConcealed(String property) {
@@ -102,13 +111,13 @@ public class UnifyComponentSettings {
             settings = new HashMap<String, Setting>();
             settings.putAll(annotationSettings.settings);
         }
+//
+//        public Builder setProperty(String name, Object value) {
+//            return setProperty(name, value, true, false);
+//        }
 
-        public Builder setProperty(String name, Object value) {
-            return setProperty(name, value, false);
-        }
-
-        public Builder setProperty(String name, Object value, boolean concealed) {
-            settings.put(name, new Setting(name, value, concealed));
+        public Builder setProperty(String name, Object value, boolean autoInject, boolean concealed) {
+            settings.put(name, new Setting(name, value, autoInject, concealed));
             return this;
         }
 

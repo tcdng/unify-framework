@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,13 +19,14 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.web.RequestContextUtil;
+import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
@@ -42,6 +43,9 @@ import com.tcdng.unify.web.util.WriterUtils;
  * @since 1.0
  */
 public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
+
+    @Configurable
+    private ThemeManager themeManager;
 
     @Configurable
     private PageManager pageManager;
@@ -81,8 +85,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             writer.write(" title=\"").write(title).write("\"");
         }
 
-        if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
-            writer.write(" disabled");
+        if (widget.isSupportDisabled()) {
+            if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
+                writer.write(" disabled");
+            }
         }
 
         if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
@@ -150,7 +156,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      */
     protected final void writeTagName(ResponseWriter writer, Widget widget) throws UnifyException {
         String name = widget.getGroupId();
-        if (!StringUtils.isBlank(name)) {
+        if (StringUtils.isNotBlank(name)) {
             writer.write(" name=\"").write(name).write("\"");
         }
     }
@@ -189,6 +195,46 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     }
 
     /**
+     * Writes tag class attribute with extra classes.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose style class to write
+     * @param extraLeading
+     *            indicates extra classes should be leading
+     * @param extraClasses
+     *            the extra classes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, boolean extraLeading,
+            String... extraClasses) throws UnifyException {
+        writer.write(" class=\"");
+        if (extraLeading) {
+            for (String extraClass : extraClasses) {
+                if (extraClass != null) {
+                    writer.write(extraClass).write(" ");
+                }
+            }
+            writer.write(widget.getStyleClass());
+        } else {
+            writer.write(widget.getStyleClass());
+            for (String extraClass : extraClasses) {
+                if (extraClass != null) {
+                    writer.write(" ").write(extraClass);
+                }
+            }
+        }
+
+        String valStyleClass = widget.getStyleClassValue();
+        if (valStyleClass != null) {
+            writer.write(" ").write(valStyleClass);
+        }
+        writer.write("\"");
+    }
+
+    /**
      * Writes tag class attribute.
      * 
      * @param writer
@@ -213,7 +259,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagStyle(ResponseWriter writer, Widget widget) throws UnifyException {
-        if (!StringUtils.isBlank(widget.getStyle())) {
+        if (StringUtils.isNotBlank(widget.getStyle())) {
             writer.write(" style=\"").write(widget.getStyle()).write("\"");
         }
     }
@@ -229,7 +275,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagStyle(ResponseWriter writer, String style) throws UnifyException {
-        if (!StringUtils.isBlank(style)) {
+        if (StringUtils.isNotBlank(style)) {
             writer.write(" style=\"").write(style).write("\"");
         }
     }
@@ -247,13 +293,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagStyle(ResponseWriter writer, Widget widget, String style) throws UnifyException {
-        if (!StringUtils.isBlank(style) || !StringUtils.isBlank(widget.getStyle())) {
+        if (StringUtils.isNotBlank(style) || StringUtils.isNotBlank(widget.getStyle())) {
             writer.write(" style=\"");
-            if (!StringUtils.isBlank(widget.getStyle())) {
+            if (StringUtils.isNotBlank(widget.getStyle())) {
                 writer.write(widget.getStyle());
             }
 
-            if (!StringUtils.isBlank(style)) {
+            if (StringUtils.isNotBlank(style)) {
                 writer.write(style);
             }
             writer.write("\"");
@@ -271,7 +317,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagTitle(ResponseWriter writer, Widget widget) throws UnifyException {
-        if (!StringUtils.isBlank(widget.getHint())) {
+        if (StringUtils.isNotBlank(widget.getHint())) {
             writer.write(" title=\"").write(widget.getHint()).write("\"");
         }
     }
@@ -287,7 +333,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagTitle(ResponseWriter writer, String title) throws UnifyException {
-        if (!StringUtils.isBlank(title)) {
+        if (StringUtils.isNotBlank(title)) {
             writer.write(" title=\"").write(title).write("\"");
         }
     }
@@ -426,20 +472,20 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     protected void writeFileImageHtmlElement(ResponseWriter writer, String src, String id, String styleClass,
             String style) throws UnifyException {
         writer.write("<img");
-        if (!StringUtils.isBlank(id)) {
+        if (StringUtils.isNotBlank(id)) {
             writer.write(" id=\"").write(id).write("\"");
         }
 
-        if (!StringUtils.isBlank(styleClass)) {
+        if (StringUtils.isNotBlank(styleClass)) {
             writer.write(" class=\"").write(styleClass).write("\"");
         }
 
-        if (!StringUtils.isBlank(style)) {
+        if (StringUtils.isNotBlank(style)) {
             writer.write(" style=\"").write(style).write("\"");
         }
 
         writer.write(" src=\"");
-        writer.writeContextResourceURL("/resource/file", ContentTypeConstants.IMAGE, writer.expandThemeTag(src));
+        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), themeManager.expandThemeTag(src));
         writer.write("\">");
     }
 
@@ -523,14 +569,14 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
     protected String writeActionParamsJS(ResponseWriter writer, String event, String function, String id,
             PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
-        String beanId = getRequestContextUtil().getResponsePageControllerInfo().getControllerId();
+        String getPathId = getRequestContextUtil().getResponsePathParts().getPathId();
         PageManager pageManager = getPageManager();
         String eventParams = "_act" + (WriterUtils.getNextRefId()) + "Prm";
         writer.write("var ").write(eventParams).write("={");
-        if (!StringUtils.isBlank(event)) {
+        if (StringUtils.isNotBlank(event)) {
             writer.write("\"uEvnt\":\"").write(event).write("\",");
         }
-        if (!StringUtils.isBlank(function)) {
+        if (StringUtils.isNotBlank(function)) {
             writer.write("\"uFunc\":").write(function).write(",");
         }
         writer.write("\"uId\":\"").write(id).write("\"");
@@ -552,11 +598,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
             if (pageAction.isUplAttribute("command")) {
                 boolean isPage = Page.class.isAssignableFrom(
-                        getComponentType(getRequestContextUtil().getResponsePageControllerInfo().getControllerName()));
+                        getComponentType(getRequestContextUtil().getResponsePathParts().getControllerName()));
                 String cmd = pageAction.getUplAttribute(String.class, "command");
                 if (cmd != null) {
                     writer.write(",\"uCmdURL\":\"");
-                    writer.writeCommandURL(beanId);
+                    writer.writeCommandURL(getPathId);
                     writer.write('"');
                     writer.write(",\"uTrgCmd\":\"").write(cmd).write("\"");
                 }
@@ -580,8 +626,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
                 UplElementReferences uer = pageAction.getUplAttribute(UplElementReferences.class, "refresh");
                 if (uer != null) {
-                    writer.write(",\"uRefreshPnls\":");
-                    writer.writeJsonStringArray(pageManager.getPageNames(uer.getLongNames()));
+                    writer.write(",\"uRefreshPnls\":").writeJsonArray(pageManager.getPageNames(uer.getLongNames()));
                 } else {
                     writer.write(",\"uRefreshPnls\":[\"");
                     if (targetPgNm == dynamicPanelPgNm) {
@@ -594,18 +639,15 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
 
             List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
-            writer.write(",\"uRef\":");
-            writer.writeJsonStringArray(componentList);
+            writer.write(",\"uRef\":").writeJsonArray(componentList);
 
             List<String> valueComponentList = pageManager.getValueReferences(pageAction.getId());
-            writer.write(",\"uVRef\":");
-            writer.writeJsonStringArray(valueComponentList);
+            writer.write(",\"uVRef\":").writeJsonArray(valueComponentList);
 
             if (pageAction.isUplAttribute("valueList")) {
                 String[] valueList = pageAction.getUplAttribute(String[].class, "valueList");
                 if (valueList != null) {
-                    writer.write(",\"uVal\":");
-                    writer.writeJsonStringArray((Object[]) valueList);
+                    writer.write(",\"uVal\":").writeJsonArray(valueList);
                 }
             }
 
@@ -613,7 +655,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 String actionPath = pageAction.getUplAttribute(String.class, "path");
                 if (actionPath != null) {
                     if (TokenUtils.isNameTag(actionPath)) {
-                        actionPath = beanId + TokenUtils.extractTokenValue(actionPath);
+                        actionPath = getPathId + TokenUtils.extractTokenValue(actionPath);
                     } else if (TokenUtils.isQuickReferenceTag(actionPath)) {
                         actionPath = (String) ((ValueStore) getRequestContext().getQuickReference())
                                 .retrieve(TokenUtils.extractTokenValue(actionPath));
@@ -627,29 +669,30 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
             if ("ux.download".equals(function)) {
                 writer.write(",\"uURL\":\"");
-                writer.writeContextResourceURL("/resource/downloadpath", ContentTypeConstants.APPLICATION_OCTETSTREAM,
+                writer.writeContextResourceURL("/resource/downloadpath", MimeType.APPLICATION_OCTETSTREAM.template(),
                         pageAction.getUplAttribute(String.class, "resource"), null, true, false);
                 writer.write('"');
             }
 
             if (pageAction.isUplAttribute("confirm")) {
                 String confirm = pageAction.getUplAttribute(String.class, "confirm");
-                if (!StringUtils.isBlank(confirm)) {
+                if (StringUtils.isNotBlank(confirm)) {
                     writer.write(",\"uConf\":");
                     writeStringParameter(writer, confirm);
+                    writer.write(",\"uIconIndex\":");
+                    writer.write(pageAction.getUplAttribute(int.class, "iconIndex"));
                     writer.write(",\"uConfURL\":\"");
-                    writer.writeContextURL(beanId, "/confirm");
+                    writer.writeContextURL(getPathId, "/confirm");
                     writer.write('"');
                 }
             }
         } else if (refPageNames != null) {
-            writer.write(",\"uRef\":");
-            writer.writeJsonStringArray((Object[]) refPageNames);
-        } else if (!StringUtils.isBlank(refObject)) {
+            writer.write(",\"uRef\":").writeJsonArray(refPageNames);
+        } else if (StringUtils.isNotBlank(refObject)) {
             writer.write(",\"uRef\":").write(refObject);
         } else if (path != null) {
             if (TokenUtils.isNameTag(path)) {
-                path = beanId + TokenUtils.extractTokenValue(path);
+                path = getPathId + TokenUtils.extractTokenValue(path);
             }
 
             writer.write(",\"uURL\":\"");

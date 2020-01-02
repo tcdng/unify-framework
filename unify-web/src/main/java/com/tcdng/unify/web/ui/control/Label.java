@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,9 +28,9 @@ import com.tcdng.unify.web.ui.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-label")
-@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultValue = "true"),
-        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultValue = "false"),
-        @UplAttribute(name = "draggable", type = boolean.class, defaultValue = "false") })
+@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false") })
 public class Label extends AbstractFormattedControl {
 
     public Label() {
@@ -46,6 +46,16 @@ public class Label extends AbstractFormattedControl {
     public boolean isLayoutCaption() throws UnifyException {
         super.isLayoutCaption();
         return getUplAttribute(boolean.class, "layoutCaption");
+    }
+
+    @Override
+    public boolean isSupportReadOnly() {
+        return false;
+    }
+
+    @Override
+    public boolean isSupportDisabled() {
+        return false;
     }
 
     public boolean isHtmlEscape() throws UnifyException {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.FormatHelper;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
@@ -38,10 +39,19 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
     }
 
     @Override
-    public void generate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    public void generate(ResponseWriter writer, Page page) throws UnifyException {
         writer.write("{\"handler\":\"").write(handlerName).write("\"");
-        doGenerate(writer, pageController);
-        appendOnSaveList(writer);
+        RequestContextUtil reqUtils = getRequestContextUtil();
+        doGenerate(writer, page);
+
+        if (reqUtils.isFocusOnWidget()) {
+            writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetId()).write("\"");
+        }
+
+        List<String> saveList = reqUtils.getOnSaveContentWidgets();
+        if (DataUtils.isNotBlank(saveList)) {
+            writer.write(",\"pSaveList\":").writeJsonArray(saveList);
+        }
         writer.write("}");
     }
 
@@ -50,13 +60,5 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
 
     }
 
-    protected abstract void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException;
-
-    private void appendOnSaveList(ResponseWriter writer) throws UnifyException {
-        List<String> saveList = getRequestContextUtil().getOnSaveContentWidgets();
-        if (!DataUtils.isBlank(saveList)) {
-            writer.write(",\"pSaveList\":");
-            writer.writeJsonStringArray(saveList);
-        }
-    }
+    protected abstract void doGenerate(ResponseWriter writer, Page page) throws UnifyException;
 }

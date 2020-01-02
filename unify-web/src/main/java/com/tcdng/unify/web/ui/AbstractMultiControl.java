@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -195,13 +195,13 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         getRequestContextUtil().addPageAlias(getId(), id);
     }
 
-    private void doAddChildControl(Control control, boolean pageInit, boolean conforming, boolean ignoreParentState,
+    private void doAddChildControl(Control control, boolean pageConstruct, boolean conforming, boolean ignoreParentState,
             boolean external) throws UnifyException {
         int childIndex = controlInfoMap.size();
         String childId = WidgetUtils.getChildId(getId(), control.getId(), childIndex);
         control.setId(childId);
-        if (pageInit) {
-            control.onPageInitialize();
+        if (pageConstruct) {
+            control.onPageConstruct();
             control.setContainer(getContainer());
         }
 

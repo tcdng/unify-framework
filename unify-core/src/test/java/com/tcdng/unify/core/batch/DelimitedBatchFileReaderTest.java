@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +23,6 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.business.BusinessLogicInput;
-import com.tcdng.unify.core.constant.PadDirection;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.util.IOUtils;
@@ -41,12 +39,12 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testOpenBatchFileReader() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200.00",
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200.00",
                     "6758495839,Bamanga Tukur,NGN,520.00");
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
+            reader.open(batchFileConfig, file);
         } finally {
             if (reader != null) {
                 reader.close();
@@ -58,12 +56,11 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadEmptyFile() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile();
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile();
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
-
+            reader.open(batchFileConfig, file);
             boolean read = reader.readNextRecord(getValueStore(new TestBatchItemRecordB()));
             assertFalse(read);
         } finally {
@@ -77,13 +74,13 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordWithTrimmingOn() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(true); // Trimming
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, true, false); // Trimming
             // on
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200.00",
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200.00",
                     "6758495839,Bamanga Tukur,NGN,520.00");
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
+            reader.open(batchFileConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -104,13 +101,13 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordWithTrimmingOff() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(false); // Trimming
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, false, false); // Trimming
             // off
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789,Abel Turner         ,NGN,20000",
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789,Abel Turner         ,NGN,20000",
                     "6758495839,Bamanga Tukur       ,NGN,52000");
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
+            reader.open(batchFileConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -131,13 +128,13 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordMultiple() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(true); // Trimming
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, true, false); // Trimming
             // on
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200.00",
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200.00",
                     "6758495839,Bamanga Tukur,NGN,520.00");
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
+            reader.open(batchFileConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -166,12 +163,12 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordMultipleWithQuotedValues() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("\"0123456789\",\"Abel Turner\",\"NGN\",\"200.00\"",
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile("\"0123456789\",\"Abel Turner\",\"NGN\",\"200.00\"",
                     "6758495839,\"Bamanga Tukur, Kano\",NGN,520.00");
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
+            reader.open(batchFileConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -199,14 +196,12 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordWithFormatter() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(true);
-            batchFileConfig.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true,
-                    '0');
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200000",
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, true, true);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200000",
                     "6758495839,Bamanga Tukur,NGN,52043");
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
+            reader.open(batchFileConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -234,12 +229,12 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordTillEof() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig batchFileConfig = BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200000",
+            BatchFileReadConfig batchFileConfig =
+                    BatchFileReaderTestUtils.createSampleDelimitedFileBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789,Abel Turner,NGN,200000",
                     "6758495839,Bamanga Tukur,NGN,52043");
             reader = (BatchFileReader) getComponent("delimited-batchfilereader");
-            reader.open(getBusinessLogicInput(), batchFileConfig, fileObject);
+            reader.open(batchFileConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -264,12 +259,6 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
     @Override
     protected void onTearDown() throws Exception {
 
-    }
-
-    private BusinessLogicInput getBusinessLogicInput() {
-        BusinessLogicInput input = new BusinessLogicInput();
-        input.setParameter(DelimitedBatchFileReaderInputConstants.FIELDDELIMITER, FieldDelimiterType.COMMA);
-        return input;
     }
 
     private ValueStore getValueStore(Object record) throws Exception {

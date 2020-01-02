@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,17 +42,25 @@ public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements 
         uiCommandInfoMap = new FactoryMap<Class<? extends Widget>, UICommandInfo>() {
 
             @Override
-            protected UICommandInfo create(Class<? extends Widget> key, Object... params) throws Exception {
+            protected UICommandInfo create(Class<? extends Widget> widgetClass, Object... params) throws Exception {
                 UICommandInfo uiCommandInfo = new UICommandInfo();
-                Method[] methods = key.getMethods();
+                Method[] methods = widgetClass.getMethods();
                 for (Method method : methods) {
                     Action ca = method.getAnnotation(Action.class);
                     if (ca != null) {
-                        if (void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
-                            uiCommandInfo.addCommandMethod(method.getName(), method);
+                        if (isCommandSignature(method)) {
+                            uiCommandInfo.addCommandMethod(method);
                         } else {
                             throw new UnifyException(UnifyWebErrorConstants.WIDGET_INVALID_COMMAND_HANDLER_SIGNATURE,
-                                    key, method.getName());
+                                    widgetClass, method.getName());
+                        }
+                    } else {
+                        // Check if method has an command method signature and super class has similar.
+                        // In other words, check inheritance of @Action from super class.
+                        // This implies that if a command method overrides a super command method, we
+                        // don't have to apply the @Action annotation
+                        if (isCommandSignature(method) && isSuperCommandMethod(widgetClass, method.getName())) {
+                            uiCommandInfo.addCommandMethod(method);
                         }
                     }
                 }
@@ -95,12 +103,34 @@ public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements 
             commandMethods = new HashMap<String, Method>();
         }
 
-        public void addCommandMethod(String name, Method method) {
-            commandMethods.put(name, method);
+        public void addCommandMethod(Method method) {
+            commandMethods.put(method.getName(), method);
+        }
+
+        public boolean isCommandMethod(String name) throws UnifyException {
+            return commandMethods.containsKey(name);
         }
 
         public Method getCommandMethod(String name) throws UnifyException {
             return commandMethods.get(name);
         }
+    }
+
+    private boolean isCommandSignature(Method method) throws UnifyException {
+        return void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0
+                && method.getExceptionTypes().length == 1
+                && UnifyException.class.isAssignableFrom(method.getExceptionTypes()[0]);
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean isSuperCommandMethod(Class<? extends Widget> widgetClass, String methodName) throws UnifyException {
+        Class<?> clazz = widgetClass;
+        while ((clazz = clazz.getSuperclass()) != null && Widget.class.isAssignableFrom(clazz)) {
+            if (uiCommandInfoMap.get((Class<? extends Widget>) clazz).isCommandMethod(methodName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

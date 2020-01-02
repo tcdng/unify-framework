@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Annotation that indicates a type is available for tooling.
  * 
@@ -31,5 +33,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Tooling {
 
-    String value();
+    String name() default AnnotationConstants.NONE;
+    
+    String description();
+    
+    boolean guarded() default false;
 }

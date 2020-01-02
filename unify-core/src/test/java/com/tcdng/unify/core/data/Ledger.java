@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.List;
+
 /**
  * Test ledger document.
  * 
@@ -25,7 +27,21 @@ public class Ledger extends AbstractDocument {
 
     private Long id;
 
-    private String[] purchases;
+    private String accountNo;
+
+    private List<String> purchases;
+
+    private double[] rates;
+    
+    public Ledger(String accountNo, List<String> purchases, double[] rates) {
+        this.accountNo = accountNo;
+        this.purchases = purchases;
+        this.rates = rates;
+    }
+
+    public Ledger() {
+
+    }
 
     @Override
     public Long getId() {
@@ -38,7 +54,12 @@ public class Ledger extends AbstractDocument {
     }
 
     @Override
-    public Object getOwnerId() {
+    public String getBranchCode() {
+        return null;
+    }
+
+    @Override
+    public String getDepartmentCode() {
         return null;
     }
 
@@ -46,12 +67,28 @@ public class Ledger extends AbstractDocument {
         this.id = id;
     }
 
-    public String[] getPurchases() {
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public List<String> getPurchases() {
         return purchases;
     }
 
-    public void setPurchases(String[] purchases) {
+    public void setPurchases(List<String> purchases) {
         this.purchases = purchases;
+    }
+
+    public double[] getRates() {
+        return rates;
+    }
+
+    public void setRates(double[] rates) {
+        this.rates = rates;
     }
 
 }

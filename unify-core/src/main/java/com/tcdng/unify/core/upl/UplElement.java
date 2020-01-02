@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -304,7 +304,11 @@ public class UplElement implements UplElementAttributes {
         }
 
         for (String attribute : uplElement.getAttributeNames()) {
-            if (!uplAttributes.containsKey(attribute)) {
+            // Fix attribute merge 12/08/18
+            // Attribute values should be updated both ways with those of this element having preference
+            if (uplAttributes.containsKey(attribute)) {
+                uplElement.setAttributeValue(attribute, uplAttributes.get(attribute));
+            } else {
                 uplAttributes.put(attribute, uplElement.getAttributeValue(attribute));
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,14 +21,14 @@ package com.tcdng.unify.core.database;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ReportParameterOptionsQuery extends AbstractTestEntityQuery<ReportParameterOptions> {
+public class ReportParameterOptionsQuery extends AbstractTestTableEntityQuery<ReportParameterOptions> {
 
     public ReportParameterOptionsQuery() {
         super(ReportParameterOptions.class);
     }
 
     public ReportParameterOptionsQuery reportParameterId(Long reportParameterId) {
-        return (ReportParameterOptionsQuery) this.equals("reportParameterId", reportParameterId);
+        return (ReportParameterOptionsQuery) this.addEquals("reportParameterId", reportParameterId);
     }
 
 }

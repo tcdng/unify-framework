@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -91,10 +91,8 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write(",\"pTodayClass\":\"ctoday\"");
         writer.write(",\"pClearable\":").write(dateField.isClearable());
         writer.write(",\"pPadLeft\":true");
-        writer.write(",\"pShortDayNm\":");
-        writer.writeJsonStringArray((Object[]) dateField.getShortDayList());
-        writer.write(",\"pLongMonthNm\":");
-        writer.writeJsonStringArray((Object[]) dateField.getLongMonthList());
+        writer.write(",\"pShortDayNm\":").writeJsonArray(dateField.getShortDayList());
+        writer.write(",\"pLongMonthNm\":").writeJsonArray(dateField.getLongMonthList());
         writer.write(",\"pPattern\":");
         writer.writeJsonPatternObject(dateField.getPattern());
         writer.write("});");

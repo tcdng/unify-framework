@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -65,7 +65,7 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
                             observedExpirableInfo.getExpirable().getName(),
                             observedExpirableInfo.getMethod().getName());
                     observedExpirableInfo.getMethod().invoke(observedExpirableInfo.getExpirable());
-                    observedExpirableInfo.reset();
+                    observedExpirableInfo.reset(now);
                 }
             } catch (Exception e) {
                 logError(e);
@@ -75,6 +75,7 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 
     @Override
     protected void onInitialize() throws UnifyException {
+        Date now = new Date();
         for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(UnifyComponent.class)) {
             for (Method method : unifyComponentConfig.getType().getMethods()) {
                 Expirable ea = method.getAnnotation(Expirable.class);
@@ -101,7 +102,7 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
                     }
 
                     UnifyComponent expirable = getComponent(unifyComponentConfig.getName());
-                    expirablesList.add(new ObservedExpirableInfo(expirable, method, cycle));
+                    expirablesList.add(new ObservedExpirableInfo(expirable, method, now, cycle));
                 }
             }
         }
@@ -122,11 +123,11 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
 
         private Date expiryDate;
 
-        public ObservedExpirableInfo(UnifyComponent expirable, Method method, int cycle) {
+        public ObservedExpirableInfo(UnifyComponent expirable, Method method, Date now, int cycle) {
             this.expirable = expirable;
             this.method = method;
             this.cycle = cycle;
-            reset();
+            reset(now);
         }
 
         public UnifyComponent getExpirable() {
@@ -141,8 +142,8 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
             return now.after(expiryDate);
         }
 
-        public void reset() {
-            expiryDate = CalendarUtils.getNowWithOffset(cycle);
+        public void reset(Date now) {
+            expiryDate = CalendarUtils.getNowWithOffset(now, cycle);
         }
     }
 }

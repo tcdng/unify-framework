@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.transform.Transformer;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Holds SQL information, relational information, reflection information and
@@ -42,11 +43,15 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
     private String name;
 
-    private String column;
+    private String columnName;
+
+    private String preferredColumnName;
 
     private String constraintName;
 
-    private String defaultValue;
+    private String defaultVal;
+
+    private String foreignEntityPreferredAlias;
 
     private Transformer<?, ?> transformer;
 
@@ -55,6 +60,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     private boolean foreignKey;
 
     private boolean ignoreFkConstraint;
+
+    private boolean listOnly;
 
     private boolean nullable;
 
@@ -69,39 +76,51 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     private int orderIndex;
 
     public SqlFieldInfo(int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
-            SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String column,
-            String constraintName, boolean primaryKey, boolean foreignKey, boolean ignoreFkConstraint,
-            Transformer<?, ?> transformer, SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultValue,
-            Field field, Method getter, Method setter) {
+            SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
+            String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
+            boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
+            SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
+            Method setter, boolean isAllObjectsInLowerCase) {
         this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
-                column, constraintName, primaryKey, foreignKey, ignoreFkConstraint, transformer, sqlFieldDimensions,
-                nullable, defaultValue, field, getter, setter);
+                columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
+                listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, defaultVal, field, getter,
+                setter, isAllObjectsInLowerCase);
     }
 
     public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
-            SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String column,
-            String constraintName, boolean primaryKey, boolean foreignKey, boolean ignoreFkConstraint,
-            Transformer<?, ?> transformer, SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultValue,
-            Field field, Method getter, Method setter) {
+            SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
+            String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
+            boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
+            SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
+            Method setter, boolean isAllObjectsInLowerCase) {
         this.marker = marker;
         this.columnType = columnType;
         this.foreignEntityInfo = foreignSqlEntityInfo;
         this.foreignFieldInfo = foreignSqlFieldInfo;
         this.foreignKeyFieldInfo = foreignKeySqlFieldInfo;
         this.name = name;
-        this.column = column;
+        this.columnName = columnName;
+        this.preferredColumnName = preferredColumnName;
         this.constraintName = constraintName;
         this.primaryKey = primaryKey;
         this.foreignKey = foreignKey;
+        this.foreignEntityPreferredAlias = foreignEntityPreferredAlias;
+        this.listOnly = listOnly;
         this.ignoreFkConstraint = ignoreFkConstraint;
         this.transformer = transformer;
         this.nullable = nullable;
         this.sqlFieldDimensions = sqlFieldDimensions;
-        this.defaultValue = defaultValue;
+        this.defaultVal = defaultVal;
         this.field = field;
         this.getter = getter;
         this.setter = setter;
         this.orderIndex = orderIndex;
+        
+        if (isAllObjectsInLowerCase) {
+            this.columnName = StringUtils.toLowerCase(columnName);
+            this.preferredColumnName = StringUtils.toLowerCase(preferredColumnName);
+            this.constraintName = StringUtils.toLowerCase(constraintName);
+        }
     }
 
     @Override
@@ -118,8 +137,13 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     }
 
     @Override
-    public String getColumn() {
-        return column;
+    public String getColumnName() {
+        return columnName;
+    }
+
+    @Override
+    public String getPreferredColumnName() {
+        return preferredColumnName;
     }
 
     @Override
@@ -128,13 +152,18 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     }
 
     @Override
-    public String getDefaultValue() {
-        return defaultValue;
+    public String getDefaultVal() {
+        return defaultVal;
+    }
+
+    @Override
+    public String getForeignEntityPreferredAlias() {
+        return foreignEntityPreferredAlias;
     }
 
     @Override
     public boolean isListOnly() {
-        return foreignKeyFieldInfo != null;
+        return listOnly;
     }
 
     public Transformer<?, ?> getTransformer() {
@@ -175,8 +204,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     }
 
     @Override
-    public boolean isWithDefaultValue() {
-        return defaultValue != null;
+    public boolean isWithDefaultVal() {
+        return defaultVal != null;
     }
 
     @Override
@@ -212,13 +241,14 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
     @Override
     public boolean isSameSchema(SqlFieldSchemaInfo sqlFieldSchemaInfo) {
-        if (defaultValue != null) {
-            if (!defaultValue.equals(sqlFieldSchemaInfo.getDefaultValue())) {
+        if (defaultVal != null) {
+            if (!defaultVal.equals(sqlFieldSchemaInfo.getDefaultVal())) {
                 return false;
             }
         }
 
-        return columnType.equals(sqlFieldSchemaInfo.getColumnType()) && column.equals(sqlFieldSchemaInfo.getColumn())
+        return columnType.equals(sqlFieldSchemaInfo.getColumnType())
+                && columnName.equals(sqlFieldSchemaInfo.getColumnName())
                 && getLength() == sqlFieldSchemaInfo.getLength() && getPrecision() == sqlFieldSchemaInfo.getPrecision()
                 && getScale() == sqlFieldSchemaInfo.getScale();
     }
@@ -240,12 +270,12 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
     public String toDimensionString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("{columnName = ").append(column);
+        sb.append("{columnName = ").append(columnName);
         sb.append(", columnType = ").append(columnType);
         sb.append(", length = ").append(getLength());
         sb.append(", precision = ").append(getPrecision());
         sb.append(", scale = ").append(getScale());
-        sb.append(", defaultVal = ").append(defaultValue).append("}");
+        sb.append(", defaultVal = ").append(defaultVal).append("}");
         return sb.toString();
     }
 }

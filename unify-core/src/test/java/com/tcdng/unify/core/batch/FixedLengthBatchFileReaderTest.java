@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.constant.PadDirection;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.util.IOUtils;
@@ -40,12 +39,12 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testOpenBatchFileReader() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+            BatchFileReadConfig batchFileReadConfig =
+                    BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                     "6758495839Bamanga Tukur       NGN0000000052000");
             reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-            reader.open(null, fileBulkConfig, fileObject);
+            reader.open(batchFileReadConfig, file);
         } finally {
             if (reader != null) {
                 reader.close();
@@ -57,11 +56,11 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadEmptyFile() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile();
+            BatchFileReadConfig batchFileReadConfig =
+                    BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile();
             reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-            reader.open(null, fileBulkConfig, fileObject);
+            reader.open(batchFileReadConfig, file);
 
             boolean read = reader.readNextRecord(getValueStore(new TestBatchItemRecordB()));
             assertFalse(read);
@@ -76,12 +75,12 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordWithTrimmingOn() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+            BatchFileReadConfig batchFileReadConfig =
+                    BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                     "6758495839Bamanga Tukur       NGN0000000052000");
             reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-            reader.open(null, fileBulkConfig, fileObject);
+            reader.open(batchFileReadConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -102,12 +101,12 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordWithTrimmingOff() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(false);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+            BatchFileReadConfig batchFileReadConfig =
+                    BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, false, false);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                     "6758495839Bamanga Tukur       NGN0000000052000");
             reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-            reader.open(null, fileBulkConfig, fileObject);
+            reader.open(batchFileReadConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -128,12 +127,12 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordMultiple() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+            BatchFileReadConfig batchFileReadConfig =
+                    BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                     "6758495839Bamanga Tukur       NGN0000000052000");
             reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-            reader.open(null, fileBulkConfig, fileObject);
+            reader.open(batchFileReadConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -162,15 +161,13 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordWithFormatter() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-            fileBulkConfig.addFieldConfig("amount", null, "!centformat", PadDirection.LEFT, 13, false, false, true,
-                    '0');
+            BatchFileReadConfig batchFileReadConfig =
+                    BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, true);
 
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                     "6758495839Bamanga Tukur       NGN0000000052043");
             reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-            reader.open(null, fileBulkConfig, fileObject);
+            reader.open(batchFileReadConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);
@@ -198,12 +195,12 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     public void testReadNextRecordTillEof() throws Exception {
         BatchFileReader reader = null;
         try {
-            BatchFileConfig fileBulkConfig = BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(true);
-            byte[][] fileObject = new byte[1][];
-            fileObject[0] = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
+            BatchFileReadConfig batchFileReadConfig =
+                    BatchFileReaderTestUtils.createSampleFixedLengthBatchConfig(null, true, false);
+            byte[] file = IOUtils.createInMemoryTextFile("0123456789Abel Turner         NGN0000000020000",
                     "6758495839Bamanga Tukur       NGN0000000052000");
             reader = (BatchFileReader) getComponent("fixedlength-batchfilereader");
-            reader.open(null, fileBulkConfig, fileObject);
+            reader.open(batchFileReadConfig, file);
 
             TestBatchItemRecordB batchItemRecord = new TestBatchItemRecordB();
             ValueStore store = getValueStore(batchItemRecord);

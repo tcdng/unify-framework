@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.tcdng.unify.core.database.sql.dialect;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.constant.SqlDialectConstants;
+import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 
 /**
  * MS SQL 2012 dialect.
@@ -25,8 +25,13 @@ import com.tcdng.unify.core.constant.SqlDialectConstants;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(name = SqlDialectConstants.MSSQL_2012, description = "$m{sqldialect.mssql2012db}")
+@Component(name = SqlDialectNameConstants.MSSQL_2012, description = "$m{sqldialect.mssql2012db}")
 public class MsSql2012Dialect extends MsSqlDialect {
+
+    @Override
+    public String getPreferredName(String name) {
+        return "[" + name + "]";
+    }
 
     @Override
     protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {

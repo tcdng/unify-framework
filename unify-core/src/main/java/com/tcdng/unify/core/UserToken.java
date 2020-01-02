@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,19 +23,25 @@ package com.tcdng.unify.core;
  */
 public class UserToken {
 
-    private String roleCode;
-
-    private String themePath;
-
     private String userLoginId;
 
     private String userName;
 
-    private Object userId;
+    private String roleCode;
 
-    private Object branchCode;
+    private String branchCode;
+
+    private String tenantCode;
+
+    private String colorScheme;
 
     private String ipAddress;
+
+    private String departmentCode;
+
+    private String themePath;
+
+    private String zoneCode;
 
     private boolean globalAccess;
 
@@ -45,33 +51,20 @@ public class UserToken {
 
     private boolean remote;
 
-    public UserToken(String userLoginId, String userName, String ipAddress, Object userId, Object branchCode,
-            boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+    public UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
+            String tenantCode, String colorScheme, boolean globalAccess, boolean reservedUser,
+            boolean allowMultipleLogin, boolean remote) {
         this.userLoginId = userLoginId;
         this.userName = userName;
-        this.userId = userId;
+        this.zoneCode = zoneCode;
         this.branchCode = branchCode;
+        this.tenantCode = tenantCode;
+        this.colorScheme = colorScheme;
         this.ipAddress = ipAddress;
         this.globalAccess = globalAccess;
         this.reservedUser = reservedUser;
         this.allowMultipleLogin = allowMultipleLogin;
         this.remote = remote;
-    }
-
-    public String getRoleCode() {
-        return roleCode;
-    }
-
-    public String getThemePath() {
-        return themePath;
-    }
-
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
-    }
-
-    public void setThemePath(String themePath) {
-        this.themePath = themePath;
     }
 
     public String getUserLoginId() {
@@ -82,16 +75,48 @@ public class UserToken {
         return userName;
     }
 
-    public Object getUserId() {
-        return userId;
+    public String getBranchCode() {
+        return branchCode;
     }
 
-    public Object getBranchCode() {
-        return branchCode;
+    public String getTenantCode() {
+        return tenantCode;
+    }
+
+    public String getZoneCode() {
+        return zoneCode;
+    }
+
+    public String getColorScheme() {
+        return colorScheme;
     }
 
     public String getIpAddress() {
         return ipAddress;
+    }
+
+    public String getDepartmentCode() {
+        return departmentCode;
+    }
+
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getThemePath() {
+        return themePath;
+    }
+
+    public void setThemePath(String themePath) {
+        this.themePath = themePath;
     }
 
     public boolean isGlobalAccess() {

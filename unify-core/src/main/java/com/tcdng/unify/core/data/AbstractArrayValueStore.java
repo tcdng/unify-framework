@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.core.data;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Abstract array value store.
@@ -43,6 +44,16 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
     @Override
     public Object retrieve(String name) throws UnifyException {
         return doRetrieve(storage[dataIndex], name);
+    }
+
+    @Override
+    public <U> U retrieve(Class<U> type, String name) throws UnifyException {
+        return DataUtils.convert(type, retrieve(name), null);
+    }
+
+    @Override
+    public <U> U retrieve(Class<U> type, int storageIndex, String name) throws UnifyException {
+        return DataUtils.convert(type, retrieve(storageIndex, name), null);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,10 +25,10 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/droparrow.png}"),
-        @UplAttribute(name = "timeout", type = long.class, defaultValue = "-1"),
+@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/droparrow.png}"),
+        @UplAttribute(name = "timeout", type = long.class, defaultVal = "-1"),
         @UplAttribute(name = "clearable", type = boolean.class),
-        @UplAttribute(name = "popupAlways", type = boolean.class, defaultValue = "false") })
+        @UplAttribute(name = "popupAlways", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPopupTextField extends TextField {
 
     @Override
@@ -38,7 +38,7 @@ public abstract class AbstractPopupTextField extends TextField {
 
     @Override
     public String getStyleClass() throws UnifyException {
-        return super.getStyleClass() + " ui-text-popup";
+        return "ui-text-popup " + super.getStyleClass();
     }
 
     public String getPopupButtonId() throws UnifyException {

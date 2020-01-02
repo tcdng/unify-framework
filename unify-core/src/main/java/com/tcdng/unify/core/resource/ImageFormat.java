@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@
 package com.tcdng.unify.core.resource;
 
 import com.tcdng.unify.core.annotation.StaticList;
-import com.tcdng.unify.core.constant.ContentTypeConstants;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
@@ -30,27 +30,32 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("imageformatlist")
 public enum ImageFormat implements EnumConst {
 
-    BITMAP("BMP", ".bmp", "image/bmp"),
-    JPEG("JPG", ".jpg", "image/jpg"),
-    GIF("GIF", ".gif", "image/gif"),
-    PNG("PNG", ".png", "image/png"),
-    WILDCARD("WLD", ".*", ContentTypeConstants.IMAGE);
+    BITMAP("BMP", ".bmp", MimeType.IMAGE_BMP),
+    JPEG("JPG", ".jpg", MimeType.IMAGE_JPG),
+    GIF("GIF", ".gif", MimeType.IMAGE_GIF),
+    PNG("PNG", ".png", MimeType.IMAGE_PNG),
+    WILDCARD("WLD", ".*", MimeType.IMAGE);
 
     private final String code;
 
     private final String fileExtension;
 
-    private final String contentType;
+    private final MimeType mimeType;
 
-    private ImageFormat(String code, String fileExtension, String contentType) {
+    private ImageFormat(String code, String fileExtension, MimeType mimeType) {
         this.code = code;
         this.fileExtension = fileExtension;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
     }
 
     @Override
     public String code() {
         return this.code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return WILDCARD.code;
     }
 
     public static ImageFormat fromCode(String code) {
@@ -65,7 +70,7 @@ public enum ImageFormat implements EnumConst {
         return this.fileExtension;
     }
 
-    public String contentType() {
-        return this.contentType;
+    public MimeType mimeType() {
+        return this.mimeType;
     }
 }

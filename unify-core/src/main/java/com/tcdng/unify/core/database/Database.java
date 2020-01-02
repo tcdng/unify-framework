@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,9 +22,9 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.Aggregate;
 import com.tcdng.unify.core.data.AggregateType;
-import com.tcdng.unify.core.operation.Update;
 
 /**
  * Interface that represents a database.
@@ -35,12 +35,11 @@ import com.tcdng.unify.core.operation.Update;
 public interface Database extends UnifyComponent {
 
     /**
-     * Returns the database transaction manager.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
+     * Gets the database dataSource.
+     * @return the dataSource
+     * @throws UnifyException if an error occurs
      */
-    DatabaseTransactionManager getTransactionManager() throws UnifyException;
+    DataSource getDataSource() throws UnifyException;
 
     /**
      * Returns the database manage data source name.
@@ -51,21 +50,42 @@ public interface Database extends UnifyComponent {
     String getDataSourceName() throws UnifyException;
 
     /**
-     * Finds record of specified type by id.
+     * Explicitly join current transaction in application database transaction
+     * manager.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void joinTransaction() throws UnifyException;
+
+    /**
+     * Creates a new database session.
+     * 
+     * @return the new database session
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    DatabaseSession createDatabaseSession() throws UnifyException;
+
+    /**
+     * Finds record of specified type by id. List-only properties of returned object
+     * are not populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
      * @param id
      *            the record unique ID
-     * @return If found, view-only properties (if any) of returned object are not
-     *         populated.
+     * @return the record with supplied ID
      * @throws UnifyException
      *             if record with id is not found
      */
     <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException;
 
     /**
-     * Finds record of specified type by id and version number.
+     * Finds record of specified type by id and version number. List-only properties
+     * of returned object are not populated. Child and child list properties are
+     * populated.
      * 
      * @param clazz
      *            the record type
@@ -73,24 +93,66 @@ public interface Database extends UnifyComponent {
      *            the record unique ID
      * @param versionNo
      *            the version number
-     * @return If found, view-only properties (if any) of returned object are not
-     *         populated.
+     * @return the record with supplied ID and version number
      * @throws UnifyException
      *             if record with id and version is not found
      */
     <T extends Entity> T find(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
     /**
-     * Finds a record by criteria.
+     * Finds a record by criteria. List-only properties of returned object are not
+     * populated. Child and child list properties are populated.
      * 
      * @param query
      *            the query
-     * @return record if found otherwise null. List-only properties (if any) of
-     *         returned object are not populated.
+     * @return matched record
      * @throws UnifyException
      *             if multiple records are found. If an error occurs
      */
     <T extends Entity> T find(Query<T> query) throws UnifyException;
+
+    /**
+     * Finds record of specified type by id. List-only properties of returned object
+     * are not populated. Child and child list properties are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record unique ID
+     * @return the record with supplied ID
+     * @throws UnifyException
+     *             if record with id is not found
+     */
+    <T extends Entity> T findLean(Class<T> clazz, Object id) throws UnifyException;
+
+    /**
+     * Finds record of specified type by id and version number. List-only properties
+     * of returned object are not populated. Child and child list properties are not
+     * populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record unique ID
+     * @param versionNo
+     *            the version number
+     * @return the record with supplied ID and version number
+     * @throws UnifyException
+     *             if record with id and version is not found
+     */
+    <T extends Entity> T findLean(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+
+    /**
+     * Finds a record by criteria. List-only properties of returned object are not
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return matched record
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T findLean(Query<T> query) throws UnifyException;
 
     /**
      * Finds constraining record that may prevent supplied record from being
@@ -104,12 +166,13 @@ public interface Database extends UnifyComponent {
     <T extends Entity> T findConstraint(T record) throws UnifyException;
 
     /**
-     * Finds all records with fields that match criteria.
+     * Finds all records with fields that match criteria. List-only properties of
+     * returned objects are not populated. Child and child list properties are not
+     * populated.
      * 
      * @param query
      *            the query
-     * @return a list of record that match criteria. List-only properties (if any)
-     *         of record are not populated.
+     * @return a list of record that match criteria.
      * @throws UnifyException
      *             if an error occurs
      */
@@ -143,21 +206,24 @@ public interface Database extends UnifyComponent {
      *     </code>
      * </pre>
      * 
+     * List-only properties of returned objects are not populated. Child and child
+     * list properties are not populated.
+     * 
      * @param keyClass
      *            the map key class
      * @param keyName
      *            the key field
      * @param query
      *            the query object.
-     * @return the resulting map. List-only properties (if any) of persistent data
-     *         are not populated.
+     * @return the resulting map.
      * @throws UnifyException
      *             if criteria key property is not set. If an error occurs
      */
     <T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query) throws UnifyException;
 
     /**
-     * Returns a map of lists by key.
+     * Returns a map of lists by key. List-only properties of returned objects are
+     * not populated. Child and child list properties are not populated.
      * 
      * @param keyClass
      *            the map key class
@@ -173,8 +239,8 @@ public interface Database extends UnifyComponent {
             throws UnifyException;
 
     /**
-     * Lists record of specified type by id. Similar to {@link #find(Class, Object)}
-     * but with view-only properties of returned record also populated.
+     * Lists record of specified type by id. List-only properties of returned object
+     * are populated. Child and child list properties are populated.
      * 
      * @param clazz
      *            the record type
@@ -186,9 +252,9 @@ public interface Database extends UnifyComponent {
     <T extends Entity> T list(Class<T> clazz, Object id) throws UnifyException;
 
     /**
-     * Lists record of specified type by id and version number. Similar to
-     * {@link #find(Class, Object, Object)} but with view-only properties of
-     * returned record also populated.
+     * Lists record of specified type by id and version number. List-only properties
+     * of returned object are populated. Child and child list properties are
+     * populated.
      * 
      * @param clazz
      *            the record type
@@ -202,8 +268,8 @@ public interface Database extends UnifyComponent {
     <T extends Entity> T list(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
 
     /**
-     * Lists record by criteria. Similar to {@link #find(Query)} but with view-only
-     * properties of returned record also populated.
+     * Lists record by criteria. List-only properties of returned object are
+     * populated. Child and child list properties are populated.
      * 
      * @param query
      *            the query
@@ -215,8 +281,50 @@ public interface Database extends UnifyComponent {
     <T extends Entity> T list(Query<T> query) throws UnifyException;
 
     /**
-     * Lists all records with fields that match criteria. Similar to
-     * {@link #findAll(Query)} but with view-only properties of returned record also
+     * Lists record of specified type by id. List-only properties of returned object
+     * are populated. Child and child list properties are not populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record unique ID
+     * @throws UnifyException
+     *             if record with id is not found
+     */
+    <T extends Entity> T listLean(Class<T> clazz, Object id) throws UnifyException;
+
+    /**
+     * Lists record of specified type by id and version number. List-only properties
+     * of returned object are populated. Child and child list properties are not
+     * populated.
+     * 
+     * @param clazz
+     *            the record type
+     * @param id
+     *            the record unique ID
+     * @param versionNo
+     *            the version number
+     * @throws UnifyException
+     *             if record with id and version is not found
+     */
+    <T extends Entity> T listLean(Class<T> clazz, Object id, Object versionNo) throws UnifyException;
+
+    /**
+     * Lists record by criteria. List-only properties of returned object are
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return record if found otherwise null. List-only properties (if any) of
+     *         returned object are populated.
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T listLean(Query<T> query) throws UnifyException;
+
+    /**
+     * Lists all records with fields that match criteria. List-only properties of
+     * returned records are populated. Child and child list properties are not
      * populated.
      * 
      * @param query
@@ -228,8 +336,8 @@ public interface Database extends UnifyComponent {
 
     /**
      * Lists all records with fields that match criteria returning resulting record
-     * in a map. Similar to {@link #findAll(Query)} but with view-only properties of
-     * returned record also populated.
+     * in a map. List-only properties of returned records are populated. Child and
+     * child list properties are not populated.
      * 
      * @param keyClass
      *            the map key class should be the same as the criteria key field
@@ -244,7 +352,8 @@ public interface Database extends UnifyComponent {
     <T, U extends Entity> Map<T, U> listAllMap(Class<T> keyClass, String keyName, Query<U> query) throws UnifyException;
 
     /**
-     * Returns a map of lists by key.
+     * Returns a map of lists by key. List-only properties of returned records are
+     * populated. Child and child list properties are not populated.
      * 
      * @param keyClass
      *            the map key class
@@ -261,7 +370,7 @@ public interface Database extends UnifyComponent {
 
     /**
      * Returns a list of values of a particular field for all record that match
-     * supplied criteria. The field, which can be a view-only field, must be
+     * supplied criteria. The field, which can be a list-only field, must be
      * selected in the criteria object. For instance we have a record class
      * 
      * <pre>
@@ -319,8 +428,36 @@ public interface Database extends UnifyComponent {
     <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
     /**
+     * Returns the minimum value of a record field by criteria.
+     * 
+     * @param fieldClass
+     *            the field type
+     * @param fieldName
+     *            the field name
+     * @param query
+     *            the query used to identify the record
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+
+    /**
+     * Returns the maximum value of a record field by criteria.
+     * 
+     * @param fieldClass
+     *            the field type
+     * @param fieldName
+     *            the field name
+     * @param query
+     *            the query used to identify the record
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+
+    /**
      * Returns a set of values of a particular field for all record that match
-     * supplied criteria. The field, which can be a view-only field, must be
+     * supplied criteria. The field, which can be a list-only field, must be
      * selected in the criteria object.
      * 
      * @param fieldClass
@@ -397,7 +534,7 @@ public interface Database extends UnifyComponent {
     Object create(Entity record) throws UnifyException;
 
     /**
-     * Updates record in database by ID.
+     * Updates record in database by ID. Child records, if any, are updated.
      * 
      * @param record
      *            the record to update
@@ -408,7 +545,8 @@ public interface Database extends UnifyComponent {
     int updateById(Entity record) throws UnifyException;
 
     /**
-     * Updates record in database by ID and version number.
+     * Updates record in database by ID and version number. Child records, if any,
+     * are updated.
      * 
      * @param record
      *            the record to update
@@ -417,6 +555,29 @@ public interface Database extends UnifyComponent {
      *             If an error occurs
      */
     int updateByIdVersion(Entity record) throws UnifyException;
+
+    /**
+     * Updates record in database by ID. Child records, if any, are not updated.
+     * 
+     * @param record
+     *            the record to update
+     * @return the number of record updated. Always 1.
+     * @throws UnifyException
+     *             if record with ID is not found. If an error occurs
+     */
+    int updateLeanById(Entity record) throws UnifyException;
+
+    /**
+     * Updates record in database by ID and version number. Child records, if any,
+     * are not updated.
+     * 
+     * @param record
+     *            the record to update
+     * @return the number of record updated.
+     * @throws UnifyException
+     *             If an error occurs
+     */
+    int updateLeanByIdVersion(Entity record) throws UnifyException;
 
     /**
      * Updates record by ID.
@@ -505,6 +666,21 @@ public interface Database extends UnifyComponent {
     int countAll(Query<? extends Entity> query) throws UnifyException;
 
     /**
+     * Executes an aggregate function for single selected field of records
+     * that match specified query.
+     * 
+     * @param aggregateType
+     *            the aggregate type
+     * @param query
+     *            the query to use
+     * @return the aggregate object
+     * @throws UnifyException
+     *             if selected field is not numeric. If no field is selected. If multiple fields are selected. If
+     *             an error occurs
+     */
+    Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+
+    /**
      * Executes an aggregate function (individually) for selected properties of
      * record that match specified criteria.
      * 
@@ -517,14 +693,34 @@ public interface Database extends UnifyComponent {
      *             if selected fields are not numeric. If no field is selected. If
      *             an error occurs
      */
-    List<Aggregate<?>> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+    List<Aggregate<?>> aggregateMany(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
 
     /**
-     * Gets the current timestamp of database.
+     * Gets the current UTC timestamp of database based on session time zone.
      * 
-     * @return the timestamp
+     * @return the UTC timestamp
      * @throws UnifyException
      *             if an error occurs
      */
     Date getNow() throws UnifyException;
+
+    /**
+     * Executes callable procedure with no results.
+     * 
+     * @param callableProc
+     *            the callable procedure object.
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    void executeCallable(CallableProc callableProc) throws UnifyException;
+
+    /**
+     * Executes callable procedure with result lists.
+     * 
+     * @param callableProc
+     * @return list of result items
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<Class<?>, List<?>> executeCallableWithResults(CallableProc callableProc) throws UnifyException;
 }

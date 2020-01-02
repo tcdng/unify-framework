@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,8 +30,8 @@ import com.tcdng.unify.core.format.Pattern;
  * @since 1.0
  */
 @Component("ui-date")
-@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultValue = "$t{images/calendar.png}"),
-        @UplAttribute(name = "formatter", type = Formatter.class, defaultValue = "$d{!dateformat style:customshort}") })
+@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/calendar.png}"),
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!dateformat style:customshort}") })
 public class DateField extends AbstractTimeField {
 
     private DateTimeFormat monthDateTimeFormat;
@@ -41,8 +41,8 @@ public class DateField extends AbstractTimeField {
     private String[] longMonthList;
 
     @Override
-    public void onPageInitialize() throws UnifyException {
-        super.onPageInitialize();
+    public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
 
         // Preset date-time format for month and pattern aliases
         Formatter<?> formatter = getFormatter();

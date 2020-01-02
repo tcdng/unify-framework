@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import java.util.Date;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
@@ -28,6 +29,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Tooling(name = "timeOfDayTrans", description = "Time-Of-Day Transformer")
 @Component("timeofday-transformer")
 public class TimeOfDayTransformer extends AbstractUnifyComponent implements Transformer<Date, Date> {
 

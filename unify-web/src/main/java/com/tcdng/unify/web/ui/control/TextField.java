@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,8 +31,8 @@ import com.tcdng.unify.web.ui.AbstractFormattedControl;
 @Component("ui-text")
 @UplAttributes({ @UplAttribute(name = "size", type = int.class), @UplAttribute(name = "minLen", type = int.class),
         @UplAttribute(name = "maxLen", type = int.class), @UplAttribute(name = "case", type = String.class),
-        @UplAttribute(name = "extStyleClass", type = String.class, defaultValue = "tread"),
-        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultValue = "true") })
+        @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tread"),
+        @UplAttribute(name = "extReadOnly", type = boolean.class, defaultVal = "true") })
 public class TextField extends AbstractFormattedControl {
 
     public String getCase() throws UnifyException {
@@ -53,6 +53,16 @@ public class TextField extends AbstractFormattedControl {
 
     public ExtensionType getExtensionType() {
         return ExtensionType.NONE;
+    }
+
+    @Override
+    public boolean setFocus() throws UnifyException {
+        boolean textUseFacade = !getExtReadOnly();
+        if (textUseFacade) {
+            return getRequestContextUtil().setFocusOnWidgetId(getFacadeId());
+        }
+
+        return super.setFocus();
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,6 +47,30 @@ public interface ValueStore {
      *             if an error occurs
      */
     Object retrieve(int storageIndex, String name) throws UnifyException;
+
+    /**
+     * Retrieves converted value from store using supplied name.
+     * 
+     * @param type the type to convert to
+     * @param name
+     *            the name of the value to retrieve
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T retrieve(Class<T> type, String name) throws UnifyException;
+
+    /**
+     * Retrieves converted value from store at a particular storage index using supplied name.
+     * 
+     * @param type the type to convert to
+     * @param storageIndex
+     *            the storage index
+     * @param name
+     *            the name of the value to retrieve
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T retrieve(Class<T> type, int storageIndex, String name) throws UnifyException;
 
     /**
      * Stores a value using supplied name.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -58,20 +58,13 @@ public class ImageWriter extends AbstractTargetControlWriter {
             writer.writeURLParameter("clearOnRead", "true");
         } else {
             String src = imageCtrl.getSrc();
-            if (StringUtils.isBlank(src)) {
-                String srcBinding = imageCtrl.getSrcBinding();
-                if (!StringUtils.isBlank(srcBinding)) {
-                    src = imageCtrl.getStringValue(srcBinding);
-                }
-            }
-
-            if (!StringUtils.isBlank(src)) {
+            if (StringUtils.isNotBlank(src)) {
                 boolean alwaysFetch = imageCtrl.isAlwaysFetch();
                 if (TokenUtils.isContextScopeTag(src)) {
                     String imageName = TokenUtils.extractTokenValue(src);
                     writer.writeScopeImageContextURL(imageName);
                     String scope = imageCtrl.getScope();
-                    if (!StringUtils.isBlank(scope)) {
+                    if (StringUtils.isNotBlank(scope)) {
                         writer.writeURLParameter("scope", scope);
                     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,6 +37,11 @@ public enum TabPosition implements EnumConst {
     @Override
     public String code() {
         return this.code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return TOP.code;
     }
 
     public static TabPosition fromCode(String code) {

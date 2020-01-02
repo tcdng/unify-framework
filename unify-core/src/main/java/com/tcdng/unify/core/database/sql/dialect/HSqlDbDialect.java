@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,16 +18,23 @@ package com.tcdng.unify.core.database.sql.dialect;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.constant.SqlDialectConstants;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
+import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
-import com.tcdng.unify.core.database.sql.SqlUtils;
+import com.tcdng.unify.core.util.SqlUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * HSQLDB SQL dialect.
@@ -35,10 +42,14 @@ import com.tcdng.unify.core.database.sql.SqlUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(name = SqlDialectConstants.HSQLDB, description = "$m{sqldialect.hsqldb}")
+@Component(name = SqlDialectNameConstants.HSQLDB, description = "$m{sqldialect.hsqldb}")
 public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
     private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
+
+    public HSqlDbDialect() {
+        super(true); // useCallableFunctionMode
+    }
 
     @Override
     public int getMaxClauseValues() {
@@ -51,8 +62,8 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateNowSql() throws UnifyException {
-        return "VALUES CURRENT_TIMESTAMP";
+    public String generateUTCTimestampSql() throws UnifyException {
+        return "VALUES TIMESTAMPADD(SQL_TSI_MINUTE, -EXTRACT(TIMEZONE_MINUTE FROM CURRENT_TIMESTAMP), TIMESTAMPADD(SQL_TSI_HOUR, -EXTRACT(TIMEZONE_HOUR FROM CURRENT_TIMESTAMP), CURRENT_TIMESTAMP))";
     }
 
     @Override
@@ -61,10 +72,84 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            throws UnifyException {
+        if (sqlColumnAlterInfo.isAltered()) {
+            List<String> sqlList = new ArrayList<String>();
+            StringBuilder sb = new StringBuilder();
+            SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+            if (sqlColumnAlterInfo.isDataChange()) {
+                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+                if (format) {
+                    sb.append(getLineSeparator());
+                } else {
+                    sb.append(' ');
+                }
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
+                sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                        sqlFieldSchemaInfo.getScale());
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
+            if (sqlColumnAlterInfo.isDefaultChange()) {
+                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+                if (format) {
+                    sb.append(getLineSeparator());
+                } else {
+                    sb.append(' ');
+                }
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" SET");
+                if (!sqlFieldSchemaInfo.isNullable() || sqlFieldSchemaInfo.isWithDefaultVal()) {
+                    sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                } else {
+                    sb.append(" DEFAULT NULL");
+                }
+
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
+            if (sqlColumnAlterInfo.isNullableChange()) {
+                if (!sqlFieldSchemaInfo.isNullable()) {
+                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
+                    sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
+                    sqlList.add(sb.toString());
+                    StringUtils.truncate(sb);
+                }
+
+                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+                if (format) {
+                    sb.append(getLineSeparator());
+                } else {
+                    sb.append(' ');
+                }
+                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
+                if (sqlFieldSchemaInfo.isNullable()) {
+                    sb.append(" SET NULL");
+                } else {
+                    sb.append(" SET NOT NULL");
+                }
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
+            return sqlList;
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
             boolean format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getTable());
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
         if (format) {
             sb.append(getLineSeparator());
         } else {

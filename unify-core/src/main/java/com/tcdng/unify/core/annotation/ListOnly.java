@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,9 +37,12 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 public @interface ListOnly {
 
     /** The name of the foreign key field */
-    String key();
+    String key() default AnnotationConstants.NONE;
 
-    /** The property of the foreign entity the view-only field binds to */
+    /**
+     * The property of the foreign entity the list-only field binds to. Should have
+     * a table alias when used in view definitions
+     */
     String property();
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,5 +46,9 @@ public class TaskOutput {
 
     public <T> T getResult(Class<T> valueType, String name) throws UnifyException {
         return DataUtils.convert(valueType, results.get(name), null);
+    }
+
+    public Object getResult(String name) throws UnifyException {
+        return results.get(name);
     }
 }

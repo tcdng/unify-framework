@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,10 @@
 package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.database.DataSource;
 
 /**
  * Default application SQL database.
@@ -25,6 +28,18 @@ import com.tcdng.unify.core.annotation.Component;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_DATABASE)
-public class DefaultApplicationSqlDatabaseImpl extends SqlDatabaseImpl {
+public class DefaultApplicationSqlDatabaseImpl extends AbstractSqlDatabase {
 
+    @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
+    private DataSource dataSource;
+
+    @Override
+    public String getDataSourceName() throws UnifyException {
+        return dataSource.getName();
+    }
+
+    @Override
+    public DataSource getDataSource() throws UnifyException {
+        return dataSource;
+    }
 }

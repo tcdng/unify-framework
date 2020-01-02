@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.tcdng.unify.core.report;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A report column.
@@ -35,6 +36,8 @@ public class ReportColumn {
 
     private String className;
 
+    private String sqlBlobTypeName;
+
     private String formatterUpl;
 
     private OrderType order;
@@ -45,19 +48,24 @@ public class ReportColumn {
 
     private boolean group;
 
+    private boolean groupOnNewPage;
+
     private boolean sum;
 
-    private ReportColumn(String title, String table, String name, String className, String formatterUpl,
-            OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group, boolean sum) {
+    private ReportColumn(String title, String table, String name, String className, String sqlBlobTypeName,
+            String formatterUpl, OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group,
+            boolean groupOnNewPage, boolean sum) {
         this.title = title;
         this.table = table;
         this.name = name;
         this.className = className;
+        this.sqlBlobTypeName = sqlBlobTypeName;
+        this.formatterUpl = formatterUpl;
         this.horizontalAlignment = horizontalAlignment;
         this.widthRatio = widthRatio;
         this.order = order;
-        this.formatterUpl = formatterUpl;
         this.group = group;
+        this.groupOnNewPage = groupOnNewPage;
         this.sum = sum;
     }
 
@@ -81,6 +89,22 @@ public class ReportColumn {
         return className;
     }
 
+    public boolean isNumber() {
+        return DataUtils.isNumberType(className);
+    }
+
+    public boolean isDate() {
+        return "java.util.Date".equals(className);
+    }
+
+    public boolean isBlob() {
+        return "[B".equals(className);
+    }
+
+    public String getSqlBlobTypeName() {
+        return sqlBlobTypeName;
+    }
+
     public HAlignType getHorizontalAlignment() {
         return horizontalAlignment;
     }
@@ -101,6 +125,10 @@ public class ReportColumn {
         return group;
     }
 
+    public boolean isGroupOnNewPage() {
+        return groupOnNewPage;
+    }
+
     public boolean isSum() {
         return sum;
     }
@@ -119,6 +147,8 @@ public class ReportColumn {
 
         private String className;
 
+        private String sqlBlobTypeName;
+
         private String formatterUpl;
 
         private OrderType order;
@@ -128,6 +158,8 @@ public class ReportColumn {
         private int widthRatio;
 
         private boolean group;
+
+        private boolean groupOnNewPage;
 
         private boolean sum;
 
@@ -152,6 +184,11 @@ public class ReportColumn {
 
         public Builder className(String className) {
             this.className = className;
+            return this;
+        }
+
+        public Builder sqlBlobTypeName(String sqlBlobTypeName) {
+            this.sqlBlobTypeName = sqlBlobTypeName;
             return this;
         }
 
@@ -180,14 +217,19 @@ public class ReportColumn {
             return this;
         }
 
+        public Builder groupOnNewPage(boolean groupOnNewPage) {
+            this.groupOnNewPage = groupOnNewPage;
+            return this;
+        }
+
         public Builder sum(boolean sum) {
             this.sum = sum;
             return this;
         }
 
         public ReportColumn build() throws UnifyException {
-            ReportColumn reportColumn = new ReportColumn(title, table, name, className, formatterUpl, order,
-                    horizontalAlignment, widthRatio, group, sum);
+            ReportColumn reportColumn = new ReportColumn(title, table, name, className, sqlBlobTypeName, formatterUpl,
+                    order, horizontalAlignment, widthRatio, group, groupOnNewPage, sum);
             return reportColumn;
         }
     }

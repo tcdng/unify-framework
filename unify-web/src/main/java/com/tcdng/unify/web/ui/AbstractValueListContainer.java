@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,7 +47,7 @@ public abstract class AbstractValueListContainer<T, U> extends AbstractContainer
     public List<T> getValueList() throws UnifyException {
         List<U> itemList = getItemList();
         if (oldItemList != itemList || (itemList != null && itemList.size() != valueList.size())) {
-            if (!DataUtils.isBlank(itemList)) {
+            if (DataUtils.isNotBlank(itemList)) {
                 int size = itemList.size();
                 valueList = new ArrayList<T>(itemList.size());
                 for (int i = 0; i < size; i++) {

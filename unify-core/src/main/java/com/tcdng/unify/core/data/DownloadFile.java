@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.core.constant.MimeType;
+
 /**
  * Data object that represents a download file.
  * 
@@ -23,24 +25,24 @@ package com.tcdng.unify.core.data;
  */
 public class DownloadFile {
 
-    private String filename;
+    private MimeType mimeType;
 
-    private String contentType;
+    private String filename;
 
     byte[] data;
 
-    public DownloadFile(String filename, String contentType, byte[] data) {
+    public DownloadFile(MimeType mimeType, String filename, byte[] data) {
+        this.mimeType = mimeType;
         this.filename = filename;
-        this.contentType = contentType;
         this.data = data;
+    }
+
+    public MimeType getMimeType() {
+        return mimeType;
     }
 
     public String getFilename() {
         return filename;
-    }
-
-    public String getContentType() {
-        return contentType;
     }
 
     public byte[] getData() {

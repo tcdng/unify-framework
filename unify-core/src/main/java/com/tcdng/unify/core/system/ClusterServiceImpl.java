@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.RequestAttributeConstants;
+import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyContainerInterface;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -32,8 +34,8 @@ import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
+import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.ReentrantLockFactoryMap;
-import com.tcdng.unify.core.operation.Update;
 import com.tcdng.unify.core.system.entities.ClusterCommand;
 import com.tcdng.unify.core.system.entities.ClusterCommandParam;
 import com.tcdng.unify.core.system.entities.ClusterCommandParamQuery;
@@ -64,9 +66,12 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 
     private List<String> dbLockList;
 
+    private Set<String> pseudoLocks;
+    
     public ClusterServiceImpl() {
         lockList = new ReentrantLockFactoryMap<String>();
         dbLockList = new ArrayList<String>();
+        pseudoLocks = new HashSet<String>();
     }
 
     @Override
@@ -108,7 +113,19 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         if (isClusterMode()) {
             return grabDbLock(lockName, true);
         }
+        
+        pseudoLocks.add(lockName);
         return true;
+    }
+
+    @Override
+    public boolean isWithSynchronizationLock(String lockName) throws UnifyException {
+        if (isClusterMode()) {
+            String lockOwnerId = getLockOwnerId(true);
+            return db().countAll(new ClusterLockQuery().lockName(lockName).currentOwner(lockOwnerId)) > 0;
+        }
+
+        return pseudoLocks.contains(lockName);
     }
 
     @Override
@@ -116,7 +133,8 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         if (isClusterMode()) {
             return releaseDbLock(lockName, true);
         }
-        return true;
+        
+        return pseudoLocks.remove(lockName);
     }
 
     @Override
@@ -132,7 +150,7 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
     @Override
     public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
         if (isClusterMode()
-                && !Boolean.TRUE.equals(getRequestAttribute(RequestAttributeConstants.SUPPRESS_BROADCAST))) {
+                && !Boolean.TRUE.equals(getRequestAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST))) {
             List<String> nodeIdList =
                     db().valueList(String.class, "nodeId", new ClusterNodeQuery().nodeNotEqual(getNodeId()));
             if (!nodeIdList.isEmpty()) {
@@ -187,23 +205,23 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         String lockOwnerId = getLockOwnerId(nodeOnly);
         logDebug("Attempt by [{0}] to hold lock [{1}]...", lockOwnerId, lockName);
         ClusterLockQuery query = new ClusterLockQuery().lockName(lockName);
-        ClusterLock clusterLockData = db().find(query);
-        if (clusterLockData == null) {
+        ClusterLock clusterLock = db().find(query);
+        if (clusterLock == null) {
             try {
-                clusterLockData = new ClusterLock();
-                clusterLockData.setLockName(lockName);
-                clusterLockData.setCurrentOwner(lockOwnerId);
-                clusterLockData.setExpiryTime(getNewLockExpirationDate());
-                clusterLockData.setLockCount(Integer.valueOf(1));
-                db().create(clusterLockData);
+                clusterLock = new ClusterLock();
+                clusterLock.setLockName(lockName);
+                clusterLock.setCurrentOwner(lockOwnerId);
+                clusterLock.setExpiryTime(getNewLockExpirationDate());
+                clusterLock.setLockCount(Integer.valueOf(1));
+                db().create(clusterLock);
                 successfulLock = true;
             } catch (Exception e) {
             }
         } else {
-            if (lockOwnerId.equals(clusterLockData.getCurrentOwner())) {
+            if (lockOwnerId.equals(clusterLock.getCurrentOwner())) {
                 successfulLock = db().updateAll(query.currentOwner(lockOwnerId),
                         new Update().add("expiryTime", getNewLockExpirationDate()).add("lockCount",
-                                clusterLockData.getLockCount() + 1)) > 0;
+                                clusterLock.getLockCount() + 1)) > 0;
             } else {
                 successfulLock = db().updateAll(query.expiredOrFree(db().getNow()),
                         new Update().add("currentOwner", lockOwnerId).add("expiryTime", getNewLockExpirationDate())

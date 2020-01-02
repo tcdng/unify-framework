@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,20 +15,20 @@
  */
 package com.tcdng.unify.jasperreports.server;
 
-import net.sf.jasperreports.engine.design.JasperDesign;
-
-import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.report.Report;
+import com.tcdng.unify.core.report.ReportLayoutManager;
+
+import net.sf.jasperreports.engine.design.JasperDesign;
 
 /**
- * UIComponent used to manage the layout of a report by manipulating a jasper
+ * Component used to manage the layout of a report by manipulating a jasper
  * design object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface JasperReportsLayoutManager extends UnifyComponent {
+public interface JasperReportsLayoutManager extends ReportLayoutManager {
 
     /**
      * Applies a layout to a jasper report design object.

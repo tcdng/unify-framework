@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,10 +18,12 @@ package com.tcdng.unify.core;
 import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.LocaleType;
@@ -31,6 +33,7 @@ import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.logging.LoggingLevel;
+import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.TokenUtils;
@@ -83,20 +86,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
+    @Override
     public UnifyComponentContext getUnifyComponentContext() throws UnifyException {
         return unifyComponentContext;
-    }
-
-    protected String getApplicationCode() throws UnifyException {
-        return unifyComponentContext.getInstanceCode();
-    }
-
-    protected String getApplicationName() throws UnifyException {
-        return unifyComponentContext.getInstanceName();
-    }
-
-    protected String getDeploymentVersion() throws UnifyException {
-        return unifyComponentContext.getDeploymentVersion();
     }
 
     /**
@@ -111,6 +103,39 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected void sendCommand(String command, String... params) throws UnifyException {
         unifyComponentContext.sendCommand(command, params);
+    }
+
+    /**
+     * Gets the container application code.
+     * 
+     * @return the application code
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getApplicationCode() throws UnifyException {
+        return unifyComponentContext.getInstanceCode();
+    }
+
+    /**
+     * Gets the container application name.
+     * 
+     * @return the application name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getApplicationName() throws UnifyException {
+        return unifyComponentContext.getInstanceName();
+    }
+
+    /**
+     * Gets the container deployment version.
+     * 
+     * @return the deployment version
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getDeploymentVersion() throws UnifyException {
+        return unifyComponentContext.getDeploymentVersion();
     }
 
     /**
@@ -418,7 +443,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Creates a array value store with index information using supplied storage
+     * Creates an array value store with index information using supplied storage
      * object.
      * 
      * @param storageObject
@@ -432,6 +457,23 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     protected ValueStore createArrayValueStore(Object[] storageObject, int dataIndex) throws UnifyException {
         return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
                 .getArrayValueStore(storageObject, dataIndex);
+    }
+
+    /**
+     * Creates a list value store with index information using supplied storage
+     * object.
+     * 
+     * @param storageObject
+     *            the storage object to use
+     * @param dataIndex
+     *            the data index
+     * @return ValueStore new instance of a value store
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected ValueStore createListValueStore(List<Object> storageObject, int dataIndex) throws UnifyException {
+        return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+                .getListValueStore(Object.class, storageObject, dataIndex);
     }
 
     /**
@@ -450,6 +492,24 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     protected <T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType,
             Class<? extends Annotation> annotationClass, String... basePackages) throws UnifyException {
         return unifyComponentContext.getAnnotatedClasses(classType, annotationClass, basePackages);
+    }
+
+    /**
+     * Fetches a list of annotated classes of a specific type and annotation type.
+     * 
+     * @param classType
+     *            the annotated class type
+     * @param annotationClass
+     *            the annotation class
+     * @param excludePackages
+     *            packages to exclude search from. This parameter is optional.
+     * @return a list of annotated classes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T> List<Class<? extends T>> getAnnotatedClassesExcluded(Class<T> classType,
+            Class<? extends Annotation> annotationClass, String... excludePackages) throws UnifyException {
+        return unifyComponentContext.getAnnotatedClassesExcluded(classType, annotationClass, excludePackages);
     }
 
     /**
@@ -706,6 +766,20 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Sets a sticky attribute in current session.
+     * 
+     * @param name
+     *            the attribute name
+     * @param value
+     *            the attribute value to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void setSessionStickyAttribute(String name, Object value) throws UnifyException {
+        unifyComponentContext.getSessionContext().setStickyAttribute(name, value);
+    }
+
+    /**
      * Gets an attribute value from current session.
      * 
      * @param name
@@ -757,42 +831,46 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
-     * Returns privilege settings of supplied privilege code for current session
+     * Returns view directive of supplied visual privilege code for current session
      * role.
      * 
      * @param privilege
      *            the privilege to test
-     * @return the privilege settings
+     * @return the view rule
      * @throws UnifyException
      *             if an error occurs
      */
-    protected PrivilegeSettings getPrivilegeSettings(String privilege) throws UnifyException {
-        return unifyComponentContext.getRolePrivilegeSettings(privilege);
+    protected ViewDirective getViewDirective(String privilege) throws UnifyException {
+        return unifyComponentContext.getRoleViewDirective(privilege);
     }
 
     /**
-     * Returns privilege names for supplied category.
+     * Returns privilege codes for supplied category and role.
      * 
+     * @param roleCode
+     *            the role code
      * @param privilegeCategoryCode
-     *            the privilege category
+     *            the privilege category code
      * @return set of privilege codes
      * @throws UnifyException
      *             if an error occurs
      */
-    protected Set<String> getPrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
-        return unifyComponentContext.getRolePrivilegeCodes(privilegeCategoryCode);
+    protected Set<String> getRolePrivilegeCodes(String roleCode, String privilegeCategoryCode) throws UnifyException {
+        return unifyComponentContext.getRolePrivilegeCodes(roleCode, privilegeCategoryCode);
     }
 
     /**
-     * Checks if application context has an attribute.
+     * Returns privilege codes for supplied category and current context role.
      * 
-     * @param name
-     *            the attribute name
-     * @return a true value if attribute exists in application context otherwise
-     *         false
+     * @param privilegeCategoryCode
+     *            the privilege category code
+     * @return set of privilege codes
      * @throws UnifyException
      *             if an error occurs
      */
+    protected Set<String> getCurrentRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
+        return unifyComponentContext.getCurrentRolePrivilegeCodes(privilegeCategoryCode);
+    }
 
     /**
      * Checks if current session role has privilege.
@@ -805,8 +883,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    public boolean isRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
-        return unifyComponentContext.isRolePrivilege(privilegeCategoryCode, privilegeCode);
+    public boolean isCurrentRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
+        return unifyComponentContext.isCurrentRolePrivilege(privilegeCategoryCode, privilegeCode);
     }
 
     /**
@@ -1138,7 +1216,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * {@link Exception#getMessage()} is returned.
      * 
      * @param localeType
-     *            the locals type
+     *            the locale type
      * @param exception
      *            the exception to get message from. Can not be null.
      * @return the exception message
@@ -1152,6 +1230,41 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
                     err.getErrorParams());
         }
         return exception.getMessage();
+    }
+
+    /**
+     * Gets a message for an error.
+     * 
+     * @param localeType
+     *            the locale type
+     * @param err
+     *            the error object to get message for. Can not be null.
+     * @return the exception message
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getExceptionMessage(LocaleType localeType, UnifyError err) throws UnifyException {
+        return unifyComponentContext.getMessages().getMessage(getLocale(localeType), err.getErrorCode(),
+                err.getErrorParams());
+    }
+
+    /**
+     * Adds a message to supplied task monitor. Resolves message if supplied as a
+     * message token.
+     * 
+     * @param taskMonitor
+     *            the task monitor to add message to
+     * @param message
+     *            the message to add
+     * @param params
+     *            optional message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void addTaskMessage(TaskMonitor taskMonitor, String message, Object... params) throws UnifyException {
+        if (taskMonitor != null) {
+            taskMonitor.addMessage(resolveSessionMessage(message, params));
+        }
     }
 
     /**
@@ -1222,6 +1335,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Gets application time zone
+     * 
+     * @return the application time zone
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected TimeZone getApplicationTimeZone() throws UnifyException {
+        return unifyComponentContext.getApplicationTimeZone();
+    }
+
+    /**
      * Gets the application banner ASCII text
      * 
      * @return the application banner text as a list of strings
@@ -1241,6 +1365,32 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected Locale getSessionLocale() throws UnifyException {
         return unifyComponentContext.getRequestContext().getLocale();
+    }
+
+    /**
+     * Begins a cluster synchronization block with specified lock. Blocks until
+     * synchronization handle is obtained or an error occurs. Lock should be
+     * released by calling {@link #endClusterLock(String)}.
+     * 
+     * @param lockName
+     *            the lock name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void beginClusterLock(String lockName) throws UnifyException {
+        unifyComponentContext.beginClusterLock(lockName);
+    }
+
+    /**
+     * Ends a cluster synchronization block for specified lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public void endClusterLock(String lockName) throws UnifyException {
+        unifyComponentContext.endClusterLock(lockName);
     }
 
     /**
@@ -1269,6 +1419,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Checks if current node has a hold on a cluster synchronization lock.
+     * 
+     * @param lockName
+     *            the lock name
+     * @return a true value is lock is held otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected boolean isWithClusterLock(String lockName) throws UnifyException {
+        return unifyComponentContext.isWithClusterLock(lockName);
+    }
+
+    /**
      * Releases a synchronization lock.
      * 
      * @param lockName
@@ -1279,6 +1442,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected boolean releaseClusterLock(String lockName) throws UnifyException {
         return unifyComponentContext.releaseClusterLock(lockName);
+    }
+
+    /**
+     * Resolves UTC based on supplied timestamp and current session.
+     * 
+     * @param timestamp
+     *            the timestamp to use
+     * @return the resolved UTC as milliseconds since January 1, 1970 00:00:00
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected long resolveUTC(Date timestamp) throws UnifyException {
+        return timestamp.getTime() - getSessionContext().getTimeZoneOffset();
     }
 
     /**
