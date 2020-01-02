@@ -39,11 +39,14 @@ Components are provided for the full web application stack which makes the need 
 ### Core libraries
 
 ```xml
+<!-- Unify Core Library-->
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-core</artifactId>
     <version>1.1.0</version>
 </dependency>
+
+<!-- Unify Web Library-->
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-web</artifactId>
