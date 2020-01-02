@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -77,8 +77,8 @@ public interface ControllerManager extends UnifyComponent {
     /**
      * Returns an instance of a controller component by name.
      * 
-     * @param controllerName
-     *            the controller name
+     * @param pathParts
+     *            the resource parts
      * @param isLoadPage indicates page loading
      * @throws UnifyException
      *             if an error occurs
