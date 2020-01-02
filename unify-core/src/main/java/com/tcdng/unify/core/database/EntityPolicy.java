@@ -69,8 +69,6 @@ public interface EntityPolicy extends UnifyComponent {
      * 
      * @param query
      *            the query object which may be altered
-     * @param now
-     *            the now time stamp
      * @throws UnifyException
      *             if an error occurs
      */

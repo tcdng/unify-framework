@@ -77,8 +77,8 @@ public interface ControllerManager extends UnifyComponent {
     /**
      * Returns an instance of a controller component by name.
      * 
-     * @param controllerName
-     *            the controller name
+     * @param pathParts
+     *            the resource parts
      * @param isLoadPage indicates page loading
      * @throws UnifyException
      *             if an error occurs
