@@ -33,4 +33,54 @@ Components are provided for the full web application stack which makes the need 
 ## Documentation
 
 * [Documentation (Wiki)](https://github.com/tcdng/unify-framework/wiki)
+
+## Maven
+
+### Core libraries
+
+```xml
+<dependency>
+    <groupId>com.tcdng.unify</groupId>
+    <artifactId>unify-core</artifactId>
+    <version>1.1.0</version>
+</dependency>
+<dependency>
+    <groupId>com.tcdng.unify</groupId>
+    <artifactId>unify-web</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+
+### Optional libraries
+
+```xml
+<!-- Embedded Jetty Server-->
+<dependency>
+    <groupId>com.tcdng.unify</groupId>
+    <artifactId>unify-jetty</artifactId>
+    <version>1.1.0</version>
+</dependency>
+
+<!-- Jasper Reports Integration-->
+<dependency>
+    <groupId>com.tcdng.unify</groupId>
+    <artifactId>unify-jasperreports</artifactId>
+    <version>1.1.0</version>
+</dependency>
+
+<!-- JCIFS Library Integration-->
+<dependency>
+    <groupId>com.tcdng.unify</groupId>
+    <artifactId>unify-jcifs</artifactId>
+    <version>1.1.0</version>
+</dependency>
+
+<!-- XChart Library Integration-->
+<dependency>
+    <groupId>com.tcdng.unify</groupId>
+    <artifactId>unify-xchart</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+
  
