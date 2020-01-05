@@ -203,6 +203,19 @@ public class UnifyComponentContext {
     }
 
     /**
+     * Fetches all component instances of a specific type.
+     * 
+     * @param componentType
+     *            the component type
+     * @return the list of components.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T extends UnifyComponent> List<T> getComponents(Class<T> componentType) throws UnifyException {
+        return applicationContext.getContainer().getComponents(componentType);
+    }
+
+    /**
      * Returns classes of a particular type annotated with a specific type of
      * annotation.
      * 

@@ -712,6 +712,27 @@ public class UnifyContainer {
     }
 
     /**
+     * Fetches all component instances of a specific type.
+     * 
+     * @param componentType
+     *            the component type
+     * @return the list of components.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends UnifyComponent> List<T> getComponents(Class<T> componentType) throws UnifyException {
+        List<T> componentList = new ArrayList<T>();
+        for (InternalUnifyComponentInfo iuc : internalUnifyComponentInfos.values()) {
+            if (componentType.isAssignableFrom(iuc.getType())) {
+                componentList.add((T) getComponent(iuc.getName()));
+            }
+        }
+        
+        return componentList;
+    }
+
+    /**
      * Gets a UPL component with specified descriptor.
      * 
      * @param locale
