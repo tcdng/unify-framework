@@ -413,6 +413,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Fetches all component instances of a specific type.
+     * 
+     * @param componentType
+     *            the component type
+     * @return the list of components.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T extends UnifyComponent> List<T> getComponents(Class<T> componentType) throws UnifyException {
+        return unifyComponentContext.getComponents(componentType);
+    }
+
+    /**
      * Creates a value store using supplied storage object.
      * 
      * @param storageObject
