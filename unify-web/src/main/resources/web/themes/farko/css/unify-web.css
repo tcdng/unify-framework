@@ -70,6 +70,14 @@ z-index:400;}
 
 .ui-unordered {}
 
+.ui-flowgrid {display:grid;}
+.ui-flowgrid .fgcell {padding:2px;}
+.ui-flowgrid .llabel {}
+.ui-flowgrid .llabelinl {float:left;padding-right:4px;}
+.ui-flowgrid .lcontent {display:block; width:100%; height:100%;}
+.ui-flowgrid .lcontentinl {float:left; display:block; height:100%;}
+.ui-flowgrid .llabelblank {}
+
 /** Shaded list layout */
 .ui-shadedlist {width:100%;color:#000;}
 .ui-shadedlist .slcap {width:20%; padding:2px;font-weight:bold;font-size:10pt;background-color:#DCDCDC;}
