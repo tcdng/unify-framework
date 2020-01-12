@@ -98,6 +98,8 @@ public class JasperReportsServer extends AbstractReportServer {
                 (JasperReportsLayoutManager) getComponent("jasperreports-columnarlayoutmanager"));
         registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_IMAGESONLY_REPORTLAYOUTMANAGER,
                 (JasperReportsLayoutManager) getComponent("jasperreports-tabularimagesonlylayoutmanager"));
+        registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_THUMBIMAGESONLY_REPORTLAYOUTMANAGER,
+                (JasperReportsLayoutManager) getComponent("jasperreports-tabularthumbimagesonlylayoutmanager"));
         registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER,
                 (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
 

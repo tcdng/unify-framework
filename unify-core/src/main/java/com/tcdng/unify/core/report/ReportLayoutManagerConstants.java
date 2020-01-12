@@ -28,5 +28,7 @@ public interface ReportLayoutManagerConstants {
 
     String TABULAR_IMAGESONLY_REPORTLAYOUTMANAGER  = "tabularimagesonly-reportlayoutmanager";
 
+    String TABULAR_THUMBIMAGESONLY_REPORTLAYOUTMANAGER  = "tabularthumbimagesonly-reportlayoutmanager";
+
     String COLUMNAR_REPORTLAYOUTMANAGER = "columnar-reportlayoutmanager";
 }
