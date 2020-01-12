@@ -41,6 +41,8 @@ import com.tcdng.unify.core.util.VersionUtils;
 public abstract class AbstractBootService<T extends FeatureDefinition> extends AbstractBusinessService
         implements BootService {
 
+    private static final String BOOT_DEPLOYMENT_LOCK = "bootdeployment-lock";
+    
     @Configurable
     private DataSourceManager dataSourceManager;
 
@@ -67,8 +69,9 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
                 isDataSourcesManaged = true;
             }
-
-            if (grabClusterMasterLock()) {
+            
+            beginClusterLock(BOOT_DEPLOYMENT_LOCK);
+            try {
                 logInfo("Checking application version information...");
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
                 String lastDeploymentVersion = deploymentFeature.getValue();
@@ -113,6 +116,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                                 lastDeploymentVersion);
                     }
                 }
+            } finally {
+                endClusterLock(BOOT_DEPLOYMENT_LOCK);
             }
         }
 
