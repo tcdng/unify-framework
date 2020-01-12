@@ -633,35 +633,19 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
                 contentPanel.addContent(requestContextUtil.getRequestPage());
             } else if ("/closePage".equals(actionName)) {
-                ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
-                Page currentPage = requestContextUtil.getRequestPage();
                 ClosePageMode closePageMode = requestContextUtil.getRequestTargetValue(ClosePageMode.class);
-                List<String> toClosePathIdList = contentPanel.evaluateRemoveContent(currentPage, closePageMode);
-                if (!toClosePathIdList.isEmpty()) {
-                    try {
-                        // Fire closePage() for all targets
-                        for (String closePathId : toClosePathIdList) {
-                            PathParts pathParts = pathInfoRepository.getPathParts(closePathId);
-                            loadRequestPage(pathParts);
-                            ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
-                        }
-
-                        // Do actual content removal
-                        contentPanel.removeContent(toClosePathIdList);
-
-                        // Set pages for removal
-                        requestContextUtil.setClosedPagePaths(toClosePathIdList);
-                    } finally {
-                        // Restore request page
-                        requestContextUtil.setRequestPage(currentPage);
-                    }
-                }
-
+                performClosePage(closePageMode, true);
                 return ResultMappingConstants.CLOSE;
             }
 
-            return (String) pageControllerInfoMap.get(pageController.getName()).getAction(actionName).getMethod()
+            String resultName = (String) pageControllerInfoMap.get(pageController.getName()).getAction(actionName).getMethod()
                     .invoke(pageController);
+            if (ResultMappingConstants.CLOSE.equals(resultName)) {
+                // Handle other actions that also return CLOSE result
+                performClosePage(ClosePageMode.CLOSE, false);
+            }
+            
+            return resultName;
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -669,7 +653,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         }
         return null;
     }
-
+    
     protected Object executeRemoteCall(RemoteCallController remoteCallController, RemoteCallFormat remoteCallFormat,
             String remoteHandler, Object remoteParam) throws UnifyException {
         Object respObj = null;
@@ -806,6 +790,33 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
         public Collection<Method> getActionMethods() {
             return actionMethods.values();
+        }
+    }
+
+    private void performClosePage(ClosePageMode closePageMode, boolean isFireClose) throws UnifyException {
+        ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
+        Page currentPage = requestContextUtil.getRequestPage();
+        List<String> toClosePathIdList = contentPanel.evaluateRemoveContent(currentPage, closePageMode);
+        if (!toClosePathIdList.isEmpty()) {
+            try {
+                if (isFireClose) {
+                    // Fire closePage() for all targets
+                    for (String closePathId : toClosePathIdList) {
+                        PathParts pathParts = pathInfoRepository.getPathParts(closePathId);
+                        loadRequestPage(pathParts);
+                        ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
+                    }
+                }
+
+                // Do actual content removal
+                contentPanel.removeContent(toClosePathIdList);
+
+                // Set pages for removal
+                requestContextUtil.setClosedPagePaths(toClosePathIdList);
+            } finally {
+                // Restore request page
+                requestContextUtil.setRequestPage(currentPage);
+            }
         }
     }
 
