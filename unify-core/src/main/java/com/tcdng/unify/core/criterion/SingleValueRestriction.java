@@ -26,7 +26,16 @@ public interface SingleValueRestriction extends SimpleRestriction {
 
     /**
      * Gets the single value for this restriction.
+     * 
      * @return the single value
      */
     Object getValue();
+
+    /**
+     * Sets the single value for this restriction.
+     * 
+     * @param val
+     *            the value to set
+     */
+    void setValue(Object val);
 }

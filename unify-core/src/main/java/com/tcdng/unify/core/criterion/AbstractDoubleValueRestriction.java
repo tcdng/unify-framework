@@ -22,7 +22,8 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractDoubleValueRestriction extends AbstractSimpleRestriction implements DoubleValueRestriction {
+public abstract class AbstractDoubleValueRestriction extends AbstractSimpleRestriction
+        implements DoubleValueRestriction {
 
     private Object firstValue;
 
@@ -42,6 +43,12 @@ public abstract class AbstractDoubleValueRestriction extends AbstractSimpleRestr
     @Override
     public Object getSecondValue() {
         return secondValue;
+    }
+
+    @Override
+    public void setValues(Object firstVal, Object secondVal) {
+        this.firstValue = firstVal;
+        this.secondValue = secondVal;
     }
 
 }

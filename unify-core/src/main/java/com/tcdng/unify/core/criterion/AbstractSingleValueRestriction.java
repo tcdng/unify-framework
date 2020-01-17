@@ -37,4 +37,9 @@ public abstract class AbstractSingleValueRestriction extends AbstractSimpleRestr
         return value;
     }
 
+    @Override
+    public void setValue(Object val) {
+        this.value = val;
+    }
+
 }

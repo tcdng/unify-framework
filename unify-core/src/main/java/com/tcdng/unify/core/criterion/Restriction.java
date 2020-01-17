@@ -56,4 +56,11 @@ public interface Restriction {
      * @return a true if empty otherwise false
      */
     boolean isEmpty();
+
+    /**
+     * Checks if restriction is simple restriction.
+     * 
+     * @return a true if simple otherwise false
+     */
+    boolean isSimple();
 }
