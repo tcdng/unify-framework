@@ -24,7 +24,8 @@ import java.util.Collection;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractMultipleValueRestriction extends AbstractSimpleRestriction implements MultipleValueRestriction {
+public abstract class AbstractMultipleValueRestriction extends AbstractSimpleRestriction
+        implements MultipleValueRestriction {
 
     private Collection<Object> values;
 
@@ -37,6 +38,11 @@ public abstract class AbstractMultipleValueRestriction extends AbstractSimpleRes
     @Override
     public Collection<Object> getValues() {
         return values;
+    }
+
+    @Override
+    public void setValues(Collection<Object> val) {
+        this.values = val;
     }
 
 }

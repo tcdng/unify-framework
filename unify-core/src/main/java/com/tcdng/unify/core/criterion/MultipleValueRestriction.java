@@ -32,4 +32,12 @@ public interface MultipleValueRestriction extends SimpleRestriction {
      * @return the values
      */
     Collection<Object> getValues();
+
+    /**
+     * Set values for this restriction.
+     * 
+     * @param val
+     *            the values to set
+     */
+    void setValues(Collection<Object> val);
 }

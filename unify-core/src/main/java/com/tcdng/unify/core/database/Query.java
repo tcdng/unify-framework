@@ -22,8 +22,10 @@ import java.util.Set;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.And;
+import com.tcdng.unify.core.criterion.BeginsWith;
 import com.tcdng.unify.core.criterion.Between;
 import com.tcdng.unify.core.criterion.CompoundRestriction;
+import com.tcdng.unify.core.criterion.EndsWith;
 import com.tcdng.unify.core.criterion.Equals;
 import com.tcdng.unify.core.criterion.Greater;
 import com.tcdng.unify.core.criterion.GreaterOrEqual;
@@ -32,14 +34,12 @@ import com.tcdng.unify.core.criterion.IsNull;
 import com.tcdng.unify.core.criterion.Less;
 import com.tcdng.unify.core.criterion.LessOrEqual;
 import com.tcdng.unify.core.criterion.Like;
-import com.tcdng.unify.core.criterion.BeginsWith;
-import com.tcdng.unify.core.criterion.EndsWith;
 import com.tcdng.unify.core.criterion.NotAmongst;
+import com.tcdng.unify.core.criterion.NotBeginWith;
 import com.tcdng.unify.core.criterion.NotBetween;
+import com.tcdng.unify.core.criterion.NotEndWith;
 import com.tcdng.unify.core.criterion.NotEqual;
 import com.tcdng.unify.core.criterion.NotLike;
-import com.tcdng.unify.core.criterion.NotBeginWith;
-import com.tcdng.unify.core.criterion.NotEndWith;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Select;
@@ -283,7 +283,7 @@ public class Query<T extends Entity> implements Cloneable {
     public boolean isRestrictedField(String fieldName) {
         return restrictions.isRestrictedField(fieldName);
     }
-    
+
     public Select getSelect() {
         return select;
     }
@@ -367,6 +367,18 @@ public class Query<T extends Entity> implements Cloneable {
     public Query<T> setDistinct(boolean distinct) {
         innerGetSelect().setDistinct(distinct);
         return this;
+    }
+
+    public boolean replaceAll(String propertyName, Object val) {
+        return restrictions.replaceAll(propertyName, val);
+    }
+
+    public boolean replaceAll(String propertyName, Object val1, Object val2) {
+        return restrictions.replaceAll(propertyName, val1, val2);
+    }
+
+    public boolean replaceAll(String propertyName, Collection<Object> val) {
+        return restrictions.replaceAll(propertyName, val);
     }
 
     public Query<T> clear() {

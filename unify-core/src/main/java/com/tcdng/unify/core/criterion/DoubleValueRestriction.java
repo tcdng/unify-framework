@@ -26,13 +26,25 @@ public interface DoubleValueRestriction extends SimpleRestriction {
 
     /**
      * Gets the first value for this restriction.
+     * 
      * @return the first value
      */
     Object getFirstValue();
 
     /**
      * Gets the second value for this restriction.
+     * 
      * @return the second value
      */
     Object getSecondValue();
+
+    /**
+     * Sets the restriction values.
+     * 
+     * @param firstVal
+     *            the first value to set
+     * @param secondVal
+     *            the second value to set
+     */
+    void setValues(Object firstVal, Object secondVal);
 }
