@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,24 +26,34 @@ import java.util.Set;
  */
 public abstract class AbstractSimpleRestriction extends AbstractRestriction implements SimpleRestriction {
 
-    private String propertyName;
+    private String fieldName;
 
-    public AbstractSimpleRestriction(String propertyName) {
-        this.propertyName = propertyName;
+    public AbstractSimpleRestriction(String fieldName) {
+        this.fieldName = fieldName;
     }
 
     @Override
-    public void writeProperties(Set<String> propertyBucket) {
-        propertyBucket.add(propertyName);
+    public void writeRestrictedFields(Set<String> restrictedFields) {
+        restrictedFields.add(fieldName);
     }
 
     @Override
-    public String getPropertyName() {
-        return propertyName;
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    @Override
+    public boolean isRestrictedField(String fieldName) {
+        return this.fieldName.equals(fieldName);
     }
 
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public boolean isSimple() {
+        return true;
     }
 }

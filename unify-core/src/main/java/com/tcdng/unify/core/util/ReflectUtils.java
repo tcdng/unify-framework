@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -411,7 +411,7 @@ public final class ReflectUtils {
                     propertyName);
         }
     }
-
+    
     /**
      * Sets nested bean property by long name. Does a deep get until the last bean
      * then sets property which is the last name in supplied long name. For instance

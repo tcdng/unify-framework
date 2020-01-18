@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -86,6 +86,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
+    @Override
     public UnifyComponentContext getUnifyComponentContext() throws UnifyException {
         return unifyComponentContext;
     }
@@ -409,6 +410,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     protected List<UnifyComponentConfig> getComponentConfigs(Class<? extends UnifyComponent> componentType)
             throws UnifyException {
         return unifyComponentContext.getComponentConfigs(componentType);
+    }
+
+    /**
+     * Fetches all component instances of a specific type.
+     * 
+     * @param componentType
+     *            the component type
+     * @return the list of components.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T extends UnifyComponent> List<T> getComponents(Class<T> componentType) throws UnifyException {
+        return unifyComponentContext.getComponents(componentType);
     }
 
     /**
@@ -1054,6 +1068,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     }
 
     /**
+     * Logs a unify error at ERROR level.
+     * 
+     * @param unifyError
+     *            the error to log
+     */
+    protected void logError(UnifyError unifyError) {
+        log(LoggingLevel.ERROR, unifyError);
+    }
+
+    /**
      * Logs a message at SEVERE level.
      * 
      * @param message
@@ -1224,11 +1248,15 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected String getExceptionMessage(LocaleType localeType, Exception exception) throws UnifyException {
         if (exception instanceof UnifyException) {
-            UnifyError err = ((UnifyException) exception).getUnifyError();
-            return unifyComponentContext.getMessages().getMessage(getLocale(localeType), err.getErrorCode(),
-                    err.getErrorParams());
+            return getErrorMessage(localeType, ((UnifyException) exception).getUnifyError());
         }
+        
         return exception.getMessage();
+    }
+
+    protected String getErrorMessage(LocaleType localeType, UnifyError ue) throws UnifyException {
+        return unifyComponentContext.getMessages().getMessage(getLocale(localeType), ue.getErrorCode(),
+                ue.getErrorParams());
     }
 
     /**
@@ -1514,6 +1542,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
             Logger logger = unifyComponentContext.getLogger();
             if (logger.isEnabled(loggingLevel)) {
                 logger.log(loggingLevel, resolveApplicationMessage(message, params));
+            }
+        } catch (UnifyException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void log(LoggingLevel loggingLevel, UnifyError unifyError) {
+        try {
+            Logger logger = unifyComponentContext.getLogger();
+            if (logger.isEnabled(loggingLevel)) {
+                logger.log(loggingLevel, getErrorMessage(LocaleType.APPLICATION, unifyError));
             }
         } catch (UnifyException e) {
             e.printStackTrace();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.web.ui.BindingInfo;
+import com.tcdng.unify.web.ui.PropertyInfo;
 
 /**
  * Data transfer header.
@@ -32,7 +32,7 @@ public class DataTransferHeader {
 
     private String longName;
 
-    private BindingInfo bindingInfo;
+    private PropertyInfo propertyInfo;
 
     public DataTransferHeader(Object value) {
         this.value = value;
@@ -43,7 +43,7 @@ public class DataTransferHeader {
     }
 
     public Object getDebugValue() {
-        if (bindingInfo != null && bindingInfo.isMasked()) {
+        if (propertyInfo != null && propertyInfo.isMasked()) {
             return "********";
         }
 
@@ -58,25 +58,25 @@ public class DataTransferHeader {
         this.longName = longName;
     }
 
-    public BindingInfo getBindingInfo() {
-        return bindingInfo;
+    public PropertyInfo getBindingInfo() {
+        return propertyInfo;
     }
 
-    public void setBindingInfo(BindingInfo bindingInfo) {
-        this.bindingInfo = bindingInfo;
+    public void setBindingInfo(PropertyInfo propertyInfo) {
+        this.propertyInfo = propertyInfo;
     }
 
     public String getLongProperty() {
-        if (bindingInfo != null) {
-            return bindingInfo.getLongProperty();
+        if (propertyInfo != null) {
+            return propertyInfo.getLongProperty();
         }
 
         return null;
     }
 
     public String getShortProperty() {
-        if (bindingInfo != null) {
-            return bindingInfo.getShortProperty();
+        if (propertyInfo != null) {
+            return propertyInfo.getShortProperty();
         }
 
         return null;

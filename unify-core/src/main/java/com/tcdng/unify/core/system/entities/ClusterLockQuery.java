@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,30 +36,30 @@ public class ClusterLockQuery extends Query<ClusterLock> {
     }
 
     public ClusterLockQuery lockName(String lockName) {
-        return (ClusterLockQuery) equals("lockName", lockName);
+        return (ClusterLockQuery) addEquals("lockName", lockName);
     }
 
     public ClusterLockQuery lockNameIn(Collection<String> lockNameList) {
-        return (ClusterLockQuery) amongst("lockName", lockNameList);
+        return (ClusterLockQuery) addAmongst("lockName", lockNameList);
     }
 
     public ClusterLockQuery currentOwner(String currentOwner) {
-        return (ClusterLockQuery) equals("currentOwner", currentOwner);
+        return (ClusterLockQuery) addEquals("currentOwner", currentOwner);
     }
 
     public ClusterLockQuery currentOwnerIsNull() {
-        return (ClusterLockQuery) isNull("currentOwner");
+        return (ClusterLockQuery) addIsNull("currentOwner");
     }
 
     public ClusterLockQuery expiryTime(Date date) {
-        return (ClusterLockQuery) equals("expiryTime", date);
+        return (ClusterLockQuery) addEquals("expiryTime", date);
     }
 
     public ClusterLockQuery expiryTimeBefore(Date date) {
-        return (ClusterLockQuery) less("expiryTime", date);
+        return (ClusterLockQuery) addLessThan("expiryTime", date);
     }
 
     public ClusterLockQuery expiredOrFree(Date date) {
-        return (ClusterLockQuery) add(new Or().add(new Less("expiryTime", date)).add(new IsNull("currentOwner")));
+        return (ClusterLockQuery) addRestriction(new Or().add(new Less("expiryTime", date)).add(new IsNull("currentOwner")));
     }
 }

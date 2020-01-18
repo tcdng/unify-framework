@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
 /**
@@ -42,12 +42,12 @@ public class PostResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         String path = getUplAttribute(String.class, "path");
         if (StringUtils.isBlank(path)) {
             String pathBinding = getUplAttribute(String.class, "pathBinding");
             if (StringUtils.isNotBlank(pathBinding)) {
-                path = (String) ReflectUtils.getNestedBeanProperty(pageController, pathBinding);
+                path = (String) ReflectUtils.getNestedBeanProperty(page.getPageBean(), pathBinding);
             }
         }
 
@@ -58,7 +58,7 @@ public class PostResponse extends AbstractJsonPageControllerResponse {
             }
         }
 
-        logDebug("Preparing post response: controller = [{0}], path = [{1}]", pageController.getName(), path);
+        logDebug("Preparing post response: path ID = [{0}], target path = [{1}]", page.getPathId(), path);
         if (StringUtils.isNotBlank(path)) {
             writer.write(",");
             writer.writeJsonPathVariable("postPath", path);

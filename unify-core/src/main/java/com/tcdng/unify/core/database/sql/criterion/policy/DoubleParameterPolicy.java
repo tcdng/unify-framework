@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,9 +43,9 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
         DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
-        String columnName = dvc.getPropertyName();
+        String columnName = dvc.getFieldName();
         if (sqlEntityInfo != null) {
-            columnName = sqlEntityInfo.getListFieldInfo(dvc.getPropertyName()).getPreferredColumnName();
+            columnName = sqlEntityInfo.getListFieldInfo(dvc.getFieldName()).getPreferredColumnName();
         }
 
         translate(sql, sqlEntityInfo.getTableAlias(), columnName, dvc.getFirstValue(), dvc.getSecondValue());
@@ -56,7 +56,7 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
-        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(dvc.getPropertyName());
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(dvc.getFieldName());
         sql.append("(");
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("? AND ?");
         sql.append(")");

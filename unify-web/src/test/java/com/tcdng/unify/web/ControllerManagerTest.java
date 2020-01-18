@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -55,23 +55,23 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testauthor");
 
         Set<String> actionNames = pbbi.getActionNames();
-        assertTrue(actionNames.contains("/testauthor/createAuthor"));
-        assertTrue(actionNames.contains("/testauthor/viewAuthor"));
-        assertTrue(actionNames.contains("/testauthor/newAuthor"));
+        assertTrue(actionNames.contains("/createAuthor"));
+        assertTrue(actionNames.contains("/viewAuthor"));
+        assertTrue(actionNames.contains("/newAuthor"));
 
-        Action action = pbbi.getAction("/testauthor/createAuthor");
+        Action action = pbbi.getAction("/createAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("createAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testauthor/viewAuthor");
+        action = pbbi.getAction("/viewAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("viewAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testauthor/newAuthor");
+        action = pbbi.getAction("/newAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
@@ -85,31 +85,31 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         PageControllerInfo pbbi = bbm.getPageControllerInfo("/testtechnicalauthor");
 
         Set<String> actionNames = pbbi.getActionNames();
-        assertTrue(actionNames.contains("/testtechnicalauthor/createAuthor"));
-        assertTrue(actionNames.contains("/testtechnicalauthor/viewAuthor"));
-        assertTrue(actionNames.contains("/testtechnicalauthor/newAuthor"));
-        assertTrue(actionNames.contains("/testtechnicalauthor/printTechnicalSpec"));
-        assertFalse(actionNames.contains("/testtechnicalauthor/drawTechnicalSpec"));
+        assertTrue(actionNames.contains("/createAuthor"));
+        assertTrue(actionNames.contains("/viewAuthor"));
+        assertTrue(actionNames.contains("/newAuthor"));
+        assertTrue(actionNames.contains("/printTechnicalSpec"));
+        assertFalse(actionNames.contains("/drawTechnicalSpec"));
 
-        Action action = pbbi.getAction("/testtechnicalauthor/createAuthor");
+        Action action = pbbi.getAction("/createAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(AuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("createAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testtechnicalauthor/viewAuthor");
+        action = pbbi.getAction("/viewAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("viewAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testtechnicalauthor/newAuthor");
+        action = pbbi.getAction("/newAuthor");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
         assertEquals("newAuthor", action.getMethod().getName());
 
-        action = pbbi.getAction("/testtechnicalauthor/printTechnicalSpec");
+        action = pbbi.getAction("/printTechnicalSpec");
         assertNotNull(action);
         assertNotNull(action.getMethod());
         assertEquals(TechnicalAuthorPageController.class, action.getMethod().getDeclaringClass());
@@ -143,7 +143,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
         Set<String> properties = new HashSet<String>();
         for (String pageName : pageNames) {
-            properties.add(rbbi.getBindingInfo(pageName).getProperty());
+            properties.add(rbbi.getPropertyInfo(pageName).getProperty());
         }
         assertEquals(4 + 2, properties.size());
 
@@ -185,28 +185,17 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetController() throws Exception {
-        ControllerManager bbm =
-                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-        Controller pbb = bbm.getController("/testauthor");
+        Controller pbb = (Controller) getComponent("/testauthor");
         assertNotNull(pbb);
 
-        Controller rbb = bbm.getController("/resource/mock");
+        Controller rbb = (Controller) getComponent("/resource/mock");
         assertNotNull(rbb);
-    }
-
-    @Test(expected = UnifyException.class)
-    public void testGetControllerUnknown() throws Exception {
-        ControllerManager bbm =
-                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-        bbm.getController("/snuffleupagus");
     }
 
     @Test
     public void testGetPageControllerSameSession() throws Exception {
-        ControllerManager bbm =
-                (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
-        Controller bb1 = bbm.getController("/testauthor");
-        Controller bb2 = bbm.getController("/testauthor");
+        Controller bb1 = (Controller) getComponent("/testauthor");
+        Controller bb2 = (Controller) getComponent("/testauthor");
         assertSame(bb1, bb2);
         assertEquals(bb1, bb2);
     }
@@ -215,24 +204,32 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     public void testPopulateControllerProperty() throws Exception {
         ControllerManager bbm =
                 (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        PathInfoRepository pathInfoRepository =
+                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
+
+        // Create page controller and load page to request context
+        bbm.getController(pathInfoRepository.getPathParts("/testauthor"), true);
 
         Date birthDt = new Date();
-        bbm.populateController("/testauthor", "fullName", "Adrian Skim");
-        bbm.populateController("/testauthor", "birthDt", birthDt);
-        bbm.populateController("/testauthor", "height", Double.valueOf(25.34));
+        bbm.populatePageBean("/testauthor", "fullName", "Adrian Skim");
+        bbm.populatePageBean("/testauthor", "birthDt", birthDt);
+        bbm.populatePageBean("/testauthor", "height", Double.valueOf(25.34));
 
-        AuthorPageController apbb = (AuthorPageController) bbm.getController("/testauthor");
-        assertEquals("Adrian Skim", apbb.getFullName());
-        assertEquals(birthDt, apbb.getBirthDt());
-        assertEquals(Double.valueOf(25.34), apbb.getHeight());
+        AuthorPageController apbb = (AuthorPageController) getComponent("/testauthor");
+        AuthorPageBean authorPageBean = (AuthorPageBean) apbb.getPage().getPageBean();
+        assertEquals("Adrian Skim", authorPageBean.getFullName());
+        assertEquals(birthDt, authorPageBean.getBirthDt());
+        assertEquals(Double.valueOf(25.34), authorPageBean.getHeight());
     }
 
     @Test
     public void testExecuteXMLRemoteCallController() throws Exception {
         ControllerManager bbm =
                 (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        PathInfoRepository pir =
+                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
-        TestClientRequest request = new TestClientRequest("/remotecall/mock/getAccountDetails");
+        TestClientRequest request = new TestClientRequest(pir.getPathParts("/remotecall/mock/getAccountDetails"));
         String reqXml = "<accountDetailParams>" + "<accountNo>0123456785</accountNo>" + "</accountDetailParams>";
         request.setParameter(RequestParameterConstants.REMOTE_CALL_FORMAT, RemoteCallFormat.XML);
         request.setParameter(RequestParameterConstants.REMOTE_CALL_BODY, reqXml);
@@ -250,9 +247,11 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     public void testExecuteJSONRemoteCallController() throws Exception {
         ControllerManager bbm =
                 (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        PathInfoRepository pir =
+                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
         TestClientResponse response = new TestClientResponse();
-        TestClientRequest request = new TestClientRequest("/remotecall/mock/getAccountDetails");
+        TestClientRequest request = new TestClientRequest(pir.getPathParts("/remotecall/mock/getAccountDetails"));
         String reqJson = "{" + "\"accountNo\":\"0123456785\"" + "}";
         request.setParameter(RequestParameterConstants.REMOTE_CALL_FORMAT, RemoteCallFormat.JSON);
         request.setParameter(RequestParameterConstants.REMOTE_CALL_BODY, reqJson);
@@ -264,11 +263,13 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
     public void testExecutePageController() throws Exception {
         ControllerManager bbm =
                 (ControllerManager) getComponent(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER);
+        PathInfoRepository pir =
+                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
         TestClientResponse response = new TestClientResponse();
-        TestClientRequest request = new TestClientRequest("/testauthor/createAuthor");
+        TestClientRequest request = new TestClientRequest(pir.getPathParts("/testauthor/createAuthor"));
         Date birthDt = new Date();
-        AuthorPageController apbb = (AuthorPageController) bbm.getController("/testauthor");
+        AuthorPageController apbb = (AuthorPageController) bbm.getController(pir.getPathParts("/testauthor"), true);
         Widget uic1 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.fullName");
         Widget uic2 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.birthDt");
         Widget uic3 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.height");
@@ -279,9 +280,10 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         bbm.executeController(request, response);
 
         // Ensure controller is populated
-        assertEquals("Tom Jones", apbb.getFullName());
-        assertEquals(birthDt, apbb.getBirthDt());
-        assertEquals(Double.valueOf(24.22), apbb.getHeight());
+        AuthorPageBean authorPageBean = (AuthorPageBean) apbb.getPage().getPageBean();
+        assertEquals("Tom Jones", authorPageBean.getFullName());
+        assertEquals(birthDt, authorPageBean.getBirthDt());
+        assertEquals(Double.valueOf(24.22), authorPageBean.getHeight());
 
         // Test result
         assertEquals("{\"jsonResp\":[{\"handler\":\"hintUserHdl\"},{\"handler\":\"refreshMenuHdl\"}]}",

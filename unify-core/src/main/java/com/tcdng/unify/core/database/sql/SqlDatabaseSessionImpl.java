@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,27 +45,6 @@ import com.tcdng.unify.core.util.SqlUtils;
 
 /**
  * Implementation of an SQL database session.
- * 
- * <pre>
- * The find/update/delete/count by criteria problem:
- * 1. Entity A has properties a1,a2,a3
- * 2. a3 is a listOnly field
- * 3. Mapped table T has columns for only (true) properties a1 and a2 (since a3 is listOnly and is mapped to a view column)
- * 4. Criteria Q has conditions with all fields a1,a2 and a3
- * 5. Attempt to update and delete by criteria Q fails because table T has no a3 column
- * 
- * Implemented solution:
- * 1. Check if criteria parameter Q1 contains only true properties
- * 2. If true, execute update/delete with criteria Q1 and return
- * 3. Else fetch all IDs I[] for entities that match criteria Q1
- * 4. Create new criteria Q2 as record id amongst I[]
- * 5. Execute update/delete with criteria Q2 and return result
- * 
- * {@link #findAll(Query)}
- * {@link #updateAll(Query, Update)}
- * {@link #deleteAll(Query)}
- * {@link #count(Query)}
- * </pre>
  * 
  * @author Lateef Ojulari
  * @since 1.0
@@ -156,16 +134,16 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         return find(query, false);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     @Override
     public <T extends Entity> T findConstraint(T record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
         if (sqlEntityInfo.isUniqueConstraints()) {
-            Query<T> query = new Query(record.getClass());
+            Query<T> query = Query.of((Class<T>) record.getClass());
             for (SqlUniqueConstraintInfo suci : sqlEntityInfo.getUniqueConstraintList().values()) {
                 query.clear();
                 for (String fieldName : suci.getFieldNameList()) {
-                    query.equals(fieldName, ReflectUtils.getBeanProperty(record, fieldName));
+                    query.addEquals(fieldName, ReflectUtils.getBeanProperty(record, fieldName));
                 }
                 T constrainingRecord = find(query);
                 if (constrainingRecord != null) {
@@ -179,79 +157,61 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException {
-        try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
-                return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
-                        sqlDataSourceDialect.prepareFindStatement(query));
-            }
-
-            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-            if (!idList.isEmpty()) {
-                Query<T> findQuery = query.copyNoCriteria();
-                findQuery.add(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
-                        sqlDataSourceDialect.prepareFindStatement(findQuery));
-            }
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
         }
-        return new ArrayList<T>();
+
+        // Check is fetch from table
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
+            return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
+                    sqlDataSourceDialect.prepareFindStatement(query, false));
+        }
+
+        // Fetch from view
+        return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
+                sqlDataSourceDialect.prepareFindStatement(query, true));
     }
 
     @Override
     public <T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
-        try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
-                return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
-                        sqlDataSourceDialect.prepareFindStatement(query));
-            }
-
-            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-            if (!idList.isEmpty()) {
-                Query<U> findQuery = query.copyNoCriteria();
-                findQuery.add(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
-                        sqlDataSourceDialect.prepareFindStatement(findQuery));
-            }
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
         }
-        return new HashMap<T, U>();
+
+        // Check is fetch from table
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
+            return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
+                    sqlDataSourceDialect.prepareFindStatement(query, false));
+        }
+
+        // Fetch from view
+        return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
+                sqlDataSourceDialect.prepareFindStatement(query, true));
     }
 
     @Override
     public <T, U extends Entity> Map<T, List<U>> findAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
-        try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
-                return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
-                        sqlDataSourceDialect.prepareFindStatement(query));
-            }
-
-            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-            if (!idList.isEmpty()) {
-                Query<U> findQuery = query.copyNoCriteria();
-                findQuery.add(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
-                        sqlDataSourceDialect.prepareFindStatement(findQuery));
-            }
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
         }
-        return new HashMap<T, List<U>>();
+
+        // Check is fetch from table
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
+            return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
+                    sqlDataSourceDialect.prepareFindStatement(query, false));
+        }
+
+        // Fetch from view
+        return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
+                sqlDataSourceDialect.prepareFindStatement(query, true));
     }
 
     @Override
@@ -286,6 +246,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareListStatement(query));
     }
@@ -293,6 +258,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, U> listAll(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareListStatement(query));
     }
@@ -300,6 +270,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, List<U>> listAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareListStatement(query));
     }
@@ -308,6 +283,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T, U extends Entity> List<T> valueList(Class<T> fieldClass, String fieldName, final Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(fieldName));
@@ -323,6 +303,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(fieldName));
@@ -337,6 +322,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U, V extends Entity> Map<T, U> valueMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(keyName, valueName));
@@ -350,6 +340,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U, V extends Entity> Map<T, List<U>> valueListMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
+        EntityPolicy entityPolicy = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass()).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(keyName, valueName));
@@ -363,6 +358,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         Select select = query.getSelect();
         try {
             query.setSelect(new Select(fieldName));
@@ -377,6 +377,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
@@ -386,6 +391,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
@@ -470,6 +480,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.isViewOnly()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                         sqlEntityInfo.getEntityClass(), "UPDATE");
@@ -481,7 +496,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
+                    || (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareUpdateStatement(query, update));
             }
@@ -490,7 +505,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<? extends Entity> updateQuery = query.copyNoAll();
-                updateQuery.add(new Amongst(idFieldInfo.getName(), idList));
+                updateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareUpdateStatement(updateQuery, update));
             }
@@ -638,18 +653,22 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         return result;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public int deleteAll(Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
             if (sqlEntityInfo.isViewOnly()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                         sqlEntityInfo.getEntityClass(), "DELETE");
             }
 
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties()))) {
+                    || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(query));
             }
@@ -659,14 +678,14 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (!idList.isEmpty()) {
                 if (sqlEntityInfo.isOnDeleteCascadeList()) {
                     for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
-                        Query<? extends Entity> attrQuery = new Query(odci.getChildEntityClass());
-                        attrQuery.amongst(odci.getChildFkField().getName(), idList);
+                        Query<? extends Entity> attrQuery = Query.of(odci.getChildEntityClass());
+                        attrQuery.addAmongst(odci.getChildFkField().getName(), idList);
                         deleteAll(attrQuery);
                     }
                 }
 
                 Query<? extends Entity> deleteQuery = query.copyNoAll();
-                deleteQuery.add(new Amongst(idFieldInfo.getName(), idList));
+                deleteQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(deleteQuery));
             }
@@ -678,39 +697,37 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         return 0;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public int count(Query<? extends Entity> query) throws UnifyException {
-        try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
-                return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
-                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareCountStatement(query), true);
-            }
-
-            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-            if (!idList.isEmpty()) {
-                Query<? extends Entity> countQuery = new Query(query.getEntityClass(), query.isApplyAppQueryLimit());
-                countQuery.add(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
-                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareCountStatement(countQuery), true);
-            }
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
         }
-        return 0;
+
+        // Check is fetch from table
+        if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
+            return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
+                    sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                    sqlDataSourceDialect.prepareCountStatement(query, false), true);
+        }
+
+        // Fetch from view
+        return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
+                sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                sqlDataSourceDialect.prepareCountStatement(query, true), true);
     }
 
     @Override
     public Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
                 return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
@@ -720,7 +737,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
-                aggregateQuery.add(new Amongst(idFieldInfo.getName(), idList));
+                aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
                 return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareAggregateStatement(aggregateType, aggregateQuery));
@@ -738,7 +755,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
                 return getSqlStatementExecutor().executeMultipleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
@@ -748,7 +770,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
                 Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
-                aggregateQuery.add(new Amongst(idFieldInfo.getName(), idList));
+                aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
                 return getSqlStatementExecutor().executeMultipleAggregateResultQuery(connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
                         sqlDataSourceDialect.prepareAggregateStatement(aggregateType, aggregateQuery));
@@ -899,18 +921,19 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         T record = null;
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getProperties())) {
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
+            // Check is fetch from table
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
                 record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
-                        sqlDataSourceDialect.prepareFindStatement(query), false);
+                        sqlDataSourceDialect.prepareFindStatement(query, false), false);
             } else {
-                SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-                List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-                if (!idList.isEmpty()) {
-                    Query<T> findQuery = query.copyNoCriteria();
-                    findQuery.add(new Amongst(idFieldInfo.getName(), idList));
-                    record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
-                            sqlDataSourceDialect.prepareFindStatement(findQuery), false);
-                }
+                // Fetch from view
+                record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
+                        sqlDataSourceDialect.prepareFindStatement(query, true), false);
             }
 
             if (fetchChild) {
@@ -961,6 +984,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     private <T extends Entity> T list(Query<T> query, boolean fetchChild) throws UnifyException {
+        EntityPolicy entityPolicy =
+                sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query)).getEntityPolicy();
+        if (entityPolicy != null) {
+            entityPolicy.preQuery(query);
+        }
+
         T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareListStatement(query), false);
         if (fetchChild) {
@@ -969,7 +998,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         return record;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     private <T extends Entity> void fetchChildRecords(T record, Select select, boolean isListOnly)
             throws UnifyException {
         if (record != null) {
@@ -987,9 +1015,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
                             SqlEntityInfo childSqlEntityInfo =
                                     sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
-                            Query<? extends Entity> query = new Query(clfi.getChildEntityClass());
-                            query.equals(clfi.getChildFkField().getName(), id)
-                                    .order(childSqlEntityInfo.getIdFieldInfo().getName());
+                            Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
+                            query.addEquals(clfi.getChildFkField().getName(), id)
+                                    .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
                             if (isListOnly) {
                                 childList = listAll(query);
@@ -1024,9 +1052,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
                             SqlEntityInfo childSqlEntityInfo =
                                     sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
-                            Query<? extends Entity> query = new Query(clfi.getChildEntityClass());
-                            query.equals(clfi.getChildFkField().getName(), id)
-                                    .order(childSqlEntityInfo.getIdFieldInfo().getName());
+                            Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
+                            query.addEquals(clfi.getChildFkField().getName(), id)
+                                    .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
                             if (isListOnly) {
                                 childList = listAll(query);
@@ -1196,11 +1224,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void deleteChildRecords(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {
         for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
-            Query<? extends Entity> query = new Query(odci.getChildEntityClass());
-            query.equals(odci.getChildFkField().getName(), id);
+            Query<? extends Entity> query = Query.of(odci.getChildEntityClass());
+            query.addEquals(odci.getChildFkField().getName(), id);
             deleteAll(query);
         }
     }

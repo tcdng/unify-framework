@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,11 +37,15 @@ public interface WebApplicationComponents {
 
     String APPLICATION_PAGEMANAGER = "application-pagemanager";
 
+    String APPLICATION_PATHINFOREPOSITORY = "application-pathinforepository";
+
     String APPLICATION_RESPONSEWRITER = "application-responsewriter";
 
     String APPLICATION_RESPONSEWRITERPOOL = "application-responsewriterpool";
 
     String APPLICATION_REQUESTCONTEXTUTIL = "application-requestcontextutil";
+
+    String APPLICATION_THEMEMANAGER = "application-thememanager";
 
     String APPLICATION_UICOMMANDMANAGER = "application-uicommandmanager";
 

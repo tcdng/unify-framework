@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,6 +43,8 @@ import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerManager;
+import com.tcdng.unify.web.PathInfoRepository;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestHeaderConstants;
@@ -69,11 +71,13 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     @Configurable(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER)
     private ControllerManager controllerManager;
 
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
+
     private List<String> remoteViewerList;
 
     @Override
-    public void handleRequest(HttpRequestMethodType methodType, Object requestObject, Object responseObject)
-            throws UnifyException {
+    public PathParts resolveRequestPath(Object requestObject) throws UnifyException {
         HttpServletRequest request = (HttpServletRequest) requestObject;
         String resolvedPath = request.getPathInfo();
         if (resolvedPath != null && resolvedPath.endsWith("/")) {
@@ -85,29 +89,41 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                     ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
         }
 
-        Charset charset = StandardCharsets.UTF_8;
-        if (request.getCharacterEncoding() != null) {
-            charset = Charset.forName(request.getCharacterEncoding());
-        }
+        return pathInfoRepository.getPathParts(resolvedPath);
+    }
 
-        ClientRequest clientRequest =
-                new HttpClientRequest(methodType, resolvedPath, charset, extractRequestParameters(request, charset));
-        ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
+    @Override
+    public void handleRequest(HttpRequestMethodType methodType, PathParts pathParts, Object requestObject,
+            Object responseObject) throws UnifyException {
+        try {
+            HttpServletRequest request = (HttpServletRequest) requestObject;
+            Charset charset = StandardCharsets.UTF_8;
+            if (request.getCharacterEncoding() != null) {
+                charset = Charset.forName(request.getCharacterEncoding());
+            }
 
-        if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
-            if (!remoteViewerList.isEmpty()) {
-                String origin = request.getHeader("origin");
-                if (remoteViewerList.contains(origin)) {
-                    HttpServletResponse response = (HttpServletResponse) responseObject;
-                    response.setHeader("Access-Control-Allow-Origin", origin);
-                    response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-                    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-                    response.setHeader("Access-Control-Max-Age", "600");
+            ClientRequest clientRequest =
+                    new HttpClientRequest(methodType, pathParts, charset, extractRequestParameters(request, charset));
+            ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
+
+            if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
+                if (!remoteViewerList.isEmpty()) {
+                    String origin = request.getHeader("origin");
+                    if (remoteViewerList.contains(origin)) {
+                        HttpServletResponse response = (HttpServletResponse) responseObject;
+                        response.setHeader("Access-Control-Allow-Origin", origin);
+                        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+                        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                        response.setHeader("Access-Control-Max-Age", "600");
+                    }
                 }
             }
-        }
 
-        controllerManager.executeController(clientRequest, clientResponse);
+            controllerManager.executeController(clientRequest, clientResponse);
+        } catch (UnifyException ue) {
+            logError(ue);
+            throw ue;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -136,8 +152,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             try {
                 switch (remoteCallFormat) {
                     case OCTETSTREAM:
-                        result.put(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM,
-                                request.getInputStream());
+                        result.put(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM, request.getInputStream());
                         break;
                     case TAGGED_BINARYMESSAGE:
                         result.put(RequestParameterConstants.REMOTE_CALL_BODY,

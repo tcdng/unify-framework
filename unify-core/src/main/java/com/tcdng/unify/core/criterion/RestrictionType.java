@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,31 +27,34 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 @StaticList("restrictiontypelist")
 public enum RestrictionType implements EnumConst {
-    EQUALS("EQ"),
-    NOT_EQUAL("NEQ"),
-    LESS_THAN("LT"),
-    LESS_OR_EQUAL("LTE"),
-    GREATER("GT"),
-    GREATER_OR_EQUAL("GTE"),
-    BETWEEN("BT"),
-    NOT_BETWEEN("NBT"),
-    AMONGST("IN"),
-    NOT_AMONGST("NIN"),
-    LIKE("LK"),
-    NOT_LIKE("NLK"),
-    BEGINS_WITH("BW"),
-    NOT_BEGIN_WITH("NBW"),
-    ENDS_WITH("EW"),
-    NOT_END_WITH("NEW"),
-    IS_NULL("NL"),
-    IS_NOT_NULL("NNL"),
-    AND("AND"),
-    OR("OR");
+    EQUALS("EQ", true),
+    NOT_EQUAL("NEQ", true),
+    LESS_THAN("LT", true),
+    LESS_OR_EQUAL("LTE", true),
+    GREATER("GT", true),
+    GREATER_OR_EQUAL("GTE", true),
+    BETWEEN("BT", false),
+    NOT_BETWEEN("NBT", false),
+    AMONGST("IN", false),
+    NOT_AMONGST("NIN", false),
+    LIKE("LK", true),
+    NOT_LIKE("NLK", true),
+    BEGINS_WITH("BW", true),
+    NOT_BEGIN_WITH("NBW", true),
+    ENDS_WITH("EW", true),
+    NOT_END_WITH("NEW", true),
+    IS_NULL("NL", false),
+    IS_NOT_NULL("NNL", false),
+    AND("AND", false),
+    OR("OR", false);
 
     private final String code;
 
-    private RestrictionType(String code) {
+    private final boolean singleParam;
+
+    private RestrictionType(String code, boolean singleParam) {
         this.code = code;
+        this.singleParam = singleParam;
     }
 
     @Override
@@ -74,6 +77,10 @@ public enum RestrictionType implements EnumConst {
 
     public boolean isRange() {
         return BETWEEN.equals(this) || NOT_BETWEEN.equals(this);
+    }
+
+    public boolean isSingleParam() {
+        return singleParam;
     }
 
     public boolean isZeroParams() {

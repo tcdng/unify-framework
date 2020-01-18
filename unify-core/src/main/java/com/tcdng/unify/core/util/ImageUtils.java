@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -310,6 +310,47 @@ public final class ImageUtils {
     }
 
     /**
+     * Flips image horizontally and returns image in PNG
+     * 
+     * @param image
+     *            the image to flip
+     * @return the flipped image
+     * @throws Exception
+     *             if an erro occurs
+     */
+    public static byte[] flipPNGHorizontally(byte[] image) throws Exception {
+        return ImageUtils.flipImageHorizontally(image, "png");
+    }
+
+    /**
+     * Flips image vertically and returns image in PNG
+     * 
+     * @param image
+     *            the image to flip
+     * @return the flipped image
+     * @throws Exception
+     *             if an erro occurs
+     */
+    public static byte[] flipPNGVertically(byte[] image) throws Exception {
+        return ImageUtils.flipImageVertically(image, "png");
+    }
+
+    /**
+     * Rotates image by angle and returns image in PNG
+     * 
+     * @param image
+     *            the image to rotate
+     * @param angle
+     *            the angle to rotate by in degrees
+     * @return the rotated image
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static byte[] rotatePNG(byte[] image, double angle) throws Exception {
+        return ImageUtils.rotateImage(image, angle, "png");
+    }
+
+    /**
      * Flips image horizontally and returns image in JPEG
      * 
      * @param image
@@ -319,6 +360,64 @@ public final class ImageUtils {
      *             if an erro occurs
      */
     public static byte[] flipJPEGHorizontally(byte[] image) throws Exception {
+        return ImageUtils.flipImageHorizontally(image, "jpg");
+    }
+
+    /**
+     * Flips image vertically and returns image in JPEG
+     * 
+     * @param image
+     *            the image to flip
+     * @return the flipped image
+     * @throws Exception
+     *             if an erro occurs
+     */
+    public static byte[] flipJPEGVertically(byte[] image) throws Exception {
+        return ImageUtils.flipImageVertically(image, "jpg");
+    }
+
+    /**
+     * Rotates image by angle and returns image in JPEG
+     * 
+     * @param image
+     *            the image to rotate
+     * @param angle
+     *            the angle to rotate by in degrees
+     * @return the rotated image
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static byte[] rotateJPEG(byte[] image, double angle) throws Exception {
+        return ImageUtils.rotateImage(image, angle, "jpg");
+    }
+
+    /**
+     * Encodes image to base 64 string.
+     * 
+     * @param image
+     *            the image to encode
+     * @return the base 64 string
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static String encodeImageToBase64String(byte[] image) throws Exception {
+        return new String(Base64.encodeBase64(image), "UTF-8");
+    }
+
+    /**
+     * Decodes image from base 64 string.
+     * 
+     * @param base64Str
+     *            the base 64 string
+     * @return the image
+     * @throws Exception
+     *             if an error occurs
+     */
+    public static byte[] decodeImageFromBase64String(String base64Str) throws Exception {
+        return Base64.decodeBase64(base64Str.getBytes("UTF-8"));
+    }
+
+    private static byte[] flipImageHorizontally(byte[] image, String format) throws Exception {
         ImageIO.setUseCache(false);
         byte[] result = image;
         ByteArrayInputStream instream = null;
@@ -334,7 +433,7 @@ public final class ImageUtils {
             BufferedImage nbi = new BufferedImage(w, h, bi.getType());
             g = nbi.createGraphics();
             g.drawImage(bi, 0, 0, w, h, 0, h, w, 0, null);
-            ImageIO.write(nbi, "jpg", outstream);
+            ImageIO.write(nbi, format, outstream);
             result = outstream.toByteArray();
         } catch (Exception e) {
             throw e;
@@ -352,16 +451,7 @@ public final class ImageUtils {
         return result;
     }
 
-    /**
-     * Flips image vertically and returns image in JPEG
-     * 
-     * @param image
-     *            the image to flip
-     * @return the flipped image
-     * @throws Exception
-     *             if an erro occurs
-     */
-    public static byte[] flipJPEGVertically(byte[] image, float quality) throws Exception {
+    public static byte[] flipImageVertically(byte[] image, String format) throws Exception {
         ImageIO.setUseCache(false);
         byte[] result = image;
         ByteArrayInputStream instream = null;
@@ -377,7 +467,7 @@ public final class ImageUtils {
             BufferedImage nbi = new BufferedImage(w, h, bi.getType());
             g = nbi.createGraphics();
             g.drawImage(bi, 0, 0, w, h, w, 0, 0, h, null);
-            ImageIO.write(nbi, "jpg", outstream);
+            ImageIO.write(nbi, format, outstream);
             result = outstream.toByteArray();
         } catch (Exception e) {
             throw e;
@@ -395,18 +485,7 @@ public final class ImageUtils {
         return result;
     }
 
-    /**
-     * Rotates image by angle and returns image in JPEG
-     * 
-     * @param image
-     *            the image to rotate
-     * @param angle
-     *            the angle to rotate by in degrees
-     * @return the rotated image
-     * @throws Exception
-     *             if an error occurs
-     */
-    public static byte[] rotateJPEG(byte[] image, double angle) throws Exception {
+    private static byte[] rotateImage(byte[] image, double angle, String format) throws Exception {
         ImageIO.setUseCache(false);
         byte[] result = image;
         ByteArrayInputStream instream = null;
@@ -423,7 +502,7 @@ public final class ImageUtils {
             g = nbi.createGraphics();
             g.rotate(Math.toRadians(angle), w / 2, h / 2);
             g.drawImage(bi, null, 0, 0);
-            ImageIO.write(nbi, "jpg", outstream);
+            ImageIO.write(nbi, format, outstream);
 
             result = outstream.toByteArray();
         } catch (Exception e) {
@@ -439,31 +518,5 @@ public final class ImageUtils {
             IOUtils.close(outstream);
         }
         return result;
-    }
-
-    /**
-     * Encodes image to base 64 string.
-     * 
-     * @param image
-     *            the image to encode
-     * @return the base 64 string
-     * @throws Exception
-     *             if an error occurs
-     */
-    public static String encodeImageToBase64String(byte[] image) throws Exception {
-        return new String(Base64.encodeBase64(image));
-    }
-
-    /**
-     * Decodes image from base 64 string.
-     * 
-     * @param base64Str
-     *            the base 64 string
-     * @return the image
-     * @throws Exception
-     *             if an error occurs
-     */
-    public static byte[] decodeImageFromBase64String(String base64Str) throws Exception {
-        return Base64.decodeBase64(base64Str.getBytes("UTF-8"));
     }
 }

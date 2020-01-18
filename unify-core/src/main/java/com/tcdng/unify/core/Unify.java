@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.logging.LogManager;
 
@@ -129,7 +128,7 @@ public class Unify {
         UnifyContainerEnvironment uce = null;
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         try {
-            TypeRepository tr = TypeUtils.buildTypeRepositoryFromClasspath();
+            TypeRepository tr = TypeUtils.getTypeRepositoryFromClasspath();
             uce = new UnifyContainerEnvironment(tr, workingFolder);
             UnifyConfigUtils.readConfigFromTypeRepository(uccb, tr);
             uccb.deploymentMode(deploymentMode);
@@ -145,7 +144,7 @@ public class Unify {
         }
 
         try {
-            xmlInputStream = new FileInputStream(IOUtils.fileInstance(configFile, workingFolder));
+            xmlInputStream = IOUtils.openFileResourceInputStream(configFile, workingFolder);
         } catch (Exception e) {
             System.err
                     .println("Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, configFile));

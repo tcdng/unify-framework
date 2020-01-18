@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.web;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,81 +40,42 @@ import com.tcdng.unify.web.annotation.ResultMappings;
 @UplBinding("web/test/upl/testauthor.upl")
 @ResultMappings({ @ResultMapping(name = "resultMappingA", response = "!postresponse"),
         @ResultMapping(name = "resultMappingB", response = "!hidepopupresponse") })
-public class AuthorPageController extends AbstractPageController {
-
-    private String fullName;
-
-    private Date birthDt;
-
-    private Double height;
+public class AuthorPageController extends AbstractPageController<AuthorPageBean> {
 
     private Map<String, Author> authorDatabase;
 
-    private MapValues bio;
-
     public AuthorPageController() {
-
+        super(AuthorPageBean.class);
     }
 
     @Action
     public String createAuthor() throws UnifyException {
-        authorDatabase.put(fullName, new Author(fullName, birthDt, height));
+        AuthorPageBean authorPageBean = getPageBean();
+        authorDatabase.put(authorPageBean.getFullName(),
+                new Author(authorPageBean.getFullName(), authorPageBean.getBirthDt(), authorPageBean.getHeight()));
         return noResult();
     }
 
     @Action
     public String viewAuthor() throws UnifyException {
-        Author author = authorDatabase.get(fullName);
-        birthDt = author.getBirthDt();
-        height = author.getHeight();
+        AuthorPageBean authorPageBean = getPageBean();
+        Author author = authorDatabase.get(authorPageBean.getFullName());
+        authorPageBean.setBirthDt(author.getBirthDt());
+        authorPageBean.setHeight(author.getHeight());
         return noResult();
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     @Action
     public String newAuthor() throws UnifyException {
-        fullName = null;
-        birthDt = null;
-        height = null;
+        reset();
         return noResult();
     }
 
-    public Date getBirthDt() {
-        return birthDt;
-    }
-
-    public void setBirthDt(Date birthDt) {
-        this.birthDt = birthDt;
-    }
-
-    public Double getHeight() {
-        return height;
-    }
-
-    public void setHeight(Double height) {
-        this.height = height;
-    }
-
-    public MapValues getBio() {
-        return bio;
-    }
-
-    public void setBio(MapValues bio) {
-        this.bio = bio;
-    }
-
     @Override
-    protected void onInitialize() throws UnifyException {
-        super.onInitialize();
+    protected void onInitPage() throws UnifyException {
+        AuthorPageBean authorPageBean = getPageBean();
         authorDatabase = new HashMap<String, Author>();
-        bio = new MapValues();
+        MapValues bio = new MapValues();
         bio.addValue("color", String.class);
         bio.addValue("age", Integer.class);
         bio.addValue("gender", Gender.class);
@@ -125,5 +85,7 @@ public class AuthorPageController extends AbstractPageController {
 
         PackableDoc pDoc = new PackableDoc(docConfig, false);
         bio.addValue("metric", pDoc);
+        authorPageBean.setBio(bio);
     }
+
 }

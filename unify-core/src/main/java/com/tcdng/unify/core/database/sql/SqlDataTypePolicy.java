@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,9 +26,11 @@ public interface SqlDataTypePolicy {
     /**
      * Gets the policy alternative default SQL string.
      * 
+     * @param fieldType the field data type.
+     * 
      * @return the alternative default
      */
-    String getAltDefault();
+    String getAltDefault(Class<?> fieldType);
 
     /**
      * Gets the java SQL data type.
@@ -63,26 +65,26 @@ public interface SqlDataTypePolicy {
      * 
      * @param sb
      *            the builder to append to
-     * @param type
+     * @param fieldType
      *            the field type
      * @param defaultVal
      *            the optional default value. If null or blank, Alternative default
      *            values are used.
      */
-    void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal);
+    void appendDefaultSql(StringBuilder sb, Class<?> fieldType, String defaultVal);
 
     /**
      * Appends default value
      * 
      * @param sb
      *            the builder to append to
-     * @param type
+     * @param fieldType
      *            the field type
      * @param defaultVal
      *            the optional default value. If null or blank, Alternative default
      *            values are used.
      */
-    void appendDefaultVal(StringBuilder sb, Class<?> type, String defaultVal);
+    void appendDefaultVal(StringBuilder sb, Class<?> fieldType, String defaultVal);
 
     /**
      * Executes the setter of a prepared statement.

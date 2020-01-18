@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,6 +36,7 @@ import com.tcdng.unify.core.database.AbstractDataSource;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.security.Authentication;
 import com.tcdng.unify.core.util.SqlUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Abstract SQL data source.
@@ -51,7 +52,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     @Configurable
     private String connectionUrl;
 
-    @Configurable
+    @Configurable(resolve = false)
     private Authentication passwordAuthentication;
 
     @Configurable
@@ -155,6 +156,10 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                     if (SqlUtils.isSupportedSqlType(sqlType)) {
                         Class<?> type = SqlUtils.getJavaType(sqlType);
                         String defaultVal = rs.getString("COLUMN_DEF");
+                        if (defaultVal != null) {
+                            defaultVal = defaultVal.trim();
+                        }
+                        
                         String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");
                         int decimalDigits = decimalDigitsStr == null ? 0 : Integer.valueOf(decimalDigitsStr);
                         columnInfoList.add(new SqlColumnInfo(type, rs.getString("TYPE_NAME"),
@@ -445,12 +450,12 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     private SqlConnectionPool createSqlConnectionPool() throws UnifyException {
         String xUsername = null;
         String xPassword = null;
-        if (passwordAuthentication != null) {
-            xUsername = passwordAuthentication.getUsername();
-            xPassword = passwordAuthentication.getPassword();
-        } else if (username != null && password != null) {
+        if (!StringUtils.isBlank(username)) {
             xUsername = username;
             xPassword = password;
+        } else if (passwordAuthentication != null) {
+            xUsername = passwordAuthentication.getUsername();
+            xPassword = passwordAuthentication.getPassword();
         }
 
         return new SqlConnectionPool(connectionUrl, xUsername, xPassword, getConnectionTimeout, minConnections,

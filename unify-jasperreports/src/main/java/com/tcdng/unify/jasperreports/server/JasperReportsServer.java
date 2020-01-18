@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.Collection;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -80,6 +83,9 @@ public class JasperReportsServer extends AbstractReportServer {
     @Configurable("20")
     private int reportExpirationPeriod;
 
+    @Configurable
+    private boolean logDebug;
+
     public void setJasperReportCache(JasperReportsCache jasperReportsCache) {
         this.jasperReportsCache = jasperReportsCache;
     }
@@ -92,8 +98,16 @@ public class JasperReportsServer extends AbstractReportServer {
                 (JasperReportsLayoutManager) getComponent("jasperreports-columnarlayoutmanager"));
         registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_IMAGESONLY_REPORTLAYOUTMANAGER,
                 (JasperReportsLayoutManager) getComponent("jasperreports-tabularimagesonlylayoutmanager"));
+        registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_THUMBIMAGESONLY_REPORTLAYOUTMANAGER,
+                (JasperReportsLayoutManager) getComponent("jasperreports-tabularthumbimagesonlylayoutmanager"));
         registerReportLayoutManager(ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER,
                 (JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
+
+        if (!logDebug) {
+            Logger.getLogger("net.sf.jasperreports").setLevel((Level) Level.ERROR);
+            Logger.getLogger("org.apache.commons.beanutils").setLevel((Level) Level.ERROR);
+            Logger.getLogger("org.apache.commons.digester").setLevel((Level) Level.ERROR);
+        }
     }
 
     @Override
@@ -198,7 +212,7 @@ public class JasperReportsServer extends AbstractReportServer {
                     }
 
                     ReportFilter rootFilter = report.getFilter();
-                    if (rootFilter != null) {
+                    if (rootFilter != null && !(rootFilter.isCompound() && !rootFilter.isSubFilters())) {
                         buildNativeQueryFilters(nqb, rootFilter);
                     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,8 +25,9 @@ package com.tcdng.unify.core.criterion;
 public interface SimpleRestriction extends Restriction {
 
     /**
-     * Gets the simple restriction property name.
-     * @return the property name
+     * Gets the simple restriction field name.
+     * 
+     * @return the field name
      */
-    String getPropertyName();
+    String getFieldName();
 }

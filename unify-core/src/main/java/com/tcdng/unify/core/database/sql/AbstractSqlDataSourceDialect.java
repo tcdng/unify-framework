@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -472,8 +472,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" ");
         }
-        sb.append("DROP CONSTRAINT ")
-                .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbForeignKeyName));
+        // sb.append("DROP CONSTRAINT ")
+        // .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(),
+        // dbForeignKeyName));
+        sb.append("DROP CONSTRAINT ").append(dbForeignKeyName);
         return sb.toString();
     }
 
@@ -526,8 +528,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" ");
         }
-        sb.append("DROP CONSTRAINT ").append(
-                SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbUniqueConstraintName));
+        // sb.append("DROP CONSTRAINT ").append(
+        // SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(),
+        // dbUniqueConstraintName));
+        sb.append("DROP CONSTRAINT ").append(dbUniqueConstraintName);
         return sb.toString();
     }
 
@@ -571,8 +575,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, boolean format)
             throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("DROP INDEX ")
-                .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(), dbIndexName));
+        // sb.append("DROP INDEX ")
+        // .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(),
+        // dbIndexName));
+        sb.append("DROP INDEX ").append(dbIndexName);
         return sb.toString();
     }
 
@@ -591,24 +597,35 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException {
-        StringBuilder fsb = new StringBuilder();
+    public String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView)
+            throws UnifyException {
+        StringBuilder findSql = new StringBuilder();
+        findSql.append("SELECT ");
+        boolean appensSym = false;
         for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getFieldInfos()) {
-            if (fsb.length() > 0) {
-                fsb.append(", ");
+            if (appensSym) {
+                findSql.append(", ");
+            } else {
+                appensSym = true;
             }
-            fsb.append(sqlFieldInfo.getPreferredColumnName());
+
+            findSql.append(sqlFieldInfo.getPreferredColumnName());
         }
 
-        StringBuilder findSql = new StringBuilder();
-        findSql.append("SELECT ").append(fsb).append(" FROM ").append(sqlEntitySchemaInfo.getSchemaTableName());
+        findSql.append(" FROM ");
+        if (useView) {
+            findSql.append(sqlEntitySchemaInfo.getSchemaViewName());
+        } else {
+            findSql.append(sqlEntitySchemaInfo.getSchemaTableName());
+        }
+
         return findSql.toString();
     }
 
     @Override
     public String generateFindRecordByPkSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException {
         StringBuilder findByPkSql = new StringBuilder();
-        findByPkSql.append(generateFindRecordSql(sqlEntitySchemaInfo)).append(" WHERE ")
+        findByPkSql.append(generateFindRecordSql(sqlEntitySchemaInfo, false)).append(" WHERE ")
                 .append(sqlEntitySchemaInfo.getIdFieldInfo().getPreferredColumnName()).append(" = ?");
         return findByPkSql.toString();
     }
@@ -625,16 +642,20 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public String generateListRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException {
-        StringBuilder fsb = new StringBuilder();
+        StringBuilder listSql = new StringBuilder();
+        listSql.append("SELECT ");
+        boolean appensSym = false;
         for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getListFieldInfos()) {
-            if (fsb.length() > 0) {
-                fsb.append(", ");
+            if (appensSym) {
+                listSql.append(", ");
+            } else {
+                appensSym = true;
             }
-            fsb.append(sqlFieldInfo.getPreferredColumnName());
+
+            listSql.append(sqlFieldInfo.getPreferredColumnName());
         }
 
-        StringBuilder listSql = new StringBuilder();
-        listSql.append("SELECT ").append(fsb).append(" FROM ").append(sqlEntitySchemaInfo.getSchemaViewName());
+        listSql.append(" FROM ").append(sqlEntitySchemaInfo.getSchemaViewName());
         return listSql.toString();
     }
 
@@ -779,9 +800,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException {
+    public String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView)
+            throws UnifyException {
         StringBuffer countSql = new StringBuffer();
-        countSql.append("SELECT COUNT(*) FROM ").append(sqlEntitySchemaInfo.getSchemaViewName());
+        countSql.append("SELECT COUNT(*) FROM ");
+        if (useView) {
+            countSql.append(sqlEntitySchemaInfo.getSchemaViewName());
+        } else {
+            countSql.append(sqlEntitySchemaInfo.getSchemaTableName());
+        }
+
         return countSql.toString();
     }
 
@@ -840,10 +868,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public SqlStatement prepareCountStatement(Query<? extends Entity> query) throws UnifyException {
+    public SqlStatement prepareCountStatement(Query<? extends Entity> query, boolean useView) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-        StringBuilder countSql = new StringBuilder(sqlCacheFactory.get(query.getEntityClass()).getCountSql());
+        StringBuilder countSql = new StringBuilder();
+        if (useView) {
+            countSql.append(sqlCacheFactory.get(query.getEntityClass()).getCountViewSql());
+        } else {
+            countSql.append(sqlCacheFactory.get(query.getEntityClass()).getCountSql());
+        }
+
         appendWhereClause(countSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
         return new SqlStatement(sqlEntityInfo, SqlStatementType.COUNT, countSql.toString(), parameterInfoList);
     }
@@ -958,7 +992,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public SqlStatement prepareFindStatement(Query<? extends Entity> query) throws UnifyException {
+    public SqlStatement prepareFindStatement(Query<? extends Entity> query, boolean useView) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
         List<SqlFieldInfo> returnFieldInfoList = null;
@@ -972,7 +1006,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 returnFieldInfoList = sqlEntityInfo.getFieldInfos();
             }
 
-            findSql.append(sqlCacheFactory.get(sqlEntityInfo.getKeyClass()).getFindSql());
+            if (useView) {
+                findSql.append(sqlCacheFactory.get(sqlEntityInfo.getKeyClass()).getFindViewSql());
+            } else {
+                findSql.append(sqlCacheFactory.get(sqlEntityInfo.getKeyClass()).getFindSql());
+            }
         } else {
             findSql.append("SELECT ");
             if (select != null && select.isDistinct()) {
@@ -1356,7 +1394,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         return Collections.emptyList();
     }
 
-    protected void appendCreateTableColumnSQLL(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+    protected void appendCreateTableColumnSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean onAlter) {
         sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
@@ -1706,6 +1744,33 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 }
 
                 sb.append(" NULL");
+            }
+        }
+    }
+
+    protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+            SqlColumnAlterInfo sqlColumnAlterInfo) throws UnifyException {
+        SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+        sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
+        sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                sqlFieldSchemaInfo.getScale());
+
+        if (sqlFieldSchemaInfo.isPrimaryKey()) {
+            sb.append(" PRIMARY KEY NOT NULL");
+        } else {
+            if (sqlColumnAlterInfo.isDefaultChange()) {
+                if (sqlFieldSchemaInfo.isWithDefaultVal()) {
+                    sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                            sqlFieldSchemaInfo.getDefaultVal());
+                }
+            }
+
+            if (sqlColumnAlterInfo.isNullableChange()) {
+                if (!sqlFieldSchemaInfo.isNullable()) {
+                    sb.append(" NOT NULL");
+                } else {
+                    sb.append(" NULL");
+                }
             }
         }
     }
@@ -2154,15 +2219,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             SqlEntitySchemaInfo sqlEntitySchemaInfo = sqlEntityInfoFactory.getSqlEntityInfo(clazz);
             if (sqlEntitySchemaInfo.isViewOnly()) {
                 return new SqlCache(generateListRecordSql(sqlEntitySchemaInfo),
-                        generateListRecordByPkSql(sqlEntitySchemaInfo),
+                        generateListRecordSql(sqlEntitySchemaInfo), generateListRecordByPkSql(sqlEntitySchemaInfo),
                         generateListRecordByPkVersionSql(sqlEntitySchemaInfo),
                         generateListRecordSql(sqlEntitySchemaInfo), generateListRecordByPkSql(sqlEntitySchemaInfo),
                         generateListRecordByPkVersionSql(sqlEntitySchemaInfo), null, null, null, null, null, null, null,
-                        generateCountRecordSql(sqlEntitySchemaInfo), generateTestSql());
+                        generateCountRecordSql(sqlEntitySchemaInfo, true),
+                        generateCountRecordSql(sqlEntitySchemaInfo, true), generateTestSql());
             }
 
-            return new SqlCache(generateFindRecordSql(sqlEntitySchemaInfo),
-                    generateFindRecordByPkSql(sqlEntitySchemaInfo),
+            return new SqlCache(generateFindRecordSql(sqlEntitySchemaInfo, false),
+                    generateFindRecordSql(sqlEntitySchemaInfo, true), generateFindRecordByPkSql(sqlEntitySchemaInfo),
                     generateFindRecordByPkVersionSql(sqlEntitySchemaInfo), generateListRecordSql(sqlEntitySchemaInfo),
                     generateListRecordByPkSql(sqlEntitySchemaInfo),
                     generateListRecordByPkVersionSql(sqlEntitySchemaInfo), generateInsertRecordSql(sqlEntitySchemaInfo),
@@ -2170,7 +2236,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                     generateUpdateRecordByPkVersionSql(sqlEntitySchemaInfo),
                     generateDeleteRecordSql(sqlEntitySchemaInfo), generateDeleteRecordByPkSql(sqlEntitySchemaInfo),
                     generateDeleteRecordByPkVersionSql(sqlEntitySchemaInfo),
-                    generateCountRecordSql(sqlEntitySchemaInfo), generateTestSql());
+                    generateCountRecordSql(sqlEntitySchemaInfo, false),
+                    generateCountRecordSql(sqlEntitySchemaInfo, true), generateTestSql());
         }
     };
 

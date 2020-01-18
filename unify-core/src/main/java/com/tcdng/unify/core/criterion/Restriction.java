@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,12 +34,21 @@ public interface Restriction {
     RestrictionType getType();
 
     /**
-     * Writes properties associated with restriction into supplied bucket.
+     * Writes restricted fields into supplied bucket.
      * 
-     * @param propertyBucket
+     * @param restrictedFields
      *            the bucket to write to
      */
-    void writeProperties(Set<String> propertyBucket);
+    void writeRestrictedFields(Set<String> restrictedFields);
+
+    /**
+     * Checks if field is part of this restriction.
+     * 
+     * @param fieldname
+     *            the field name
+     * @return true is property is part of this restriction otherwise false
+     */
+    boolean isRestrictedField(String fieldname);
 
     /**
      * Checks if restriction is empty.
@@ -47,4 +56,11 @@ public interface Restriction {
      * @return a true if empty otherwise false
      */
     boolean isEmpty();
+
+    /**
+     * Checks if restriction is simple restriction.
+     * 
+     * @return a true if simple otherwise false
+     */
+    boolean isSimple();
 }

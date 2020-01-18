@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -61,7 +61,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
         tm.beginTransaction();
         try {
             batchItemList = db.findAll(
-                    new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
+                    Query.of(TestBatchItemRecordA.class).addAmongst("id", result).addOrder("id"));
         } finally {
             tm.endTransaction();
         }
@@ -100,7 +100,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
         tm.beginTransaction();
         try {
             batchItemList = db.findAll(
-                    new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
+                    Query.of(TestBatchItemRecordA.class).addAmongst("id", result).addOrder("id"));
         } finally {
             tm.endTransaction();
         }
@@ -139,7 +139,7 @@ public class DBBatchItemFileReadProcessorTest extends AbstractUnifyComponentTest
         tm.beginTransaction();
         try {
             batchItemList = db.findAll(
-                    new Query<TestBatchItemRecordA>(TestBatchItemRecordA.class).amongst("id", result).order("id"));
+                    Query.of(TestBatchItemRecordA.class).addAmongst("id", result).addOrder("id"));
         } finally {
             tm.endTransaction();
         }

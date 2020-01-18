@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -410,17 +410,6 @@ public interface ResponseWriter extends UnifyComponent {
      * Returns true if this response writer is empty.
      */
     boolean isEmpty();
-
-    /**
-     * Expands a theme tagged resource to a full theme resource URL
-     * 
-     * @param string
-     *            the tagged resource
-     * @return the expanded them resource URL
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String expandThemeTag(String string) throws UnifyException;
 
     /**
      * Writes javascript REGEX that allows only alphanumeric characters and,

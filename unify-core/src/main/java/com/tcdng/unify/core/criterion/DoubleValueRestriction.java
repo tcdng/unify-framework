@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,13 +26,25 @@ public interface DoubleValueRestriction extends SimpleRestriction {
 
     /**
      * Gets the first value for this restriction.
+     * 
      * @return the first value
      */
     Object getFirstValue();
 
     /**
      * Gets the second value for this restriction.
+     * 
      * @return the second value
      */
     Object getSecondValue();
+
+    /**
+     * Sets the restriction values.
+     * 
+     * @param firstVal
+     *            the first value to set
+     * @param secondVal
+     *            the second value to set
+     */
+    void setValues(Object firstVal, Object secondVal);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,14 +15,11 @@
  */
 package com.tcdng.unify.web.controller;
 
-import java.io.File;
-
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.web.constant.RealPathConstants;
 
 /**
- * Resource controller for fetching file downloading resources from application
+ * Resource controller for fetching file downloading resources from container
  * download path.
  * 
  * @author Lateef Ojulari
@@ -31,13 +28,7 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component("/resource/downloadpath")
 public class DownloadPathResourceController extends RealPathResourceController {
 
-    @Override
-    public void prepareExecution() throws UnifyException {
-        super.prepareExecution();
-        file = new File(
-                IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), "download/" + getResourceName()));
-        if (file.exists()) {
-            setContentLength(file.length());
-        }
+    public DownloadPathResourceController() {
+        super(RealPathConstants.DOWNLOAD_FOLDER);
     }
 }

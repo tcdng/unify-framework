@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.panel.SwitchPanel;
 
@@ -37,15 +37,15 @@ public class SwitchPanelResponse extends RefreshPanelResponse {
     private String[] panels;
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         String[] panels = getPanels();
-        logDebug("Preparing switch panel response: controller = [{0}], panelCount = [{1}]", pageController.getName(),
+        logDebug("Preparing switch panel response: path ID = [{0}], panelCount = [{1}]", page.getPathId(),
                 panels.length);
         for (int i = 0; i < panels.length; i++) {
-            SwitchPanel switchPanel = (SwitchPanel) pageController.getPanelByShortName(panels[i]);
+            SwitchPanel switchPanel = (SwitchPanel) page.getPanelByShortName(panels[i]);
             switchPanel.switchContent(targets[i]);
         }
-        super.doGenerate(writer, pageController);
+        super.doGenerate(writer, page);
     }
 
     @Override

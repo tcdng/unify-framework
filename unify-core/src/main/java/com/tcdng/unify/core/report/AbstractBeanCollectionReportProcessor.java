@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,9 +29,12 @@ public abstract class AbstractBeanCollectionReportProcessor<T> extends AbstractR
 
     @Override
     public void process(Report report) throws UnifyException {
+        doProcess(report);
         List<T> beanCollection = getBeanCollection(report.getReportParameters());
         report.setBeanCollection(beanCollection);
     }
+
+    protected abstract void doProcess(Report report) throws UnifyException;
 
     protected abstract List<T> getBeanCollection(ReportParameters reportParameters) throws UnifyException;
 }

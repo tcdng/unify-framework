@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,9 +27,9 @@ import com.tcdng.unify.core.util.StringUtils;
 public abstract class AbstractSqlDataTypePolicy implements SqlDataTypePolicy {
 
     @Override
-    public void appendDefaultSql(StringBuilder sb, Class<?> type, String defaultVal) {
+    public void appendDefaultSql(StringBuilder sb, Class<?> fieldType, String defaultVal) {
         if (StringUtils.isBlank(defaultVal)) {
-            defaultVal = getAltDefault();
+            defaultVal = getAltDefault(fieldType);
         }
 
         if (StringUtils.isNotBlank(defaultVal)) {
@@ -38,9 +38,9 @@ public abstract class AbstractSqlDataTypePolicy implements SqlDataTypePolicy {
     }
 
     @Override
-    public void appendDefaultVal(StringBuilder sb, Class<?> type, String defaultVal) {
+    public void appendDefaultVal(StringBuilder sb, Class<?> fieldType, String defaultVal) {
         if (StringUtils.isBlank(defaultVal)) {
-            defaultVal = getAltDefault();
+            defaultVal = getAltDefault(fieldType);
         }
 
         if (StringUtils.isNotBlank(defaultVal)) {

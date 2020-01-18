@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -52,6 +52,12 @@ public class DummyEventLogger extends AbstractUnifyComponent implements EventLog
     @Override
     public <T extends Entity> boolean logUserEvent(EventType eventType, T oldRecord, T newRecord)
             throws UnifyException {
+        return false;
+    }
+
+    @Override
+    public boolean logUserEvent(EventType eventType, Class<? extends Entity> entityClass, Object id,
+            List<FieldAudit> fieldAuditList) throws UnifyException {
         return false;
     }
 

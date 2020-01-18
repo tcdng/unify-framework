@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,8 +20,8 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
-import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.annotation.ResultMapping;
+import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.data.Hint;
 
@@ -41,8 +41,8 @@ public class HintUserResponse extends AbstractJsonPageControllerResponse {
     }
 
     @Override
-    protected void doGenerate(ResponseWriter writer, PageController pageController) throws UnifyException {
-        logDebug("Preparing hint user response: controller = [{0}]", pageController.getName());
+    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
+        logDebug("Preparing hint user response: path ID = [{0}]", page.getPathId());
         List<Hint> hintList = getRequestContextUtil().getUserHints();
         if (hintList != null && !hintList.isEmpty()) {
             writer.write(",\"hintUserHtml\":");

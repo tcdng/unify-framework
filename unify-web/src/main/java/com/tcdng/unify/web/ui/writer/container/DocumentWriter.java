@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,10 +17,12 @@ package com.tcdng.unify.web.ui.writer.container;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.PageController;
+import com.tcdng.unify.web.PathInfoRepository;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.ui.DocumentLayout;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -38,6 +40,9 @@ import com.tcdng.unify.web.ui.writer.AbstractPageWriter;
 @Component("document-writer")
 public class DocumentWriter extends AbstractPageWriter {
 
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
+
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
@@ -45,7 +50,7 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.write("<html ");
         writeTagAttributes(writer, document);
         writer.write(">");
-        
+
         // Head
         writer.write("<head>");
         // Write title
@@ -100,7 +105,7 @@ public class DocumentWriter extends AbstractPageWriter {
             }
         }
         writer.write("</head>");
-        
+
         // Body
         writer.write("<body class=\"dBody\"");
         String style = document.getStyle();
@@ -140,11 +145,11 @@ public class DocumentWriter extends AbstractPageWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
         writer.write("<script>");
-        PageController pageController = (PageController) document.getValueStore().getValueObject();
         // Set document properties
-        writer.write("ux.setupDocument(\"").write(pageController.getName()).write("\", \"")
+        PathParts pathParts = pathInfoRepository.getPathParts(document);
+        writer.write("ux.setupDocument(\"").write(pathParts.getControllerName()).write("\", \"")
                 .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
-                .write(document.getPopupSysId()).write("\");");
+                .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
 
         // Write layout behaviour
         DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");

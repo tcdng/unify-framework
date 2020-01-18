@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -553,7 +553,7 @@ public class Report {
                 throw new IllegalStateException("Can not have multiple root compound filter.");
             }
 
-            ReportFilter reportFilter = new ReportFilter(op, new ArrayList<ReportFilter>());
+            ReportFilter reportFilter = new ReportFilter(op);
             if (!filters.isEmpty()) {
                 filters.peek().getSubFilterList().add(reportFilter);
             }
@@ -598,11 +598,11 @@ public class Report {
             return this;
         }
 
-        public Builder addReportParameter(String name, String description, Object value) {
-            return addReportParameter(name, description, null, value, false, false);
+        public Builder addParameter(String name, String description, Object value) {
+            return addParameter(name, description, null, value, false, false);
         }
 
-        public Builder addReportParameter(String name, String description, String formatter, Object value,
+        public Builder addParameter(String name, String description, String formatter, Object value,
                 boolean headerDetail, boolean footerDetail) {
             reportParameters
                     .setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
@@ -610,6 +610,10 @@ public class Report {
         }
 
         public Report build() throws UnifyException {
+            if (rootFilter == null) {
+                rootFilter = new ReportFilter(RestrictionType.AND);
+            }
+            
             Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
                     table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout, reportParameters,
                     pageWidth, pageHeight, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -62,17 +62,16 @@ public abstract class AbstractDBSearchProvider extends AbstractSearchProviderLis
         return execute(getSessionLocale(), new SearchProviderParams(null, filter));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<? extends Listable> execute(Locale locale, SearchProviderParams params) throws UnifyException {
         String key = params.getKey();
         if (StringUtils.isNotBlank(key)) {
-            return genericService.listAll(new Query(recordType).equals(keyProperty, key).limit(searchLimit));
+            return genericService.listAll(Query.of(recordType).addEquals(keyProperty, key).setLimit(searchLimit));
         }
 
         String filter = params.getFilter();
         if (StringUtils.isNotBlank(filter)) {
-            Query<?> query = new Query(recordType).like(descProperty, filter).limit(searchLimit);
+            Query<?> query = Query.of(recordType).addLike(descProperty, filter).setLimit(searchLimit);
             addQueryFilters(query);
             return genericService.listAll(query);
         }

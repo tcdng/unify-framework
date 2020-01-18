@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -200,6 +200,19 @@ public class UnifyComponentContext {
      */
     public List<UnifyComponentConfig> getComponentConfigs(Class<? extends UnifyComponent> type) throws UnifyException {
         return applicationContext.getContainer().getComponentConfigs(type);
+    }
+
+    /**
+     * Fetches all component instances of a specific type.
+     * 
+     * @param componentType
+     *            the component type
+     * @return the list of components.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected <T extends UnifyComponent> List<T> getComponents(Class<T> componentType) throws UnifyException {
+        return applicationContext.getContainer().getComponents(componentType);
     }
 
     /**

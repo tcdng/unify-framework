@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,31 +41,6 @@ public class UserSessionTrackingPolicy extends AbstractEntityPolicy {
         userSessionTracking.setCreateTime(now);
         userSessionTracking.setLastAccessTime(now);
         return userSessionTracking.getId();
-    }
-
-    @Override
-    public void preUpdate(Entity record, Date now) throws UnifyException {
-
-    }
-
-    @Override
-    public void preDelete(Entity record, Date now) throws UnifyException {
-
-    }
-
-    @Override
-    public void onCreateError(Entity record) {
-
-    }
-
-    @Override
-    public void onUpdateError(Entity record) {
-
-    }
-
-    @Override
-    public void onDeleteError(Entity record) {
-
     }
 
 }

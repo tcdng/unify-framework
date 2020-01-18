@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -94,12 +94,22 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
     }
 
     @Override
+    protected boolean isAppendPopup(AbstractPopupTextField popupTextField) throws UnifyException {
+        if (super.isAppendPopup(popupTextField)) {
+            MoneyField moneyField = (MoneyField) popupTextField;
+            return moneyField.isMultiCurrency();
+        }
+
+        return false;
+    }
+
+    @Override
     protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
         MoneyField moneyField = (MoneyField) widget;
         writer.write("<button");
         writeTagId(writer, moneyField.getPopupButtonId());
         writeTagStyleClass(writer, "tplbutton");
-        if (!appendPopup(moneyField)) {
+        if (!isAppendPopup(moneyField)) {
             writer.write(" disabled");
         }
 

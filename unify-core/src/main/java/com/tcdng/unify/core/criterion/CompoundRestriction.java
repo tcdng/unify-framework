@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.criterion;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -60,4 +61,39 @@ public interface CompoundRestriction extends Restriction {
      * Clears all restrictions contained by this compound restriction.
      */
     void clear();
+
+    /**
+     * Replace value for all single value restrictions on property.
+     * 
+     * @param propertyName
+     *            the property name
+     * @param val
+     *            the value to set
+     * @return a true value if any replacement was made
+     */
+    boolean replaceAll(String propertyName, Object val);
+
+    /**
+     * Replace value for all double value restrictions on property.
+     * 
+     * @param propertyName
+     *            the property name
+     * @param val1
+     *            the first value to set
+     * @param val2
+     *            the second value to set
+     * @return a true value if any replacement was made
+     */
+    boolean replaceAll(String propertyName, Object val1, Object val2);
+
+    /**
+     * Replace value for all multiple value restrictions on property.
+     * 
+     * @param propertyName
+     *            the property name
+     * @param val
+     *            the multiple values to set
+     * @return a true value if any replacement was made
+     */
+    boolean replaceAll(String propertyName, Collection<Object> val);
 }

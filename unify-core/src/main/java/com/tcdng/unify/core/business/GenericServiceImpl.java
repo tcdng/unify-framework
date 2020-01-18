@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,8 +42,8 @@ public class GenericServiceImpl extends AbstractBusinessService implements Gener
 
     @Override
     public <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException {
-        Query<T> query = new Query<T>(clazz);
-        query.equals("id", id);
+        Query<T> query = Query.of(clazz);
+        query.addEquals("id", id);
         return (T) db().list(query);
     }
 
@@ -55,7 +55,7 @@ public class GenericServiceImpl extends AbstractBusinessService implements Gener
     @Override
     public <T, U extends Entity> T listValue(Class<T> valueClazz, Class<U> recordClazz, Object id, String property)
             throws UnifyException {
-        return db().value(valueClazz, property, new Query<U>(recordClazz).equals("id", id));
+        return db().value(valueClazz, property, Query.of(recordClazz).addEquals("id", id));
     }
 
     @Override

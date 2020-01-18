@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,9 +18,12 @@ package com.tcdng.unify.web.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.data.ValueStoreFactory;
+import com.tcdng.unify.web.PageBean;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.ui.panel.AbstractStandalonePanel;
 import com.tcdng.unify.web.ui.panel.StandalonePanel;
@@ -40,16 +43,26 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
     private Map<String, Object> attributes;
 
-    private String sessionId;
+    private String pathId;
 
     @Override
-    public String getSessionId() {
-        return sessionId;
+    public String getPathId() {
+        return pathId;
     }
 
     @Override
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setPathId(String pathId) {
+        this.pathId = pathId;
+    }
+
+    @Override
+    public void setPageBean(PageBean pageBean) throws UnifyException {
+        setValueStore(((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+                .getValueStore(pageBean, -1));    }
+
+    @Override
+    public PageBean getPageBean() throws UnifyException {
+        return (PageBean) getValueStore().getValueObject();
     }
 
     @Override

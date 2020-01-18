@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,9 +16,6 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.UplBinding;
-import com.tcdng.unify.web.annotation.ResultMapping;
-import com.tcdng.unify.web.annotation.ResultMappings;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 
 /**
@@ -28,15 +25,9 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
  * @since 1.0
  */
 @Component(ReservedPageControllerConstants.COMMONUTILITIES)
-@UplBinding("web/common/upl/commonutilities.upl")
-@ResultMappings({
-        @ResultMapping(name = "showapplicationmessage", response = { "!showpopupresponse popup:$s{messageBoxPopup}" }),
-        @ResultMapping(
-                name = "showapplicationtaskmonitor",
-                response = { "!showpopupresponse popup:$s{taskMonitorInfoPopup}" }) })
-public class CommonUtilitiesPageController extends AbstractPageController {
+public class CommonUtilitiesPageController extends AbstractCommonUtilitiesPageController<CommonUtilitiesPageBean> {
 
     public CommonUtilitiesPageController() {
-        super(true, false);
+        super(CommonUtilitiesPageBean.class);
     }
 }

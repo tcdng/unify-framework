@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
+import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
 
 /**
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Policy("testentitynorest-policy")
 @Table(name = "REPORT_PARAMETEROPT")
 public class ReportParameterOptions extends AbstractTestTableEntity {
 

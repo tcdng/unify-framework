@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
         super.doWriteBehavior(writer, popupTextField);
 
         ExtensionType extensionType = popupTextField.getExtensionType();
-        if (appendPopup(popupTextField)) {
+        if (isAppendPopup(popupTextField)) {
             // Append popup JS
             if (popupTextField.isPopupAlways()
                     || (popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled())) {
@@ -76,7 +76,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
         writer.write("<button");
         writeTagId(writer, popupTextField.getPopupButtonId());
         writeTagStyleClass(writer, "tpbutton");
-        if (!appendPopup(popupTextField)) {
+        if (!isAppendPopup(popupTextField)) {
             writer.write(" disabled");
         }
 
@@ -88,7 +88,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
     @Override
     protected void writeBaseAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
         AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-        if (appendPopup(popupTextField)) {
+        if (isAppendPopup(popupTextField)) {
             writer.write("<div");
             writeTagId(writer, popupTextField.getPopupId());
             writeTagStyleClass(writer, "ui-text-popup-win");
@@ -98,13 +98,13 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
         }
     }
 
-    protected boolean appendPopup(AbstractPopupTextField popupTextField) throws UnifyException {
+    protected boolean isAppendPopup(AbstractPopupTextField popupTextField) throws UnifyException {
         if (popupTextField.isPopupOnEditableOnly()) {
             return popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled();
         }
         return true;
     }
-
+    
     protected abstract void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException;
 

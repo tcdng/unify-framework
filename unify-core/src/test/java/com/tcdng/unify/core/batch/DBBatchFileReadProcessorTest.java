@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -68,7 +68,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
         TestBatchRecordB qryBatchRecord = null;
         tm.beginTransaction();
         try {
-            qryBatchRecord = db.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "NGN"));
+            qryBatchRecord = db.find(Query.of(TestBatchRecordB.class).addEquals("currency", "NGN"));
         } finally {
             tm.endTransaction();
         }
@@ -84,7 +84,7 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
         tm.beginTransaction();
         try {
             batchItemList = db.findAll(
-                    new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class).equals("batchId", batchId).order("id"));
+                    Query.of(TestBatchItemRecordB.class).addEquals("batchId", batchId).addOrder("id"));
         } finally {
             tm.endTransaction();
         }
@@ -138,8 +138,8 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
         TestBatchRecordB usdBatchRecord = null;
         tm.beginTransaction();
         try {
-            ngnBatchRecord = db.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "NGN"));
-            usdBatchRecord = db.find(new Query<TestBatchRecordB>(TestBatchRecordB.class).equals("currency", "USD"));
+            ngnBatchRecord = db.find(Query.of(TestBatchRecordB.class).addEquals("currency", "NGN"));
+            usdBatchRecord = db.find(Query.of(TestBatchRecordB.class).addEquals("currency", "USD"));
         } finally {
             tm.endTransaction();
         }
@@ -162,10 +162,10 @@ public class DBBatchFileReadProcessorTest extends AbstractUnifyComponentTest {
         List<TestBatchItemRecordB> usdBatchItemList = null;
         tm.beginTransaction();
         try {
-            ngnBatchItemList = db.findAll(new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class)
-                    .equals("batchId", ngnBatchId).order("id"));
-            usdBatchItemList = db.findAll(new Query<TestBatchItemRecordB>(TestBatchItemRecordB.class)
-                    .equals("batchId", usdBatchId).order("id"));
+            ngnBatchItemList = db.findAll(Query.of(TestBatchItemRecordB.class)
+                    .addEquals("batchId", ngnBatchId).addOrder("id"));
+            usdBatchItemList = db.findAll(Query.of(TestBatchItemRecordB.class)
+                    .addEquals("batchId", usdBatchId).addOrder("id"));
         } finally {
             tm.endTransaction();
         }

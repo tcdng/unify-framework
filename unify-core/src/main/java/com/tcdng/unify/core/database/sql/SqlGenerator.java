@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -344,8 +344,8 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName,
-            boolean format) throws UnifyException;
+    String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, boolean format)
+            throws UnifyException;
 
     /**
      * Generates native create view SQL for specified record type.
@@ -377,11 +377,13 @@ public interface SqlGenerator extends UnifyComponent {
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
+     * @param useView
+     *            indicates SQL should be based on view.
      * @return the generated find SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
+    String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView) throws UnifyException;
 
     /**
      * Generates native find record by primary key SQL for specified record type.
@@ -562,11 +564,13 @@ public interface SqlGenerator extends UnifyComponent {
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
+     * @param useView
+     *            indicates SQL should be based on view.
      * @return the count SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
+    String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView) throws UnifyException;
 
     /**
      * Generates connection test SQL.

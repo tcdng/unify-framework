@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -96,7 +96,7 @@ public interface PageManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Map<String, BindingInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException;
+    Map<String, PropertyInfo> getStandalonePanelPropertyBindings(String name) throws UnifyException;
 
     /**
      * Returns the page name for supplied long name. The same page name is always

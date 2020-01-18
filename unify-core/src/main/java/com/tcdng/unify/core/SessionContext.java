@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -52,8 +52,6 @@ public class SessionContext extends Context {
 
     private String remoteUser;
 
-    private String remoteViewer;
-
     private UserPlatform platform;
 
     private Date lastAccessTime;
@@ -61,7 +59,7 @@ public class SessionContext extends Context {
     private boolean useDaylightSavings;
     
     public SessionContext(String id, Locale locale, TimeZone timeZone, String uriBase, String contextPath,
-            String remoteHost, String remoteAddress, String remoteUser, String remoteViewer, UserPlatform platform) {
+            String remoteHost, String remoteAddress, String remoteUser, UserPlatform platform) {
         this.id = id;
         this.locale = locale;
         this.timeZone = timeZone;
@@ -71,8 +69,6 @@ public class SessionContext extends Context {
         this.remoteAddress = remoteAddress;
         this.remoteUser = remoteUser;
         this.platform = platform;
-//        this.lastAccessTime = new Date();
-        this.remoteViewer = remoteViewer;
         setAttribute(TRUE_ATTRIBUTE, Boolean.TRUE);
         setAttribute(FALSE_ATTRIBUTE, Boolean.FALSE);
     }
@@ -117,20 +113,12 @@ public class SessionContext extends Context {
         return remoteUser;
     }
 
-    public String getRemoteViewer() {
-        return remoteViewer;
-    }
-
     public UserPlatform getPlatform() {
         return platform;
     }
 
-    public boolean isRemoteViewer() {
-        return this.remoteViewer != null;
-    }
-
     public boolean isUserLoggedIn() {
-        return this.userToken != null || this.isRemoteViewer();
+        return userToken != null;
     }
 
     public Date getLastAccessTime() {

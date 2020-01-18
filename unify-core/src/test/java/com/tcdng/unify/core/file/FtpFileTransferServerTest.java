@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,10 +50,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testGetRemoteFileList() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .useAuthenticationId(REMOTE_AUTH_ID).remotePort(REMOTE_PORT)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist").build();
-        List<FileInfo> fileInfoList = fileTransferServer.getRemoteFileList(fileTransferInfo);
+        List<FileInfo> fileInfoList = fileTransferServer.getRemoteFileList(fileTransferSetup);
         assertNotNull(fileInfoList);
         assertEquals(2, fileInfoList.size());
 
@@ -67,10 +67,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
         assertEquals("Hello.txt", fileInfo.getFilename());
         assertTrue(fileInfo.isFile());
 
-        fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                 .remotePath("unify_test/filelist/books").build();
-        fileInfoList = fileTransferServer.getRemoteFileList(fileTransferInfo);
+        fileInfoList = fileTransferServer.getRemoteFileList(fileTransferSetup);
         assertNotNull(fileInfoList);
         assertEquals(4, fileInfoList.size());
 
@@ -98,11 +98,11 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testGetRemoteFileListWithFilter() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo =
-                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        FileTransferSetup fileTransferSetup =
+                FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                         .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                         .remotePath("unify_test/filelist").filterByExtension(".pdf").build();
-        List<FileInfo> fileInfoList = fileTransferServer.getRemoteFileList(fileTransferInfo);
+        List<FileInfo> fileInfoList = fileTransferServer.getRemoteFileList(fileTransferSetup);
         assertNotNull(fileInfoList);
         assertEquals(1, fileInfoList.size());
 
@@ -111,10 +111,10 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
         assertEquals("books", fileInfo.getFilename());
         assertFalse(fileInfo.isFile());
 
-        fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                 .remotePath("unify_test/filelist/books").filterByExtension(".pdf").build();
-        fileInfoList = fileTransferServer.getRemoteFileList(fileTransferInfo);
+        fileInfoList = fileTransferServer.getRemoteFileList(fileTransferSetup);
         assertNotNull(fileInfoList);
         assertEquals(3, fileInfoList.size());
 
@@ -137,142 +137,142 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
     @Test
     public void testRemoteDirectoryExist() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist").build();
-        assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
+        assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferSetup));
 
-        fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                 .remotePath("unify_test/filelist/books").build();
-        assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
+        assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferSetup));
     }
 
     @Test
     public void testRemoteDirectoryNotExist() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelistA").build();
-        assertFalse(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
+        assertFalse(fileTransferServer.remoteDirectoryExists(fileTransferSetup));
 
-        fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                 .remotePath("unify_test/filelist/booksA").build();
-        assertFalse(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
+        assertFalse(fileTransferServer.remoteDirectoryExists(fileTransferSetup));
     }
 
     @Test
     public void testRemoteFileExist() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/filelist").build();
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "Hello.txt"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "Hello.txt"));
 
-        fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                 .remotePath("unify_test/filelist/books").build();
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "Blue Sky.txt"));
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "Core-Servlets-and-JSP.pdf"));
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "iText.pdf"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "Blue Sky.txt"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "Core-Servlets-and-JSP.pdf"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "iText.pdf"));
     }
 
     @Test
     public void testCreateRemoteDirectory() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/newlist").build();
-        fileTransferServer.createRemoteDirectory(fileTransferInfo);
-        assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferInfo));
+        fileTransferServer.createRemoteDirectory(fileTransferSetup);
+        assertTrue(fileTransferServer.remoteDirectoryExists(fileTransferSetup));
     }
 
     @Test
     public void testCreateRemoteFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/newlist").build();
-        fileTransferServer.createRemoteFile(fileTransferInfo, "Sample.txt");
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "Sample.txt"));
+        fileTransferServer.createRemoteFile(fileTransferSetup, "Sample.txt");
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "Sample.txt"));
     }
 
     @Test(expected = UnifyException.class)
     public void testCreateRemoteFileInvalidFolder() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/newlist/samples").build();
-        fileTransferServer.createRemoteFile(fileTransferInfo, "Sample2.txt");
+        fileTransferServer.createRemoteFile(fileTransferSetup, "Sample2.txt");
     }
 
     @Test
     public void testDeleteRemoteFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST)
+        FileTransferSetup fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST)
                 .remotePort(REMOTE_PORT).useAuthenticationId(REMOTE_AUTH_ID)
                 .useAuthenticationPassword(REMOTE_AUTH_PASSWORD).remotePath("unify_test/newlist").build();
-        fileTransferServer.createRemoteFile(fileTransferInfo, "Sample.txt");
-        fileTransferServer.deleteRemoteFile(fileTransferInfo, "Sample.txt");
-        assertFalse(fileTransferServer.remoteFileExists(fileTransferInfo, "Sample.txt"));
+        fileTransferServer.createRemoteFile(fileTransferSetup, "Sample.txt");
+        fileTransferServer.deleteRemoteFile(fileTransferSetup, "Sample.txt");
+        assertFalse(fileTransferServer.remoteFileExists(fileTransferSetup, "Sample.txt"));
     }
 
     @Test
     public void testUploadFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo =
-                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        FileTransferSetup fileTransferSetup =
+                FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                         .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                         .remotePath("unify_test/uploadlist").localPath(LOCAL_UPLOAD_PATH).build();
-        fileTransferServer.createRemoteDirectory(fileTransferInfo);
-        fileTransferServer.uploadFile(fileTransferInfo, "MyTcdLogo.png", "TcdLogo.png");
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "MyTcdLogo.png"));
+        fileTransferServer.createRemoteDirectory(fileTransferSetup);
+        fileTransferServer.uploadFile(fileTransferSetup, "MyTcdLogo.png", "TcdLogo.png");
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "MyTcdLogo.png"));
     }
 
     @Test
     public void testUploadFiles() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo =
-                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        FileTransferSetup fileTransferSetup =
+                FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                         .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                         .remotePath("unify_test/uploadlist/myimages").localPath(LOCAL_UPLOAD_PATH + "\\images").build();
-        fileTransferServer.uploadFiles(fileTransferInfo);
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "users.png"));
+        fileTransferServer.uploadFiles(fileTransferSetup);
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "users.png"));
 
-        fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                 .remotePath("unify_test/uploadlist/myimages/set1").build();
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "app_server.png"));
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "branch_inner.png"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "app_server.png"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "branch_inner.png"));
 
-        fileTransferInfo = FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                 .remotePath("unify_test/uploadlist/myimages/set2").build();
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "flowcentral.jpg"));
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "merlin.jpg"));
-        assertTrue(fileTransferServer.remoteFileExists(fileTransferInfo, "raelyn.jpg"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "flowcentral.jpg"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "merlin.jpg"));
+        assertTrue(fileTransferServer.remoteFileExists(fileTransferSetup, "raelyn.jpg"));
     }
 
     @Test
     public void testDownloadFile() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo =
-                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        FileTransferSetup fileTransferSetup =
+                FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                         .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                         .remotePath("unify_test/filelist").localPath(LOCAL_DOWNLOAD_PATH).build();
-        fileTransferServer.downloadFile(fileTransferInfo, "Hello.txt", "MyHello.txt");
+        fileTransferServer.downloadFile(fileTransferSetup, "Hello.txt", "MyHello.txt");
         assertTrue(new File(LOCAL_DOWNLOAD_PATH + "\\MyHello.txt").isFile());
     }
 
     @Test
     public void testDownloadFiles() throws Exception {
         FileTransferServer fileTransferServer = getFileTransferServer();
-        FileTransferInfo fileTransferInfo =
-                FileTransferInfo.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
+        FileTransferSetup fileTransferSetup =
+                FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                         .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
                         .remotePath("unify_test/filelist/books").localPath(LOCAL_DOWNLOAD_PATH + "\\mybooks").build();
-        fileTransferServer.downloadFiles(fileTransferInfo);
+        fileTransferServer.downloadFiles(fileTransferSetup);
         assertTrue(new File(LOCAL_DOWNLOAD_PATH + "\\mybooks\\Blue Sky.txt").isFile());
         assertTrue(new File(LOCAL_DOWNLOAD_PATH + "\\mybooks\\Core-Servlets-and-JSP.pdf").isFile());
         assertTrue(new File(LOCAL_DOWNLOAD_PATH + "\\mybooks\\iText.pdf").isFile());

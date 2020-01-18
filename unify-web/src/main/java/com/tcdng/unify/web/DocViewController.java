@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,12 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.ui.Panel;
-
 /**
  * Document view controller.
  * 
  * @author Lateef Ojulari
  * @version 1.0
  */
-public interface DocViewController extends PageController {
+public interface DocViewController<T extends DocViewBean> extends PageController<T> {
 
-    Panel getDocViewPanel() throws UnifyException;
 }

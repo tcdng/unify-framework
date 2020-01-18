@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,30 +31,30 @@ public interface FileTransferServer extends UnifyComponent {
     /**
      * Gets a file list from remote server path.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @return the file list
      * @throws UnifyException
      *             if an error occurs
      */
-    List<FileInfo> getRemoteFileList(FileTransferInfo fileTransferInfo) throws UnifyException;
+    List<FileInfo> getRemoteFileList(FileTransferSetup fileTransferSetup) throws UnifyException;
 
     /**
      * Tests if a file directory exists on remote server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            The file server info
      * @return boolean a true value if file directory exists on server otherwise
      *         false
      * @throws UnifyException
      *             If an error occurs
      */
-    boolean remoteDirectoryExists(FileTransferInfo fileTransferInfo) throws UnifyException;
+    boolean remoteDirectoryExists(FileTransferSetup fileTransferSetup) throws UnifyException;
 
     /**
      * Tests if a file exists on remote server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            The file server info
      * @param serverFile
      *            the server file name
@@ -62,47 +62,47 @@ public interface FileTransferServer extends UnifyComponent {
      * @throws UnifyException
      *             If an error occurs
      */
-    boolean remoteFileExists(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException;
+    boolean remoteFileExists(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException;
 
     /**
      * Creates a directory, the transfer info remote path, on remote server if does
      * not exist.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @throws UnifyException
      *             if an error occurs
      */
-    void createRemoteDirectory(FileTransferInfo fileTransferInfo) throws UnifyException;
+    void createRemoteDirectory(FileTransferSetup fileTransferSetup) throws UnifyException;
 
     /**
      * Creates a file on remote server truncating if already exists.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @param serverFile
      *            the server file name
      * @throws UnifyException
      *             if an error occurs
      */
-    void createRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException;
+    void createRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException;
 
     /**
      * Deletes a file on remote server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @param serverFile
      *            the server file name
      * @throws UnifyException
      *             if an error occurs
      */
-    void deleteRemoteFile(FileTransferInfo fileTransferInfo, String serverFile) throws UnifyException;
+    void deleteRemoteFile(FileTransferSetup fileTransferSetup, String serverFile) throws UnifyException;
 
     /**
      * Reads a block of bytes from file on remote file server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file transfer information
      * @param serverFile
      *            the remote file name
@@ -114,58 +114,58 @@ public interface FileTransferServer extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    byte[] readRemoteBlock(FileTransferInfo fileTransferInfo, String serverFile, long index, int size)
+    byte[] readRemoteBlock(FileTransferSetup fileTransferSetup, String serverFile, long index, int size)
             throws UnifyException;
 
     /**
      * Gets a file list from local path.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @return the file list
      * @throws UnifyException
      *             if an error occurs
      */
-    List<FileInfo> getLocalFileList(FileTransferInfo fileTransferInfo) throws UnifyException;
+    List<FileInfo> getLocalFileList(FileTransferSetup fileTransferSetup) throws UnifyException;
 
     /**
      * Creates a file on local truncating if already exists.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @param localFile
      *            the local file name
      * @throws UnifyException
      *             if an error occurs
      */
-    void createLocalFile(FileTransferInfo fileTransferInfo, String localFile) throws UnifyException;
+    void createLocalFile(FileTransferSetup fileTransferSetup, String localFile) throws UnifyException;
 
     /**
      * Creates a local directory.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @throws UnifyException
      *             if an error occurs
      */
-    void createLocalDirectory(FileTransferInfo fileTransferInfo) throws UnifyException;
+    void createLocalDirectory(FileTransferSetup fileTransferSetup) throws UnifyException;
 
     /**
      * Deletes a local file.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file server info
      * @param localFile
      *            the local file name
      * @throws UnifyException
      *             if an error occurs
      */
-    void deleteLocalFile(FileTransferInfo fileTransferInfo, String localFile) throws UnifyException;
+    void deleteLocalFile(FileTransferSetup fileTransferSetup, String localFile) throws UnifyException;
 
     /**
      * Reads a block of bytes from file on local.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file transfer information
      * @param localFile
      *            the local file name
@@ -177,13 +177,13 @@ public interface FileTransferServer extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    byte[] readLocalBlock(FileTransferInfo fileTransferInfo, String localFile, long index, int size)
+    byte[] readLocalBlock(FileTransferSetup fileTransferSetup, String localFile, long index, int size)
             throws UnifyException;
 
     /**
      * Upload a file to remote file server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file transfer information
      * @param serverFile
      *            the server file name
@@ -192,22 +192,22 @@ public interface FileTransferServer extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void uploadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile) throws UnifyException;
+    void uploadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile) throws UnifyException;
 
     /**
      * Upload all files including subfolders to remote file server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file transfer information
      * @throws UnifyException
      *             if an error occurs
      */
-    void uploadFiles(FileTransferInfo fileTransferInfo) throws UnifyException;
+    void uploadFiles(FileTransferSetup fileTransferSetup) throws UnifyException;
 
     /**
      * Download a file from remote file server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file transfer information
      * @param serverFile
      *            the server file name
@@ -216,15 +216,15 @@ public interface FileTransferServer extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void downloadFile(FileTransferInfo fileTransferInfo, String serverFile, String localFile) throws UnifyException;
+    void downloadFile(FileTransferSetup fileTransferSetup, String serverFile, String localFile) throws UnifyException;
 
     /**
      * Download all files including subfolders from remote file server.
      * 
-     * @param fileTransferInfo
+     * @param fileTransferSetup
      *            the file transfer information
      * @throws UnifyException
      *             if an error occurs
      */
-    void downloadFiles(FileTransferInfo fileTransferInfo) throws UnifyException;
+    void downloadFiles(FileTransferSetup fileTransferSetup) throws UnifyException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,15 +30,18 @@ public class Setting {
 
     private Object value;
 
+    private boolean autoInject;
+
     private boolean hidden;
 
     public Setting(String name, Object value) {
-        this(name, value, false);
+        this(name, value, true, false);
     }
 
-    public Setting(String name, Object value, boolean hidden) {
+    public Setting(String name, Object value, boolean autoInject, boolean hidden) {
         this.name = name;
         this.value = value;
+        this.autoInject = autoInject;
         this.hidden = hidden;
     }
 
@@ -56,6 +59,10 @@ public class Setting {
         }
 
         return String.valueOf(this.value);
+    }
+
+    public boolean isAutoInject() {
+        return autoInject;
     }
 
     public boolean isHidden() {

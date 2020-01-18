@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -153,7 +153,7 @@ public final class UnifyConfigUtils {
         for (Field field : fields) {
             Configurable ca = field.getAnnotation(Configurable.class);
             names.add(field.getName());
-            ub.setProperty(field.getName(), UnifyConfigUtils.getConfigurableValue(ca), ca.hidden());
+            ub.setProperty(field.getName(), UnifyConfigUtils.getConfigurableValue(ca), ca.resolve(), ca.hidden());
         }
 
         // Set configurable fields overriding same fields if present
@@ -166,7 +166,7 @@ public final class UnifyConfigUtils {
                         throw new UnifyException(UnifyCoreErrorConstants.PROPERTY_IS_NOT_CONFIGURABLE, property, claz);
                     }
 
-                    ub.setProperty(property, UnifyConfigUtils.getConfigurableValue(ca), ca.hidden());
+                    ub.setProperty(property, UnifyConfigUtils.getConfigurableValue(ca), ca.resolve(), ca.hidden());
                 }
             }
         }
@@ -299,12 +299,12 @@ public final class UnifyConfigUtils {
                                 String property = propertyConfig.getName();
                                 String value = propertyConfig.getValue();
                                 if (value != null) {
-                                    ub.setProperty(property, value, propertyConfig.isHidden());
+                                    ub.setProperty(property, value, false, propertyConfig.isHidden());
                                 } else if (propertyConfig.getValueList() != null) {
                                     ub.setProperty(property,
                                             propertyConfig.getValueList()
                                                     .toArray(new String[propertyConfig.getValueList().size()]),
-                                            propertyConfig.isHidden());
+                                            false, propertyConfig.isHidden());
                                 }
                             }
                         }

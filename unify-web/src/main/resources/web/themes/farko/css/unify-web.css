@@ -70,6 +70,14 @@ z-index:400;}
 
 .ui-unordered {}
 
+.ui-flowgrid {display:grid;}
+.ui-flowgrid .fgcell {padding:2px;}
+.ui-flowgrid .llabel {}
+.ui-flowgrid .llabelinl {float:left;padding-right:4px;}
+.ui-flowgrid .lcontent {display:block; width:100%; height:100%;}
+.ui-flowgrid .lcontentinl {float:left; display:block; height:100%;}
+.ui-flowgrid .llabelblank {}
+
 /** Shaded list layout */
 .ui-shadedlist {width:100%;color:#000;}
 .ui-shadedlist .slcap {width:20%; padding:2px;font-weight:bold;font-size:10pt;background-color:#DCDCDC;}
@@ -232,6 +240,16 @@ z-index:400;}
 .ui-contentpanel .cptitlebar .cpbar {display: inline-block; width: 100%; height: 26px; margin-bottom: 2px;
 	border-bottom: 2px solid #000000;}
 .ui-contentpanel .cptitlebar .cpspan {float:left; font-size: 10pt; font-weight: bold; text-align: left;}
+
+.contentpanel-popup {position: fixed; visibility: hidden; width: auto; z-index: 300;
+    background-color: #F0F0F0;}
+.contentpanel-popup ul {list-style: none; padding: 2px; position: absolute; top: 100%;
+    border: 1px solid #808080; background-color: #F0F0F0;min-width:120px;}
+.contentpanel-popup ul li {float: none; position: relative;}
+.contentpanel-popup .msep {border-top:1px solid #AAA; padding-top:4px;margin-top:4px;}
+.contentpanel-popup .mitem {display: block; width: auto; margin: 0; padding: 8px 10px; font-size:10pt;
+    color: #000; text-align: left; text-decoration: none; white-space: nowrap;}
+.contentpanel-popup .mitem:hover {background-color: #49A3FF; color: #FFF;}
 
 /** Dialog panel */
 .ui-dialogpanel {}
@@ -402,7 +420,7 @@ z-index:400;}
 .ui-assignmentbox .abrow {display:table-row;}
 .ui-assignmentbox .abscell {display:table-cell;}
 .ui-assignmentbox .abfieldset {padding-top: 4px; padding-bottom: 4px; border: 1px solid white;}
-.ui-assignmentbox .abmselect {width: 280px;height:140px; border: 1px solid #C8C8C8;}
+.ui-assignmentbox .abmselect {width: 360px;height:220px; border: 1px solid #C8C8C8;}
 .ui-assignmentbox .abbcell {display:table-cell;text-align:center;vertical-align:middle;padding:8px;}
 .ui-assignmentbox .abbutton {width:32px; height: 24px; padding:0px; margin:2px;}
 .ui-assignmentbox .abbutton:hover:enabled {color: #FFF; background-color: #6080F0;}
@@ -433,11 +451,11 @@ z-index:400;}
 .ui-minibutton-alert:disabled {cursor:default;}
 .ui-minibutton-alert:hover:enabled {color: #FFF; background-color: #F06060;}
 
-/** Check box*/
+/** Checkbox*/
 .ui-checkbox {width:16px; height:16px;}
 
-/** Check box list */
-.ui-checkboxlist {}
+/** Check list */
+.ui-checklist {}
 
 
 /** Date field */
@@ -464,9 +482,15 @@ z-index:400;}
 /** Decimal field */
 .ui-decimal {text-align: right; padding-right: 4px;}
 
-/** Drop-down with checkbox list */
-.ui-dropdowncheckboxlist {width:180px;}
-.ui-dropdowncheckboxlist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
+/** Download link grid */
+.ui-downloadlinkgrid {}
+.ui-downloadlinkgrid .dlgcatcap{display:block; background-color:#F0F0F0; font-size:18px;
+    padding:4px 4px; vertical-align:middle; margin-bottom:8px;}
+.ui-downloadlinkgrid .dlglink{font-size:14px; text-decoration:underline;cursor: pointer;}
+
+/** Drop-down with check list */
+.ui-dropdownchecklist {width:180px;}
+.ui-dropdownchecklist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
 
 /** File attachment */
 .ui-fileattachment {}
@@ -755,7 +779,7 @@ z-index:400;}
 .ui-time {width: 160px;}
 .ui-time .tfframe {padding:2px; border: solid 1px #A0A0A0; background-color: #FFF;}
 .ui-time .tfabutton {width: 75px; height:36px; padding-top: 5px; padding-bottom: 5px; margin-left:6px; border: 1px solid #C8C8C8;}
-.ui-time .tfabutton:hover {background-color: #D0D0D0;}
+.ui-time .tfabutton:hover:enabled {color: #FFF; background-color: #6080F0 !important;}
 .ui-time .tfbutton {width: 26px; height:36px; padding-top: 5px; padding-bottom: 5px; border: 1px solid #C8C8C8;}
 .ui-time .tfbutton:hover {background-color: #D0D0D0;}
 .ui-time .tftext {width: 22px; height:36px; border:none; text-align: right; padding-right:2px;}

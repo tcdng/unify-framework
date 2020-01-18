@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,11 @@
  */
 package com.tcdng.unify.core.report;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tcdng.unify.core.criterion.RestrictionType;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A report filter.
@@ -38,8 +40,12 @@ public class ReportFilter {
     private Object param2;
 
     private List<ReportFilter> subFilterList;
-    
+
     public ReportFilter(RestrictionType op, String tableName, String columnName, Object param1, Object param2) {
+        if (op.isCompound()) {
+            throw new IllegalArgumentException("Restriction type must be simple for this constructor.");
+        }
+
         this.op = op;
         this.tableName = tableName;
         this.columnName = columnName;
@@ -47,9 +53,13 @@ public class ReportFilter {
         this.param2 = param2;
     }
 
-    public ReportFilter(RestrictionType op, List<ReportFilter> subFilterList) {
+    public ReportFilter(RestrictionType op) {
+        if (!op.isCompound()) {
+            throw new IllegalArgumentException("Restriction type must be compound for this constructor.");
+        }
+
         this.op = op;
-        this.subFilterList = subFilterList;
+        this.subFilterList = new ArrayList<ReportFilter>();
     }
 
     public RestrictionType getOp() {
@@ -58,6 +68,10 @@ public class ReportFilter {
 
     public boolean isCompound() {
         return op.isCompound();
+    }
+
+    public boolean isSubFilters() {
+        return !DataUtils.isBlank(subFilterList);
     }
 
     public String getTableName() {
@@ -80,4 +94,19 @@ public class ReportFilter {
         return subFilterList;
     }
 
+    public boolean isWithFilterColumn(String columnName) {
+        if (!DataUtils.isBlank(subFilterList)) {
+            for (ReportFilter subFilter : subFilterList) {
+                if (subFilter.isCompound()) {
+                    if (subFilter.isWithFilterColumn(columnName)) {
+                        return true;
+                    }
+                } else if (columnName.equals(subFilter.columnName)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

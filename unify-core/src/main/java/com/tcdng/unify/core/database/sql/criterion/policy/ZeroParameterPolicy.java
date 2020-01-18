@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,9 +42,9 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
         NoValueRestriction nvc = (NoValueRestriction) restriction;
-        String columnName = nvc.getPropertyName();
+        String columnName = nvc.getFieldName();
         if (sqlEntityInfo != null) {
-            columnName = sqlEntityInfo.getListFieldInfo(nvc.getPropertyName()).getPreferredColumnName();
+            columnName = sqlEntityInfo.getListFieldInfo(nvc.getFieldName()).getPreferredColumnName();
         }
         translate(sql, sqlEntityInfo.getTableAlias(), columnName, null, null);
     }
@@ -53,7 +53,7 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         NoValueRestriction nvc = (NoValueRestriction) restriction;
-        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(nvc.getPropertyName());
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(nvc.getFieldName());
         sql.append("(");
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);
         sql.append(")");

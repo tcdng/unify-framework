@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.AbstractClientRequest;
 import com.tcdng.unify.web.ClientRequestType;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 
@@ -36,15 +37,15 @@ public class HttpClientRequest extends AbstractClientRequest {
 
     private HttpRequestMethodType methodType;
 
-    private String path;
+    private PathParts pathParts;
 
     private Charset charset;
 
     private Map<String, Object> parameters;
 
-    public HttpClientRequest(HttpRequestMethodType methodType, String path, Charset charset,
+    public HttpClientRequest(HttpRequestMethodType methodType, PathParts pathParts, Charset charset,
             Map<String, Object> parameters) {
-        this.path = path;
+        this.pathParts = pathParts;
         this.charset = charset;
         this.parameters = parameters;
         this.methodType = methodType;
@@ -56,8 +57,8 @@ public class HttpClientRequest extends AbstractClientRequest {
     }
 
     @Override
-    public String getPath() {
-        return path;
+    public PathParts getPathParts() {
+        return pathParts;
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -137,7 +137,7 @@ public final class DataUtils {
     private static final Map<Class<?>, DataType> classToDataTypeMap;
 
     private static DateTimeFormatter defaultDateTimeFormatter;
-    
+
     static {
         Map<Class<?>, DataType> map = new HashMap<Class<?>, DataType>();
         map.put(byte[].class, DataType.BLOB);
@@ -353,11 +353,11 @@ public final class DataUtils {
     public static void registerDefaultFormatters(DateTimeFormatter defaultDateTimeFormatter) {
         DataUtils.defaultDateTimeFormatter = defaultDateTimeFormatter;
     }
-    
+
     public static DateTimeFormatter getDefaultDateTimeFormatter() {
         return DataUtils.defaultDateTimeFormatter;
     }
-    
+
     /**
      * Checks if two objects are equal.
      * 
@@ -545,7 +545,7 @@ public final class DataUtils {
             return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.getClassForName(className)));
         } catch (UnifyException e) {
         }
-        
+
         return false;
     }
 
@@ -565,7 +565,8 @@ public final class DataUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Input<T> newInput(Class<T> type, String name, String description, String editor, boolean mandatory) throws UnifyException {
+    public static <T> Input<T> newInput(Class<T> type, String name, String description, String editor,
+            boolean mandatory) throws UnifyException {
         Class<? extends Input> inputClass = classToInputMap.get(type);
         return (Input<T>) ReflectUtils.newInstance(inputClass,
                 new Class<?>[] { String.class, String.class, String.class, boolean.class }, name, description, editor,
@@ -1122,6 +1123,31 @@ public final class DataUtils {
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.REFLECT_REFLECTION_ERROR, bean.getClass(),
                     propertyName);
+        }
+    }
+
+    /**
+     * Clears all the properties if a bean.
+     * 
+     * @param bean
+     *            the bean object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static void clearAllBeanProperties(Object bean) throws UnifyException {
+        if (bean != null) {
+            try {
+                for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterMap(bean.getClass()).values()) {
+                    if (getterSetterInfo.isSetter()) {
+                        Object nullVal = classToNullMap.get(getterSetterInfo.getType());
+                        getterSetterInfo.getSetter().invoke(bean, nullVal);
+                    }
+                }
+            } catch (UnifyException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new UnifyException(e, UnifyCoreErrorConstants.REFLECT_REFLECTION_ERROR, bean.getClass());
+            }
         }
     }
 

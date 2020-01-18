@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,12 +31,12 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class TestClientRequest extends AbstractClientRequest {
 
-    private String path;
+    private PathParts pathParts;
 
     private Map<String, Object> parameters;
 
-    public TestClientRequest(String path) {
-        this.path = path;
+    public TestClientRequest(PathParts pathParts) {
+        this.pathParts = pathParts;
         parameters = new HashMap<String, Object>();
     }
 
@@ -46,8 +46,8 @@ public class TestClientRequest extends AbstractClientRequest {
     }
 
     @Override
-    public String getPath() {
-        return path;
+    public PathParts getPathParts() {
+        return pathParts;
     }
 
     @Override

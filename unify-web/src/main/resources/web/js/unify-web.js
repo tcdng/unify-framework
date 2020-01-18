@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department
+ * Copyright 2018-2020 The Code Department
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
 ux.docSysInfoId = null;
+ux.docSessionId = null;
 
 ux.popupVisible = false;
 
@@ -65,7 +66,6 @@ ux.remoteView = null;
 ux.shortcuts = [];
 ux.pagenamealiases = [];
 ux.delayedpanelposting = [];
-ux.remoteviewsessions = [];
 
 ux.resizefunctions = {};
 ux.confirmstore = {};
@@ -102,20 +102,17 @@ ux.registerExtension = function(extLiteral, extObj) {
 }
 
 /** Basic * */
-ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId) {
+ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docSessionId) {
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
 	ux.docSysInfoId = docSysInfoId;
+	ux.docSessionId = docSessionId;
 }
 
 ux.processJSON = function(jsonstring) {
 	var jsonEval = eval("(" + jsonstring + ")");
 	ux.remoteView = jsonEval.remoteView;
-	if (ux.remoteView) {
-		ux.remoteviewsessions[ux.remoteView.view] = ux.remoteView.sessionID;
-	}
-
 	if (jsonEval.jsonResp) {
 		for (var j = 0; j < jsonEval.jsonResp.length; j++) {
 			var resp = jsonEval.jsonResp[j];
@@ -134,13 +131,13 @@ ux.processJSON = function(jsonstring) {
 ux.newEvPrm = function(rgp) {
 	var evp = {};
 	if (ux.remoteView) {
-		evp.uSessionID = ux.remoteView.sessionID;
 		evp.uViewer = ux.remoteView.view;
 	}
 
 	if (rgp.pCmdURL) {
 		evp.uURL = rgp.pCmdURL;
 	}
+
 	return evp;
 }
 
@@ -806,7 +803,6 @@ ux.rigDragAndDropPopup = function(rgp) {
 ux.loadRemoteDocViewPanel = function(rgp) {
 	var evp = {};
 	evp.uViewer = rgp.pWinPgNm;
-	evp.uSessionID = ux.remoteviewsessions[evp.uViewer];
 	evp.uURL = rgp.pRemoteURL;
 	evp.uLoginId = rgp.pLoginId;
 	evp.uUserName = rgp.pUserName;
@@ -818,7 +814,6 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 	// Resolve save path viewer
 	ux.cntSaveRemoteView = {};
 	ux.cntSaveRemoteView.view = evp.uViewer;
-	ux.cntSaveRemoteView.sessionID = evp.uSessionID;
 	
 	ux.postCommit(evp);
 }
@@ -1050,9 +1045,24 @@ ux.rigContentPanel = function(rgp) {
 		ux.postToPath(rgp.pImmURL);
 	} else {
 		var currIdx = rgp.pCurIdx;
+		var menuId = rgp.pMenuId;
+		var uId = rgp.pId;
 		for(var i = 0; i < rgp.pContent.length; i++) {
 			var cnt = rgp.pContent[i];
-			if (i != currIdx) {
+			if (i == currIdx) {
+				if (i > 0) {
+					var evp = {};
+					evp.uTabPaneId = rgp.pTabPaneId;
+					evp.uMenuId = menuId;
+					ux.attachEventHandler(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
+							evp);
+					
+					// Wire menu events
+					ux.contentAttachClose(uId, cnt, "mic_", "CL");
+					ux.contentAttachClose(uId, cnt, "mico_", "CLO");
+					ux.contentAttachClose(uId, cnt, "mica_", "CLA");
+				}
+			} else {
 				var evp = {};
 				evp.uOpenPath = cnt.openPath;
 				ux.attachEventHandler(_id(cnt.tabId), "click", ux.contentOpen,
@@ -1070,24 +1080,44 @@ ux.rigContentPanel = function(rgp) {
 	}
 }
 
+ux.contentOpenTabMenu = function(uEv) {
+	var evp = uEv.evp;
+	var loc = ux.getExactPointerCoordinates(uEv);
+	// Show menu
+	var openPrm = {};
+	openPrm.popupId = evp.uMenuId;
+	openPrm.relFrameId = evp.uTabPaneId;
+	openPrm.stayOpenForMillSec = UNIFY_DEFAULT_POPUP_TIMEOUT;
+	openPrm.forceReopen = true;
+	openPrm.uTrg = uEv.uTrg;
+	openPrm.uLoc = loc;
+	ux.doOpenPopup(openPrm);
+}
+
 ux.contentOpen  = function(uEv) {
 	var evp = uEv.evp;
 	var path = evp.uOpenPath;
 	evp.uRef = [];
 	evp.uViewer = null;
-	evp.uSessionID = null;
 	if (ux.cntSaveList && ux.cntSavePath) {
 		ux.cntOpenPath = evp.uOpenPath;
 		path = ux.cntSavePath;
 		evp.uRef = ux.cntSaveList;
 		if (ux.cntSaveIsRemote && ux.cntSaveRemoteView) {
 			evp.uViewer = ux.cntSaveRemoteView.view;
-			evp.uSessionID = ux.cntSaveRemoteView.sessionID;
 		}
 	}
 	
 	evp.uURL = path;
 	ux.post(uEv);
+}
+
+ux.contentAttachClose = function(uId, cnt, type, mode) {
+	var evp = {};
+	evp.uSendTrg = mode;
+	evp.uURL = cnt.closePath;
+	ux.attachEventHandler(_id(type + uId), "click", ux.post,
+			evp);
 }
 
 /** Fixed content panel */
@@ -2961,7 +2991,6 @@ ux.rigTreeExplorer = function(rgp) {
 	}
 	
 	tdat.selList = selList;
-	ux.disableWinContextMenu();
 }
 
 ux.treeMenuClickHandler = function(uEv) {
@@ -3282,7 +3311,6 @@ ux.treeSelect = function(evp, tElem, selObj, i, select) {
 ux.buildFormParams = function(trgObj, evp) {
 	var param = {};
 	param.value = new FormData();
-	param.value.append("req_pag", "true");
 	param.isForm = true;
 	ux.buildObjParams(trgObj, evp, param);
 	return param;
@@ -3291,7 +3319,6 @@ ux.buildFormParams = function(trgObj, evp) {
 ux.buildReqParams = function(trgObj, evp) {
 	var param = {};
 	param.value = "morsic=" + new Date().getTime();
-	param.value += "&req_pag=true";
 	param.isForm = false;
 	ux.buildObjParams(trgObj, evp, param);
 	return param;
@@ -3399,11 +3426,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	if (isForm) {
 		if (evp.uViewer) {
 			pb.append("req_rv", evp.uViewer);
-			if (evp.uSessionID) {
-				pb.append("req_rsi", evp.uSessionID);
-			} else if (ux.remoteviewsessions[evp.uViewer]) {
-				pb.append("req_rsi", ux.remoteviewsessions[evp.uViewer]);
-			}
+			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
 		}
@@ -3421,11 +3444,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 	} else {
 		if (evp.uViewer) {
 			pb += ("&req_rv=" + _enc(evp.uViewer));
-			if (evp.uSessionID) {
-				pb += ("&req_rsi=" + _enc(evp.uSessionID));
-			} else if (ux.remoteviewsessions[evp.uViewer]) {
-				pb += ("&req_rsi=" + _enc(ux.remoteviewsessions[evp.uViewer]));
-			}
+			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
 		}
@@ -4058,6 +4077,7 @@ ux.padRight = function(text, ch, length) {
 }
 
 /** Mouse */
+ux.actRightClick = false;
 ux.wireRightClickHandler = function(evp, handler) {
 	evp.uRightHandler = handler;
 	return ux.onRightClickHandler;
@@ -4065,6 +4085,7 @@ ux.wireRightClickHandler = function(evp, handler) {
 
 ux.onRightClickHandler = function(uEv) {
 	if (uEv.mButton == UNIFY_RIGHT_BUTTON) {
+		ux.actRightClick = true;
 		uEv.evp.uRightHandler(uEv);
 	}
 }
@@ -4191,8 +4212,6 @@ ux.setHiddenValues = function(references, hiddenValues) {
 }
 
 /** Document functions and event handlers */
-var menuContextOff = false;
-
 ux.init = function() {
 	ux.resizeTimeout = null;
 	// Set document keydown handler
@@ -4202,16 +4221,16 @@ ux.init = function() {
 	
 	// Register self as extension
 	ux.registerExtension("ux", ux);
-}
-
-ux.disableWinContextMenu = function() {
-	if (!menuContextOff) {
-		window.oncontextmenu = function () {
-		    return false; // Cancel default menu
+	
+	// Override window menu context
+	window.oncontextmenu = function (uEv) {
+		if (ux.actRightClick) {
+			return ux.actRightClick = false;
 		}
-
-		menuContextOff = true;
+		
+	    return true; // Do default
 	}
+
 }
 
 ux.documentKeydownHandler = function(uEv) {

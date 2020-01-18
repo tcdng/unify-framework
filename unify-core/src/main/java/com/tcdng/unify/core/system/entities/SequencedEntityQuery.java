@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system.entities;
 
 import java.util.Collection;
 
+import com.tcdng.unify.core.criterion.CompoundRestriction;
 import com.tcdng.unify.core.database.Query;
 
 /**
@@ -35,35 +36,39 @@ public class SequencedEntityQuery<T extends SequencedEntity> extends Query<T> {
         super(entityClass, applyAppQueryLimit);
     }
 
+    public SequencedEntityQuery(Class<T> entityClass, CompoundRestriction restrictions, boolean applyAppQueryLimit) {
+        super(entityClass, restrictions, applyAppQueryLimit);
+    }
+
     public SequencedEntityQuery<T> id(Long id) {
-        return (SequencedEntityQuery<T>) equals("id", id);
+        return (SequencedEntityQuery<T>) addEquals("id", id);
     }
 
     public SequencedEntityQuery<T> idNot(Long id) {
-        return (SequencedEntityQuery<T>) notEqual("id", id);
+        return (SequencedEntityQuery<T>) addNotEqual("id", id);
     }
 
     public SequencedEntityQuery<T> idIn(Collection<Long> ids) {
-        return (SequencedEntityQuery<T>) amongst("id", ids);
+        return (SequencedEntityQuery<T>) addAmongst("id", ids);
     }
 
     public SequencedEntityQuery<T> idNotIn(Collection<Long> ids) {
-        return (SequencedEntityQuery<T>) notAmongst("id", ids);
+        return (SequencedEntityQuery<T>) addNotAmongst("id", ids);
     }
 
     public SequencedEntityQuery<T> reserved() {
-        return (SequencedEntityQuery<T>) less("id", 0L);
+        return (SequencedEntityQuery<T>) addLessThan("id", 0L);
     }
 
     public SequencedEntityQuery<T> notReserved() {
-        return (SequencedEntityQuery<T>) greater("id", 0L);
+        return (SequencedEntityQuery<T>) addGreaterThan("id", 0L);
     }
 
     public SequencedEntityQuery<T> orderById() {
-        return (SequencedEntityQuery<T>) order("id");
+        return (SequencedEntityQuery<T>) addOrder("id");
     }
 
     public SequencedEntityQuery<T> selectId() {
-        return (SequencedEntityQuery<T>) select("id");
+        return (SequencedEntityQuery<T>) addSelect("id");
     }
 }

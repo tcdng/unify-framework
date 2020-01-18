@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 The Code Department.
+ * Copyright 2018-2020 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -55,10 +55,10 @@ public abstract class AbstractDocument extends AbstractPage implements Document 
     }
 
     @Override
-    public Panel getContentPanel() throws UnifyException {
+    public ContentPanel getContentPanel() throws UnifyException {
         String contentPanelId = getUplAttribute(String.class, "contentPanel");
         if (contentPanelId != null) {
-            return getPanelByLongName(contentPanelId);
+            return (ContentPanel) getPanelByLongName(contentPanelId);
         }
         return null;
     }
