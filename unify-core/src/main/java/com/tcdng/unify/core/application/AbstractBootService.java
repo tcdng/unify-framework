@@ -207,6 +207,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
             }
             return feature;
         } catch (UnifyException ue) {
+        } finally {
+            commitTransactions();
         }
 
         return null;
