@@ -202,7 +202,6 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         String captionIdBase = tree.getCaptionIdBase();
         String iconIdBase = tree.getIconIdBase();
         int chIndent = indent + 1;
-        boolean isTreePolicy = tree.hasTreePolicy();
         do {
             TreeItem treeItem = ch.getItem();
             TreeItemTypeInfo treeItemTypeInfo = treeItem.getTypeInfo();
@@ -245,12 +244,8 @@ public class TreeExplorerWriter extends AbstractControlWriter {
 
             writeFileImageHtmlElement(writer, treeItemTypeInfo.getIcon(), iconIdBase + itemId, "ticon", null);
             writer.write("<span class=\"titem\">");
-            if (isTreePolicy) {
-                writer.writeWithHtmlEscape(
-                        tree.getTreePolicy().getTreeItemCaption(treeItemTypeInfo, treeItem.getContent()));
-            } else {
-                writer.writeWithHtmlEscape(String.valueOf(treeItem.getContent()));
-            }
+            writer.writeWithHtmlEscape(
+                    tree.getTreePolicy().getTreeItemCaption(treeItemTypeInfo, treeItem.getContent()));
             writer.write("</span></span>");
 
             // Close branch

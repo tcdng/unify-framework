@@ -25,7 +25,6 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.MarkedTree;
 import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemMatcher;
-import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
 import com.tcdng.unify.core.data.MarkedTree.Node;
 import com.tcdng.unify.web.ui.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
 
@@ -36,11 +35,9 @@ import com.tcdng.unify.web.ui.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
  * @since 1.0
  */
 public class Tree {
-
-    private static final TreeItemExpander expandChildPolicy = new TreeItemExpander();
-
-    private static final TreeItemCollapser collapseChildPolicy = new TreeItemCollapser();
-
+    
+    private TreePolicy treePolicy;
+    
     private TreeTypeInfo typeInfo;
 
     private MarkedTree<TreeItem> markedTree;
@@ -49,8 +46,9 @@ public class Tree {
 
     private Queue<TreeEvent> eventQueue;
 
-    private Tree(TreeTypeInfo typeInfo, MarkedTree<TreeItem> markedTree) {
+    private Tree(TreeTypeInfo typeInfo, TreePolicy treePolicy, MarkedTree<TreeItem> markedTree) {
         this.typeInfo = typeInfo;
+        this.treePolicy = treePolicy;
         this.markedTree = markedTree;
         selectedItemIdList = Collections.emptyList();
         eventQueue = new LinkedList<TreeEvent>();
@@ -64,12 +62,8 @@ public class Tree {
         }
 
         Long itemId = markedTree.addChild(parentItemId, new TreeItem(treeItemTypeInfo, item));
-        markedTree.updateParentNodes(itemId, expandChildPolicy); // Expand parents
+        markedTree.updateParentNodes(itemId, treePolicy.getTreeItemExpander()); // Expand parents
         return itemId;
-    }
-
-    public void setTreePolicy(MarkedTreePolicy<TreeItem> treePolicy) {
-        markedTree.setTreePolicy(treePolicy);
     }
 
     public TreePolicy getTreePolicy() {
@@ -166,7 +160,7 @@ public class Tree {
         this.selectedItemIdList = selectedItemIdList;
         for (Long itemId : selectedItemIdList) {
             try {
-                markedTree.updateParentNodes(itemId, expandChildPolicy);
+                markedTree.updateParentNodes(itemId, treePolicy.getTreeItemExpander());
             } catch (UnifyException e) {
             }
         }
@@ -190,7 +184,7 @@ public class Tree {
     }
 
     public void collapseAll() throws UnifyException {
-        markedTree.updateNodes(collapseChildPolicy);
+        markedTree.updateNodes(treePolicy.getTreeItemCollapser());
     }
 
     public boolean collapse(Long itemId) {
@@ -204,7 +198,7 @@ public class Tree {
     }
 
     public void expandAll() throws UnifyException {
-        markedTree.updateNodes(expandChildPolicy);
+        markedTree.updateNodes(treePolicy.getTreeItemExpander());
     }
 
     public boolean expand(Long itemId) {
@@ -225,6 +219,8 @@ public class Tree {
 
         private TreeTypeInfo typeInfo;
 
+        private TreePolicy treePolicy;
+        
         private MarkedTree<TreeItem> markedTree;
 
         private Builder(TreeTypeInfo typeInfo) {
@@ -232,6 +228,12 @@ public class Tree {
             this.markedTree = new MarkedTree<TreeItem>(new TreeItem());
         }
 
+        public Builder usePolicy(TreePolicy treePolicy) {
+            this.treePolicy = treePolicy;
+            this.markedTree.setTreePolicy(treePolicy);
+            return this;
+        }
+        
         public Builder addTreeItem(String type, Object item) throws UnifyException {
             if (!typeInfo.isTreeItemType(type)) {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
@@ -256,7 +258,7 @@ public class Tree {
 
         public Tree build() throws UnifyException {
             markedTree.setChain(false); // Enter unchained mode
-            return new Tree(typeInfo, markedTree);
+            return new Tree(typeInfo, treePolicy, markedTree);
         }
     }
 
