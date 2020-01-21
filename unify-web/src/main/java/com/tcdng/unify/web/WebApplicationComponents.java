@@ -50,4 +50,6 @@ public interface WebApplicationComponents {
     String APPLICATION_UICOMMANDMANAGER = "application-uicommandmanager";
 
     String APPLICATION_WEBCLIENT = "application-webclient";
+
+    String APPLICATION_DEFAULT_TREEPOLICY = "application-defaulttreepolicy";
 }

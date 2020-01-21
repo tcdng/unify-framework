@@ -23,7 +23,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
 import com.tcdng.unify.core.data.MarkedTree.Node;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
@@ -49,7 +48,6 @@ import com.tcdng.unify.web.ui.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
 @Component("ui-treeexplorer")
 @UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultVal = "$t{images/collapsed.png}"),
         @UplAttribute(name = "expandedIcon", type = String.class, defaultVal = "$t{images/expanded.png}"),
-        @UplAttribute(name = "treeRule", type = String.class, defaultVal = "default-treepolicy"),
         @UplAttribute(name = "treeEventPath", type = String.class),
         @UplAttribute(name = "dataComponents", type = UplElementReferences.class) })
 public class TreeExplorer extends AbstractMultiControl {
@@ -137,18 +135,12 @@ public class TreeExplorer extends AbstractMultiControl {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void setTree(Tree tree) throws UnifyException {
         this.tree = tree;
-        this.tree.setTreePolicy((MarkedTreePolicy<TreeItem>) getComponent(getUplAttribute(String.class, "treeRule")));
     }
 
     public TreePolicy getTreePolicy() {
         return tree.getTreePolicy();
-    }
-
-    public boolean hasTreePolicy() {
-        return tree.isTreePolicy();
     }
 
     public String getCollapsedIcon() throws UnifyException {

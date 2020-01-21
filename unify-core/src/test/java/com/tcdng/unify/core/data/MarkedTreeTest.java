@@ -105,11 +105,11 @@ public class MarkedTreeTest {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         mTree.add("music");
         mTree.add("video");
-        
+
         mTree.setChain(false);
         assertNull(mTree.getChainParent());
         assertNull(mTree.getChainLast());
-                
+
         mTree.setChain(true);
         assertNotNull(mTree.getChainParent());
         assertEquals("ROOT", mTree.getChainParent().getItem());
@@ -131,7 +131,7 @@ public class MarkedTreeTest {
 
     @Test
     public void testDeepAddItemOnNewMarkedTree() throws Exception {
-        MarkedTree<String> mTree = new MarkedTree<String>("ROOT");      
+        MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         // ROOT->music
         // ROOT->music->jazz
         // ROOT->music->blues
@@ -149,22 +149,22 @@ public class MarkedTreeTest {
         assertNotNull(mTree.getChainParent());
         assertEquals("music", mTree.getChainParent().getItem());
         assertNull(mTree.getChainLast());
-        
+
         mTree.add("jazz");
         mTree.add("blues");
         assertNotNull(mTree.getChainLast());
         assertEquals("blues", mTree.getChainLast().getItem());
-        
+
         assertTrue(mTree.descend());
         assertNotNull(mTree.getChainParent());
         assertEquals("blues", mTree.getChainParent().getItem());
         assertNull(mTree.getChainLast());
-        
+
         mTree.add("The Thrill is Gone");
         mTree.add("Mannish Boy");
         assertNotNull(mTree.getChainLast());
         assertEquals("Mannish Boy", mTree.getChainLast().getItem());
-        
+
         assertTrue(mTree.ascend());
         assertNotNull(mTree.getChainParent());
         assertEquals("music", mTree.getChainParent().getItem());
@@ -174,7 +174,7 @@ public class MarkedTreeTest {
         mTree.add("rap");
         assertNotNull(mTree.getChainLast());
         assertEquals("rap", mTree.getChainLast().getItem());
-        
+
         assertTrue(mTree.ascend());
         assertNotNull(mTree.getChainParent());
         assertEquals("ROOT", mTree.getChainParent().getItem());
@@ -182,12 +182,12 @@ public class MarkedTreeTest {
         assertEquals("music", mTree.getChainLast().getItem());
 
         mTree.add("video");
-        
+
         assertTrue(mTree.descend());
         assertNotNull(mTree.getChainParent());
         assertEquals("video", mTree.getChainParent().getItem());
         assertNull(mTree.getChainLast());
-        
+
         mTree.add("comedy");
         mTree.add("action");
         assertNotNull(mTree.getChainLast());
@@ -198,7 +198,7 @@ public class MarkedTreeTest {
         assertEquals("ROOT", mTree.getChainParent().getItem());
         assertNotNull(mTree.getChainLast());
         assertEquals("video", mTree.getChainLast().getItem());
-       
+
         assertFalse(mTree.ascend());
 
         assertEquals(10, mTree.size());
@@ -221,7 +221,7 @@ public class MarkedTreeTest {
         mTree.descend();
         mTree.add("comedy");
         mTree.add("action");
-        
+
         // Music
         assertEquals(Long.valueOf(1L), musicMark);
         Node<String> music = mTree.getNode(musicMark);
@@ -240,7 +240,7 @@ public class MarkedTreeTest {
         assertEquals("blues", music.getChild().getNext().getNext().getPrev().getItem());
         assertEquals("rap", music.getChild().getNext().getNext().getItem());
         assertNull(music.getChild().getNext().getNext().getNext());
-        
+
         // Blues
         assertEquals(Long.valueOf(3L), bluesMark);
         Node<String> blues = mTree.getNode(bluesMark);
@@ -258,7 +258,7 @@ public class MarkedTreeTest {
         assertEquals("Mannish Boy", blues.getChild().getNext().getItem());
         assertNotNull(blues.getChild().getNext().getPrev());
         assertEquals("The Thrill is Gone", blues.getChild().getNext().getPrev().getItem());
-        
+
         // Video
         assertEquals(Long.valueOf(7L), videoMark);
         Node<String> video = mTree.getNode(videoMark);
@@ -274,9 +274,9 @@ public class MarkedTreeTest {
         assertNotNull(video.getChild().getNext());
         assertEquals("action", video.getChild().getNext().getItem());
         assertNotNull(video.getChild().getNext().getPrev());
-        assertEquals("comedy", video.getChild().getNext().getPrev().getItem());   
+        assertEquals("comedy", video.getChild().getNext().getPrev().getItem());
     }
-    
+
     @Test
     public void testAddItemAbove() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -289,7 +289,7 @@ public class MarkedTreeTest {
         Long mannishMark = mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -298,9 +298,9 @@ public class MarkedTreeTest {
         assertEquals(Long.valueOf(7L), videoMark);
         Long spoonfulMark = mTree.addAbove(mannishMark, "Spoonful");
         assertEquals(Long.valueOf(8L), spoonfulMark);
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("video", root.getChild().getItem());
         assertNotNull(root.getChild().getNext());
@@ -308,19 +308,19 @@ public class MarkedTreeTest {
         assertNotNull(root.getChild().getNext().getPrev());
         assertEquals("video", root.getChild().getNext().getPrev().getItem());
         assertNull(root.getChild().getNext().getNext());
-        
-        Node<String> thrill =  mTree.getNode(thrillMark);
+
+        Node<String> thrill = mTree.getNode(thrillMark);
         assertNotNull(thrill.getNext());
         assertEquals("Spoonful", thrill.getNext().getItem());
         assertNotNull(thrill.getNext().getPrev());
         assertEquals("The Thrill is Gone", thrill.getNext().getPrev().getItem());
-        
+
         assertNotNull(thrill.getNext().getNext());
         assertEquals("Mannish Boy", thrill.getNext().getNext().getItem());
         assertNotNull(thrill.getNext().getNext().getPrev());
         assertEquals("Spoonful", thrill.getNext().getNext().getPrev().getItem());
     }
-    
+
     @Test
     public void testAddItemBelow() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -333,7 +333,7 @@ public class MarkedTreeTest {
         mTree.add("Mannish Boy");
         mTree.ascend();
         Long rapMark = mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -344,9 +344,9 @@ public class MarkedTreeTest {
         assertEquals(Long.valueOf(8L), spoonfulMark);
         Long hiphopMark = mTree.addBelow(rapMark, "hiphop");
         assertEquals(Long.valueOf(9L), hiphopMark);
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("music", root.getChild().getItem());
         assertNotNull(root.getChild().getNext());
@@ -354,13 +354,13 @@ public class MarkedTreeTest {
         assertNotNull(root.getChild().getNext().getPrev());
         assertEquals("music", root.getChild().getNext().getPrev().getItem());
         assertNull(root.getChild().getNext().getNext());
-        
-        Node<String> thrill =  mTree.getNode(thrillMark);
+
+        Node<String> thrill = mTree.getNode(thrillMark);
         assertNotNull(thrill.getNext());
         assertEquals("Spoonful", thrill.getNext().getItem());
         assertNotNull(thrill.getNext().getPrev());
         assertEquals("The Thrill is Gone", thrill.getNext().getPrev().getItem());
-        
+
         assertNotNull(thrill.getNext().getNext());
         assertEquals("Mannish Boy", thrill.getNext().getNext().getItem());
         assertNotNull(thrill.getNext().getNext().getPrev());
@@ -374,7 +374,7 @@ public class MarkedTreeTest {
         mTree.descend();
         Long jazzMark = mTree.add("jazz");
         mTree.add("blues");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -382,14 +382,14 @@ public class MarkedTreeTest {
         mTree.addChild(musicMark, "rap");
         mTree.addChild(jazzMark, "So What");
         mTree.addChild(jazzMark, "Take Five");
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("music", root.getChild().getItem());
         assertNull(root.getChild().getNext());
-        
-        Node<String> music =  mTree.getNode(musicMark);
+
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
         assertEquals("music", music.getChild().getPrev().getItem());
@@ -400,8 +400,8 @@ public class MarkedTreeTest {
         assertEquals("rap", music.getChild().getNext().getNext().getItem());
         assertEquals("blues", music.getChild().getNext().getNext().getPrev().getItem());
         assertNull(music.getChild().getNext().getNext().getNext());
-        
-        Node<String> jazz =  mTree.getNode(jazzMark);
+
+        Node<String> jazz = mTree.getNode(jazzMark);
         assertNotNull(jazz.getChild());
         assertEquals("So What", jazz.getChild().getItem());
         assertNotNull(jazz.getChild().getNext());
@@ -416,7 +416,7 @@ public class MarkedTreeTest {
         mTree.descend();
         Long jazzMark = mTree.add("jazz");
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -426,14 +426,14 @@ public class MarkedTreeTest {
         mTree.addChild(musicMark, "zelt");
         mTree.addChild(jazzMark, "Take Five");
         mTree.addChild(jazzMark, "So What");
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("music", root.getChild().getItem());
         assertNull(root.getChild().getNext());
-        
-        Node<String> music =  mTree.getNode(musicMark);
+
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("blues", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
@@ -448,8 +448,8 @@ public class MarkedTreeTest {
         assertNotNull(music.getChild().getNext().getNext().getNext().getNext());
         assertEquals("zelt", music.getChild().getNext().getNext().getNext().getNext().getItem());
         assertEquals("rap", music.getChild().getNext().getNext().getNext().getNext().getPrev().getItem());
-        
-        Node<String> jazz =  mTree.getNode(jazzMark);
+
+        Node<String> jazz = mTree.getNode(jazzMark);
         assertNotNull(jazz.getChild());
         assertEquals("So What", jazz.getChild().getItem());
         assertNotNull(jazz.getChild().getNext());
@@ -464,7 +464,7 @@ public class MarkedTreeTest {
         mTree.descend();
         Long jazzMark = mTree.add("jazz");
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -474,14 +474,14 @@ public class MarkedTreeTest {
         mTree.addChild(musicMark, "zelt");
         mTree.addChild(jazzMark, "Take Five");
         mTree.addChild(jazzMark, "So What");
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("music", root.getChild().getItem());
         assertNull(root.getChild().getNext());
-        
-        Node<String> music =  mTree.getNode(musicMark);
+
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
@@ -492,14 +492,14 @@ public class MarkedTreeTest {
         assertEquals("rap", music.getChild().getNext().getNext().getNext().getItem());
         assertNotNull(music.getChild().getNext().getNext().getNext().getNext());
         assertEquals("zelt", music.getChild().getNext().getNext().getNext().getNext().getItem());
-        
-        Node<String> jazz =  mTree.getNode(jazzMark);
+
+        Node<String> jazz = mTree.getNode(jazzMark);
         assertNotNull(jazz.getChild());
         assertEquals("Take Five", jazz.getChild().getItem());
         assertNotNull(jazz.getChild().getNext());
         assertEquals("So What", jazz.getChild().getNext().getItem());
     }
-    
+
     @Test
     public void testMoveAbove() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -512,16 +512,16 @@ public class MarkedTreeTest {
         Long mannishMark = mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
         // Move item above
         assertTrue(mTree.moveAbove(jazzMark, bluesMark));
         assertTrue(mTree.moveAbove(trillMark, mannishMark));
-        
+
         // Validate
-        Node<String> music =  mTree.getNode(musicMark);
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("blues", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
@@ -529,14 +529,14 @@ public class MarkedTreeTest {
         assertNotNull(music.getChild().getNext().getNext());
         assertEquals("rap", music.getChild().getNext().getNext().getItem());
         assertNull(music.getChild().getNext().getNext().getNext());
-        
-        Node<String> blues =  mTree.getNode(bluesMark);
+
+        Node<String> blues = mTree.getNode(bluesMark);
         assertNotNull(blues.getChild());
         assertEquals("Mannish Boy", blues.getChild().getItem());
         assertNotNull(blues.getChild().getNext());
         assertEquals("The Thrill is Gone", blues.getChild().getNext().getItem());
     }
-    
+
     @Test
     public void testMoveAboveAndAcrossLevel() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -549,35 +549,35 @@ public class MarkedTreeTest {
         mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
         // Move item above
         assertTrue(mTree.moveAbove(musicMark, bluesMark));
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("blues", root.getChild().getItem());
         assertNotNull(root.getChild().getNext());
         assertEquals("music", root.getChild().getNext().getItem());
         assertNull(root.getChild().getNext().getNext());
-        
-        Node<String> music =  mTree.getNode(musicMark);
+
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
         assertEquals("rap", music.getChild().getNext().getItem());
         assertNull(music.getChild().getNext().getNext());
-        
-        Node<String> blues =  mTree.getNode(bluesMark);
+
+        Node<String> blues = mTree.getNode(bluesMark);
         assertNotNull(blues.getChild());
         assertEquals("The Thrill is Gone", blues.getChild().getItem());
         assertNotNull(blues.getChild().getNext());
         assertEquals("Mannish Boy", blues.getChild().getNext().getItem());
     }
-    
+
     @Test
     public void testMoveAncestorAbove() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -590,7 +590,7 @@ public class MarkedTreeTest {
         Long mannishMark = mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -598,7 +598,7 @@ public class MarkedTreeTest {
         assertFalse(mTree.moveAbove(bluesMark, musicMark));
         assertFalse(mTree.moveAbove(mannishMark, bluesMark));
     }
-    
+
     @Test
     public void testMoveAboveSame() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -611,7 +611,7 @@ public class MarkedTreeTest {
         Long mannishMark = mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -619,8 +619,7 @@ public class MarkedTreeTest {
         assertFalse(mTree.moveAbove(bluesMark, bluesMark));
         assertFalse(mTree.moveAbove(mannishMark, mannishMark));
     }
-    
-    
+
     @Test
     public void testMoveBelow() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -633,16 +632,16 @@ public class MarkedTreeTest {
         Long mannishMark = mTree.add("Mannish Boy");
         mTree.ascend();
         Long rapMark = mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
         // Move item below
         assertTrue(mTree.moveBelow(rapMark, bluesMark));
         assertTrue(mTree.moveBelow(trillMark, mannishMark));
-        
+
         // Validate
-        Node<String> music =  mTree.getNode(musicMark);
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
@@ -650,14 +649,14 @@ public class MarkedTreeTest {
         assertNotNull(music.getChild().getNext().getNext());
         assertEquals("blues", music.getChild().getNext().getNext().getItem());
         assertNull(music.getChild().getNext().getNext().getNext());
-        
-        Node<String> blues =  mTree.getNode(bluesMark);
+
+        Node<String> blues = mTree.getNode(bluesMark);
         assertNotNull(blues.getChild());
         assertEquals("The Thrill is Gone", blues.getChild().getItem());
         assertNotNull(blues.getChild().getNext());
         assertEquals("Mannish Boy", blues.getChild().getNext().getItem());
     }
-    
+
     @Test
     public void testMoveBelowAndAcrossLevel() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -670,35 +669,35 @@ public class MarkedTreeTest {
         mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
         // Move item below
         assertTrue(mTree.moveBelow(musicMark, bluesMark));
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("music", root.getChild().getItem());
         assertNotNull(root.getChild().getNext());
         assertEquals("blues", root.getChild().getNext().getItem());
         assertNull(root.getChild().getNext().getNext());
-        
-        Node<String> music =  mTree.getNode(musicMark);
+
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
         assertEquals("rap", music.getChild().getNext().getItem());
         assertNull(music.getChild().getNext().getNext());
-        
-        Node<String> blues =  mTree.getNode(bluesMark);
+
+        Node<String> blues = mTree.getNode(bluesMark);
         assertNotNull(blues.getChild());
         assertEquals("The Thrill is Gone", blues.getChild().getItem());
         assertNotNull(blues.getChild().getNext());
         assertEquals("Mannish Boy", blues.getChild().getNext().getItem());
     }
-    
+
     @Test
     public void testMoveAncestorBelow() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -711,7 +710,7 @@ public class MarkedTreeTest {
         Long mannishMark = mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -719,7 +718,7 @@ public class MarkedTreeTest {
         assertFalse(mTree.moveBelow(bluesMark, musicMark));
         assertFalse(mTree.moveBelow(mannishMark, bluesMark));
     }
-    
+
     @Test
     public void testMoveBelowSame() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -732,7 +731,7 @@ public class MarkedTreeTest {
         Long mannishMark = mTree.add("Mannish Boy");
         mTree.ascend();
         mTree.add("rap");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -740,7 +739,7 @@ public class MarkedTreeTest {
         assertFalse(mTree.moveBelow(bluesMark, bluesMark));
         assertFalse(mTree.moveBelow(mannishMark, mannishMark));
     }
-    
+
     @Test
     public void testMoveAsChild() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -755,22 +754,22 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         Long videoMark = mTree.add("video");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
         // Move item below
         assertTrue(mTree.moveAsChild(videoMark, bluesMark));
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("music", root.getChild().getItem());
         assertNotNull(root.getChild().getNext());
         assertEquals("video", root.getChild().getNext().getItem());
         assertNull(root.getChild().getNext().getNext());
 
-        Node<String> music =  mTree.getNode(musicMark);
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
@@ -778,13 +777,13 @@ public class MarkedTreeTest {
         assertEquals("rap", music.getChild().getNext().getItem());
         assertNull(music.getChild().getNext().getNext());
 
-        Node<String> video =  mTree.getNode(videoMark);
+        Node<String> video = mTree.getNode(videoMark);
         assertNotNull(video);
         assertNotNull(video.getChild());
         assertEquals("blues", video.getChild().getItem());
         assertNull(video.getChild().getNext());
-        
-        Node<String> blues =  mTree.getNode(bluesMark);
+
+        Node<String> blues = mTree.getNode(bluesMark);
         assertNotNull(blues.getChild());
         assertEquals("The Thrill is Gone", blues.getChild().getItem());
         assertNotNull(blues.getChild().getNext());
@@ -811,7 +810,7 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         mTree.add("video");
-        
+
         Node<String> music = mTree.findFirstNode(new TestMatcher1("music"));
         assertNotNull(music);
         assertEquals("music", music.getItem());
@@ -822,7 +821,7 @@ public class MarkedTreeTest {
         assertNotNull(music.getChild().getNext().getNext());
         assertEquals("rap", music.getChild().getNext().getNext().getItem());
         assertNull(music.getChild().getNext().getNext().getNext());
-        
+
         Node<String> video = mTree.findFirstNode(new TestMatcher1("video"));
         assertNotNull(video);
         assertEquals("video", video.getItem());
@@ -843,7 +842,7 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         mTree.add("video");
-        
+
         Node<String> blues = mTree.findFirstNode(new TestMatcher1("blues"));
         assertNotNull(blues);
         assertEquals("blues", blues.getItem());
@@ -873,7 +872,7 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         mTree.add("video");
-        
+
         assertNull(mTree.findFirstNode(new TestMatcher1("hiphop")));
     }
 
@@ -891,7 +890,7 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         Long videoMark = mTree.add("video");
-        
+
         Node<String> blues = mTree.findFirstNode(musicMark, new TestMatcher1("blues"));
         assertNotNull(blues);
         assertEquals("blues", blues.getItem());
@@ -905,7 +904,7 @@ public class MarkedTreeTest {
         assertNotNull(mannish);
         assertEquals("Mannish Boy", mannish.getItem());
         assertNull(mannish.getChild());
-        
+
         // Match at start point
         Node<String> video = mTree.findFirstNode(videoMark, new TestMatcher1("video"));
         assertNotNull(video);
@@ -926,13 +925,13 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         mTree.add("video");
-        
+
         // No existent mark
         assertNull(mTree.findFirstNode(Long.valueOf(99L), new TestMatcher1("video")));
-        
+
         // Not in branch
         assertNull(mTree.findFirstNode(bluesMark, new TestMatcher1("music")));
-        
+
         // Unmatched
         assertNull(mTree.findFirstNode(musicMark, new TestMatcher1("hiphop")));
     }
@@ -955,7 +954,7 @@ public class MarkedTreeTest {
         mTree.ascend();
         mTree.ascend();
         mTree.add("video");
-        
+
         List<Node<String>> nodeList = mTree.findNodes(new TestMatcher2("The"));
         assertNotNull(nodeList);
         assertEquals(2, nodeList.size());
@@ -983,11 +982,11 @@ public class MarkedTreeTest {
         mTree.ascend();
         mTree.ascend();
         mTree.add("video");
-        
+
         List<Node<String>> nodeList = mTree.findNodes(jazzMark, new TestMatcher2("No"));
         assertNotNull(nodeList);
         assertEquals(0, nodeList.size());
-        
+
         nodeList = mTree.findNodes(rapMark, new TestMatcher2("No"));
         assertNotNull(nodeList);
         assertEquals(1, nodeList.size());
@@ -1001,7 +1000,7 @@ public class MarkedTreeTest {
 
         // Select all
         mTree.updateNodes(new TestMarkedTreeItemUpdater1());
-        
+
         // Validate
         Node<TestFood> root = mTree.getRoot();
         assertTrue(root.getItem().isSelected());
@@ -1022,10 +1021,9 @@ public class MarkedTreeTest {
         mTree.add(new TestFood("tomato"));
         mTree.add(new TestFood("asparagus"));
 
-
         // Select all
         mTree.updateNodes(new TestMarkedTreeItemUpdater1());
-        
+
         // Validate
         Node<TestFood> root = mTree.getRoot();
         assertTrue(root.getItem().isSelected());
@@ -1058,10 +1056,9 @@ public class MarkedTreeTest {
         mTree.add(new TestFood("tomato"));
         mTree.add(new TestFood("asparagus"));
 
-
         // Select all with name starting with "a"
         mTree.updateNodes(new TestMatcher3("a"), new TestMarkedTreeItemUpdater1());
-        
+
         // Validate
         Node<TestFood> root = mTree.getRoot();
         assertFalse(root.getItem().isSelected());
@@ -1094,11 +1091,10 @@ public class MarkedTreeTest {
         mTree.add(new TestFood("tomato"));
         mTree.add(new TestFood("asparagus"));
 
-
         // Select all from specific nodes
         mTree.updateNodes(orangeMark, new TestMarkedTreeItemUpdater1());
         mTree.updateNodes(vegMark, new TestMarkedTreeItemUpdater1());
-        
+
         // Validate
         Node<TestFood> root = mTree.getRoot();
         assertFalse(root.getItem().isSelected());
@@ -1131,11 +1127,10 @@ public class MarkedTreeTest {
         mTree.add(new TestFood("tomato"));
         mTree.add(new TestFood("asparagus"));
 
-
         // Select all from specific nodes
         mTree.updateNodes(fruitMark, new TestMatcher3("a"), new TestMarkedTreeItemUpdater1());
         mTree.updateNodes(vegMark, new TestMatcher3("t"), new TestMarkedTreeItemUpdater1());
-        
+
         // Validate
         Node<TestFood> root = mTree.getRoot();
         assertFalse(root.getItem().isSelected());
@@ -1166,12 +1161,11 @@ public class MarkedTreeTest {
         mTree.add(new TestFood("vegetable"));
         mTree.descend();
         mTree.add(new TestFood("tomato"));
-        Long aspMark =  mTree.add(new TestFood("asparagus"));
-
+        Long aspMark = mTree.add(new TestFood("asparagus"));
 
         // Select all parents from specific node
         mTree.updateParentNodes(aspMark, new TestMarkedTreeItemUpdater1());
-        
+
         // Validate
         Node<TestFood> root = mTree.getRoot();
         assertTrue(root.getItem().isSelected());
@@ -1202,12 +1196,11 @@ public class MarkedTreeTest {
         mTree.add(new TestFood("vegetable"));
         mTree.descend();
         mTree.add(new TestFood("tomato"));
-        Long aspMark =  mTree.add(new TestFood("asparagus"));
-
+        Long aspMark = mTree.add(new TestFood("asparagus"));
 
         // Select all parents from specific node
         mTree.updateParentNodes(aspMark, new TestMatcher3("v"), new TestMarkedTreeItemUpdater1());
-        
+
         // Validate
         Node<TestFood> root = mTree.getRoot();
         assertFalse(root.getItem().isSelected());
@@ -1224,19 +1217,19 @@ public class MarkedTreeTest {
         assertFalse(vegetable.getChild().getItem().isSelected());
         assertFalse(vegetable.getChild().getNext().getItem().isSelected());
     }
-    
+
     @Test
     public void testRemoveByUnknownMark() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
 
         // Enter unchained mode
         mTree.setChain(false);
-        
+
         // Remove
         Node<String> rem = mTree.remove(Long.valueOf(1L));
         assertNull(rem);
     }
-    
+
     @Test
     public void testRemoveByMark() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
@@ -1251,7 +1244,7 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         mTree.add("video");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -1263,25 +1256,24 @@ public class MarkedTreeTest {
         assertEquals("The Thrill is Gone", rem.getChild().getItem());
         assertNotNull(rem.getChild().getNext());
         assertEquals("Mannish Boy", rem.getChild().getNext().getItem());
-        
+
         assertNull(mTree.getNode(bluesMark));
-        
+
         // Validate
-        Node<String> root =  mTree.getRoot();
+        Node<String> root = mTree.getRoot();
         assertNotNull(root.getChild());
         assertEquals("music", root.getChild().getItem());
         assertNotNull(root.getChild().getNext());
         assertEquals("video", root.getChild().getNext().getItem());
         assertNull(root.getChild().getNext().getNext());
 
-        Node<String> music =  mTree.getNode(musicMark);
+        Node<String> music = mTree.getNode(musicMark);
         assertNotNull(music.getChild());
         assertEquals("jazz", music.getChild().getItem());
         assertNotNull(music.getChild().getNext());
         assertEquals("rap", music.getChild().getNext().getItem());
         assertNull(music.getChild().getNext().getNext());
     }
-    
 
     @Test
     public void testClearMarkedTree() throws Exception {
@@ -1290,7 +1282,7 @@ public class MarkedTreeTest {
         mTree.descend();
         Long jazzMark = mTree.add("jazz");
         mTree.add("blues");
-        
+
         // Enter unchained mode
         mTree.setChain(false);
 
@@ -1298,7 +1290,7 @@ public class MarkedTreeTest {
         mTree.addChild(musicMark, "rap");
         mTree.addChild(jazzMark, "So What");
         mTree.addChild(jazzMark, "Take Five");
-        
+
         // Clear
         mTree.clear();
         assertTrue(mTree.isChain());
@@ -1307,15 +1299,14 @@ public class MarkedTreeTest {
         assertNull(mTree.getChainLast());
         assertEquals(1, mTree.size());
     }
-    
-    
+
     @Test
     public void testNodeGetChildItemList() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         Long musicMark = mTree.add("music");
         mTree.descend();
         mTree.add("jazz");
-        Long bluesMark =  mTree.add("blues");
+        Long bluesMark = mTree.add("blues");
         mTree.descend();
         mTree.add("The Thrill is Gone");
         mTree.add("Mannish Boy");
@@ -1323,14 +1314,14 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         Long videoMark = mTree.add("video");
-        
+
         Node<String> root = mTree.getRoot();
         List<String> rootList = root.getChildItemList();
         assertNotNull(rootList);
         assertEquals(2, rootList.size());
         assertEquals("music", rootList.get(0));
         assertEquals("video", rootList.get(1));
-        
+
         Node<String> music = mTree.getNode(musicMark);
         List<String> musicList = music.getChildItemList();
         assertNotNull(musicList);
@@ -1338,28 +1329,27 @@ public class MarkedTreeTest {
         assertEquals("jazz", musicList.get(0));
         assertEquals("blues", musicList.get(1));
         assertEquals("rap", musicList.get(2));
-        
+
         Node<String> blues = mTree.getNode(bluesMark);
         List<String> bluesList = blues.getChildItemList();
         assertNotNull(bluesList);
         assertEquals(2, bluesList.size());
         assertEquals("The Thrill is Gone", bluesList.get(0));
         assertEquals("Mannish Boy", bluesList.get(1));
-        
+
         Node<String> video = mTree.getNode(videoMark);
         List<String> videoList = video.getChildItemList();
         assertNotNull(videoList);
         assertEquals(0, videoList.size());
     }
-    
-    
+
     @Test
     public void testNodeGetChildItemListWithMatching() throws Exception {
         MarkedTree<String> mTree = new MarkedTree<String>("ROOT");
         Long musicMark = mTree.add("music");
         mTree.descend();
         mTree.add("jazz");
-        Long bluesMark =  mTree.add("blues");
+        Long bluesMark = mTree.add("blues");
         mTree.descend();
         mTree.add("The Thrill is Gone");
         mTree.add("Mannish Boy");
@@ -1367,19 +1357,19 @@ public class MarkedTreeTest {
         mTree.add("rap");
         mTree.ascend();
         mTree.add("video");
-        
+
         Node<String> root = mTree.getRoot();
         List<String> rootList = root.getChildItemList(new TestMatcher1("video"));
         assertNotNull(rootList);
         assertEquals(1, rootList.size());
         assertEquals("video", rootList.get(0));
-        
+
         Node<String> music = mTree.getNode(musicMark);
         List<String> musicList = music.getChildItemList(new TestMatcher1("blues"));
         assertNotNull(musicList);
         assertEquals(1, musicList.size());
         assertEquals("blues", musicList.get(0));
-        
+
         Node<String> blues = mTree.getNode(bluesMark);
         List<String> bluesList = blues.getChildItemList(new TestMatcher1("White Skull"));
         assertNotNull(bluesList);
@@ -1390,22 +1380,22 @@ public class MarkedTreeTest {
 class TestMatcher1 implements MarkedTreeItemMatcher<String> {
 
     private String matchStr;
-    
+
     public TestMatcher1(String matchStr) {
         this.matchStr = matchStr;
     }
-    
+
     @Override
     public boolean match(String item) {
         return matchStr.equals(item);
     }
-    
+
 }
 
 class TestMatcher2 implements MarkedTreeItemMatcher<String> {
 
     private String beginStr;
-    
+
     public TestMatcher2(String beginStr) {
         this.beginStr = beginStr;
     }
@@ -1414,13 +1404,13 @@ class TestMatcher2 implements MarkedTreeItemMatcher<String> {
     public boolean match(String item) {
         return item.startsWith(beginStr);
     }
-    
+
 }
 
 class TestMatcher3 implements MarkedTreeItemMatcher<TestFood> {
 
     private String beginStr;
-    
+
     public TestMatcher3(String beginStr) {
         this.beginStr = beginStr;
     }
@@ -1429,7 +1419,7 @@ class TestMatcher3 implements MarkedTreeItemMatcher<TestFood> {
     public boolean match(TestFood item) {
         return item.getName().startsWith(beginStr);
     }
-    
+
 }
 
 class TestMarkedTreePolicy1 implements MarkedTreePolicy<String> {
@@ -1442,16 +1432,16 @@ class TestMarkedTreePolicy1 implements MarkedTreePolicy<String> {
             }
         }
         return 0;
-    }  
-
-    @Override
-    public void performOnAdd(String targetParentItem, String childItem) {
-        
     }
 
     @Override
-    public void performOnRemove(String targetParentItem, String childItem) {
-        
+    public void performOnAdd(Long parentMark, Long childMark, String targetParentItem, String childItem) {
+
+    }
+
+    @Override
+    public void performOnRemove(Long parentMark, Long childMark, String targetParentItem, String childItem) {
+
     }
 }
 
@@ -1465,16 +1455,16 @@ class TestMarkedTreePolicy2 implements MarkedTreePolicy<String> {
             }
         }
         return 0;
-    }  
-
-    @Override
-    public void performOnAdd(String targetParentItem, String childItem) {
-        
     }
 
     @Override
-    public void performOnRemove(String targetParentItem, String childItem) {
-        
+    public void performOnAdd(Long parentMark, Long childMark, String targetParentItem, String childItem) {
+
+    }
+
+    @Override
+    public void performOnRemove(Long parentMark, Long childMark, String targetParentItem, String childItem) {
+
     }
 }
 
@@ -1482,14 +1472,14 @@ class TestMarkedTreeItemUpdater1 implements MarkedTreeItemUpdater<TestFood> {
 
     @Override
     public void update(TestFood childItem) {
-        childItem.setSelected(true); 
+        childItem.setSelected(true);
     }
 }
 
 class TestFood {
-    
+
     private String name;
-    
+
     private boolean selected;
 
     public TestFood(String name) {
@@ -1507,7 +1497,5 @@ class TestFood {
     public String getName() {
         return name;
     }
-    
+
 }
-
-

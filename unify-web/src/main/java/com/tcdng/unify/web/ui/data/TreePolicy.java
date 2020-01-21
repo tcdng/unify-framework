@@ -40,4 +40,22 @@ public interface TreePolicy extends MarkedTreePolicy<TreeItem> {
      *             if an error occurs
      */
     String getTreeItemCaption(TreeItemTypeInfo category, Object item) throws UnifyException;
+
+    /**
+     * Get the tree item expander.
+     * 
+     * @return the tree item expander
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    TreeItemUpdater getTreeItemExpander() throws UnifyException;
+
+    /**
+     * Get the tree item collapser.
+     * 
+     * @return the tree item collapser
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    TreeItemUpdater getTreeItemCollapser() throws UnifyException;
 }

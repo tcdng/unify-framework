@@ -2968,8 +2968,9 @@ ux.rigTreeExplorer = function(rgp) {
 				}
 
 				if ((flags & TREEITEM_RIGHTCLICK.mask) > 0) {
-					ux.attachEventHandler(elm, "rtclick", ux.treeItemRightClickHandler, evp);
+					evp.uDoMenu = true;
 				}
+				ux.attachEventHandler(elm, "rtclick", ux.treeItemRightClickHandler, evp);
 
 				if ((flags & TREEITEM_DRAG.mask) > 0) {
 					ux.attachEventHandler(elm, "dragstart", ux.treeItemDragStartHandler, evp);
@@ -3181,8 +3182,8 @@ ux.treeItemProcessEvent = function(treeId) {
 					ux.treeSelectItem(evp, true, false);
 				}
 	
-				if (tdat.uMenu) {
-					var showMenu = false;
+				var showMenu = false;
+				if (evp.uDoMenu && tdat.uMenu) {
 					// Hide all menu items
 					var menu = tdat.uMenu;
 					ux.setDisplayModeByName(menu.sepId, "none");
@@ -3217,6 +3218,10 @@ ux.treeItemProcessEvent = function(treeId) {
 						openPrm.uLoc = tdat.uLoc;
 						ux.doOpenPopup(openPrm);
 					}
+				}
+				
+				if (!showMenu) {
+					ux.hidePopup(null);
 				}
 			}
 		}
@@ -4225,9 +4230,11 @@ ux.init = function() {
 	// Override window menu context
 	window.oncontextmenu = function (uEv) {
 		if (ux.actRightClick) {
-			return ux.actRightClick = false;
+			ux.actRightClick = false;
+			return false;
 		}
 		
+		ux.hidePopup(null);
 	    return true; // Do default
 	}
 
@@ -4684,12 +4691,13 @@ ux.cancelClosePopupTimer = function() {
 
 // Hide popup when click-out
 ux.documentHidePopup = function(uEv) {
+	/*
 	if (ux.popupStayOpen) {
 		if (ux.popupNewOpen) {
 			ux.popupNewOpen = false;
 			return;
 		}
-	}
+	}*/
 
 	var elem = uEv.uTrg;
 	while (elem) {
