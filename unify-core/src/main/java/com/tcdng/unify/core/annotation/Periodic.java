@@ -38,4 +38,6 @@ public @interface Periodic {
     PeriodicType value() default PeriodicType.NORMAL;
 
     String taskStatusLogger() default AnnotationConstants.NONE;
+    
+    boolean clusterMode() default false;
 }

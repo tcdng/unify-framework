@@ -96,11 +96,11 @@ public class UnifyContainer {
 
     public static final int DEFAULT_APPLICATION_QUERY_LIMIT = 10000;
 
-    public static final int DEFAULT_APPLICATION_SESSION_TIMEOUT = 600;
+    public static final int DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC = 600;
 
-    private static final long PERIODIC_EXECUTION_INITIAL_DELAY = 200;
+    private static final long PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC = 200;
 
-    private static final long COMMAND_THREAD_RATE = 1000;
+    private static final long COMMAND_THREAD_RATE_MILLISEC = 2000;
 
     private static ThreadLocal<InitializationTrail> initializationTrailThreadLocal =
             new ThreadLocal<InitializationTrail>() {
@@ -505,15 +505,20 @@ public class UnifyContainer {
             // Schedule periodic tasks
             logInfo("Scheduling periodic tasks...");
             TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-            for (Map.Entry<String, Map<String, Periodic>> entry1 : componentPeriodMethodMap.entrySet()) {
-                logInfo("Intializing component [{0}] with periodic methods...", entry1.getKey());
-                getComponent(entry1.getKey());
-                for (Map.Entry<String, Periodic> entry2 : entry1.getValue().entrySet()) {
-                    Periodic pa = entry2.getValue();
+            for (Map.Entry<String, Map<String, Periodic>> componentEntry : componentPeriodMethodMap.entrySet()) {
+                logInfo("Intializing component [{0}] with periodic methods...", componentEntry.getKey());
+                getComponent(componentEntry.getKey());
+                for (Map.Entry<String, Periodic> periodicEntry : componentEntry.getValue().entrySet()) {
+                    Periodic pa = periodicEntry.getValue();
+                    // Skip if periodic should run in cluster mode and container is not in cluster mode
+                    if (pa.clusterMode() && !clusterMode) {
+                        continue;
+                    }
+                    
                     PeriodicType periodicType = pa.value();
                     String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
-                    TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType, entry1.getKey(),
-                            entry2.getKey(), taskStatusLoggerName, PERIODIC_EXECUTION_INITIAL_DELAY);
+                    TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType, componentEntry.getKey(),
+                            periodicEntry.getKey(), taskStatusLoggerName, PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC);
                     periodicTaskMonitorList.add(taskMonitor);
                 }
             }
@@ -1541,6 +1546,7 @@ public class UnifyContainer {
             while (!shutdown) {
                 try {
                     if (clusterMode) {
+                        // Handle cluster commands
                         requestContextManager.getRequestContext()
                                 .setAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST, Boolean.TRUE);
                         List<Command> clusterCommandList = clusterService.getClusterCommands();
@@ -1556,6 +1562,7 @@ public class UnifyContainer {
                                 .setAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST, Boolean.FALSE);
                     }
 
+                    // Handle commands from interface port
                     ContainerCommand cc = containerCommandQueue.poll();
                     if (cc != null) {
                         String command = cc.getCommand();
@@ -1564,7 +1571,7 @@ public class UnifyContainer {
                         }
                     }
 
-                    ThreadUtils.sleep(COMMAND_THREAD_RATE);
+                    ThreadUtils.sleep(COMMAND_THREAD_RATE_MILLISEC);
                 } catch (Exception e) {
                     logError(e);
                 }
