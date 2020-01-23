@@ -300,6 +300,10 @@ public class TreeExplorer extends AbstractMultiControl {
         return tree.getTreeItem(treeEvent, index);
     }
 
+    public TreeItem removeTreeItem(Long mark) throws UnifyException {
+        return tree.removeTreeItem(mark);
+    }
+
     public int itemCount() {
         return tree.itemCount();
     }
@@ -318,6 +322,14 @@ public class TreeExplorer extends AbstractMultiControl {
 
     public TreeEvent getEvent() {
         return tree.getEvent();
+    }
+
+    public List<Integer> getMultiSelectMenuSequence() {
+        return tree.getMultiSelectMenuSequence();
+    }
+    
+    public boolean isMultiSelectMenu() {
+        return tree.isMultiSelectMenu();
     }
 
 }

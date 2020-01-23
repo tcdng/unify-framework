@@ -27,12 +27,15 @@ public class TreeMenuItemInfo {
     private String code;
 
     private String caption;
-    
+
+    private String confirm;
+
     private int groupIndex;
 
-    public TreeMenuItemInfo(String code, String caption, int groupIndex) {
+    public TreeMenuItemInfo(String code, String caption, String confirm, int groupIndex) {
         this.code = code;
         this.caption = caption;
+        this.confirm = confirm;
         this.groupIndex = groupIndex;
     }
 
@@ -42,6 +45,10 @@ public class TreeMenuItemInfo {
 
     public String getCaption() {
         return caption;
+    }
+
+    public String getConfirm() {
+        return confirm;
     }
 
     public int getGroupIndex() {
