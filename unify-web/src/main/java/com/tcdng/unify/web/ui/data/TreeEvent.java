@@ -60,10 +60,6 @@ public class TreeEvent {
         return menuCode;
     }
 
-    public List<Long> getItemIds() {
-        return itemIdList;
-    }
-
     public List<Long> getItemIdList() {
         return itemIdList;
     }

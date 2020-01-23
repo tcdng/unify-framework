@@ -35,9 +35,9 @@ import com.tcdng.unify.web.ui.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
  * @since 1.0
  */
 public class Tree {
-    
+
     private TreePolicy treePolicy;
-    
+
     private TreeTypeInfo typeInfo;
 
     private MarkedTree<TreeItem> markedTree;
@@ -83,7 +83,7 @@ public class Tree {
     }
 
     public Node<TreeItem> getNode(TreeEvent treeEvent, int index) {
-        return markedTree.getNode(treeEvent.getItemIds().get(index));
+        return markedTree.getNode(treeEvent.getItemIdList().get(index));
     }
 
     public Node<TreeItem> findFirstNode(Long firstItemId, MarkedTreeItemMatcher<TreeItem> matcher)
@@ -133,7 +133,16 @@ public class Tree {
     }
 
     public TreeItem getTreeItem(TreeEvent treeEvent, int index) {
-        return getTreeItem(treeEvent.getItemIds().get(index));
+        return getTreeItem(treeEvent.getItemIdList().get(index));
+    }
+
+    public TreeItem removeTreeItem(Long mark) throws UnifyException {
+        Node<TreeItem> node = markedTree.remove(mark);
+        if (node != null) {
+            return node.getItem();
+        }
+        
+        return null;
     }
 
     public int itemCount() {
@@ -154,6 +163,14 @@ public class Tree {
 
     public boolean isMenuItemList() {
         return typeInfo.isMenuItemList();
+    }
+
+    public List<Integer> getMultiSelectMenuSequence() {
+        return typeInfo.getMultiSelectMenuSequence();
+    }
+
+    public boolean isMultiSelectMenu() {
+        return typeInfo.isMultiSelectMenu();
     }
 
     public void setSelectedItems(List<Long> selectedItemIdList) {
@@ -220,7 +237,7 @@ public class Tree {
         private TreeTypeInfo typeInfo;
 
         private TreePolicy treePolicy;
-        
+
         private MarkedTree<TreeItem> markedTree;
 
         private Builder(TreeTypeInfo typeInfo) {
@@ -233,7 +250,7 @@ public class Tree {
             this.markedTree.setTreePolicy(treePolicy);
             return this;
         }
-        
+
         public Builder addTreeItem(String type, Object item) throws UnifyException {
             if (!typeInfo.isTreeItemType(type)) {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,

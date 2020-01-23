@@ -2886,7 +2886,13 @@ ux.treeDatCreate = function(rgp) {
 		tdat.uRef = tdat.uRef.concat(rgp.pEventRef);
 	}
 	tdat.uMenu = rgp.pMenu;
+	tdat.uMsMenu = rgp.pMsMenu;
 	tdat.uLastSelIdx = -1;
+	var oldtdat = ux.treedatmap[tdat.uId];
+	if (oldtdat) {
+		tdat.uLastSelIdx = oldtdat.uLastSelIdx;
+	}
+
 	ux.treedatmap[tdat.uId] = tdat;
 	return tdat;
 }
@@ -2916,6 +2922,12 @@ ux.rigTreeExplorer = function(rgp) {
 			var menuItem = menu.items[i];
 			var evp = ux.newTreeEvPrm(rgp);
 			evp.uMenuCode = menuItem.code;
+			if (menuItem.pConf) {
+				evp.uConfURL = rgp.pConfURL;
+				evp.uConf = menuItem.pConf;
+				evp.uIconIndex = menuItem.pIconIndex;
+			}
+			
 			ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
 		}
 	}
@@ -3188,13 +3200,21 @@ ux.treeItemProcessEvent = function(treeId) {
 					var menu = tdat.uMenu;
 					ux.setDisplayModeByName(menu.sepId, "none");
 					
-					// Show menu items based on tree item type
 					var tItem = tdat.uItemList[evp.uItemIdx];
-					var typeInfo= tItem.typeInfo;
-					if (typeInfo.menu && typeInfo.menu.length > 0) {
+					var actMenu = null;
+					if (tdat.selList.length > 1) {
+						// Multiple items selected. Do multi-select menu.
+						actMenu = tdat.uMsMenu;
+					} else {
+						// Do selected item menu
+						actMenu = tItem.typeInfo.menu;
+					}
+
+					// Show menu items
+					if (actMenu && actMenu.length > 0) {
 						var gIndex = -1;
-						for(var i = 0; i < typeInfo.menu.length; i++) {
-							var mitem = menu.items[typeInfo.menu[i]];
+						for(var i = 0; i < actMenu.length; i++) {
+							var mitem = menu.items[actMenu[i]];
 							var miElem = _id(mitem.id);
 							if (gIndex >= 0 && gIndex != mitem.grpIdx) {
 								miElem.className = menu.sepCls;
@@ -3219,7 +3239,7 @@ ux.treeItemProcessEvent = function(treeId) {
 						ux.doOpenPopup(openPrm);
 					}
 				}
-				
+
 				if (!showMenu) {
 					ux.hidePopup(null);
 				}
@@ -4452,6 +4472,7 @@ ux.handleOrConfirmRedirect = function(event, handler, evp) {
 		if (hiddenElem) {
 			evPrmConf.uConfPrm = hiddenElem.value;
 		}
+		ux.hidePopup(null);
 		ux.postCommit(evPrmConf);
 	} else {
 		// Handle now
