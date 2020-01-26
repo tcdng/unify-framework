@@ -439,7 +439,7 @@ public final class DataUtils {
     }
 
     /**
-     * Finds the data type equivalence of supplied data type.
+     * Finds the data type equivalence of supplied class.
      * 
      * @param clazz
      *            the data type
@@ -449,6 +449,23 @@ public final class DataUtils {
      */
     public static DataType findDataType(Class<?> clazz) throws UnifyException {
         return classToDataTypeMap.get(clazz);
+    }
+
+    /**
+     * Finds the data type equivalence of supplied class name.
+     * 
+     * @param className
+     *            the class name
+     * @return the equivalent data type if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static DataType findDataType(String className) throws UnifyException {
+        try {
+            return classToDataTypeMap.get(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+        }
     }
 
     /**
