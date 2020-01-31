@@ -50,7 +50,9 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
     private static final String MENU_CATEGORY_CLASSBASE = "opcat";
 
     private static final String MENUITEM_CATEGORY_CLASSBASE = "mcat";
-    
+
+    private static final String ORIGINAL_MENU_PATHID = "ORIGINAL_MENU_PATHID";
+            
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         FlyoutMenu flyoutMenu = (FlyoutMenu) widget;
@@ -78,13 +80,14 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
         writer.write(",\"pContId\":\"").write(flyoutMenu.getContainerId()).write('"');
         writer.write(",\"pCmdURL\":\"");
         // Resolves out of bean context error which usually happens of menu reload
-//        Object valueObject = flyoutMenu.getValueStore().getValueObject();
-//        if (valueObject instanceof PageController) {
-//            writer.writeCommandURL(((PageController) valueObject).getSessionId());
-//        } else {
-//            writer.writeCommandURL();
-//        }
-        writer.writeCommandURL();
+        String originalPathId = (String) getSessionAttribute(ORIGINAL_MENU_PATHID);
+        if (!StringUtils.isBlank(originalPathId)) {
+            writer.writeCommandURL(originalPathId);
+        } else {
+            originalPathId = getRequestContextUtil().getResponsePathParts().getPathId();
+            setSessionAttribute(ORIGINAL_MENU_PATHID, originalPathId);
+            writer.writeCommandURL();
+        }
 
         writer.write('"');
         writer.write(",\"pMenuWinId\":").writeJsonArray(menuWinIdList);
