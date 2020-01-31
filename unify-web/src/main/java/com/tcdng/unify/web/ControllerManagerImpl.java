@@ -393,23 +393,32 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                             }
                         }
 
+                        logDebug("Processing result with name [{0}]...", resultName);
                         // Check if action result needs to be routed to containing
                         // document controller
                         if (!pbbInfo.hasResultWithName(resultName) && !page.isDocument()) {
                             if (docPageController != null) {
+                                logDebug("Result with name [{0}] not found for controller [{1}]...", resultName,
+                                        pageController.getName());
                                 respPathParts = docPathParts;
                                 pageController = docPageController;
                                 page = loadRequestPage(respPathParts);
                                 pbbInfo = pageControllerInfoMap.get(pageController.getName());
+                                logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
+                                        pageController.getName());
                             }
                         }
 
                         // Route to common utilities if necessary
                         if (!pbbInfo.hasResultWithName(resultName)) {
+                            logDebug("Result with name [{0}] not found for controller [{1}]...", resultName,
+                                    pageController.getName());
                             respPathParts = pathInfoRepository.getPathParts(commonUtilitiesControllerName);
                             pageController = (PageController<?>) getController(respPathParts, false);
                             page = loadRequestPage(respPathParts);
                             pbbInfo = pageControllerInfoMap.get(pageController.getName());
+                            logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
+                                    pageController.getName());
                         }
                     }
 
@@ -635,21 +644,23 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         try {
             if ("/openPage".equals(actionName)) {
                 pageController.openPage();
-                ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
-                contentPanel.addContent(requestContextUtil.getRequestPage());
+                if (!requestContextUtil.isRemoteViewer()) {
+                    ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
+                    contentPanel.addContent(requestContextUtil.getRequestPage());
+                }
             } else if ("/closePage".equals(actionName)) {
                 ClosePageMode closePageMode = requestContextUtil.getRequestTargetValue(ClosePageMode.class);
                 performClosePage(closePageMode, true);
                 return ResultMappingConstants.CLOSE;
             }
 
-            String resultName = (String) pageControllerInfoMap.get(pageController.getName()).getAction(actionName).getMethod()
-                    .invoke(pageController);
+            String resultName = (String) pageControllerInfoMap.get(pageController.getName()).getAction(actionName)
+                    .getMethod().invoke(pageController);
             if (ResultMappingConstants.CLOSE.equals(resultName)) {
                 // Handle other actions that also return CLOSE result
                 performClosePage(ClosePageMode.CLOSE, false);
             }
-            
+
             return resultName;
         } catch (UnifyException e) {
             throw e;
@@ -658,7 +669,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         }
         return null;
     }
-    
+
     protected Object executeRemoteCall(RemoteCallController remoteCallController, RemoteCallFormat remoteCallFormat,
             String remoteHandler, Object remoteParam) throws UnifyException {
         Object respObj = null;

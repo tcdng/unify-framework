@@ -53,6 +53,9 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     @Configurable
     private TaskLauncher taskLauncher;
 
+    @Configurable
+    private PathInfoRepository pathInfoRepository;
+
     private Class<T> pageBeanClass;
 
     public AbstractPageController(Class<T> pageBeanClass) {
@@ -673,6 +676,25 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
      */
     protected void onClosePage() throws UnifyException {
 
+    }
+
+    /**
+     * Change page path information.
+     * 
+     * @param colorScheme
+     *            the color scheme to set
+     * @param savePagePath
+     *            the save page path to set
+     * @param remoteSave
+     *            the remote save flag
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void changePathInfo(String colorScheme, String savePagePath, boolean remoteSave) throws UnifyException {
+        PagePathInfo pathInfo = pathInfoRepository.getPagePathInfo(getPage());
+        pathInfo.setColorScheme(colorScheme);
+        pathInfo.setSavePagePath(savePagePath);
+        pathInfo.setRemoteSave(remoteSave);
     }
 
     /**
