@@ -66,7 +66,7 @@ ux.remoteView = null;
 ux.shortcuts = [];
 ux.pagenamealiases = [];
 ux.delayedpanelposting = [];
-ux.debounceinfo = [];
+ux.debouncetime = [];
 
 ux.resizefunctions = {};
 ux.confirmstore = {};
@@ -3877,18 +3877,18 @@ ux.registerDebounce = function(pgNmlist) {
 	if(pgNmlist) {
 		var timestamp = Date.getTime();
 		for (var i = 0; i < pgNmlist.length; i++) {
-			ux.debounceinfo[pgNmlist[i]] = timestamp;
+			ux.debouncetime[pgNmlist[i]] = timestamp;
 		}
 	}
 }
 
 ux.effectDebounce = function() {
 	var debounced = [];
-	for(var pgNm in ux.debounceinfo) {
+	for(var pgNm in ux.debouncetime) {
 		var elem = _id(pgNm);
 		if (elem && !elem.disabled) {
 			elem.disabled = true;
-			debounced[pgNm] = ux.debounceinfo[pgNm];
+			debounced[pgNm] = ux.debouncetime[pgNm];
 		}
 	}
 	
@@ -3898,7 +3898,7 @@ ux.effectDebounce = function() {
 ux.clearDebounce = function(debounced) {
 	if (debounced) {
 		for(var pgNm in debounced) {
-			if(debounced[pgNm] == ux.debounceinfo[pgNm]) {
+			if(debounced[pgNm] == ux.debouncetime[pgNm]) {
 				var elem = _id(pgNm);
 				if (elem) {
 					elem.disabled = false;
