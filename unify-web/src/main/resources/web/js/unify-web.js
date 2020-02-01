@@ -494,14 +494,20 @@ ux.ajaxCall = function(ajaxPrms) {
 			uAjaxReq.send();
 		}
 	} catch (ex) {
+		if (ajaxPrms.uIsDebounce) {
+			 ux.clearDebounce(ajaxPrms.uDebounced);
+		}				
+
 		if (ajaxPrms.uSync) {
 			ux.submitting = false;
 		}
+		
 		if (ajaxPrms.uBusy) {
 			if ((--ux.busyCounter) <= 0) {
 				ux.hideBusyIndicator();
 			}
 		}
+		
 		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
 				+ ex);
 	}
