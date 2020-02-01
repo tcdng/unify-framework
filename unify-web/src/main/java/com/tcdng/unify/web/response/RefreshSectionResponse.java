@@ -48,7 +48,7 @@ public class RefreshSectionResponse extends AbstractJsonPageControllerResponse {
             logDebug("Preparing refresh section response: path ID = [{0}], component = [{1}], section= [{2}]",
                     page.getPathId(), widget.getLongName(), sectionPageName);
             writer.write(",\"section\":").writeJsonSection(widget, sectionPageName);
-            appendRegisteredDebounceWidgets(writer);
+            appendRegisteredDebounceWidgets(writer, false);
         } else {
             logDebug("Preparing refresh section response: Can not get section information from request context");
         }

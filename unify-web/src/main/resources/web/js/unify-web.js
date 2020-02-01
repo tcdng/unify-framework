@@ -404,7 +404,7 @@ ux.refreshPageGlobals = function(resp) {
 
 ux.registerRespDebounce = function(resp) {
 	if (resp.debounceList) {
-		ux.registerDebounce(resp.debounceList);
+		ux.registerDebounce(resp.debounceList, resp.debounceClear);
 	}
 }
 
@@ -3873,9 +3873,13 @@ ux.fireDelayedPost = function(pgNm) {
 }
 
 /** Debounce */
-ux.registerDebounce = function(pgNmlist) {
+ux.registerDebounce = function(pgNmlist, clear) {
+	if (clear) {
+		ux.debouncetime = [];
+	}
+	
 	if(pgNmlist) {
-		var timestamp = Date.getTime();
+		var timestamp = new Date().getTime();
 		for (var i = 0; i < pgNmlist.length; i++) {
 			ux.debouncetime[pgNmlist[i]] = timestamp;
 		}

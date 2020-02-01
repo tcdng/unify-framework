@@ -42,7 +42,7 @@ public class LoadContentResponse extends AbstractJsonPageControllerResponse {
         appendRefreshPageJSON(writer, contentPanel, page);
         writer.write(",");
         appendRefreshAttributesJson(writer, true);
-        appendRegisteredDebounceWidgets(writer);
+        appendRegisteredDebounceWidgets(writer, true);
         writer.write(",\"busyIndicator\":\"").write(contentPanel.getBusyIndicatorId()).write("\"");
         writer.write(",\"scrollToTop\":true");
     }

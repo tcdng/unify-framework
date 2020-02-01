@@ -27,7 +27,8 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-button")
-@UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class) })
+@UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class),
+        @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
 public class Button extends AbstractTargetControl {
 
     @Override

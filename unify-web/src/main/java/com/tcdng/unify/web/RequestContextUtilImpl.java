@@ -448,7 +448,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     public void registerWidgetDebounce(String widgetId) throws UnifyException {
         Collection<String> widgetIds = (Collection<String>) getRequestAttribute(DEBOUNCE_WIDGET);
         if (widgetIds == null) {
-            widgetIds = new HashSet<String>();
+            widgetIds = new ArrayList<String>();
             setRequestAttribute(DEBOUNCE_WIDGET, widgetIds);
         }
         
@@ -456,8 +456,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public Collection<String> getRegisteredDebounceWidgetIds() throws UnifyException {
-        return (Collection<String>) getRequestAttribute(DEBOUNCE_WIDGET);
+    public Collection<String> getAndClearRegisteredDebounceWidgetIds() throws UnifyException {
+        return (Collection<String>) removeRequestAttribute(DEBOUNCE_WIDGET);
     }
 
     @Override

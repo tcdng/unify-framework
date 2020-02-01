@@ -48,7 +48,7 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
         appendRefreshPanelsJson(writer, page, refreshList, useLongNames);
         writer.write(",");
         appendRefreshAttributesJson(writer, false);
-        appendRegisteredDebounceWidgets(writer);
+        appendRegisteredDebounceWidgets(writer, false);
     }
 
     protected String[] getPanels() throws UnifyException {

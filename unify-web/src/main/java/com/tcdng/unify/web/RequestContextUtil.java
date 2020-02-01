@@ -558,13 +558,13 @@ public interface RequestContextUtil extends UnifyComponent {
     void registerWidgetDebounce(String widgetId) throws UnifyException;
 
     /**
-     * Gets the widgets registered for debounce in current request.
+     * Gets and clears the widgets registered for debounce in current request.
      * 
      * @return the registered widget IDs
      * @throws UnifyException
      *             if an error occurs
      */
-    Collection<String> getRegisteredDebounceWidgetIds() throws UnifyException;
+    Collection<String> getAndClearRegisteredDebounceWidgetIds() throws UnifyException;
 
     /**
      * Checks if widgets are registered for debounce in this request.

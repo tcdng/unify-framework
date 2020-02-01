@@ -56,9 +56,10 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
         writer.write("}");
     }
     
-    protected void appendRegisteredDebounceWidgets(ResponseWriter writer) throws UnifyException {
-        Collection<String> widgetIds = getRequestContextUtil().getRegisteredDebounceWidgetIds();
+    protected void appendRegisteredDebounceWidgets(ResponseWriter writer, boolean clear) throws UnifyException {
+        Collection<String> widgetIds = getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds();
         if (!DataUtils.isBlank(widgetIds)) {
+            writer.write(",\"debounceClear\":").write(clear);
             writer.write(",\"debounceList\":").writeJsonArray(widgetIds);
         }
     }

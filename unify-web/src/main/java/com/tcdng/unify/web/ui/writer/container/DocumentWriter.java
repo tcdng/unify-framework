@@ -172,7 +172,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
         // Write deboucing
         if (getRequestContextUtil().isRegisteredDebounceWidgets()) {
-            writer.write("var debounceList = ").writeJsonArray(getRequestContextUtil().getRegisteredDebounceWidgetIds())
+            writer.write("var debounceList = ").writeJsonArray(getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds())
                     .write(";");
             writer.write("ux.registerDebounce(debounceList);");
         }
