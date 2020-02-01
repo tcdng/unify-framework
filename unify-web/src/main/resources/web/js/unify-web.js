@@ -66,6 +66,7 @@ ux.remoteView = null;
 ux.shortcuts = [];
 ux.pagenamealiases = [];
 ux.delayedpanelposting = [];
+ux.debounceinfo = [];
 
 ux.resizefunctions = {};
 ux.confirmstore = {};
@@ -229,6 +230,7 @@ ux.respHandler = {
 		} else {
 			ux.refreshPageGlobals(resp);
 			ux.refreshPanels(resp);
+			ux.registerRespDebounce(resp);
 			if (resp.busyIndicator) {
 				ux.busyIndicator = resp.busyIndicator;
 			}
@@ -258,10 +260,12 @@ ux.respHandler = {
 	refreshPanelHdl : function(resp) {
 		ux.refreshPageGlobals(resp);
 		ux.refreshPanels(resp);
+		ux.registerRespDebounce(resp);
 	},
 
 	refreshSectionHdl : function(resp) {
 		ux.refreshSection(resp);
+		ux.registerRespDebounce(resp);
 	},
 
 	showPopupHdl : function(resp) {
@@ -398,6 +402,12 @@ ux.refreshPageGlobals = function(resp) {
 	ux.setPageNameAliases(resp);
 }
 
+ux.registerRespDebounce = function(resp) {
+	if (resp.debounceList) {
+		ux.registerDebounce(resp.debounceList);
+	}
+}
+
 ux.setPageNameAliases = function(resp) {
 	if (resp.pageNameAliases) {
 		for (var i = 0; i < resp.pageNameAliases.length; i++) {
@@ -443,33 +453,46 @@ ux.ajaxCall = function(ajaxPrms) {
 		ux.prepareBusyIndicator();
 	}
 
+	if (ajaxPrms.uIsDebounce) {
+		ajaxPrms.uDebounced = ux.effectDebounce();
+	}
+	
 	try {
 		uAjaxReq.open("POST", ajaxPrms.uURL, true);
 		if (ajaxPrms.uEncoded) {
 			uAjaxReq.setRequestHeader("Content-Type",
 					"application/x-www-form-urlencoded");
 		}
+		
 		uAjaxReq.onreadystatechange = function() {
 			if (uAjaxReq.readyState == 4) {
 				if (ajaxPrms.uSync) {
 					ux.submitting = false;
 				}
+				
 				if (ajaxPrms.uBusy) {
 					if ((--ux.busyCounter) <= 0) {
 						ux.hideBusyIndicator();
 					}
 				}
+				
 				if (uAjaxReq.status == 200) {
 					ajaxPrms.uSuccessFunc(uAjaxReq.responseText);
 				} else {
 					alert(uAjaxReq.responseText);
 				}
+				
+				if (ajaxPrms.uIsDebounce) {
+					 ux.clearDebounce(ajaxPrms.uDebounced);
+				}				
 			}
 		};
-		if (ajaxPrms.uParam)
+		
+		if (ajaxPrms.uParam) {
 			uAjaxReq.send(ajaxPrms.uParam);
-		else
+		} else {
 			uAjaxReq.send();
+		}
 	} catch (ex) {
 		if (ajaxPrms.uSync) {
 			ux.submitting = false;
@@ -502,6 +525,7 @@ ux.ajaxCallWithJSONResp = function(trgObj, evp) {
 		}
 		var ajaxPrms = ux.ajaxConstructCallParam(evp.uURL, uPrm, evp.uSync,
 				uEncoded, evp.uBusy, ux.processJSON);
+		ajaxPrms.uIsDebounce = evp.uIsDebounce;
 		ux.ajaxCall(ajaxPrms);
 	}
 }
@@ -3844,6 +3868,42 @@ ux.fireDelayedPost = function(pgNm) {
 		ux.delayedpanelposting[pgNm] = null;
 		if (_id(pgNm)) {
 			ux.ajaxCallWithJSONResp(null, evp);
+		}
+	}
+}
+
+/** Debounce */
+ux.registerDebounce = function(pgNmlist) {
+	if(pgNmlist) {
+		var timestamp = Date.getTime();
+		for (var i = 0; i < pgNmlist.length; i++) {
+			ux.debounceinfo[pgNmlist[i]] = timestamp;
+		}
+	}
+}
+
+ux.effectDebounce = function() {
+	var debounced = [];
+	for(var pgNm in ux.debounceinfo) {
+		var elem = _id(pgNm);
+		if (elem && !elem.disabled) {
+			elem.disabled = true;
+			debounced[pgNm] = ux.debounceinfo[pgNm];
+		}
+	}
+	
+	return debounced;
+}
+
+ux.clearDebounce = function(debounced) {
+	if (debounced) {
+		for(var pgNm in debounced) {
+			if(debounced[pgNm] == ux.debounceinfo[pgNm]) {
+				var elem = _id(pgNm);
+				if (elem) {
+					elem.disabled = false;
+				}				
+			} 
 		}
 	}
 }

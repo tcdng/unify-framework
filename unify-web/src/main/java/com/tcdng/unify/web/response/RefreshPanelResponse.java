@@ -48,14 +48,15 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
         appendRefreshPanelsJson(writer, page, refreshList, useLongNames);
         writer.write(",");
         appendRefreshAttributesJson(writer, false);
+        appendRegisteredDebounceWidgets(writer);
     }
 
     protected String[] getPanels() throws UnifyException {
         return getUplAttribute(String[].class, "panels");
     }
 
-    private void appendRefreshPanelsJson(ResponseWriter writer, Page page, String[] panelIds,
-            boolean useLongNames) throws UnifyException {
+    private void appendRefreshPanelsJson(ResponseWriter writer, Page page, String[] panelIds, boolean useLongNames)
+            throws UnifyException {
         logDebug("Preparing refresh panel response: path ID = [{0}], useLongNames = [{1}]", page.getPathId(),
                 useLongNames);
         writer.write(",\"refreshPanels\":[");

@@ -86,6 +86,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
 
     private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
 
+    private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
+
     @Configurable(ApplicationComponents.APPLICATION_EVENTSLOGGER)
     private EventLogger eventLogger;
 
@@ -440,6 +442,27 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     @Override
     public String getFocusOnWidgetId() throws UnifyException {
         return (String) getRequestAttribute(FOCUS_ON_WIDGET);
+    }
+
+    @Override
+    public void registerWidgetDebounce(String widgetId) throws UnifyException {
+        Collection<String> widgetIds = (Collection<String>) getRequestAttribute(DEBOUNCE_WIDGET);
+        if (widgetIds == null) {
+            widgetIds = new HashSet<String>();
+            setRequestAttribute(DEBOUNCE_WIDGET, widgetIds);
+        }
+        
+        widgetIds.add(widgetId);
+    }
+
+    @Override
+    public Collection<String> getRegisteredDebounceWidgetIds() throws UnifyException {
+        return (Collection<String>) getRequestAttribute(DEBOUNCE_WIDGET);
+    }
+
+    @Override
+    public boolean isRegisteredDebounceWidgets() throws UnifyException {
+        return getRequestAttribute(DEBOUNCE_WIDGET) != null;
     }
 
     @Override

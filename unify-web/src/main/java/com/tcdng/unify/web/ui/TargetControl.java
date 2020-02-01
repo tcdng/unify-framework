@@ -42,4 +42,13 @@ public interface TargetControl extends Control {
      *             if an error occurs
      */
     String getTargetId() throws UnifyException;
+
+    /**
+     * Returns control's debounce flag.
+     * 
+     * @return the debounce flag
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isDebounce() throws UnifyException;
 }

@@ -546,4 +546,32 @@ public interface RequestContextUtil extends UnifyComponent {
      *             if an error occurs
      */
     String getFocusOnWidgetId() throws UnifyException;
+
+    /**
+     * Registers a widget for debounce in current request.
+     * 
+     * @param widgetId
+     *            the widget ID
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void registerWidgetDebounce(String widgetId) throws UnifyException;
+
+    /**
+     * Gets the widgets registered for debounce in current request.
+     * 
+     * @return the registered widget IDs
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Collection<String> getRegisteredDebounceWidgetIds() throws UnifyException;
+
+    /**
+     * Checks if widgets are registered for debounce in this request.
+     * 
+     * @return a true value if widgets are registered otherwise false.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isRegisteredDebounceWidgets() throws UnifyException;
 }
