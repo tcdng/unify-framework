@@ -53,13 +53,14 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         int length = listableList.size();
 
         String currencyCode = getCurrencyCode(moneyField);
+        String selStyleClass = getUserColorStyleClass("sel");
         for (int i = 0; i < length; i++) {
             Listable listable = listableList.get(i);
             String key = listable.getListKey();
             writer.write("<a");
             writeTagId(writer, moneyField.getNamingIndexedId(i));
             if (key.equals(currencyCode)) {
-                writeTagStyleClass(writer, "sel");
+                writeTagStyleClass(writer, selStyleClass);
             } else {
                 writeTagStyleClass(writer, "norm");
             }
@@ -89,7 +90,7 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
         writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
         writer.write(",\"pNormCls\":\"norm\"");
-        writer.write(",\"pSelCls\":\"sel\"");
+        writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
         writer.write("});");
     }
 
