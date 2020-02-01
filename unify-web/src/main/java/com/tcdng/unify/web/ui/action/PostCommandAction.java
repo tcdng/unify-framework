@@ -31,7 +31,8 @@ import com.tcdng.unify.web.ui.AbstractPageAction;
 @UplAttributes({ @UplAttribute(name = "command", type = String.class, defaultVal = "switchState"),
         @UplAttribute(name = "target", type = String.class),
         @UplAttribute(name = "validations", type = UplElementReferences.class),
-        @UplAttribute(name = "refresh", type = UplElementReferences.class) })
+        @UplAttribute(name = "refresh", type = UplElementReferences.class),
+        @UplAttribute(name = "debounce", type = boolean.class)})
 public class PostCommandAction extends AbstractPageAction {
 
     public PostCommandAction() {

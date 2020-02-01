@@ -164,11 +164,18 @@ public class DocumentWriter extends AbstractPageWriter {
         writeBehaviour(writer, document.getContentPanel());
         writeBehaviour(writer, document.getFooterPanel());
 
-        // Add more behaviour
+        // Write page aliases
         writer.write("var aliasPrms = {");
         writer.write("\"pageNameAliases\":");
         writer.writeJsonPageNameAliasesArray();
         writer.write("}; ux.setPageNameAliases(aliasPrms);");
+
+        // Write deboucing
+        if (getRequestContextUtil().isRegisteredDebounceWidgets()) {
+            writer.write("var debounceList = ").writeJsonArray(getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds())
+                    .write(";");
+            writer.write("ux.registerDebounce(debounceList);");
+        }
 
         writer.write("ux.cascadeStretch();");
         writer.write("</script>");

@@ -50,6 +50,10 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
 
         writer.write("/>");
         doWriteTargetControl(writer, targetControl);
+
+        if (targetControl.isDebounce()) {
+            getRequestContextUtil().registerWidgetDebounce(targetControl.getId());
+        }
     }
 
     protected abstract void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl)

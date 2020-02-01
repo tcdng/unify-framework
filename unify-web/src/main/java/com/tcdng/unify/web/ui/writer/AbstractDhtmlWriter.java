@@ -674,6 +674,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 writer.write('"');
             }
 
+            if (pageAction.isUplAttribute("debounce")) {
+                writer.write(",\"uIsDebounce\":");
+                writer.write(pageAction.getUplAttribute(boolean.class, "debounce"));
+            }
+            
             if (pageAction.isUplAttribute("confirm")) {
                 String confirm = pageAction.getUplAttribute(String.class, "confirm");
                 if (StringUtils.isNotBlank(confirm)) {

@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
@@ -53,6 +54,14 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
             writer.write(",\"pSaveList\":").writeJsonArray(saveList);
         }
         writer.write("}");
+    }
+    
+    protected void appendRegisteredDebounceWidgets(ResponseWriter writer, boolean clear) throws UnifyException {
+        Collection<String> widgetIds = getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds();
+        if (!DataUtils.isBlank(widgetIds)) {
+            writer.write(",\"debounceClear\":").write(clear);
+            writer.write(",\"debounceList\":").writeJsonArray(widgetIds);
+        }
     }
 
     protected String getTimestampedResourceName(String resourceName) throws UnifyException {
