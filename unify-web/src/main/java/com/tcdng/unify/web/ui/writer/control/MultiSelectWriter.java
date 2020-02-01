@@ -53,13 +53,14 @@ public class MultiSelectWriter extends AbstractControlWriter {
         List<? extends Listable> listableList = multiSelect.getListables();
         int length = listableList.size();
         writer.write("<div id=\"").write(multiSelect.getListPanelId()).write("\" class=\"mslist\">");
+        String selStyleClass = getUserColorStyleClass("sel");
         for (int i = 0; i < length; i++) {
             Listable listable = listableList.get(i);
             String key = listable.getListKey();
             writer.write("<a");
             writeTagId(writer, multiSelect.getNamingIndexedId(i));
             if (values != null && values.contains(key)) {
-                writeTagStyleClass(writer, "sel");
+                writeTagStyleClass(writer, selStyleClass);
             } else {
                 writeTagStyleClass(writer, "norm");
             }
@@ -104,7 +105,7 @@ public class MultiSelectWriter extends AbstractControlWriter {
         writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
         writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
         writer.write(",\"pNormCls\":\"norm\"");
-        writer.write(",\"pSelCls\":\"sel\"");
+        writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
         writer.write("});");
     }
 

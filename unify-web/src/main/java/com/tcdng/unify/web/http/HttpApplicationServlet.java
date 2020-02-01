@@ -42,6 +42,7 @@ import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.core.upl.UplComponentWriterManager;
+import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
@@ -265,7 +266,8 @@ public class HttpApplicationServlet extends HttpServlet {
                     String branchCode = request.getParameter(RequestParameterConstants.REMOTE_BRANCH_CODE);
                     String zoneCode = request.getParameter(RequestParameterConstants.REMOTE_ZONE_CODE);
                     String tenantCode = request.getParameter(RequestParameterConstants.REMOTE_TENANT_CODE);
-                    String colorScheme = request.getParameter(RequestParameterConstants.REMOTE_COLOR_SCHEME);
+                    String colorScheme = ColorUtils.getConformingColorSchemeCode(
+                            request.getParameter(RequestParameterConstants.REMOTE_COLOR_SCHEME));
                     boolean globalAccess =
                             Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
                     UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(),
