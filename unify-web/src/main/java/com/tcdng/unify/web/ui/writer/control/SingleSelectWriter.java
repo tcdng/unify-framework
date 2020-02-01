@@ -51,10 +51,11 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         int length = listableList.size();
 
         String blankOption = singleSelect.getBlankOption();
+        String selStyleClass = getUserColorStyleClass("sel");
         if (blankOption != null) {
             writer.write("<a id=\"").write(singleSelect.getBlankOptionId()).write("\" class=\"");
             if (StringUtils.isBlank(value)) {
-                writer.write("sel\">");
+                writer.write(selStyleClass).write("\">");
             } else {
                 writer.write("norm\">");
             }
@@ -76,7 +77,7 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
             writer.write("<a");
             writeTagId(writer, singleSelect.getNamingIndexedId(i));
             if (key.equals(value)) {
-                writeTagStyleClass(writer, "sel");
+                writeTagStyleClass(writer, selStyleClass);
             } else {
                 writeTagStyleClass(writer, "norm");
             }
@@ -112,7 +113,7 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
         writer.write(",\"pIsBlank\":").write(blankOption != null);
         writer.write(",\"pNormCls\":\"norm\"");
-        writer.write(",\"pSelCls\":\"sel\"");
+        writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
         writer.write("});");
     }
 

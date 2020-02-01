@@ -16,7 +16,11 @@
 package com.tcdng.unify.web.ui.writer;
 
 import com.tcdng.unify.core.RequestContext;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UserToken;
+import com.tcdng.unify.core.util.ColorUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.ui.EventHandler;
 import com.tcdng.unify.web.ui.PageManager;
@@ -116,4 +120,18 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
         return sb.toString();
     }
 
+    protected String getUserColorStyleClass(String classBase) throws UnifyException {
+        UserToken userToken = getUserToken();
+        if (userToken != null && StringUtils.isNotBlank(userToken.getColorScheme())) {
+            return classBase + userToken.getColorScheme();
+        } else {
+            String configColorScheme = ColorUtils.getConformingColorSchemeCode(
+                    getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_COLORSCHEME));
+            if (!StringUtils.isBlank(configColorScheme)) {
+                return classBase + configColorScheme;
+            }
+        }
+
+        return classBase;
+    }
 }

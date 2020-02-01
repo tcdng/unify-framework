@@ -52,7 +52,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
     private static final String MENUITEM_CATEGORY_CLASSBASE = "mcat";
 
     private static final String ORIGINAL_MENU_PATHID = "ORIGINAL_MENU_PATHID";
-            
+
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         FlyoutMenu flyoutMenu = (FlyoutMenu) widget;
@@ -197,6 +197,9 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
                 String scheme = menu.getColorScheme();
                 opcat += scheme;
                 mcat += scheme;
+            } else {
+                opcat = getUserColorStyleClass(opcat);
+                mcat = getUserColorStyleClass(mcat);
             }
 
             for (MenuItemSet menuItemSet : menu.getMenuItemSetList()) {
