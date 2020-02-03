@@ -92,14 +92,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
         writer.write('"');
         writer.write(",\"pMenuWinId\":").writeJsonArray(menuWinIdList);
         writer.write(",\"pNavId\":\"").write(flyoutMenu.getNavId()).write("\"");
-        writer.write(",\"pSliderId\":\"").write(flyoutMenu.getSliderId()).write("\"");
-        writer.write(",\"pSliderWinId\":\"").write(flyoutMenu.getSliderWinId()).write("\"");
-        writer.write(",\"pBackBtnId\":\"").write(flyoutMenu.getBackButtonId()).write("\"");
-        writer.write(",\"pForwardBtnId\":\"").write(flyoutMenu.getForwardButtonId()).write("\"");
-        writer.write(",\"pSliderGap\":").write(flyoutMenu.getSliderGap());
         writer.write(",\"pVertical\":").write(flyoutMenu.isVertical());
-        writer.write(",\"pRate\":").write(flyoutMenu.getScrollRate());
-        writer.write(",\"pStepRate\":").write(flyoutMenu.getScrollStepRate());
 
         MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
         if (menuSet.isShowSelect()) {
@@ -131,8 +124,6 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
     @Override
     protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
         AbstractFlyoutMenu flyoutMenu = (AbstractFlyoutMenu) container;
-        String backImg = flyoutMenu.getUplAttribute(String.class, "backImgSrc");
-        String forwardImg = flyoutMenu.getUplAttribute(String.class, "forwardImgSrc");
         flyoutMenu.clear();
         writer.write("<div style=\"display:table;width:100%;height:100%;table-layout:fixed;\">");
         writer.write("<div style=\"display:table-row;\">");
@@ -142,16 +133,8 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
             writer.write("<div style=\"display:table-cell;\">");
         }
 
-        appendScrollButton(writer, flyoutMenu, flyoutMenu.getBackButtonId(), backImg);
-
         writer.write("<div id=\"").write(flyoutMenu.getSliderWinId()).write("\"");
-        if (flyoutMenu.isVertical()) {
-            writer.write(" style=\"display:inline-block;width:100%;height:100%;overflow-y:hidden;\">");
-        } else {
-            writer.write(" style=\"display:inline-block;width:100%;height:100%;overflow-x:hidden;\">");
-        }
-        writer.write("<div id=\"").write(flyoutMenu.getSliderId())
-                .write("\" style = \"visibility:hidden;position:relative;\">");
+        writer.write(" style=\"display:inline-block;width:100%;height:100%;\">");
         writer.write("<ul id=\"").write(flyoutMenu.getNavId()).write("\" class=\"nav\">");
         StringBuilder psb = new StringBuilder();
 
@@ -239,34 +222,12 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
         writer.write("</ul>");
         writer.write("</div>");
         writer.write("</div>");
-
-        appendScrollButton(writer, flyoutMenu, flyoutMenu.getForwardButtonId(), forwardImg);
-
-        writer.write("</div>");
         writer.write("</div>");
         writer.write("</div>");
 
         writer.writeStructureAndContent(flyoutMenu.getCurrentSelCtrl());
 
         writer.write(psb.toString());
-    }
-
-    private void appendScrollButton(ResponseWriter writer, AbstractFlyoutMenu flyoutMenu, String buttonId,
-            String imageSrc) throws UnifyException {
-        writer.write("<div id=\"").write(buttonId);
-        if (flyoutMenu.isVertical()) {
-            writer.write("\" class=\"scroll\" style=\"display:table-cell; width:100%; vertical-align:middle;\">");
-        } else {
-            writer.write("\" class=\"scroll\" style=\"display:table-cell; height:100%; vertical-align:middle;\">");
-        }
-        writer.write("<img src=\"");
-        writer.writeFileImageContextURL(imageSrc);
-        if (flyoutMenu.isVertical()) {
-            writer.write("\" style=\"height:100%;max-width:100%;\"/>");
-        } else {
-            writer.write("\" style=\"width:100%;max-height:100%;\"/>");
-        }
-        writer.write("</div>");
     }
 
 }

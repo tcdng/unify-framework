@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.UplAttribute;
-import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.ui.MenuItem;
 import com.tcdng.unify.web.ui.Control;
 
@@ -31,11 +29,6 @@ import com.tcdng.unify.web.ui.Control;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "sliderGap", type = int.class, defaultVal = "3"),
-        @UplAttribute(name = "scrollRate", type = int.class, defaultVal = "200"),
-        @UplAttribute(name = "scrollStepRate", type = int.class, defaultVal = "50"),
-        @UplAttribute(name = "backImgSrc", type = String.class),
-        @UplAttribute(name = "forwardImgSrc", type = String.class) })
 public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements FlyoutMenu {
 
     private Map<String, MenuItem> visibleMenuItemMap;
@@ -65,23 +58,8 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
     }
 
     @Override
-    public String getSliderId() throws UnifyException {
-        return getPrefixedId("sld_");
-    }
-
-    @Override
     public String getNavId() throws UnifyException {
         return getPrefixedId("nav_");
-    }
-
-    @Override
-    public String getBackButtonId() throws UnifyException {
-        return getPrefixedId("btnb_");
-    }
-
-    @Override
-    public String getForwardButtonId() throws UnifyException {
-        return getPrefixedId("btnf_");
     }
 
     @Override
@@ -102,21 +80,6 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
     @Override
     public boolean isVertical() {
         return false;
-    }
-
-    @Override
-    public int getSliderGap() throws UnifyException {
-        return getUplAttribute(int.class, "sliderGap");
-    }
-
-    @Override
-    public int getScrollRate() throws UnifyException {
-        return getUplAttribute(int.class, "scrollRate");
-    }
-
-    @Override
-    public int getScrollStepRate() throws UnifyException {
-        return getUplAttribute(int.class, "scrollStepRate");
     }
 
     @Override
