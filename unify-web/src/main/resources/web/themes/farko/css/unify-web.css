@@ -116,8 +116,6 @@ z-index:400;}
 
 /** Flyout menus */
 .ui-horizontalflyoutmenu {display:block; width:100%; height:22px; background-color: #F0F0F0;}
-.ui-horizontalflyoutmenu .scroll {width:16px; background-color: #202020;}
-.ui-horizontalflyoutmenu .scroll:hover {background-color: #404040;}
 .ui-horizontalflyoutmenu .nav {list-style: none; position: relative; display: inline-table;}
 .ui-horizontalflyoutmenu .nav li {float: left;}
 .ui-horizontalflyoutmenu .option {display: block; width: 120px; margin: 0px 1px 0px 0px; padding: 3px 0px; font-size:10pt;
@@ -125,8 +123,6 @@ z-index:400;}
 .ui-horizontalflyoutmenu .mselect {width: 120px; margin-right: 4px;}
 
 .ui-verticalflyoutmenu {display:block; height:100%; background-color: #F0F0F0;padding:4px;}
-.ui-verticalflyoutmenu .scroll {width:100%; height:22px; background-color: #202020;}
-.ui-verticalflyoutmenu .scroll:hover {background-color: #404040;}
 .ui-verticalflyoutmenu .nav {list-style: none; position: relative; display: inline-table; width:100%;}
 .ui-verticalflyoutmenu .nav li {}
 .ui-verticalflyoutmenu .option {display: block; margin: 0px 0px 2px 0px; padding: 8px 2px; font-size:10pt;

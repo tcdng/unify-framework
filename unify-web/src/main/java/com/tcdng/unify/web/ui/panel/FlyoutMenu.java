@@ -57,31 +57,16 @@ public interface FlyoutMenu extends Panel {
      * Returns the selectID
      */
     String getSelectId() throws UnifyException;
-
+    
     /**
      * Returns the menu slider window ID
      */
     String getSliderWinId() throws UnifyException;
 
     /**
-     * Returns the menu slider ID
-     */
-    String getSliderId() throws UnifyException;
-
-    /**
      * Returns the menu navigation ID
      */
     String getNavId() throws UnifyException;
-
-    /**
-     * Returns the menu back button ID
-     */
-    String getBackButtonId() throws UnifyException;
-
-    /**
-     * Returns the menu forward button ID
-     */
-    String getForwardButtonId() throws UnifyException;
 
     /**
      * Returns popup ID
@@ -106,31 +91,7 @@ public interface FlyoutMenu extends Panel {
      *             if an error occurs
      */
     String getPopupContentId() throws UnifyException;
-
-    /**
-     * Returns the slider menu gap in pixels.
-     * 
-     * @throws UnifyException
-     *             if an error occurs.
-     */
-    int getSliderGap() throws UnifyException;
-
-    /**
-     * Returns the menu scroll rate.
-     * 
-     * @throws UnifyException
-     *             if an error occurs.
-     */
-    int getScrollRate() throws UnifyException;
-
-    /**
-     * Returns the menu scroll step rate.
-     * 
-     * @throws UnifyException
-     *             if an error occurs.
-     */
-    int getScrollStepRate() throws UnifyException;
-
+    
     /**
      * Indicates if menu is vertical.
      */
