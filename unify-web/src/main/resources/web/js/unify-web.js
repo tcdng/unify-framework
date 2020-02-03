@@ -479,7 +479,11 @@ ux.ajaxCall = function(ajaxPrms) {
 				if (uAjaxReq.status == 200) {
 					ajaxPrms.uSuccessFunc(uAjaxReq.responseText);
 				} else {
-					alert(uAjaxReq.responseText);
+					if (!uAjaxReq.responseText || uAjaxReq.responseText.trim().length == 0) {
+						alert("Unable to connect to server.");
+					} else {
+						alert(uAjaxReq.responseText);
+					}
 				}
 				
 				if (ajaxPrms.uIsDebounce) {
