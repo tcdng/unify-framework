@@ -207,7 +207,6 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
         skipOnPopulateSet.add(RequestParameterConstants.DOCUMENT);
         skipOnPopulateSet.add(RequestParameterConstants.TARGET_VALUE);
-        skipOnPopulateSet.add(RequestParameterConstants.PAGE_INDICATOR);
         skipOnPopulateSet.add(RequestParameterConstants.VALIDATION_ACTION);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSG);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSGICON);

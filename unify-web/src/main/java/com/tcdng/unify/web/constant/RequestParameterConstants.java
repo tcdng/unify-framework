@@ -27,8 +27,6 @@ public interface RequestParameterConstants {
 
     String TARGET_VALUE = "req_trg";
 
-    String PAGE_INDICATOR = "req_pag";
-
     String DOCUMENT = "req_doc";
 
     String COMMAND = "req_cmd";

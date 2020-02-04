@@ -378,7 +378,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         for (String element : pathElement) {
             buf.append(element);
         }
-        buf.append("?req_pag=true");
         return this;
     }
 
@@ -395,7 +394,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         writeContextURL(path);
 
         PageManager pageManager = getPageManager();
-        buf.append('&').append(pageManager.getPageName("resourceName")).append("=")
+        buf.append('?').append(pageManager.getPageName("resourceName")).append("=")
                 .append(encodeURLParameter(themeManager.expandThemeTag(resourceName)));
         if (StringUtils.isNotBlank(contentType)) {
             buf.append('&').append(pageManager.getPageName("contentType")).append("=")

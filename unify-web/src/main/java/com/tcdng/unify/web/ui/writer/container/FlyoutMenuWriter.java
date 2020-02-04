@@ -57,8 +57,8 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         FlyoutMenu flyoutMenu = (FlyoutMenu) widget;
         List<String> menuWinIdList = new ArrayList<String>();
-        for (String id : flyoutMenu.getMenuItemIds()) {
-            MenuItem menuItem = flyoutMenu.getMenuItem(id);
+        for (String id : flyoutMenu.getActiveMenuItemIds()) {
+            MenuItem menuItem = flyoutMenu.getActiveMenuItem(id);
             if (menuItem.isMain()) {
                 String popupId = "pop_" + id;
                 String popupContentId = "popc_" + id;
@@ -102,18 +102,24 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
 
         writer.write(",\"pMenuItems\":[");
         boolean appendSym = false;
-        for (String id : flyoutMenu.getMenuItemIds()) {
-            MenuItem menuItem = flyoutMenu.getMenuItem(id);
-            if (menuItem.getActionPath() != null) {
-                if (appendSym) {
-                    writer.write(",");
-                } else {
-                    appendSym = true;
-                }
+        for (String id : flyoutMenu.getActiveMenuItemIds()) {
+            MenuItem menuItem = flyoutMenu.getActiveMenuItem(id);
+            if (getViewDirective(menuItem.getPrivilege()).isVisible()) {
+                if (!StringUtils.isBlank(menuItem.getActionPath())) {
+                    if (appendSym) {
+                        writer.write(",");
+                    } else {
+                        appendSym = true;
+                    }
 
-                writer.write("{\"id\":\"").write(id).write("\"");
-                writer.write(",\"main\":").write(menuItem.isMain());
-                writer.write(",\"actionPath\":\"").writeContextURL(menuItem.getActionPath()).write("\"}");
+                    writer.write("{\"id\":\"").write(id).write("\"");
+                    writer.write(",\"main\":").write(menuItem.isMain());
+                    writer.write(",\"actionPath\":\"").writeContextURL(menuItem.getActionPath()).write("\"");
+                    if (!StringUtils.isBlank(menuItem.getOriginPath())) {
+                        writer.write(",\"originPath\":\"").write(menuItem.getOriginPath()).write("\"");
+                    }
+                    writer.write("}");
+                }
             }
         }
         writer.write("]");
@@ -188,7 +194,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
             for (MenuItemSet menuItemSet : menu.getMenuItemSetList()) {
                 if (getViewDirective(menuItemSet.getPrivilege()).isVisible()) {
                     String menuId = flyoutMenu.getNamingIndexedId(childIndex++);
-                    flyoutMenu.addMenuItem(menuId, menuItemSet);
+                    flyoutMenu.addActiveMenuItem(menuId, menuItemSet);
                     writer.write("<li id=\"").write("win_" + menuId).write("\">");
                     writer.write("<a class=\"option ").write(opcat).write("\" id=\"").write(menuId).write("\">");
                     writer.writeWithHtmlEscape(resolveSessionMessage(menuItemSet.getCaption()));
@@ -205,11 +211,14 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
                         for (MenuItem menuItem : menuItemList) {
                             if (getViewDirective(menuItem.getPrivilege()).isVisible()) {
                                 String menuItemId = flyoutMenu.getNamingIndexedId(childIndex++);
-                                flyoutMenu.addMenuItem(menuItemId, menuItem);
-                                psb.append("<li><a class=\"mitem ").append(mcat).append("\" id=\"").append(menuItemId)
-                                        .append("\">");
-                                HtmlUtils.writeStringWithHtmlEscape(psb, resolveSessionMessage(menuItem.getCaption()));
-                                psb.append("</a></li>");
+                                flyoutMenu.addActiveMenuItem(menuItemId, menuItem);
+                                if (!menuItem.isHidden()) {
+                                    psb.append("<li><a class=\"mitem ").append(mcat).append("\" id=\"")
+                                            .append(menuItemId).append("\">");
+                                    HtmlUtils.writeStringWithHtmlEscape(psb,
+                                            resolveSessionMessage(menuItem.getCaption()));
+                                    psb.append("</a></li>");
+                                }
                             }
                         }
                         psb.append("</ul>");
