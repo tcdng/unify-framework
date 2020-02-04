@@ -416,6 +416,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         if (requestContextUtil.isRemoteViewer()) {
             buf.append('&').append(RequestParameterConstants.REMOTE_VIEWER).append("=")
                     .append(requestContextUtil.getRemoteViewer());
+            buf.append('&').append(RequestParameterConstants.REMOTE_SESSION_ID).append("=")
+            .append(getRequestContext().getAttribute(RequestParameterConstants.REMOTE_SESSION_ID));
         }
         return this;
     }

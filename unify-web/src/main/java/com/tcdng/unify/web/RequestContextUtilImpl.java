@@ -163,6 +163,8 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
                 request.getParameter(RequestParameterConstants.CONFIRM_PARAM));
         setRequestAttribute(RequestParameterConstants.REMOTE_VIEWER,
                 request.getParameter(RequestParameterConstants.REMOTE_VIEWER));
+        setRequestAttribute(RequestParameterConstants.REMOTE_SESSION_ID,
+                request.getParameter(RequestParameterConstants.REMOTE_SESSION_ID));
     }
 
     @Override

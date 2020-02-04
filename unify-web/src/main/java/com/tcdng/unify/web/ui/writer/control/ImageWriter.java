@@ -56,7 +56,7 @@ public class ImageWriter extends AbstractTargetControlWriter {
             setSessionAttribute(imageName, image);
             writer.writeScopeImageContextURL(imageName);
             writer.writeURLParameter("clearOnRead", "true");
-        } else {
+       } else {
             String src = imageCtrl.getSrc();
             if (StringUtils.isNotBlank(src)) {
                 boolean alwaysFetch = imageCtrl.isAlwaysFetch();
