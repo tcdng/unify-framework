@@ -220,12 +220,12 @@ z-index:400;}
 .ui-contentpanel .cptab .cpactive {border:solid 1px #C0C0C0; margin-bottom: -1px; border-bottom:solid 1px #FFF !important;}
 .ui-contentpanel .cptab .cpactive a {float:left; font-size:12px; padding: 8px; color: #454545;}
 .ui-contentpanel .cptab .cpactive .cpremote {margin:3px; padding:4px;}
-.ui-contentpanel .cptab .cpactive .cpcat {border: 2px solid #5970B2; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatblue {border: 2px solid #3378C0; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatgreen {border: 2px solid #33C078; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatorange {border: 2px solid #C07833; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatgray {border: 2px solid #787878; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpcat {border: 2px solid #5970B2; color: #454545; background-color: #BFD6FF;}
+.ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545; background-color: #FF9999;}
+.ui-contentpanel .cptab .cpactive .cpcatblue {border: 2px solid #3378C0; color: #454545;background-color: #99DEFF;}
+.ui-contentpanel .cptab .cpactive .cpcatgreen {border: 2px solid #33C078; color: #454545; background-color: #99FFDE;}
+.ui-contentpanel .cptab .cpactive .cpcatorange {border: 2px solid #C07833; color: #454545; background-color: #FFDE99;}
+.ui-contentpanel .cptab .cpactive .cpcatgray {border: 2px solid #787878; color: #454545; background-color: #DEDEDE;}
 .ui-contentpanel .cptab .cpactive img {float:right; padding:9px 6px; width:10px; height:10px; cursor:pointer;}
 .ui-contentpanel .cptab .cpinactive {border:solid 1px #D0D0D0; margin-top: 4px; background-color: #E0E0E0; border-bottom: none !important; cursor:pointer;}
 .ui-contentpanel .cptab .cpinactive:hover {background-color: #D0D0D0;}
