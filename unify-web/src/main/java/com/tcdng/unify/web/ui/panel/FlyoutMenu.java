@@ -33,7 +33,7 @@ public interface FlyoutMenu extends Panel {
     /**
      * Returns a list of menu item ids.
      */
-    Set<String> getMenuItemIds();
+    Set<String> getActiveMenuItemIds();
 
     /**
      * Returns a menu item by id.
@@ -41,7 +41,7 @@ public interface FlyoutMenu extends Panel {
      * @param id
      *            the id
      */
-    MenuItem getMenuItem(String id);
+    MenuItem getActiveMenuItem(String id);
 
     /**
      * Returns current selection control.

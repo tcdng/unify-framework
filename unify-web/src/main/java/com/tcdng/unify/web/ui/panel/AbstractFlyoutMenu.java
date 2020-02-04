@@ -31,14 +31,14 @@ import com.tcdng.unify.web.ui.Control;
  */
 public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements FlyoutMenu {
 
-    private Map<String, MenuItem> visibleMenuItemMap;
+    private Map<String, MenuItem> activeMenuItemMap;
 
     private Control currentSelCtrl;
 
     private int currentSel;
 
     public AbstractFlyoutMenu() {
-        visibleMenuItemMap = new HashMap<String, MenuItem>();
+        activeMenuItemMap = new HashMap<String, MenuItem>();
     }
 
     @Override
@@ -83,21 +83,21 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
     }
 
     @Override
-    public Set<String> getMenuItemIds() {
-        return visibleMenuItemMap.keySet();
+    public Set<String> getActiveMenuItemIds() {
+        return activeMenuItemMap.keySet();
     }
 
     @Override
-    public MenuItem getMenuItem(String pageName) {
-        return visibleMenuItemMap.get(pageName);
+    public MenuItem getActiveMenuItem(String pageName) {
+        return activeMenuItemMap.get(pageName);
     }
 
     public void clear() {
-        visibleMenuItemMap.clear();
+        activeMenuItemMap.clear();
     }
 
-    public void addMenuItem(String name, MenuItem menuItem) {
-        visibleMenuItemMap.put(name, menuItem);
+    public void addActiveMenuItem(String name, MenuItem menuItem) {
+        activeMenuItemMap.put(name, menuItem);
     }
 
     @Override

@@ -25,8 +25,9 @@ import java.util.List;
  */
 public class MenuItemSet extends MenuItem {
 
-    public MenuItemSet(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
-        super(caption, privilege, actionPath, menuItemList);
+    public MenuItemSet(String caption, String privilege, String actionPath, String originPath,
+            List<MenuItem> menuItemList, boolean hidden) {
+        super(caption, privilege, actionPath, originPath, menuItemList, hidden);
     }
 
     @Override
