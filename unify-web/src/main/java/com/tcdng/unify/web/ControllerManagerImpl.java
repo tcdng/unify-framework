@@ -113,8 +113,6 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
     private Map<RemoteCallFormat, ObjectStreamer> objectStreamers;
 
-    // private Map<String, String> actionToControllerNameMap;
-
     private Map<String, Result> defaultResultMap;
 
     @SuppressWarnings("rawtypes")
@@ -136,7 +134,6 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
     @SuppressWarnings("rawtypes")
     public ControllerManagerImpl() {
-        // actionToControllerNameMap = new ConcurrentHashMap<String, String>();
         skipOnPopulateSet = new HashSet<String>();
 
         pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>() {
@@ -177,31 +174,21 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         pageControllerInfoMap = new FactoryMap<String, PageControllerInfo>() {
             @Override
             protected PageControllerInfo create(String controllerName, Object... params) throws Exception {
-                PageControllerInfo pageControllerInfo = createPageControllerInfo(controllerName);
-                // for (String actionName : pageControllerInfo.getActionNames()) {
-                // actionToControllerNameMap.put(actionName, controllerName);
-                // }
-                return pageControllerInfo;
+                return createPageControllerInfo(controllerName);
             }
         };
 
         remoteCallControllerInfoMap = new FactoryMap<String, RemoteCallControllerInfo>() {
             @Override
             protected RemoteCallControllerInfo create(String controllerName, Object... params) throws Exception {
-                RemoteCallControllerInfo remoteCallControllerInfo = createRemoteCallControllerInfo(controllerName);
-                // for (String handlerName : remoteCallControllerInfo.getRemoteHandlerNames()) {
-                // actionToControllerNameMap.put(handlerName, controllerName);
-                // }
-                return remoteCallControllerInfo;
+                return createRemoteCallControllerInfo(controllerName);
             }
         };
 
         resourceControllerInfoMap = new FactoryMap<String, ResourceControllerInfo>() {
             @Override
             protected ResourceControllerInfo create(String controllerName, Object... params) throws Exception {
-                ResourceControllerInfo resourceControllerInfo = createResourceControllerInfo(controllerName);
-                // actionToControllerNameMap.put(controllerName, controllerName);
-                return resourceControllerInfo;
+                return createResourceControllerInfo(controllerName);
             }
         };
 
@@ -259,7 +246,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
             if (file.exists()) {
                 ResourceController realPathResourceController =
-                        (ResourceController) this.getComponent("/resource/realpath");
+                        (ResourceController) getComponent("/resource/realpath");
                 realPathResourceController.setResourceName(path);
                 return realPathResourceController;
             }
