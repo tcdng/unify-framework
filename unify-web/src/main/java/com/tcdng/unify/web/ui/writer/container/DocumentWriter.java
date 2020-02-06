@@ -28,6 +28,7 @@ import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.container.BasicDocument;
+import com.tcdng.unify.web.ui.container.BasicDocumentResources;
 import com.tcdng.unify.web.ui.writer.AbstractPageWriter;
 
 /**
@@ -43,6 +44,9 @@ public class DocumentWriter extends AbstractPageWriter {
     @Configurable
     private PathInfoRepository pathInfoRepository;
 
+    @Configurable
+    private BasicDocumentResources resources;
+    
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
@@ -91,6 +95,8 @@ public class DocumentWriter extends AbstractPageWriter {
             }
         }
 
+        writeResourcesStyleSheet(writer);
+
         // Write javascript sources
         writeJavascript(writer, "web/js/unify-web.js");
 
@@ -104,6 +110,9 @@ public class DocumentWriter extends AbstractPageWriter {
                 writeJavascript(writer, script);
             }
         }
+
+        writeResourcesScript(writer);
+
         writer.write("</head>");
 
         // Body
@@ -151,14 +160,14 @@ public class DocumentWriter extends AbstractPageWriter {
                 .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
                 .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
 
-        // Write layout behaviour
+        // Write layout behavior
         DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
         writer.writeBehaviour(documentLayout, document);
 
         // Write inherited behavior
         super.doWriteBehavior(writer, document);
 
-        // Write panel behaviours
+        // Write panel behaviors
         writeBehaviour(writer, document.getHeaderPanel());
         writeBehaviour(writer, document.getMenuPanel());
         writeBehaviour(writer, document.getContentPanel());
@@ -170,10 +179,10 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.writeJsonPageNameAliasesArray();
         writer.write("}; ux.setPageNameAliases(aliasPrms);");
 
-        // Write deboucing
+        // Write debouncing
         if (getRequestContextUtil().isRegisteredDebounceWidgets()) {
-            writer.write("var debounceList = ").writeJsonArray(getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds())
-                    .write(";");
+            writer.write("var debounceList = ")
+                    .writeJsonArray(getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds()).write(";");
             writer.write("ux.registerDebounce(debounceList);");
         }
 
@@ -184,6 +193,27 @@ public class DocumentWriter extends AbstractPageWriter {
     @Override
     protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
 
+    }
+
+    private void writeResourcesStyleSheet(ResponseWriter writer)
+            throws UnifyException {
+        if (resources != null) {
+            for (String sheetLink : resources.getStyleSheetResourceLinks()) {
+                writer.write("<link href=\"");
+                writer.write(sheetLink);
+                writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
+            }
+        }
+    }
+
+    private void writeResourcesScript(ResponseWriter writer) throws UnifyException {
+        if (resources != null) {
+            for (String scriptLink : resources.getScriptResourceLinks()) {
+                writer.write("<script src=\"");
+                writer.write(scriptLink);
+                writer.write("\"></script>");
+            }
+        }
     }
 
     private void writeStyleSheet(ResponseWriter writer, String styleSheet) throws UnifyException {
