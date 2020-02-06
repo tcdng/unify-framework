@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -796,8 +797,17 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
     }
 
     private void performClosePage(ClosePageMode closePageMode, boolean isFireClose) throws UnifyException {
-        ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
         Page currentPage = requestContextUtil.getRequestPage();
+        if (requestContextUtil.isRemoteViewer()) {
+            // Fire closePage()
+            PathParts pathParts = pathInfoRepository.getPathParts(currentPage.getPathId());
+            loadRequestPage(pathParts);
+            ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
+            requestContextUtil.setClosedPagePaths(Arrays.asList(currentPage.getPathId()));
+            return;
+        }
+        
+        ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
         List<String> toClosePathIdList = contentPanel.evaluateRemoveContent(currentPage, closePageMode);
         if (!toClosePathIdList.isEmpty()) {
             try {
