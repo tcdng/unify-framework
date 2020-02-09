@@ -369,6 +369,15 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     int getMaxClauseValues();
 
     /**
+     * Normalizes default value based on this dialect.
+     * 
+     * @param defaultStr
+     *            the default value to normalize
+     * @return the normalized default value
+     */
+    String normalizeDefault(String defaultStr);
+
+    /**
      * Checks if there's a query limit or offset
      * 
      * @param query

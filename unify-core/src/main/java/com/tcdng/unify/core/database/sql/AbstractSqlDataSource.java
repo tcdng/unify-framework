@@ -152,19 +152,24 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                 List<SqlColumnInfo> columnInfoList = new ArrayList<SqlColumnInfo>();
                 rs = connection.getMetaData().getColumns(null, schemaName, tableName, null);
                 while (rs.next()) {
+                    String columnName = rs.getString("COLUMN_NAME");
                     int sqlType = rs.getInt("DATA_TYPE");
                     if (SqlUtils.isSupportedSqlType(sqlType)) {
                         Class<?> type = SqlUtils.getJavaType(sqlType);
                         String defaultVal = rs.getString("COLUMN_DEF");
                         if (defaultVal != null) {
-                            defaultVal = defaultVal.trim();
+                            defaultVal = getDialect().normalizeDefault(defaultVal.trim());
                         }
-                        
+
                         String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");
                         int decimalDigits = decimalDigitsStr == null ? 0 : Integer.valueOf(decimalDigitsStr);
-                        columnInfoList.add(new SqlColumnInfo(type, rs.getString("TYPE_NAME"),
-                                rs.getString("COLUMN_NAME"), defaultVal, sqlType,
-                                rs.getInt("COLUMN_SIZE"), decimalDigits, "YES".equals(rs.getString("IS_NULLABLE"))));
+                        columnInfoList.add(new SqlColumnInfo(type, rs.getString("TYPE_NAME"), columnName, defaultVal,
+                                sqlType, rs.getInt("COLUMN_SIZE"), decimalDigits,
+                                "YES".equals(rs.getString("IS_NULLABLE"))));
+                    } else {
+                        logDebug(
+                                "Column [{0}] of type [{1}] skipped when obtaining column list for table [{2}] in schema [{3}].",
+                                columnName, sqlType, tableName, schemaName);
                     }
                 }
                 return columnInfoList;
@@ -201,7 +206,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
             try {
                 Set<String> columnNames = new LinkedHashSet<String>();
                 rs = connection.getMetaData().getColumns(null, schemaName, tableName, null);
-                if(getDialect().isAllObjectsInLowerCase()) {
+                if (getDialect().isAllObjectsInLowerCase()) {
                     while (rs.next()) {
                         columnNames.add(rs.getString("COLUMN_NAME").toLowerCase());
                     }
@@ -210,7 +215,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                         columnNames.add(rs.getString("COLUMN_NAME").toUpperCase());
                     }
                 }
-                
+
                 return columnNames;
             } catch (SQLException e) {
                 throwOperationErrorException(e);
@@ -359,7 +364,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         if (sqlConnectionPool != null) {
             sqlConnectionPool.terminate();
         }
-        
+
         super.onTerminate();
         logInfo("Datasource [{0}] terminated.", getName());
     }
