@@ -67,6 +67,18 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String normalizeDefault(String defaultStr) {
+        if (defaultStr != null) {
+            int last = defaultStr.length() - 1;
+            if (defaultStr.charAt(0) == '(' && defaultStr.charAt(last) == ')') {
+                return defaultStr.substring(1, last);
+            }
+        }
+
+        return defaultStr;
+    }
+
+    @Override
     protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
         if (offset > 0) {
             throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
@@ -99,7 +111,6 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
                 .append(sqlRecordSchemaInfo.getSchemaTableName()).append("'");
         return sb.toString();
     }
-
 
     @Override
     public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
@@ -143,10 +154,29 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
             } else {
                 sb.append(' ');
             }
+
             sb.append("ALTER COLUMN ");
-            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
+            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo);
             sqlList.add(sb.toString());
             StringUtils.truncate(sb);
+
+            if (sqlFieldSchemaInfo.isWithDefaultVal()) {
+                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+                if (format) {
+                    sb.append(getLineSeparator());
+                } else {
+                    sb.append(' ');
+                }
+
+                sb.append("ADD ");
+                sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                        sqlFieldSchemaInfo.getDefaultVal());
+                sb.append(" FOR ");
+                sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
             return sqlList;
         }
 
@@ -164,6 +194,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
             sb.append(' ');
         }
         sb.append("ALTER COLUMN ");
+        sb.append(sqlColumnInfo.getColumnName());
         appendTypeSql(sb, sqlColumnInfo);
         sb.append(" NULL");
         return sb.toString();
@@ -203,6 +234,28 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
         setDataTypePolicy(ColumnType.BLOB, new MsSqlBlobPolicy());
         setDataTypePolicy(ColumnType.CLOB, new MsSqlClobPolicy());
     }
+
+    private void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo) throws UnifyException {
+        SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+        sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
+        sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                sqlFieldSchemaInfo.getScale());
+
+        if (sqlFieldSchemaInfo.isPrimaryKey()) {
+            sb.append(" PRIMARY KEY NOT NULL");
+        } else {
+            if (sqlFieldSchemaInfo.isWithDefaultVal()) {
+                sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                        sqlFieldSchemaInfo.getDefaultVal());
+            }
+
+            if (sqlFieldSchemaInfo.isNullable()) {
+                sb.append(" NULL");
+            } else {
+                sb.append(" NOT NULL");
+            }
+        }
+    }
 }
 
 class MsSqlTimestampUTCPolicy extends TimestampUTCPolicy {
@@ -216,7 +269,7 @@ class MsSqlTimestampUTCPolicy extends TimestampUTCPolicy {
     public int getSqlType() {
         return Types.TIMESTAMP;
     }
-    
+
 }
 
 class MsSqlTimestampPolicy extends TimestampPolicy {
@@ -230,7 +283,7 @@ class MsSqlTimestampPolicy extends TimestampPolicy {
     public int getSqlType() {
         return Types.TIMESTAMP;
     }
-    
+
 }
 
 class MsSqlDatePolicy extends DatePolicy {
@@ -244,9 +297,8 @@ class MsSqlDatePolicy extends DatePolicy {
     public int getSqlType() {
         return Types.TIMESTAMP;
     }
-    
-}
 
+}
 
 class MsSqlBlobPolicy extends BlobPolicy {
 

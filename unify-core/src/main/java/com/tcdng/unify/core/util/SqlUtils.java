@@ -95,6 +95,7 @@ public final class SqlUtils {
         sqlToJavaTypeMap = new HashMap<Integer, Class<?>>();
         sqlToJavaTypeMap.put(Types.BIGINT, Long.class);
         sqlToJavaTypeMap.put(Types.BIT, Boolean.class);
+        sqlToJavaTypeMap.put(Types.VARBINARY, byte[].class);
         sqlToJavaTypeMap.put(Types.LONGVARBINARY, byte[].class);
         sqlToJavaTypeMap.put(Types.BLOB, byte[].class);
         sqlToJavaTypeMap.put(Types.BOOLEAN, Boolean.class);
