@@ -43,14 +43,14 @@ Components are provided for the full web application stack which makes the need 
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-core</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 
 <!-- Unify Web Library-->
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-web</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
@@ -61,28 +61,28 @@ Components are provided for the full web application stack which makes the need 
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-jetty</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 
 <!-- Jasper Reports Integration-->
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-jasperreports</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 
 <!-- JCIFS Library Integration-->
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-jcifs</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 
 <!-- XChart Library Integration-->
 <dependency>
     <groupId>com.tcdng.unify</groupId>
     <artifactId>unify-xchart</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
