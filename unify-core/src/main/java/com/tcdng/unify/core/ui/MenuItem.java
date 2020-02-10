@@ -15,8 +15,9 @@
  */
 package com.tcdng.unify.core.ui;
 
-import java.util.Collections;
 import java.util.List;
+
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Menu item data object.
@@ -32,15 +33,20 @@ public class MenuItem {
 
     private String actionPath;
 
+    private String originPath;
+
     private List<MenuItem> menuItemList;
 
-    public MenuItem(String caption, String privilege, String actionPath, List<MenuItem> menuItemList) {
+    private boolean hidden;
+
+    public MenuItem(String caption, String privilege, String actionPath, String originPath, List<MenuItem> menuItemList,
+            boolean hidden) {
         this.caption = caption;
         this.privilege = privilege;
         this.actionPath = actionPath;
-        if (menuItemList != null) {
-            this.menuItemList = Collections.unmodifiableList(menuItemList);
-        }
+        this.originPath = originPath;
+        this.menuItemList = DataUtils.unmodifiableList(menuItemList);
+        this.hidden = hidden;
     }
 
     public String getCaption() {
@@ -55,8 +61,16 @@ public class MenuItem {
         return actionPath;
     }
 
+    public String getOriginPath() {
+        return originPath;
+    }
+
     public List<MenuItem> getMenuItemList() {
         return menuItemList;
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 
     public boolean isMain() {

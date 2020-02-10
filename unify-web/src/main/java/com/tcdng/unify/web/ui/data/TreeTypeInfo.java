@@ -37,11 +37,14 @@ public class TreeTypeInfo {
 
     private List<TreeMenuItemInfo> menuItemInfoList;
 
+    private List<Integer> multiSelectMenuSequence;
+
     private Map<String, ExtendedTreeItemTypeInfo> treeItemTypeInfos;
 
-    private TreeTypeInfo(List<TreeMenuItemInfo> menuItemInfoList,
+    private TreeTypeInfo(List<TreeMenuItemInfo> menuItemInfoList, List<Integer> multiSelectMenuSequence,
             Map<String, ExtendedTreeItemTypeInfo> treeItemTypeInfos) {
         this.menuItemInfoList = menuItemInfoList;
+        this.multiSelectMenuSequence = multiSelectMenuSequence;
         this.treeItemTypeInfos = treeItemTypeInfos;
     }
 
@@ -49,36 +52,44 @@ public class TreeTypeInfo {
         return menuItemInfoList;
     }
 
+    public List<Integer> getMultiSelectMenuSequence() {
+        return multiSelectMenuSequence;
+    }
+
     public Collection<ExtendedTreeItemTypeInfo> getExtendedTreeItemTypeInfos() {
         return treeItemTypeInfos.values();
     }
-    
+
     public TreeItemTypeInfo getTreeItemTypeInfo(String itemTypeCode) {
         ExtendedTreeItemTypeInfo in = treeItemTypeInfos.get(itemTypeCode);
         if (in != null) {
             return in.getTreeItemTypeInfo();
         }
-        
+
         return null;
     }
 
     public boolean isTreeItemType(String code) {
         return treeItemTypeInfos.containsKey(code);
     }
-    
+
     public List<Integer> getMenuItemSequence(String itemTypeCode) {
         ExtendedTreeItemTypeInfo in = treeItemTypeInfos.get(itemTypeCode);
         if (in != null) {
             return in.getMenuSequence();
         }
-        
+
         return null;
+    }
+
+    public boolean isMultiSelectMenu() {
+        return !multiSelectMenuSequence.isEmpty();
     }
 
     public boolean isMenuItemList() {
         return !menuItemInfoList.isEmpty();
     }
-    
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -88,6 +99,8 @@ public class TreeTypeInfo {
         private List<TreeMenuItemInfo> menuItemInfoList;
 
         private List<String> menuCodeList;
+
+        private List<Integer> multiSelectMenuSequence;
 
         private Map<String, ExtendedTreeItemTypeInfo> treeItemTypeInfos;
 
@@ -100,18 +113,39 @@ public class TreeTypeInfo {
         }
 
         public Builder addMenuItem(String code, String caption) throws UnifyException {
+            return addMenuItem(code, caption, null);
+        }
+
+        public Builder addMenuItem(String code, String caption, String confirm) throws UnifyException {
             if (menuCodeList.contains(code)) {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
                         "Menu item with code [" + code + "] already exists.");
             }
 
             menuCodeList.add(code);
-            menuItemInfoList.add(new TreeMenuItemInfo(code, caption, menuItemGroupIndex));
+            menuItemInfoList.add(new TreeMenuItemInfo(code, caption, confirm, menuItemGroupIndex));
             return this;
         }
 
         public Builder nextMenuItemGroup() throws UnifyException {
             menuItemGroupIndex++;
+            return this;
+        }
+
+        public Builder addMultiSelectMenuItem(String menuItemCode) throws UnifyException {
+            int menuIndex = menuCodeList.indexOf(menuItemCode);
+            if (menuIndex < 0) {
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                        "Multi-select setup refers to unknown menu item [" + menuItemCode + "].");
+            }
+
+            if (multiSelectMenuSequence == null) {
+                multiSelectMenuSequence = new ArrayList<Integer>();
+            }
+
+            if (!multiSelectMenuSequence.contains(menuIndex)) {
+                multiSelectMenuSequence.add(menuIndex);
+            }
             return this;
         }
 
@@ -143,6 +177,7 @@ public class TreeTypeInfo {
 
         public TreeTypeInfo build() throws UnifyException {
             return new TreeTypeInfo(Collections.unmodifiableList(menuItemInfoList),
+                    DataUtils.unmodifiableList(multiSelectMenuSequence),
                     Collections.unmodifiableMap(treeItemTypeInfos));
         }
     }

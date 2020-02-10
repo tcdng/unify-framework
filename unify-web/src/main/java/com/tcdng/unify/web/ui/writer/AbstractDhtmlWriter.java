@@ -674,6 +674,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 writer.write('"');
             }
 
+            if (pageAction.isUplAttribute("debounce")) {
+                writer.write(",\"uIsDebounce\":");
+                writer.write(pageAction.getUplAttribute(boolean.class, "debounce"));
+            }
+            
             if (pageAction.isUplAttribute("confirm")) {
                 String confirm = pageAction.getUplAttribute(String.class, "confirm");
                 if (StringUtils.isNotBlank(confirm)) {
@@ -712,20 +717,20 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         return pageManager;
     }
 
+    protected void writeStringParameter(ResponseWriter writer, String string) {
+        if (string != null && !string.trim().isEmpty()) {
+            writer.write("\"").write(string).write("\"");
+        } else {
+            writer.write("null");
+        }
+    }
+
     private void writeRefObjectEventHandlerJS(ResponseWriter writer, String pageName, String eventType, String action,
             String refObject) throws UnifyException {
         String event = WriterUtils.getEventJS(eventType.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action.toLowerCase());
         String eventParams = writeActionParamsJS(writer, event, function, pageName, null, null, refObject, null);
         writer.write("ux.setOnEvent(").write(eventParams).write(");");
-    }
-
-    private void writeStringParameter(ResponseWriter writer, String string) {
-        if (string != null && !string.trim().isEmpty()) {
-            writer.write("\"").write(string).write("\"");
-        } else {
-            writer.write("null");
-        }
     }
 
 }

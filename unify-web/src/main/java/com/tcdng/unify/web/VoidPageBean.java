@@ -14,18 +14,19 @@
  * the License.
  */
 
-package com.tcdng.unify.web.ui.data;
+package com.tcdng.unify.web;
 
 /**
- * Tree item collapser.
+ * Completely empty page bean.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TreeItemCollapser extends AbstractTreeItemUpdater {
+public final class VoidPageBean extends AbstractPageBean {
 
-    @Override
-    public void update(TreeItem childItem) {
-        childItem.setExpanded(true);
+    public static final VoidPageBean INSTANCE = new VoidPageBean();
+
+    private VoidPageBean() {
+
     }
 }

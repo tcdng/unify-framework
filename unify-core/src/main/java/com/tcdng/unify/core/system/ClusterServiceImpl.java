@@ -186,10 +186,10 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         if (!clusterCommandList.isEmpty()) {
             List<Long> clusterCommandIdList = new ArrayList<Long>();
             resultList = new ArrayList<Command>();
-            for (ClusterCommand clusterCommandData : clusterCommandList) {
-                Long clusterCommandId = clusterCommandData.getId();
+            for (ClusterCommand clusterCommand : clusterCommandList) {
+                Long clusterCommandId = clusterCommand.getId();
                 clusterCommandIdList.add(clusterCommandId);
-                resultList.add(new Command(clusterCommandData.getCommandCode(), db().valueList(String.class,
+                resultList.add(new Command(clusterCommand.getCommandCode(), db().valueList(String.class,
                         "parameter", new ClusterCommandParamQuery().clusterCommandId(clusterCommandId))));
             }
 
@@ -246,9 +246,9 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         String lockOwnerId = getLockOwnerId(nodeOnly);
         logDebug("Attempt by [{0}] to release lock [{1}]...", lockOwnerId, lockName);
         ClusterLockQuery query = new ClusterLockQuery().lockName(lockName).currentOwner(lockOwnerId);
-        ClusterLock clusterLockData = db().find(query);
-        if (clusterLockData != null) {
-            Integer lockCount = clusterLockData.getLockCount() - 1;
+        ClusterLock clusterLock = db().find(query);
+        if (clusterLock != null) {
+            Integer lockCount = clusterLock.getLockCount() - 1;
             if (lockCount > 0) {
                 successfulRelease = db().updateAll(query, new Update().add("lockCount", lockCount)) > 0;
                 if (successfulRelease) {
@@ -270,7 +270,7 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         return successfulRelease;
     }
 
-    @Periodic(PeriodicType.FAST)
+    @Periodic(value = PeriodicType.FAST, clusterMode = true)
     @Transactional(TransactionAttribute.REQUIRES_NEW)
     public void performHeartBeat(TaskMonitor taskMonitor) throws UnifyException {
         String nodeId = getNodeId();
@@ -279,14 +279,14 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         if (db().updateAll(new ClusterNodeQuery().nodeId(nodeId),
                 new Update().add("lastHeartBeat", lastHeartBeat)) == 0) {
             // Register node
-            ClusterNode clusterNodeData = new ClusterNode();
-            clusterNodeData.setNodeId(nodeId);
-            clusterNodeData.setLastHeartBeat(lastHeartBeat);
-            clusterNodeData.setIpAddress(NetworkUtils.getLocalHostIpAddress());
+            ClusterNode clusterNode = new ClusterNode();
+            clusterNode.setNodeId(nodeId);
+            clusterNode.setLastHeartBeat(lastHeartBeat);
+            clusterNode.setIpAddress(NetworkUtils.getLocalHostIpAddress());
             UnifyContainerInterface unifyContainerInterface =
                     (UnifyContainerInterface) this.getComponent("unify-commandinterface");
-            clusterNodeData.setCommandPort(Integer.valueOf(unifyContainerInterface.getPort()));
-            db().create(clusterNodeData);
+            clusterNode.setCommandPort(Integer.valueOf(unifyContainerInterface.getPort()));
+            db().create(clusterNode);
         }
 
         // Extend life of locks held by this node
@@ -296,7 +296,7 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         }
     }
 
-    @Periodic(PeriodicType.SLOWER)
+    @Periodic(value = PeriodicType.SLOWER, clusterMode = true)
     @Transactional(TransactionAttribute.REQUIRES_NEW)
     public void performClusterHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
         // Obliterate cluster nodes with stopped heart beats (Dead nodes).

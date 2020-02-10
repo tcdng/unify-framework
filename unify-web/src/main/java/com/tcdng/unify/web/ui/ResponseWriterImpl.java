@@ -16,10 +16,8 @@
 package com.tcdng.unify.web.ui;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,7 +27,6 @@ import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.RequestContext;
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -55,6 +52,7 @@ import com.tcdng.unify.web.ui.writer.DocumentLayoutWriter;
 import com.tcdng.unify.web.ui.writer.LayoutWriter;
 import com.tcdng.unify.web.ui.writer.PanelWriter;
 import com.tcdng.unify.web.ui.writer.WidgetWriter;
+import com.tcdng.unify.web.util.UrlUtils;
 
 /**
  * Default implementation of a response writer.
@@ -68,7 +66,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     @Configurable
     private ThemeManager themeManager;
-    
+
     @Configurable
     private RequestContextUtil requestContextUtil;
 
@@ -378,7 +376,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         for (String element : pathElement) {
             buf.append(element);
         }
-        buf.append("?req_pag=true");
         return this;
     }
 
@@ -395,15 +392,16 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         writeContextURL(path);
 
         PageManager pageManager = getPageManager();
-        buf.append('&').append(pageManager.getPageName("resourceName")).append("=")
-                .append(encodeURLParameter(themeManager.expandThemeTag(resourceName)));
+        buf.append('?').append(pageManager.getPageName("resourceName")).append("=")
+                .append(UrlUtils.encodeURLParameter(themeManager.expandThemeTag(resourceName)));
         if (StringUtils.isNotBlank(contentType)) {
             buf.append('&').append(pageManager.getPageName("contentType")).append("=")
-                    .append(encodeURLParameter(contentType));
+                    .append(UrlUtils.encodeURLParameter(contentType));
         }
 
         if (StringUtils.isNotBlank(scope)) {
-            buf.append('&').append(pageManager.getPageName("scope")).append("=").append(encodeURLParameter(scope));
+            buf.append('&').append(pageManager.getPageName("scope")).append("=")
+                    .append(UrlUtils.encodeURLParameter(scope));
         }
 
         if (attachment) {
@@ -417,13 +415,16 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         if (requestContextUtil.isRemoteViewer()) {
             buf.append('&').append(RequestParameterConstants.REMOTE_VIEWER).append("=")
                     .append(requestContextUtil.getRemoteViewer());
+            buf.append('&').append(RequestParameterConstants.REMOTE_SESSION_ID).append("=")
+                    .append(getRequestContext().getAttribute(RequestParameterConstants.REMOTE_SESSION_ID));
         }
         return this;
     }
 
     @Override
     public ResponseWriter writeURLParameter(String name, String value) throws UnifyException {
-        buf.append('&').append(getPageManager().getPageName(name)).append("=").append(encodeURLParameter(value));
+        buf.append('&').append(getPageManager().getPageName(name)).append("=")
+                .append(UrlUtils.encodeURLParameter(value));
         return this;
     }
 
@@ -639,14 +640,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     private RequestContextUtil getRequestContextUtil() throws UnifyException {
         return (RequestContextUtil) getComponent(WebApplicationComponents.APPLICATION_REQUESTCONTEXTUTIL);
-    }
-
-    private String encodeURLParameter(String parameter) throws UnifyException {
-        try {
-            return URLEncoder.encode(parameter, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.UTIL_ERROR);
-        }
     }
 
     private ResponseWriter writeJsonArray(Object[] arr, boolean quote) throws UnifyException {

@@ -70,6 +70,14 @@ z-index:400;}
 
 .ui-unordered {}
 
+.ui-flowgrid {display:grid;}
+.ui-flowgrid .fgcell {padding:2px;}
+.ui-flowgrid .llabel {}
+.ui-flowgrid .llabelinl {float:left;padding-right:4px;}
+.ui-flowgrid .lcontent {display:block; width:100%; height:100%;}
+.ui-flowgrid .lcontentinl {float:left; display:block; height:100%;}
+.ui-flowgrid .llabelblank {}
+
 /** Shaded list layout */
 .ui-shadedlist {width:100%;color:#000;}
 .ui-shadedlist .slcap {width:20%; padding:2px;font-weight:bold;font-size:10pt;background-color:#DCDCDC;}
@@ -108,8 +116,6 @@ z-index:400;}
 
 /** Flyout menus */
 .ui-horizontalflyoutmenu {display:block; width:100%; height:22px; background-color: #F0F0F0;}
-.ui-horizontalflyoutmenu .scroll {width:16px; background-color: #202020;}
-.ui-horizontalflyoutmenu .scroll:hover {background-color: #404040;}
 .ui-horizontalflyoutmenu .nav {list-style: none; position: relative; display: inline-table;}
 .ui-horizontalflyoutmenu .nav li {float: left;}
 .ui-horizontalflyoutmenu .option {display: block; width: 120px; margin: 0px 1px 0px 0px; padding: 3px 0px; font-size:10pt;
@@ -117,8 +123,6 @@ z-index:400;}
 .ui-horizontalflyoutmenu .mselect {width: 120px; margin-right: 4px;}
 
 .ui-verticalflyoutmenu {display:block; height:100%; background-color: #F0F0F0;padding:4px;}
-.ui-verticalflyoutmenu .scroll {width:100%; height:22px; background-color: #202020;}
-.ui-verticalflyoutmenu .scroll:hover {background-color: #404040;}
 .ui-verticalflyoutmenu .nav {list-style: none; position: relative; display: inline-table; width:100%;}
 .ui-verticalflyoutmenu .nav li {}
 .ui-verticalflyoutmenu .option {display: block; margin: 0px 0px 2px 0px; padding: 8px 2px; font-size:10pt;
@@ -216,12 +220,12 @@ z-index:400;}
 .ui-contentpanel .cptab .cpactive {border:solid 1px #C0C0C0; margin-bottom: -1px; border-bottom:solid 1px #FFF !important;}
 .ui-contentpanel .cptab .cpactive a {float:left; font-size:12px; padding: 8px; color: #454545;}
 .ui-contentpanel .cptab .cpactive .cpremote {margin:3px; padding:4px;}
-.ui-contentpanel .cptab .cpactive .cpcat {border: 2px solid #5970B2; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatblue {border: 2px solid #3378C0; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatgreen {border: 2px solid #33C078; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatorange {border: 2px solid #C07833; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpcatgray {border: 2px solid #787878; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpcat {border: 2px solid #5970B2; color: #454545; background-color: #BFD6FF;}
+.ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545; background-color: #FF9999;}
+.ui-contentpanel .cptab .cpactive .cpcatblue {border: 2px solid #3378C0; color: #454545;background-color: #99DEFF;}
+.ui-contentpanel .cptab .cpactive .cpcatgreen {border: 2px solid #33C078; color: #454545; background-color: #99FFDE;}
+.ui-contentpanel .cptab .cpactive .cpcatorange {border: 2px solid #C07833; color: #454545; background-color: #FFDE99;}
+.ui-contentpanel .cptab .cpactive .cpcatgray {border: 2px solid #787878; color: #454545; background-color: #DEDEDE;}
 .ui-contentpanel .cptab .cpactive img {float:right; padding:9px 6px; width:10px; height:10px; cursor:pointer;}
 .ui-contentpanel .cptab .cpinactive {border:solid 1px #D0D0D0; margin-top: 4px; background-color: #E0E0E0; border-bottom: none !important; cursor:pointer;}
 .ui-contentpanel .cptab .cpinactive:hover {background-color: #D0D0D0;}
@@ -567,6 +571,11 @@ z-index:400;}
 .ui-money .mflist .norm {}
 .ui-money .mflist .norm:hover {background-color: #B2B2B2; color: #FFF;}
 .ui-money .mflist .sel {background-color: #5970B2; color: #FFF;}
+.ui-money .mflist .selred {background-color: #C03333; color: #FFF;}
+.ui-money .mflist .selblue {background-color: #3378C0; color: #FFF;}
+.ui-money .mflist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-money .mflist .selorange {background-color: #C07833; color: #FFF;}
+.ui-money .mflist .selgray {background-color: #787878; color: #FFF;}
 
 /** Multidynamic */
 .ui-multidynamic {}
@@ -592,6 +601,11 @@ z-index:400;}
 .ui-multiselect .mslist .norm {}
 .ui-multiselect .mslist .norm:hover {background-color: #B2B2B2; color: #FFF;}
 .ui-multiselect .mslist .sel {background-color: #5970B2; color: #FFF;}
+.ui-multiselect .mslist .selred {background-color: #C03333; color: #FFF;}
+.ui-multiselect .mslist .selblue {background-color: #3378C0; color: #FFF;}
+.ui-multiselect .mslist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-multiselect .mslist .selorange {background-color: #C07833; color: #FFF;}
+.ui-multiselect .mslist .selgray {background-color: #787878; color: #FFF;}
 
 /** Name field */
 .ui-name {}
@@ -606,6 +620,11 @@ z-index:400;}
 .ui-optionstextarea .otalist .norm {}
 .ui-optionstextarea .otalist .norm:hover {background-color: #B2B2B2; color: #FFF;}
 .ui-optionstextarea .otalist .sel {background-color: #5970B2; color: #FFF;}
+.ui-optionstextarea .otalist .selred {background-color: #C03333; color: #FFF;}
+.ui-optionstextarea .otalist .selblue {background-color: #3378C0; color: #FFF;}
+.ui-optionstextarea .otalist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-optionstextarea .otalist .selorange {background-color: #C07833; color: #FFF;}
+.ui-optionstextarea .otalist .selgray {background-color: #787878; color: #FFF;}
 
 /** Paragraph */
 .ui-paragraph {}
@@ -657,6 +676,11 @@ z-index:400;}
 .ui-select .sslist .norm {}
 .ui-select .sslist .norm:hover {background-color: #B2B2B2; color: #FFF;}
 .ui-select .sslist .sel {background-color: #5970B2; color: #FFF;}
+.ui-select .sslist .selred {background-color: #C03333; color: #FFF;}
+.ui-select .sslist .selblue {background-color: #3378C0; color: #FFF;}
+.ui-select .sslist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-select .sslist .selorange {background-color: #C07833; color: #FFF;}
+.ui-select .sslist .selgray {background-color: #787878; color: #FFF;}
 
 /** Single Select (Mini)*/
 .ui-miniselect {width: 100px; font-size:7pt;}
@@ -666,6 +690,11 @@ z-index:400;}
 .ui-miniselect .sslist .norm {}
 .ui-miniselect .sslist .norm:hover {background-color: #B2B2B2; color: #FFF;}
 .ui-miniselect .sslist .sel {background-color: #5970B2; color: #FFF;}
+.ui-miniselect .sslist .selred {background-color: #C03333; color: #FFF;}
+.ui-miniselect .sslist .selblue {background-color: #3378C0; color: #FFF;}
+.ui-miniselect .sslist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-miniselect .sslist .selorange {background-color: #C07833; color: #FFF;}
+.ui-miniselect .sslist .selgray {background-color: #787878; color: #FFF;}
 .ui-miniselect .tpbutton {width:16px; height:18px; padding:2px 2px; background-color: #E8E8E8 !important;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
 .ui-miniselect .tpbutton img {width:10px;height:10px;}
@@ -778,7 +807,13 @@ z-index:400;}
 
 /** Title bar */
 .ui-titlebar {display: inline-block; width: 100%; margin-bottom: 2px;
-	font-weight: bold; background-color: #5970B2; color: #FFF;}
+	font-weight: bold;}
+.ui-titlebar .base {background-color: #5970B2; color: #FFF;}
+.ui-titlebar .basered {background-color: #C03333; color: #FFF;}
+.ui-titlebar .baseblue {background-color: #3378C0; color: #FFF;}
+.ui-titlebar .basegreen {background-color: #33C078; color: #FFF;}
+.ui-titlebar .baseorange {background-color: #C07833; color: #FFF;}
+.ui-titlebar .basegray {background-color: #787878; color: #FFF;}
 .ui-titlebar .tblabel {float:left; font-size: 18px; padding:10px 6px; text-align: left;}
 .ui-titlebar .tbcontrols {float:right; padding:10px 6px; text-align: right;}
 .ui-titlebar .tbbutton {width:18px; height:18px; cursor:pointer;}

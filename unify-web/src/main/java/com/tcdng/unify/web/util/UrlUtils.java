@@ -13,19 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.web.util;
 
-package com.tcdng.unify.web.ui.data;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Tree item expander.
+ * URL utilities.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class TreeItemExpander extends AbstractTreeItemUpdater {
+public final class UrlUtils {
 
-    @Override
-    public void update(TreeItem childItem) {
-        childItem.setExpanded(true);
+    private UrlUtils() {
+
     }
+
+    public static String encodeURLParameter(String parameter) throws UnifyException {
+        try {
+            return URLEncoder.encode(parameter, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.UTIL_ERROR);
+        }
+    }
+
 }

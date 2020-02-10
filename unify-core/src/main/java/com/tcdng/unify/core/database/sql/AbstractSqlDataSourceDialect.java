@@ -18,12 +18,15 @@ package com.tcdng.unify.core.database.sql;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyContainer;
@@ -99,6 +102,12 @@ import com.tcdng.unify.core.util.SqlUtils;
 public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponent implements SqlDataSourceDialect {
 
     private static final String TIMESTAMP_FORMAT = "''yyyy-MM-dd HH:mm:ss''";
+
+    private static final Set<String> TYPE_NO_PRECISION;
+    
+    static {
+        TYPE_NO_PRECISION = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("BIGINT", "DATETIME")));
+    }
 
     @Configurable
     private SqlEntityInfoFactory sqlEntityInfoFactory;
@@ -835,6 +844,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     public int getMaxClauseValues() {
         return 0;
+    }
+
+    @Override
+    public String normalizeDefault(String defaultStr) {
+        return defaultStr;
     }
 
     @Override
@@ -1774,10 +1788,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
         }
     }
-
+    
     protected void appendTypeSql(StringBuilder sb, SqlColumnInfo sqlColumnInfo) {
-        sb.append(' ').append(sqlColumnInfo.getTypeName());
-        if (sqlColumnInfo.getSize() > 0) {
+        String typeName = sqlColumnInfo.getTypeName().toUpperCase();
+        sb.append(' ').append(typeName);
+        if (sqlColumnInfo.getSize() > 0 && !TYPE_NO_PRECISION.contains(typeName)) {
             sb.append('(').append(sqlColumnInfo.getSize());
             if (sqlColumnInfo.getDecimalDigits() > 0) {
                 sb.append(',').append(sqlColumnInfo.getDecimalDigits());

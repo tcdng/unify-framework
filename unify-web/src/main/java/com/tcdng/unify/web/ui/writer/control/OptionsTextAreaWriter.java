@@ -56,12 +56,13 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
             List<? extends Listable> listableList = optionsTextArea.getListables();
             int length = listableList.size();
 
+            String selStyleClass = getUserColorStyleClass("sel");
             for (int i = 0; i < length; i++) {
                 Listable listable = listableList.get(i);
                 writer.write("<a");
                 writeTagId(writer, optionsTextArea.getNamingIndexedId(i));
                 if (i == 0) {
-                    writeTagStyleClass(writer, "sel");
+                    writeTagStyleClass(writer, selStyleClass);
                 } else {
                     writeTagStyleClass(writer, "norm");
                 }
@@ -94,7 +95,7 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
             writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
             writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
             writer.write(",\"pNormCls\":\"norm\"");
-            writer.write(",\"pSelCls\":\"sel\"");
+            writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
         }
 
         writer.write("});");

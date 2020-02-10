@@ -14,37 +14,36 @@
  * the License.
  */
 
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.web.ui.container;
+
+import java.util.List;
+
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Double value restriction object.
+ * Basic document resources.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DoubleValueRestriction extends SimpleRestriction {
+public interface BasicDocumentResources extends UnifyComponent {
 
     /**
-     * Gets the first value for this restriction.
+     * Gets a list of style sheet resource links.
      * 
-     * @return the first value
+     * @return list of style sheet links
+     * @throws UnifyException
+     *             if an error occurs
      */
-    Object getFirstValue();
+    List<String> getStyleSheetResourceLinks() throws UnifyException;
 
     /**
-     * Gets the second value for this restriction.
+     * Gets a list of script resource links.
      * 
-     * @return the second value
+     * @return list of script links
+     * @throws UnifyException
+     *             if an error occurs
      */
-    Object getSecondValue();
-
-    /**
-     * Sets the restriction values.
-     * 
-     * @param firstVal
-     *            the first value to set
-     * @param secondVal
-     *            the second value to set
-     */
-    void setValues(Object firstVal, Object secondVal);
+    List<String> getScriptResourceLinks() throws UnifyException;
 }

@@ -70,4 +70,16 @@ public class PagePathInfo {
         return remoteSave;
     }
 
+    public void setColorScheme(String colorScheme) {
+        this.colorScheme = colorScheme;
+    }
+
+    public void setSavePagePath(String savePagePath) {
+        this.savePagePath = savePagePath;
+    }
+
+    public void setRemoteSave(boolean remoteSave) {
+        this.remoteSave = remoteSave;
+    }
+
 }

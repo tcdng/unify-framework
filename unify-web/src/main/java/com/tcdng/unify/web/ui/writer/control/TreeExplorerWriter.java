@@ -22,6 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.MarkedTree.Node;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.TreeExplorer;
@@ -139,6 +140,11 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         }
 
         if (treeExplorer.hasMenu()) {
+            String getPathId = getRequestContextUtil().getResponsePathParts().getPathId();
+            writer.write(",\"pConfURL\":\"");
+            writer.writeContextURL(getPathId, "/confirm");
+            writer.write('"');
+            
             String menuId = treeExplorer.getMenuId();
             String sepId = treeExplorer.getMenuSeperatorId();
             writer.write(",\"pMenu\":");
@@ -159,10 +165,19 @@ public class TreeExplorerWriter extends AbstractControlWriter {
                 writer.write("{\"id\":\"").write(sepId + i).write('"');
                 writer.write(",\"code\":\"").write(menuItem.getCode()).write('"');
                 writer.write(",\"grpIdx\":").write(menuItem.getGroupIndex());
+                if (!StringUtils.isBlank(menuItem.getConfirm())) {
+                    writer.write(",\"pConf\":");
+                    writeStringParameter(writer, resolveSessionMessage(menuItem.getConfirm()));
+                    writer.write(",\"pIconIndex\":3");
+                }
                 writer.write("}");
                 i++;
             }
             writer.write("]}");
+
+            if (treeExplorer.isMultiSelectMenu()) {
+                writer.write(",\"pMsMenu\":").writeJsonArray(treeExplorer.getMultiSelectMenuSequence());
+            }
         }
 
         // Write item type information
@@ -202,7 +217,6 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         String captionIdBase = tree.getCaptionIdBase();
         String iconIdBase = tree.getIconIdBase();
         int chIndent = indent + 1;
-        boolean isTreePolicy = tree.hasTreePolicy();
         do {
             TreeItem treeItem = ch.getItem();
             TreeItemTypeInfo treeItemTypeInfo = treeItem.getTypeInfo();
@@ -245,12 +259,8 @@ public class TreeExplorerWriter extends AbstractControlWriter {
 
             writeFileImageHtmlElement(writer, treeItemTypeInfo.getIcon(), iconIdBase + itemId, "ticon", null);
             writer.write("<span class=\"titem\">");
-            if (isTreePolicy) {
-                writer.writeWithHtmlEscape(
-                        tree.getTreePolicy().getTreeItemCaption(treeItemTypeInfo, treeItem.getContent()));
-            } else {
-                writer.writeWithHtmlEscape(String.valueOf(treeItem.getContent()));
-            }
+            writer.writeWithHtmlEscape(
+                    tree.getTreePolicy().getTreeItemCaption(treeItemTypeInfo, treeItem.getContent()));
             writer.write("</span></span>");
 
             // Close branch

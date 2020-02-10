@@ -13,29 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.action;
 
+package com.tcdng.unify.web.ui.layout;
+
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.upl.UplElementReferences;
-import com.tcdng.unify.web.ui.AbstractPageAction;
+import com.tcdng.unify.web.ui.AbstractLayout;
 
 /**
- * Post command action.
+ * Flow grid layout.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("ui-postcommand")
-@UplAttributes({ @UplAttribute(name = "command", type = String.class, defaultVal = "switchState"),
-        @UplAttribute(name = "target", type = String.class),
-        @UplAttribute(name = "validations", type = UplElementReferences.class),
-        @UplAttribute(name = "refresh", type = UplElementReferences.class),
-        @UplAttribute(name = "debounce", type = boolean.class)})
-public class PostCommandAction extends AbstractPageAction {
+@Component("ui-flowgrid")
+@UplAttributes({ @UplAttribute(name = "columns", type = int.class, defaultVal = "1"),
+        @UplAttribute(name = "minColumnWidth", type = String.class, defaultVal = "200px") })
+public class FlowGridLayout extends AbstractLayout {
 
-    public PostCommandAction() {
-        super("postcommand");
+    public int getColumns() throws UnifyException {
+        return getUplAttribute(int.class, "columns");
+    }
+
+    public String getMinColumnWidth() throws UnifyException {
+        return getUplAttribute(String.class, "minColumnWidth");
     }
 }

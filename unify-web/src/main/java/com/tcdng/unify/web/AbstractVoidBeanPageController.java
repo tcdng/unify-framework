@@ -14,37 +14,22 @@
  * the License.
  */
 
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.web;
 
 /**
- * Double value restriction object.
+ * Convenient abstract base class for void page bean page controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DoubleValueRestriction extends SimpleRestriction {
+public abstract class AbstractVoidBeanPageController extends AbstractPageController<VoidPageBean> {
 
-    /**
-     * Gets the first value for this restriction.
-     * 
-     * @return the first value
-     */
-    Object getFirstValue();
+    public AbstractVoidBeanPageController() {
+        super(VoidPageBean.class);
+    }
 
-    /**
-     * Gets the second value for this restriction.
-     * 
-     * @return the second value
-     */
-    Object getSecondValue();
+    public AbstractVoidBeanPageController(boolean secured) {
+        super(VoidPageBean.class, secured, true, false);
+    }
 
-    /**
-     * Sets the restriction values.
-     * 
-     * @param firstVal
-     *            the first value to set
-     * @param secondVal
-     *            the second value to set
-     */
-    void setValues(Object firstVal, Object secondVal);
 }

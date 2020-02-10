@@ -17,6 +17,7 @@
 package com.tcdng.unify.core.criterion;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -73,16 +74,78 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
     }
 
     @Override
+    public boolean isSimple() {
+        return false;
+    }
+
+    @Override
     public int size() {
         if (restrictionList != null) {
             return restrictionList.size();
         }
-        
+
         return 0;
     }
 
     @Override
     public void clear() {
         restrictionList = null;
+    }
+
+    @Override
+    public boolean replaceAll(String propertyName, Object val) {
+        if (restrictionList != null) {
+            boolean replaced = false;
+            for (Restriction restriction : restrictionList) {
+                if (restriction.getType().isSingleParam()) {
+                    ((SingleValueRestriction) restriction).setValue(val);
+                    replaced = true;
+                } else if (restriction.getType().isCompound()) {
+                    ((CompoundRestriction) restriction).replaceAll(propertyName, val);
+                }
+            }
+
+            return replaced;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean replaceAll(String propertyName, Object val1, Object val2) {
+        if (restrictionList != null) {
+            boolean replaced = false;
+            for (Restriction restriction : restrictionList) {
+                if (restriction.getType().isRange()) {
+                    ((DoubleValueRestriction) restriction).setValues(val1, val2);
+                    replaced = true;
+                } else if (restriction.getType().isCompound()) {
+                    ((CompoundRestriction) restriction).replaceAll(propertyName, val1, val2);
+                }
+            }
+
+            return replaced;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean replaceAll(String propertyName, Collection<Object> val) {
+        if (restrictionList != null) {
+            boolean replaced = false;
+            for (Restriction restriction : restrictionList) {
+                if (restriction.getType().isCollection()) {
+                    ((MultipleValueRestriction) restriction).setValues(val);
+                    replaced = true;
+                } else if (restriction.getType().isCompound()) {
+                    ((CompoundRestriction) restriction).replaceAll(propertyName, val);
+                }
+            }
+
+            return replaced;
+        }
+
+        return false;
     }
 }

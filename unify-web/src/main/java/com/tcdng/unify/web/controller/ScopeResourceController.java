@@ -52,7 +52,6 @@ public class ScopeResourceController extends AbstractResourceController {
     @Override
     public void prepareExecution() throws UnifyException {
         setContentDisposition(getResourceName());
-
         if (isApplicationScope = Scope.APPLICATION.equals(Scope.fromCode(scope))) {
             resource = getApplicationAttribute(getResourceName());
         } else {

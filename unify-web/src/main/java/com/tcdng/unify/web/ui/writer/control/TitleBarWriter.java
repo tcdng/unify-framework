@@ -42,6 +42,7 @@ public class TitleBarWriter extends AbstractControlWriter {
         writer.write("<div");
         writeTagAttributes(writer, titleBar);
         writer.write(">");
+        writer.write("<div class=\"").write(getUserColorStyleClass("base")).write("\">");
         writer.write("<div class=\"tblabel\">");
         writeCaption(writer, titleBar);
         writer.write("</div>");
@@ -53,6 +54,7 @@ public class TitleBarWriter extends AbstractControlWriter {
         }
         writer.write("</div>");
         writer.write("<div style=\"clear:both;\"></div>");
+        writer.write("</div>");
         writer.write("</div>");
     }
 

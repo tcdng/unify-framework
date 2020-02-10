@@ -431,15 +431,34 @@ public final class DataUtils {
      */
     public static DataType getDataType(Class<?> clazz) throws UnifyException {
         DataType dataType = classToDataTypeMap.get(clazz);
-
         if (dataType == null) {
+            if (EnumConst.class.isAssignableFrom(clazz)) {
+                return DataType.STRING;
+            }
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_UNSUPPORTED_PROPERTY_TYPE, clazz);
         }
         return dataType;
     }
 
     /**
-     * Finds the data type equivalence of supplied data type.
+     * Returns the data type equivalence of supplied class name.
+     * 
+     * @param className
+     *            the class name
+     * @return the equivalent data type
+     * @throws UnifyException
+     *             if data type is unsupported
+     */
+    public static DataType getDataType(String className) throws UnifyException {
+        try {
+            return DataUtils.getDataType(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+        }
+    }
+
+    /**
+     * Finds the data type equivalence of supplied class.
      * 
      * @param clazz
      *            the data type
@@ -448,7 +467,31 @@ public final class DataUtils {
      *             if an error occurs
      */
     public static DataType findDataType(Class<?> clazz) throws UnifyException {
-        return classToDataTypeMap.get(clazz);
+        DataType dataType = classToDataTypeMap.get(clazz);
+        if (dataType == null) {
+            if (EnumConst.class.isAssignableFrom(clazz)) {
+                return DataType.STRING;
+            }
+        }
+        
+        return dataType;
+    }
+
+    /**
+     * Finds the data type equivalence of supplied class name.
+     * 
+     * @param className
+     *            the class name
+     * @return the equivalent data type if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static DataType findDataType(String className) throws UnifyException {
+        try {
+            return DataUtils.findDataType(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+        }
     }
 
     /**
@@ -462,7 +505,6 @@ public final class DataUtils {
      */
     public static ColumnType getColumnType(Class<?> clazz) throws UnifyException {
         ColumnType columnType = classToColumnMap.get(clazz);
-
         if (columnType == null) {
             if (EnumConst.class.isAssignableFrom(clazz)) {
                 return ColumnType.ENUMCONST;

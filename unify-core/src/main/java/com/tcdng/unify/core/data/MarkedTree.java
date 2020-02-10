@@ -384,9 +384,18 @@ public class MarkedTree<T> {
         if (last == null) {
             nw.prev = parent;
             last = parent.child = nw;
+
+            if (treePolicy != null) {
+                treePolicy.performOnAdd(parent.mark, nw.mark, parent.item, nw.item);
+            }
         } else {
             nw.prev = last;
             last = last.next = nw;
+
+            if (treePolicy != null) {
+                Node<T> parentNode = getParent(nw);
+                treePolicy.performOnAdd(parentNode.mark, nw.mark, parentNode.item, nw.item);
+            }
         }
 
         return last.mark;
@@ -768,7 +777,7 @@ public class MarkedTree<T> {
             dest.child = child;
 
             if (treePolicy != null) {
-                treePolicy.performOnAdd(dest.item, child.item);
+                treePolicy.performOnAdd(dest.mark, child.mark, dest.item, child.item);
             }
         } else {
             if (treePolicy == null) {
@@ -835,7 +844,8 @@ public class MarkedTree<T> {
         trg.prev = nw;
 
         if (treePolicy != null) {
-            treePolicy.performOnAdd(this.getParent(nw).item, nw.item);
+            Node<T> parentNode = getParent(nw);
+            treePolicy.performOnAdd(parentNode.mark, nw.mark, parentNode.item, nw.item);
         }
     }
 
@@ -848,7 +858,8 @@ public class MarkedTree<T> {
         trg.next = nw;
 
         if (treePolicy != null) {
-            treePolicy.performOnAdd(this.getParent(nw).item, nw.item);
+            Node<T> parentNode = getParent(nw);
+            treePolicy.performOnAdd(parentNode.mark, nw.mark, parentNode.item, nw.item);
         }
     }
 
@@ -874,7 +885,7 @@ public class MarkedTree<T> {
         }
 
         if (treePolicy != null && parent != null) {
-            treePolicy.performOnRemove(parent.item, trg.item);
+            treePolicy.performOnRemove(parent.getMark(), trg.getMark(), parent.item, trg.item);
         }
     }
 
@@ -1142,21 +1153,29 @@ public class MarkedTree<T> {
         /**
          * Executes on add of child item.
          * 
+         * @param parentMark
+         *            the parent mark
+         * @param childMark
+         *            the child mark
          * @param targetParentItem
          *            the parent item
          * @param childItem
          *            the added child item
          */
-        void performOnAdd(T targetParentItem, T childItem);
+        void performOnAdd(Long parentMark, Long childMark, T targetParentItem, T childItem);
 
         /**
          * Executes on remove of child item.
          * 
+         * @param parentMark
+         *            the parent mark
+         * @param childMark
+         *            the child mark
          * @param targetParentItem
          *            the parent item
          * @param childItem
          *            the removed child item
          */
-        void performOnRemove(T targetParentItem, T childItem);
+        void performOnRemove(Long parentMark, Long childMark, T targetParentItem, T childItem);
     }
 }

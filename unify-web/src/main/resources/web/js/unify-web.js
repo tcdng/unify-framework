@@ -62,10 +62,12 @@ ux.cntSavePath = null;
 ux.cntSaveList = null;
 ux.cntSaveRemoteView = null;
 ux.remoteView = null;
+ux.remoteredirect = [];
 
 ux.shortcuts = [];
 ux.pagenamealiases = [];
 ux.delayedpanelposting = [];
+ux.debouncetime = [];
 
 ux.resizefunctions = {};
 ux.confirmstore = {};
@@ -229,6 +231,7 @@ ux.respHandler = {
 		} else {
 			ux.refreshPageGlobals(resp);
 			ux.refreshPanels(resp);
+			ux.registerRespDebounce(resp);
 			if (resp.busyIndicator) {
 				ux.busyIndicator = resp.busyIndicator;
 			}
@@ -258,10 +261,12 @@ ux.respHandler = {
 	refreshPanelHdl : function(resp) {
 		ux.refreshPageGlobals(resp);
 		ux.refreshPanels(resp);
+		ux.registerRespDebounce(resp);
 	},
 
 	refreshSectionHdl : function(resp) {
 		ux.refreshSection(resp);
+		ux.registerRespDebounce(resp);
 	},
 
 	showPopupHdl : function(resp) {
@@ -344,6 +349,11 @@ ux.postPath = function(resp) {
 		var path = resp.postPath;
 		if (path == "content_open") {
 			path = ux.cntOpenPath;
+		} else {
+			var rpath = ux.remoteredirect[path];
+			if (rpath) {
+				path = rpath;
+			}
 		}
 		
 		var ajaxPrms = ux.ajaxConstructCallParam(path, "req_doc="
@@ -398,6 +408,12 @@ ux.refreshPageGlobals = function(resp) {
 	ux.setPageNameAliases(resp);
 }
 
+ux.registerRespDebounce = function(resp) {
+	if (resp.debounceList) {
+		ux.registerDebounce(resp.debounceList, resp.debounceClear);
+	}
+}
+
 ux.setPageNameAliases = function(resp) {
 	if (resp.pageNameAliases) {
 		for (var i = 0; i < resp.pageNameAliases.length; i++) {
@@ -443,42 +459,65 @@ ux.ajaxCall = function(ajaxPrms) {
 		ux.prepareBusyIndicator();
 	}
 
+	if (ajaxPrms.uIsDebounce) {
+		ajaxPrms.uDebounced = ux.effectDebounce();
+	}
+	
 	try {
 		uAjaxReq.open("POST", ajaxPrms.uURL, true);
 		if (ajaxPrms.uEncoded) {
 			uAjaxReq.setRequestHeader("Content-Type",
 					"application/x-www-form-urlencoded");
 		}
+		
 		uAjaxReq.onreadystatechange = function() {
 			if (uAjaxReq.readyState == 4) {
 				if (ajaxPrms.uSync) {
 					ux.submitting = false;
 				}
+				
 				if (ajaxPrms.uBusy) {
 					if ((--ux.busyCounter) <= 0) {
 						ux.hideBusyIndicator();
 					}
 				}
+				
 				if (uAjaxReq.status == 200) {
 					ajaxPrms.uSuccessFunc(uAjaxReq.responseText);
 				} else {
-					alert(uAjaxReq.responseText);
+					if (!uAjaxReq.responseText || uAjaxReq.responseText.trim().length == 0) {
+						alert("Unable to connect to server.");
+					} else {
+						alert(uAjaxReq.responseText);
+					}
 				}
+				
+				if (ajaxPrms.uIsDebounce) {
+					 ux.clearDebounce(ajaxPrms.uDebounced);
+				}				
 			}
 		};
-		if (ajaxPrms.uParam)
+		
+		if (ajaxPrms.uParam) {
 			uAjaxReq.send(ajaxPrms.uParam);
-		else
+		} else {
 			uAjaxReq.send();
+		}
 	} catch (ex) {
+		if (ajaxPrms.uIsDebounce) {
+			 ux.clearDebounce(ajaxPrms.uDebounced);
+		}				
+
 		if (ajaxPrms.uSync) {
 			ux.submitting = false;
 		}
+		
 		if (ajaxPrms.uBusy) {
 			if ((--ux.busyCounter) <= 0) {
 				ux.hideBusyIndicator();
 			}
 		}
+		
 		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
 				+ ex);
 	}
@@ -489,7 +528,7 @@ ux.ajaxCallWithJSONResp = function(trgObj, evp) {
 		ux.lastUserActTime = new Date().getTime();
 	}
 
-	if (evp.uURL) {
+	if (evp.uURL) {	
 		var uEncoded = true;
 		var uPrm;
 		if (ux.detectFormElement(trgObj, evp.uRef)) {
@@ -502,6 +541,7 @@ ux.ajaxCallWithJSONResp = function(trgObj, evp) {
 		}
 		var ajaxPrms = ux.ajaxConstructCallParam(evp.uURL, uPrm, evp.uSync,
 				uEncoded, evp.uBusy, ux.processJSON);
+		ajaxPrms.uIsDebounce = evp.uIsDebounce;
 		ux.ajaxCall(ajaxPrms);
 	}
 }
@@ -796,7 +836,7 @@ ux.populateSelectOptions = function(paramObject) {
 ux.rigDragAndDropPopup = function(rgp) {
 	var actElem = _id(rgp.pId);
 	rgp.uTargetPnlId = ux.docPopupId;
-	ux.attachEventHandler(actElem, "mousedown", ux.dragDropEngage, rgp);
+	ux.attachHandler(actElem, "mousedown", ux.dragDropEngage, rgp);
 }
 
 /** Remote document view panel */
@@ -826,7 +866,7 @@ ux.rigDesktopType2 = function(rgp) {
 		var evp = {};
 		evp.uRigMenu = _id(rgp.pMenuId);
 		evp.uOpen = rgp.pOpen;
-		ux.attachEventHandler(gripToRig, "click", ux.collapseGripClickHandler,
+		ux.attachHandler(gripToRig, "click", ux.collapseGripClickHandler,
 				evp);
 	}
 }
@@ -856,100 +896,12 @@ ux.rigFlyoutMenu = function(rgp) {
 			var evp = {};
 			evp.uMain = mItem.main;
 			evp.uOpenPath = mItem.actionPath;
-			ux.attachEventHandler(_id(mItem.id), "click", ux.menuOpenPath,
+			if (mItem.originPath) {
+				ux.remoteredirect[mItem.originPath] = mItem.actionPath;
+			}
+			
+			ux.attachHandler(_id(mItem.id), "click", ux.menuOpenPath,
 					evp);
-		}
-	}
-	
-	if (rgp.pVertical) {
-		var sliderHeight = 0;
-		var maxSliderWidth = 0;
-		for (var i = 0; i < menuWinIds.length; i++) {
-			var rect = ux.boundingRect(_id(menuWinIds[i]));
-			sliderSections[i] = sliderHeight;
-			sliderHeight += rect.height;
-
-			var sliderWidth = rect.width;
-			if (maxSliderWidth < sliderWidth) {
-				maxSliderWidth = sliderWidth;
-			}
-		}
-
-		var slider = _id(rgp.pSliderId);
-		var navMenuRect = ux.boundingRect(_id(rgp.pNavId));
-		slider.style.height = navMenuRect.height + "px";
-		slider.style.visibility = "visible";
-
-		// Attach event handlers to scroll buttons if slider length is longer
-		// than slider window
-		var upBtn = _id(rgp.pBackBtnId);
-		var downBtn = _id(rgp.pForwardBtnId);
-		var rect = ux.boundingRect(_id(rgp.pSliderWinId));
-		if (rect.height < sliderHeight) {
-			var evp = {};
-			evp.rate = rgp.pRate;
-			evp.sliderIndex = 0;
-			evp.sliderHeight = sliderHeight;
-			evp.sliderSections = sliderSections;
-			evp.sliderWinId = rgp.pSliderWinId;
-			evp.menuCount = menuWinIds.length;
-			evp.sliderTranslation = new Transformation(slider,
-					rgp.pStepRate);
-			ux.attachEventHandler(upBtn, "click",
-					ux.menuSliderUpBtnClickHandler, evp);
-			ux.attachEventHandler(downBtn, "click",
-					ux.menuSliderDownBtnClickHandler, evp);
-		} else {
-			upBtn.style.display = "none";
-			downBtn.style.display = "none";
-		}
-	} else {
-		var sliderWidth = 0;
-		var maxSliderHeight = 0;
-		for (var i = 0; i < menuWinIds.length; i++) {
-			var rect = ux.boundingRect(_id(menuWinIds[i]));
-			sliderSections[i] = sliderWidth;
-			sliderWidth += rect.width;
-
-			var sliderHeight = rect.height;
-			if (maxSliderHeight < sliderHeight) {
-				maxSliderHeight = sliderHeight;
-			}
-		}
-
-		var slider = _id(rgp.pSliderId);
-		var navMenuRect = ux.boundingRect(_id(rgp.pNavId));
-		slider.style.width = navMenuRect.width + "px";
-		slider.style.visibility = "visible";
-
-		if (maxSliderHeight > 0) {
-			var menuBody = _id(rgp.pId);
-			maxSliderHeight += rgp.pSliderGap;
-			menuBody.style.height = maxSliderHeight + "px";
-		}
-
-		// Attach event handlers to scroll buttons if slider length is longer
-		// than slider window
-		var leftBtn = _id(rgp.pBackBtnId);
-		var rightBtn = _id(rgp.pForwardBtnId);
-		var rect = ux.boundingRect(_id(rgp.pSliderWinId));
-		if (rect.width < sliderWidth) {
-			var evp = {};
-			evp.rate = rgp.pRate;
-			evp.sliderIndex = 0;
-			evp.sliderWidth = sliderWidth;
-			evp.sliderSections = sliderSections;
-			evp.sliderWinId = rgp.pSliderWinId;
-			evp.menuCount = menuWinIds.length;
-			evp.sliderTranslation = new Transformation(slider,
-					rgp.pStepRate);
-			ux.attachEventHandler(leftBtn, "click",
-					ux.menuSliderLeftBtnClickHandler, evp);
-			ux.attachEventHandler(rightBtn, "click",
-					ux.menuSliderRightBtnClickHandler, evp);
-		} else {
-			leftBtn.style.display = "none";
-			rightBtn.style.display = "none";
 		}
 	}
 
@@ -960,7 +912,7 @@ ux.rigFlyoutMenu = function(rgp) {
 		evp.uCmd = id + "->switchState";
 		evp.uPanels = [ id ];
 		evp.uRef = [ rgp.pCurSelId ];
-		ux.attachEventHandler(_id(rgp.pSelId), "change",
+		ux.attachHandler(_id(rgp.pSelId), "change",
 				ux.menuSelectChgHandler, evp);
 	}
 }
@@ -981,55 +933,6 @@ ux.menuSelectChgHandler = function(uEv) {
 		currSelCtrl.value = _id(evp.uSelId).value;
 	}
 	ux.post(uEv);
-}
-
-ux.menuSliderUpBtnClickHandler = function(uEv) {
-	var evp = uEv.evp;
-	if (evp.sliderIndex > 0) {
-		evp.sliderTranslation.linear(0, 0,
-				-evp.sliderSections[evp.sliderIndex],
-				-evp.sliderSections[--evp.sliderIndex], evp.rate);
-	}
-}
-
-ux.menuSliderDownBtnClickHandler = function(uEv) {
-	var evp = uEv.evp;
-
-	// Shift only if slider section is hidden
-	var rect = ux.boundingRect(_id(evp.sliderWinId));
-	var sliderWinHeight = rect.height;
-	if (sliderWinHeight < (evp.sliderHeight - evp.sliderSections[evp.sliderIndex])) {
-		if (evp.sliderIndex < (evp.menuCount - 1)) {
-			evp.sliderTranslation.linear(0, 0,
-					-evp.sliderSections[evp.sliderIndex],
-					-evp.sliderSections[++evp.sliderIndex], evp.rate);
-		}
-	}
-}
-
-ux.menuSliderLeftBtnClickHandler = function(uEv) {
-	var evp = uEv.evp;
-	if (evp.sliderIndex > 0) {
-		evp.sliderTranslation.linear(
-				-evp.sliderSections[evp.sliderIndex],
-				-evp.sliderSections[--evp.sliderIndex], 0, 0, evp.rate);
-	}
-}
-
-ux.menuSliderRightBtnClickHandler = function(uEv) {
-	var evp = uEv.evp;
-
-	// Shift only if slider section is hidden
-	var rect = ux.boundingRect(_id(evp.sliderWinId));
-	var sliderWinWidth = rect.width;
-	if (sliderWinWidth < (evp.sliderWidth - evp.sliderSections[evp.sliderIndex])) {
-		if (evp.sliderIndex < (evp.menuCount - 1)) {
-			evp.sliderTranslation.linear(
-					-evp.sliderSections[evp.sliderIndex],
-					-evp.sliderSections[++evp.sliderIndex], 0, 0,
-					evp.rate);
-		}
-	}
 }
 
 /** ******************* PANELS ******************* */
@@ -1054,7 +957,7 @@ ux.rigContentPanel = function(rgp) {
 					var evp = {};
 					evp.uTabPaneId = rgp.pTabPaneId;
 					evp.uMenuId = menuId;
-					ux.attachEventHandler(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
+					ux.attachHandler(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
 							evp);
 					
 					// Wire menu events
@@ -1065,14 +968,14 @@ ux.rigContentPanel = function(rgp) {
 			} else {
 				var evp = {};
 				evp.uOpenPath = cnt.openPath;
-				ux.attachEventHandler(_id(cnt.tabId), "click", ux.contentOpen,
+				ux.attachHandler(_id(cnt.tabId), "click", ux.contentOpen,
 						evp);
 			}
 			
 			if (i > 0) {
 				var evp = {};
 				evp.uURL = cnt.closePath;
-				ux.attachEventHandler(_id(cnt.tabImgId), "click", ux.post,
+				ux.attachHandler(_id(cnt.tabImgId), "click", ux.post,
 						evp);
 			}
 		}
@@ -1116,7 +1019,7 @@ ux.contentAttachClose = function(uId, cnt, type, mode) {
 	var evp = {};
 	evp.uSendTrg = mode;
 	evp.uURL = cnt.closePath;
-	ux.attachEventHandler(_id(type + uId), "click", ux.post,
+	ux.attachHandler(_id(type + uId), "click", ux.post,
 			evp);
 }
 
@@ -1136,7 +1039,7 @@ ux.rigSplitPanel = function(rgp) {
 	evp.uMax = rgp.pMax;
 	evp.uMin = rgp.pMin;
 	evp.uVert = rgp.pVert;
-	ux.attachEventHandler(_id(rgp.pCtrlId), "mousedown", ux.splitEngage,
+	ux.attachHandler(_id(rgp.pCtrlId), "mousedown", ux.splitEngage,
 					evp);
 	ux.registerResizeFunc(rgp.pId, ux.splitFitContent, evp);
 	ux.splitFitContent(evp);
@@ -1279,7 +1182,7 @@ ux.rigTabbedPanel = function(rgp) {
 				evp.uNewPgNm = tabPgNm;
 				evp.uRef = refList;
 
-				ux.attachEventHandler(_id(rgp.pTabCapIdList[i]), "click",
+				ux.attachHandler(_id(rgp.pTabCapIdList[i]), "click",
 						ux.tabbedPanelTabClickHandler, evp);
 			}
 		}
@@ -1314,7 +1217,7 @@ ux.rigAccordion = function(rgp) {
 			evp.uRef = [ rgp.pCurrSelCtrlId ];
 			evp.uSelIdx = i;
 
-			ux.attachEventHandler(_id(rgp.pHeaderIdBase + i), "click",
+			ux.attachHandler(_id(rgp.pHeaderIdBase + i), "click",
 					ux.accordionClickHandler, evp);
 		}
 	}
@@ -1351,8 +1254,8 @@ ux.rigAssignmentBox = function(rgp) {
 	}
 
 	evPrmSel.uPanels = [ rgp.pContId ];
-	ux.attachEventHandler(filterSel1, "change", ux.post, evPrmSel);
-	ux.attachEventHandler(filterSel2, "change", ux.post, evPrmSel);
+	ux.attachHandler(filterSel1, "change", ux.post, evPrmSel);
+	ux.attachHandler(filterSel2, "change", ux.post, evPrmSel);
 
 	var assnBoxRigBtns = function(rgp, assnBtnId, assnAllBtnId,
 			unassnSelId) {
@@ -1366,13 +1269,13 @@ ux.rigAssignmentBox = function(rgp) {
 		var evp = ux.newEvPrm(rgp);
 		evp.uRef = [ unassnSelId ];
 		evp.uPanels = [ rgp.pContId ];
-		ux.attachEventHandler(assnBtn, "click", ux.post, evp);
+		ux.attachHandler(assnBtn, "click", ux.post, evp);
 
 		if (!assnAllBtn.disabled) {
 			evp = ux.newEvPrm(rgp);
 			evp.uRef = [ unassnSelId ];
 			evp.uPanels = [ rgp.pContId ];
-			ux.attachEventHandler(assnAllBtn, "click", function(uEv) {
+			ux.attachHandler(assnAllBtn, "click", function(uEv) {
 				for (var i = 0; i < unassnSel.options.length; i++) {
 					unassnSel.options[i].selected = true;
 				}
@@ -1380,7 +1283,7 @@ ux.rigAssignmentBox = function(rgp) {
 			}, evp);
 
 			evp = {};
-			ux.attachEventHandler(unassnSel, "change", function(uEv) {
+			ux.attachHandler(unassnSel, "change", function(uEv) {
 				assnBtn.disabled = true;
 				for (var i = 0; i < unassnSel.options.length; i++) {
 					if (unassnSel.options[i].selected) {
@@ -1423,7 +1326,7 @@ ux.rigDateField = function(rgp) {
 	ux.dateSetCurrent(id);
 
 	// Setup 'Today' button
-	ux.attachEventHandler(_id("btnt_" + id), "click",
+	ux.attachHandler(_id("btnt_" + id), "click",
 			ux.dateTodayClickHandler, evp);
 
 	// Populate calendar
@@ -1464,7 +1367,7 @@ ux.dateSetupScroll = function(rgp, scrIdPrefix, valueIdPrefix, step) {
 	evp.uTodayClass = rgp.pTodayClass;
 	evp.uValueIdPrefix = valueIdPrefix;
 	evp.uStep = step;
-	ux.attachEventHandler(_id(scrIdPrefix + id), "click",
+	ux.attachHandler(_id(scrIdPrefix + id), "click",
 			ux.dateScrollHandler, evp);
 }
 
@@ -1597,12 +1500,12 @@ ux.rigFileAttachment = function(rgp) {
 			var evp = ux.newEvPrm(rgp);
 			evp.uPanels = [ rgp.pContId ];
 			evp.isUniqueTrg = true;
-			ux.attachEventHandler(fileElem, "change", ux.post, evp);
+			ux.attachHandler(fileElem, "change", ux.post, evp);
 
 			// Attach
 			evp = {};
 			evp.fileId = fileElem.id;
-			ux.attachEventHandler(_id(attachId + idx), "click",
+			ux.attachHandler(_id(attachId + idx), "click",
 					ux.attachFileClickHandler, evp);
 
 			// View
@@ -1610,19 +1513,19 @@ ux.rigFileAttachment = function(rgp) {
 				evp = {};
 				evp.uURL = rgp.pViewURL;
 				evp.uPanels = [ rgp.pContId ];
-				ux.attachEventHandler(_id(viewId + idx), "click", ux.post, evp);
+				ux.attachHandler(_id(viewId + idx), "click", ux.post, evp);
 			} else {
 				evp = ux.newEvPrm(rgp);
 				evp.uCmd = id + "->view";
 				evp.uPanels = [ rgp.pContId ];
-				ux.attachEventHandler(_id(viewId + idx), "click", ux.post, evp);
+				ux.attachHandler(_id(viewId + idx), "click", ux.post, evp);
 			}
 
 			// Remove
 			evp = ux.newEvPrm(rgp);
 			evp.uCmd = id + "->detach";
 			evp.uPanels = [ rgp.pContId ];
-			ux.attachEventHandler(_id(remId + idx), "click", ux.post, evp);
+			ux.attachHandler(_id(remId + idx), "click", ux.post, evp);
 		}
 	}
 }
@@ -1638,7 +1541,7 @@ ux.rigFileDownload = function(rgp) {
 	if (dBtn) {
 		var evp = ux.newEvPrm(rgp);
 		evp.uCmd = id + "->download";
-		ux.attachEventHandler(dBtn, "click", ux.post, evp);
+		ux.attachHandler(dBtn, "click", ux.post, evp);
 	}
 }
 
@@ -1654,7 +1557,7 @@ ux.rigFileUpload = function(rgp) {
 		} else {
 			if (btnElem) {
 				var evp = {};
-				ux.attachEventHandler(btnElem, "click", function(uEv) {
+				ux.attachHandler(btnElem, "click", function(uEv) {
 					fileElem.click();
 				}, evp);
 			}
@@ -1665,7 +1568,7 @@ ux.rigFileUpload = function(rgp) {
 			var evp = {};
 			evp.uMaxSize = rgp.pMaxSize;
 			evp.uMaxMsg = rgp.pMaxMsg;
-			ux.attachEventHandler(fileElem, "change", function(uEv) {
+			ux.attachHandler(fileElem, "change", function(uEv) {
 				var maxLen = 0;
 				if (uEv.evp.uMaxSize) {
 					maxLen = uEv.evp.uMaxSize;
@@ -1698,10 +1601,10 @@ ux.rigFileUpload = function(rgp) {
 					evp.uURL = rgp.pUploadURL;
 					evp.uRef = [ id ];
 					evp.uPanels = [ rgp.pContId ];
-					ux.attachEventHandler(btnUpElem, "click", ux.post, evp);
+					ux.attachHandler(btnUpElem, "click", ux.post, evp);
 
 					evp = {};
-					ux.attachEventHandler(fileElem, "change", function(uEv) {
+					ux.attachHandler(fileElem, "change", function(uEv) {
 						if (fileElem.value) {
 							btnUpElem.disabled = false;
 						} else {
@@ -1724,7 +1627,7 @@ ux.rigLinkGrid = function(rgp) {
 				var evp = {};
 				evp.uURL = linkCat.pURL;
 				evp.uSendTrg = link.pCode;
-				ux.attachEventHandler(_id(link.pId), "click", function(uEv) {
+				ux.attachHandler(_id(link.pId), "click", function(uEv) {
 					ux.post(uEv);
 				}, evp);
 			}
@@ -1756,7 +1659,7 @@ ux.rigMoneyField = function(rgp) {
 	// Wire facade
 	var evp = {};
 	evp.uCom = mfCom;
-	ux.attachEventHandler(mfCom.uFacObj, "change", ux.mfAmountChange, evp);
+	ux.attachHandler(mfCom.uFacObj, "change", ux.mfAmountChange, evp);
 	
 	// Wire section
 	ux.listWirePopFrame(mfCom, rgp);
@@ -1839,8 +1742,8 @@ ux.rigMultiSelect = function(rgp) {
 	var evp = {};
 	evp.uCom = msCom;
 	evp.uHitHandler = ux.msKeydownHit;
-	ux.attachEventHandler(msCom.uFrmObj, "click", ux.focusOnClick, evp);
-	ux.attachEventHandler(msCom.uFrmObj, "keydown", ux.listSearchKeydown, evp);
+	ux.attachHandler(msCom.uFrmObj, "click", ux.focusOnClick, evp);
+	ux.attachHandler(msCom.uFrmObj, "keydown", ux.listSearchKeydown, evp);
 
 	// Select
 	for (var i = 0; i < rgp.pICnt; i++) {
@@ -1849,7 +1752,7 @@ ux.rigMultiSelect = function(rgp) {
 		evp.uCom = msCom;
 		var aElem = _id(rgp.pLabelIds[i]);
 		if (aElem) {
-			ux.attachEventHandler(aElem, "click", ux.msSelectClick, evp);
+			ux.attachHandler(aElem, "click", ux.msSelectClick, evp);
 		}
 	}
 }
@@ -1922,11 +1825,11 @@ ux.rigPhotoUpload = function(rgp) {
 		var fileElem = _id(rgp.pFileId);
 		var evp = ux.newEvPrm(rgp);
 		evp.uPanels = [ rgp.pContId ];
-		ux.attachEventHandler(fileElem, "change", ux.post, evp);
+		ux.attachHandler(fileElem, "change", ux.post, evp);
 
 		var imgElem = _id(rgp.pImgId);
 		evp = {};
-		ux.attachEventHandler(imgElem, "click", function(uEv) {
+		ux.attachHandler(imgElem, "click", function(uEv) {
 			fileElem.click();
 		}, evp);
 	}
@@ -1942,7 +1845,7 @@ ux.rigSearchField = function(rgp) {
 		var evp = ux.newEvPrm(rgp);
 		evp.uCmd = id + "->search";
 		evp.uReqTrg = true;
-		ux.attachEventHandler(fElem, "enter", ux.post, evp);
+		ux.attachHandler(fElem, "enter", ux.post, evp);
 	}
 
 	// Result
@@ -1964,7 +1867,7 @@ ux.searchWireResult = function(rgp) {
 		evp.uKey = rgp.pKeys[i];
 		var aElem = _id(rgp.pLabelIds[i]);
 		if (aElem) {
-			ux.attachEventHandler(aElem, "click", ux.searchSelect, evp);
+			ux.attachHandler(aElem, "click", ux.searchSelect, evp);
 		}
 	}
 }
@@ -2018,9 +1921,9 @@ ux.rigOptionsTextArea = function(rgp) {
 		evp.stayOpenForMillSec = 0;
 		evp.showHandler = ux.optionsTextAreaOnShow;
 		evp.showParam=rgp.pFrmId;
-		ux.attachEventHandler(elem, "keypress", ux.otaTxtKeypress,
+		ux.attachHandler(elem, "keypress", ux.otaTxtKeypress,
 				evp);
-		ux.attachEventHandler(elem,  "keydown", ux.otaTxtKeydown,
+		ux.attachHandler(elem,  "keydown", ux.otaTxtKeydown,
 				evp);
 		
 		if (rgp.pScrEnd) {
@@ -2249,7 +2152,7 @@ ux.rigTable = function(rgp) {
 		// Attach horizontal scroll
 		var tblHeader = _id("hdr_" + id);
 		var tblBody = _id("bod_" + id);
-		ux.attachEventHandler(tblBody, "scroll", function(uEv) {
+		ux.attachHandler(tblBody, "scroll", function(uEv) {
 			tblHeader.style.left = "-" + tblBody.scrollLeft + "px";
 		}, rgp);
 
@@ -2281,7 +2184,7 @@ ux.rigTable = function(rgp) {
 				tRow.uClassName = tRow.className;
 				evp.uRigTbl = tblToRig;
 				evp.uRigRow = tRow;
-				ux.attachEventHandler(tRow, "click", ux.tableRowClickHandler,
+				ux.attachHandler(tRow, "click", ux.tableRowClickHandler,
 						evp);
 			}
 		}
@@ -2322,7 +2225,7 @@ ux.rigTable = function(rgp) {
 			evp.uRef = [ rgp.pItemPerPgCtrlId ];
 		}
 		evp.uPanels = [ rgp.pContId ];
-		ux.attachEventHandler(_id(rgp.pItemPerPgCtrlId), "change",
+		ux.attachHandler(_id(rgp.pItemPerPgCtrlId), "change",
 				ux.post, evp);
 	}
 
@@ -2359,7 +2262,7 @@ ux.rigTable = function(rgp) {
 		var evp = {};
 		evp.uRigTbl = tblToRig;
 		tblToRig.uSelBoxes = selBoxes;
-		ux.attachEventHandler(_id(rgp.pSelAllId),
+		ux.attachHandler(_id(rgp.pSelAllId),
 				"click", ux.tableSelAllClick, evp);
 		
 		for (var i = 0; i < selBoxes.length; i++) {
@@ -2370,13 +2273,13 @@ ux.rigTable = function(rgp) {
 			selBox.uIndex = i;
 			
 			// Wire handlers
-			ux.attachEventHandler(selBox, "click", ux.tableMultiSelClick,
+			ux.attachHandler(selBox, "click", ux.tableMultiSelClick,
 					evp);
 			if (!rgp.pShiftable) {
 				var evpRw = {};
 				evpRw.uRigTbl = tblToRig;
 				evpRw.uSelBox = selBox;
-				ux.attachEventHandler(tRow, "click", ux.tableMultiRowClickHandler,
+				ux.attachHandler(tRow, "click", ux.tableMultiRowClickHandler,
 						evpRw);
 			}
 			
@@ -2408,7 +2311,7 @@ ux.rigTable = function(rgp) {
 				} else {
 					imgId = colInfo.field + '_' + rgp.pSortDescId;
 				}
-				ux.attachEventHandler(_id(imgId), "click",
+				ux.attachHandler(_id(imgId), "click",
 						ux.tableSortClickHandler, evp);
 			}
 		}
@@ -2721,7 +2624,7 @@ ux.tableAttachPageNavClick = function(id, pageSel, rgp) {
 		evp.uRef = [ rgp.pCurrPgCtrlId ];
 	}
 	evp.uPanels = [ rgp.pContId ];
-	ux.attachEventHandler(_id(id), "click", ux.tablePageNavClickHandler, evp);
+	ux.attachHandler(_id(id), "click", ux.tablePageNavClickHandler, evp);
 }
 
 ux.tablePageNavClickHandler = function(uEv) {
@@ -2770,7 +2673,7 @@ ux.rigTimeField = function(rgp) {
 	// Setup 'Set' button
 	var evp = {};
 	evp.uRigPrm = rgp;
-	ux.attachEventHandler(_id("btns_" + id), "click", ux.timeSetBtnHandler,
+	ux.attachHandler(_id("btns_" + id), "click", ux.timeSetBtnHandler,
 			evp);
 
 	// Setup 'Clear' button
@@ -2794,7 +2697,7 @@ ux.rigTimeField = function(rgp) {
 			evp.uStep = 1;
 			evp.uLen = len;
 			evp.uFormat = format;
-			ux.attachEventHandler(_id("btnat_" + id  + i), "click",
+			ux.attachHandler(_id("btnat_" + id  + i), "click",
 					ux.timeScrollHandler, evp);
 
 			evp = {};
@@ -2806,7 +2709,7 @@ ux.rigTimeField = function(rgp) {
 			evp.uStep = -1;
 			evp.uLen = len;
 			evp.uFormat = format;
-			ux.attachEventHandler(_id("btnst_" + id + i), "click",
+			ux.attachHandler(_id("btnst_" + id + i), "click",
 					ux.timeScrollHandler, evp);
 		}
 	}
@@ -2886,7 +2789,13 @@ ux.treeDatCreate = function(rgp) {
 		tdat.uRef = tdat.uRef.concat(rgp.pEventRef);
 	}
 	tdat.uMenu = rgp.pMenu;
+	tdat.uMsMenu = rgp.pMsMenu;
 	tdat.uLastSelIdx = -1;
+	var oldtdat = ux.treedatmap[tdat.uId];
+	if (oldtdat) {
+		tdat.uLastSelIdx = oldtdat.uLastSelIdx;
+	}
+
 	ux.treedatmap[tdat.uId] = tdat;
 	return tdat;
 }
@@ -2916,7 +2825,13 @@ ux.rigTreeExplorer = function(rgp) {
 			var menuItem = menu.items[i];
 			var evp = ux.newTreeEvPrm(rgp);
 			evp.uMenuCode = menuItem.code;
-			ux.attachEventHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
+			if (menuItem.pConf) {
+				evp.uConfURL = rgp.pConfURL;
+				evp.uConf = menuItem.pConf;
+				evp.uIconIndex = menuItem.pIconIndex;
+			}
+			
+			ux.attachHandler(_id(menuItem.id), "click", ux.treeMenuClickHandler, evp);
 		}
 	}
 	
@@ -2950,7 +2865,7 @@ ux.rigTreeExplorer = function(rgp) {
 					} else {
 						evp.uCmd = rgp.pId + "->expand";
 					}
-					ux.attachEventHandler(_id(rgp.pCtrlBase + tItem.idx),
+					ux.attachHandler(_id(rgp.pCtrlBase + tItem.idx),
 							"click", ux.treeCtrlImageClickHandler, evp);
 				}
 
@@ -2960,27 +2875,28 @@ ux.rigTreeExplorer = function(rgp) {
 				var flags = tItem.typeInfo.flags;
 				var elm = _id(tItem.frmId);
 				if ((flags & TREEITEM_CLICK.mask) > 0) {
-					ux.attachEventHandler(elm, "click", ux.treeItemClickHandler, evp);
+					ux.attachHandler(elm, "click", ux.treeItemClickHandler, evp);
 				}
 				
 				if ((flags & TREEITEM_DBCLICK.mask) > 0) {
-					ux.attachEventHandler(elm, "dblclick", ux.treeItemDbClickHandler, evp);
+					ux.attachHandler(elm, "dblclick", ux.treeItemDbClickHandler, evp);
 				}
 
 				if ((flags & TREEITEM_RIGHTCLICK.mask) > 0) {
-					ux.attachEventHandler(elm, "rtclick", ux.treeItemRightClickHandler, evp);
+					evp.uDoMenu = true;
 				}
+				ux.attachHandler(elm, "rtclick", ux.treeItemRightClickHandler, evp);
 
 				if ((flags & TREEITEM_DRAG.mask) > 0) {
-					ux.attachEventHandler(elm, "dragstart", ux.treeItemDragStartHandler, evp);
-					ux.attachEventHandler(elm, "dragexit", ux.treeItemDragExitHandler, evp);
+					ux.attachHandler(elm, "dragstart", ux.treeItemDragStartHandler, evp);
+					ux.attachHandler(elm, "dragexit", ux.treeItemDragExitHandler, evp);
 				}
 
 				if ((flags & TREEITEM_DROP.mask) > 0) {
-					ux.attachEventHandler(elm, "dragenter", ux.treeItemDragEnterHandler, evp);
-					ux.attachEventHandler(elm, "dragover", ux.treeItemDragOverHandler, evp);
-					ux.attachEventHandler(elm, "drop", ux.treeItemDropHandler, evp);
-					ux.attachEventHandler(elm, "dragleave", ux.treeItemDragLeaveHandler, evp);
+					ux.attachHandler(elm, "dragenter", ux.treeItemDragEnterHandler, evp);
+					ux.attachHandler(elm, "dragover", ux.treeItemDragOverHandler, evp);
+					ux.attachHandler(elm, "drop", ux.treeItemDropHandler, evp);
+					ux.attachHandler(elm, "dragleave", ux.treeItemDragLeaveHandler, evp);
 				}
 
 				if (selObj.options[i].selected) {
@@ -3181,19 +3097,27 @@ ux.treeItemProcessEvent = function(treeId) {
 					ux.treeSelectItem(evp, true, false);
 				}
 	
-				if (tdat.uMenu) {
-					var showMenu = false;
+				var showMenu = false;
+				if (evp.uDoMenu && tdat.uMenu) {
 					// Hide all menu items
 					var menu = tdat.uMenu;
 					ux.setDisplayModeByName(menu.sepId, "none");
 					
-					// Show menu items based on tree item type
 					var tItem = tdat.uItemList[evp.uItemIdx];
-					var typeInfo= tItem.typeInfo;
-					if (typeInfo.menu && typeInfo.menu.length > 0) {
+					var actMenu = null;
+					if (tdat.selList.length > 1) {
+						// Multiple items selected. Do multi-select menu.
+						actMenu = tdat.uMsMenu;
+					} else {
+						// Do selected item menu
+						actMenu = tItem.typeInfo.menu;
+					}
+
+					// Show menu items
+					if (actMenu && actMenu.length > 0) {
 						var gIndex = -1;
-						for(var i = 0; i < typeInfo.menu.length; i++) {
-							var mitem = menu.items[typeInfo.menu[i]];
+						for(var i = 0; i < actMenu.length; i++) {
+							var mitem = menu.items[actMenu[i]];
 							var miElem = _id(mitem.id);
 							if (gIndex >= 0 && gIndex != mitem.grpIdx) {
 								miElem.className = menu.sepCls;
@@ -3217,6 +3141,10 @@ ux.treeItemProcessEvent = function(treeId) {
 						openPrm.uLoc = tdat.uLoc;
 						ux.doOpenPopup(openPrm);
 					}
+				}
+
+				if (!showMenu) {
+					ux.hidePopup(null);
 				}
 			}
 		}
@@ -3652,14 +3580,14 @@ ux.listWirePopFrame = function(sCom, rgp) {
 	evp.uCom = sCom;
 	evp.uHitHandler = ux.listKeydownHit;
 	evp.uEnterHandler = ux.listKeydownEnter;
-	ux.attachEventHandler(sCom.uFrmObj, "click", ux.focusOnClick, evp);
-	ux.attachEventHandler(sCom.uFrmObj, "keydown", ux.listSearchKeydown, evp);
+	ux.attachHandler(sCom.uFrmObj, "click", ux.focusOnClick, evp);
+	ux.attachHandler(sCom.uFrmObj, "keydown", ux.listSearchKeydown, evp);
 	
 	if (sCom.uBlankObj) {
 		evp = {};
 		evp.uIndex = -1;
 		evp.uCom = sCom;
-		ux.attachEventHandler(sCom.uBlankObj, "click", ux.listSelectClick, evp);
+		ux.attachHandler(sCom.uBlankObj, "click", ux.listSelectClick, evp);
 	}
 	
 	for (var i = 0; i < rgp.pICnt; i++) {
@@ -3668,7 +3596,7 @@ ux.listWirePopFrame = function(sCom, rgp) {
 		evp.uCom = sCom;
 		var aElem = _id(rgp.pLabelIds[i]);
 		if (aElem) {
-			ux.attachEventHandler(aElem, "click", ux.listSelectClick, evp);
+			ux.attachHandler(aElem, "click", ux.listSelectClick, evp);
 		}
 	}
 }
@@ -3823,6 +3751,46 @@ ux.fireDelayedPost = function(pgNm) {
 	}
 }
 
+/** Debounce */
+ux.registerDebounce = function(pgNmlist, clear) {
+	if (clear) {
+		ux.debouncetime = [];
+	}
+	
+	if(pgNmlist) {
+		var timestamp = new Date().getTime();
+		for (var i = 0; i < pgNmlist.length; i++) {
+			ux.debouncetime[pgNmlist[i]] = timestamp;
+		}
+	}
+}
+
+ux.effectDebounce = function() {
+	var debounced = [];
+	for(var pgNm in ux.debouncetime) {
+		var elem = _id(pgNm);
+		if (elem && !elem.disabled) {
+			elem.disabled = true;
+			debounced[pgNm] = ux.debouncetime[pgNm];
+		}
+	}
+	
+	return debounced;
+}
+
+ux.clearDebounce = function(debounced) {
+	if (debounced) {
+		for(var pgNm in debounced) {
+			if(debounced[pgNm] == ux.debouncetime[pgNm]) {
+				var elem = _id(pgNm);
+				if (elem) {
+					elem.disabled = false;
+				}				
+			} 
+		}
+	}
+}
+
 /** Translation */
 ux.centralize = function(baseElem, elem) {
 	var x = Math.floor((baseElem.offsetWidth - elem.offsetWidth) / 2);
@@ -3920,9 +3888,9 @@ ux.setTextRegexFormatting = function(id, formatRegex, textCase) {
 
 	var elem = _id(id);
 	if (elem) {
-		ux.attachEventHandler(elem, "keypress", ux.textInputKeypress,
+		ux.attachHandler(elem, "keypress", ux.textInputKeypress,
 				evp);
-		ux.attachEventHandler(elem,  "keydown", ux.textInputKeydown,
+		ux.attachHandler(elem,  "keydown", ux.textInputKeydown,
 				evp);
 	}
 }
@@ -4122,7 +4090,7 @@ ux.setOnEvent = function(evp) {
 			ux.multipleAttachEventHandler(evp.uId, eventName, evp.uFunc,
 					evp);
 		} else {
-			ux.attachEventHandler(elem, eventName, evp.uFunc,
+			ux.attachHandler(elem, eventName, evp.uFunc,
 					evp);
 			if (evp.uFire) {
 				ux.fireEvent(elem, eventName, true);
@@ -4157,7 +4125,7 @@ ux.popupWireClear = function(rgp, btnId, trgArr) {
 		if (rgp.pClearable) {
 			var evp = {};
 			evp.uRef = trgArr;
-			ux.attachEventHandler(clearBtn, "click", function(uEv) {
+			ux.attachHandler(clearBtn, "click", function(uEv) {
 				ux.clear(uEv);
 				ux.hidePopup(uEv);
 			}, evp);
@@ -4171,7 +4139,7 @@ ux.popupWireCancel = function(btnId) {
 	var cancelBtn = _id(btnId);
 	if (cancelBtn) {
 		var evp = {};
-		ux.attachEventHandler(cancelBtn, "click", ux.hidePopup, evp);
+		ux.attachHandler(cancelBtn, "click", ux.hidePopup, evp);
 	}
 }
 
@@ -4216,7 +4184,7 @@ ux.init = function() {
 	ux.resizeTimeout = null;
 	// Set document keydown handler
 	var evp = {};
-	ux.attachEventHandler(document, "keydown", ux.documentKeydownHandler,
+	ux.attachHandler(document, "keydown", ux.documentKeydownHandler,
 					evp);
 	
 	// Register self as extension
@@ -4225,9 +4193,11 @@ ux.init = function() {
 	// Override window menu context
 	window.oncontextmenu = function (uEv) {
 		if (ux.actRightClick) {
-			return ux.actRightClick = false;
+			ux.actRightClick = false;
+			return false;
 		}
 		
+		ux.hidePopup(null);
 	    return true; // Do default
 	}
 
@@ -4401,11 +4371,11 @@ ux.getElementPosition = function getPosition(el) {
 ux.multipleAttachEventHandler = function(name, eventName, handler, evp) {
 	var elems = _name(name);
 	for (var i = 0; i < elems.length; i++) {
-		ux.attachEventHandler(elems[i], eventName, handler, evp);
+		ux.attachHandler(elems[i], eventName, handler, evp);
 	}
 }
 
-ux.attachEventHandler = function(domObject, eventName, handler, evp) {
+ux.attachHandler = function(domObject, eventName, handler, evp) {
 	if ("enter" == eventName) {
 		eventName = "keydown";
 		handler = ux.wireSpecialKeyHandler(evp, handler, "Enter", 13);
@@ -4445,6 +4415,7 @@ ux.handleOrConfirmRedirect = function(event, handler, evp) {
 		if (hiddenElem) {
 			evPrmConf.uConfPrm = hiddenElem.value;
 		}
+		ux.hidePopup(null);
 		ux.postCommit(evPrmConf);
 	} else {
 		// Handle now
@@ -4595,12 +4566,12 @@ ux.doOpenPopup = function(openPrm) {
 		ux.popCurr = newPCurr;
 		ux.popupNewOpen = true;
 		if (!(ux.popCurr.eventsSet == true)) {
-			ux.attachEventHandler(ux.popCurr, "mouseover",
+			ux.attachHandler(ux.popCurr, "mouseover",
 					ux.cancelClosePopupTimer, {});
 			if (ux.popupStayOpen != true) {
-				ux.attachEventHandler(openPrm.uTrg, "mouseout",
+				ux.attachHandler(openPrm.uTrg, "mouseout",
 						ux.startClosePopupTimer, {});
-				ux.attachEventHandler(ux.popCurr, "mouseout",
+				ux.attachHandler(ux.popCurr, "mouseout",
 						ux.startClosePopupTimer, {});
 			}
 
@@ -4684,12 +4655,13 @@ ux.cancelClosePopupTimer = function() {
 
 // Hide popup when click-out
 ux.documentHidePopup = function(uEv) {
+	/*
 	if (ux.popupStayOpen) {
 		if (ux.popupNewOpen) {
 			ux.popupNewOpen = false;
 			return;
 		}
-	}
+	}*/
 
 	var elem = uEv.uTrg;
 	while (elem) {
@@ -4704,7 +4676,7 @@ ux.documentHidePopup = function(uEv) {
 	ux.hidePopup(uEv);
 }
 
-ux.attachEventHandler(document, "click", ux.documentHidePopup, {});
+ux.attachHandler(document, "click", ux.documentHidePopup, {});
 
 /** On window resize function */
 ux.registerResizeFunc = function(id, resizeFunc, resizePrm) {
@@ -4727,7 +4699,7 @@ ux.callResizeFuncs = function() {
 	}
 }
 
-ux.attachEventHandler(window, "resize", function() {
+ux.attachHandler(window, "resize", function() {
 	window.clearTimeout(ux.resizeTimeout); // Debounce resize call
 	ux.resizeTimeout = window.setTimeout(ux.callResizeFuncs,
 			UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY);

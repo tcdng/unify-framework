@@ -14,37 +14,37 @@
  * the License.
  */
 
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.core.util;
+
+import com.tcdng.unify.core.constant.ColorScheme;
 
 /**
- * Double value restriction object.
+ * Color utilities.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DoubleValueRestriction extends SimpleRestriction {
+public final class ColorUtils {
+
+    private ColorUtils() {
+
+    }
 
     /**
-     * Gets the first value for this restriction.
+     * Gets conforming color scheme code.
      * 
-     * @return the first value
+     * @param scheme
+     *            the color scheme
+     * @return the color scheme code otherwise null
      */
-    Object getFirstValue();
+    public static String getConformingColorSchemeCode(String scheme) {
+        if (!StringUtils.isBlank(scheme)) {
+            ColorScheme colorScheme = ColorScheme.fromName(scheme);
+            if (colorScheme != null) {
+                return colorScheme.code();
+            }
+        }
 
-    /**
-     * Gets the second value for this restriction.
-     * 
-     * @return the second value
-     */
-    Object getSecondValue();
-
-    /**
-     * Sets the restriction values.
-     * 
-     * @param firstVal
-     *            the first value to set
-     * @param secondVal
-     *            the second value to set
-     */
-    void setValues(Object firstVal, Object secondVal);
+        return null;
+    }
 }

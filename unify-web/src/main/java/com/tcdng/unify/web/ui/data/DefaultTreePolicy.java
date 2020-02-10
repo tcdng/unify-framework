@@ -17,6 +17,7 @@
 package com.tcdng.unify.web.ui.data;
 
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.web.WebApplicationComponents;
 
 /**
  * Default implementation of a tree policy.
@@ -24,16 +25,16 @@ import com.tcdng.unify.core.annotation.Component;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("default-treepolicy")
+@Component(WebApplicationComponents.APPLICATION_DEFAULT_TREEPOLICY)
 public class DefaultTreePolicy extends AbstractTreePolicy {
 
     @Override
-    public void performOnAdd(TreeItem targetParentItem, TreeItem childItem) {
+    public void performOnAdd(Long parentMark, Long childMark, TreeItem targetParentItem, TreeItem childItem) {
 
     }
 
     @Override
-    public void performOnRemove(TreeItem targetParentItem, TreeItem childItem) {
+    public void performOnRemove(Long parentMark, Long childMark, TreeItem targetParentItem, TreeItem childItem) {
 
     }
 

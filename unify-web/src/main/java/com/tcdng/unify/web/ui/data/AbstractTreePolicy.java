@@ -28,6 +28,10 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractTreePolicy extends AbstractUnifyComponent implements TreePolicy {
 
+    private static final TreeItemCollapser TREEITEM_COLLAPSER = new TreeItemCollapser();
+
+    private static final TreeItemExpander TREEITEM_EXPANDER = new TreeItemExpander();
+
     @Override
     public String getTreeItemCaption(TreeItemTypeInfo category, Object item) throws UnifyException {
         String itemCaptionKey = category.getItemCaptionKey();
@@ -36,6 +40,16 @@ public abstract class AbstractTreePolicy extends AbstractUnifyComponent implemen
         }
 
         return resolveSessionMessage(itemCaptionKey, item);
+    }
+
+    @Override
+    public TreeItemUpdater getTreeItemExpander() throws UnifyException {
+        return TREEITEM_EXPANDER;
+    }
+
+    @Override
+    public TreeItemUpdater getTreeItemCollapser() throws UnifyException {
+        return TREEITEM_COLLAPSER;
     }
 
     @Override
@@ -55,6 +69,22 @@ public abstract class AbstractTreePolicy extends AbstractUnifyComponent implemen
     @Override
     protected void onTerminate() throws UnifyException {
 
+    }
+
+    private static class TreeItemCollapser extends AbstractTreeItemUpdater {
+
+        @Override
+        public void update(TreeItem treeItem) {
+            treeItem.setExpanded(false);
+        }
+    }
+
+    private static class TreeItemExpander extends AbstractTreeItemUpdater {
+
+        @Override
+        public void update(TreeItem treeItem) {
+            treeItem.setExpanded(true);
+        }
     }
 
 }

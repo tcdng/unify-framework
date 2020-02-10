@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -113,8 +114,6 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
     private Map<RemoteCallFormat, ObjectStreamer> objectStreamers;
 
-    // private Map<String, String> actionToControllerNameMap;
-
     private Map<String, Result> defaultResultMap;
 
     @SuppressWarnings("rawtypes")
@@ -136,7 +135,6 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
     @SuppressWarnings("rawtypes")
     public ControllerManagerImpl() {
-        // actionToControllerNameMap = new ConcurrentHashMap<String, String>();
         skipOnPopulateSet = new HashSet<String>();
 
         pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>() {
@@ -177,37 +175,26 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         pageControllerInfoMap = new FactoryMap<String, PageControllerInfo>() {
             @Override
             protected PageControllerInfo create(String controllerName, Object... params) throws Exception {
-                PageControllerInfo pageControllerInfo = createPageControllerInfo(controllerName);
-                // for (String actionName : pageControllerInfo.getActionNames()) {
-                // actionToControllerNameMap.put(actionName, controllerName);
-                // }
-                return pageControllerInfo;
+                return createPageControllerInfo(controllerName);
             }
         };
 
         remoteCallControllerInfoMap = new FactoryMap<String, RemoteCallControllerInfo>() {
             @Override
             protected RemoteCallControllerInfo create(String controllerName, Object... params) throws Exception {
-                RemoteCallControllerInfo remoteCallControllerInfo = createRemoteCallControllerInfo(controllerName);
-                // for (String handlerName : remoteCallControllerInfo.getRemoteHandlerNames()) {
-                // actionToControllerNameMap.put(handlerName, controllerName);
-                // }
-                return remoteCallControllerInfo;
+                return createRemoteCallControllerInfo(controllerName);
             }
         };
 
         resourceControllerInfoMap = new FactoryMap<String, ResourceControllerInfo>() {
             @Override
             protected ResourceControllerInfo create(String controllerName, Object... params) throws Exception {
-                ResourceControllerInfo resourceControllerInfo = createResourceControllerInfo(controllerName);
-                // actionToControllerNameMap.put(controllerName, controllerName);
-                return resourceControllerInfo;
+                return createResourceControllerInfo(controllerName);
             }
         };
 
         skipOnPopulateSet.add(RequestParameterConstants.DOCUMENT);
         skipOnPopulateSet.add(RequestParameterConstants.TARGET_VALUE);
-        skipOnPopulateSet.add(RequestParameterConstants.PAGE_INDICATOR);
         skipOnPopulateSet.add(RequestParameterConstants.VALIDATION_ACTION);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSG);
         skipOnPopulateSet.add(RequestParameterConstants.CONFIRM_MSGICON);
@@ -260,7 +247,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
             if (file.exists()) {
                 ResourceController realPathResourceController =
-                        (ResourceController) this.getComponent("/resource/realpath");
+                        (ResourceController) getComponent("/resource/realpath");
                 realPathResourceController.setResourceName(path);
                 return realPathResourceController;
             }
@@ -278,10 +265,15 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 Page currentPage = requestContextUtil.getRequestPage();
                 try {
                     PageController<?> pageController = (PageController<?>) controller;
-                    Class<? extends PageBean> pageBeanClass = pageController.getPageBeanClass();
                     page = pageManager.createPage(sessionContext.getLocale(), controllerName);
                     page.setPathId(pathParts.getPathId());
-                    page.setPageBean(ReflectUtils.newInstance(pageBeanClass));
+                    Class<? extends PageBean> pageBeanClass = pageController.getPageBeanClass();
+                    if (VoidPageBean.class.equals(pageBeanClass)) {
+                        page.setPageBean(VoidPageBean.INSTANCE);
+                    } else {
+                        page.setPageBean(ReflectUtils.newInstance(pageBeanClass));
+                    }
+
                     requestContextUtil.setRequestPage(page);
                     pageController.initPage();
                     sessionContext.setAttribute(pathParts.getPathId(), page);
@@ -388,23 +380,32 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                             }
                         }
 
+                        logDebug("Processing result with name [{0}]...", resultName);
                         // Check if action result needs to be routed to containing
                         // document controller
                         if (!pbbInfo.hasResultWithName(resultName) && !page.isDocument()) {
                             if (docPageController != null) {
+                                logDebug("Result with name [{0}] not found for controller [{1}]...", resultName,
+                                        pageController.getName());
                                 respPathParts = docPathParts;
                                 pageController = docPageController;
                                 page = loadRequestPage(respPathParts);
                                 pbbInfo = pageControllerInfoMap.get(pageController.getName());
+                                logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
+                                        pageController.getName());
                             }
                         }
 
                         // Route to common utilities if necessary
                         if (!pbbInfo.hasResultWithName(resultName)) {
+                            logDebug("Result with name [{0}] not found for controller [{1}]...", resultName,
+                                    pageController.getName());
                             respPathParts = pathInfoRepository.getPathParts(commonUtilitiesControllerName);
                             pageController = (PageController<?>) getController(respPathParts, false);
                             page = loadRequestPage(respPathParts);
                             pbbInfo = pageControllerInfoMap.get(pageController.getName());
+                            logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
+                                    pageController.getName());
                         }
                     }
 
@@ -630,38 +631,24 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         try {
             if ("/openPage".equals(actionName)) {
                 pageController.openPage();
-                ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
-                contentPanel.addContent(requestContextUtil.getRequestPage());
-            } else if ("/closePage".equals(actionName)) {
-                ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
-                Page currentPage = requestContextUtil.getRequestPage();
-                ClosePageMode closePageMode = requestContextUtil.getRequestTargetValue(ClosePageMode.class);
-                List<String> toClosePathIdList = contentPanel.evaluateRemoveContent(currentPage, closePageMode);
-                if (!toClosePathIdList.isEmpty()) {
-                    try {
-                        // Fire closePage() for all targets
-                        for (String closePathId : toClosePathIdList) {
-                            PathParts pathParts = pathInfoRepository.getPathParts(closePathId);
-                            loadRequestPage(pathParts);
-                            ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
-                        }
-
-                        // Do actual content removal
-                        contentPanel.removeContent(toClosePathIdList);
-
-                        // Set pages for removal
-                        requestContextUtil.setClosedPagePaths(toClosePathIdList);
-                    } finally {
-                        // Restore request page
-                        requestContextUtil.setRequestPage(currentPage);
-                    }
+                if (!requestContextUtil.isRemoteViewer()) {
+                    ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
+                    contentPanel.addContent(requestContextUtil.getRequestPage());
                 }
-
+            } else if ("/closePage".equals(actionName)) {
+                ClosePageMode closePageMode = requestContextUtil.getRequestTargetValue(ClosePageMode.class);
+                performClosePage(closePageMode, true);
                 return ResultMappingConstants.CLOSE;
             }
 
-            return (String) pageControllerInfoMap.get(pageController.getName()).getAction(actionName).getMethod()
-                    .invoke(pageController);
+            String resultName = (String) pageControllerInfoMap.get(pageController.getName()).getAction(actionName)
+                    .getMethod().invoke(pageController);
+            if (ResultMappingConstants.CLOSE.equals(resultName)) {
+                // Handle other actions that also return CLOSE result
+                performClosePage(ClosePageMode.CLOSE, false);
+            }
+
+            return resultName;
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -806,6 +793,42 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
         public Collection<Method> getActionMethods() {
             return actionMethods.values();
+        }
+    }
+
+    private void performClosePage(ClosePageMode closePageMode, boolean isFireClose) throws UnifyException {
+        Page currentPage = requestContextUtil.getRequestPage();
+        if (requestContextUtil.isRemoteViewer()) {
+            // Fire closePage()
+            PathParts pathParts = pathInfoRepository.getPathParts(currentPage.getPathId());
+            loadRequestPage(pathParts);
+            ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
+            requestContextUtil.setClosedPagePaths(Arrays.asList(currentPage.getPathId()));
+            return;
+        }
+        
+        ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
+        List<String> toClosePathIdList = contentPanel.evaluateRemoveContent(currentPage, closePageMode);
+        if (!toClosePathIdList.isEmpty()) {
+            try {
+                if (isFireClose) {
+                    // Fire closePage() for all targets
+                    for (String closePathId : toClosePathIdList) {
+                        PathParts pathParts = pathInfoRepository.getPathParts(closePathId);
+                        loadRequestPage(pathParts);
+                        ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
+                    }
+                }
+
+                // Do actual content removal
+                contentPanel.removeContent(toClosePathIdList);
+
+                // Set pages for removal
+                requestContextUtil.setClosedPagePaths(toClosePathIdList);
+            } finally {
+                // Restore request page
+                requestContextUtil.setRequestPage(currentPage);
+            }
         }
     }
 

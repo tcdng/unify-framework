@@ -14,37 +14,27 @@
  * the License.
  */
 
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.web.ui.container;
+
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Double value restriction object.
+ * Convenient base class for basic document resources.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DoubleValueRestriction extends SimpleRestriction {
+public abstract class AbstractBasicDocumentResources extends AbstractUnifyComponent implements BasicDocumentResources {
 
-    /**
-     * Gets the first value for this restriction.
-     * 
-     * @return the first value
-     */
-    Object getFirstValue();
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-    /**
-     * Gets the second value for this restriction.
-     * 
-     * @return the second value
-     */
-    Object getSecondValue();
+    }
 
-    /**
-     * Sets the restriction values.
-     * 
-     * @param firstVal
-     *            the first value to set
-     * @param secondVal
-     *            the second value to set
-     */
-    void setValues(Object firstVal, Object secondVal);
+    @Override
+    protected void onTerminate() throws UnifyException {
+
+    }
+
 }

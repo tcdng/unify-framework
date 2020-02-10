@@ -186,7 +186,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         Date now = db().getNow();
         List<String> activeSessionList = new ArrayList<String>();
         int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-                UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT);
+                UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC);
         expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
         Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
         for (UserSession userSession : userSessions.values()) {

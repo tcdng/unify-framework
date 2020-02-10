@@ -35,6 +35,8 @@ public interface WebApplicationComponents {
 
     String APPLICATION_LISTCONTROLUTIL = "application-listcontrolutil";
 
+    String APPLICATION_BASICDOCUMENTRESOURCES = "application-basicdocumentresources";
+
     String APPLICATION_PAGEMANAGER = "application-pagemanager";
 
     String APPLICATION_PATHINFOREPOSITORY = "application-pathinforepository";
@@ -50,4 +52,6 @@ public interface WebApplicationComponents {
     String APPLICATION_UICOMMANDMANAGER = "application-uicommandmanager";
 
     String APPLICATION_WEBCLIENT = "application-webclient";
+
+    String APPLICATION_DEFAULT_TREEPOLICY = "application-defaulttreepolicy";
 }

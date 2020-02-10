@@ -51,4 +51,9 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
     public boolean isEmpty() {
         return false;
     }
+
+    @Override
+    public boolean isSimple() {
+        return true;
+    }
 }
