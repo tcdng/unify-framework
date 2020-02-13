@@ -133,12 +133,12 @@ public interface RequestContextUtil extends UnifyComponent {
     /**
      * Sets current request context's command response path.
      * 
-     * @param path
+     * @param targetPath
      *            the path to set
      * @throws UnifyException
      *             if an error occurs
      */
-    void setCommandResponsePath(String path) throws UnifyException;
+    void setCommandResponsePath(TargetPath targetPath) throws UnifyException;
 
     /**
      * Returns current request context's command response path.
@@ -146,7 +146,7 @@ public interface RequestContextUtil extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String getCommandResponsePath() throws UnifyException;
+    TargetPath getCommandResponsePath() throws UnifyException;
 
     /**
      * Extracts request parameters for current request context

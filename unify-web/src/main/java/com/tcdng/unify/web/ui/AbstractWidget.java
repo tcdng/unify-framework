@@ -26,6 +26,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerManager;
 import com.tcdng.unify.web.RequestContextUtil;
+import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.util.WidgetUtils;
 
@@ -453,6 +454,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     protected void setCommandResultMapping(String resultMappingName) throws UnifyException {
         getRequestContextUtil().setCommandResultMapping(resultMappingName);
+    }
+    
+    protected void setCommandResponsePath(TargetPath targetPath) throws UnifyException {
+        getRequestContextUtil().setCommandResponsePath(targetPath);
     }
 
     protected ControllerManager getControllerManager() throws UnifyException {

@@ -137,6 +137,8 @@ z-index:400;}
 .opcatblue:hover {background-color: #4388D0;}
 .opcatgreen {border: 1px solid #33C078; background-color: #33C078; color: #FFF;}
 .opcatgreen:hover {background-color: #43D088;}
+.opcatyellow {border: 1px solid #C0B800; background-color: #C0B800; color: #FFF;}
+.opcatyellow:hover {background-color: #D0C800;}
 .opcatorange {border: 1px solid #C07833; background-color: #C07833; color: #FFF;}
 .opcatorange:hover {background-color: #D08843;}
 .opcatgray {border: 1px solid #787878; background-color: #787878; color: #FFF;}
@@ -157,6 +159,8 @@ z-index:400;}
 .mcatblue:hover {background-color: #4388D0; color: #FFF;}
 .mcatgreen {}
 .mcatgreen:hover {background-color: #43D088; color: #FFF;}
+.mcatyellow {}
+.mcatyellow:hover {background-color: #D0C800; color: #FFF;}
 .mcatorange {}
 .mcatorange:hover {background-color: #D08843; color: #FFF;}
 .mcatgray {}
@@ -224,6 +228,7 @@ z-index:400;}
 .ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545; background-color: #FF9999;}
 .ui-contentpanel .cptab .cpactive .cpcatblue {border: 2px solid #3378C0; color: #454545;background-color: #99DEFF;}
 .ui-contentpanel .cptab .cpactive .cpcatgreen {border: 2px solid #33C078; color: #454545; background-color: #99FFDE;}
+.ui-contentpanel .cptab .cpactive .cpcatyellow {border: 2px solid #C0B800; color: #454545; background-color: #FFEE99;}
 .ui-contentpanel .cptab .cpactive .cpcatorange {border: 2px solid #C07833; color: #454545; background-color: #FFDE99;}
 .ui-contentpanel .cptab .cpactive .cpcatgray {border: 2px solid #787878; color: #454545; background-color: #DEDEDE;}
 .ui-contentpanel .cptab .cpactive img {float:right; padding:9px 6px; width:10px; height:10px; cursor:pointer;}
@@ -421,6 +426,16 @@ z-index:400;}
 .ui-assignmentbox .abbutton {width:32px; height: 24px; padding:0px; margin:2px;}
 .ui-assignmentbox .abbutton:hover:enabled {color: #FFF; background-color: #6080F0;}
 
+/** Badge */
+.ui-badge {}
+.badgesel {background-color: #5970B2; color: #FFF;}
+.badgeselred {background-color: #C03333; color: #FFF;}
+.badgeselblue {background-color: #3378C0; color: #FFF;}
+.badgeselgreen {background-color: #33C078; color: #FFF;}
+.badgeselyellow {background-color: #C0B800; color: #FFF;}
+.badgeselorange {background-color: #C07833; color: #FFF;}
+.badgeselgray {background-color: #787878; color: #FFF;}
+
 /** Bell */
 .ui-bell {position:relative;width:28px;height:28px;}
 .ui-bell span{position:absolute;right:-2px;background-color:red;
@@ -574,6 +589,7 @@ z-index:400;}
 .ui-money .mflist .selred {background-color: #C03333; color: #FFF;}
 .ui-money .mflist .selblue {background-color: #3378C0; color: #FFF;}
 .ui-money .mflist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-money .mflist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-money .mflist .selorange {background-color: #C07833; color: #FFF;}
 .ui-money .mflist .selgray {background-color: #787878; color: #FFF;}
 
@@ -604,6 +620,7 @@ z-index:400;}
 .ui-multiselect .mslist .selred {background-color: #C03333; color: #FFF;}
 .ui-multiselect .mslist .selblue {background-color: #3378C0; color: #FFF;}
 .ui-multiselect .mslist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-multiselect .mslist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-multiselect .mslist .selorange {background-color: #C07833; color: #FFF;}
 .ui-multiselect .mslist .selgray {background-color: #787878; color: #FFF;}
 
@@ -623,6 +640,7 @@ z-index:400;}
 .ui-optionstextarea .otalist .selred {background-color: #C03333; color: #FFF;}
 .ui-optionstextarea .otalist .selblue {background-color: #3378C0; color: #FFF;}
 .ui-optionstextarea .otalist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-optionstextarea .otalist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-optionstextarea .otalist .selorange {background-color: #C07833; color: #FFF;}
 .ui-optionstextarea .otalist .selgray {background-color: #787878; color: #FFF;}
 
@@ -679,6 +697,7 @@ z-index:400;}
 .ui-select .sslist .selred {background-color: #C03333; color: #FFF;}
 .ui-select .sslist .selblue {background-color: #3378C0; color: #FFF;}
 .ui-select .sslist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-select .sslist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-select .sslist .selorange {background-color: #C07833; color: #FFF;}
 .ui-select .sslist .selgray {background-color: #787878; color: #FFF;}
 
@@ -693,6 +712,7 @@ z-index:400;}
 .ui-miniselect .sslist .selred {background-color: #C03333; color: #FFF;}
 .ui-miniselect .sslist .selblue {background-color: #3378C0; color: #FFF;}
 .ui-miniselect .sslist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-miniselect .sslist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-miniselect .sslist .selorange {background-color: #C07833; color: #FFF;}
 .ui-miniselect .sslist .selgray {background-color: #787878; color: #FFF;}
 .ui-miniselect .tpbutton {width:16px; height:18px; padding:2px 2px; background-color: #E8E8E8 !important;
@@ -717,6 +737,7 @@ z-index:400;}
 .ui-simplecrudtable .tselred {background-color: #FF9999;}
 .ui-simplecrudtable .tselblue {background-color: #99DEFF;}
 .ui-simplecrudtable .tselgreen {background-color: #99FFDE;}
+.ui-simplecrudtable .tselyellow {background-color: #FFEE99;}
 .ui-simplecrudtable .tselorange {background-color: #FFDE99;}
 .ui-simplecrudtable .tselgray {background-color: #DEDEDE;}
 .ui-simplecrudtable .taction {width:16px; height:16px; margin-right:4px; cursor:pointer;}
@@ -760,6 +781,7 @@ z-index:400;}
 .ui-table .tselred {background-color: #FF9999;}
 .ui-table .tselblue {background-color: #99DEFF;}
 .ui-table .tselgreen {background-color: #99FFDE;}
+.ui-table .tselyellow {background-color: #FFEE99;}
 .ui-table .tselorange {background-color: #FFDE99;}
 .ui-table .tselgray {background-color: #DEDEDE;}
 .ui-table .tpagn {background-color: #ECECEC;}
@@ -812,6 +834,7 @@ z-index:400;}
 .ui-titlebar .basered {background-color: #C03333; color: #FFF;}
 .ui-titlebar .baseblue {background-color: #3378C0; color: #FFF;}
 .ui-titlebar .basegreen {background-color: #33C078; color: #FFF;}
+.ui-titlebar .baseyellow {background-color: #C0B800; color: #FFF;}
 .ui-titlebar .baseorange {background-color: #C07833; color: #FFF;}
 .ui-titlebar .basegray {background-color: #787878; color: #FFF;}
 .ui-titlebar .tblabel {float:left; font-size: 18px; padding:10px 6px; text-align: left;}

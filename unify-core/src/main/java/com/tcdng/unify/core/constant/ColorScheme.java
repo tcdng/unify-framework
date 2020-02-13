@@ -26,6 +26,7 @@ public enum ColorScheme implements EnumConst {
     RED("red"),
     BLUE("blue"),
     GREEN("green"),
+    YELLOW("yellow"),
     ORANGE("orange"),
     GRAY("gray");
 
