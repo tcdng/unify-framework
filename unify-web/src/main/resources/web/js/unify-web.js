@@ -356,8 +356,12 @@ ux.postPath = function(resp) {
 			}
 		}
 		
-		var ajaxPrms = ux.ajaxConstructCallParam(path, "req_doc="
-				+ _enc(ux.docPath), false, true, false, ux.processJSON);
+		var prm = "req_doc=" + _enc(ux.docPath);
+		if(resp.target) {
+			prm += "&req_trg=" + _enc(resp.target);
+		}
+		
+		var ajaxPrms = ux.ajaxConstructCallParam(path, prm, false, true, false, ux.processJSON);
 		ux.ajaxCall(ajaxPrms);
 	}
 }

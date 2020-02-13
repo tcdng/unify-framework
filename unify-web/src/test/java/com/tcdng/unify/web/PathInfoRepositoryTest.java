@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Path information repository test.
+ * TargetPath information repository test.
  * 
  * @author Lateef Ojulari
  * @since 1.0

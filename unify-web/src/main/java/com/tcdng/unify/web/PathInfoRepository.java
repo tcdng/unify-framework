@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.Page;
 
 /**
- * Path information repository.
+ * TargetPath information repository.
  * 
  * @author Lateef Ojulari
  * @since 1.0

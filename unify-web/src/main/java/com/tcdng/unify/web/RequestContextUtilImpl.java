@@ -142,13 +142,13 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void setCommandResponsePath(String path) throws UnifyException {
-        setRequestAttribute(COMMAND_POSTRESPONSE_PATH, path);
+    public void setCommandResponsePath(TargetPath targetPath) throws UnifyException {
+        setRequestAttribute(COMMAND_POSTRESPONSE_PATH, targetPath);
     }
 
     @Override
-    public String getCommandResponsePath() throws UnifyException {
-        return (String) getRequestAttribute(COMMAND_POSTRESPONSE_PATH);
+    public TargetPath getCommandResponsePath() throws UnifyException {
+        return (TargetPath) getRequestAttribute(COMMAND_POSTRESPONSE_PATH);
     }
 
     @Override
