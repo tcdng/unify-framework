@@ -613,6 +613,15 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                     targetPgNm = pageManager.getPageName(pageAction.getParentLongName());
                 }
 
+                if (!StringUtils.isBlank(dynamicPanelPgNm)) {
+                    System.out.println("@Saber: ");
+                    System.out.println("@Saber: dynamicPanelPgNm = " + dynamicPanelPgNm);
+                    System.out.println("@Saber: targetPgNm = " + targetPgNm);
+                    System.out.println("@Saber: actionPgNm = " + pageManager.getPageName(pageAction.getParentLongName()));
+                    System.out.println("@Saber: controllerName = " + getRequestContextUtil().getResponsePathParts().getControllerName());
+                    System.out.println("@Saber: type = " + getComponentType(getRequestContextUtil().getResponsePathParts().getControllerName()));
+                }
+                
                 String commandTarget = pageAction.getUplAttribute(String.class, "target");
                 if (commandTarget != null) {
                     targetPgNm = pageManager.getPageName(commandTarget);
