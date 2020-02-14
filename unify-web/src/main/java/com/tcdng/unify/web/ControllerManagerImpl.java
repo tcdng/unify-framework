@@ -502,6 +502,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
         defaultResultMap.put(ResultMappingConstants.OPEN,
                 new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
                         (PageControllerResponse) getUplComponent(defaultLocale, "!loadcontentresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 
@@ -512,6 +513,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
         defaultResultMap.put(ResultMappingConstants.CLOSE,
                 new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
                         (PageControllerResponse) getUplComponent(defaultLocale, "!unloadcontentresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 
