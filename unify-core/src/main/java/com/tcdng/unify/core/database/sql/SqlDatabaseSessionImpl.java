@@ -30,11 +30,13 @@ import java.util.Stack;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.criterion.Aggregate;
+import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.Select;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.Aggregate;
-import com.tcdng.unify.core.data.AggregateType;
+import com.tcdng.unify.core.data.Aggregation;
+import com.tcdng.unify.core.data.GroupAggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
@@ -667,8 +669,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         sqlEntityInfo.getEntityClass(), "DELETE");
             }
 
-            if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (!sqlEntityInfo.isChildList() && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
+            if (sqlDataSourceDialect.isQueryOffsetOrLimit(query) || (!sqlEntityInfo.isChildList()
+                    && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(query));
             }
@@ -719,7 +721,15 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException {
+    public Date getNow() throws UnifyException {
+        return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, Date.class,
+                sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC),
+                sqlDataSourceDialect.generateUTCTimestampSql(), true);
+    }
+
+    @Override
+    public Aggregation aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query)
+            throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
@@ -728,9 +738,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-                return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
+                return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query));
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
@@ -738,9 +748,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (!idList.isEmpty()) {
                 Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
                 aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeSingleAggregateResultQuery(connection,
+                return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, connection,
                         sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregateType, aggregateQuery));
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, aggregateQuery));
             }
         } catch (UnifyException e) {
             throw e;
@@ -751,8 +761,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public List<Aggregate<?>> aggregateMany(AggregateType aggregateType, Query<? extends Entity> query)
-            throws UnifyException {
+    public List<Aggregation> aggregateMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
@@ -761,9 +770,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(connection,
-                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregateType, query));
+                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
+                        connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
             }
 
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
@@ -771,9 +780,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (!idList.isEmpty()) {
                 Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
                 aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(connection,
-                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregateType, aggregateQuery));
+                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
+                        connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), aggregateQuery));
             }
         } catch (UnifyException e) {
             throw e;
@@ -784,10 +793,36 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public Date getNow() throws UnifyException {
-        return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, Date.class,
-                sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC),
-                sqlDataSourceDialect.generateUTCTimestampSql(), true);
+    public List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query)
+            throws UnifyException {
+        try {
+            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+            if (entityPolicy != null) {
+                entityPolicy.preQuery(query);
+            }
+
+            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
+                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
+                        query.getGroupBy(), connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
+            }
+
+            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
+            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
+            if (!idList.isEmpty()) {
+                Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
+                aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
+                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
+                        query.getGroupBy(), connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), aggregateQuery));
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+        }
+        return Collections.emptyList();
     }
 
     @Override

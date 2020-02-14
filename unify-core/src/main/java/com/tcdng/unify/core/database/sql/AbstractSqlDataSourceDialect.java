@@ -36,12 +36,13 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.criterion.AggregateFunction;
+import com.tcdng.unify.core.criterion.AggregateType;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.criterion.Select;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
@@ -104,7 +105,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private static final String TIMESTAMP_FORMAT = "''yyyy-MM-dd HH:mm:ss''";
 
     private static final Set<String> TYPE_NO_PRECISION;
-    
+
     static {
         TYPE_NO_PRECISION = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("BIGINT", "DATETIME")));
     }
@@ -931,30 +932,75 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public SqlStatement prepareAggregateStatement(AggregateType aggregateType, Query<? extends Entity> query)
+    public SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
         List<SqlFieldInfo> returnFieldInfoList = null;
-        Select select = query.getSelect();
-        if (select.isEmpty()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_SELECT_FOR_AGGREGATE,
-                    sqlEntityInfo.getKeyClass());
-        }
 
         StringBuilder aggregateSql = new StringBuilder();
         aggregateSql.append("SELECT ");
-        appendAggregateFunctionSql(aggregateSql, AggregateType.COUNT, "*", false);
+        returnFieldInfoList = new ArrayList<SqlFieldInfo>();
+        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
+        if (!aggregateFunction.getType().supports(DataUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
+                    aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+        }
+
+        appendAggregateFunctionSql(aggregateSql, aggregateFunction.getType(), sqlFieldInfo.getPreferredColumnName(),
+                query.isDistinct());
+        returnFieldInfoList.add(sqlFieldInfo);
+
+        // Select from view because criteria can contain view-only properties
+        aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
+
+        appendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
+
+        return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
+                getSqlResultList(returnFieldInfoList));
+    }
+
+    @Override
+    public SqlStatement prepareAggregateStatement(List<AggregateFunction> aggregateFunctionList,
+            Query<? extends Entity> query) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
+        List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+        List<SqlFieldInfo> returnFieldInfoList = null;
+
         boolean distinct = query.isDistinct();
         returnFieldInfoList = new ArrayList<SqlFieldInfo>();
-        for (String name : select.values()) {
-            SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
-            if (!aggregateType.supports(DataUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE, name,
-                        sqlEntityInfo.getKeyClass());
+        StringBuilder aggregateSql = new StringBuilder();
+        aggregateSql.append("SELECT ");
+        boolean appendSym = false;
+        if (query.isGroupBy()) {
+            for(String fieldName: query.getGroupBy().values()) {
+                SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
+                if (appendSym) {
+                    aggregateSql.append(", ");
+                } else {
+                    appendSym = true;
+                }
+
+                aggregateSql.append(sqlFieldInfo.getPreferredColumnName());
+                returnFieldInfoList.add(sqlFieldInfo);
             }
-            aggregateSql.append(", ");
-            appendAggregateFunctionSql(aggregateSql, aggregateType, sqlFieldInfo.getPreferredColumnName(), distinct);
+        }
+        
+        for (AggregateFunction aggregateFunction : aggregateFunctionList) {
+            SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
+            if (!aggregateFunction.getType().supports(DataUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+                throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
+                        aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+            }
+
+            if (appendSym) {
+                aggregateSql.append(", ");
+            } else {
+                appendSym = true;
+            }
+
+            appendAggregateFunctionSql(aggregateSql, aggregateFunction.getType(), sqlFieldInfo.getPreferredColumnName(),
+                    distinct);
             returnFieldInfoList.add(sqlFieldInfo);
         }
 
@@ -1581,6 +1627,20 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
         }
 
+        if (query.isGroupBy()) {
+            sql.append(" GROUP BY ");
+            boolean appendSym = false;
+            for (String grpFieldName : query.getGroupBy().values()) {
+                if (appendSym) {
+                    sql.append(", ");
+                } else {
+                    appendSym = true;
+                }
+
+                sql.append(sqlEntityInfo.getListFieldInfo(grpFieldName).getPreferredColumnName());
+            }
+        }
+
         if (queryType.includeLimit()) {
             isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
         }
@@ -1788,7 +1848,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
         }
     }
-    
+
     protected void appendTypeSql(StringBuilder sb, SqlColumnInfo sqlColumnInfo) {
         String typeName = sqlColumnInfo.getTypeName().toUpperCase();
         sb.append(' ').append(typeName);

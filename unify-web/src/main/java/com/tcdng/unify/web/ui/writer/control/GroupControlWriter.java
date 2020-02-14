@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.control.GroupControl;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 
 /**
- * Group control writer.
+ * Grouping control writer.
  * 
  * @author Lateef Ojulari
  * @since 1.0

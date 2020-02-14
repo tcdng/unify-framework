@@ -875,7 +875,7 @@ public interface UnifyCoreErrorConstants {
      */
     String DATABASE_NOT_PART_OF_TRANSACTION = "UC_00D8";
 
-    /** Callable result type information not found. Callable type = {0}, Result type = {1} */
+    /** Callable result type information not found. Callable type = {0}, AggregateItem type = {1} */
     String CALLABLE_RESULT_TYPE_NOT_FOUND = "UC_00D9";
 
     /** Callable field can not be annotated with multiple parameter annotation. Callable field = {0}.*/

@@ -22,7 +22,10 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.Aggregate;
+import com.tcdng.unify.core.criterion.AggregateFunction;
+import com.tcdng.unify.core.criterion.GroupBy;
+import com.tcdng.unify.core.data.Aggregation;
+import com.tcdng.unify.core.data.GroupAggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 
@@ -235,9 +238,10 @@ public interface SqlStatementExecutor extends UnifyComponent {
 
     /**
      * Executes an aggregate statement that returns a single aggregate via supplied
-     * connection. The first select field must be a COUNT aggregate followed by
-     * a single aggregated field.
+     * connection.
      * 
+     * @param aggregateFunction
+     *            the aggregate function.
      * @param connection
      *            the database connection
      * @param countSqlDataTypePolicy
@@ -248,14 +252,15 @@ public interface SqlStatementExecutor extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Aggregate<?> executeSingleAggregateResultQuery(Connection connection,
+    Aggregation executeSingleAggregateResultQuery(AggregateFunction aggregateFunction, Connection connection,
             SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
 
     /**
      * Executes an aggregate statement that returns an aggregate list via supplied
-     * connection. The first select field must be a COUNT aggregate followed by
-     * other aggregated fields.
+     * connection.
      * 
+     * @param aggregateFunctionList
+     *            the aggregate function list
      * @param connection
      *            the database connection
      * @param countSqlDataTypePolicy
@@ -266,8 +271,31 @@ public interface SqlStatementExecutor extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Aggregate<?>> executeMultipleAggregateResultQuery(Connection connection,
-            SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
+    List<Aggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList,
+            Connection connection, SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement)
+            throws UnifyException;
+
+    /**
+     * Executes a group aggregate statement that returns an aggregate list via
+     * supplied connection.
+     * 
+     * @param aggregateFunctionList
+     *            the aggregate function list
+     * @param groupBy
+     *            the group by fields
+     * @param connection
+     *            the database connection
+     * @param countSqlDataTypePolicy
+     *            count field SQL data type policy
+     * @param sqlStatement
+     *            the criteria statement object
+     * @return list of aggregate result
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<GroupAggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList,
+            GroupBy groupBy, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement)
+            throws UnifyException;
 
     /**
      * Executes a callable statement.

@@ -13,37 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.core.criterion.AggregateFunction;
+
 /**
- * Aggregate object.
+ * An aggregation.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Aggregate<T> {
+public class Aggregation {
+    
+    private AggregateFunction function;
+    
+    private Object value;
 
-    private String fieldName;
-
-    private int count;
-
-    private T value;
-
-    public Aggregate(String fieldName, int count, T value) {
-        this.fieldName = fieldName;
-        this.count = count;
+    public Aggregation(AggregateFunction function, Object value) {
+        this.function = function;
         this.value = value;
     }
 
-    public String getFieldName() {
-        return fieldName;
+    public AggregateFunction getFunction() {
+        return function;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public T getValue() {
+    public Object getValue() {
         return value;
     }
 }

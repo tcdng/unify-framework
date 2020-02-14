@@ -13,35 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.core.criterion;
 
-import java.util.Date;
+import java.util.Collection;
+
+import com.tcdng.unify.core.data.FluentSet;
 
 /**
- * Supported aggregate function enumeration.
+ * Used to specify fields to group by.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum AggregateType {
-    COUNT(Object.class),
-    SUM(Number.class),
-    AVERAGE(Number.class),
-    MAXIMUM(Number.class, Date.class),
-    MINIMUM(Number.class, Date.class);
+public class GroupBy extends FluentSet<String> {
 
-    private final Class<?>[] supports;
-
-    private AggregateType(Class<?>... supports) {
-        this.supports = supports;
+    @Override
+    public GroupBy add(String field) {
+        return (GroupBy) super.add(field);
     }
 
-    public boolean supports(Class<?> clazz) {
-        for (Class<?> spClass : supports) {
-            if (spClass.isAssignableFrom(clazz)) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public GroupBy addAll(Collection<? extends String> collection) {
+        return (GroupBy) super.addAll(collection);
+    }
+
+    @Override
+    public GroupBy removeAll(Collection<? extends String> set) {
+        return (GroupBy) super.removeAll(set);
+    }
+
+    @Override
+    public GroupBy remove(String value) {
+        return (GroupBy) super.remove(value);
     }
 }
