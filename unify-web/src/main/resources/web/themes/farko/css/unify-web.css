@@ -427,7 +427,7 @@ z-index:400;}
 .ui-assignmentbox .abbutton:hover:enabled {color: #FFF; background-color: #6080F0;}
 
 /** Badge */
-.ui-badge {}
+.ui-badge {display:inline-block !important; padding:2px 8px;}
 .badgesel {background-color: #5970B2; color: #FFF;}
 .badgeselred {background-color: #C03333; color: #FFF;}
 .badgeselblue {background-color: #3378C0; color: #FFF;}
