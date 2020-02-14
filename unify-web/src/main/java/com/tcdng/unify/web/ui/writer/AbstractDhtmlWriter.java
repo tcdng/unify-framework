@@ -25,10 +25,10 @@ import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
+import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
 import com.tcdng.unify.web.ui.PageManager;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -597,7 +597,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
 
             if (pageAction.isUplAttribute("command")) {
-                boolean isPage = Page.class.isAssignableFrom(
+                boolean isPage = PageController.class.isAssignableFrom(
                         getComponentType(getRequestContextUtil().getResponsePathParts().getControllerName()));
                 String cmd = pageAction.getUplAttribute(String.class, "command");
                 if (cmd != null) {
@@ -612,7 +612,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 if (isPage) {
                     targetPgNm = pageManager.getPageName(pageAction.getParentLongName());
                 }
-
+                
                 String commandTarget = pageAction.getUplAttribute(String.class, "target");
                 if (commandTarget != null) {
                     targetPgNm = pageManager.getPageName(commandTarget);
