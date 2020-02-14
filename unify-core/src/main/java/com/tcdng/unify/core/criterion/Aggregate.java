@@ -13,36 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.constant.MimeType;
+package com.tcdng.unify.core.criterion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * AggregateItem mapping data object.
+ * Used to specify an aggregate operation.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Result {
+public class Aggregate {
 
-    private MimeType mimeType;
-
-    private PageControllerResponse[] pageControllerResponses;
-
-    public Result(PageControllerResponse[] responses) {
-        this(MimeType.APPLICATION_JSON, responses);
+    private List<AggregateFunction> functionList;
+    
+    public Aggregate() {
+        functionList = new ArrayList<AggregateFunction>();
     }
 
-    public Result(MimeType mimeType, PageControllerResponse[] responses) {
-        this.mimeType = mimeType;
-        this.pageControllerResponses = responses;
+    public Aggregate add(AggregateType type, String fieldName) {
+        functionList.add(new AggregateFunction(type, fieldName));
+        return this;
     }
-
-    public MimeType getMimeType() {
-        return mimeType;
-    }
-
-    public PageControllerResponse[] getResponses() {
-        return pageControllerResponses;
+    
+    public List<AggregateFunction> getFunctionList() {
+        return functionList;
     }
 }

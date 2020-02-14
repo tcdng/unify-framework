@@ -22,9 +22,11 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.Aggregate;
+import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.Aggregate;
-import com.tcdng.unify.core.data.AggregateType;
+import com.tcdng.unify.core.data.Aggregation;
+import com.tcdng.unify.core.data.GroupAggregation;
 
 /**
  * Interface that represents a database.
@@ -36,8 +38,10 @@ public interface Database extends UnifyComponent {
 
     /**
      * Gets the database dataSource.
+     * 
      * @return the dataSource
-     * @throws UnifyException if an error occurs
+     * @throws UnifyException
+     *             if an error occurs
      */
     DataSource getDataSource() throws UnifyException;
 
@@ -666,34 +670,50 @@ public interface Database extends UnifyComponent {
     int countAll(Query<? extends Entity> query) throws UnifyException;
 
     /**
-     * Executes an aggregate function for single selected field of records
-     * that match specified query.
+     * Executes an aggregate function for single selected field of records that
+     * match specified query.
      * 
-     * @param aggregateType
-     *            the aggregate type
+     * @param aggregateFunction
+     *            the aggregate function
      * @param query
      *            the query to use
      * @return the aggregate object
      * @throws UnifyException
-     *             if selected field is not numeric. If no field is selected. If multiple fields are selected. If
-     *             an error occurs
+     *             If aggregate function field is unknown for entity. If aggregate
+     *             function field is not numeric. If an error occurs
      */
-    Aggregate<?> aggregate(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+    Aggregation aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query) throws UnifyException;
 
     /**
      * Executes an aggregate function (individually) for selected properties of
      * record that match specified criteria.
      * 
-     * @param aggregateType
-     *            the aggregate type
+     * @param aggregate
+     *            the aggregate definition
      * @param query
-     *            the aggregated items query
+     *            the aggregated items query.
      * @return list of aggregate result
      * @throws UnifyException
      *             if selected fields are not numeric. If no field is selected. If
      *             an error occurs
      */
-    List<Aggregate<?>> aggregateMany(AggregateType aggregateType, Query<? extends Entity> query) throws UnifyException;
+    List<Aggregation> aggregateMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException;
+
+    /**
+     * Executes a grouping aggregate function (individually) for selected properties
+     * of record that match specified criteria.
+     * 
+     * @param aggregate
+     *            the aggregate definition
+     * @param query
+     *            the aggregated items query. Must include group-by fields
+     * @return list of aggregate result
+     * @throws UnifyException
+     *             if selected fields are not numeric. If no field is selected. If
+     *             an error occurs
+     */
+    List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query)
+            throws UnifyException;
 
     /**
      * Gets the current UTC timestamp of database based on session time zone.

@@ -13,36 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+package com.tcdng.unify.core.criterion;
 
-import com.tcdng.unify.core.constant.MimeType;
+import java.util.Date;
 
 /**
- * AggregateItem mapping data object.
+ * Supported aggregate function enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Result {
+public enum AggregateType {
+    COUNT(Object.class),
+    SUM(Number.class),
+    AVERAGE(Number.class),
+    MAXIMUM(Number.class, Date.class),
+    MINIMUM(Number.class, Date.class);
 
-    private MimeType mimeType;
+    private final Class<?>[] supports;
 
-    private PageControllerResponse[] pageControllerResponses;
-
-    public Result(PageControllerResponse[] responses) {
-        this(MimeType.APPLICATION_JSON, responses);
+    private AggregateType(Class<?>... supports) {
+        this.supports = supports;
     }
 
-    public Result(MimeType mimeType, PageControllerResponse[] responses) {
-        this.mimeType = mimeType;
-        this.pageControllerResponses = responses;
-    }
-
-    public MimeType getMimeType() {
-        return mimeType;
-    }
-
-    public PageControllerResponse[] getResponses() {
-        return pageControllerResponses;
+    public boolean supports(Class<?> clazz) {
+        for (Class<?> spClass : supports) {
+            if (spClass.isAssignableFrom(clazz)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -29,6 +29,7 @@ import com.tcdng.unify.core.criterion.EndsWith;
 import com.tcdng.unify.core.criterion.Equals;
 import com.tcdng.unify.core.criterion.Greater;
 import com.tcdng.unify.core.criterion.GreaterOrEqual;
+import com.tcdng.unify.core.criterion.GroupBy;
 import com.tcdng.unify.core.criterion.IsNotNull;
 import com.tcdng.unify.core.criterion.IsNull;
 import com.tcdng.unify.core.criterion.Less;
@@ -58,6 +59,8 @@ public class Query<T extends Entity> implements Cloneable {
 
     private Select select;
 
+    private GroupBy groupBy;
+    
     private Order order;
 
     private String maxProperty;
@@ -216,6 +219,18 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addGroupBy(String field) {
+        innerGetGroupBy().add(field);
+        return this;
+    }
+
+    public Query<T> addGroupBy(String... fields) {
+        for (String field : fields) {
+            innerGetGroupBy().add(field);
+        }
+        return this;
+    }
+
     public Query<T> addOrder(String field) {
         getOrder().add(field);
         return this;
@@ -292,6 +307,22 @@ public class Query<T extends Entity> implements Cloneable {
         this.select = select;
     }
 
+    public boolean isSelect() {
+        return select != null && !select.isEmpty();
+    }
+
+    public GroupBy getGroupBy() {
+        return groupBy;
+    }
+
+    public void setGroupBy(GroupBy groupBy) {
+        this.groupBy = groupBy;
+    }
+
+    public boolean isGroupBy() {
+        return groupBy != null && !groupBy.isEmpty();
+    }
+    
     public Order getOrder() {
         if (order == null) {
             order = new Order();
@@ -387,6 +418,10 @@ public class Query<T extends Entity> implements Cloneable {
             select.clear();
         }
 
+        if (groupBy != null) {
+            groupBy.clear();
+        }
+        
         if (order != null) {
             order.clear();
         }
@@ -408,6 +443,12 @@ public class Query<T extends Entity> implements Cloneable {
         }
     }
 
+    public void clearGroupBy() {
+        if (groupBy != null) {
+            groupBy.clear();
+        }
+    }
+
     public void clearOrder() {
         if (order != null) {
             order.clear();
@@ -419,6 +460,7 @@ public class Query<T extends Entity> implements Cloneable {
         Query<T> query = new Query(entityClass, applyAppQueryLimit);
         query.restrictions = restrictions;
         query.select = select;
+        query.groupBy = groupBy;
         query.order = order;
         query.offset = offset;
         query.limit = limit;
@@ -431,6 +473,7 @@ public class Query<T extends Entity> implements Cloneable {
     public Query<T> copyNoCriteria() {
         Query<T> query = new Query(entityClass, applyAppQueryLimit);
         query.select = select;
+        query.groupBy = groupBy;
         query.order = order;
         query.offset = offset;
         query.limit = limit;
@@ -449,5 +492,12 @@ public class Query<T extends Entity> implements Cloneable {
             select = new Select();
         }
         return select;
+    }
+
+    private GroupBy innerGetGroupBy() {
+        if (groupBy == null) {
+            groupBy = new GroupBy();
+        }
+        return groupBy;
     }
 }

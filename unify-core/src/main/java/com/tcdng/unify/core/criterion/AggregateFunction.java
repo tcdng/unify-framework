@@ -13,36 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.constant.MimeType;
+package com.tcdng.unify.core.criterion;
 
 /**
- * AggregateItem mapping data object.
+ * An aggregate function.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Result {
+public class AggregateFunction {
 
-    private MimeType mimeType;
+    private AggregateType type;
+    
+    private String fieldName;
 
-    private PageControllerResponse[] pageControllerResponses;
-
-    public Result(PageControllerResponse[] responses) {
-        this(MimeType.APPLICATION_JSON, responses);
+    public AggregateFunction(AggregateType type, String fieldName) {
+        this.type = type;
+        this.fieldName = fieldName;
     }
 
-    public Result(MimeType mimeType, PageControllerResponse[] responses) {
-        this.mimeType = mimeType;
-        this.pageControllerResponses = responses;
+    public AggregateType getType() {
+        return type;
     }
 
-    public MimeType getMimeType() {
-        return mimeType;
+    public String getFieldName() {
+        return fieldName;
     }
-
-    public PageControllerResponse[] getResponses() {
-        return pageControllerResponses;
-    }
+    
 }

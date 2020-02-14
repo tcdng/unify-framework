@@ -176,7 +176,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             ReportColumn grpReportColumn = groupingColumnList.get(i);
             JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, grpReportColumn);
 
-            // Group header
+            // Grouping header
             boolean showColumnHeader = isWithGroupColumns && ((i + 1) == glen);
             JRDesignBand groupHeaderBand = new JRDesignBand();
             if (showColumnHeader) {
@@ -210,7 +210,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             ((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(groupHeaderBand);
 
             if (!summationColumnList.isEmpty()) {
-                // Group footer
+                // Grouping footer
                 JRDesignBand groupFooterBand = new JRDesignBand();
                 groupFooterBand.setHeight(columnHeaderHeight);
                 grpJRDesignRectangle =

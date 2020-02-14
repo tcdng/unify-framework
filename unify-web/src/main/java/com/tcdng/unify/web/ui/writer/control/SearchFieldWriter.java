@@ -59,7 +59,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write("/>");
         writer.write("</div>");
 
-        // Result row
+        // AggregateItem row
         writer.write("<div");
         writeTagId(writer, searchField.getResultPanelId());
         writeTagStyleClass(writer, "sfresultrow");

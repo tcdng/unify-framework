@@ -15,11 +15,13 @@
  */
 package com.tcdng.unify.core.database.sql;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.Entity;
@@ -327,13 +329,25 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     /**
      * Prepares an aggregate field statement.
      * 
-     * @param aggregateType
-     *            the aggregate type
+     * @param aggregateFunction
+     *            the aggregate function
      * @param query
      *            the aggregation query
      * @return the aggregate statement
      */
-    SqlStatement prepareAggregateStatement(AggregateType aggregateType, Query<? extends Entity> query)
+    SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query)
+            throws UnifyException;
+    
+    /**
+     * Prepares an aggregate field statement.
+     * 
+     * @param aggregateFunctionList
+     *            the aggregate function list
+     * @param query
+     *            the aggregation query
+     * @return the aggregate statement
+     */
+    SqlStatement prepareAggregateStatement(List<AggregateFunction> aggregateFunctionList, Query<? extends Entity> query)
             throws UnifyException;
 
     /**
