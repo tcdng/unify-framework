@@ -214,14 +214,17 @@ public class UnifyContainerConfig {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_HAS_NO_NAME, type);
             }
 
-            if (!overwrite && unifyComponentConfigs.containsKey(name)) {
+            UnifyComponentConfig newUnifyComponentConfig =
+                    new UnifyComponentConfig(settings, name, description, type, singleton);
+
+            UnifyComponentConfig existUnifyComponentConfig = unifyComponentConfigs.get(name);
+            if (existUnifyComponentConfig != null && !overwrite) {
+                existUnifyComponentConfig.addConflict(newUnifyComponentConfig);
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_WITH_NAME_EXISTS, name,
                         unifyComponentConfigs.get(name), type);
             }
 
-            UnifyComponentConfig unifyComponentConfig =
-                    new UnifyComponentConfig(settings, name, description, type, singleton);
-            unifyComponentConfigs.put(name, unifyComponentConfig);
+            unifyComponentConfigs.put(name, newUnifyComponentConfig);
             return this;
         }
 

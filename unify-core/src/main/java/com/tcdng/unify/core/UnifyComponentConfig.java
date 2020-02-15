@@ -15,6 +15,11 @@
  */
 package com.tcdng.unify.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.tcdng.unify.core.util.DataUtils;
+
 /**
  * Configuration for a unify component.
  * 
@@ -33,6 +38,8 @@ public class UnifyComponentConfig {
 
     private UnifyComponentSettings settings;
 
+    private List<UnifyComponentConfig> conflictList;
+    
     public UnifyComponentConfig(String name, String description, Class<? extends UnifyComponent> type,
             boolean singleton) {
         this(UnifyComponentSettings.EMPTY_SETTINGS, name, description, type, singleton);
@@ -70,6 +77,22 @@ public class UnifyComponentConfig {
         return settings;
     }
 
+    public void addConflict(UnifyComponentConfig conflictUnifyComponentConfig) {
+        if (conflictList == null) {
+            conflictList = new ArrayList<UnifyComponentConfig>();
+        }
+        
+        conflictList.add(conflictUnifyComponentConfig);
+    }
+    
+    public List<UnifyComponentConfig> getConflictList() {
+        return conflictList;
+    }
+
+    public boolean isWithConfict() {
+        return !DataUtils.isBlank(conflictList);
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -943,4 +943,7 @@ public interface UnifyCoreErrorConstants {
 
     /** No report layout manager is available for layout name {0}. Report server = {1}*/
     String REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER = "UC_00EF";
+
+    /** Conflicting types found for component with name {0}. Conflicting types = {1} */
+    String COMPONENT_CONFLICTING_COMPONENTS_FOUND_IN_CONFIG = "UC_00F0";
 }
