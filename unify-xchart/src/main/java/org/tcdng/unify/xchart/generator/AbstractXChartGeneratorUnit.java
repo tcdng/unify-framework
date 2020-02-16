@@ -27,9 +27,11 @@ import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.chart.AbstractChart;
 import com.tcdng.unify.core.chart.AbstractChartGeneratorUnit;
 import com.tcdng.unify.core.chart.Chart;
 import com.tcdng.unify.core.chart.ChartImageFormat;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Abstract base class for XChart chart generator units.
@@ -39,7 +41,9 @@ import com.tcdng.unify.core.chart.ChartImageFormat;
  */
 public abstract class AbstractXChartGeneratorUnit<T extends Chart> extends AbstractChartGeneratorUnit<T> {
 
-    private static final Map<ChartImageFormat, BitmapFormat> formats;
+    protected static final Map<ChartImageFormat, BitmapFormat> formats;
+
+    protected static final Map<AbstractChart.ValueFormat, String> valueFormatMapping;
 
     static {
         Map<ChartImageFormat, BitmapFormat> tempFormats = new HashMap<ChartImageFormat, BitmapFormat>();
@@ -48,6 +52,13 @@ public abstract class AbstractXChartGeneratorUnit<T extends Chart> extends Abstr
         tempFormats.put(ChartImageFormat.JPG, BitmapFormat.JPG);
         tempFormats.put(ChartImageFormat.PNG, BitmapFormat.PNG);
         formats = Collections.unmodifiableMap(tempFormats);
+        
+        Map<AbstractChart.ValueFormat, String> tempValueFormatMapping = new HashMap<AbstractChart.ValueFormat, String>();
+        tempValueFormatMapping.put(AbstractChart.ValueFormat.AMOUNT, "###,##0.00");
+        tempValueFormatMapping.put(AbstractChart.ValueFormat.DECIMAL, "#####0.00");
+        tempValueFormatMapping.put(AbstractChart.ValueFormat.INTEGER, "#####0");
+        tempValueFormatMapping.put(AbstractChart.ValueFormat.COUNT, "###,##0");
+        valueFormatMapping = DataUtils.unmodifiableMap(tempValueFormatMapping);        
     }
 
     public AbstractXChartGeneratorUnit(Class<T> chartType) {

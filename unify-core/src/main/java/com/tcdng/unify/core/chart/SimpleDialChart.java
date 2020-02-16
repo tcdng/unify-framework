@@ -29,12 +29,12 @@ public class SimpleDialChart extends AbstractChart {
     private SingleValueSeries singleValueSeries;
 
     private SimpleDialChart(int width, int height, ChartImageFormat format, String seriesName, Double value) {
-        super(width, height, ColorPalette.DEFAULT, format);
+        super(width, height, ColorPalette.DEFAULT, format, null, null, false);
         this.singleValueSeries = new SingleValueSeries(seriesName, value);
     }
 
     private SimpleDialChart(int width, int height, String seriesName, Double value) {
-        super(width, height, ColorPalette.DEFAULT);
+        super(width, height, ColorPalette.DEFAULT, null, null, false);
         this.singleValueSeries = new SingleValueSeries(seriesName, value);
     }
 
