@@ -19,13 +19,16 @@ package org.tcdng.unify.xchart;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
+import com.tcdng.unify.core.chart.AbstractChart.AnnotationType;
+import com.tcdng.unify.core.chart.AbstractChart.ValueFormat;
+import com.tcdng.unify.core.chart.BarChart;
 import com.tcdng.unify.core.chart.ChartGenerator;
 import com.tcdng.unify.core.chart.PieChart;
-import com.tcdng.unify.core.chart.PieChart.AnnotationType;
-import com.tcdng.unify.core.chart.PieChart.ValueFormat;
 import com.tcdng.unify.core.chart.SimpleDialChart;
 import com.tcdng.unify.core.constant.ColorPalette;
 
@@ -60,6 +63,23 @@ public class ChartGeneratorTest extends AbstractUnifyComponentTest {
                         .colorPalette(ColorPalette.BLUE_SCALE)
                         .annotationType(AnnotationType.LABEL_VALUE)
                         .valueFormat(ValueFormat.AMOUNT)
+                        .showLegend(true)
+                        .build();
+        byte[] image = getChartGenerator().generateImage(chart);
+        assertNotNull(image);
+        assertTrue(image.length > 0);
+        //getChartGenerator().generateToFile(chart, "e:\\data\\ming.png");
+    }
+
+    @Test
+    public void testGenerateBarChart() throws Exception {
+        BarChart chart =
+                BarChart.newBuilder(640, 380)
+                        .addSeries("All Docs", Arrays.asList("Loan Disbursement Online", "Virgin Atlantic", "Customer Onboarding"), Arrays.asList(20, 35, 10), "#abcdef")
+                        .addSeries("My Docs", Arrays.asList("Loan Disbursement Online", "Virgin Atlantic", "Customer Onboarding"), Arrays.asList(8, 4, 8), "#fedcba")
+                        .colorPalette(ColorPalette.CUSTOM)
+                        .annotationType(AnnotationType.LABEL_VALUE)
+                        .valueFormat(ValueFormat.COUNT)
                         .showLegend(true)
                         .build();
         byte[] image = getChartGenerator().generateImage(chart);

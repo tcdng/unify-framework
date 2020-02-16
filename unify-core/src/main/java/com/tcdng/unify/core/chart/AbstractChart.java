@@ -26,6 +26,21 @@ import com.tcdng.unify.core.constant.ColorPalette;
  */
 public abstract class AbstractChart implements Chart {
 
+    public enum AnnotationType {
+        VALUE,
+        PERCENTAGE,
+        LABEL,
+        LABEL_VALUE,
+        LABEL_PERCENTAGE
+    }
+
+    public enum ValueFormat {
+        INTEGER,
+        DECIMAL,
+        AMOUNT,
+        COUNT,
+    }
+
     private int width;
 
     private int height;
@@ -34,15 +49,26 @@ public abstract class AbstractChart implements Chart {
 
     private ChartImageFormat format;
 
-    public AbstractChart(int width, int height, ColorPalette colorPalette) {
-        this(width, height, colorPalette, ChartImageFormat.PNG);
+    private AnnotationType annotationType;
+
+    private ValueFormat valueFormat;
+
+    private boolean showLegend;
+
+    protected AbstractChart(int width, int height, ColorPalette colorPalette, AnnotationType annotationType,
+            ValueFormat valueFormat, boolean showLegend) {
+        this(width, height, colorPalette, ChartImageFormat.PNG, annotationType, valueFormat, showLegend);
     }
 
-    public AbstractChart(int width, int height, ColorPalette colorPalette, ChartImageFormat format) {
+    protected AbstractChart(int width, int height, ColorPalette colorPalette, ChartImageFormat format,
+            AnnotationType annotationType, ValueFormat valueFormat, boolean showLegend) {
         this.width = width;
         this.height = height;
         this.colorPalette = colorPalette;
         this.format = format;
+        this.showLegend = showLegend;
+        this.annotationType = annotationType;
+        this.valueFormat = valueFormat;
     }
 
     @Override
@@ -63,6 +89,18 @@ public abstract class AbstractChart implements Chart {
     @Override
     public ChartImageFormat getImageFormat() {
         return format;
+    }
+
+    public AnnotationType getAnnotationType() {
+        return annotationType;
+    }
+
+    public ValueFormat getValueFormat() {
+        return valueFormat;
+    }
+
+    public boolean isShowLegend() {
+        return showLegend;
     }
 
 }

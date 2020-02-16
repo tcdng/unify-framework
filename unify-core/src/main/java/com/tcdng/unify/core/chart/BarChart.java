@@ -24,30 +24,47 @@ import com.tcdng.unify.core.constant.ColorPalette;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Pie Chart.
+ * Bar chart.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PieChart extends AbstractChart {
+public class BarChart extends AbstractChart {
 
-    private List<SingleValueSeries> seriesList;
+    private List<CategorySeries> seriesList;
 
-    private PieChart(int width, int height, ColorPalette colorPalette, ChartImageFormat format,
-            AnnotationType annotationType, ValueFormat valueFormat, boolean showLegend,
-            List<SingleValueSeries> seriesList) {
+    private boolean showXAxisTicks;
+
+    private boolean showYAxisTicks;
+
+    private BarChart(int width, int height, ColorPalette colorPalette, ChartImageFormat format,
+            AnnotationType annotationType, ValueFormat valueFormat, boolean showLegend, List<CategorySeries> seriesList,
+            boolean showXAxisTicks, boolean showYAxisTicks) {
         super(width, height, colorPalette, format, annotationType, valueFormat, showLegend);
         this.seriesList = seriesList;
+        this.showXAxisTicks = showXAxisTicks;
+        this.showYAxisTicks = showYAxisTicks;
     }
 
-    private PieChart(int width, int height, ColorPalette colorPalette, AnnotationType annotationType,
-            ValueFormat valueFormat, boolean showLegend, List<SingleValueSeries> seriesList) {
+    private BarChart(int width, int height, ColorPalette colorPalette, AnnotationType annotationType,
+            ValueFormat valueFormat, boolean showLegend, List<CategorySeries> seriesList, boolean showXAxisTicks,
+            boolean showYAxisTicks) {
         super(width, height, colorPalette, annotationType, valueFormat, showLegend);
         this.seriesList = seriesList;
+        this.showXAxisTicks = showXAxisTicks;
+        this.showYAxisTicks = showYAxisTicks;
     }
 
-    public List<SingleValueSeries> getSeriesList() {
+    public List<CategorySeries> getSeriesList() {
         return seriesList;
+    }
+
+    public boolean isShowXAxisTicks() {
+        return showXAxisTicks;
+    }
+
+    public boolean isShowYAxisTicks() {
+        return showYAxisTicks;
     }
 
     public static Builder newBuilder(int width, int height) {
@@ -62,7 +79,7 @@ public class PieChart extends AbstractChart {
 
         private ChartImageFormat format;
 
-        private List<SingleValueSeries> seriesList;
+        private List<CategorySeries> seriesList;
 
         private AnnotationType annotationType;
 
@@ -72,14 +89,20 @@ public class PieChart extends AbstractChart {
 
         private boolean showLegend;
 
+        private boolean showXAxisTicks;
+
+        private boolean showYAxisTicks;
+
         public Builder(int width, int height) {
             this.width = width;
             this.height = height;
             this.annotationType = AnnotationType.VALUE;
             this.valueFormat = ValueFormat.INTEGER;
             this.showLegend = true;
+            this.showXAxisTicks = true;
+            this.showYAxisTicks = false;
             this.colorPalette = ColorPalette.DEFAULT;
-            this.seriesList = new ArrayList<SingleValueSeries>();
+            this.seriesList = new ArrayList<CategorySeries>();
         }
 
         public Builder format(ChartImageFormat format) {
@@ -102,34 +125,46 @@ public class PieChart extends AbstractChart {
             return this;
         }
 
+        public Builder showYAxisTicks(boolean showYAxisTicks) {
+            this.showYAxisTicks = showYAxisTicks;
+            return this;
+        }
+
+        public Builder showXAxisTicks(boolean showXAxisTicks) {
+            this.showXAxisTicks = showXAxisTicks;
+            return this;
+        }
+
         public Builder colorPalette(ColorPalette colorPalette) {
             this.colorPalette = colorPalette;
             return this;
         }
 
-        public Builder addSeries(String seriesName, Double value) {
-            seriesList.add(new SingleValueSeries(seriesName, value));
+        public Builder addSeries(String seriesName, List<?> xValueList, List<? extends Number> yValueList) {
+            seriesList.add(new CategorySeries(seriesName, xValueList, yValueList));
             return this;
         }
 
-        public Builder addSeries(String seriesName, Double value, Color color) {
-            seriesList.add(new SingleValueSeries(seriesName, value, color));
+        public Builder addSeries(String seriesName, List<?> xValueList, List<? extends Number> yValueList,
+                Color color) {
+            seriesList.add(new CategorySeries(seriesName, xValueList, yValueList, color));
             return this;
         }
 
-        public Builder addSeries(String seriesName, Double value, String hexColor) {
-            seriesList.add(new SingleValueSeries(seriesName, value, Color.decode(hexColor)));
+        public Builder addSeries(String seriesName, List<?> xValueList, List<? extends Number> yValueList,
+                String hexColor) {
+            seriesList.add(new CategorySeries(seriesName, xValueList, yValueList, Color.decode(hexColor)));
             return this;
         }
 
-        public PieChart build() {
+        public BarChart build() {
             if (format == null) {
-                return new PieChart(width, height, colorPalette, annotationType, valueFormat, showLegend,
-                        DataUtils.unmodifiableList(seriesList));
+                return new BarChart(width, height, colorPalette, annotationType, valueFormat, showLegend,
+                        DataUtils.unmodifiableList(seriesList), showXAxisTicks, showYAxisTicks);
             }
 
-            return new PieChart(width, height, colorPalette, format, annotationType, valueFormat, showLegend,
-                    DataUtils.unmodifiableList(seriesList));
+            return new BarChart(width, height, colorPalette, format, annotationType, valueFormat, showLegend,
+                    DataUtils.unmodifiableList(seriesList), showXAxisTicks, showYAxisTicks);
         }
     }
 
