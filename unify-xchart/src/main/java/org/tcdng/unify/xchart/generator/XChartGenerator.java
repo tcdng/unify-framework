@@ -32,7 +32,9 @@ import com.tcdng.unify.core.chart.AbstractChartGenerator;
 public class XChartGenerator extends AbstractChartGenerator {
 
     private static final String[] GENERATOR_UNITS = { XChartApplicationComponents.XCHART_SIMPLEDIALGENERATOR,
-            XChartApplicationComponents.XCHART_BARCHARTGENERATOR, XChartApplicationComponents.XCHART_PIECHARTGENERATOR };
+            XChartApplicationComponents.XCHART_BARCHARTGENERATOR, XChartApplicationComponents.XCHART_PIECHARTGENERATOR,
+            XChartApplicationComponents.XCHART_LINECHARTGENERATOR,
+            XChartApplicationComponents.XCHART_AREACHARTGENERATOR };
 
     @Override
     protected String[] getProvidedChartGeneratorUnitNames() throws UnifyException {
