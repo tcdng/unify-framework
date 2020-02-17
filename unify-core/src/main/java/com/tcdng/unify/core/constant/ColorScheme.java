@@ -23,17 +23,20 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("colorschemelist")
 public enum ColorScheme implements EnumConst {
 
-    RED("red"),
-    BLUE("blue"),
-    GREEN("green"),
-    YELLOW("yellow"),
-    ORANGE("orange"),
-    GRAY("gray");
+    RED("red", ColorPalette.RED_SCALE),
+    BLUE("blue", ColorPalette.BLUE_SCALE),
+    GREEN("green", ColorPalette.GREEN_SCALE),
+    YELLOW("yellow", ColorPalette.YELLOW_SCALE),
+    ORANGE("orange", ColorPalette.ORANGE_SCALE),
+    GRAY("gray", ColorPalette.GRAY_SCALE);
 
     private final String code;
 
-    private ColorScheme(String code) {
+    private final ColorPalette pallete;
+    
+    private ColorScheme(String code, ColorPalette pallete) {
         this.code = code;
+        this.pallete = pallete;
     }
 
     @Override
@@ -44,6 +47,10 @@ public enum ColorScheme implements EnumConst {
     @Override
     public String defaultCode() {
         return GRAY.code;
+    }
+
+    public ColorPalette pallete() {
+        return pallete;
     }
 
     public static ColorScheme fromCode(String code) {
