@@ -16,7 +16,9 @@
 
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.AggregateFunction;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * An aggregation.
@@ -41,5 +43,9 @@ public class Aggregation {
 
     public Object getValue() {
         return value;
+    }
+
+    public <T> T getValue(Class<T> targetClazz) throws UnifyException {
+        return DataUtils.convert(targetClazz, value, null);
     }
 }
