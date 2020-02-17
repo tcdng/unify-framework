@@ -946,4 +946,7 @@ public interface UnifyCoreErrorConstants {
 
     /** Conflicting types found for component with name {0}. Conflicting types = {1} */
     String COMPONENT_CONFLICTING_COMPONENTS_FOUND_IN_CONFIG = "UC_00F0";
+
+    /** Aggregation grouping field with name {0} is unknown. */
+    String AGGREGATION_GROUPING_FIELD_UNKNOWN = "UC_00F1";
 }

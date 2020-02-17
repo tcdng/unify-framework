@@ -125,8 +125,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertNotNull(qtyAggregate);
             assertEquals("price", priceAggregate.getFunction().getFieldName());
             assertEquals(140.00, priceAggregate.getValue());
+            assertEquals(Double.valueOf(140.00), priceAggregate.getValue(Double.class));
             assertEquals("quantity", qtyAggregate.getFunction().getFieldName());
-            assertEquals(84, qtyAggregate.getValue());
+            assertEquals(Integer.valueOf(84), qtyAggregate.getValue(Integer.class));
 
             // Combine Average and sum
             list = db.aggregateMany(
@@ -205,13 +206,18 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(1, aggregation.getGroupingList().size());
             assertEquals("color", aggregation.getGroupingList().get(0).getFieldName());
             assertEquals("cyan", aggregation.getGroupingList().get(0).getValue());
+            assertEquals("cyan", aggregation.getGroupingValue(String.class, 0));
+            assertEquals("cyan", aggregation.getGroupingValue(String.class, "color"));
             assertEquals(3, aggregation.getAggregationList().size());
             assertEquals("price", aggregation.getAggregationList().get(0).getFunction().getFieldName());
             assertEquals(60.00, aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals(Double.valueOf(60.00), aggregation.getAggregationValue(Double.class, 0));
             assertEquals("quantity", aggregation.getAggregationList().get(1).getFunction().getFieldName());
             assertEquals(3, aggregation.getAggregationList().get(1).getValue()); // SUM
+            assertEquals(Integer.valueOf(3), aggregation.getAggregationValue(Integer.class, 1));
             assertEquals("quantity", aggregation.getAggregationList().get(2).getFunction().getFieldName());
             assertEquals(1, aggregation.getAggregationList().get(2).getValue()); // COUNT
+            assertEquals(Integer.valueOf(1), aggregation.getAggregationValue(Integer.class, 2));
 
             aggregation = aggregationList.get(1);
             assertNotNull(aggregation);

@@ -18,6 +18,10 @@ package com.tcdng.unify.core.data;
 
 import java.util.List;
 
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.DataUtils;
+
 /**
  * A group aggregation.
  * 
@@ -27,9 +31,9 @@ import java.util.List;
 public class GroupAggregation {
 
     private List<Grouping> groupingList;
-    
+
     private List<Aggregation> aggregationList;
-    
+
     public GroupAggregation(List<Grouping> groupingList, List<Aggregation> aggregationList) {
         this.groupingList = groupingList;
         this.aggregationList = aggregationList;
@@ -43,10 +47,36 @@ public class GroupAggregation {
         return aggregationList;
     }
 
+    public <T> T getGroupingValue(Class<T> targetClazz, String fieldName) throws UnifyException {
+        for (Grouping grouping : groupingList) {
+            if (grouping.getFieldName().equals(fieldName)) {
+                return DataUtils.convert(targetClazz, grouping.getValue(), null);
+            }
+        }
+
+        throw new UnifyException(UnifyCoreErrorConstants.AGGREGATION_GROUPING_FIELD_UNKNOWN, fieldName);
+    }
+
+    public <T> T getGroupingValue(Class<T> targetClazz, int index) throws UnifyException {
+        return DataUtils.convert(targetClazz, groupingList.get(index).getValue(), null);
+    }
+
+    public <T> T getAggregationValue(Class<T> targetClazz, int index) throws UnifyException {
+        return aggregationList.get(index).getValue(targetClazz);
+    }
+
+    public int getGroupingSize() {
+        return groupingList.size();
+    }
+
+    public int getAggregationSize() {
+        return aggregationList.size();
+    }
+    
     public static class Grouping {
-        
+
         private String fieldName;
-        
+
         private Object value;
 
         public Grouping(String fieldName, Object value) {
