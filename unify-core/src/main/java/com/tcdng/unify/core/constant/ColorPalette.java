@@ -30,9 +30,11 @@ import java.util.Map;
  * @since 1.0
  */
 public enum ColorPalette {
+    
     RED_SCALE,
     BLUE_SCALE,
     GREEN_SCALE,
+    YELLOW_SCALE,
     ORANGE_SCALE,
     GRAY_SCALE,
     DEFAULT,
@@ -54,6 +56,10 @@ public enum ColorPalette {
                 Collections.unmodifiableList(
                         Arrays.asList(Color.decode("#43D088"), Color.decode("#5DEAA2"), Color.decode("#76FFBB"),
                                 Color.decode("#90FFD5"), Color.decode("#A9FFEE"), Color.decode("#C2FFF8"))));
+        map.put(ColorPalette.YELLOW_SCALE,
+                Collections.unmodifiableList(
+                        Arrays.asList(Color.decode("#D0C800"), Color.decode("#D9D333"), Color.decode("#E2DE66"),
+                                Color.decode("#ECE999"), Color.decode("#F5F4CC"), Color.decode("#FAF9E5"))));
         map.put(ColorPalette.ORANGE_SCALE,
                 Collections.unmodifiableList(
                         Arrays.asList(Color.decode("#D08843"), Color.decode("#EAA25D"), Color.decode("#FFBB76"),
@@ -71,6 +77,18 @@ public enum ColorPalette {
         }
         
         return palettes.get(this);
+    }
+    
+    public Color getShade(int shadeIndex) {
+        if (isCustom() || isDefault()) {
+            return null;
+        }
+        
+        if (shadeIndex > 0 && shadeIndex <= 5) {
+            return palettes.get(this).get(shadeIndex);
+        }
+        
+        return null;
     }
     
     public boolean isCustom() {
