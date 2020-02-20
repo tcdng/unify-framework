@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -737,27 +736,14 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 entityPolicy.preQuery(query);
             }
 
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-                return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, connection,
-                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query));
-            }
-
-            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-            if (!idList.isEmpty()) {
-                Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
-                aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, connection,
-                        sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, aggregateQuery));
-            }
+            return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, connection,
+                    sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                    sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query));
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
         }
-        return null;
     }
 
     @Override
@@ -769,27 +755,14 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 entityPolicy.preQuery(query);
             }
 
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
-                        connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
-            }
-
-            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-            if (!idList.isEmpty()) {
-                Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
-                aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
-                        connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), aggregateQuery));
-            }
+            return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
+                    connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                    sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
         }
-        return Collections.emptyList();
     }
 
     @Override
@@ -802,27 +775,14 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 entityPolicy.preQuery(query);
             }
 
-            if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
-                        query.getGroupBy(), connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
-            }
-
-            SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-            List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
-            if (!idList.isEmpty()) {
-                Query<? extends Entity> aggregateQuery = query.copyNoCriteria();
-                aggregateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
-                return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
-                        query.getGroupBy(), connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
-                        sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), aggregateQuery));
-            }
+            return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
+                    query.getGroupBy(), connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+                    sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
         }
-        return Collections.emptyList();
     }
 
     @Override

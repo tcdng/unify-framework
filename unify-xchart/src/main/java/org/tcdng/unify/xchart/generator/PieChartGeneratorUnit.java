@@ -72,7 +72,7 @@ public class PieChartGeneratorUnit extends AbstractXChartGeneratorUnit<PieChart>
         pieChart.getStyler().setLegendVisible(chart.isShowLegend());
         pieChart.getStyler().setAnnotationDistance(1.2);
         pieChart.getStyler().setAnnotationType(annotationMapping.get(chart.getAnnotationType()));
-        pieChart.getStyler().setPlotContentSize(.6);
+        pieChart.getStyler().setPlotContentSize(0.8);
         pieChart.getStyler().setStartAngleInDegrees(45);
         pieChart.getStyler().setPlotBackgroundColor(Color.WHITE);
         pieChart.getStyler().setChartBackgroundColor(Color.WHITE);
