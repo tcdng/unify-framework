@@ -79,12 +79,16 @@ public enum ColorPalette {
         return palettes.get(this);
     }
     
+    public Color getShade() {
+        return getShade(0);
+    }
+    
     public Color getShade(int shadeIndex) {
         if (isCustom() || isDefault()) {
             return null;
         }
         
-        if (shadeIndex > 0 && shadeIndex <= 5) {
+        if (shadeIndex >= 0 && shadeIndex <= 5) {
             return palettes.get(this).get(shadeIndex);
         }
         

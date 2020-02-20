@@ -52,7 +52,7 @@ public class ChartGeneratorTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGeneratePieChart() throws Exception {
-        PieChart chart = PieChart.newBuilder(640, 380).addSeries("Lufthansa", 250.0).addSeries("Virgin Atlantic", 400.0)
+        PieChart chart = PieChart.newBuilder(740, 480).addSeries("Lufthansa", 250.0).addSeries("Virgin Atlantic", 400.0)
                 .addSeries("Aeroflot", 100.0).addSeries("Finnair", 300.0).addSeries("KLM", 200.0)
                 .addSeries("Air France", 350.0).addSeries("Turkish Airlines", 120.0)
                 .colorPalette(ColorPalette.BLUE_SCALE).annotationType(AnnotationType.LABEL_VALUE)
@@ -60,7 +60,7 @@ public class ChartGeneratorTest extends AbstractUnifyComponentTest {
         byte[] image = getChartGenerator().generateImage(chart);
         assertNotNull(image);
         assertTrue(image.length > 0);
-        // getChartGenerator().generateToFile(chart, "e:\\data\\ming.png");
+        getChartGenerator().generateToFile(chart, "e:\\data\\ming.png");
     }
 
     @Test
