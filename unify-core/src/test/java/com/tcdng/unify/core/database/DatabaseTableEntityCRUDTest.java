@@ -104,6 +104,28 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testAggregateSingleListCriteria() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
+
+
+            Aggregation aggregate = db.aggregate(new AggregateFunction(AggregateType.SUM, "age"),
+                    new AuthorQuery().addEquals("officeTelephone", "+2348888888"));
+            assertNotNull(aggregate);
+            assertEquals(Integer.valueOf(125), aggregate.getValue());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+    
+    
+    @Test
     public void testAggregateMultiple() throws Exception {
         tm.beginTransaction();
         try {
@@ -248,6 +270,52 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         } catch (Exception e) {
             tm.setRollback();
             throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testGroupAggregateMultipleListCriteria() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Salmer Hayek", 52, Gender.FEMALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
+
+
+            List<GroupAggregation> aggregationList = db.aggregateGroupMany(new Aggregate().add(AggregateType.SUM, "age"),
+                    new AuthorQuery().addEquals("officeTelephone", "+2348888888").addGroupBy("gender").addOrder("gender"));
+            assertNotNull(aggregationList);
+            assertEquals(2, aggregationList.size());
+
+            GroupAggregation aggregation = aggregationList.get(0);
+            assertNotNull(aggregation);
+            assertEquals(1, aggregation.getGroupingList().size());
+            assertEquals("gender", aggregation.getGroupingList().get(0).getFieldName());
+            assertEquals(Gender.FEMALE, aggregation.getGroupingList().get(0).getValue());
+            assertEquals(Gender.FEMALE, aggregation.getGroupingValue(Gender.class, 0));
+            assertEquals(Gender.FEMALE, aggregation.getGroupingValue(Gender.class, "gender"));
+            assertEquals(1, aggregation.getAggregationList().size());
+            assertEquals("age", aggregation.getAggregationList().get(0).getFunction().getFieldName());
+            assertEquals(Integer.valueOf(52), aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals(Integer.valueOf(52), aggregation.getAggregationValue(Integer.class, 0));
+
+            aggregation = aggregationList.get(1);
+            assertNotNull(aggregation);
+            assertEquals(1, aggregation.getGroupingList().size());
+            assertEquals("gender", aggregation.getGroupingList().get(0).getFieldName());
+            assertEquals(Gender.MALE, aggregation.getGroupingList().get(0).getValue());
+            assertEquals(Gender.MALE, aggregation.getGroupingValue(Gender.class, 0));
+            assertEquals(Gender.MALE, aggregation.getGroupingValue(Gender.class, "gender"));
+            assertEquals(1, aggregation.getAggregationList().size());
+            assertEquals("age", aggregation.getAggregationList().get(0).getFunction().getFieldName());
+            assertEquals(Integer.valueOf(125), aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals(Integer.valueOf(125), aggregation.getAggregationValue(Integer.class, 0));          
         } finally {
             tm.endTransaction();
         }
