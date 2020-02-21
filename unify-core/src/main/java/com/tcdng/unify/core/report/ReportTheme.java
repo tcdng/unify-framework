@@ -214,7 +214,7 @@ public class ReportTheme {
             detailTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#FFFFFF"), Color.decode("#FFFFFF"));
             shadeTheme = new ThemeColors(Color.decode("#000000"), Color.decode("#EEEEEE"), Color.decode("#EEEEEE"));
             grandSummaryTheme =
-                    new ThemeColors(Color.decode("#000000"), Color.decode("#D0D0D0"), Color.decode("#D0D0D0"));
+                    new ThemeColors(Color.decode("#000000"), Color.decode("#EEEEEE"), Color.decode("#EEEEEE"));
         }
 
         public Builder columnFontSize(int columnFontSize) {
