@@ -110,7 +110,7 @@ public class PieChart extends AbstractChart {
             return this;
         }
 
-        public Builder showLegend(double plotContentSize) {
+        public Builder plotContentSize(double plotContentSize) {
             this.plotContentSize = plotContentSize;
             return this;
         }
