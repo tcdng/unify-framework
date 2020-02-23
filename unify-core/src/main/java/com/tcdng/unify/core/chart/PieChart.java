@@ -31,23 +31,33 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class PieChart extends AbstractChart {
 
+    private static final double DEFAULT_PLOT_CONTENT_SIZE = 0.6;
+    
     private List<SingleValueSeries> seriesList;
 
-    private PieChart(int width, int height, ColorPalette colorPalette, ChartImageFormat format,
+    private double plotContentSize;
+    
+    private PieChart(int width, int height, double plotContentSize, ColorPalette colorPalette, ChartImageFormat format,
             AnnotationType annotationType, ValueFormat valueFormat, boolean showLegend,
             List<SingleValueSeries> seriesList) {
         super(width, height, colorPalette, format, annotationType, valueFormat, showLegend);
+        this.plotContentSize = plotContentSize;
         this.seriesList = seriesList;
     }
 
-    private PieChart(int width, int height, ColorPalette colorPalette, AnnotationType annotationType,
+    private PieChart(int width, int height, double plotContentSize, ColorPalette colorPalette, AnnotationType annotationType,
             ValueFormat valueFormat, boolean showLegend, List<SingleValueSeries> seriesList) {
         super(width, height, colorPalette, annotationType, valueFormat, showLegend);
+        this.plotContentSize = plotContentSize;
         this.seriesList = seriesList;
     }
 
     public List<SingleValueSeries> getSeriesList() {
         return seriesList;
+    }
+
+    public double getPlotContentSize() {
+        return plotContentSize;
     }
 
     public static Builder newBuilder(int width, int height) {
@@ -59,6 +69,8 @@ public class PieChart extends AbstractChart {
         private int width;
 
         private int height;
+
+        private double plotContentSize;
 
         private ChartImageFormat format;
 
@@ -75,6 +87,7 @@ public class PieChart extends AbstractChart {
         public Builder(int width, int height) {
             this.width = width;
             this.height = height;
+            this.plotContentSize = DEFAULT_PLOT_CONTENT_SIZE;
             this.annotationType = AnnotationType.VALUE;
             this.valueFormat = ValueFormat.INTEGER;
             this.showLegend = true;
@@ -94,6 +107,11 @@ public class PieChart extends AbstractChart {
 
         public Builder valueFormat(ValueFormat valueFormat) {
             this.valueFormat = valueFormat;
+            return this;
+        }
+
+        public Builder showLegend(double plotContentSize) {
+            this.plotContentSize = plotContentSize;
             return this;
         }
 
@@ -124,11 +142,11 @@ public class PieChart extends AbstractChart {
 
         public PieChart build() {
             if (format == null) {
-                return new PieChart(width, height, colorPalette, annotationType, valueFormat, showLegend,
+                return new PieChart(width, height, plotContentSize, colorPalette, annotationType, valueFormat, showLegend,
                         DataUtils.unmodifiableList(seriesList));
             }
 
-            return new PieChart(width, height, colorPalette, format, annotationType, valueFormat, showLegend,
+            return new PieChart(width, height, plotContentSize, colorPalette, format, annotationType, valueFormat, showLegend,
                     DataUtils.unmodifiableList(seriesList));
         }
     }
