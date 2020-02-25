@@ -58,11 +58,11 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
         fileCtrl = (FileUpload) addInternalChildControl(
                 "!ui-fileupload acceptBinding:typeName selectOnly:true hidden:true");
         attachCtrl = addInternalChildControl(
-                "!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach}");
+                "!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach} debounce:false");
         viewCtrl = addInternalChildControl(
-                "!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view}");
+                "!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view} debounce:false");
         removeCtrl = addInternalChildControl(
-                "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove}");
+                "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} debounce:false");
     }
 
     @Override

@@ -99,10 +99,10 @@ public class AssignmentBox extends AbstractMultiControl {
                 constructMultiSelect("assignList", "assignListKey", "assignListDesc", "assignedSelList", msStyle));
         unassignedSelCtrl = (Control) addInternalChildControl(constructMultiSelect("unassignList", "unassignListKey",
                 "unassignListDesc", "unassignedSelList", msStyle));
-        assignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assign}");
-        assignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assignall}");
-        unassignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassign}");
-        unassignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassignall}");
+        assignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assign} debounce:false");
+        assignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assignall} debounce:false");
+        unassignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassign} debounce:false");
+        unassignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassignall} debounce:false");
     }
 
     @SuppressWarnings("unchecked")
