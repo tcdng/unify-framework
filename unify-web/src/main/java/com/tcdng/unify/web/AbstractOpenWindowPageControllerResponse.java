@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJsonPageControllerResponse {
 
     public AbstractOpenWindowPageControllerResponse() {
-        super("openWindowHdl");
+        super("openWindowHdl", false);
     }
 
     @Override

@@ -25,7 +25,6 @@ import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
-import com.tcdng.unify.web.PageController;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.WebApplicationComponents;
@@ -597,8 +596,6 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
 
             if (pageAction.isUplAttribute("command")) {
-                boolean isPage = PageController.class.isAssignableFrom(
-                        getComponentType(getRequestContextUtil().getResponsePathParts().getControllerName()));
                 String cmd = pageAction.getUplAttribute(String.class, "command");
                 if (cmd != null) {
                     writer.write(",\"uCmdURL\":\"");
@@ -607,34 +604,28 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                     writer.write(",\"uTrgCmd\":\"").write(cmd).write("\"");
                 }
 
-                String dynamicPanelPgNm = getRequestContextUtil().getDynamicPanelPageName();
-                String targetPgNm = dynamicPanelPgNm;
-                if (isPage) {
-                    targetPgNm = pageManager.getPageName(pageAction.getParentLongName());
-                }
-                
+                String targetCmdPgNm = null;
                 String commandTarget = pageAction.getUplAttribute(String.class, "target");
                 if (commandTarget != null) {
-                    targetPgNm = pageManager.getPageName(commandTarget);
+                    targetCmdPgNm = pageManager.getPageName(commandTarget);
                 }
 
-                if (targetPgNm == null) {
-                    targetPgNm = pageManager.getPageName(pageAction.getParentLongName());
+                if (targetCmdPgNm == null) {
+                    targetCmdPgNm = pageManager.getPageName(pageAction.getParentLongName());
                 }
 
-                writer.write(",\"uTrgPnl\":\"").write(targetPgNm).write("\"");
+                writer.write(",\"uTrgPnl\":\"").write(targetCmdPgNm).write("\"");
 
                 UplElementReferences uer = pageAction.getUplAttribute(UplElementReferences.class, "refresh");
                 if (uer != null) {
                     writer.write(",\"uRefreshPnls\":").writeJsonArray(pageManager.getPageNames(uer.getLongNames()));
                 } else {
-                    writer.write(",\"uRefreshPnls\":[\"");
-                    if (targetPgNm == dynamicPanelPgNm) {
-                        writer.write(getRequestContextUtil().getDynamicPanelParentPageName());
-                    } else {
-                        writer.write(targetPgNm);
+                    String targetRefreshPgNm = getRequestContextUtil().getDynamicPanelParentPageName();
+                    if (targetRefreshPgNm == null) {
+                        targetRefreshPgNm = pageManager.getPageName(pageAction.getParentLongName());
                     }
-                    writer.write("\"]");
+
+                    writer.write(",\"uRefreshPnls\":[\"").write(targetRefreshPgNm).write("\"]");
                 }
             }
 

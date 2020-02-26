@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class FileDownloadResponse extends AbstractJsonPageControllerResponse {
 
     public FileDownloadResponse() {
-        super("downloadHdl");
+        super("downloadHdl", false);
     }
 
     @Override

@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class LoadContentResponse extends AbstractJsonPageControllerResponse {
 
     public LoadContentResponse() {
-        super("loadContentHdl");
+        super("loadContentHdl", true);
     }
 
     @Override
