@@ -37,7 +37,7 @@ import com.tcdng.unify.web.ui.data.Hint;
 public class HintUserResponse extends AbstractJsonPageControllerResponse {
 
     public HintUserResponse() {
-        super("hintUserHdl");
+        super("hintUserHdl", false);
     }
 
     @Override

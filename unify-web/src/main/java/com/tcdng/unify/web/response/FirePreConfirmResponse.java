@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class FirePreConfirmResponse extends AbstractJsonPageControllerResponse {
 
     public FirePreConfirmResponse() {
-        super("firePreConfirmHdl");
+        super("firePreConfirmHdl", false);
     }
 
     @Override

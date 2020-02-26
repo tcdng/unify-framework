@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class CommandPostResponse extends AbstractJsonPageControllerResponse {
 
     public CommandPostResponse() {
-        super("commandPostHdl");
+        super("commandPostHdl", false);
     }
 
     @Override

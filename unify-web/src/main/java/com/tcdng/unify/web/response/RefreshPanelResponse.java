@@ -34,7 +34,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
 
     public RefreshPanelResponse() {
-        super("refreshPanelHdl");
+        super("refreshPanelHdl", true);
     }
 
     @Override

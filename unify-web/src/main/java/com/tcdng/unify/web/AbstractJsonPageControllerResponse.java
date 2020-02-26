@@ -35,8 +35,11 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
 
     private String handlerName;
 
-    public AbstractJsonPageControllerResponse(String handlerName) {
+    private boolean processSaveList;
+
+    public AbstractJsonPageControllerResponse(String handlerName, boolean processSaveList) {
         this.handlerName = handlerName;
+        this.processSaveList = processSaveList;
     }
 
     @Override
@@ -47,12 +50,17 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
 
         if (reqUtils.isFocusOnWidget()) {
             writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetId()).write("\"");
+            reqUtils.clearFocusOnWidget();
         }
 
-        List<String> saveList = reqUtils.getOnSaveContentWidgets();
-        if (DataUtils.isNotBlank(saveList)) {
-            writer.write(",\"pSaveList\":").writeJsonArray(saveList);
+        if (processSaveList) {
+            List<String> saveList = reqUtils.getOnSaveContentWidgets();
+            if (DataUtils.isNotBlank(saveList)) {
+                writer.write(",\"pSaveList\":").writeJsonArray(saveList);
+                reqUtils.clearOnSaveContentWidgets();
+            }
         }
+
         writer.write("}");
     }
     

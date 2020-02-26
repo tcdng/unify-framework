@@ -37,7 +37,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class ForwardResponse extends AbstractJsonPageControllerResponse {
 
     public ForwardResponse() {
-        super("forwardHdl");
+        super("forwardHdl", false);
     }
 
     @Override

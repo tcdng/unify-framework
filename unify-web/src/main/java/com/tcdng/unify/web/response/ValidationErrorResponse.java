@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.data.ValidationInfo;
 public class ValidationErrorResponse extends AbstractJsonPageControllerResponse {
 
     public ValidationErrorResponse() {
-        super("validationErrorHdl");
+        super("validationErrorHdl", false);
     }
 
     @Override
