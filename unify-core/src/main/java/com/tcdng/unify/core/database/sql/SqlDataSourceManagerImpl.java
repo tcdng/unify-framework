@@ -33,6 +33,9 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.StaticList;
+import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.database.DataSourceManager;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.DataUtils;
@@ -348,6 +351,54 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                 pstmt = connection.prepareStatement(sql);
                 pstmt.executeUpdate();
                 SqlUtils.close(pstmt);
+            }
+            connection.commit();
+
+            // Update static reference data
+            if (EnumConst.class.isAssignableFrom(entityClass)) {
+                StaticList sla = entityClass.getAnnotation(StaticList.class);
+                if (sla != null) {
+                    logDebug("Updating static data for reference {0}...", sqlEntityInfo.getEnumConstClass());
+                    Map<String, String> map = getListMap(LocaleType.APPLICATION, sla.value());
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        final String code = entry.getKey();
+                        final String description = entry.getValue();
+
+                        final SqlFieldInfo codeFieldInfo = sqlEntityInfo.getFieldInfo("code");
+                        final SqlFieldInfo descFieldInfo = sqlEntityInfo.getFieldInfo("description");
+                        pstmt = connection
+                                .prepareStatement("SELECT COUNT(*) FROM " + sqlEntityInfo.getPreferredTableName()
+                                        + " WHERE " + codeFieldInfo.getPreferredColumnName() + " = ?");
+                        pstmt.setString(1, code);
+                        rs = pstmt.executeQuery();
+                        rs.next();
+                        final int count = rs.getInt(1);
+                        SqlUtils.close(pstmt);
+                        SqlUtils.close(rs);
+
+                        if (count == 0) {
+                            logDebug("Insert static record with code = [{0}] and description = [{1}]...", code,
+                                    description);
+                            pstmt = connection.prepareStatement("INSERT INTO " + sqlEntityInfo.getPreferredTableName()
+                                    + " (" + codeFieldInfo.getPreferredColumnName() + ", "
+                                    + descFieldInfo.getPreferredColumnName() + ") VALUES (?, ?)");
+                            pstmt.setString(1, code);
+                            pstmt.setString(2, description);
+                            pstmt.executeUpdate();
+                            SqlUtils.close(pstmt);
+                        } else {
+                            logDebug("Updating description = [{0}] for static record with code = [{1}] ...",
+                                    description, code);
+                            pstmt = connection.prepareStatement("UPDATE " + sqlEntityInfo.getPreferredTableName()
+                                    + " SET " + descFieldInfo.getPreferredColumnName() + " = ? WHERE "
+                                    + codeFieldInfo.getPreferredColumnName() + " = ?");
+                            pstmt.setString(1, description);
+                            pstmt.setString(2, code);
+                            pstmt.executeUpdate();
+                            SqlUtils.close(pstmt);
+                        }
+                    }
+                }
             }
             connection.commit();
         } catch (SQLException e) {
