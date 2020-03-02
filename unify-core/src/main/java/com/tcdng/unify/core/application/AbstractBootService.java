@@ -16,19 +16,13 @@
 package com.tcdng.unify.core.application;
 
 import java.util.List;
-import java.util.Map;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
-import com.tcdng.unify.core.constant.EnumConst;
-import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.database.DataSourceManager;
-import com.tcdng.unify.core.database.StaticReference;
-import com.tcdng.unify.core.database.StaticReferenceQuery;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.VersionUtils;
 
@@ -89,8 +83,6 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 if (isDeployNewVersion) {
                     logInfo("Installing newer application version {0}. Current version is {1}.", versionToDeploy,
                             lastDeploymentVersion);
-
-                    updateStaticReferenceTables();
 
                     BootInstallationInfo<T> bootInstallationInfo = prepareBootInstallation();
                     if (bootInstallationInfo.isInstallers() && bootInstallationInfo.isFeatures()) {
@@ -164,34 +156,6 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
         logInfo("Managing datasources...");
         for (String datasource : datasources) {
             dataSourceManager.manageDataSource(datasource);
-        }
-    }
-
-    private void updateStaticReferenceTables() throws UnifyException {
-        // Update reference tables
-        logDebug("Updating static reference tables...");
-        List<Class<? extends EnumConst>> enumConstList = getAnnotatedClasses(EnumConst.class, StaticList.class);
-
-        for (Class<? extends EnumConst> clazz : enumConstList) {
-            StaticList ra = clazz.getAnnotation(StaticList.class);
-            logDebug("Updating static reference table [{0}]...", ra.value());
-            Map<String, String> map = getListMap(LocaleType.APPLICATION, ra.value());
-            StaticReferenceQuery query = new StaticReferenceQuery(clazz);
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String description = entry.getValue();
-                query.clear();
-                query.code(entry.getKey());
-                StaticReference staticData = db().find(query);
-                if (staticData == null) {
-                    staticData = new StaticReference(clazz);
-                    staticData.setCode(entry.getKey());
-                    staticData.setDescription(description);
-                    db().create(staticData);
-                } else if (!description.equals(staticData.getDescription())) {
-                    staticData.setDescription(description);
-                    db().updateById(staticData);
-                }
-            }
         }
     }
 
