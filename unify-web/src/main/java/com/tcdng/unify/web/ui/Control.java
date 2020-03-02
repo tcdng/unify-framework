@@ -70,14 +70,6 @@ public interface Control extends DataTransferWidget {
     String getNotificationId() throws UnifyException;
 
     /**
-     * Updates control state.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void updateState() throws UnifyException;
-
-    /**
      * Sets focus on this control.
      * 
      * @return a true value if focused otherwise false

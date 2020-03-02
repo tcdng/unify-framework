@@ -427,6 +427,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         return null;
     }
 
+    @Override
+    public void updateInternalState() throws UnifyException {
+
+    }
+
     protected void setPageAttribute(String name, Object value) throws UnifyException {
         getRequestContextUtil().getRequestPage().setAttribute(name, value);
     }

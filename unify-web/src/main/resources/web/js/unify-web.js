@@ -41,6 +41,9 @@ const UNIFY_LASTUSERACT_EFFECT_PERIOD = 180000; // 3 minutes.
 
 const UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 
+const UNIFY_MINUTES_IN_DAY = 1440;
+const UNIFY_MINUTES_IN_HOUR = 60;
+
 ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
@@ -1486,6 +1489,46 @@ ux.dateCalendarDayClick = function(id, dayCount) {
 	ux.setPatternValue(_id(id).uRigPrm);
 	ux.hidePopup(null);
 	ux.datePopulateCalendar(_id(id).evp);
+}
+
+/** Duration Select */
+ux.rigDurationSelect = function(rgp) {
+	var evp = {};
+	if (rgp.pDaySelId) {
+		evp.daySel = _id(rgp.pDaySelId);
+	}
+
+	if (rgp.pHourSelId) {
+		evp.hourSel = _id(rgp.pHourSelId);
+	}
+
+	evp.minSel = _id(rgp.pMinSelId);
+	evp.durationHid = _id(rgp.pDurationId);
+
+	if (evp.daySel) {
+		ux.attachHandler(evp.daySel, "change", ux.durationSelCalc, evp);
+	}
+
+	if (evp.hourSel) {
+		ux.attachHandler(evp.hourSel, "change", ux.durationSelCalc, evp);
+	}
+
+	ux.attachHandler(evp.minSel, "change", ux.durationSelCalc, evp);
+}
+
+ux.durationSelCalc = function(uEv) {
+	var evp = uEv.evp;
+	var totalMinutes = 0;
+	if (evp.daySel) {
+		totalMinutes = totalMinutes + evp.daySel.value * UNIFY_MINUTES_IN_DAY;
+	}
+
+	if (evp.hourSel) {
+		totalMinutes = totalMinutes + evp.hourSel.value * UNIFY_MINUTES_IN_HOUR;
+	}
+
+	totalMinutes = totalMinutes + evp.minSel.value * 1;
+	evp.durationHid.value = totalMinutes;
 }
 
 /** FileAttachment */
