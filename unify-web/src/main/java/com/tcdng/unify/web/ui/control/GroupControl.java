@@ -47,11 +47,6 @@ public class GroupControl extends AbstractMultiControl implements Control {
     }
 
     @Override
-    public void updateState() throws UnifyException {
-
-    }
-
-    @Override
     public void addPageAliases() throws UnifyException {
         if (isContainerEditable()) {
             addPageAlias(getDataGroupId());

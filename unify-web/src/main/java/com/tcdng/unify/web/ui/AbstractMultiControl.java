@@ -86,9 +86,10 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
             DataTransferBlock childBlock = transferBlock.getChildBlock();
             Control control = (Control) getChildControlInfo(childBlock.getId()).getControl();
             control.populate(childBlock);
+            onInternalChildPopulated(control);
         }
     }
-
+    
     @Override
     public ChildControlInfo getChildControlInfo(String childId) {
         return controlInfoMap.get(childId);
@@ -193,6 +194,10 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
      */
     protected void addPageAlias(String id) throws UnifyException {
         getRequestContextUtil().addPageAlias(getId(), id);
+    }
+
+    protected void onInternalChildPopulated(Control control) throws UnifyException {
+        
     }
 
     private void doAddChildControl(Control control, boolean pageConstruct, boolean conforming, boolean ignoreParentState,

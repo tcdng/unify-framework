@@ -37,6 +37,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
     @Override
     public void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+        widget.updateInternalState();
         doWriteStructureAndContent(writer, widget);
         widget.addPageAliases();
     }
@@ -45,6 +46,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     public void writeStructureAndContent(ResponseWriter writer, Widget widget, String id) throws UnifyException {
         String origId = widget.getId();
         widget.setId(id);
+        widget.updateInternalState();
         doWriteStructureAndContent(writer, widget);
         widget.addPageAliases();
         widget.setId(origId);

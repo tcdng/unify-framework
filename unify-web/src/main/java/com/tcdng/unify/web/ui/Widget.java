@@ -514,4 +514,13 @@ public interface Widget extends UplComponent {
      *             if an error occurs
      */
     void onPageConstruct() throws UnifyException;
+
+    /**
+     * Updates widget internal state. Widget is expected to synchronize internal
+     * state with binded value.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void updateInternalState() throws UnifyException;
 }

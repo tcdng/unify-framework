@@ -37,15 +37,14 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         AssignmentBox assignmentBox = (AssignmentBox) widget;
-        assignmentBox.updateState();
         writer.write("<div");
         writeTagAttributes(writer, assignmentBox);
         writer.write(">");
 
         writer.write("<div class=\"abftable\">");
         writer.write("<div class=\"abrow\">");
-        writeFilter(writer, assignmentBox, assignmentBox.getFilterSel1(), assignmentBox.getFilterCaption1());
-        writeFilter(writer, assignmentBox, assignmentBox.getFilterSel2(), assignmentBox.getFilterCaption2());
+        writeFilter(writer, assignmentBox.getFilterSel1(), assignmentBox.getFilterCaption1());
+        writeFilter(writer, assignmentBox.getFilterSel2(), assignmentBox.getFilterCaption2());
         writer.write("</div></div>");
 
         writer.write("<div class=\"abtable\">");
@@ -110,7 +109,7 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
         writer.write("});");
     }
 
-    private void writeFilter(ResponseWriter writer, AssignmentBox assignmentBox, Control filter, String caption)
+    private void writeFilter(ResponseWriter writer, Control filter, String caption)
             throws UnifyException {
         if (filter != null) {
             writer.write("<div class=\"abscell\"> <span class=\"ablabel\">");

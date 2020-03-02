@@ -598,5 +598,15 @@ public final class CalendarUtils {
         public int getSeconds() {
             return seconds;
         }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("{days = ").append(days);
+            sb.append(", hours = ").append(hours);
+            sb.append(", minutes = ").append(minutes);
+            sb.append(", seconds = ").append(seconds);
+            sb.append("}");
+            return sb.toString();
+        }
     }
 }

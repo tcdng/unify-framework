@@ -503,6 +503,14 @@ z-index:400;}
 .ui-dropdownchecklist {width:180px;}
 .ui-dropdownchecklist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
 
+/** Duration select */
+.ui-durationselect {}
+.ui-durationselect .dsselect {display:inline-block; width: 52px; margin-bottom:6px;}
+.ui-durationselect .dslabel {padding-left:2px; padding-right:10px;}
+.ui-durationselect .dstable {display:table;}
+.ui-durationselect .dsrow {display:table-row;}
+.ui-durationselect .dscell {display:table-cell;}
+
 /** File attachment */
 .ui-fileattachment {}
 .ui-fileattachment .faodd {display:table-row;background-color: #FFF;border: 1px solid #A9A9A9;}

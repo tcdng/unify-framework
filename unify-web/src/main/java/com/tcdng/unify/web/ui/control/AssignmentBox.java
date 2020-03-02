@@ -77,6 +77,7 @@ public class AssignmentBox extends AbstractMultiControl {
 
     @Override
     public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         String filterList1 = getUplAttribute(String.class, "filterList1");
         if (StringUtils.isNotBlank(filterList1)) {
             filterCtrl1 = (Control) addInternalChildControl("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
@@ -107,7 +108,7 @@ public class AssignmentBox extends AbstractMultiControl {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void updateState() throws UnifyException {
+    public void updateInternalState() throws UnifyException {
         List<String> valueList = getValue(List.class, String.class);
         if (assignedIdList != valueList) {
             assignedIdList = valueList;
