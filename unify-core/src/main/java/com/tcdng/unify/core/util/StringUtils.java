@@ -646,14 +646,17 @@ public final class StringUtils {
     }
 
     public static String buildParameterizedString(List<StringToken> tokenList, Map<String, Object> parameters) {
-        if (tokenList.isEmpty()) {
+        if (DataUtils.isBlank(tokenList)) {
             return "";
         }
 
         StringBuilder sb = new StringBuilder();
         for (StringToken stringToken : tokenList) {
             if (stringToken.isParam()) {
-                sb.append(parameters.get(stringToken.getToken()));
+                Object val = parameters.get(stringToken.getToken());
+                if(val != null) {
+                    sb.append(val);
+                }
             } else {
                 sb.append(stringToken.getToken());
             }
