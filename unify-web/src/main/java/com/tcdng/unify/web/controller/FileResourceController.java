@@ -25,6 +25,7 @@ import com.tcdng.unify.core.cache.FileCache;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.AbstractResourceController;
 import com.tcdng.unify.web.annotation.RequestParameter;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Resource controller for fetching file resources from application real path,
@@ -49,10 +50,10 @@ public class FileResourceController extends AbstractResourceController {
     private boolean cache;
 
     public FileResourceController() {
-        super(false);
+        super(Secured.FALSE);
     }
 
-    public FileResourceController(boolean secured) {
+    public FileResourceController(Secured secured) {
         super(secured);
     }
 

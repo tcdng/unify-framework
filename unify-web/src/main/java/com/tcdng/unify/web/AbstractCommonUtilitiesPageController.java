@@ -18,6 +18,9 @@ package com.tcdng.unify.web;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.web.annotation.ResultMapping;
 import com.tcdng.unify.web.annotation.ResultMappings;
+import com.tcdng.unify.web.constant.ReadOnly;
+import com.tcdng.unify.web.constant.ResetOnWrite;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Base class for common utilities page controller.
@@ -35,7 +38,7 @@ public abstract class AbstractCommonUtilitiesPageController<T extends AbstractPa
         extends AbstractPageController<T> {
 
     public AbstractCommonUtilitiesPageController(Class<T> pageBeanClass) {
-        super(pageBeanClass, true, false, false);
+        super(pageBeanClass, Secured.TRUE, ReadOnly.FALSE, ResetOnWrite.FALSE);
     }
 
 }

@@ -25,6 +25,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Resource controller for fetching file resources from application real path.
@@ -46,7 +47,7 @@ public class RealPathResourceController extends FileResourceController {
     }
 
     public RealPathResourceController(String subfolder) {
-        super(false);
+        super(Secured.FALSE);
         this.subfolder = subfolder;
     }
 

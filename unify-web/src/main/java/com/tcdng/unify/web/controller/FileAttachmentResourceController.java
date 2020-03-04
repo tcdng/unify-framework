@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.AbstractResourceController;
+import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.ui.control.FileAttachmentHandler;
 import com.tcdng.unify.web.ui.data.FileAttachmentInfo;
 import com.tcdng.unify.web.ui.data.FileAttachmentsInfo;
@@ -35,7 +36,7 @@ import com.tcdng.unify.web.ui.data.FileAttachmentsInfo;
 public class FileAttachmentResourceController extends AbstractResourceController {
 
     public FileAttachmentResourceController() {
-        super(false);
+        super(Secured.FALSE);
     }
 
     @Override

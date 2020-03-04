@@ -16,6 +16,10 @@
 
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.web.constant.ReadOnly;
+import com.tcdng.unify.web.constant.ResetOnWrite;
+import com.tcdng.unify.web.constant.Secured;
+
 /**
  * Convenient abstract base class for void page bean page controller.
  * 
@@ -28,8 +32,8 @@ public abstract class AbstractVoidBeanPageController extends AbstractPageControl
         super(VoidPageBean.class);
     }
 
-    public AbstractVoidBeanPageController(boolean secured) {
-        super(VoidPageBean.class, secured, true, false);
+    public AbstractVoidBeanPageController(Secured secured) {
+        super(VoidPageBean.class, secured, ReadOnly.TRUE, ResetOnWrite.FALSE);
     }
 
 }
