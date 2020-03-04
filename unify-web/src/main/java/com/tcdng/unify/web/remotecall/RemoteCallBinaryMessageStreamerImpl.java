@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.TaggedBinaryMessage;
 import com.tcdng.unify.core.stream.AbstractObjectStreamer;
 
@@ -91,7 +92,7 @@ public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
     }
 
     @Override
-    public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
+    public void marshal(Object object, OutputStream outputStream, Charset charset, PrintFormat printFormat) throws UnifyException {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(outputStream);
             if (PushBinaryMessageParams.class.equals(object.getClass())) {
@@ -128,12 +129,12 @@ public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer
     }
 
     @Override
-    public void marshal(Object object, Writer writer) throws UnifyException {
+    public void marshal(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
         throwUnsupportedOperationException();
     }
 
     @Override
-    public byte[] marshal(Object object) throws UnifyException {
+    public byte[] marshal(Object object, PrintFormat printFormat) throws UnifyException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         marshal(object, baos);
         return baos.toByteArray();

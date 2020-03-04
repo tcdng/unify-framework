@@ -43,6 +43,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.AbstractPool;
 import com.tcdng.unify.core.data.FactoryMap;
 
@@ -60,9 +61,6 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
 
     @Configurable("2000")
     private long getTimeout;
-
-    @Configurable("false")
-    private boolean nicelyFormatted;
 
     private FactoryMap<Class<?>, JAXBContextPool> jaxbContextPools;
 
@@ -179,7 +177,8 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
     }
 
     @Override
-    public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
+    public void marshal(Object object, OutputStream outputStream, Charset charset, PrintFormat printFormat)
+            throws UnifyException {
         Marshaller marshaller = jaxbContextPools.get(object.getClass()).getMarshallerPool().borrowObject();
         try {
             if (charset == null) {
@@ -188,7 +187,7 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
                 marshaller.setProperty(Marshaller.JAXB_ENCODING, charset.name());
             }
 
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, nicelyFormatted);
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, PrintFormat.PRETTY.equals(printFormat));
 
             marshaller.marshal(object, outputStream);
             outputStream.flush();
@@ -200,10 +199,10 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
     }
 
     @Override
-    public void marshal(Object object, Writer writer) throws UnifyException {
+    public void marshal(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
         Marshaller marshaller = jaxbContextPools.get(object.getClass()).getMarshallerPool().borrowObject();
         try {
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, nicelyFormatted);
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, PrintFormat.PRETTY.equals(printFormat));
             marshaller.marshal(object, writer);
             writer.flush();
         } catch (Exception e) {
@@ -214,9 +213,9 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
     }
 
     @Override
-    public String marshal(Object object) throws UnifyException {
+    public String marshal(Object object, PrintFormat printFormat) throws UnifyException {
         StringWriter writer = new StringWriter();
-        marshal(object, writer);
+        marshal(object, writer, printFormat);
         return writer.toString();
     }
 

@@ -24,6 +24,7 @@ import java.nio.charset.Charset;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -66,17 +67,18 @@ public class JSONObjectStreamerImpl extends AbstractObjectStreamer implements JS
     }
 
     @Override
-    public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
-        DataUtils.writeJsonObject(object, outputStream, charset);
+    public void marshal(Object object, OutputStream outputStream, Charset charset, PrintFormat printFormat)
+            throws UnifyException {
+        DataUtils.writeJsonObject(object, outputStream, charset, printFormat);
     }
 
     @Override
-    public void marshal(Object object, Writer writer) throws UnifyException {
-        DataUtils.writeJsonObject(object, writer);
+    public void marshal(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
+        DataUtils.writeJsonObject(object, writer, printFormat);
     }
 
     @Override
-    public String marshal(Object object) throws UnifyException {
-        return DataUtils.writeJsonObject(object);
+    public String marshal(Object object, PrintFormat printFormat) throws UnifyException {
+        return DataUtils.writeJsonObject(object, printFormat);
     }
 }

@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
  * CalendarUtils tests.
@@ -338,7 +339,7 @@ public class DataUtilsTest {
 
     @Test
     public void testWriteEmptyJsonObject() throws Exception {
-        String json = DataUtils.writeJsonObject(new Inventory());
+        String json = DataUtils.writeJsonObject(new Inventory(), PrintFormat.NONE);
         assertNotNull(json);
         assertEquals("{}", json);
     }
@@ -347,7 +348,7 @@ public class DataUtilsTest {
     public void testWriteJsonObject() throws Exception {
         Book book = new Book("Saladin", BigDecimal.valueOf(10.0), 20, false);
         book.setPriceHistory(new Double[] { 8.32, 9.14 });
-        String json = DataUtils.writeJsonObject(book);
+        String json = DataUtils.writeJsonObject(book, PrintFormat.NONE);
         assertNotNull(json);
 
         Book jsonBook = DataUtils.readJsonObject(Book.class, json);
@@ -372,7 +373,7 @@ public class DataUtilsTest {
         book.setPriceHistory(new Double[] { 12.45, 11.0, 11.22 });
         entry.setBook(book);
 
-        String json = DataUtils.writeJsonObject(entry);
+        String json = DataUtils.writeJsonObject(entry, PrintFormat.NONE);
         assertNotNull(json);
 
         InventoryEntry jsonEntry = DataUtils.readJsonObject(InventoryEntry.class, json);
@@ -410,7 +411,7 @@ public class DataUtilsTest {
 
         Inventory inventory = new Inventory();
         inventory.setEntries(new InventoryEntry[] { entry1, entry2 });
-        String json = DataUtils.writeJsonObject(inventory);
+        String json = DataUtils.writeJsonObject(inventory, PrintFormat.NONE);
         assertNotNull(json);
 
         Inventory jsonInventory = DataUtils.readJsonObject(Inventory.class, json);
@@ -462,7 +463,7 @@ public class DataUtilsTest {
         ((Picture) pictureAsset.getResource()).setWidth(200);
         ((Picture) pictureAsset.getResource()).setHeight(50);
 
-        String json = DataUtils.writeJsonObject(pictureAsset);
+        String json = DataUtils.writeJsonObject(pictureAsset, PrintFormat.NONE);
         assertNotNull(json);
 
         PictureAsset jsonPictureAsset = DataUtils.readJsonObject(PictureAsset.class, json);

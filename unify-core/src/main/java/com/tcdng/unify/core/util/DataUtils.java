@@ -50,12 +50,14 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonObject.Member;
 import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.PrettyPrint;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.convert.BigDecimalConverter;
 import com.tcdng.unify.core.convert.BooleanConverter;
 import com.tcdng.unify.core.convert.ByteArrayConverter;
@@ -314,7 +316,7 @@ public final class DataUtils {
         collectionInterfaceToClassMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, JsonValueConverter> jsonConverrerMap;
+    private static final Map<Class<?>, JsonValueConverter> jsonConverterMap;
 
     static {
         Map<Class<?>, JsonValueConverter> map = new HashMap<Class<?>, JsonValueConverter>();
@@ -343,7 +345,7 @@ public final class DataUtils {
         map.put(short.class, new JsonShortConverter());
         map.put(String.class, new JsonStringConverter());
         map.put(String[].class, new JsonStringArrayConverter());
-        jsonConverrerMap = Collections.unmodifiableMap(map);
+        jsonConverterMap = Collections.unmodifiableMap(map);
     }
 
     private DataUtils() {
@@ -473,7 +475,7 @@ public final class DataUtils {
                 return DataType.STRING;
             }
         }
-        
+
         return dataType;
     }
 
@@ -1314,17 +1316,20 @@ public final class DataUtils {
      *            the output stream to write to
      * @param charset
      *            optional character set
+     * @param printFormat
+     *            formatting type
      * @throws UnifyException
      *             if an error occurs
      */
-    public static void writeJsonObject(Object object, OutputStream outputStream, Charset charset)
-            throws UnifyException {
+    public static void writeJsonObject(Object object, OutputStream outputStream, Charset charset,
+            PrintFormat printFormat) throws UnifyException {
         if (charset == null) {
-            DataUtils.writeJsonObject(object, new BufferedWriter(new OutputStreamWriter(outputStream)));
+            DataUtils.writeJsonObject(object, new BufferedWriter(new OutputStreamWriter(outputStream)), printFormat);
             return;
         }
 
-        DataUtils.writeJsonObject(object, new BufferedWriter(new OutputStreamWriter(outputStream, charset)));
+        DataUtils.writeJsonObject(object, new BufferedWriter(new OutputStreamWriter(outputStream, charset)),
+                printFormat);
     }
 
     /**
@@ -1334,14 +1339,25 @@ public final class DataUtils {
      *            the object to write
      * @param writer
      *            the writer to write to
+     * @param printFormat
+     *            formatting type
      * @throws UnifyException
      *             if an error occurs
      */
-    public static void writeJsonObject(Object object, Writer writer) throws UnifyException {
+    public static void writeJsonObject(Object object, Writer writer, PrintFormat printFormat)
+            throws UnifyException {
         try {
             JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject);
-            jsonObject.writeTo(writer);
+            DataUtils.writeJsonObject(object, jsonObject, printFormat);
+            switch (printFormat) {
+                case PRETTY:
+                    jsonObject.writeTo(writer, PrettyPrint.PRETTY_PRINT);
+                    break;
+                case NONE:
+                default:
+                    jsonObject.writeTo(writer);
+                    break;
+            }
             writer.flush();
         } catch (UnifyException e) {
             throw e;
@@ -1350,10 +1366,10 @@ public final class DataUtils {
         }
     }
 
-    public static String writeJsonObject(Object object) throws UnifyException {
+    public static String writeJsonObject(Object object, PrintFormat printFormat) throws UnifyException {
         try {
             JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject);
+            DataUtils.writeJsonObject(object, jsonObject, printFormat);
             return jsonObject.toString();
         } catch (UnifyException e) {
             throw e;
@@ -1480,7 +1496,7 @@ public final class DataUtils {
                     throw new Exception("Type " + object.getClass() + " has no mutator for member " + member.getName());
                 }
 
-                JsonValueConverter<?> converter = jsonConverrerMap.get(paramType);
+                JsonValueConverter<?> converter = jsonConverterMap.get(paramType);
                 if (converter == null) {
                     if (Collection.class.isAssignableFrom(paramType)) {
                         JsonArray array = value.asArray();
@@ -1488,7 +1504,7 @@ public final class DataUtils {
                                 DataUtils.getCollectionConcreteType((Class<? extends Collection>) paramType));
                         if (sInfo.isParameterArgumented()) {
                             Class<?> componentType = sInfo.getArgumentType();
-                            converter = jsonConverrerMap.get(sInfo.getArgumentType());
+                            converter = jsonConverterMap.get(sInfo.getArgumentType());
                             if (converter == null) {
                                 for (int i = 0; i < array.size(); i++) {
                                     result.add(DataUtils.readJsonObject(componentType.newInstance(),
@@ -1505,7 +1521,7 @@ public final class DataUtils {
                     } else if (paramType.isArray()) {
                         JsonArray array = value.asArray();
                         Class<?> componentType = paramType.getComponentType();
-                        converter = jsonConverrerMap.get(componentType);
+                        converter = jsonConverterMap.get(componentType);
                         Object[] valueArray = (Object[]) Array.newInstance(componentType, array.size());
                         if (converter == null) {
                             for (int i = 0; i < valueArray.length; i++) {
@@ -1531,7 +1547,8 @@ public final class DataUtils {
         return object;
     }
 
-    private static <T> void writeJsonObject(T object, JsonObject jsonObject) throws UnifyException, Exception {
+    private static <T> void writeJsonObject(T object, JsonObject jsonObject, PrintFormat printFormat)
+            throws UnifyException, Exception {
         if (object != null) {
             Map<String, GetterSetterInfo> accessorMap = ReflectUtils.getGetterSetterMap(object.getClass());
             for (String name : accessorMap.keySet()) {
@@ -1545,21 +1562,21 @@ public final class DataUtils {
                     Class<?> returnType = gInfo.getType();
                     if (Object.class.equals(returnType)) {
                         JsonObject jsonValue = Json.object();
-                        DataUtils.writeJsonObject(value, jsonValue);
+                        DataUtils.writeJsonObject(value, jsonValue, printFormat);
                         jsonObject.add(name, jsonValue);
                     } else {
-                        JsonValueConverter<?> converter = jsonConverrerMap.get(returnType);
+                        JsonValueConverter<?> converter = jsonConverterMap.get(returnType);
                         if (converter == null) {
                             if (Collection.class.isAssignableFrom(value.getClass())) {
                                 JsonArray array = (JsonArray) Json.array();
                                 if (gInfo.isParameterArgumented()) {
-                                    converter = jsonConverrerMap.get(gInfo.getArgumentType());
+                                    converter = jsonConverterMap.get(gInfo.getArgumentType());
                                 }
 
                                 if (converter == null) {
                                     for (Object obj : (Collection<?>) value) {
                                         JsonObject jsonValue = Json.object();
-                                        DataUtils.writeJsonObject(obj, jsonValue);
+                                        DataUtils.writeJsonObject(obj, jsonValue, printFormat);
                                         array.add(jsonValue);
                                     }
                                 } else {
@@ -1572,12 +1589,12 @@ public final class DataUtils {
                             } else if (value.getClass().isArray()) {
                                 JsonArray array = (JsonArray) Json.array();
                                 Class<?> componentType = value.getClass().getComponentType();
-                                converter = jsonConverrerMap.get(componentType);
+                                converter = jsonConverterMap.get(componentType);
                                 int length = Array.getLength(value);
                                 if (converter == null) {
                                     for (int i = 0; i < length; i++) {
                                         JsonObject jsonValue = Json.object();
-                                        DataUtils.writeJsonObject(Array.get(value, i), jsonValue);
+                                        DataUtils.writeJsonObject(Array.get(value, i), jsonValue, printFormat);
                                         array.add(jsonValue);
                                     }
                                 } else {
@@ -1589,7 +1606,7 @@ public final class DataUtils {
                                 jsonObject.add(name, array);
                             } else {
                                 JsonObject jsonValue = Json.object();
-                                DataUtils.writeJsonObject(value, jsonValue);
+                                DataUtils.writeJsonObject(value, jsonValue, printFormat);
                                 jsonObject.add(name, jsonValue);
                             }
                         } else {
