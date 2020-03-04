@@ -20,6 +20,7 @@ import java.io.InputStream;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Resource controller for fetching file resources from class loader.
@@ -31,7 +32,7 @@ import com.tcdng.unify.core.util.IOUtils;
 public class ClassLoaderResourceController extends FileResourceController {
 
     public ClassLoaderResourceController() {
-        super(false);
+        super(Secured.FALSE);
     }
 
     @Override

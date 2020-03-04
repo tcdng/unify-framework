@@ -24,6 +24,9 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.annotation.RequestParameter;
+import com.tcdng.unify.web.constant.ReadOnly;
+import com.tcdng.unify.web.constant.ResetOnWrite;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Abstract base class for resource request controllers.
@@ -48,8 +51,8 @@ public abstract class AbstractResourceController extends AbstractUIController im
 
     private Map<String, String> metaDataMap;
 
-    public AbstractResourceController(boolean secured) {
-        super(secured, false, false);
+    public AbstractResourceController(Secured secured) {
+        super(secured, ReadOnly.FALSE, ResetOnWrite.FALSE);
     }
 
     @Override
@@ -85,7 +88,7 @@ public abstract class AbstractResourceController extends AbstractUIController im
     }
 
     @Override
-    public void reset() throws UnifyException{
+    public void reset() throws UnifyException {
 
     }
 

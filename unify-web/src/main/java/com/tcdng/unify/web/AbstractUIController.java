@@ -15,6 +15,10 @@
  */
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.web.constant.ReadOnly;
+import com.tcdng.unify.web.constant.ResetOnWrite;
+import com.tcdng.unify.web.constant.Secured;
+
 /**
  * Convenient base class for user interface controllers.
  * 
@@ -27,10 +31,10 @@ public abstract class AbstractUIController extends AbstractController implements
 
     private boolean resetOnWrite;
 
-    public AbstractUIController(boolean secured, boolean readOnly, boolean resetOnWrite) {
+    public AbstractUIController(Secured secured, ReadOnly readOnly, ResetOnWrite resetOnWrite) {
         super(secured);
-        this.readOnly = readOnly;
-        this.resetOnWrite = resetOnWrite;
+        this.readOnly = readOnly.isTrue();
+        this.resetOnWrite = resetOnWrite.isTrue();
     }
 
     @Override

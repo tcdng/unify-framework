@@ -13,27 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.annotation.Singleton;
-import com.tcdng.unify.web.constant.Secured;
+package com.tcdng.unify.web.constant;
 
 /**
- * Convenient base class for plain controllers.
+ * Read only enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(true)
-public abstract class AbstractPlainController extends AbstractController implements PlainController {
-
-    public AbstractPlainController() {
-        super(Secured.FALSE);
+public enum ReadOnly {
+    TRUE,
+    FALSE;
+    
+    public boolean isTrue() {
+        return TRUE.equals(this);
     }
-
-    @Override
-    public final ControllerType getType() {
-        return ControllerType.PLAIN_CONTROLLER;
+    
+    public boolean isFalse() {
+        return FALSE.equals(this);
     }
-
 }

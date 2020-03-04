@@ -23,6 +23,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.annotation.RequestParameter;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Mock resource controller.
@@ -34,7 +35,7 @@ import com.tcdng.unify.web.annotation.RequestParameter;
 public class MockResourceController extends AbstractResourceController {
 
     public MockResourceController() {
-        super(false);
+        super(Secured.FALSE);
     }
 
     @RequestParameter

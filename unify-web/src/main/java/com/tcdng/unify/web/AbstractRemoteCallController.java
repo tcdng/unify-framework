@@ -16,6 +16,7 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Convenient base class for remote call controller.
@@ -27,7 +28,7 @@ import com.tcdng.unify.core.annotation.Singleton;
 public abstract class AbstractRemoteCallController extends AbstractController implements RemoteCallController {
 
     public AbstractRemoteCallController() {
-        super(false);
+        super(Secured.FALSE);
     }
 
     @Override

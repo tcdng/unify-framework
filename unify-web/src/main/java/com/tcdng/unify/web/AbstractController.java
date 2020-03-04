@@ -20,6 +20,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.data.ValueStoreFactory;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Abstract base controller component.
@@ -37,8 +38,8 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 
     private boolean secured;
 
-    public AbstractController(boolean secured) {
-        this.secured = secured;
+    public AbstractController(Secured secured) {
+        this.secured = secured.isTrue();
     }
 
     @Override
