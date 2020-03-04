@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
  * Interface for object stream read/write device.
@@ -87,7 +88,7 @@ public interface ObjectStreamer extends UnifyComponent {
     <T> T unmarshal(Class<T> type, String string) throws UnifyException;
 
     /**
-     * Writes an object to supplied output stream.
+     * Writes an object to supplied output stream with no formatting.
      * 
      * @param object
      *            the object to write
@@ -101,7 +102,7 @@ public interface ObjectStreamer extends UnifyComponent {
     void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException;
 
     /**
-     * Writes an object to supplied output stream.
+     * Writes an object to supplied output stream with no formatting.
      * 
      * @param object
      *            the object to write
@@ -113,7 +114,7 @@ public interface ObjectStreamer extends UnifyComponent {
     void marshal(Object object, OutputStream outputStream) throws UnifyException;
 
     /**
-     * Writes an object to supplied writer.
+     * Writes an object to supplied writer with no formatting.
      * 
      * @param object
      *            the object to write
@@ -125,7 +126,7 @@ public interface ObjectStreamer extends UnifyComponent {
     void marshal(Object object, Writer writer) throws UnifyException;
 
     /**
-     * Writes an object.
+     * Writes an object with no formatting.
      * 
      * @param object
      *            the object to write
@@ -134,4 +135,62 @@ public interface ObjectStreamer extends UnifyComponent {
      * @return Object the object result
      */
     Object marshal(Object object) throws UnifyException;
+
+    /**
+     * Writes an object to supplied output stream.
+     * 
+     * @param object
+     *            the object to write
+     * @param outputStream
+     *            the stream to write to
+     * @param charset
+     *            character set
+     * @param printFormat
+     *            how output should formatted
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void marshal(Object object, OutputStream outputStream, Charset charset, PrintFormat printFormat)
+            throws UnifyException;
+
+    /**
+     * Writes an object to supplied output stream.
+     * 
+     * @param object
+     *            the object to write
+     * @param outputStream
+     *            the stream to write to
+     * @param printFormat
+     *            how output should formatted
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void marshal(Object object, OutputStream outputStream, PrintFormat printFormat) throws UnifyException;
+
+    /**
+     * Writes an object to supplied writer.
+     * 
+     * @param object
+     *            the object to write
+     * @param writer
+     *            the writer to write to
+     * @param printFormat
+     *            how output should formatted
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void marshal(Object object, Writer writer, PrintFormat printFormat) throws UnifyException;
+
+    /**
+     * Writes an object.
+     * 
+     * @param object
+     *            the object to write
+     * @param printFormat
+     *            how output should formatted
+     * @throws UnifyException
+     *             if an error occurs
+     * @return Object the marshal result
+     */
+    Object marshal(Object object, PrintFormat printFormat) throws UnifyException;
 }
