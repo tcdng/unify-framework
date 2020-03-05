@@ -24,6 +24,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
@@ -105,7 +106,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateRenameTable(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-            SqlEntitySchemaInfo oldSqlRecordSchemaInfo, boolean format) throws UnifyException {
+            SqlEntitySchemaInfo oldSqlRecordSchemaInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("sp_RENAME '").append(oldSqlRecordSchemaInfo.getSchemaTableName()).append('.')
                 .append(sqlRecordSchemaInfo.getSchemaTableName()).append("'");
@@ -114,10 +115,10 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -129,7 +130,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
         if (sqlColumnAlterInfo.isAltered()) {
             List<String> sqlList = new ArrayList<String>();
@@ -149,7 +150,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
             }
 
             sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-            if (format) {
+            if (format.isPretty()) {
                 sb.append(getLineSeparator());
             } else {
                 sb.append(' ');
@@ -162,7 +163,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
             if (sqlFieldSchemaInfo.isWithDefaultVal()) {
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -185,10 +186,10 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -202,7 +203,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("sp_RENAME '").append(sqlRecordSchemaInfo.getSchemaTableName()).append('.')
                 .append(oldSqlFieldSchemaInfo.getPreferredColumnName()).append("', '");
@@ -212,10 +213,10 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
