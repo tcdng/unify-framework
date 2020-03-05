@@ -109,12 +109,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private static final String TIMESTAMP_FORMAT = "''yyyy-MM-dd HH:mm:ss''";
 
-    private static final Set<String> TYPE_NO_PRECISION;
-
-    static {
-        TYPE_NO_PRECISION = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("BIGINT", "DATETIME")));
-    }
-
     @Configurable
     private SqlEntityInfoFactory sqlEntityInfoFactory;
 
@@ -139,6 +133,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies;
 
+    private Set<String> noPrecisionTypes;
+    
     private String terminationSql;
 
     private String newLineSql;
@@ -203,6 +199,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlCriteriaPolicies.put(RestrictionType.IS_NOT_NULL, new IsNotNullPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.AND, new AndPolicy(this));
         sqlCriteriaPolicies.put(RestrictionType.OR, new OrPolicy(this));
+        
+        noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME"));
     }
 
     @Override
@@ -1460,6 +1458,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlDataTypePolicies.put(columnType, sqlDataTypePolicy);
     }
 
+    protected boolean includeNoPrecisionType(String sqlType) {
+        return noPrecisionTypes.add(sqlType);
+    }
+    
     protected List<String> getDataSourceInitStatements() {
         return Collections.emptyList();
     }
@@ -1862,7 +1864,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected void appendTypeSql(StringBuilder sb, SqlColumnInfo sqlColumnInfo) {
         String typeName = sqlColumnInfo.getTypeName().toUpperCase();
         sb.append(' ').append(typeName);
-        if (sqlColumnInfo.getSize() > 0 && !TYPE_NO_PRECISION.contains(typeName)) {
+        if (sqlColumnInfo.getSize() > 0 && !noPrecisionTypes.contains(typeName)) {
             sb.append('(').append(sqlColumnInfo.getSize());
             if (sqlColumnInfo.getDecimalDigits() > 0) {
                 sb.append(',').append(sqlColumnInfo.getDecimalDigits());

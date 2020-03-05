@@ -234,6 +234,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
         setDataTypePolicy(ColumnType.DATE, new MsSqlDatePolicy());
         setDataTypePolicy(ColumnType.BLOB, new MsSqlBlobPolicy());
         setDataTypePolicy(ColumnType.CLOB, new MsSqlClobPolicy());
+        
+        includeNoPrecisionType("INT");
     }
 
     private void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo) throws UnifyException {
