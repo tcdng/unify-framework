@@ -17,16 +17,24 @@
 package com.tcdng.unify.core.constant;
 
 /**
- * Print format enumeration.
+ * Unique constraints enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum PrintFormat {
-    NONE,
-    PRETTY;
+public enum UniqueConstraints {
+    TRUE,
+    FALSE;
     
-    public boolean isPretty() {
-        return PRETTY.equals(this);
+    public boolean isTrue() {
+        return TRUE.equals(this);
+    }
+    
+    public UniqueConstraints of(boolean val) {
+        if(val) {
+            return TRUE;
+        }
+        
+        return FALSE;
     }
 }

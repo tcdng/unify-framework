@@ -25,6 +25,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
@@ -73,7 +74,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
         if (sqlColumnAlterInfo.isAltered()) {
             List<String> sqlList = new ArrayList<String>();
@@ -81,7 +82,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
             SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
             if (sqlColumnAlterInfo.isDataChange()) {
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -95,7 +96,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
             if (sqlColumnAlterInfo.isDefaultChange()) {
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -124,7 +125,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
                 }
 
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -147,10 +148,10 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');

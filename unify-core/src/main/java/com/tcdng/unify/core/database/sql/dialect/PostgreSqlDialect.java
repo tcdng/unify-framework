@@ -26,6 +26,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
@@ -72,11 +73,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException {
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         String tableName = sqlRecordSchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(" ");
@@ -88,10 +89,10 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -103,7 +104,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
         if (sqlColumnAlterInfo.isAltered()) {
             List<String> sqlList = new ArrayList<String>();
@@ -123,7 +124,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
             }
 
             sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-            if (format) {
+            if (format.isPretty()) {
                 sb.append(getLineSeparator());
             } else {
                 sb.append(' ');
@@ -140,10 +141,10 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
