@@ -67,8 +67,8 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
                         .append(timeField.getPrefixedId("btnat_")).append(i).append("\">").append(plusBtnSymbol)
                         .append("</button></div>");
                 csb.append(
-                        "<div style=\"display:table-cell\"><input type=\"text\" class=\"tftext\" readonly=\"true\" id=\"")
-                        .append(fp.getTarget()).append("\" value=\"").append(value).append("\"/>");
+                        "<div style=\"display:table-cell\"><input type=\"text\" class=\"tftext\" id=\"")
+                        .append(fp.getTarget()).append("\" value=\"").append(value).append("\" readonly />");
                 if (listableList != null) {
                     int j = 0;
                     for (Listable listable : listableList) {

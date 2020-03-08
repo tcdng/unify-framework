@@ -93,7 +93,7 @@ public class FileUploadWriter extends AbstractControlWriter {
             writer.write("</button>");
 
             writer.write("<input type=\"text\" class=\"fsspan\" id=\"").write(fileUpload.getSpanId())
-                    .write("\" readonly/>");
+                    .write("\" readonly />");
 
             writer.write("</div>");
         }
