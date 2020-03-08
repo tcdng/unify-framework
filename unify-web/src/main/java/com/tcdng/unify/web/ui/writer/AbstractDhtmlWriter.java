@@ -60,6 +60,23 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
+        writeTagAttributes(writer, widget, widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param styleClass
+     *            the style class to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributes(ResponseWriter writer, Widget widget, String styleClass)
+            throws UnifyException {
         writer.write(" id=\"").write(widget.getId()).write("\"");
 
         String groupId = widget.getGroupId();
@@ -67,7 +84,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             writer.write(" name=\"").write(groupId).write("\"");
         }
 
-        writer.write(" class=\"").write(widget.getStyleClass());
+        writer.write(" class=\"").write(styleClass);
         String valStyleClass = widget.getStyleClassValue();
         if (valStyleClass != null) {
             writer.write(" ").write(valStyleClass);
@@ -383,6 +400,22 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     }
 
     /**
+     * Writes tag readonly attribute
+     * 
+     * @param writer
+     *            the writer to use
+     * @param widget
+     *            the widget
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagReadOnly(ResponseWriter writer, Widget widget) throws UnifyException {
+        if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
+            writer.write(" readonly");
+        }
+    }
+
+    /**
      * Writes tag id attribute.
      * 
      * @param sb
@@ -669,7 +702,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 writer.write(",\"uIsDebounce\":");
                 writer.write(pageAction.getUplAttribute(boolean.class, "debounce"));
             }
-            
+
             if (pageAction.isUplAttribute("confirm")) {
                 String confirm = pageAction.getUplAttribute(String.class, "confirm");
                 if (StringUtils.isNotBlank(confirm)) {
