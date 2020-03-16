@@ -178,49 +178,49 @@ public class DataUtilsTest {
 
     @Test
     public void testSortAscending() throws Exception {
-        DataUtils.sort(bookList, Book.class, "author", true);
+        DataUtils.sortAscending(bookList, Book.class, "author");
         assertEquals("Aladin", bookList.get(0).getAuthor());
         assertEquals("Maladin", bookList.get(1).getAuthor());
         assertEquals("Paladin", bookList.get(2).getAuthor());
         assertEquals("Saladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "price", true);
+        DataUtils.sortAscending(bookList, Book.class, "price");
         assertEquals("Saladin", bookList.get(0).getAuthor());
         assertEquals("Maladin", bookList.get(1).getAuthor());
         assertEquals("Aladin", bookList.get(2).getAuthor());
         assertEquals("Paladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "copies", true);
+        DataUtils.sortAscending(bookList, Book.class, "copies");
         assertEquals("Maladin", bookList.get(0).getAuthor());
         assertEquals("Paladin", bookList.get(1).getAuthor());
         assertEquals("Aladin", bookList.get(2).getAuthor());
         assertEquals("Saladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "censored", true);
+        DataUtils.sortAscending(bookList, Book.class, "censored");
         assertEquals("Paladin", bookList.get(3).getAuthor());
     }
 
     @Test
     public void testSortDescending() throws Exception {
-        DataUtils.sort(bookList, Book.class, "author", false);
+        DataUtils.sortDescending(bookList, Book.class, "author");
         assertEquals("Saladin", bookList.get(0).getAuthor());
         assertEquals("Paladin", bookList.get(1).getAuthor());
         assertEquals("Maladin", bookList.get(2).getAuthor());
         assertEquals("Aladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "price", false);
+        DataUtils.sortDescending(bookList, Book.class, "price");
         assertEquals("Paladin", bookList.get(0).getAuthor());
         assertEquals("Aladin", bookList.get(1).getAuthor());
         assertEquals("Maladin", bookList.get(2).getAuthor());
         assertEquals("Saladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "copies", false);
+        DataUtils.sortDescending(bookList, Book.class, "copies");
         assertEquals("Saladin", bookList.get(0).getAuthor());
         assertEquals("Aladin", bookList.get(1).getAuthor());
         assertEquals("Paladin", bookList.get(2).getAuthor());
         assertEquals("Maladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "censored", false);
+        DataUtils.sortDescending(bookList, Book.class, "censored");
         assertEquals("Paladin", bookList.get(0).getAuthor());
     }
 

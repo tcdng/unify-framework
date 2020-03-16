@@ -931,7 +931,7 @@ public final class DataUtils {
     }
 
     /**
-     * Sorts a list by bean property.
+     * Sorts a list by bean property ascending.
      * 
      * @param list
      *            the list to sort
@@ -939,58 +939,55 @@ public final class DataUtils {
      *            the bean type
      * @param property
      *            the bean property to sort with
-     * @param ascending
-     *            the sort direction. A true value means sort ascending
      * @throws UnifyException
      *             if an error occurs
      */
-    @SuppressWarnings("unchecked")
-    public static <T> void sort(List<?> list, Class<T> beanClass, String property, boolean ascending)
+    public static <T> void sortAscending(List<?> list, Class<T> beanClass, String property)
             throws UnifyException {
-        String key = beanClass.getName() + '.' + property + '.' + ascending;
-        Comparator<T> comparator = (Comparator<T>) comparatorMap.get(key);
-        if (comparator == null) {
-            synchronized (COMPARATORMAP_LOCK) {
-                comparator = (Comparator<T>) comparatorMap.get(key);
-                if (comparator == null) {
-                    GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterInfo(beanClass, property);
-                    comparator = new ObjectByFieldComparator<T>(getterSetterInfo.getGetter(), ascending);
-                    comparatorMap.put(key, comparator);
-                }
-            }
-        }
-        Collections.sort((List<T>) list, comparator);
+        DataUtils.sort(list, beanClass, property, true);
     }
 
     /**
-     * Compares two comparable value for sorting.
+     * Sorts a list by bean property descending.
+     * 
+     * @param list
+     *            the list to sort
+     * @param beanClass
+     *            the bean type
+     * @param property
+     *            the bean property to sort with
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static <T> void sortDescending(List<?> list, Class<T> beanClass, String property)
+            throws UnifyException {
+       DataUtils.sort(list, beanClass, property, false);
+    }
+
+    /**
+     * Compares two comparable value for sorting ascending.
      * 
      * @param value1
      *            the first value
      * @param value2
      *            the second value
-     * @param ascending
-     *            the sort direction
-     * @return an integer representing the comparision result
+     * @return an integer representing the comparison result
      */
-    public static int compareForSort(Comparable<Object> value1, Comparable<Object> value2, boolean ascending) {
-        if (value1 == value2) {
-            return 0;
-        }
+    public static int compareForSortAscending(Comparable<Object> value1, Comparable<Object> value2) {
+        return DataUtils.compareForSort(value1, value2, true);
+    }
 
-        if (ascending) {
-            if (value1 == null)
-                return -1;
-            if (value2 == null)
-                return 1;
-            return value1.compareTo(value2);
-        } else {
-            if (value1 == null)
-                return 1;
-            if (value2 == null)
-                return -1;
-            return -value1.compareTo(value2);
-        }
+    /**
+     * Compares two comparable value for sorting descending.
+     * 
+     * @param value1
+     *            the first value
+     * @param value2
+     *            the second value
+     * @return an integer representing the comparison result
+     */
+    public static int compareForSortDescending(Comparable<Object> value1, Comparable<Object> value2) {
+        return DataUtils.compareForSort(value1, value2, false);
     }
 
     /**
@@ -1615,6 +1612,44 @@ public final class DataUtils {
                     }
                 }
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> void sort(List<?> list, Class<T> beanClass, String property, boolean ascending)
+            throws UnifyException {
+        String key = beanClass.getName() + '.' + property + '.' + ascending;
+        Comparator<T> comparator = (Comparator<T>) comparatorMap.get(key);
+        if (comparator == null) {
+            synchronized (COMPARATORMAP_LOCK) {
+                comparator = (Comparator<T>) comparatorMap.get(key);
+                if (comparator == null) {
+                    GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterInfo(beanClass, property);
+                    comparator = new ObjectByFieldComparator<T>(getterSetterInfo.getGetter(), ascending);
+                    comparatorMap.put(key, comparator);
+                }
+            }
+        }
+        Collections.sort((List<T>) list, comparator);
+    }
+
+    private static int compareForSort(Comparable<Object> value1, Comparable<Object> value2, boolean ascending) {
+        if (value1 == value2) {
+            return 0;
+        }
+
+        if (ascending) {
+            if (value1 == null)
+                return -1;
+            if (value2 == null)
+                return 1;
+            return value1.compareTo(value2);
+        } else {
+            if (value1 == null)
+                return 1;
+            if (value2 == null)
+                return -1;
+            return -value1.compareTo(value2);
         }
     }
 

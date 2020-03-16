@@ -43,7 +43,7 @@ public class SqlDataSourceSchemaListCommand extends AbstractDynamicSqlDataSource
             for (String schema : getDsManager().getSchemas(params.getConfigName())) {
                 schemaList.add(new ListData(schema, schema));
             }
-            DataUtils.sort(schemaList, Listable.class, "listDescription", true);
+            DataUtils.sortAscending(schemaList, Listable.class, "listDescription");
             return schemaList;
         }
 

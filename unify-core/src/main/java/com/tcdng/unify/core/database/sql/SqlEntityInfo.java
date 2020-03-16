@@ -136,7 +136,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         }
 
         List<SqlFieldInfo> inputlistFieldInfoList = new ArrayList<SqlFieldInfo>(listFieldInfoByName.values());
-        DataUtils.sort(inputlistFieldInfoList, SqlFieldSchemaInfo.class, "foreignEntityPreferredAlias", true);
+        DataUtils.sortAscending(inputlistFieldInfoList, SqlFieldSchemaInfo.class, "foreignEntityPreferredAlias");
         for (SqlFieldInfo sqlFieldInfo : inputlistFieldInfoList) {
             if (!sqlFieldInfo.isListOnly()) {
                 fieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);

@@ -40,7 +40,7 @@ public class SqlDataSourceColumnListCommand extends AbstractDynamicSqlDataSource
                 && StringUtils.isNotBlank(params.getTableName())) {
             List<SqlColumnInfo> columnList =
                     getDsManager().getColumns(params.getConfigName(), params.getSchemaName(), params.getTableName());
-            DataUtils.sort(columnList, SqlColumnInfo.class, "listDescription", true);
+            DataUtils.sortAscending(columnList, SqlColumnInfo.class, "listDescription");
             return columnList;
         }
 

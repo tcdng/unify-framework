@@ -45,7 +45,7 @@ public class JavaLocaleListCommand extends AbstractZeroParamsListCommand {
                 javaLocaleList.add(new ListData(availLocale.toLanguageTag(), availLocale.getDisplayName(locale)));
             }
             
-            DataUtils.sort(javaLocaleList, ListData.class, "listDescription", true);
+            DataUtils.sortAscending(javaLocaleList, ListData.class, "listDescription");
         }
 
         return javaLocaleList;

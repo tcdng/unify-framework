@@ -249,7 +249,7 @@ public class UnifyContainerConfig {
         }
 
         public UnifyContainerConfig build() throws UnifyException {
-            DataUtils.sort(staticSettings, UnifyStaticSettings.class, "level", true);
+            DataUtils.sortAscending(staticSettings, UnifyStaticSettings.class, "level");
             return new UnifyContainerConfig(Collections.unmodifiableMap(unifyComponentConfigs),
                     Collections.unmodifiableMap(settings), Collections.unmodifiableMap(aliases),
                     Collections.unmodifiableList(staticSettings), deploymentVersion, nodeId, clusterMode,

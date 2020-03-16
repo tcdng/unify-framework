@@ -44,7 +44,7 @@ public class SqlDataSourceTableListCommand extends AbstractDynamicSqlDataSourceL
 
             List<SqlTableInfo> tableList =
                     getDsManager().getTables(params.getConfigName(), params.getSchemaName(), sqlTableType);
-            DataUtils.sort(tableList, SqlTableInfo.class, "listDescription", true);
+            DataUtils.sortAscending(tableList, SqlTableInfo.class, "listDescription");
             return tableList;
         }
 

@@ -299,7 +299,11 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
                 // Sort original list to
                 List<?> items = (List<?>) getValue();
-                DataUtils.sort(items, items.get(0).getClass(), columnState.getFieldName(), sortDirection);
+               if(sortDirection) {
+                   DataUtils.sortAscending(items, items.get(0).getClass(), columnState.getFieldName());
+               } else {
+                   DataUtils.sortDescending(items, items.get(0).getClass(), columnState.getFieldName());
+               }
             }
         }
     }
@@ -880,8 +884,13 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         @Override
         public int compare(Row row1, Row row2) {
             try {
-                return DataUtils.compareForSort((Comparable<Object>) row1.getRowValueStore().retrieve(property),
-                        (Comparable<Object>) row2.getRowValueStore().retrieve(property), ascending);
+                if (ascending) {
+                    return DataUtils.compareForSortAscending((Comparable<Object>) row1.getRowValueStore().retrieve(property),
+                            (Comparable<Object>) row2.getRowValueStore().retrieve(property));
+                }
+
+                return DataUtils.compareForSortDescending((Comparable<Object>) row1.getRowValueStore().retrieve(property),
+                        (Comparable<Object>) row2.getRowValueStore().retrieve(property));
             } catch (UnifyException e) {
             }
             return 0;

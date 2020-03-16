@@ -677,8 +677,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 if (sqlOrderColumns) {
                     List<SqlFieldInfo> tempList = new ArrayList<SqlFieldInfo>(propertyInfoMap.values());
-                    DataUtils.sort(tempList, SqlFieldInfo.class, "columnName", true);
-                    DataUtils.sort(tempList, SqlFieldInfo.class, "orderIndex", true);
+                    DataUtils.sortAscending(tempList, SqlFieldInfo.class, "columnName");
+                    DataUtils.sortAscending(tempList, SqlFieldInfo.class, "orderIndex");
 
                     propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
                     for (SqlFieldInfo sqlFieldInfo : tempList) {

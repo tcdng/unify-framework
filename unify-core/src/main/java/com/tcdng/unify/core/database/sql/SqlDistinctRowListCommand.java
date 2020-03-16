@@ -55,7 +55,7 @@ public class SqlDistinctRowListCommand extends AbstractDynamicSqlDataSourceListC
                 resultList.add(new ListData(String.valueOf(item[0]), String.valueOf(item[1])));
             }
 
-            DataUtils.sort(resultList, ListData.class, "listDescription", true);
+            DataUtils.sortAscending(resultList, ListData.class, "listDescription");
             return resultList;
         }
 
