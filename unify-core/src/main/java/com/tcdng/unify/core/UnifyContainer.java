@@ -1307,6 +1307,7 @@ public class UnifyContainer {
         Class<? extends BusinessService> proxyClazz =
                 bspg.generateCompileLoadProxyBusinessServiceClass(businessLogicConfig.getName(),
                         (Class<? extends BusinessService>) businessLogicConfig.getType(), pluginMap);
+        logDebug("Proxy business class [{0}] generated...", proxyClazz.getName());
         UnifyComponentConfig internalComponentConfig =
                 new UnifyComponentConfig(businessLogicConfig.getSettings(), businessLogicConfig.getName(),
                         businessLogicConfig.getDescription(), proxyClazz, businessLogicConfig.isSingleton());
