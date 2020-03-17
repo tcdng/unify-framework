@@ -15,11 +15,14 @@
  */
 package com.tcdng.unify.core.business.internal;
 
+import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.codehaus.janino.SimpleCompiler;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
@@ -42,7 +45,6 @@ import com.tcdng.unify.core.business.BusinessLogicUnit;
 import com.tcdng.unify.core.business.BusinessService;
 import com.tcdng.unify.core.constant.DeploymentMode;
 import com.tcdng.unify.core.system.ClusterService;
-import com.tcdng.unify.core.util.CompilerUtils;
 import com.tcdng.unify.core.util.NameUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
@@ -343,7 +345,9 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
             }
 
             String className = generateProxyBusinessServiceName(businessServiceClazz);
-            return (Class<? extends BusinessService>) CompilerUtils.compileAndLoadClass(className, source);
+            SimpleCompiler compiler = new SimpleCompiler();
+            compiler.cook(new StringReader(source));
+            return (Class<? extends BusinessService>) compiler.getClassLoader().loadClass(className);
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
