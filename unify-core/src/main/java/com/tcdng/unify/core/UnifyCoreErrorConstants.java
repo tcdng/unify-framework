@@ -949,4 +949,7 @@ public interface UnifyCoreErrorConstants {
 
     /** Aggregation grouping field with name {0} is unknown. */
     String AGGREGATION_GROUPING_FIELD_UNKNOWN = "UC_00F1";
+
+    /** Compilation error {0}*/
+    String JAVA_SOURCE_COMPILATION_ERROR= "UC_00F2";
 }
