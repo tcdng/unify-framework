@@ -82,6 +82,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
     private static final String ENUM_TABLE_PREFIX = "RF";
 
+    private static final String RESERVED_FIELD = "ext";
+    
     @Configurable("true")
     private boolean sqlOrderColumns;
 
@@ -233,6 +235,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 do {
                     Field[] fields = searchClass.getDeclaredFields();
                     for (Field field : fields) {
+                        if(RESERVED_FIELD.equals(field.getName())) {
+                            continue;
+                        }
+                        
                         boolean isEnumConst = EnumConst.class.isAssignableFrom(field.getType());
                         boolean isPersistent = false;
                         boolean isPrimaryKey = false;
@@ -719,6 +725,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 do {
                     Field[] fields = searchClass.getDeclaredFields();
                     for (Field field : fields) {
+                        if(RESERVED_FIELD.equals(field.getName())) {
+                            continue;
+                        }
+                        
                         boolean isPrimaryKey = false;
                         Column ca = field.getAnnotation(Column.class);
                         if (ca != null) {
@@ -985,6 +995,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             do {
                                 Field[] fields = searchClass.getDeclaredFields();
                                 for (Field field : fields) {
+                                    if(RESERVED_FIELD.equals(field.getName())) {
+                                        continue;
+                                    }
+                                    
                                     addSqlCallableFieldInfo(fieldInfoList, resultClass, field);
                                 }
                             } while ((searchClass = searchClass.getSuperclass()) != null);
@@ -1086,6 +1100,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
         do {
             Field[] fields = searchClass.getDeclaredFields();
             for (Field fld : fields) {
+                if(RESERVED_FIELD.equals(fld.getName())) {
+                    continue;
+                }
+                
                 ForeignKey fka = fld.getAnnotation(ForeignKey.class);
                 if (fka != null && fka.childKey()) {
                     if (entityClass.equals(fka.value()) || entityClass.equals(fka.type())) {
