@@ -3458,50 +3458,59 @@ ux.buildNameParams = function(name, builtNames, param) {
 
 ux.extractObjParams = function(elem, param) {
 	if (elem && !elem.disabled && elem.type != "button") {
-		var transferId = elem.id;
+		var trnId = elem.id;
 		if (elem.type == "hidden") {
+			var pblank = false;
 			if(elem.value == "pushc_") {
-				var cElems = _name(transferId);
+				pblank = true;
+				var cElems = _name(trnId);
 				for(var i = 0; i < cElems.length; i++) {
 					if (cElems[i].checked) {
-						ux.appendParam(transferId, cElems[i].value, param);
+						ux.appendParam(trnId, cElems[i].value, param);
+						pblank = false;
 					}
 				}
 			} else if(elem.value == "pushr_") {
-				var rElems = _name(transferId);
+				pblank = true;
+				var rElems = _name(trnId);
 				for(var i = 0; i < rElems.length; i++) {
 					if (rElems[i].checked) {
-						ux.appendParam(transferId, rElems[i].value, param);
+						ux.appendParam(trnId, rElems[i].value, param);
+						pblank = false;
 						break;
 					}
 				}
 			} else if(elem.value == "pushg_") {
-				var gElems = _name(transferId);
+				var gElems = _name(trnId);
 				for(var i = 0; i < gElems.length; i++) {
 					ux.extractObjParams(gElems[i], param);
 				}
 			} else {
-				ux.appendParam(transferId, elem.value, param);
+				ux.appendParam(trnId, elem.value, param);
+			}
+			
+			if (pblank) {
+				ux.appendParam(trnId, "", param);
 			}
 		} else if (elem.type == "checkbox") {
-			ux.appendParam(transferId, elem.checked, param);
+			ux.appendParam(trnId, elem.checked, param);
 		} else if (elem.type == "select-multiple") {
 			for (var i = 0; i < elem.options.length; i++) {
 				if (elem.options[i].selected) {
-					ux.appendParam(transferId, elem.options[i].value, param);
+					ux.appendParam(trnId, elem.options[i].value, param);
 				}
 			}
 		} else if (elem.type == "file") {
 			if (elem.value) {
 				var files = elem.files;
 				for (var i = 0; i < files.length; i++) {
-					param.value.append(transferId, files[i],
+					param.value.append(trnId, files[i],
 							files[i].name);
 				}
 			}
 		} else {
 			if (elem.value != undefined) {
-				ux.appendParam(transferId, elem.value, param);
+				ux.appendParam(trnId, elem.value, param);
 			}
 		}
 	}
