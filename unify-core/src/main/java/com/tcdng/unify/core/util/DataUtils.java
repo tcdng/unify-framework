@@ -136,9 +136,9 @@ public final class DataUtils {
 
     public static final String EMPTY_STRING = "";
 
-    private static final Map<Class<?>, DataType> classToDataTypeMap;
-
     private static DateTimeFormatter defaultDateTimeFormatter;
+
+    private static final Map<Class<?>, DataType> classToDataTypeMap;
 
     static {
         Map<Class<?>, DataType> map = new HashMap<Class<?>, DataType>();

@@ -18,6 +18,7 @@ package com.tcdng.unify.core.constant;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.util.EnumUtils;
 
@@ -30,25 +31,30 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("datatypelist")
 public enum DataType implements EnumConst {
 
-    CHAR("CH", Character.class),
-    BOOLEAN("BL", Boolean.class),
-    SHORT("SH", Short.class),
-    INTEGER("IN", Integer.class),
-    LONG("LN", Long.class),
-    FLOAT("FL", Float.class),
-    DOUBLE("DB", Double.class),
-    DECIMAL("DC", BigDecimal.class),
-    DATE("DT", Date.class),
-    STRING("ST", String.class),
-    BLOB("BT", byte[].class);
+    CHAR("CH", Character.class, ColumnType.CHARACTER),
+    BOOLEAN("BL", Boolean.class, ColumnType.BOOLEAN),
+    SHORT("SH", Short.class, ColumnType.SHORT),
+    INTEGER("IN", Integer.class, ColumnType.INTEGER),
+    LONG("LN", Long.class, ColumnType.LONG),
+    FLOAT("FL", Float.class, ColumnType.FLOAT),
+    DOUBLE("DB", Double.class, ColumnType.DOUBLE),
+    DECIMAL("DC", BigDecimal.class, ColumnType.DECIMAL),
+    DATE("DT", Date.class, ColumnType.DATE),
+    TIMESTAMP("TS", Date.class, ColumnType.TIMESTAMP),
+    TIMESTAMP_UTC("TU", Date.class, ColumnType.TIMESTAMP_UTC),
+    STRING("ST", String.class, ColumnType.STRING),
+    BLOB("BT", byte[].class, ColumnType.BLOB);
 
     private final String code;
 
     private final Class<?> javaClass;
 
-    private DataType(String code, Class<?> javaClass) {
+    private final ColumnType columnType;
+
+    private DataType(String code, Class<?> javaClass, ColumnType columnType) {
         this.code = code;
         this.javaClass = javaClass;
+        this.columnType = columnType;
     }
 
     @Override
@@ -63,6 +69,10 @@ public enum DataType implements EnumConst {
 
     public Class<?> javaClass() {
         return javaClass;
+    }
+
+    public ColumnType columnType() {
+        return columnType;
     }
 
     public static DataType fromCode(String code) {
