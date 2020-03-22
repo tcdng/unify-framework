@@ -35,6 +35,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.AggregateType;
 import com.tcdng.unify.core.criterion.GroupBy;
@@ -78,7 +79,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T executeSingleObjectResultQuery(Connection connection, Class<T> clazz,
-            SqlDataTypePolicy sqlDataTypePolicy, SqlStatement sqlStatement, boolean mustMatch) throws UnifyException {
+            SqlDataTypePolicy sqlDataTypePolicy, SqlStatement sqlStatement, MustMatch mustMatch) throws UnifyException {
         T result = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
@@ -92,7 +93,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
-            } else if (mustMatch) {
+            } else if (mustMatch.isTrue()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_SINGLEOBJECT_NO_MATCHING_RECORD, clazz);
             }
         } catch (UnifyException e) {
@@ -109,7 +110,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T executeSingleObjectResultQuery(Connection connection, Class<T> clazz,
-            SqlDataTypePolicy sqlDataTypePolicy, String sqlQuery, boolean mustMatch) throws UnifyException {
+            SqlDataTypePolicy sqlDataTypePolicy, String sqlQuery, MustMatch mustMatch) throws UnifyException {
         T result = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
@@ -123,7 +124,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
-            } else if (mustMatch) {
+            } else if (mustMatch.isTrue()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_SINGLEOBJECT_NO_MATCHING_RECORD, clazz);
             }
         } catch (UnifyException e) {
@@ -276,7 +277,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Entity> T executeSingleRecordResultQuery(Connection connection, SqlStatement sqlStatement,
-            boolean mustMatch) throws UnifyException {
+            MustMatch mustMatch) throws UnifyException {
         T result = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
@@ -299,7 +300,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
-            } else if (mustMatch) {
+            } else if (mustMatch.isTrue()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_MATCHING_RECORD,
                         sqlEntityInfo.getEntityClass());
             }

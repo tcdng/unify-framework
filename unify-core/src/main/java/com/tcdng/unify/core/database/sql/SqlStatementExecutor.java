@@ -22,6 +22,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.GroupBy;
 import com.tcdng.unify.core.data.Aggregation;
@@ -70,7 +71,7 @@ public interface SqlStatementExecutor extends UnifyComponent {
      *             criteria. If an error occurs
      */
     <T> T executeSingleObjectResultQuery(Connection connection, Class<T> clazz, SqlDataTypePolicy sqlDataTypePolicy,
-            SqlStatement sqlStatement, boolean mustMatch) throws UnifyException;
+            SqlStatement sqlStatement, MustMatch mustMatch) throws UnifyException;
 
     /**
      * Executes a statement that returns a single value via supplied connection.
@@ -91,7 +92,7 @@ public interface SqlStatementExecutor extends UnifyComponent {
      *             criteria. If an error occurs
      */
     <T> T executeSingleObjectResultQuery(Connection connection, Class<T> clazz, SqlDataTypePolicy sqlDataTypePolicy,
-            String sqlQuery, boolean mustMatch) throws UnifyException;
+            String sqlQuery, MustMatch mustMatch) throws UnifyException;
 
     /**
      * Executes a statement that returns a list of values via supplied connection.
@@ -182,7 +183,7 @@ public interface SqlStatementExecutor extends UnifyComponent {
      *             If an error occurs
      */
     <T extends Entity> T executeSingleRecordResultQuery(Connection connection, SqlStatement sqlStatement,
-            boolean mustMatch) throws UnifyException;
+            MustMatch mustMatch) throws UnifyException;
 
     /**
      * Executes a statement that returns a list of record via supplied connection.

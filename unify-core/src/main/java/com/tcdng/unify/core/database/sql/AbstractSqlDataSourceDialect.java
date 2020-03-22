@@ -39,6 +39,7 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.ForeignConstraints;
 import com.tcdng.unify.core.constant.Indexes;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.constant.QueryAgainst;
 import com.tcdng.unify.core.constant.UniqueConstraints;
 import com.tcdng.unify.core.constant.Views;
 import com.tcdng.unify.core.criterion.AggregateFunction;
@@ -891,11 +892,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public SqlStatement prepareCountStatement(Query<? extends Entity> query, boolean useView) throws UnifyException {
+    public SqlStatement prepareCountStatement(Query<? extends Entity> query, QueryAgainst queryAgainst) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
         StringBuilder countSql = new StringBuilder();
-        if (useView) {
+        if (queryAgainst.isAgainstView()) {
             countSql.append(sqlCacheFactory.get(query.getEntityClass()).getCountViewSql());
         } else {
             countSql.append(sqlCacheFactory.get(query.getEntityClass()).getCountSql());
@@ -1060,7 +1061,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public SqlStatement prepareFindStatement(Query<? extends Entity> query, boolean useView) throws UnifyException {
+    public SqlStatement prepareFindStatement(Query<? extends Entity> query, QueryAgainst queryAgainst) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(query);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
         List<SqlFieldInfo> returnFieldInfoList = null;
@@ -1074,7 +1075,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 returnFieldInfoList = sqlEntityInfo.getFieldInfos();
             }
 
-            if (useView) {
+            if (queryAgainst.isAgainstView()) {
                 findSql.append(sqlCacheFactory.get(sqlEntityInfo.getKeyClass()).getFindViewSql());
             } else {
                 findSql.append(sqlCacheFactory.get(sqlEntityInfo.getKeyClass()).getFindSql());
