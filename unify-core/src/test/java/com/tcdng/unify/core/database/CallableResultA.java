@@ -31,7 +31,7 @@ import com.tcdng.unify.core.annotation.Table;
  */
 @Table(name = "LICENSE")
 @CallableResult
-public class CallableResultA extends AbstractTestTableEntity {
+public class CallableResultA extends AbstractTestVersionedTableEntity {
 
     @Column
     @ResultField

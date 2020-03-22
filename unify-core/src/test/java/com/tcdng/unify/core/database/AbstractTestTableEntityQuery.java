@@ -16,12 +16,12 @@
 package com.tcdng.unify.core.database;
 
 /**
- * Abstract base test table entity query.
+ * Abstract base test entity query.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTestTableEntityQuery<T extends AbstractTestTableEntity> extends Query<T> {
+public abstract class AbstractTestTableEntityQuery<T extends AbstractTestVersionedTableEntity> extends Query<T> {
 
     public AbstractTestTableEntityQuery(Class<T> entityClass) {
         super(entityClass);

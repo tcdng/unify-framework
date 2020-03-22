@@ -959,8 +959,8 @@ public interface UnifyCoreErrorConstants {
     /** Entity type annotation {0} is unsupported for table extension. Type = {1}, field {2}. */
     String RECORD_RABLE_EXTENSION_UNSUPPORTED_ANNOTATION = "UC_00F4";
 
-    /** Foreign reference to extended entity not allowed. Type = {0}, field {1}. */
-    String FOREIGN_REFERENCE_TO_EXTENDED_ENTITY = "UC_00F5";
+    /** Foreign reference to extension not allowed. Type = {0}, field {1}. */
+    String FOREIGN_REFERENCE_TO_EXTENSION = "UC_00F5";
 
     /** Extension foreign reference must refer to extended entity. Type = {0}, field {1}. */
     String EXTENSION_REFERENCE_MUST_REFER_EXTENDED_ENTITY = "UC_00F6";
@@ -973,4 +973,13 @@ public interface UnifyCoreErrorConstants {
 
     /** Entity type extension referencing not allowed. Type = {0}, field {1}*/
     String RECORD_EXTENSION_REFERENCE_NOT_ALLOWED = "UC_00F9";
+
+    /** Entity type extension has no extension foreign reference. Type = {0}*/
+    String RECORD_EXTENSION_NO_FOREIGN_REFERENCE = "UC_00FA";
+
+    /** Foreign reference to extended entity not allowed. Type = {0}, field {1}. */
+    String FOREIGN_REFERENCE_TO_EXTENDED_ENTITY = "UC_00FB";
+
+    /** Entity type list-only not allowed from extended entity. Type = {0}, field {1}. */
+    String RECORD_LISTONLY_NOT_ALLOWED_FROM_EXTENDED = "UC_00FC";
 }

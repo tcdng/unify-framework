@@ -18,36 +18,32 @@ package com.tcdng.unify.core.database;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
-import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.constant.BooleanType;
-import com.tcdng.unify.core.constant.Gender;
 
 /**
- * Test author record.
+ * Test branch extension record.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Table(name = "AUTHOR")
-public class Author extends AbstractTestVersionedTableEntity {
+@TableExt
+public class BranchExt extends AbstractTestTableEntity {
 
-    @ForeignKey(type = Office.class, onDeleteCascade = true)
+    @ForeignKey(type = Branch.class, extension = true)
+    private Long branchId;
+
+    @ForeignKey(type = Office.class)
     private Long officeId;
 
     @Column
-    private String name;
+    private String state;
 
     @Column
-    private Integer age;
-
-    @Column
-    private Gender gender;
+    private String country;
 
     @ForeignKey
-    private BooleanType retired;
-
-    @ListOnly(key = "officeId", property = "size")
-    private Integer officeSize;
+    private BooleanType closed;
 
     @ListOnly(key = "officeId", property = "address")
     private String officeAddress;
@@ -55,27 +51,26 @@ public class Author extends AbstractTestVersionedTableEntity {
     @ListOnly(key = "officeId", property = "telephone")
     private String officeTelephone;
 
-    @ListOnly(key = "retired", property = "description")
-    private String retiredDesc;
+    @ListOnly(key = "closed", property = "description")
+    private String closedDesc;
 
-    public Author(String name, Integer age, Gender gender, BooleanType retired, Long officeId) {
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.retired = retired;
+    public BranchExt(Long officeId, String state, String country, BooleanType closed) {
         this.officeId = officeId;
+        this.state = state;
+        this.country = country;
+        this.closed = closed;
     }
 
-    public Author() {
-
+    public BranchExt() {
+        
+    }
+    
+    public Long getBranchId() {
+        return branchId;
     }
 
-    public Integer getOfficeSize() {
-        return officeSize;
-    }
-
-    public void setOfficeSize(Integer officeSize) {
-        this.officeSize = officeSize;
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
     }
 
     public Long getOfficeId() {
@@ -86,36 +81,28 @@ public class Author extends AbstractTestVersionedTableEntity {
         this.officeId = officeId;
     }
 
-    public String getName() {
-        return name;
+    public String getState() {
+        return state;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getCountry() {
+        return country;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public Gender getGender() {
-        return gender;
+    public BooleanType getClosed() {
+        return closed;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public BooleanType getRetired() {
-        return retired;
-    }
-
-    public void setRetired(BooleanType retired) {
-        this.retired = retired;
+    public void setClosed(BooleanType closed) {
+        this.closed = closed;
     }
 
     public String getOfficeAddress() {
@@ -134,12 +121,11 @@ public class Author extends AbstractTestVersionedTableEntity {
         this.officeTelephone = officeTelephone;
     }
 
-    public String getRetiredDesc() {
-        return retiredDesc;
+    public String getClosedDesc() {
+        return closedDesc;
     }
 
-    public void setRetiredDesc(String retiredDesc) {
-        this.retiredDesc = retiredDesc;
+    public void setClosedDesc(String closedDesc) {
+        this.closedDesc = closedDesc;
     }
-
 }

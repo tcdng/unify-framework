@@ -18,7 +18,7 @@ package com.tcdng.unify.core.business;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.database.AbstractTestTableEntity;
+import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
 
 /**
  * Loan disbursement record.
@@ -27,7 +27,7 @@ import com.tcdng.unify.core.database.AbstractTestTableEntity;
  * @since 1.0
  */
 @Table
-public class LoanDisbursement extends AbstractTestTableEntity {
+public class LoanDisbursement extends AbstractTestVersionedTableEntity {
 
     @ForeignKey(LoanAccount.class)
     private Long loanAccountId;

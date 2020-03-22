@@ -34,7 +34,7 @@ import com.tcdng.unify.core.constant.BooleanType;
  */
 @Policy("testentitynorest-policy")
 @Table(name = "REPORT_PARAMETER")
-public class ReportParameter extends AbstractTestTableEntity {
+public class ReportParameter extends AbstractTestVersionedTableEntity {
 
     @ForeignKey(Report.class)
     private Long reportId;

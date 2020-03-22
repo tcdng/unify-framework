@@ -16,47 +16,58 @@
 package com.tcdng.unify.core.database;
 
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.ForeignKey;
-import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.Table;
 
 /**
- * Test report parameter option entity.
+ * Test branch record.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Policy("testentitynorest-policy")
-@Table(name = "REPORT_PARAMETEROPT")
-public class ReportParameterOptions extends AbstractTestVersionedTableEntity {
-
-    @ForeignKey(ReportParameter.class)
-    private Long reportParameterId;
+@Table(name = "BRANCH")
+public class Branch extends AbstractTestVersionedTableEntity {
 
     @Column
-    private String name;
+    private String code;
 
-    public ReportParameterOptions(String name) {
-        this.name = name;
+    @Column
+    private String description;
+
+    @Column
+    private String sortCode;
+
+    public Branch(String code, String description, String sortCode) {
+        this.code = code;
+        this.description = description;
+        this.sortCode = sortCode;
     }
 
-    public ReportParameterOptions() {
-
+    public Branch() {
+        
+    }
+    
+    public String getCode() {
+        return code;
     }
 
-    public Long getReportParameterId() {
-        return reportParameterId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public void setReportParameterId(Long reportParameterId) {
-        this.reportParameterId = reportParameterId;
+    public String getDescription() {
+        return description;
     }
 
-    public String getName() {
-        return name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getSortCode() {
+        return sortCode;
     }
+
+    public void setSortCode(String sortCode) {
+        this.sortCode = sortCode;
+    }
+
 }

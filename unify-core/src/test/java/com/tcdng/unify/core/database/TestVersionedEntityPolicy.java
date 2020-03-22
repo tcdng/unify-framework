@@ -15,31 +15,31 @@
  */
 package com.tcdng.unify.core.database;
 
-import com.tcdng.unify.core.annotation.Id;
-import com.tcdng.unify.core.annotation.Policy;
+import java.util.Date;
+
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
 
 /**
- * Abstract base class for test entities.
+ * Policy class for test versioned record.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Policy("testentity-policy")
-public abstract class AbstractTestTableEntity extends AbstractEntity {
-
-    @Id
-    private Long id;
+@Component("testversionedentity-policy")
+public class TestVersionedEntityPolicy extends TestEntityPolicy {
 
     @Override
-    public String getDescription() {
-        return null;
-    }
-
-    public Long getId() {
+    public Object preCreate(Entity record, Date now) throws UnifyException {
+        Object id = super.preCreate(record, now);
+        ((AbstractTestVersionedTableEntity) record).setVersion(1L);
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public void preUpdate(Entity record, Date now) throws UnifyException {
+        super.preUpdate(record, now);
+        ((AbstractTestVersionedTableEntity) record)
+                .setVersion(((AbstractTestVersionedTableEntity) record).getVersion() + 1L);
     }
 }

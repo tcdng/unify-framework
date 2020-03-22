@@ -502,6 +502,12 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             logDebug("Building dependency list for entity type {0}", entityClass);
             buildDependencyList(sqlDataSource, entityTypeList, entityClass);
         }
+        
+        for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
+            logDebug("Building dependency list for entity extension type {0}", entityClass);
+            buildDependencyList(sqlDataSource, entityTypeList, entityClass);
+        }
+        
         return entityTypeList;
     }
 
