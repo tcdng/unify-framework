@@ -44,11 +44,6 @@ public class StaticReference extends AbstractEntity {
         return code;
     }
 
-    @Override
-    public Entity getExt() {
-        return null;
-    }
-
     public Class<? extends EnumConst> getEnumConstType() {
         return enumConstType;
     }

@@ -51,6 +51,8 @@ public interface SqlEntitySchemaInfo {
 
     SqlFieldSchemaInfo getVersionFieldInfo();
 
+    SqlFieldSchemaInfo getExtFkFieldInfo();
+    
     List<? extends SqlFieldSchemaInfo> getFieldInfos();
 
     List<? extends SqlFieldSchemaInfo> getListFieldInfos();

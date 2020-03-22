@@ -49,12 +49,12 @@ public abstract class AbstractEntity implements Entity {
     }
 
     @Override
-    public Entity getExt() {
+    public final Entity getExt() {
         return ext;
     }
 
     @Override
-    public void setExt(Entity ext) {
+    public final void setExt(Entity ext) {
         this.ext = ext;
     }
 

@@ -34,7 +34,5 @@ public @interface TableExt {
 
     Class<? extends Entity> extend();
 
-    UniqueConstraint[] uniqueConstraints() default {};
-
     Index[] indexes() default {};
 }

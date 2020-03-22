@@ -173,13 +173,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                             sqlDataSourceDialect.isAllObjectsInLowerCase());
                     String idxColumnName = rs.getString("COLUMN_NAME");
                     if (StringUtils.isNotBlank(idxName) && StringUtils.isNotBlank(idxColumnName)) {
-                        boolean unique = false;
-                        if (sqlDataSourceDialect.isAllObjectsInLowerCase()) {
-                            unique = idxName.indexOf(SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT_LOWERCASE) > 0;
-                        } else {
-                            unique = idxName.indexOf(SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT) > 0;
-                        }
-
+                        boolean unique = SqlUtils.isUniqueConstraintName(idxName);
                         TableConstraint tConst = managedTableConstraints.get(idxName);
                         if (tConst == null) {
                             tConst = new TableConstraint(idxName, null, unique);
