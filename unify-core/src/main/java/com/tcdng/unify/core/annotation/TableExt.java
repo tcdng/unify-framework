@@ -20,9 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.constant.AnnotationConstants;
-
 /**
  * Annotation for indicating an entity extension.
  * 
@@ -33,12 +30,9 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TableExt {
 
-    /**
-     * The application data source that table belongs to. Defaults to
-     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
-     */
-    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
+    /** Table unique constraints */
+    UniqueConstraint[] uniqueConstraints() default {};
 
-    /** The name of the table. */
-    String name() default AnnotationConstants.NONE;
+    /** Table indexes */
+    Index[] indexes() default {};
 }

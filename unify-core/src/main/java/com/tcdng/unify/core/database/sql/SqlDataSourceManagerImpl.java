@@ -494,17 +494,13 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(pstmt);
         }
     }
-
+    
     private List<Class<?>> getTableEntities(String dataSourceName) throws UnifyException {
         SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
+        buildSqlInformation(sqlDataSource);
+        
         List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
         for (Class<?> entityClass : sqlDataSource.getTableEntityTypes()) {
-            logDebug("Building dependency list for entity type {0}", entityClass);
-            buildDependencyList(sqlDataSource, entityTypeList, entityClass);
-        }
-        
-        for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
-            logDebug("Building dependency list for entity extension type {0}", entityClass);
             buildDependencyList(sqlDataSource, entityTypeList, entityClass);
         }
         
@@ -516,8 +512,22 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         return sqlDataSource.getViewEntityTypes();
     }
 
+    private void buildSqlInformation(SqlDataSource sqlDataSource) throws UnifyException {
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        for (Class<?> entityClass : sqlDataSource.getTableEntityTypes()) {
+            logDebug("Building SQL information for entity type {0}...", entityClass);
+            sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        }
+        
+        for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
+            logDebug("Building SQL information for entity extension type {0}...", entityClass);
+            sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        }        
+    }
+
     private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
             throws UnifyException {
+        logDebug("Building dependency list for entity type {0}...", entityClass);
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
 

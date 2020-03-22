@@ -19,8 +19,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -83,11 +81,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public Object create(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "CREATE");
-        }
-
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "CREATE");
@@ -130,11 +123,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T extends Entity> T findConstraint(T record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "FIND_CONSTRAINT");
-        }
-
         if (sqlEntityInfo.isUniqueConstraints()) {
             Query<T> query = Query.of((Class<T>) record.getClass());
             for (SqlUniqueConstraintInfo suci : sqlEntityInfo.getUniqueConstraintList().values()) {
@@ -155,93 +143,54 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "FIND_ALL");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
         }
 
-        List<T> resultList = null;
         if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-            resultList = getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
+            return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                     sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE));
-        } else {
-            resultList = getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
-                    sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
         }
-
-        if (!resultList.isEmpty() && sqlEntityInfo.isWithExtension()) {
-            fetchExtensions(sqlEntityInfo, resultList, IncludeListOnly.FALSE);
-        }
-
-        return resultList;
+        
+        return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
+                sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
     }
 
     @Override
     public <T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "FIND_ALL_MAP");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
         }
 
-        Map<T, U> resultMap = null;
         if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-            resultMap = getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
+            return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                     sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE));
-        } else {
-            resultMap = getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
-                    sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
         }
-
-        if (!resultMap.isEmpty() && sqlEntityInfo.isWithExtension()) {
-            fetchExtensions(sqlEntityInfo, resultMap.values(), IncludeListOnly.FALSE);
-        }
-
-        return resultMap;
+        
+        return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
+                sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
     }
 
     @Override
     public <T, U extends Entity> Map<T, List<U>> findAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "FIND_ALL_LIST_MAP");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
         }
 
-        Map<T, List<U>> resultMap = null;
-        // Check is fetch from table
         if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
-            resultMap = getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
+            return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                     sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE));
-        } else {
-            resultMap = getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
-                    sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
         }
-
-        if (!resultMap.isEmpty() && sqlEntityInfo.isWithExtension()) {
-            for (List<U> list : resultMap.values()) {
-                fetchExtensions(sqlEntityInfo, list, IncludeListOnly.FALSE);
-            }
-        }
-
-        return resultMap;
+        
+        return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
+                sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
     }
 
     @Override
@@ -277,85 +226,45 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "LIST_ALL");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
         }
 
-        List<T> resultList = getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
+        return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareListStatement(query));
-
-        if (!resultList.isEmpty() && sqlEntityInfo.isWithExtension()) {
-            fetchExtensions(sqlEntityInfo, resultList, IncludeListOnly.TRUE);
-        }
-
-        return resultList;
     }
 
     @Override
     public <T, U extends Entity> Map<T, U> listAll(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "LIST_ALL");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
         }
 
-        Map<T, U> resultMap = getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
+        return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareListStatement(query));
-
-        if (!resultMap.isEmpty() && sqlEntityInfo.isWithExtension()) {
-            fetchExtensions(sqlEntityInfo, resultMap.values(), IncludeListOnly.TRUE);
-        }
-
-        return resultMap;
     }
 
     @Override
     public <T, U extends Entity> Map<T, List<U>> listAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "LIST_ALL_LIST_MAP");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
         }
 
-        Map<T, List<U>> resultMap = getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass,
-                keyName, sqlDataSourceDialect.prepareListStatement(query));
-
-        if (!resultMap.isEmpty() && sqlEntityInfo.isWithExtension()) {
-            for (List<U> list : resultMap.values()) {
-                fetchExtensions(sqlEntityInfo, list, IncludeListOnly.TRUE);
-            }
-        }
-
-        return resultMap;
+        return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
+                sqlDataSourceDialect.prepareListStatement(query));
     }
 
     @Override
     public <T, U extends Entity> List<T> valueList(Class<T> fieldClass, String fieldName, final Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "VALUE_LIST");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -376,11 +285,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "VALUE_SET");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -401,11 +305,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T, U, V extends Entity> Map<T, U> valueMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "VALUE_MAP");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -425,11 +324,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public <T, U, V extends Entity> Map<T, List<U>> valueListMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "VALUE_LIST_MAP");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -448,11 +342,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "VALUE");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -472,11 +361,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "MIN");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -492,11 +376,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "MAX");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -512,11 +391,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public void populateListOnly(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "POPULATE_LIST_ONLY");
-        }
-
         try {
             Map<String, Object> fkItemMap = new HashMap<String, Object>();
             for (SqlForeignKeyInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
@@ -584,12 +458,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int updateById(Class<? extends Entity> clazz, Object id, Update update) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "UPDATE_BY_ID");
-        }
-
         return getSqlStatementExecutor().executeUpdate(connection,
                 sqlDataSourceDialect.prepareUpdateStatement(clazz, id, update));
     }
@@ -598,11 +466,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-            if (sqlEntityInfo.isExtension()) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                        sqlEntityInfo.getEntityClass(), "UPDATE_ALL");
-            }
-
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -643,11 +506,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int deleteById(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "DELETE_BY_ID");
-        }
-
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "DELETE_BY_ID");
@@ -663,10 +521,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 } else {
                     entityPolicy.preDelete(record, null);
                 }
-            }
-
-            if (sqlEntityInfo.isWithExtension()) {
-                deleteExtension(sqlEntityInfo, record.getId());
             }
 
             if (sqlEntityInfo.isOnDeleteCascadeList()) {
@@ -697,11 +551,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int deleteByIdVersion(Entity record) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "DELETE_BY_ID_VERSION");
-        }
-
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "DELETE_BY_ID_VERSION");
@@ -736,10 +585,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 sqlStatement = sqlDataSourceDialect.prepareDeleteByPkStatement(record.getClass(), record.getId());
             }
 
-            if (sqlEntityInfo.isWithExtension()) {
-                deleteExtension(sqlEntityInfo, record.getId());
-            }
-
             if (sqlEntityInfo.isOnDeleteCascadeList()) {
                 deleteChildRecords(sqlEntityInfo, record.getId());
             }
@@ -768,11 +613,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int delete(Class<? extends Entity> clazz, final Object id) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "DELETE");
-        }
-
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "DELETE");
@@ -781,10 +621,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareDeleteByPkStatement(clazz, id);
         int result;
         try {
-            if (sqlEntityInfo.isWithExtension()) {
-                deleteExtension(sqlEntityInfo, id);
-            }
-
             if (sqlEntityInfo.isOnDeleteCascadeList()) {
                 deleteChildRecords(sqlEntityInfo, id);
             }
@@ -807,11 +643,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public int deleteAll(Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.isExtension()) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                        sqlEntityInfo.getEntityClass(), "DELETE_ALL");
-            }
-
             if (sqlEntityInfo.isViewOnly()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                         sqlEntityInfo.getEntityClass(), "DELETE_ALL");
@@ -823,7 +654,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (!sqlEntityInfo.isWithExtension() && !sqlEntityInfo.isChildList()
+                    || (!sqlEntityInfo.isChildList()
                             && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(query));
@@ -832,10 +663,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
             List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
             if (!idList.isEmpty()) {
-                if (sqlEntityInfo.isWithExtension()) {
-                    deleteExtensions(sqlEntityInfo, idList);
-                }
-
                 if (sqlEntityInfo.isOnDeleteCascadeList()) {
                     for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
                         Query<? extends Entity> attrQuery = Query.of(odci.getChildEntityClass());
@@ -860,11 +687,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int count(Query<? extends Entity> query) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "COUNT");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -886,11 +708,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
-        if (sqlEntityInfo.isWithExtension()) {
-            return ReflectUtils.newInstance(sqlEntityInfo.getExtSqlEntityInfo().getEntityClass());
-        }
-
-        return null;
+        return ReflectUtils.newInstance(sqlEntityInfo.getEntityClass());
     }
 
     @Override
@@ -905,11 +723,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.isExtension()) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                        sqlEntityInfo.getEntityClass(), "AGGREGATE");
-            }
-
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -929,11 +742,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public List<Aggregation> aggregateMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.isExtension()) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                        sqlEntityInfo.getEntityClass(), "AGGREGATE_MANY");
-            }
-
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -954,11 +762,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             throws UnifyException {
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
-            if (sqlEntityInfo.isExtension()) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                        sqlEntityInfo.getEntityClass(), "AGGREGATE_GROUP_MANY");
-            }
-
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -1067,21 +870,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     private <T extends Entity> T find(Class<T> clazz, Object id, FetchChild fetchChild) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "FIND");
-        }
-
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkStatement(clazz, id);
         try {
             T record =
                     getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, MustMatch.TRUE);
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
-            }
-
-            if (sqlEntityInfo.isWithExtension()) {
-                fetchExtension(sqlEntityInfo, record, IncludeListOnly.FALSE);
             }
 
             if (fetchChild.isTrue()) {
@@ -1096,11 +890,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private <T extends Entity> T find(Class<T> clazz, Object id, final Object versionNo, FetchChild fetchChild)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "FIND");
-        }
-
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkVersionStatement(clazz, id, versionNo);
         try {
             T record =
@@ -1108,10 +897,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
                         versionNo);
-            }
-
-            if (sqlEntityInfo.isWithExtension()) {
-                fetchExtension(sqlEntityInfo, record, IncludeListOnly.FALSE);
             }
 
             if (fetchChild.isTrue()) {
@@ -1127,11 +912,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         T record = null;
         try {
             SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-            if (sqlEntityInfo.isExtension()) {
-                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                        sqlEntityInfo.getEntityClass(), "FIND");
-            }
-
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -1147,10 +927,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW), MustMatch.FALSE);
             }
 
-            if (sqlEntityInfo.isWithExtension()) {
-                fetchExtension(sqlEntityInfo, record, IncludeListOnly.FALSE);
-            }
-
             if (fetchChild.isTrue()) {
                 fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.FALSE);
             }
@@ -1164,21 +940,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     private <T extends Entity> T list(Class<T> clazz, Object id, FetchChild fetchChild) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "LIST_BY_ID");
-        }
-
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkStatement(clazz, id);
         try {
             T record =
                     getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, MustMatch.TRUE);
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
-            }
-
-            if (sqlEntityInfo.isWithExtension()) {
-                fetchExtension(sqlEntityInfo, record, IncludeListOnly.TRUE);
             }
 
             if (fetchChild.isTrue()) {
@@ -1193,11 +960,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private <T extends Entity> T list(Class<T> clazz, Object id, final Object versionNo, FetchChild fetchChild)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "LIST_BY_ID_VERSION");
-        }
-
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkVersionStatement(clazz, id, versionNo);
         try {
             T record =
@@ -1205,10 +967,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
                         versionNo);
-            }
-
-            if (sqlEntityInfo.isWithExtension()) {
-                fetchExtension(sqlEntityInfo, record, IncludeListOnly.TRUE);
             }
 
             if (fetchChild.isTrue()) {
@@ -1222,11 +980,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     private <T extends Entity> T list(Query<T> query, FetchChild fetchChild) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "LIST");
-        }
-
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -1235,61 +988,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
 
-        if (sqlEntityInfo.isWithExtension()) {
-            fetchExtension(sqlEntityInfo, record, IncludeListOnly.TRUE);
-        }
-
         if (fetchChild.isTrue()) {
             fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.TRUE);
         }
         return record;
-    }
-
-    private <T extends Entity> void fetchExtension(SqlEntityInfo sqlEntityInfo, T record,
-            IncludeListOnly includeListOnly) throws UnifyException {
-        if (record != null) {
-            SqlEntityInfo extSqlEntityInfo = sqlEntityInfo.getExtSqlEntityInfo();
-            Query<? extends Entity> query = Query.of(extSqlEntityInfo.getEntityClass());
-            query.addEquals(extSqlEntityInfo.getExtFkFieldInfo().getName(), record.getId());
-            Entity extRrecord = null;
-            if (includeListOnly.isTrue()) {
-                extRrecord = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
-                        sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
-            } else {
-                extRrecord = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
-                        sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE), MustMatch.FALSE);
-            }
-
-            record.setExt(extRrecord);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends Entity> void fetchExtensions(SqlEntityInfo sqlEntityInfo, Collection<T> resultList,
-            IncludeListOnly includeListOnly) throws UnifyException {
-        List<Object> idList = new ArrayList<Object>();
-        for (T record : resultList) {
-            idList.add(record.getId());
-        }
-
-        SqlEntityInfo extSqlEntityInfo = sqlEntityInfo.getExtSqlEntityInfo();
-        Query<? extends Entity> query = Query.of(extSqlEntityInfo.getEntityClass());
-        String extFkFieldName = extSqlEntityInfo.getExtFkFieldInfo().getName();
-        query.addAmongst(extFkFieldName, idList);
-        Map<Object, ? extends Entity> resultMap = null;
-        if (includeListOnly.isTrue()) {
-            resultMap = (Map<Object, ? extends Entity>) getSqlStatementExecutor().executeMultipleRecordResultQuery(
-                    connection, extSqlEntityInfo.getExtFkFieldInfo().getFieldType(), extFkFieldName,
-                    sqlDataSourceDialect.prepareListStatement(query));
-        } else {
-            resultMap = (Map<Object, ? extends Entity>) getSqlStatementExecutor().executeMultipleRecordResultQuery(
-                    connection, extSqlEntityInfo.getExtFkFieldInfo().getFieldType(), extFkFieldName,
-                    sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE));
-        }
-
-        for (T record : resultList) {
-            record.setExt(resultMap.get(record.getId()));
-        }
     }
 
     private <T extends Entity> void fetchChildRecords(SqlEntityInfo sqlEntityInfo, T record, Select select,
@@ -1382,11 +1084,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         int result;
         SqlStatement sqlStatement = null;
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "UPDATE_BY_ID");
-        }
-
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "UPDATE");
@@ -1409,10 +1106,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         record.getId());
             }
 
-            if (sqlEntityInfo.isWithExtension()) {
-                updateExtension(sqlEntityInfo, record);
-            }
-
             if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
                 updateChildRecords(sqlEntityInfo, record);
             }
@@ -1433,11 +1126,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         int result;
         SqlStatement sqlStatement = null;
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
-        if (sqlEntityInfo.isExtension()) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_OPERATION_UNSUPPORTED,
-                    sqlEntityInfo.getEntityClass(), "UPDATE_BY_ID_VERSION");
-        }
-
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "UPDATE");
@@ -1471,10 +1159,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (result == 0) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, record.getClass(),
                         sqlEntityInfo.getIdFieldInfo().getGetter().invoke(record), oldVersionNo);
-            }
-
-            if (sqlEntityInfo.isWithExtension()) {
-                updateExtension(sqlEntityInfo, record);
             }
 
             if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
@@ -1512,10 +1196,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         try {
             getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
 
-            if (sqlEntityInfo.isWithExtension()) {
-                createExtensionRecord(sqlEntityInfo, record);
-            }
-
             if (sqlEntityInfo.isChildList()) {
                 createChildRecords(sqlEntityInfo, record, id);
             }
@@ -1525,21 +1205,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             sqlDataSourceDialect.restoreStatement(sqlStatement);
         }
         return id;
-    }
-
-    private void createExtensionRecord(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
-        try {
-            Entity extRecord = record.getExt();
-            if (extRecord != null) {
-                SqlEntityInfo extSqlEntityInfo = sqlEntityInfo.getExtSqlEntityInfo();
-                extSqlEntityInfo.getExtFkFieldInfo().getSetter().invoke(extRecord, record.getId());
-                create(extSqlEntityInfo, extRecord);
-            }
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
-        }
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -1574,29 +1239,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
     }
 
-    private void updateExtension(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
-        deleteExtension(sqlEntityInfo, record.getId());
-        createExtensionRecord(sqlEntityInfo, record);
-    }
-
     private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
         Object id = record.getId();
         deleteChildRecords(sqlEntityInfo, id);
         createChildRecords(sqlEntityInfo, record, id);
-    }
-
-    private int deleteExtension(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {
-        SqlEntityInfo extSqlEntityInfo = sqlEntityInfo.getExtSqlEntityInfo();
-        Query<? extends Entity> query = Query.of(extSqlEntityInfo.getEntityClass());
-        query.addEquals(extSqlEntityInfo.getExtFkFieldInfo().getName(), id);
-        return getSqlStatementExecutor().executeUpdate(connection, sqlDataSourceDialect.prepareDeleteStatement(query));
-    }
-
-    private int deleteExtensions(SqlEntityInfo sqlEntityInfo, List<?> idList) throws UnifyException {
-        SqlEntityInfo extSqlEntityInfo = sqlEntityInfo.getExtSqlEntityInfo();
-        Query<? extends Entity> query = Query.of(extSqlEntityInfo.getEntityClass());
-        query.addAmongst(extSqlEntityInfo.getExtFkFieldInfo().getName(), idList);
-        return getSqlStatementExecutor().executeUpdate(connection, sqlDataSourceDialect.prepareDeleteStatement(query));
     }
 
     private void deleteChildRecords(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {

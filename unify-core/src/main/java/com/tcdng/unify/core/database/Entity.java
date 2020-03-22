@@ -27,10 +27,6 @@ import com.tcdng.unify.core.data.Listable;
 public interface Entity extends Listable, Describable {
 
     Object getId();
-
-    Entity getExt();
-    
-    void setExt(Entity ext);
     
     boolean isReserved();
 }

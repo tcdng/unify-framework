@@ -619,7 +619,7 @@ public interface DatabaseSession {
      * 
      * @param entityClass
      *            the extended entity type
-     * @return a new instance of extension type if entity is extended otherwise null
+     * @return a new instance of extension type
      * @throws UnifyException
      *             if an error occurs
      */

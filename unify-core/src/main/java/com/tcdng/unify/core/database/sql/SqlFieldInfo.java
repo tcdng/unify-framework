@@ -64,6 +64,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     private boolean listOnly;
 
     private boolean nullable;
+    
+    private boolean extension;
 
     private SqlFieldDimensions sqlFieldDimensions;
 
@@ -79,11 +81,11 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
             SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
             String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
             boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
-            SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
+            SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean extension, String defaultVal, Field field, Method getter,
             Method setter, boolean isAllObjectsInLowerCase) {
         this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
                 columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
-                listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, defaultVal, field, getter,
+                listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, extension, defaultVal, field, getter,
                 setter, isAllObjectsInLowerCase);
     }
 
@@ -91,7 +93,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
             SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
             String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
             boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
-            SqlFieldDimensions sqlFieldDimensions, boolean nullable, String defaultVal, Field field, Method getter,
+            SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean extension, String defaultVal, Field field, Method getter,
             Method setter, boolean isAllObjectsInLowerCase) {
         this.marker = marker;
         this.columnType = columnType;
@@ -109,6 +111,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         this.ignoreFkConstraint = ignoreFkConstraint;
         this.transformer = transformer;
         this.nullable = nullable;
+        this.extension = extension;
         this.sqlFieldDimensions = sqlFieldDimensions;
         this.defaultVal = defaultVal;
         this.field = field;
@@ -177,6 +180,11 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     @Override
     public boolean isNullable() {
         return nullable;
+    }
+
+    @Override
+    public boolean isExtension() {
+        return extension;
     }
 
     public SqlFieldDimensions getSqlFieldDimensions() {

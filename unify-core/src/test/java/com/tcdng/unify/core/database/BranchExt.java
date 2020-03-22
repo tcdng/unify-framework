@@ -28,10 +28,7 @@ import com.tcdng.unify.core.constant.BooleanType;
  * @since 1.0
  */
 @TableExt
-public class BranchExt extends AbstractTestTableEntity {
-
-    @ForeignKey(type = Branch.class, extension = true)
-    private Long branchId;
+public class BranchExt extends Branch {
 
     @ForeignKey(type = Office.class)
     private Long officeId;
@@ -54,7 +51,9 @@ public class BranchExt extends AbstractTestTableEntity {
     @ListOnly(key = "closed", property = "description")
     private String closedDesc;
 
-    public BranchExt(Long officeId, String state, String country, BooleanType closed) {
+    public BranchExt(String code, String description, String sortCode, Long officeId, String state, String country,
+            BooleanType closed) {
+        super(code, description, sortCode);
         this.officeId = officeId;
         this.state = state;
         this.country = country;
@@ -62,15 +61,7 @@ public class BranchExt extends AbstractTestTableEntity {
     }
 
     public BranchExt() {
-        
-    }
-    
-    public Long getBranchId() {
-        return branchId;
-    }
 
-    public void setBranchId(Long branchId) {
-        this.branchId = branchId;
     }
 
     public Long getOfficeId() {

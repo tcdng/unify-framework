@@ -30,8 +30,6 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 @Tooling(name = "plainCommon", description = "Plain Common")
 public abstract class AbstractEntity implements Entity {
-
-    private Entity ext;
     
     @Override
     public String getListKey() {
@@ -46,16 +44,6 @@ public abstract class AbstractEntity implements Entity {
     @Override
     public boolean isReserved() {
         return false;
-    }
-
-    @Override
-    public final Entity getExt() {
-        return ext;
-    }
-
-    @Override
-    public final void setExt(Entity ext) {
-        this.ext = ext;
     }
 
     @Override
