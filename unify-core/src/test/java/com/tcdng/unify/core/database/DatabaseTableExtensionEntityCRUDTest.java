@@ -50,7 +50,8 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
         tm.beginTransaction();
         try {
             Entity extensionInst = db.getNewExtensionInstance(Author.class);
-            assertNull(extensionInst);
+            assertNotNull(extensionInst);
+            assertTrue(Author.class.equals(extensionInst.getClass()));
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -73,9 +74,9 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
             tm.endTransaction();
         }
     }
-    
+
     @Test
-    public void testCreateRecordWithNullExtension() throws Exception {
+    public void testCreateRecordWithSuperClass() throws Exception {
         tm.beginTransaction();
         try {
             Branch branch = new Branch("100", "Head Office", "221015100");
@@ -91,7 +92,7 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     }
 
     @Test
-    public void testFindRecordWithNullExtension() throws Exception {
+    public void testFindRecordWithSuperClass() throws Exception {
         tm.beginTransaction();
         try {
             Branch branch = new Branch("100", "Head Office", "221015100");
@@ -101,8 +102,18 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
 
             Branch foundBranch = db.find(Branch.class, id);
             assertNotNull(foundBranch);
-            assertNull(foundBranch.getExt());
-            assertEquals(branch, foundBranch);
+            assertTrue(BranchExt.class.equals(foundBranch.getClass()));
+            BranchExt branchExt = (BranchExt) foundBranch;
+            assertEquals("100", branchExt.getCode());
+            assertEquals("Head Office", branchExt.getDescription());
+            assertEquals("221015100", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -112,7 +123,7 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     }
 
     @Test
-    public void testFindAllWithNullExtension() throws Exception {
+    public void testFindAllWithSuperClass() throws Exception {
         tm.beginTransaction();
         try {
             db.create(new Branch("100", "Head Office", "221015100"));
@@ -122,24 +133,48 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
             List<Branch> branchList = db.findAll(new BranchQuery().addOrder("code").ignoreEmptyCriteria(true));
             assertNotNull(branchList);
             assertEquals(3, branchList.size());
-            
+
             Branch branch = branchList.get(0);
-            assertEquals("100", branch.getCode());
-            assertEquals("Head Office", branch.getDescription());
-            assertEquals("221015100", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            BranchExt branchExt = (BranchExt) branch;
+            assertEquals("100", branchExt.getCode());
+            assertEquals("Head Office", branchExt.getDescription());
+            assertEquals("221015100", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
 
             branch = branchList.get(1);
-            assertEquals("101", branch.getCode());
-            assertEquals("Palm Groove Branch", branch.getDescription());
-            assertEquals("221015101", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            branchExt = (BranchExt) branch;
+            assertEquals("101", branchExt.getCode());
+            assertEquals("Palm Groove Branch", branchExt.getDescription());
+            assertEquals("221015101", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
 
             branch = branchList.get(2);
-            assertEquals("102", branch.getCode());
-            assertEquals("Lekki Phase I", branch.getDescription());
-            assertEquals("221015102", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            branchExt = (BranchExt) branch;
+            assertEquals("102", branchExt.getCode());
+            assertEquals("Lekki Phase I", branchExt.getDescription());
+            assertEquals("221015102", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -149,7 +184,7 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     }
 
     @Test
-    public void testListRecordWithNullExtension() throws Exception {
+    public void testListRecordWithSuperClass() throws Exception {
         tm.beginTransaction();
         try {
             Branch branch = new Branch("100", "Head Office", "221015100");
@@ -159,8 +194,18 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
 
             Branch foundBranch = db.list(Branch.class, id);
             assertNotNull(foundBranch);
-            assertNull(foundBranch.getExt());
-            assertEquals(branch, foundBranch);
+            assertTrue(BranchExt.class.equals(foundBranch.getClass()));
+            BranchExt branchExt = (BranchExt) foundBranch;
+            assertEquals("100", branchExt.getCode());
+            assertEquals("Head Office", branchExt.getDescription());
+            assertEquals("221015100", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -170,7 +215,7 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     }
 
     @Test
-    public void testListAllWithNullExtension() throws Exception {
+    public void testListAllWithSuperClass() throws Exception {
         tm.beginTransaction();
         try {
             db.create(new Branch("100", "Head Office", "221015100"));
@@ -180,24 +225,48 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
             List<Branch> branchList = db.listAll(new BranchQuery().addOrder("code").ignoreEmptyCriteria(true));
             assertNotNull(branchList);
             assertEquals(3, branchList.size());
-            
+
             Branch branch = branchList.get(0);
-            assertEquals("100", branch.getCode());
-            assertEquals("Head Office", branch.getDescription());
-            assertEquals("221015100", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            BranchExt branchExt = (BranchExt) branch;
+            assertEquals("100", branchExt.getCode());
+            assertEquals("Head Office", branchExt.getDescription());
+            assertEquals("221015100", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
 
             branch = branchList.get(1);
-            assertEquals("101", branch.getCode());
-            assertEquals("Palm Groove Branch", branch.getDescription());
-            assertEquals("221015101", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            branchExt = (BranchExt) branch;
+            assertEquals("101", branchExt.getCode());
+            assertEquals("Palm Groove Branch", branchExt.getDescription());
+            assertEquals("221015101", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
 
             branch = branchList.get(2);
-            assertEquals("102", branch.getCode());
-            assertEquals("Lekki Phase I", branch.getDescription());
-            assertEquals("221015102", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            branchExt = (BranchExt) branch;
+            assertEquals("102", branchExt.getCode());
+            assertEquals("Lekki Phase I", branchExt.getDescription());
+            assertEquals("221015102", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -207,7 +276,7 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     }
 
     @Test
-    public void testUpdateRecordByIdWithNullExtension() throws Exception {
+    public void testUpdateRecordByIdWithSuperClass() throws Exception {
         tm.beginTransaction();
         try {
             Branch branch = new Branch("100", "Head Office", "221015100");
@@ -218,17 +287,25 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
 
             Branch foundBranch = db.find(Branch.class, branch.getId());
             assertNotNull(foundBranch);
-            assertNull(foundBranch.getExt());
-            assertEquals("100", foundBranch.getCode());
-            assertEquals("Head Office Main", foundBranch.getDescription());
-            assertEquals("221015102", foundBranch.getSortCode());
+            assertTrue(BranchExt.class.equals(foundBranch.getClass()));
+            BranchExt branchExt = (BranchExt) foundBranch;
+            assertEquals("100", branchExt.getCode());
+            assertEquals("Head Office Main", branchExt.getDescription());
+            assertEquals("221015102", branchExt.getSortCode());
+            assertNull(branchExt.getOfficeId());
+            assertNull(branchExt.getState());
+            assertNull(branchExt.getCountry());
+            assertNull(branchExt.getClosed());
+            assertNull(branchExt.getOfficeAddress());
+            assertNull(branchExt.getOfficeTelephone());
+            assertNull(branchExt.getClosedDesc());
         } finally {
             tm.endTransaction();
         }
     }
 
     @Test
-    public void testDeleteRecordByIdWithNullExtension() throws Exception {
+    public void testDeleteRecordByIdWithSuperClass() throws Exception {
         tm.beginTransaction();
         try {
             Long id = (Long) db.create(new Branch("100", "Head Office", "221015100"));
@@ -247,12 +324,12 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     public void testCreateRecordWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Branch branch = new Branch("100", "Head Office", "221015100");
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
-            branch.setExt(new BranchExt(parklaneOfficeId, "Lagos", "Nigeria", BooleanType.FALSE));
-            Long id = (Long) db.create(branch);
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            Long id = (Long) db.create(branchExt);
             assertNotNull(id);
-            assertEquals(id, branch.getId());
+            assertEquals(id, branchExt.getId());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -265,21 +342,19 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     public void testFindRecordWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Branch branch = new Branch("100", "Head Office", "221015100");
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
-            branch.setExt(new BranchExt(parklaneOfficeId, "Lagos", "Nigeria", BooleanType.FALSE));
-            Long id = (Long) db.create(branch);
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            Long id = (Long) db.create(branchExt);
             assertNotNull(id);
-            assertEquals(id, branch.getId());
+            assertEquals(id, branchExt.getId());
 
             Branch foundBranch = db.find(Branch.class, id);
-            assertNotNull(foundBranch);            
-            assertEquals("100", foundBranch.getCode());
-            assertEquals("Head Office", foundBranch.getDescription());
-            assertEquals("221015100", foundBranch.getSortCode());
-
-            assertNotNull(foundBranch.getExt());
-            BranchExt foundBranchExt = (BranchExt) foundBranch.getExt();
+            assertTrue(BranchExt.class.equals(foundBranch.getClass()));
+            BranchExt foundBranchExt = (BranchExt) foundBranch;
+            assertEquals("100", foundBranchExt.getCode());
+            assertEquals("Head Office", foundBranchExt.getDescription());
+            assertEquals("221015100", foundBranchExt.getSortCode());
             assertEquals(parklaneOfficeId, foundBranchExt.getOfficeId());
             assertEquals("Lagos", foundBranchExt.getState());
             assertEquals("Nigeria", foundBranchExt.getCountry());
@@ -299,27 +374,27 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     public void testFindAllWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Branch branch = new Branch("100", "Head Office", "221015100");
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
-            branch.setExt(new BranchExt(parklaneOfficeId, "Lagos", "Nigeria", BooleanType.FALSE));
-            db.create(branch);
-            db.create(new Branch("101", "Palm Groove Branch", "221015101"));
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            db.create(branchExt);
+            db.create(new BranchExt("101", "Palm Groove Branch", "221015101", null, null, null, null));
 
-            branch = new Branch("102", "Lekki Phase I", "221015102");
             Long warehouseOfficeId = (Long) db.create(warehouseOffice);
-            branch.setExt(new BranchExt(warehouseOfficeId, "Abuja", "Nigeria", BooleanType.TRUE));
-            db.create(branch);
+            branchExt = new BranchExt("102", "Lekki Phase I", "221015102", warehouseOfficeId, "Abuja", "Nigeria",
+                    BooleanType.TRUE);
+            db.create(branchExt);
 
             List<Branch> branchList = db.findAll(new BranchQuery().addOrder("code").ignoreEmptyCriteria(true));
             assertNotNull(branchList);
             assertEquals(3, branchList.size());
-            
-            branch = branchList.get(0);
-            assertEquals("100", branch.getCode());
-            assertEquals("Head Office", branch.getDescription());
-            assertEquals("221015100", branch.getSortCode());
-            assertNotNull(branch.getExt());
-            BranchExt foundBranchExt = (BranchExt) branch.getExt();
+
+            Branch branch = branchList.get(0);
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            BranchExt foundBranchExt = (BranchExt) branch;
+            assertEquals("100", foundBranchExt.getCode());
+            assertEquals("Head Office", foundBranchExt.getDescription());
+            assertEquals("221015100", foundBranchExt.getSortCode());
             assertEquals(parklaneOfficeId, foundBranchExt.getOfficeId());
             assertEquals("Lagos", foundBranchExt.getState());
             assertEquals("Nigeria", foundBranchExt.getCountry());
@@ -329,17 +404,25 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
             assertNull(foundBranchExt.getClosedDesc());
 
             branch = branchList.get(1);
-            assertEquals("101", branch.getCode());
-            assertEquals("Palm Groove Branch", branch.getDescription());
-            assertEquals("221015101", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            foundBranchExt = (BranchExt) branch;
+            assertEquals("101", foundBranchExt.getCode());
+            assertEquals("Palm Groove Branch", foundBranchExt.getDescription());
+            assertEquals("221015101", foundBranchExt.getSortCode());
+            assertNull(foundBranchExt.getOfficeId());
+            assertNull(foundBranchExt.getState());
+            assertNull(foundBranchExt.getCountry());
+            assertNull(foundBranchExt.getClosed());
+            assertNull(foundBranchExt.getOfficeAddress());
+            assertNull(foundBranchExt.getOfficeTelephone());
+            assertNull(foundBranchExt.getClosedDesc());
 
             branch = branchList.get(2);
-            assertEquals("102", branch.getCode());
-            assertEquals("Lekki Phase I", branch.getDescription());
-            assertEquals("221015102", branch.getSortCode());
-            assertNotNull(branch.getExt());
-            foundBranchExt = (BranchExt) branch.getExt();
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            foundBranchExt = (BranchExt) branch;
+            assertEquals("102", foundBranchExt.getCode());
+            assertEquals("Lekki Phase I", foundBranchExt.getDescription());
+            assertEquals("221015102", foundBranchExt.getSortCode());
             assertEquals(warehouseOfficeId, foundBranchExt.getOfficeId());
             assertEquals("Abuja", foundBranchExt.getState());
             assertEquals("Nigeria", foundBranchExt.getCountry());
@@ -359,21 +442,20 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     public void testListRecordWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Branch branch = new Branch("100", "Head Office", "221015100");
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
-            branch.setExt(new BranchExt(parklaneOfficeId, "Lagos", "Nigeria", BooleanType.FALSE));
-            Long id = (Long) db.create(branch);
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            Long id = (Long) db.create(branchExt);
             assertNotNull(id);
-            assertEquals(id, branch.getId());
+            assertEquals(id, branchExt.getId());
 
             Branch foundBranch = db.list(Branch.class, id);
-            assertNotNull(foundBranch);            
-            assertEquals("100", foundBranch.getCode());
-            assertEquals("Head Office", foundBranch.getDescription());
-            assertEquals("221015100", foundBranch.getSortCode());
-
-            assertNotNull(foundBranch.getExt());
-            BranchExt foundBranchExt = (BranchExt) foundBranch.getExt();
+            assertNotNull(foundBranch);
+            assertTrue(BranchExt.class.equals(foundBranch.getClass()));
+            BranchExt foundBranchExt = (BranchExt) foundBranch;
+            assertEquals("100", foundBranchExt.getCode());
+            assertEquals("Head Office", foundBranchExt.getDescription());
+            assertEquals("221015100", foundBranchExt.getSortCode());
             assertEquals(parklaneOfficeId, foundBranchExt.getOfficeId());
             assertEquals("Lagos", foundBranchExt.getState());
             assertEquals("Nigeria", foundBranchExt.getCountry());
@@ -393,27 +475,27 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     public void testListAllWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Branch branch = new Branch("100", "Head Office", "221015100");
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
-            branch.setExt(new BranchExt(parklaneOfficeId, "Lagos", "Nigeria", BooleanType.FALSE));
-            db.create(branch);
-            db.create(new Branch("101", "Palm Groove Branch", "221015101"));
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            db.create(branchExt);
+            db.create(new BranchExt("101", "Palm Groove Branch", "221015101", null, null, null, null));
 
-            branch = new Branch("102", "Lekki Phase I", "221015102");
             Long warehouseOfficeId = (Long) db.create(warehouseOffice);
-            branch.setExt(new BranchExt(warehouseOfficeId, "Abuja", "Nigeria", BooleanType.TRUE));
-            db.create(branch);
+            branchExt = new BranchExt("102", "Lekki Phase I", "221015102", warehouseOfficeId, "Abuja", "Nigeria",
+                    BooleanType.TRUE);
+            db.create(branchExt);
 
             List<Branch> branchList = db.listAll(new BranchQuery().addOrder("code").ignoreEmptyCriteria(true));
             assertNotNull(branchList);
             assertEquals(3, branchList.size());
-            
-            branch = branchList.get(0);
-            assertEquals("100", branch.getCode());
-            assertEquals("Head Office", branch.getDescription());
-            assertEquals("221015100", branch.getSortCode());
-            assertNotNull(branch.getExt());
-            BranchExt foundBranchExt = (BranchExt) branch.getExt();
+
+            Branch branch = branchList.get(0);
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            BranchExt foundBranchExt = (BranchExt) branch;
+            assertEquals("100", foundBranchExt.getCode());
+            assertEquals("Head Office", foundBranchExt.getDescription());
+            assertEquals("221015100", foundBranchExt.getSortCode());
             assertEquals(parklaneOfficeId, foundBranchExt.getOfficeId());
             assertEquals("Lagos", foundBranchExt.getState());
             assertEquals("Nigeria", foundBranchExt.getCountry());
@@ -423,17 +505,25 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
             assertEquals("False", foundBranchExt.getClosedDesc());
 
             branch = branchList.get(1);
-            assertEquals("101", branch.getCode());
-            assertEquals("Palm Groove Branch", branch.getDescription());
-            assertEquals("221015101", branch.getSortCode());
-            assertNull(branch.getExt());
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            foundBranchExt = (BranchExt) branch;
+            assertEquals("101", foundBranchExt.getCode());
+            assertEquals("Palm Groove Branch", foundBranchExt.getDescription());
+            assertEquals("221015101", foundBranchExt.getSortCode());
+            assertNull(foundBranchExt.getOfficeId());
+            assertNull(foundBranchExt.getState());
+            assertNull(foundBranchExt.getCountry());
+            assertNull(foundBranchExt.getClosed());
+            assertNull(foundBranchExt.getOfficeAddress());
+            assertNull(foundBranchExt.getOfficeTelephone());
+            assertNull(foundBranchExt.getClosedDesc());
 
             branch = branchList.get(2);
-            assertEquals("102", branch.getCode());
-            assertEquals("Lekki Phase I", branch.getDescription());
-            assertEquals("221015102", branch.getSortCode());
-            assertNotNull(branch.getExt());
-            foundBranchExt = (BranchExt) branch.getExt();
+            assertTrue(BranchExt.class.equals(branch.getClass()));
+            foundBranchExt = (BranchExt) branch;
+            assertEquals("102", foundBranchExt.getCode());
+            assertEquals("Lekki Phase I", foundBranchExt.getDescription());
+            assertEquals("221015102", foundBranchExt.getSortCode());
             assertEquals(warehouseOfficeId, foundBranchExt.getOfficeId());
             assertEquals("Abuja", foundBranchExt.getState());
             assertEquals("Nigeria", foundBranchExt.getCountry());
@@ -453,25 +543,23 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     public void testUpdateRecordByIdWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Branch branch = new Branch("100", "Head Office", "221015100");
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
-            BranchExt branchExt = new BranchExt(parklaneOfficeId, "Lagos", "Nigeria", BooleanType.FALSE);
-            branch.setExt(branchExt);
-            db.create(branch);
-            branch.setDescription("Head Office Main");
-            branch.setSortCode("221015102");
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            db.create(branchExt);
+            branchExt.setDescription("Head Office Main");
+            branchExt.setSortCode("221015102");
             branchExt.setState("Abuja");
             branchExt.setClosed(BooleanType.TRUE);
-            db.updateById(branch);
+            db.updateById(branchExt);
 
-            Branch foundBranch = db.find(Branch.class, branch.getId());
+            Branch foundBranch = db.find(Branch.class, branchExt.getId());
             assertNotNull(foundBranch);
-            assertEquals("100", foundBranch.getCode());
-            assertEquals("Head Office Main", foundBranch.getDescription());
-            assertEquals("221015102", foundBranch.getSortCode());
-
-            assertNotNull(foundBranch.getExt());
-            BranchExt foundBranchExt = (BranchExt) foundBranch.getExt();
+            assertTrue(BranchExt.class.equals(foundBranch.getClass()));
+            BranchExt foundBranchExt = (BranchExt) foundBranch;
+            assertEquals("100", foundBranchExt.getCode());
+            assertEquals("Head Office Main", foundBranchExt.getDescription());
+            assertEquals("221015102", foundBranchExt.getSortCode());
             assertEquals(parklaneOfficeId, foundBranchExt.getOfficeId());
             assertEquals("Abuja", foundBranchExt.getState());
             assertEquals("Nigeria", foundBranchExt.getCountry());
@@ -488,11 +576,10 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     public void testDeleteRecordByIdWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Branch branch = new Branch("100", "Head Office", "221015100");
             Long parklaneOfficeId = (Long) db.create(parklaneOffice);
-            BranchExt branchExt = new BranchExt(parklaneOfficeId, "Lagos", "Nigeria", BooleanType.FALSE);
-            branch.setExt(branchExt);
-            Long id = (Long) db.create(branch);
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            Long id = (Long) db.create(branchExt);
             assertEquals(1, db.countAll(new BranchQuery().addEquals("id", id)));
             db.delete(Branch.class, id);
             assertEquals(0, db.countAll(new BranchQuery().addEquals("id", id)));

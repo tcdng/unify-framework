@@ -68,9 +68,12 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
         String name = getName();
         // Extensions
         for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, TableExt.class)) {
-            TableExt tae = entityClass.getAnnotation(TableExt.class);
-            if (tae.datasource().equals(name)) {
-                entityList.add(entityClass);
+            Class<?> extendedEntityClass = entityClass.getSuperclass();
+            if (extendedEntityClass != null) {
+                Table ta = extendedEntityClass.getAnnotation(Table.class);
+                if (ta.datasource().equals(name)) {
+                    entityList.add(entityClass);
+                }
             }
         }
 

@@ -956,30 +956,21 @@ public interface UnifyCoreErrorConstants {
     /** Entity class {0} attempting to extend entity {1} which is already extended by {2}.*/
     String MULTIPLE_TABLE_EXTENSIONS = "UC_00F3";
 
-    /** Entity type annotation {0} is unsupported for table extension. Type = {1}, field {2}. */
-    String RECORD_RABLE_EXTENSION_UNSUPPORTED_ANNOTATION = "UC_00F4";
-
-    /** Foreign reference to extension not allowed. Type = {0}, field {1}. */
-    String FOREIGN_REFERENCE_TO_EXTENSION = "UC_00F5";
-
-    /** Extension foreign reference must refer to extended entity. Type = {0}, field {1}. */
-    String EXTENSION_REFERENCE_MUST_REFER_EXTENDED_ENTITY = "UC_00F6";
-
-    /** Multiple extension references is not allowed. Type = {0}, field {1}. */
-    String EXTENSION_REFERENCE_MULTIPLE = "UC_00F7";
-
-    /** Entity type operation not supported for extension. Type = {0}, operation {1}*/
-    String RECORD_EXTENSION_OPERATION_UNSUPPORTED = "UC_00F8";
-
-    /** Entity type extension referencing not allowed. Type = {0}, field {1}*/
-    String RECORD_EXTENSION_REFERENCE_NOT_ALLOWED = "UC_00F9";
-
-    /** Entity type extension has no extension foreign reference. Type = {0}*/
-    String RECORD_EXTENSION_NO_FOREIGN_REFERENCE = "UC_00FA";
-
-    /** Foreign reference to extended entity not allowed. Type = {0}, field {1}. */
-    String FOREIGN_REFERENCE_TO_EXTENDED_ENTITY = "UC_00FB";
-
-    /** Entity type list-only not allowed from extended entity. Type = {0}, field {1}. */
-    String RECORD_LISTONLY_NOT_ALLOWED_FROM_EXTENDED = "UC_00FC";
+    /** Entity type annotation {0} is unsupported for table extension. field {1}. */
+    String RECORD_EXTENSION_UNSUPPORTED_ANNOTATION = "UC_00F4";
+    
+    /** Entity type foreign reference to table extension not allowed. Type = {0}, field {1}. */
+    String RECORD_EXTENSION_REFERENCE_NOT_ALLOWED = "UC_00F5";
+    
+    /** Entity type {0} super class {1} must be annotated with {2}.*/
+    String RECORD_EXTENSION_SUPERCLASS_INCOMPATIBLE = "UC_00F6";
+    
+    /** Entity type foreign reference to superclass not allowed. Type = {0}, field {1}. */
+    String RECORD_SUPERCLASS_REFERENCE_NOT_ALLOWED = "UC_00F7";
+    
+    /** Entity type field already exists in super hierarchy. Type = {0}, field {1}. */
+    String RECORD_SUPERCLASS_FIELD_EXIST = "UC_00F8";
+    
+    /** Entity type {0} super class {1} is already extended by {2}. */
+    String RECORD_SUPERCLASS_ALREADY_EXTENDED = "UC_00F9";
 }

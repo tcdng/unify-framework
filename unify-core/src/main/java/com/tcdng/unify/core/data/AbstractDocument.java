@@ -16,8 +16,6 @@
 
 package com.tcdng.unify.core.data;
 
-import com.tcdng.unify.core.database.Entity;
-
 /**
  * Abstract document.
  * 
@@ -29,16 +27,6 @@ public abstract class AbstractDocument implements Document {
     @Override
     public boolean isReserved() {
         return false;
-    }
-
-    @Override
-    public Entity getExt() {
-        return null;
-    }
-
-    @Override
-    public void setExt(Entity ext) {
-        
     }
 
     @Override

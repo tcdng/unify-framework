@@ -44,7 +44,6 @@ import com.tcdng.unify.core.database.sql.SqlFieldDimensions;
  */
 public final class SqlUtils {
 
-    private static final String IDENTIFIER_PREFIX_EXTENSION = "E_";
     private static final String IDENTIFIER_PREFIX_VIEW = "V_";
 
     private static final String IDENTIFIER_SUFFIX_FOREIGNKEY = "_FK";
@@ -240,17 +239,6 @@ public final class SqlUtils {
      */
     public static String generateViewName(String tableSchemaName) {
         return String.format("%s%s", IDENTIFIER_PREFIX_VIEW, tableSchemaName);
-    }
-
-    /**
-     * Genarates a table extension name.
-     * 
-     * @param tableSchemaName
-     *            the extended table name
-     * @return the table extension name
-     */
-    public static String generateTableExtensionName(String tableSchemaName) {
-        return String.format("%s%s", IDENTIFIER_PREFIX_EXTENSION, tableSchemaName);
     }
 
     /**
