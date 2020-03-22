@@ -477,7 +477,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED,
                                         entityClass, field);
                             }
-                            
+
                             Field attrFkField = getAttributeOnlyForeignKeyField(entityClass, childType);
                             if (attrFkField == null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_NO_MATCHING_FK, field,
@@ -501,7 +501,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED,
                                         entityClass, field);
                             }
-                            
+
                             Field attrFkField = getAttributeOnlyForeignKeyField(entityClass, argumentType);
                             if (attrFkField == null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILDLIST_NO_MATCHING_FK, field,
@@ -727,18 +727,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             private SqlEntityInfo createTableExtensionEntityInfo(Class<?> entityClass,
                     EntityCycleDetector entityCycleDetector) throws Exception {
                 TableExt tae = entityClass.getAnnotation(TableExt.class);
-                SqlEntityInfo sqlEntityInfo = get(tae.extend(), entityCycleDetector);
-                if (sqlEntityInfo.isWithExtension()) {
-                    throw new UnifyException(UnifyCoreErrorConstants.MULTIPLE_TABLE_EXTENSIONS, entityClass,
-                            sqlEntityInfo.getEntityClass(), sqlEntityInfo.getExtSqlEntityInfo().getEntityClass());
+                String extTableName = AnnotationUtils.getAnnotationString(tae.name());
+                if (StringUtils.isBlank(extTableName)) {
+                    extTableName =
+                            SqlUtils.generateTableExtensionName(SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), sqlGenerationApplySpacing));
                 }
 
-                String extTableName = SqlUtils.generateTableExtensionName(sqlEntityInfo.getTableName());
-                String preferredTableName = sqlDataSourceDialect.getPreferredName(extTableName);
-                String schema = sqlEntityInfo.getSchema();
-                String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
-
                 // Process all fields including super class fields
+                Map<Field, Class<?>> fkRefClassesMap = new HashMap<Field, Class<?>>();
                 Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
                 SqlFieldInfo idFieldInfo = null;
                 SqlFieldInfo extForeignFieldInfo = null;
@@ -867,13 +863,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             isPersistent = true;
                             isForeignKey = true;
                             String fkName = null;
-                            boolean onDeleteCascade = false;
 
                             fkName = fka.name();
                             isNullable = fka.nullable();
-                            Class<?> foreignType = fka.value();
-                            if (foreignType.equals(Entity.class)) {
-                                foreignType = fka.type();
+                            Class<?> foreignEntityClass = fka.value();
+                            if (foreignEntityClass.equals(Entity.class)) {
+                                foreignEntityClass = fka.type();
                             } else if (!fka.type().equals(Entity.class)) {
                                 throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION,
                                         "value", "foreignType", fka.getClass(), field);
@@ -886,33 +881,28 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                             field.getType(), fka.getClass(), field);
                                 }
 
-                                foreignType = field.getType();
+                                foreignEntityClass = field.getType();
                             }
 
-                            if (foreignType.equals(Entity.class)) {
+                            if (foreignEntityClass.equals(Entity.class)) {
                                 throw new UnifyException(
                                         UnifyCoreErrorConstants.ANNOTATION_MUST_SPECIFY_ATTRIBUTE_OF_TWO, "value",
                                         "foreignType", fka.getClass(), field);
                             }
 
-                            entityCycleDetector.addReference(entityClass, foreignType);
-                            foreignEntityInfo = get(foreignType, entityCycleDetector);
-                            onDeleteCascade = fka.onDeleteCascade();
-                            if (fka.extension()) {
-                                if (!foreignType.equals(sqlEntityInfo.getEntityClass())) {
-                                    throw new UnifyException(
-                                            UnifyCoreErrorConstants.EXTENSION_REFERENCE_MUST_REFER_EXTENDED_ENTITY,
-                                            entityClass, field);
-                                }
+                            if (foreignEntityClass.isAnnotationPresent(TableExt.class)) {
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.FOREIGN_REFERENCE_TO_EXTENSION, entityClass,
+                                        field);
+                            }
 
+                            entityCycleDetector.addReference(entityClass, foreignEntityClass);
+                            foreignEntityInfo = get(foreignEntityClass, entityCycleDetector);
+                            
+                            if (fka.extension()) {
                                 isForExtension = true;
-                                onDeleteCascade = true;
                             } else {
-                                if (foreignType.equals(sqlEntityInfo.getEntityClass())) {
-                                    throw new UnifyException(
-                                            UnifyCoreErrorConstants.FOREIGN_REFERENCE_TO_EXTENDED_ENTITY, entityClass,
-                                            field);
-                                }
+                                fkRefClassesMap.put(field, foreignEntityClass);
                             }
 
                             foreignFieldInfo = foreignEntityInfo.getIdFieldInfo();
@@ -925,12 +915,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             if (!isEnumConst && !field.getType().equals(foreignFieldInfo.getField().getType())) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_FOREIGNKEY_TYPE_MUST_MATCH_ID,
                                         searchClass, field, foreignFieldInfo.getField());
-                            }
-
-                            // Add on delete info to parent entity class
-                            if (onDeleteCascade) {
-                                foreignEntityInfo.expandOnDeleteCascade(
-                                        new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field));
                             }
                         }
 
@@ -984,6 +968,30 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     }
                 } while ((searchClass = searchClass.getSuperclass()) != null);
 
+                if (extForeignFieldInfo == null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_NO_FOREIGN_REFERENCE,
+                            entityClass);
+                }
+
+                Class<?> extFkEntityClass = extForeignFieldInfo.getForeignEntityInfo().getEntityClass();
+                for (Map.Entry<Field, Class<?>> entry: fkRefClassesMap.entrySet()) {
+                    if (extFkEntityClass.equals(entry.getValue())) {
+                        throw new UnifyException(UnifyCoreErrorConstants.FOREIGN_REFERENCE_TO_EXTENDED_ENTITY,
+                                entityClass, entry.getKey());
+                    }
+                }
+                
+                SqlEntityInfo sqlEntityInfo =
+                        get(extFkEntityClass, entityCycleDetector);
+                if (sqlEntityInfo.isWithExtension()) {
+                    throw new UnifyException(UnifyCoreErrorConstants.MULTIPLE_TABLE_EXTENSIONS, entityClass,
+                            sqlEntityInfo.getEntityClass(), sqlEntityInfo.getExtSqlEntityInfo().getEntityClass());
+                }
+
+                String preferredTableName = sqlDataSourceDialect.getPreferredName(extTableName);
+                String schema = sqlEntityInfo.getSchema();
+                String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
+
                 // Rename view if necessary
                 String viewName = extTableName;
                 if (!listOnlyFieldMap.isEmpty()) {
@@ -1008,6 +1016,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                     entry.getKey(), field, loa.key());
                         }
 
+                        if (extForeignFieldInfo.getName().equals(loa.key())) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTONLY_NOT_ALLOWED_FROM_EXTENDED,
+                                    entityClass, field);
+                        }
+                        
                         SqlEntityInfo foreignEntityInfo = foreignKeySQLFieldInfo.getForeignEntityInfo();
                         SqlFieldInfo foreignFieldInfo = foreignEntityInfo.getListFieldInfo(loa.property());
 
@@ -1055,43 +1068,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     entityPolicy = (EntityPolicy) getComponent(pa.value());
                 }
 
-                // Indexes
-                Map<String, SqlIndexInfo> indexMap = null;
-                if (tae.indexes().length > 0) {
-                    indexMap = new LinkedHashMap<String, SqlIndexInfo>();
-                    for (Index idxa : tae.indexes()) {
-                        String[] fieldNames = idxa.value();
-                        String name = SqlUtils.generateIndexName(extTableName, fieldNames);
-                        if (fieldNames.length == 0) {
-                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_INDEX,
-                                    entityClass, name);
-                        }
-
-                        if (sqlDataSourceDialect.isAllObjectsInLowerCase()) {
-                            name = name.toLowerCase();
-                        }
-
-                        for (String fieldName : fieldNames) {
-                            SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(fieldName);
-                            if (sqlFieldInfo == null) {
-                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_PROPERTY_FOR_INDEX,
-                                        entityClass, fieldName);
-                            }
-
-                            if (sqlFieldInfo.isListOnly()) {
-                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTONLY_PROPERTY_FOR_INDEX,
-                                        entityClass, fieldName);
-                            }
-                        }
-
-                        indexMap.put(name, new SqlIndexInfo(name, Arrays.asList(fieldNames), idxa.unique()));
-                    }
-
-                    if (indexMap.isEmpty()) {
-                        indexMap = null;
-                    }
-                }
-
                 // Order if necessary
                 if (sqlOrderColumns) {
                     List<SqlFieldInfo> tempList = new ArrayList<SqlFieldInfo>(propertyInfoMap.values());
@@ -1109,7 +1085,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 SqlEntityInfo extSqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
                         entityPolicy, schema, extTableName, preferredTableName, schemaTableName, tableAlias, viewName,
                         preferredViewName, schemaViewName, idFieldInfo, null, extForeignFieldInfo, propertyInfoMap,
-                        null, null, null, indexMap, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
+                        null, null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
                         true);
                 sqlEntityInfo.setExtSqlEntityInfo(extSqlEntityInfo);
                 return extSqlEntityInfo;

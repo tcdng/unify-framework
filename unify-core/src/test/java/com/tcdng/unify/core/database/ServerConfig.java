@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Table;
  * @since 1.0
  */
 @Table
-public class ServerConfig extends AbstractTestTableEntity {
+public class ServerConfig extends AbstractTestVersionedTableEntity {
 
     @Column
     private String name;

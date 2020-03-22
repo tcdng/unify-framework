@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.View;
 
 /**
@@ -42,6 +43,15 @@ public interface DataSource extends UnifyComponent {
      *             if an error occurs
      */
     List<Class<?>> getTableEntityTypes() throws UnifyException;
+
+    /**
+     * Returns a list of entity extension types annotated with {@link TableExt} that
+     * are maintained in this data source.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<Class<?>> getTableExtensionEntityTypes() throws UnifyException;
 
     /**
      * Returns a list of entity types annotated with {@link View} that are

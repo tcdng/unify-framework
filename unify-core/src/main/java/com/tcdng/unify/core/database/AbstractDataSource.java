@@ -23,6 +23,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.constant.EnumConst;
 
@@ -62,6 +63,21 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
     }
 
     @Override
+    public List<Class<?>> getTableExtensionEntityTypes() throws UnifyException {
+        List<Class<?>> entityList = new ArrayList<Class<?>>();
+        String name = getName();
+        // Extensions
+        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, TableExt.class)) {
+            TableExt tae = entityClass.getAnnotation(TableExt.class);
+            if (tae.datasource().equals(name)) {
+                entityList.add(entityClass);
+            }
+        }
+
+        return entityList;
+    }
+
+    @Override
     public List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException {
         List<Class<? extends Entity>> entityList = new ArrayList<Class<? extends Entity>>();
         String name = getName();
@@ -83,12 +99,12 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
     @Override
     protected void onInitialize() throws UnifyException {
-        
+
     }
 
     @Override
     protected void onTerminate() throws UnifyException {
-        
+
     }
 
     protected void setDialect(DataSourceDialect dialect) {

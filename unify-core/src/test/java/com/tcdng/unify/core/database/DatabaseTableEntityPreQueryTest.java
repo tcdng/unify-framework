@@ -1832,7 +1832,7 @@ public class DatabaseTableEntityPreQueryTest extends AbstractUnifyComponentTest 
     protected void onSetup() throws Exception {
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        testEntityPolicy = (TestEntityPolicy) getComponent("testentity-policy");
+        testEntityPolicy = (TestEntityPolicy) getComponent("testversionedentity-policy");
     }
 
     @SuppressWarnings({ "unchecked" })

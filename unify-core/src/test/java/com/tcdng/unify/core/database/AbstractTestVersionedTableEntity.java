@@ -15,31 +15,26 @@
  */
 package com.tcdng.unify.core.database;
 
-import com.tcdng.unify.core.annotation.Id;
 import com.tcdng.unify.core.annotation.Policy;
+import com.tcdng.unify.core.annotation.Version;
 
 /**
- * Abstract base class for test entities.
+ * Abstract base class for test versioned entities.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Policy("testentity-policy")
-public abstract class AbstractTestTableEntity extends AbstractEntity {
+@Policy("testversionedentity-policy")
+public abstract class AbstractTestVersionedTableEntity extends AbstractTestTableEntity {
 
-    @Id
-    private Long id;
+    @Version
+    private long version;
 
-    @Override
-    public String getDescription() {
-        return null;
+    public long getVersion() {
+        return version;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

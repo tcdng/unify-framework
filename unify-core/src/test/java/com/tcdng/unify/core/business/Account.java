@@ -17,7 +17,7 @@ package com.tcdng.unify.core.business;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.database.AbstractTestTableEntity;
+import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
 
 /**
  * Account entity.
@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.AbstractTestTableEntity;
  * @since 1.0
  */
 @Table
-public class Account extends AbstractTestTableEntity {
+public class Account extends AbstractTestVersionedTableEntity {
 
     @Column
     private String accountNo;

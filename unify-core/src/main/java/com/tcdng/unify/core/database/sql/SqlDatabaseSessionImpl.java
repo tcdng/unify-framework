@@ -815,8 +815,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 entityPolicy.preQuery(query);
             }
 
-            if (sqlDataSourceDialect.isQueryOffsetOrLimit(query) || (!sqlEntityInfo.isChildList()
-                    && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
+            if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
+                    || (!sqlEntityInfo.isWithExtension() && !sqlEntityInfo.isChildList()
+                            && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(query));
             }

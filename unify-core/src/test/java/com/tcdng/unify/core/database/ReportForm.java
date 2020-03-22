@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.Table;
  */
 @Policy("testentitynorest-policy")
 @Table(name = "REPORT_FORM")
-public class ReportForm extends AbstractTestTableEntity {
+public class ReportForm extends AbstractTestVersionedTableEntity {
 
     @ForeignKey(Report.class)
     private Long reportId;
