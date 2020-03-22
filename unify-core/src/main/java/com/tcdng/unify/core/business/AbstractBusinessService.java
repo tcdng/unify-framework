@@ -25,6 +25,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.sql.DynamicSqlDatabaseManager;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
@@ -55,6 +56,12 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     @Override
     public DatabaseTransactionManager tm() throws UnifyException {
         return databaseTransactionManager;
+    }
+
+    @Transactional
+    @Override
+    public Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException {
+        return db().getNewExtensionInstance(entityClass);
     }
 
     @Transactional
