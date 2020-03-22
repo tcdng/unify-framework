@@ -63,9 +63,13 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private String schemaViewName;
 
+    private SqlEntityInfo extSqlEntityInfo;
+
     private SqlFieldInfo idFieldInfo;
 
     private SqlFieldInfo versionFieldInfo;
+
+    private SqlFieldInfo extFkFieldInfo;
 
     private List<SqlFieldInfo> fieldInfoList;
 
@@ -97,14 +101,16 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private List<SqlViewRestrictionInfo> viewRestrictionList;
 
+    private boolean extension;
+    
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
             EntityPolicy recordPolicy, String schema, String tableName, String preferredTableName, String schemaTableName,
             String tableAlias, String viewName, String preferredViewName, String schemaViewName,
-            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
+            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo extFkFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
-            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase) throws UnifyException {
+            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase, boolean extension) throws UnifyException {
         this.index = index;
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
@@ -119,6 +125,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.schemaViewName = schemaViewName;
         this.idFieldInfo = idFieldInfo;
         this.versionFieldInfo = versionFieldInfo;
+        this.extFkFieldInfo = extFkFieldInfo;
+        this.extension = extension;
         this.fieldInfoList = new ArrayList<SqlFieldInfo>();
         this.listFieldInfoList = new ArrayList<SqlFieldInfo>();
         this.listFieldInfoByName = Collections.unmodifiableMap(sQLFieldInfoMap);
@@ -242,6 +250,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public SqlFieldInfo getVersionFieldInfo() {
         return versionFieldInfo;
+    }
+
+    @Override
+    public SqlFieldInfo getExtFkFieldInfo() {
+        return extFkFieldInfo;
     }
 
     @Override
@@ -401,6 +414,22 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     public boolean isOnDeleteCascadeList() {
         return !onDeleteCascadeInfoList.isEmpty();
+    }
+
+    public boolean isExtension() {
+        return extension;
+    }
+
+    public SqlEntityInfo getExtSqlEntityInfo() {
+        return extSqlEntityInfo;
+    }
+
+    void setExtSqlEntityInfo(SqlEntityInfo extSqlEntityInfo) {
+        this.extSqlEntityInfo = extSqlEntityInfo;
+    }
+
+    public boolean isWithExtension() {
+        return extSqlEntityInfo != null;
     }
 
     void expandOnDeleteCascade(OnDeleteCascadeInfo onDeleteCascadeInfo) {

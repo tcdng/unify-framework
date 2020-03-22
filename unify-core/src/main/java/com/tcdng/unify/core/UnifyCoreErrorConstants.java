@@ -951,5 +951,26 @@ public interface UnifyCoreErrorConstants {
     String AGGREGATION_GROUPING_FIELD_UNKNOWN = "UC_00F1";
 
     /** Compilation error {0}*/
-    String JAVA_SOURCE_COMPILATION_ERROR= "UC_00F2";
+    String JAVA_SOURCE_COMPILATION_ERROR = "UC_00F2";
+
+    /** Entity class {0} attempting to extend entity {1} which is already extended by {2}.*/
+    String MULTIPLE_TABLE_EXTENSIONS = "UC_00F3";
+
+    /** Entity type annotation {0} is unsupported for table extension. Type = {1}, field {2}. */
+    String RECORD_RABLE_EXTENSION_UNSUPPORTED_ANNOTATION = "UC_00F4";
+
+    /** Foreign reference to extended entity not allowed. Type = {0}, field {1}. */
+    String FOREIGN_REFERENCE_TO_EXTENDED_ENTITY = "UC_00F5";
+
+    /** Extension foreign reference must refer to extended entity. Type = {0}, field {1}. */
+    String EXTENSION_REFERENCE_MUST_REFER_EXTENDED_ENTITY = "UC_00F6";
+
+    /** Multiple extension references is not allowed. Type = {0}, field {1}. */
+    String EXTENSION_REFERENCE_MULTIPLE = "UC_00F7";
+
+    /** Entity type operation not supported for extension. Type = {0}, operation {1}*/
+    String RECORD_EXTENSION_OPERATION_UNSUPPORTED = "UC_00F8";
+
+    /** Entity type extension referencing not allowed. Type = {0}, field {1}*/
+    String RECORD_EXTENSION_REFERENCE_NOT_ALLOWED = "UC_00F9";
 }

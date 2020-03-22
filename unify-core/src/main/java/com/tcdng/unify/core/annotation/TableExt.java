@@ -13,24 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
+package com.tcdng.unify.core.annotation;
 
-import com.tcdng.unify.core.data.Describable;
-import com.tcdng.unify.core.data.Listable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.tcdng.unify.core.database.Entity;
 
 /**
- * Interface required by all entities.
+ * Annotation for indicating an entity extension.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Entity extends Listable, Describable {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TableExt {
 
-    Object getId();
+    Class<? extends Entity> extend();
 
-    Entity getExt();
-    
-    void setExt(Entity ext);
-    
-    boolean isReserved();
+    Index[] indexes() default {};
 }

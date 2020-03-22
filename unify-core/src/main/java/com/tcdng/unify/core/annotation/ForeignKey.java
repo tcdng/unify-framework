@@ -59,6 +59,11 @@ public @interface ForeignKey {
     boolean onDeleteCascade() default false;
 
     /**
+     * Indicates a table extension foreign reference.
+     */
+    boolean extension() default false;
+
+    /**
      * Indicates annotated field should be considered a foreign key for child lists.
      */
     boolean childKey() default true;

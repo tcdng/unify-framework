@@ -62,7 +62,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         int result = 0;
         PreparedStatement pStmt = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             result = pStmt.executeUpdate();
         } catch (UnifyException e) {
@@ -84,7 +84,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
@@ -118,7 +118,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             pStmt = connection.prepareStatement(sqlQuery);
             rs = pStmt.executeQuery();
             if (rs.next()) {
-                long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+                final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
                 result = (T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1, timeZoneOffset);
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
@@ -187,7 +187,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -248,7 +248,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -282,7 +282,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
         try {
             SqlEntityInfo sqlEntityInfo = sqlStatement.getSqlEntityInfo();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
@@ -328,7 +328,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -386,7 +386,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -451,7 +451,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -492,7 +492,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
@@ -540,7 +540,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
@@ -587,7 +587,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         try {
             List<String> groupByFieldList = new ArrayList<String>(groupBy.values());
             final int glen = groupByFieldList.size();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -638,7 +638,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
         try {
             // Prepare and execute callable statement
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             cStmt = getCallableStatement(connection, sqlCallableStatement, timeZoneOffset);
 
             if (sqlCallableStatement.isWithReturn() && sqlCallableStatement.isFunctionMode()) {
@@ -674,7 +674,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
         try {
             // Prepare and execute callable statement
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             cStmt = getCallableStatement(connection, sqlCallableStatement, timeZoneOffset);
 
             boolean isResults = cStmt.execute();
@@ -743,7 +743,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     @SuppressWarnings("unchecked")
     private PreparedStatement getPreparedStatement(Connection connection, SqlStatement sqlStatement,
-            long timeZoneOffset) throws Exception {
+            final long timeZoneOffset) throws Exception {
         logDebug("Preparing SQl: statement = {0}", sqlStatement);
         PreparedStatement pStmt = connection.prepareStatement(sqlStatement.getSql());
         int index = 0;
@@ -762,7 +762,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     private CallableStatement getCallableStatement(Connection connection, SqlCallableStatement sqlCallableStatement,
-            long timeZoneOffset) throws Exception {
+            final long timeZoneOffset) throws Exception {
         logDebug("Preparing SQl: callable statement = {0}", sqlCallableStatement);
         CallableStatement cStmt = connection.prepareCall(sqlCallableStatement.getSql());
         int sqlIndex = 1;
@@ -787,7 +787,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs, long timeZoneOffset) throws Exception {
+    private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs, final long timeZoneOffset) throws Exception {
         Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
                 sqlResult.getColumnName(), timeZoneOffset);
         if (sqlResult.isTransformed()) {
@@ -802,7 +802,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
 
             rs = pStmt.executeQuery();
@@ -831,7 +831,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     private void populateCallableOutParameters(CallableStatement cStmt, CallableProc callableProc,
-            SqlCallableStatement sqlCallableStatement, long timeZoneOffset) throws Exception {
+            SqlCallableStatement sqlCallableStatement, final long timeZoneOffset) throws Exception {
         while (cStmt.getMoreResults()) {
             // Nothing here. Just clearing results if any left.
         }

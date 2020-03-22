@@ -27,8 +27,6 @@ import com.tcdng.unify.core.database.CallableProc;
  */
 public interface SqlEntityInfoFactory extends UnifyComponent {
 
-    String VIEW_PREFIX = "V_";
-
     /**
      * Sets the factory SQL data source dialect.
      * 
