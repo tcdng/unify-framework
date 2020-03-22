@@ -267,6 +267,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+    public Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException {
+        return getDatabaseSession().getNewExtensionInstance(entityClass);
+    }
+
+    @Override
     public Date getNow() throws UnifyException {
         return getDatabaseSession().getNow();
     }

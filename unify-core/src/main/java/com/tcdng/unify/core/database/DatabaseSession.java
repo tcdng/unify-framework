@@ -615,6 +615,17 @@ public interface DatabaseSession {
     List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException;
 
     /**
+     * Gets a new instance of an entity extension type.
+     * 
+     * @param entityClass
+     *            the extended entity type
+     * @return a new instance of extension type if entity is extended otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException;
+
+    /**
      * Gets the current timestamp in UTC of data source based on session time zone.
      * 
      * @return the UTC timestamp

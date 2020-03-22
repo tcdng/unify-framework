@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.constant.QueryAgainst;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.criterion.Update;
@@ -129,13 +130,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the query object
-     * @param useView
-     *            indicates view should be used
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the find statement
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareFindStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
+    SqlStatement prepareFindStatement(Query<? extends Entity> query, QueryAgainst queryAgainst) throws UnifyException;
 
     /**
      * Prepares list record by primary key statement.
@@ -290,13 +291,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the record criteria
-     * @param useView
-     *            indicates view should be used
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the count statement.
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareCountStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
+    SqlStatement prepareCountStatement(Query<? extends Entity> query, QueryAgainst queryAgainst) throws UnifyException;
 
     /**
      * Prepares select min statement.
@@ -337,7 +338,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      */
     SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query)
             throws UnifyException;
-    
+
     /**
      * Prepares an aggregate field statement.
      * 
