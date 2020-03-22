@@ -485,7 +485,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                sqlDataSourceDialect.prepareMinStatement(sqlFieldInfo.getPreferredColumnName(), query), MustMatch.FALSE);
+                sqlDataSourceDialect.prepareMinStatement(sqlFieldInfo.getPreferredColumnName(), query),
+                MustMatch.FALSE);
     }
 
     @Override
@@ -504,7 +505,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
                 sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getPreferredColumnName(), query), MustMatch.FALSE);
+                sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getPreferredColumnName(), query),
+                MustMatch.FALSE);
     }
 
     @Override
@@ -879,6 +881,16 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
                 sqlDataSourceDialect.getSqlTypePolicy(int.class),
                 sqlDataSourceDialect.prepareCountStatement(query, QueryAgainst.VIEW), MustMatch.TRUE);
+    }
+
+    @Override
+    public Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        if (sqlEntityInfo.isWithExtension()) {
+            return ReflectUtils.newInstance(sqlEntityInfo.getExtSqlEntityInfo().getEntityClass());
+        }
+
+        return null;
     }
 
     @Override

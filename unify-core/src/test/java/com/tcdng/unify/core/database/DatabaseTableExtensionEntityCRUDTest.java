@@ -19,6 +19,7 @@ package com.tcdng.unify.core.database;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -44,6 +45,35 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
 
     private Database db;
 
+    @Test
+    public void testGetNewExtensionInstanceBlank() throws Exception {
+        tm.beginTransaction();
+        try {
+            Entity extensionInst = db.getNewExtensionInstance(Author.class);
+            assertNull(extensionInst);
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testGetNewExtensionInstance() throws Exception {
+        tm.beginTransaction();
+        try {
+            Entity extensionInst = db.getNewExtensionInstance(Branch.class);
+            assertNotNull(extensionInst);
+            assertTrue(BranchExt.class.equals(extensionInst.getClass()));
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+    
     @Test
     public void testCreateRecordWithNullExtension() throws Exception {
         tm.beginTransaction();

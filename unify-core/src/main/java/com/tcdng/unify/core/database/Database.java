@@ -712,8 +712,18 @@ public interface Database extends UnifyComponent {
      *             if selected fields are not numeric. If no field is selected. If
      *             an error occurs
      */
-    List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query)
-            throws UnifyException;
+    List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException;
+
+    /**
+     * Gets a new instance of an entity extension type.
+     * 
+     * @param entityClass
+     *            the extended entity type
+     * @return a new instance of extension type if entity is extended otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException;
 
     /**
      * Gets the current UTC timestamp of database based on session time zone.
