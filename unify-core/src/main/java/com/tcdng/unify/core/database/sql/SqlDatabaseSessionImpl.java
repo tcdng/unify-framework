@@ -142,7 +142,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -152,7 +152,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                     sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE));
         }
-        
+
         return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
     }
@@ -160,7 +160,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -170,7 +170,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                     sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE));
         }
-        
+
         return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
     }
@@ -178,7 +178,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, List<U>> findAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -188,7 +188,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                     sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.TABLE));
         }
-        
+
         return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareFindStatement(query, QueryAgainst.VIEW));
     }
@@ -225,7 +225,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -238,7 +238,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, U> listAll(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -251,7 +251,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Map<T, List<U>> listAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -264,7 +264,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> List<T> valueList(Class<T> fieldClass, String fieldName, final Query<U> query)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -284,7 +284,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -304,7 +304,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U, V extends Entity> Map<T, U> valueMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -323,7 +323,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public <T, U, V extends Entity> Map<T, List<U>> valueListMap(Class<T> keyClass, String keyName, Class<U> valueClass,
             String valueName, Query<V> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -341,7 +341,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -360,7 +360,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -375,7 +375,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -465,7 +465,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
         try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -505,7 +505,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int deleteById(Entity record) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "DELETE_BY_ID");
@@ -550,7 +550,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int deleteByIdVersion(Entity record) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "DELETE_BY_ID_VERSION");
@@ -612,7 +612,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int delete(Class<? extends Entity> clazz, final Object id) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "DELETE");
@@ -642,7 +642,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public int deleteAll(Query<? extends Entity> query) throws UnifyException {
         try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             if (sqlEntityInfo.isViewOnly()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                         sqlEntityInfo.getEntityClass(), "DELETE_ALL");
@@ -653,9 +653,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                 entityPolicy.preQuery(query);
             }
 
-            if (sqlDataSourceDialect.isQueryOffsetOrLimit(query)
-                    || (!sqlEntityInfo.isChildList()
-                            && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
+            if (sqlDataSourceDialect.isQueryOffsetOrLimit(query) || (!sqlEntityInfo.isChildList()
+                    && sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields()))) {
                 return getSqlStatementExecutor().executeUpdate(connection,
                         sqlDataSourceDialect.prepareDeleteStatement(query));
             }
@@ -686,7 +685,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int count(Query<? extends Entity> query) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -706,9 +705,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
-    public Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
-        return ReflectUtils.newInstance(sqlEntityInfo.getEntityClass());
+    public Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException {
+        return ReflectUtils.newInstance(resolveSqlEntityInfo(entityClass).getEntityClass());
     }
 
     @Override
@@ -722,7 +720,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public Aggregation aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query)
             throws UnifyException {
         try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -741,7 +739,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @Override
     public List<Aggregation> aggregateMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException {
         try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -761,7 +759,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     public List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query)
             throws UnifyException {
         try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(query.getEntityClass());
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -869,7 +867,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     private <T extends Entity> T find(Class<T> clazz, Object id, FetchChild fetchChild) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkStatement(clazz, id);
         try {
             T record =
@@ -889,7 +887,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     private <T extends Entity> T find(Class<T> clazz, Object id, final Object versionNo, FetchChild fetchChild)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkVersionStatement(clazz, id, versionNo);
         try {
             T record =
@@ -911,7 +909,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private <T extends Entity> T find(Query<T> query, FetchChild fetchChild) throws UnifyException {
         T record = null;
         try {
-            SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
             if (entityPolicy != null) {
                 entityPolicy.preQuery(query);
@@ -939,7 +937,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     private <T extends Entity> T list(Class<T> clazz, Object id, FetchChild fetchChild) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkStatement(clazz, id);
         try {
             T record =
@@ -956,10 +954,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             sqlDataSourceDialect.restoreStatement(sqlStatement);
         }
     }
-
+    
     private <T extends Entity> T list(Class<T> clazz, Object id, final Object versionNo, FetchChild fetchChild)
             throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkVersionStatement(clazz, id, versionNo);
         try {
             T record =
@@ -979,7 +977,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     private <T extends Entity> T list(Query<T> query, FetchChild fetchChild) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(query));
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
         EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
         if (entityPolicy != null) {
             entityPolicy.preQuery(query);
@@ -1083,7 +1081,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private int updateById(Entity record, UpdateChild updateChild) throws UnifyException {
         int result;
         SqlStatement sqlStatement = null;
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "UPDATE");
@@ -1125,7 +1123,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private int updateByIdVersion(Entity record, UpdateChild updateChild) throws UnifyException {
         int result;
         SqlStatement sqlStatement = null;
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "UPDATE");
@@ -1251,6 +1249,23 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             query.addEquals(odci.getChildFkField().getName(), id);
             deleteAll(query);
         }
+    }
+
+    private SqlEntityInfo resolveSqlEntityInfo(Entity record) throws UnifyException {
+        return resolveSqlEntityInfo(SqlUtils.getEntityClass(record));
+    }
+
+    private SqlEntityInfo resolveSqlEntityInfo(Query<?> query) throws UnifyException {
+        return resolveSqlEntityInfo(SqlUtils.getEntityClass(query));
+    }
+
+    private SqlEntityInfo resolveSqlEntityInfo(Class<?> clazz) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        if (sqlEntityInfo.isExtended()) {
+            return sqlEntityInfo.getExtensionSqlEntityInfo();
+        }
+        
+        return sqlEntityInfo;
     }
 
     private SqlStatementExecutor getSqlStatementExecutor() throws UnifyException {

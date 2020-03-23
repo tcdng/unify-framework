@@ -23,6 +23,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ForeignConstraints;
 import com.tcdng.unify.core.constant.Indexes;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.constant.QueryAgainst;
 import com.tcdng.unify.core.constant.UniqueConstraints;
 import com.tcdng.unify.core.constant.Views;
 
@@ -169,8 +170,8 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo, PrintFormat format)
-            throws UnifyException;
+    String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates rename column SQL.
@@ -383,13 +384,14 @@ public interface SqlGenerator extends UnifyComponent {
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
-     * @param useView
-     *            indicates SQL should be based on view.
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the generated find SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView) throws UnifyException;
+    String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, QueryAgainst queryAgainst)
+            throws UnifyException;
 
     /**
      * Generates native find record by primary key SQL for specified record type.
@@ -570,13 +572,13 @@ public interface SqlGenerator extends UnifyComponent {
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
-     * @param useView
-     *            indicates SQL should be based on view.
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the count SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView) throws UnifyException;
+    String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, QueryAgainst queryAgainst) throws UnifyException;
 
     /**
      * Generates connection test SQL.

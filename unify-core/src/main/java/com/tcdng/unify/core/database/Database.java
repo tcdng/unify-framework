@@ -719,11 +719,11 @@ public interface Database extends UnifyComponent {
      * 
      * @param entityClass
      *            the extended entity type
-     * @return a new instance of extension type if entity is extended otherwise null
+     * @return a new instance of extension type
      * @throws UnifyException
      *             if an error occurs
      */
-    Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException;
+    Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException;
 
     /**
      * Gets the current UTC timestamp of database based on session time zone.
