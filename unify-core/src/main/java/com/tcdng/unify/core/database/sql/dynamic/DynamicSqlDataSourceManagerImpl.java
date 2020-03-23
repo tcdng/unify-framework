@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -26,6 +26,10 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.NativeQuery;
+import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlDataSource;
+import com.tcdng.unify.core.database.sql.SqlTableInfo;
+import com.tcdng.unify.core.database.sql.SqlTableType;
 
 /**
  * Default implementation of dynamic SQL data source manager.

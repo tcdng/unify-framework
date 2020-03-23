@@ -150,8 +150,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         if (this.childInfoList.isEmpty() && this.childListInfoList.isEmpty()) {
             this.onDeleteCascadeInfoList = Collections.emptyList();
         } else {
-            this.onDeleteCascadeInfoList = new ArrayList<OnDeleteCascadeInfo>();
-            this.onDeleteCascadeInfoList.addAll(this.childInfoList);
+            this.onDeleteCascadeInfoList = new ArrayList<OnDeleteCascadeInfo>(this.childInfoList);
             this.onDeleteCascadeInfoList.addAll(this.childListInfoList);
             this.onDeleteCascadeInfoList = Collections.unmodifiableList(this.onDeleteCascadeInfoList);
 
@@ -577,7 +576,6 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.fieldInfoByName = DataUtils.unmodifiableMap(this.fieldInfoByName);
         this.fieldInfoList = DataUtils.unmodifiableList(this.fieldInfoList);
         this.listFieldInfoList = DataUtils.unmodifiableList(this.listFieldInfoList);
-
         this.managedForeignKeyList = this.foreignKeyList;
         this.managedFieldInfoByName = this.fieldInfoByName;
         this.managedFieldInfoList = this.fieldInfoList;

@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.database.DataSourceManager;
+import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.VersionUtils;
 
@@ -50,8 +51,9 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     @Transactional
     public void startup() throws UnifyException {
         logInfo("Initializing datasources...");
+        DataSourceManagerOptions options = new DataSourceManagerOptions();
         for (String datasource : datasources) {
-            dataSourceManager.initDataSource(datasource);
+            dataSourceManager.initDataSource(datasource, options);
         }
 
         if (isDeploymentMode()) {
@@ -59,7 +61,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
             boolean isDataSourcesManaged = false;
             if (deploymentFeature == null) {
                 // Blank database. Manage data sources first time.
-                manageDataSources();
+                manageDataSources(options);
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
                 isDataSourcesManaged = true;
             }
@@ -75,7 +77,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                     // If not already managed, manage data sources if not production mode or if
                     // deploying new version
                     if (!isProductionMode() || isDeployNewVersion) {
-                        manageDataSources();
+                        manageDataSources(options);
                     }
                 }
 
@@ -152,10 +154,10 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     protected abstract void onShutdown() throws UnifyException;
 
-    private void manageDataSources() throws UnifyException {
+    private void manageDataSources(DataSourceManagerOptions options) throws UnifyException {
         logInfo("Managing datasources...");
         for (String datasource : datasources) {
-            dataSourceManager.manageDataSource(datasource);
+            dataSourceManager.manageDataSource(datasource, options);
         }
     }
 

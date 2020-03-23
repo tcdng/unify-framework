@@ -14,18 +14,19 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
-
-import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.annotation.Component;
+package com.tcdng.unify.core.constant;
 
 /**
- * Dynamic SQL database implementation.
+ * Force constraints enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE)
-public class DynamicSqlDatabaseImpl extends AbstractDynamicSqlDatabase {
-
+public enum ForceConstraints {
+    TRUE,
+    FALSE;
+    
+    public boolean isTrue() {
+        return TRUE.equals(this);
+    }
 }

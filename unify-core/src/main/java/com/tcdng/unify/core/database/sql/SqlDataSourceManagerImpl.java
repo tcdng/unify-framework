@@ -32,12 +32,13 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.database.DataSourceManager;
+import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.SqlUtils;
@@ -52,16 +53,8 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
 public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements DataSourceManager {
 
-    @Configurable("true")
-    private boolean forceForeignConstraints;
-
-    @Configurable("false")
-    private boolean formatSql;
-
-    private PrintFormat printFormat;
-
     @Override
-    public void initDataSource(String datasource) throws UnifyException {
+    public void initDataSource(String datasource, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
         Connection connection = (Connection) sqlDataSource.getConnection();
         PreparedStatement pstmt = null;
@@ -80,7 +73,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     }
 
     @Override
-    public void manageDataSource(String dataSourceName) throws UnifyException {
+    public void manageDataSource(String dataSourceName, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
@@ -88,12 +81,12 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             for (Class<?> entityClass : getTableEntities(dataSourceName)) {
                 logDebug("Managing schema elements for table entity type {0}...", entityClass);
-                manageTableEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass);
+                manageTableEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass, options);
             }
 
             for (Class<? extends Entity> entityClass : getViewEntities(dataSourceName)) {
                 logDebug("Managing schema elements for view entity type {0}...", entityClass);
-                manageViewEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass);
+                manageViewEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass, options);
             }
         } catch (SQLException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR, dataSourceName);
@@ -104,11 +97,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
     @Override
     protected void onInitialize() throws UnifyException {
-        if (formatSql) {
-            printFormat = PrintFormat.PRETTY;
-        } else {
-            printFormat = PrintFormat.NONE;
-        }
+
     }
 
     @Override
@@ -117,9 +106,11 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     }
 
     private void manageTableEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
-            Class<?> entityClass) throws UnifyException {
+            Class<?> entityClass, DataSourceManagerOptions options ) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        final PrintFormat printFormat = options.getPrintFormat();
+        final ForceConstraints forceConstraints = options.getForceConstraints();
 
         Connection connection = null;
         PreparedStatement pstmt = null;
@@ -136,7 +127,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                 if ("TABLE".equalsIgnoreCase(tableType)) {
                     Map<String, SqlColumnInfo> columnMap =
                             sqlDataSource.getColumnMap(appSchema, sqlEntityInfo.getTableName());
-                    List<String> columnUpdateSql = detectColumnUpdates(sqlDataSourceDialect, sqlEntityInfo, columnMap);
+                    List<String> columnUpdateSql = detectColumnUpdates(sqlDataSourceDialect, sqlEntityInfo, columnMap, printFormat);
                     tableUpdateSql.addAll(columnUpdateSql);
                 } else {
                     throw new UnifyException(UnifyCoreErrorConstants.DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE,
@@ -186,7 +177,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
                 List<String> createUpdateConstraintSql = new ArrayList<String>();
                 // Detect foreign constraint changes
-                if (forceForeignConstraints && sqlEntityInfo.isManagedForeignKeys()) {
+                if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
                     for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
                         if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
                                 .isIgnoreFkConstraint()) {
@@ -284,9 +275,10 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                 tableUpdateSql.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, printFormat));
 
                 // Create constraints and indexes
-                if (forceForeignConstraints && sqlEntityInfo.isManagedForeignKeys()) {
+                if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
                     for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-                        if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
+                        if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
+                                .isIgnoreFkConstraint()) {
                             tableUpdateSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
                                     sqlForeignKeyInfo, printFormat));
                         }
@@ -432,9 +424,10 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     }
 
     private void manageViewEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
-            Class<? extends Entity> entityClass) throws UnifyException {
+            Class<? extends Entity> entityClass, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        final PrintFormat printFormat = options.getPrintFormat();
 
         Connection connection = null;
         PreparedStatement pstmt = null;
@@ -556,7 +549,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     }
 
     private List<String> detectColumnUpdates(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
-            Map<String, SqlColumnInfo> columnInfos) throws UnifyException {
+            Map<String, SqlColumnInfo> columnInfos, PrintFormat printFormat) throws UnifyException {
         List<String> columnUpdateSql = new ArrayList<String>();
         for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
             SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName());
