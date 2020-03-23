@@ -51,7 +51,7 @@ public interface BusinessService extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException;
+    Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException;
 
     /**
      * Returns the today's date.

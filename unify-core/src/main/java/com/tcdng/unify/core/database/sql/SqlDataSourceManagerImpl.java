@@ -59,7 +59,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     private boolean formatSql;
 
     private PrintFormat printFormat;
-    
+
     @Override
     public void initDataSource(String datasource) throws UnifyException {
         SqlDataSource sqlDataSource = (SqlDataSource) getComponent(datasource);
@@ -104,7 +104,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
     @Override
     protected void onInitialize() throws UnifyException {
-        if(formatSql) {
+        if (formatSql) {
             printFormat = PrintFormat.PRETTY;
         } else {
             printFormat = PrintFormat.NONE;
@@ -186,10 +186,12 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
                 List<String> createUpdateConstraintSql = new ArrayList<String>();
                 // Detect foreign constraint changes
-                if (forceForeignConstraints && sqlEntityInfo.isForeignKeys()) {
-                    for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
-                        if (!sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
-                            SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName());
+                if (forceForeignConstraints && sqlEntityInfo.isManagedForeignKeys()) {
+                    for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+                        if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
+                                .isIgnoreFkConstraint()) {
+                            SqlFieldInfo sqlFieldInfo =
+                                    sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
                             String fkConstName = sqlFieldInfo.getConstraint();
                             TableConstraint fkConst = managedTableConstraints.get(fkConstName);
                             boolean update = true;
@@ -208,7 +210,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
                             if (update) {
                                 createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
-                                        sqlEntityInfo, sqlForeignKeyInfo,printFormat));
+                                        sqlEntityInfo, sqlForeignKeyInfo, printFormat));
                             }
                         }
                     }
@@ -231,8 +233,8 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                         }
 
                         if (update) {
-                            createUpdateConstraintSql.add(sqlDataSourceDialect
-                                    .generateAddUniqueConstraintSql(sqlEntityInfo, sqlUniqueConstraintInfo,printFormat));
+                            createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(
+                                    sqlEntityInfo, sqlUniqueConstraintInfo, printFormat));
                         }
                     }
                 }
@@ -254,7 +256,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
 
                         if (update) {
                             createUpdateConstraintSql.add(sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo,
-                                    sqlIndexInfo,printFormat));
+                                    sqlIndexInfo, printFormat));
                         }
                     }
                 }
@@ -263,13 +265,13 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                 for (TableConstraint tConst : managedTableConstraints.values()) {
                     if (tConst.isForeignKey()) {
                         tableUpdateSql.add(sqlDataSourceDialect.generateDropForeignKeyConstraintSql(sqlEntityInfo,
-                                tConst.getName(),printFormat));
+                                tConst.getName(), printFormat));
                     } else if (tConst.isUniqueConst()) {
                         tableUpdateSql.add(sqlDataSourceDialect.generateDropUniqueConstraintSql(sqlEntityInfo,
-                                tConst.getName(),printFormat));
+                                tConst.getName(), printFormat));
                     } else {
-                        tableUpdateSql.add(
-                                sqlDataSourceDialect.generateDropIndexSql(sqlEntityInfo, tConst.getName(),printFormat));
+                        tableUpdateSql.add(sqlDataSourceDialect.generateDropIndexSql(sqlEntityInfo, tConst.getName(),
+                                printFormat));
                     }
                 }
 
@@ -279,14 +281,14 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                 logInfo("Creating datasource table {0}...", sqlEntityInfo.getTableName());
 
                 // Create table
-                tableUpdateSql.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo,printFormat));
+                tableUpdateSql.add(sqlDataSourceDialect.generateCreateTableSql(sqlEntityInfo, printFormat));
 
                 // Create constraints and indexes
-                if (forceForeignConstraints && sqlEntityInfo.isForeignKeys()) {
-                    for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
-                        if (!sqlEntityInfo.getFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
+                if (forceForeignConstraints && sqlEntityInfo.isManagedForeignKeys()) {
+                    for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+                        if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
                             tableUpdateSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
-                                    sqlForeignKeyInfo,printFormat));
+                                    sqlForeignKeyInfo, printFormat));
                         }
                     }
                 }
@@ -295,14 +297,14 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                     for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
                             .values()) {
                         tableUpdateSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(sqlEntityInfo,
-                                sqlUniqueConstraintInfo,printFormat));
+                                sqlUniqueConstraintInfo, printFormat));
                     }
                 }
 
                 if (sqlEntityInfo.isIndexes()) {
                     for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
                         tableUpdateSql.add(
-                                sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo, sqlIndexInfo,printFormat));
+                                sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo, sqlIndexInfo, printFormat));
                     }
                 }
             }
@@ -341,7 +343,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                     }
 
                     // Create view
-                    viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo,printFormat));
+                    viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, printFormat));
                 }
             }
 
@@ -419,7 +421,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             throws UnifyException {
         if (fieldNameList.size() == columns.size()) {
             for (String fieldName : fieldNameList) {
-                if (!columns.contains(sqlEntityInfo.getFieldInfo(fieldName).getColumnName())) {
+                if (!columns.contains(sqlEntityInfo.getManagedFieldInfo(fieldName).getColumnName())) {
                     return false;
                 }
             }
@@ -470,7 +472,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
                     }
 
                     // Create view
-                    viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo,printFormat));
+                    viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, printFormat));
                 }
             }
 
@@ -494,16 +496,16 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(pstmt);
         }
     }
-    
+
     private List<Class<?>> getTableEntities(String dataSourceName) throws UnifyException {
         SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
         buildSqlInformation(sqlDataSource);
-        
+
         List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
         for (Class<?> entityClass : sqlDataSource.getTableEntityTypes()) {
             buildDependencyList(sqlDataSource, entityTypeList, entityClass);
         }
-        
+
         return entityTypeList;
     }
 
@@ -518,11 +520,11 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
             logDebug("Building SQL information for entity type {0}...", entityClass);
             sqlDataSourceDialect.getSqlEntityInfo(entityClass);
         }
-        
+
         for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
             logDebug("Building SQL information for entity extension type {0}...", entityClass);
             sqlDataSourceDialect.getSqlEntityInfo(entityClass);
-        }        
+        }
     }
 
     private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
@@ -531,7 +533,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
 
-        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
             if (sqlFieldInfo.isForeignKey()) {
                 SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
                 buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
@@ -544,7 +546,7 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     }
 
     private boolean matchViewColumns(SqlEntityInfo sqlEntityInfo, Set<String> columnNames) {
-        for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getListFieldInfos()) {
+        for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedListFieldInfos()) {
             if (!columnNames.contains(sqlfieldInfo.getColumnName())) {
                 return false;
             }
@@ -556,18 +558,18 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
     private List<String> detectColumnUpdates(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
             Map<String, SqlColumnInfo> columnInfos) throws UnifyException {
         List<String> columnUpdateSql = new ArrayList<String>();
-        for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getFieldInfos()) {
+        for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
             SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName());
             if (sqlColumnInfo == null) {
                 // New column
-                columnUpdateSql.add(sqlDataSourceDialect.generateAddColumn(sqlEntityInfo, sqlfieldInfo,printFormat));
+                columnUpdateSql.add(sqlDataSourceDialect.generateAddColumn(sqlEntityInfo, sqlfieldInfo, printFormat));
             } else {
                 SqlColumnAlterInfo columnAlterInfo =
                         checkSqlColumnAltered(sqlDataSourceDialect, sqlfieldInfo, sqlColumnInfo);
                 if (columnAlterInfo.isAltered()) {
                     // Alter column
                     columnUpdateSql.addAll(sqlDataSourceDialect.generateAlterColumn(sqlEntityInfo, sqlfieldInfo,
-                            columnAlterInfo,printFormat));
+                            columnAlterInfo, printFormat));
                 }
             }
         }

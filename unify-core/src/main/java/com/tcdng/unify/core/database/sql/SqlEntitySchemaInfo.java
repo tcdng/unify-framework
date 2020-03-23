@@ -53,12 +53,18 @@ public interface SqlEntitySchemaInfo {
     
     List<? extends SqlFieldSchemaInfo> getFieldInfos();
 
+    List<? extends SqlFieldSchemaInfo> getManagedFieldInfos();
+    
     List<? extends SqlFieldSchemaInfo> getListFieldInfos();
+    
+    List<? extends SqlFieldSchemaInfo> getManagedListFieldInfos();
 
     Set<String> getFieldNames();
 
     SqlFieldSchemaInfo getFieldInfo(String name) throws UnifyException;
-
+    
+    SqlFieldInfo getManagedFieldInfo(String name) throws UnifyException;
+    
     SqlFieldSchemaInfo getFieldInfo(Long marker) throws UnifyException;
 
     Map<String, Class<?>> getViewBaseTables();

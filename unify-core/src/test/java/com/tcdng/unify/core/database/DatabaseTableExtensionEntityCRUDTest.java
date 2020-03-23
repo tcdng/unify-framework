@@ -46,10 +46,10 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     private Database db;
 
     @Test
-    public void testGetNewExtensionInstanceBlank() throws Exception {
+    public void testGetExtendedInstanceNoExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Entity extensionInst = db.getNewExtensionInstance(Author.class);
+            Entity extensionInst = db.getExtendedInstance(Author.class);
             assertNotNull(extensionInst);
             assertTrue(Author.class.equals(extensionInst.getClass()));
         } catch (Exception e) {
@@ -61,10 +61,10 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     }
 
     @Test
-    public void testGetNewExtensionInstance() throws Exception {
+    public void testGetExtendedInstanceWithExtension() throws Exception {
         tm.beginTransaction();
         try {
-            Entity extensionInst = db.getNewExtensionInstance(Branch.class);
+            Entity extensionInst = db.getExtendedInstance(Branch.class);
             assertNotNull(extensionInst);
             assertTrue(BranchExt.class.equals(extensionInst.getClass()));
         } catch (Exception e) {

@@ -623,7 +623,7 @@ public interface DatabaseSession {
      * @throws UnifyException
      *             if an error occurs
      */
-    Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException;
+    Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException;
 
     /**
      * Gets the current timestamp in UTC of data source based on session time zone.

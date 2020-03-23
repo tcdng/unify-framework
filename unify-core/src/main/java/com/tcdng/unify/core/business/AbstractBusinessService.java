@@ -60,8 +60,8 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 
     @Transactional
     @Override
-    public Entity getNewExtensionInstance(Class<? extends Entity> entityClass) throws UnifyException {
-        return db().getNewExtensionInstance(entityClass);
+    public Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException {
+        return db().getExtendedInstance(entityClass);
     }
 
     @Transactional

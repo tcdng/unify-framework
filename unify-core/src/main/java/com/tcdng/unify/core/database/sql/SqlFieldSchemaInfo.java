@@ -55,11 +55,6 @@ public interface SqlFieldSchemaInfo {
      * Returns the field nullable attribute
      */
     boolean isNullable();
-
-    /**
-     * Returns the field extension attribute
-     */
-    boolean isExtension();
     
     /**
      * Returns the field length.
