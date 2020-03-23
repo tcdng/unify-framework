@@ -14,8 +14,9 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
+import com.tcdng.unify.core.database.sql.SqlDatabase;
 
 /**
  * Dynamic SQL database.

@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.list.AbstractListCommand;
 
 /**

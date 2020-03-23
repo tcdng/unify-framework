@@ -20,6 +20,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.database.DataSource;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDatabase;
 
 /**
  * Convenient abstract base class for dynamic SQL databases.

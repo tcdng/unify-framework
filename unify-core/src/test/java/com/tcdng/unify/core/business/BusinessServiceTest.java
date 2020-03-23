@@ -31,11 +31,11 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
-import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceConfig;
-import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
-import com.tcdng.unify.core.database.sql.DynamicSqlDatabase;
 import com.tcdng.unify.core.database.sql.NameSqlDataSourceSchemaImpl;
 import com.tcdng.unify.core.database.sql.SqlDatabase;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceConfig;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDatabase;
 import com.tcdng.unify.core.util.SqlUtils;
 
 /**
