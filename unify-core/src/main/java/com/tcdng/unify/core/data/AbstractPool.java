@@ -45,11 +45,11 @@ public abstract class AbstractPool<T> {
 
     private boolean executeOnGet;
 
-    public AbstractPool(long getTimeout, int minSize, int maxSize) {
+    public AbstractPool(final long getTimeout, final int minSize, final int maxSize) {
         this(getTimeout, minSize, maxSize, false);
     }
 
-    public AbstractPool(long getTimeout, int minSize, int maxSize, boolean executeOnGet) {
+    public AbstractPool(final long getTimeout, final int minSize, final int maxSize, final boolean executeOnGet) {
         this.getTimeout = getTimeout;
         this.minSize = minSize;
         this.executeOnGet = executeOnGet;
@@ -157,9 +157,11 @@ public abstract class AbstractPool<T> {
         return false;
     }
 
-    protected abstract T createObject(Object... params) throws Exception;
+    protected void onGetObject(T object, Object... params) throws Exception {
 
-    protected abstract void onGetObject(T object, Object... params) throws Exception;
+    }
+
+    protected abstract T createObject(Object... params) throws Exception;
 
     protected abstract void destroyObject(T object);
 }

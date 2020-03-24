@@ -123,7 +123,7 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
     int getDataSourceCount() throws UnifyException;
 
     /**
-     * Returns a list of schemas in this data source.
+     * Returns a list of schemas in data source.
      * 
      * @param configName
      *            the data source configuration name

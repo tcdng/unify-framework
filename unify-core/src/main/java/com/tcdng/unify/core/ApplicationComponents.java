@@ -77,6 +77,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_REQUESTCONTEXTMANAGER = "application-requestcontextmanager";
 
+    String APPLICATION_RUNTIMEJAVACLASSMANAGER = "application-runtimejavaclassmanager";
+
     String APPLICATION_SEQUENCENUMBERSERVICE = "application-sequencenumberservice";
 
     String APPLICATION_SQLENTITYINFOFACTORY = "application-sqlentityinfofactory";
