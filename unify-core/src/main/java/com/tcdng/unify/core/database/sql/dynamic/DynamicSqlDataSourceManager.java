@@ -55,56 +55,6 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
     boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
 
     /**
-     * Tests a runtime data source configuration.
-     * 
-     * @param dynamicSqlDataSourceConfig
-     *            the configuration to test.
-     * @return true if test was successful
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    boolean testConfiguration(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
-
-    /**
-     * Tests a runtime data source native query.
-     * 
-     * @param dynamicSqlDataSourceConfig
-     *            the data source configuration.
-     * @param query
-     *            the native query object
-     * @return the result count
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    int testNativeQuery(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, NativeQuery query) throws UnifyException;
-
-    /**
-     * Tests a runtime data source native query.
-     * 
-     * @param dynamicSqlDataSourceConfig
-     *            the datasource configuration.
-     * @param nativeSql
-     *            the native query SQL
-     * @return the result count
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    int testNativeQuery(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, String nativeSql) throws UnifyException;
-
-    /**
-     * Tests a runtime data source native update.
-     * 
-     * @param dynamicSqlDataSourceConfig
-     *            the datasource configuration.
-     * @param updateSql
-     *            the native update SQL
-     * @return the update count
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    int testNativeUpdate(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, String updateSql) throws UnifyException;
-
-    /**
      * Returns true if data source is configured.
      * 
      * @param configName
@@ -232,5 +182,55 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      *             If an error occurs
      */
     void terminateAll() throws UnifyException;
+
+    /**
+     * Tests a runtime data source configuration.
+     * 
+     * @param dynamicSqlDataSourceConfig
+     *            the configuration to test.
+     * @return true if test was successful
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean testConfiguration(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
+
+    /**
+     * Tests a runtime data source native query.
+     * 
+     * @param dynamicSqlDataSourceConfig
+     *            the data source configuration.
+     * @param query
+     *            the native query object
+     * @return the result count
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int testNativeQuery(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, NativeQuery query) throws UnifyException;
+
+    /**
+     * Tests a runtime data source native query.
+     * 
+     * @param dynamicSqlDataSourceConfig
+     *            the datasource configuration.
+     * @param nativeSql
+     *            the native query SQL
+     * @return the result count
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int testNativeQuery(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, String nativeSql) throws UnifyException;
+
+    /**
+     * Tests a runtime data source native update.
+     * 
+     * @param dynamicSqlDataSourceConfig
+     *            the datasource configuration.
+     * @param updateSql
+     *            the native update SQL
+     * @return the update count
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    int testNativeUpdate(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig, String updateSql) throws UnifyException;
 
 }
