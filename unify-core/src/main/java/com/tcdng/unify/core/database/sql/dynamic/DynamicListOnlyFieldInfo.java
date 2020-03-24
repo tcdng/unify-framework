@@ -16,46 +16,40 @@
 
 package com.tcdng.unify.core.database.sql.dynamic;
 
-import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
 
 /**
- * Dynamic field information.
+ * Dynamic list-only field information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class DynamicFieldInfo {
+public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
-    private EntityFieldType fieldType;
+    private DynamicFieldInfo propertyFieldInfo;
     
-    private DataType dataType;
+    private String key;
 
-    private String columnName;
+    private String property;
 
-    private String fieldName;
-
-    public DynamicFieldInfo(EntityFieldType fieldType, DataType dataType, String columnName, String fieldName) {
-        this.fieldType = fieldType;
-        this.dataType = dataType;
-        this.columnName = columnName;
-        this.fieldName = fieldName;
+    public DynamicListOnlyFieldInfo(DynamicFieldInfo propertyFieldInfo, String columnName, String fieldName,
+            String key, String property) {
+        super(EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName);
+        this.propertyFieldInfo = propertyFieldInfo;
+        this.key = key;
+        this.property = property;
     }
 
-    public EntityFieldType getFieldType() {
-        return fieldType;
+    public DynamicFieldInfo getPropertyFieldInfo() {
+        return propertyFieldInfo;
     }
 
-    public DataType getDataType() {
-        return dataType;
+    public String getKey() {
+        return key;
     }
 
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public String getFieldName() {
-        return fieldName;
+    public String getProperty() {
+        return property;
     }
 
 }

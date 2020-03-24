@@ -28,20 +28,27 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class DynamicEntityInfo {
 
+    private String tableName;
+    
     private String className;
     
-    private List<DynamicFieldInfo> fieldInfoList;
+    private List<DynamicFieldInfo> fieldInfos;
 
-    public DynamicEntityInfo(String className, List<DynamicFieldInfo> fieldInfoList) {
+    private DynamicEntityInfo(String tableName, String className, List<DynamicFieldInfo> fieldInfos) {
+        this.tableName = tableName;
         this.className = className;
-        this.fieldInfoList = DataUtils.unmodifiableList(fieldInfoList);
+        this.fieldInfos = DataUtils.unmodifiableList(fieldInfos);
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 
     public String getClassName() {
         return className;
     }
 
-    public List<DynamicFieldInfo> getFieldInfoList() {
-        return fieldInfoList;
+    public List<DynamicFieldInfo> getFieldInfos() {
+        return fieldInfos;
     }
 }
