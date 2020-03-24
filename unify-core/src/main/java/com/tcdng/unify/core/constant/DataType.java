@@ -43,6 +43,7 @@ public enum DataType implements EnumConst {
     TIMESTAMP("TS", Date.class, ColumnType.TIMESTAMP),
     TIMESTAMP_UTC("TU", Date.class, ColumnType.TIMESTAMP_UTC),
     STRING("ST", String.class, ColumnType.STRING),
+    CLOB("CT", String.class, ColumnType.CLOB),
     BLOB("BT", byte[].class, ColumnType.BLOB);
 
     private final String code;
