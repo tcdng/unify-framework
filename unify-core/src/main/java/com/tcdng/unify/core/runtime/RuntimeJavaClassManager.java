@@ -24,7 +24,9 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * Component for managing runtime java classes.
+ * Component for managing runtime java classes. Compiled and saved classes are
+ * maintained in groups. Each group has a single class loader which is
+ * invalidated whenever the version of any of its members changes.
  * 
  * @author Lateef Ojulari
  * @since 1.0
@@ -156,6 +158,34 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
      * @throws UnifyException
      *             if compilation fails. if an error occurs
      */
-    boolean compileAndSaveJavaClass(String groupName, FileJavaClassSource fileJavaClassSource)
-            throws UnifyException;
+    boolean compileAndSaveJavaClass(String groupName, FileJavaClassSource fileJavaClassSource) throws UnifyException;
+
+    /**
+     * Gets a java class that belongs to a group. Class object if fetched from the
+     * group's class loader. Provided a group class loader has not been invalidated
+     * by a successful save, this method will always return the same class object
+     * for the same group name and class name.
+     * 
+     * @param groupName
+     *            the group name
+     * @param className
+     *            the class name
+     * @return the java class object
+     * @throws UnifyException
+     *             if class is not found in group. if an error occurs
+     */
+    Class<?> getSavedJavaClass(String groupName, String className) throws UnifyException;
+
+    /**
+     * Gets the version of a saved java class belonging to s group.
+     * 
+     * @param groupName
+     *            the group name
+     * @param className
+     *            the class name
+     * @return the saved class version if found otherwise zero
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    long getSavedJavaClassVersion(String groupName, String className) throws UnifyException;
 }
