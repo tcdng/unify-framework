@@ -973,4 +973,7 @@ public interface UnifyCoreErrorConstants {
     
     /** Entity type {0} super class {1} is already extended by {2}. */
     String RECORD_SUPERCLASS_ALREADY_EXTENDED = "UC_00F9";
+    
+    /** Invalid large object version specified. Application {0}, category {1}, object = {2}, version {3}*/
+    String INVALID_LARGEOBJECT_VERSION = "UC_00FA";
 }
