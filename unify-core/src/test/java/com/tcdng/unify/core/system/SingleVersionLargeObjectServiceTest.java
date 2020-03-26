@@ -92,6 +92,30 @@ public class SingleVersionLargeObjectServiceTest extends AbstractUnifyComponentT
     }
 
     @Test
+    public void testGetBlobVersionUnknownBob() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        long version = svlos.getBlobVersion("testApp", "category1", "userImg");
+        assertEquals(0, version);
+    }
+
+    @Test
+    public void testGetBlobVersion() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        svlos.storeBlob("testApp", "category1", "userImg", new byte[] { (byte) 0xca, (byte) 0xfe }, 2);
+        long version = svlos.getBlobVersion("testApp", "category1", "userImg");
+        assertEquals(2, version);
+    }
+
+    @Test
+    public void testGetBlobNewVersion() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        svlos.storeBlob("testApp", "category1", "userImg", new byte[] { (byte) 0xca, (byte) 0xfe }, 2);
+        svlos.storeBlob("testApp", "category1", "userImg", new byte[] { (byte) 0xba, (byte) 0xbe }, 4);
+        long version = svlos.getBlobVersion("testApp", "category1", "userImg");
+        assertEquals(4, version);
+    }
+    
+    @Test
     public void testRetreiveBlobNotExist() throws Exception {
         SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
         byte[] blob = svlos.retrieveBlob("testApp", "category1", "userImg");
@@ -231,6 +255,30 @@ public class SingleVersionLargeObjectServiceTest extends AbstractUnifyComponentT
         clob = svlos.retrieveClob("testApp", "category1", "userImg2");
         assertNotNull(clob);
         assertEquals("babe", clob);
+    }
+
+    @Test
+    public void testGetClobVersionUnknownBob() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        long version = svlos.getClobVersion("testApp", "category1", "userImg");
+        assertEquals(0, version);
+    }
+
+    @Test
+    public void testGetClobVersion() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        svlos.storeClob("testApp", "category1", "userImg", "cafe", 2);
+        long version = svlos.getClobVersion("testApp", "category1", "userImg");
+        assertEquals(2, version);
+    }
+
+    @Test
+    public void testGetClobNewVersion() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        svlos.storeClob("testApp", "category1", "userImg", "cafe", 2);
+        svlos.storeClob("testApp", "category1", "userImg", "babe", 4);
+        long version = svlos.getClobVersion("testApp", "category1", "userImg");
+        assertEquals(4, version);
     }
 
     @Override
