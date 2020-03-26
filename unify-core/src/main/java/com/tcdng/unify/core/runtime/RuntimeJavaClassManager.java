@@ -188,4 +188,14 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
      *             if an error occurs
      */
     long getSavedJavaClassVersion(String groupName, String className) throws UnifyException;
+
+    /**
+     * Clears cached saved java classes belonging to a group.
+     * 
+     * @param groupName
+     *            the group name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void clearCachedSaveJavaClasses(String groupName) throws UnifyException;
 }
