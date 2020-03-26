@@ -33,7 +33,8 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
 
     /**
      * Compiles a Java class source from input stream and load resulting class to
-     * JVM
+     * JVM. Uses a one-time class loader which implies that classes with the same
+     * name can be compiled and loaded.
      * 
      * @param className
      *            the class name
@@ -46,7 +47,9 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
     Class<?> compileAndLoadJavaClass(String className, InputStream is) throws UnifyException;
 
     /**
-     * Compiles a Java class source from reader and load resulting class to JVM
+     * Compiles a Java class source from reader and load resulting class to JVM.
+     * Uses a one-time class loader which implies that classes with the same name
+     * can be compiled and loaded.
      * 
      * @param className
      *            the class name
@@ -59,7 +62,9 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
     Class<?> compileAndLoadJavaClass(String className, Reader reader) throws UnifyException;
 
     /**
-     * Compiles a Java class source from string and load resulting class to JVM
+     * Compiles a Java class source from string and load resulting class to JVM.
+     * Uses a one-time class loader which implies that classes with the same name
+     * can be compiled and loaded.
      * 
      * @param className
      *            the class name
@@ -72,7 +77,9 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
     Class<?> compileAndLoadJavaClass(String className, String string) throws UnifyException;
 
     /**
-     * Compiles a Java class source from file and load resulting class to JVM
+     * Compiles a Java class source from file and load resulting class to JVM. Uses
+     * a one-time class loader which implies that classes with the same name can be
+     * compiled and loaded.
      * 
      * @param className
      *            the class name
@@ -83,4 +90,72 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
      *             if an error occurs
      */
     Class<?> compileAndLoadJavaClass(String className, File file) throws UnifyException;
+
+    /**
+     * Compiles a java class source and saves a java class under a specified group.
+     * Performs no operation if supplied source is of a lower or equal version to
+     * previously saved compilation.
+     * 
+     * @param groupName
+     *            the group name
+     * @param inputStreamJavaClassSource
+     *            the source object
+     * @return true if supplied source is a newer version and compiled and saved
+     *         successfully otherwise false
+     * @throws UnifyException
+     *             if compilation fails. if an error occurs
+     */
+    boolean compileAndSaveJavaClass(String groupName, InputStreamJavaClassSource inputStreamJavaClassSource)
+            throws UnifyException;
+
+    /**
+     * Compiles a java class source and saves a java class under a specified group.
+     * Performs no operation if supplied source is of a lower or equal version to
+     * previously saved compilation.
+     * 
+     * @param groupName
+     *            the group name
+     * @param readerJavaClassSource
+     *            the reader object
+     * @return true if supplied source is a newer version and compiled and saved
+     *         successfully otherwise false
+     * @throws UnifyException
+     *             if compilation fails. if an error occurs
+     */
+    boolean compileAndSaveJavaClass(String groupName, ReaderJavaClassSource readerJavaClassSource)
+            throws UnifyException;
+
+    /**
+     * Compiles a java class source and saves a java class under a specified group.
+     * Performs no operation if supplied source is of a lower or equal version to
+     * previously saved compilation.
+     * 
+     * @param groupName
+     *            the group name
+     * @param stringJavaClassSource
+     *            the source object
+     * @return true if supplied source is a newer version and compiled and saved
+     *         successfully otherwise false
+     * @throws UnifyException
+     *             if compilation fails. if an error occurs
+     */
+    boolean compileAndSaveJavaClass(String groupName, StringJavaClassSource stringJavaClassSource)
+            throws UnifyException;
+
+    /**
+     * Compiles a java class source and saves a java class under a specified group.
+     * Performs no operation if supplied source is of a lower or equal version to
+     * previously saved compilation.
+     * 
+     * @param groupName
+     *            the group name
+     * @param fileJavaClassSource
+     *            the source object
+     * @return true if supplied source is a newer version and compiled and saved
+     *         successfully otherwise false
+     * @throws UnifyException
+     *             if compilation fails. if an error occurs
+     */
+    boolean compileAndSaveJavaClass(String groupName, FileJavaClassSource fileJavaClassSource)
+            throws UnifyException;
 }

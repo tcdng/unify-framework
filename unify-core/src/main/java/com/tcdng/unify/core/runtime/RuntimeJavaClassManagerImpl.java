@@ -29,9 +29,10 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.data.AbstractPool;
+import com.tcdng.unify.core.system.SingleVersionLargeObjectService;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.LockUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Default implementation of runtime java class manager.
@@ -42,12 +43,14 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component(ApplicationComponents.APPLICATION_RUNTIMEJAVACLASSMANAGER)
 public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager {
 
-    private static final long GET_COMPILER_TIMEOUT = 8000; // 8 Seconds
+    private static final String RUNTIMECLASS_APPLICATION = "app::runtimeJavaClass";
 
-    @Configurable("32")
-    private int maxCompilers;
-
-    private SimpleCompilerPool simpleCompilerPool;
+    // Do NOT use injection here because the default business proxy
+    // generator uses this component. Injection causes the
+    // SingleVersionLargeObjectService instance to be instantiated before the proxy
+    // type can be created for it. Use #getComponent() at point of usage instead.
+    // @Configurable
+    // private SingleVersionLargeObjectService singleVersionLargeObjectService;
 
     @Override
     public Class<?> compileAndLoadJavaClass(String className, InputStream is) throws UnifyException {
@@ -83,36 +86,80 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
     }
 
     @Override
-    protected void onInitialize() throws UnifyException {
-        simpleCompilerPool = new SimpleCompilerPool();
+    public boolean compileAndSaveJavaClass(String groupName, InputStreamJavaClassSource inputStreamJavaClassSource)
+            throws UnifyException {
+        InputStreamReader reader = new InputStreamReader(inputStreamJavaClassSource.getSource());
+        try {
+            return innerCompileAndSaveClass(groupName, inputStreamJavaClassSource, reader);
+        } finally {
+            IOUtils.close(reader);
+        }
+    }
+
+    @Override
+    public boolean compileAndSaveJavaClass(String groupName, ReaderJavaClassSource readerJavaClassSource)
+            throws UnifyException {
+        return innerCompileAndSaveClass(groupName, readerJavaClassSource, readerJavaClassSource.getSource());
+    }
+
+    @Override
+    public boolean compileAndSaveJavaClass(String groupName, StringJavaClassSource stringJavaClassSource)
+            throws UnifyException {
+        return innerCompileAndSaveClass(groupName, stringJavaClassSource,
+                new StringReader(stringJavaClassSource.getSource()));
+    }
+
+    @Override
+    public boolean compileAndSaveJavaClass(String groupName, FileJavaClassSource fileJavaClassSource)
+            throws UnifyException {
+        FileReader reader = null;
+        try {
+            reader = new FileReader(fileJavaClassSource.getSource());
+            return innerCompileAndSaveClass(groupName, fileJavaClassSource, reader);
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
+        } finally {
+            IOUtils.close(reader);
+        }
     }
 
     private Class<?> innerCompileAndLoadClass(String className, Reader reader) throws UnifyException {
-        SimpleCompiler compiler = simpleCompilerPool.borrowObject();
         try {
+            SimpleCompiler compiler = new SimpleCompiler();
             compiler.cook(reader);
             return compiler.getClassLoader().loadClass(className);
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
-        } finally {
-            simpleCompilerPool.returnObject(compiler);
         }
     }
 
-    private class SimpleCompilerPool extends AbstractPool<SimpleCompiler> {
-
-        public SimpleCompilerPool() {
-            super(GET_COMPILER_TIMEOUT, 0, maxCompilers);
+    private boolean innerCompileAndSaveClass(String groupName, AbstractJavaClassSource srcDetails, Reader reader)
+            throws UnifyException {
+        final String className = srcDetails.getClassName();
+        final long version = srcDetails.getVersion();
+        SingleVersionLargeObjectService singleVersionLargeObjectService =
+                (SingleVersionLargeObjectService) getComponent(
+                        ApplicationComponents.APPLICATION_SINGLEVERSIONLOBSERVICE);
+        if (singleVersionLargeObjectService.getBlobVersion(RUNTIMECLASS_APPLICATION, groupName, className) < version) {
+            synchronized (LockUtils.getStringLockObject(StringUtils.dotify(RUNTIMECLASS_APPLICATION, groupName))) {
+                if (singleVersionLargeObjectService.getBlobVersion(RUNTIMECLASS_APPLICATION, groupName,
+                        className) < version) {
+                    synchronized (LockUtils
+                            .getStringLockObject(StringUtils.dotify(RUNTIMECLASS_APPLICATION, groupName))) {
+                        try {
+                            SimpleCompiler compiler = new SimpleCompiler();
+                            compiler.cook(reader);
+                            byte[] byteCode = compiler.getBytecodes().get(className);
+                            return singleVersionLargeObjectService.storeBlob(RUNTIMECLASS_APPLICATION, groupName,
+                                    className, byteCode, version);
+                        } catch (Exception e) {
+                            throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
+                        }
+                    }
+                }
+            }
         }
 
-        @Override
-        protected SimpleCompiler createObject(Object... params) throws Exception {
-            return new SimpleCompiler();
-        }
-
-        @Override
-        protected void destroyObject(SimpleCompiler simpleCompiler) {
-
-        }
+        return false;
     }
 }
