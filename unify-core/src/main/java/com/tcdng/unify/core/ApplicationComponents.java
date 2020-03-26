@@ -81,6 +81,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_SEQUENCENUMBERSERVICE = "application-sequencenumberservice";
 
+    String APPLICATION_SINGLEVERSIONLOBSERVICE = "application-singleversionlobservice";
+
     String APPLICATION_SQLENTITYINFOFACTORY = "application-sqlentityinfofactory";
 
     String APPLICATION_SQLSTATEMENTEXECUTOR = "application-sqlstatementexecutor";
