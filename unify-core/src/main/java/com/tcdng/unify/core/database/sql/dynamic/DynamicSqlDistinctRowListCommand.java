@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +26,8 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.database.NativeQuery;
+import com.tcdng.unify.core.database.sql.SqlDistinctRowListConfig;
+import com.tcdng.unify.core.database.sql.SqlDistinctRowListConfigManager;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -35,7 +37,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * @since 1.0
  */
 @Component("sqldistinctrowlist")
-public class SqlDistinctRowListCommand extends AbstractDynamicSqlDataSourceListCommand {
+public class DynamicSqlDistinctRowListCommand extends AbstractDynamicSqlDataSourceListCommand {
 
     @Override
     public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {

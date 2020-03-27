@@ -13,38 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.database.sql.SqlTableInfo;
+import com.tcdng.unify.core.database.sql.SqlTableType;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * SQL datasource schema list command.
+ * SQL datasource table list command.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("sqldatasourceschemalist")
-public class SqlDataSourceSchemaListCommand extends AbstractDynamicSqlDataSourceListCommand {
+@Component("sqldatasourcetablelist")
+public class DynamicSqlDataSourceTableListCommand extends AbstractDynamicSqlDataSourceListCommand {
 
     @Override
     public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-        if (StringUtils.isNotBlank(params.getConfigName())) {
-            List<Listable> schemaList = new ArrayList<Listable>();
-            for (String schema : getDsManager().getSchemas(params.getConfigName())) {
-                schemaList.add(new ListData(schema, schema));
+        if (StringUtils.isNotBlank(params.getConfigName()) && StringUtils.isNotBlank(params.getSchemaName())) {
+            SqlTableType sqlTableType = SqlTableType.TABLE;
+            if (params.getTableName() != null) {
+                sqlTableType = SqlTableType.fromName(params.getTableName());
             }
-            DataUtils.sortAscending(schemaList, Listable.class, "listDescription");
-            return schemaList;
+
+            List<SqlTableInfo> tableList =
+                    getDsManager().getTables(params.getConfigName(), params.getSchemaName(), sqlTableType);
+            DataUtils.sortAscending(tableList, SqlTableInfo.class, "listDescription");
+            return tableList;
         }
 
         return Collections.emptyList();

@@ -28,14 +28,6 @@ import com.tcdng.unify.core.database.CallableProc;
 public interface SqlEntityInfoFactory extends UnifyComponent {
 
     /**
-     * Sets the factory SQL data source dialect.
-     * 
-     * @param sqlDataSourceDialect
-     *            the dialect to set
-     */
-    void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect);
-
-    /**
      * Returns the SQL entity information for a entity type.
      * 
      * @param entityClass
@@ -56,4 +48,12 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
      *             if an error occurs
      */
     SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> callableClass) throws UnifyException;
+
+    /**
+     * Sets the factory SQL data source dialect.
+     * 
+     * @param sqlDataSourceDialect
+     *            the dialect to set
+     */
+    void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect);
 }
