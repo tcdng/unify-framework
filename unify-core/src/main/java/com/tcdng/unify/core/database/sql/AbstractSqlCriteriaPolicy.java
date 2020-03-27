@@ -29,12 +29,12 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
 
-    protected SqlDataSourceDialect sqlDataSourceDialect;
+    protected SqlDataSourceDialectPolicies rootPolicies;
 
     protected String opSql;
 
-    public AbstractSqlCriteriaPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
-        this.sqlDataSourceDialect = sqlDataSourceDialect;
+    public AbstractSqlCriteriaPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
+        this.rootPolicies = rootPolicies;
         this.opSql = opSql;
     }
 
@@ -54,7 +54,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if an error occurs
      */
     protected SqlCriteriaPolicy getOperatorPolicy(Restriction restriction) throws UnifyException {
-        return sqlDataSourceDialect.getSqlCriteriaPolicy(restriction.getType());
+        return rootPolicies.getSqlCriteriaPolicy(restriction.getType());
     }
 
     /**
@@ -67,7 +67,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if an error occurs
      */
     protected SqlCriteriaPolicy getOperatorPolicy(RestrictionType type) throws UnifyException {
-        return sqlDataSourceDialect.getSqlCriteriaPolicy(type);
+        return rootPolicies.getSqlCriteriaPolicy(type);
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if column type is not supported
      */
     protected SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException {
-        return sqlDataSourceDialect.getSqlTypePolicy(columnType);
+        return rootPolicies.getSqlTypePolicy(columnType);
     }
 
     /**
@@ -92,14 +92,14 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if an error occurs
      */
     protected String getNativeSqlStringValue(Object value) throws UnifyException {
-        return sqlDataSourceDialect.translateValue(value);
+        return rootPolicies.translateValue(value);
     }
 
     /**
      * Returns the minimum clause values.
      */
     protected int maximumClauseValues() {
-        return sqlDataSourceDialect.getMaxClauseValues();
+        return rootPolicies.getMaxClauseValues();
     }
 
     /**
@@ -135,14 +135,14 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
             SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
             return sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
         }
-        
+
         return param;
     }
 
     protected abstract void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1,
             Object param2) throws UnifyException;
 
-    protected SqlDataSourceDialect getSqlDataSourceDialect() {
-        return sqlDataSourceDialect;
+    protected SqlDataSourceDialectPolicies getRootPolicies() {
+        return rootPolicies;
     }
 }

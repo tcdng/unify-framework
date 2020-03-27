@@ -565,7 +565,7 @@ public class Report {
             }
 
             if (rootFilter != null) {
-                throw new IllegalStateException("Can not have multiple root compound filter.");
+                throw new IllegalStateException("Can not have multiple rootPolicies compound filter.");
             }
 
             ReportFilter reportFilter = new ReportFilter(op);

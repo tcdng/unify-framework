@@ -24,7 +24,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.MultipleValueRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldInfo;
 import com.tcdng.unify.core.database.sql.SqlParameter;
@@ -42,8 +42,8 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
 
     private String multOpSql;
 
-    public MultipleParameterPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect, String multOpSql) {
-        super(opSql, sqlDataSourceDialect);
+    public MultipleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies, String multOpSql) {
+        super(opSql, rootPolicies);
         this.multOpSql = multOpSql;
     }
 

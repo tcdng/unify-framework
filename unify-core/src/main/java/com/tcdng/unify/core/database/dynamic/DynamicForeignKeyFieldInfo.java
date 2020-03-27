@@ -14,48 +14,36 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql.dynamic;
+package com.tcdng.unify.core.database.dynamic;
 
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
 
 /**
- * Dynamic field information.
+ * Dynamic foreign key field information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class DynamicFieldInfo {
+public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
 
-    private EntityFieldType fieldType;
-    
-    private DataType dataType;
+    private DynamicEntityInfo parentDynamicEntityInfo;
 
-    private String columnName;
+    private boolean nullable;
 
-    private String fieldName;
-
-    public DynamicFieldInfo(EntityFieldType fieldType, DataType dataType, String columnName, String fieldName) {
-        this.fieldType = fieldType;
-        this.dataType = dataType;
-        this.columnName = columnName;
-        this.fieldName = fieldName;
+    public DynamicForeignKeyFieldInfo(DynamicEntityInfo parentDynamicEntityInfo, String columnName, String fieldName,
+            boolean nullable) {
+        super(EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName);
+        this.parentDynamicEntityInfo = parentDynamicEntityInfo;
+        this.nullable = nullable;
     }
 
-    public EntityFieldType getFieldType() {
-        return fieldType;
+    public DynamicEntityInfo getParentDynamicEntityInfo() {
+        return parentDynamicEntityInfo;
     }
 
-    public DataType getDataType() {
-        return dataType;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public String getFieldName() {
-        return fieldName;
+    public boolean isNullable() {
+        return nullable;
     }
 
 }

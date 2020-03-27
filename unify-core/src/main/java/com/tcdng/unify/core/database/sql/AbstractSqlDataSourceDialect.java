@@ -15,12 +15,9 @@
  */
 package com.tcdng.unify.core.database.sql;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -35,6 +32,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.ForeignConstraints;
 import com.tcdng.unify.core.constant.Indexes;
@@ -106,9 +104,8 @@ import com.tcdng.unify.core.util.SqlUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Singleton(false)
 public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponent implements SqlDataSourceDialect {
-
-    private static final String TIMESTAMP_FORMAT = "''yyyy-MM-dd HH:mm:ss''";
 
     @Configurable
     private SqlEntityInfoFactory sqlEntityInfoFactory;
@@ -122,17 +119,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Configurable("64")
     private int maxStatementInfo;
 
-    private DateFormat timestampFormat;
-
     private SqlCacheFactory sqlCacheFactory;
 
     private SqlStatementPoolsFactory sqlStatementPoolsFactory;
 
     private SqlCallableStatementPools sqlCallableStatementPools;
-
-    private Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies;
-
-    private Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies;
 
     private Set<String> noPrecisionTypes;
 
@@ -151,56 +142,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     public AbstractSqlDataSourceDialect(boolean useCallableFunctionMode, boolean appendNullOnTblCreate) {
         this.useCallableFunctionMode = useCallableFunctionMode;
         this.appendNullOnTblCreate = appendNullOnTblCreate;
-        timestampFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
         sqlCacheFactory = new SqlCacheFactory();
         sqlStatementPoolsFactory = new SqlStatementPoolsFactory();
-
-        sqlDataTypePolicies = new HashMap<ColumnType, SqlDataTypePolicy>();
-        sqlDataTypePolicies.put(ColumnType.BLOB, new BlobPolicy());
-        sqlDataTypePolicies.put(ColumnType.BOOLEAN, new BooleanPolicy());
-        sqlDataTypePolicies.put(ColumnType.BOOLEAN_ARRAY, new BooleanArrayPolicy());
-        sqlDataTypePolicies.put(ColumnType.CHARACTER, new CharacterPolicy());
-        sqlDataTypePolicies.put(ColumnType.CLOB, new ClobPolicy());
-        sqlDataTypePolicies.put(ColumnType.DATE, new DatePolicy());
-        sqlDataTypePolicies.put(ColumnType.DECIMAL, new BigDecimalPolicy());
-        sqlDataTypePolicies.put(ColumnType.DOUBLE, new DoublePolicy());
-        sqlDataTypePolicies.put(ColumnType.DOUBLE_ARRAY, new DoubleArrayPolicy());
-        sqlDataTypePolicies.put(ColumnType.FLOAT, new FloatPolicy());
-        sqlDataTypePolicies.put(ColumnType.FLOAT_ARRAY, new FloatArrayPolicy());
-        sqlDataTypePolicies.put(ColumnType.SHORT, new ShortPolicy());
-        sqlDataTypePolicies.put(ColumnType.SHORT_ARRAY, new ShortArrayPolicy());
-        sqlDataTypePolicies.put(ColumnType.INTEGER, new IntegerPolicy());
-        sqlDataTypePolicies.put(ColumnType.INTEGER_ARRAY, new IntegerArrayPolicy());
-        sqlDataTypePolicies.put(ColumnType.LONG, new LongPolicy());
-        sqlDataTypePolicies.put(ColumnType.LONG_ARRAY, new LongArrayPolicy());
-        sqlDataTypePolicies.put(ColumnType.STRING, new StringPolicy());
-        sqlDataTypePolicies.put(ColumnType.STRING_ARRAY, new StringArrayPolicy());
-        sqlDataTypePolicies.put(ColumnType.TIMESTAMP_UTC, new TimestampUTCPolicy());
-        sqlDataTypePolicies.put(ColumnType.TIMESTAMP, new TimestampPolicy());
-        sqlDataTypePolicies.put(ColumnType.ENUMCONST, new EnumConstPolicy());
-
-        sqlCriteriaPolicies = new HashMap<RestrictionType, SqlCriteriaPolicy>();
-        sqlCriteriaPolicies.put(RestrictionType.EQUALS, new EqualPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_EQUAL, new NotEqualPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.LESS_THAN, new LessPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.LESS_OR_EQUAL, new LessOrEqualPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.GREATER, new GreaterPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.GREATER_OR_EQUAL, new GreaterOrEqualPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.BETWEEN, new BetweenPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_BETWEEN, new NotBetweenPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.AMONGST, new AmongstPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_AMONGST, new NotAmongstPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.LIKE, new LikePolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE, new NotLikePolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.BEGINS_WITH, new LikeBeginPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_BEGIN_WITH, new NotLikeBeginPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.ENDS_WITH, new LikeEndPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_END_WITH, new NotLikeEndPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.IS_NULL, new IsNullPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.IS_NOT_NULL, new IsNotNullPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.AND, new AndPolicy(this));
-        sqlCriteriaPolicies.put(RestrictionType.OR, new OrPolicy(this));
-
         noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME"));
     }
 
@@ -833,27 +776,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException {
-        String paramStr = null;
-        if (param instanceof SqlViewColumnInfo) {
-            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
-            paramStr = sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
-        } else {
-            paramStr = String.valueOf(param);
-        }
-
-        if (type.equals(SqlLikeType.BEGINS_WITH)) {
-            return paramStr + "%";
-        } else if (type.equals(SqlLikeType.ENDS_WITH)) {
-            return "%" + paramStr;
-        }
-
-        return "%" + paramStr + "%";
+    public final String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException {
+        return getSqlDataSourceDialectPolicies().generateLikeParameter(type, param);
     }
 
     @Override
-    public int getMaxClauseValues() {
-        return 0;
+    public final int getMaxClauseValues() {
+        return getSqlDataSourceDialectPolicies().getMaxClauseValues();
     }
 
     @Override
@@ -868,12 +797,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlDataTypePolicy getSqlTypePolicy(Class<?> clazz) throws UnifyException {
-        return sqlDataTypePolicies.get(DataUtils.getColumnType(clazz));
+        return getSqlDataSourceDialectPolicies().getSqlTypePolicy(DataUtils.getColumnType(clazz));
     }
 
     @Override
     public SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException {
-        return sqlDataTypePolicies.get(columnType);
+        return getSqlDataSourceDialectPolicies().getSqlTypePolicy(columnType);
     }
 
     @Override
@@ -888,7 +817,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) throws UnifyException {
-        return sqlCriteriaPolicies.get(restrictionType);
+        return getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(restrictionType);
     }
 
     @Override
@@ -1337,8 +1266,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         if (query.isRootFilter()) {
             sql.append(" WHERE ");
             NativeQuery.Filter rootFilter = query.getRootFilter();
-            sqlCriteriaPolicies.get(rootFilter.getOp()).translate(sql, null, null, aliasGenerator,
-                    rootFilter.getSubFilterList());
+            getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(rootFilter.getOp()).translate(sql, null, null,
+                    aliasGenerator, rootFilter.getSubFilterList());
         }
 
         if (query.isOrderBy()) {
@@ -1423,25 +1352,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String translateValue(Object param) throws UnifyException {
-        if (param instanceof String) {
-            String paramStr = (String) param;
-            if (paramStr.indexOf('.') > 0) {
-                return paramStr;
-            }
-
-            return "\'" + param + "\'";
-        }
-
-        if (param instanceof Date) {
-            return timestampFormat.format((Date) param);
-        }
-
-        if (param instanceof Boolean) {
-            return "\'" + SqlUtils.getString((Boolean) param) + "\'";
-        }
-
-        return String.valueOf(param);
+    public final String translateValue(Object param) throws UnifyException {
+        return getSqlDataSourceDialectPolicies().translateValue(param);
     }
 
     @Override
@@ -1472,8 +1384,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     protected void onInitialize() throws UnifyException {
         sqlEntityInfoFactory.setSqlDataSourceDialect(this);
-        sqlCallableStatementPools = new SqlCallableStatementPools(sqlDataTypePolicies, getStatementInfoTimeout,
-                minStatementInfo, maxStatementInfo, useCallableFunctionMode);
+        sqlCallableStatementPools =
+                new SqlCallableStatementPools(getSqlDataSourceDialectPolicies().getSqlDataTypePolicies(),
+                        getStatementInfoTimeout, minStatementInfo, maxStatementInfo, useCallableFunctionMode);
         terminationSql = ";";
         newLineSql = getLineSeparator();
     }
@@ -1483,9 +1396,56 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     }
 
-    protected void setDataTypePolicy(ColumnType columnType, SqlDataTypePolicy sqlDataTypePolicy) throws UnifyException {
-        sqlDataTypePolicies.put(columnType, sqlDataTypePolicy);
+    protected static void populateDefaultSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+        sqlDataTypePolicies.put(ColumnType.BLOB, new BlobPolicy());
+        sqlDataTypePolicies.put(ColumnType.BOOLEAN, new BooleanPolicy());
+        sqlDataTypePolicies.put(ColumnType.BOOLEAN_ARRAY, new BooleanArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.CHARACTER, new CharacterPolicy());
+        sqlDataTypePolicies.put(ColumnType.CLOB, new ClobPolicy());
+        sqlDataTypePolicies.put(ColumnType.DATE, new DatePolicy());
+        sqlDataTypePolicies.put(ColumnType.DECIMAL, new BigDecimalPolicy());
+        sqlDataTypePolicies.put(ColumnType.DOUBLE, new DoublePolicy());
+        sqlDataTypePolicies.put(ColumnType.DOUBLE_ARRAY, new DoubleArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.FLOAT, new FloatPolicy());
+        sqlDataTypePolicies.put(ColumnType.FLOAT_ARRAY, new FloatArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.SHORT, new ShortPolicy());
+        sqlDataTypePolicies.put(ColumnType.SHORT_ARRAY, new ShortArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.INTEGER, new IntegerPolicy());
+        sqlDataTypePolicies.put(ColumnType.INTEGER_ARRAY, new IntegerArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.LONG, new LongPolicy());
+        sqlDataTypePolicies.put(ColumnType.LONG_ARRAY, new LongArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.STRING, new StringPolicy());
+        sqlDataTypePolicies.put(ColumnType.STRING_ARRAY, new StringArrayPolicy());
+        sqlDataTypePolicies.put(ColumnType.TIMESTAMP_UTC, new TimestampUTCPolicy());
+        sqlDataTypePolicies.put(ColumnType.TIMESTAMP, new TimestampPolicy());
+        sqlDataTypePolicies.put(ColumnType.ENUMCONST, new EnumConstPolicy());
     }
+
+    protected static void populateDefaultSqlCriteriaPolicies(SqlDataSourceDialectPolicies rootPolicies,
+            Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+        sqlCriteriaPolicies.put(RestrictionType.EQUALS, new EqualPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_EQUAL, new NotEqualPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.LESS_THAN, new LessPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.LESS_OR_EQUAL, new LessOrEqualPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.GREATER, new GreaterPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.GREATER_OR_EQUAL, new GreaterOrEqualPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.BETWEEN, new BetweenPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_BETWEEN, new NotBetweenPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.AMONGST, new AmongstPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_AMONGST, new NotAmongstPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.LIKE, new LikePolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE, new NotLikePolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.BEGINS_WITH, new LikeBeginPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_BEGIN_WITH, new NotLikeBeginPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.ENDS_WITH, new LikeEndPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_END_WITH, new NotLikeEndPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.IS_NULL, new IsNullPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.IS_NOT_NULL, new IsNotNullPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.AND, new AndPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.OR, new OrPolicy(rootPolicies));
+    }
+
+    protected abstract SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies();
 
     protected boolean includeNoPrecisionType(String sqlType) {
         return noPrecisionTypes.add(sqlType);
@@ -1498,7 +1458,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected void appendCreateTableColumnSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
             boolean onAlter) {
         sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
-        SqlDataTypePolicy sqlDataTypePolicy = sqlDataTypePolicies.get(sqlFieldSchemaInfo.getColumnType());
+        SqlDataTypePolicy sqlDataTypePolicy =
+                getSqlDataSourceDialectPolicies().getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
         sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
                 sqlFieldSchemaInfo.getScale());
 
@@ -1932,16 +1893,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     /**
-     * Sets the dialect timestamp format.
-     * 
-     * @param timestampFormat
-     *            the format to set
-     */
-    protected void setTimestampFormat(DateFormat timestampFormat) {
-        this.timestampFormat = timestampFormat;
-    }
-
-    /**
      * Returns criteria result rows limit..
      * 
      * @param query
@@ -2130,9 +2081,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                     appendSym = true;
                 }
 
-                sqlCriteriaPolicies.get(sqlViewRestrictionInfo.getRestrictionType()).translate(sb,
-                        sqlViewRestrictionInfo.getTableAlias(), sqlViewRestrictionInfo.getColumnName(),
-                        sqlViewRestrictionInfo.getParam1(), sqlViewRestrictionInfo.getParam2());
+                getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(sqlViewRestrictionInfo.getRestrictionType())
+                        .translate(sb, sqlViewRestrictionInfo.getTableAlias(), sqlViewRestrictionInfo.getColumnName(),
+                                sqlViewRestrictionInfo.getParam1(), sqlViewRestrictionInfo.getParam2());
             }
         }
 
@@ -2142,8 +2093,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private class SqlStatementPoolsFactory extends FactoryMap<Class<?>, SqlStatementPools> {
         @Override
         protected SqlStatementPools create(Class<?> clazz, Object... params) throws Exception {
-            return new SqlStatementPools(sqlEntityInfoFactory.getSqlEntityInfo(clazz), sqlDataTypePolicies,
-                    sqlCacheFactory.get(clazz), getStatementInfoTimeout, minStatementInfo, maxStatementInfo);
+            return new SqlStatementPools(sqlEntityInfoFactory.getSqlEntityInfo(clazz),
+                    getSqlDataSourceDialectPolicies().getSqlDataTypePolicies(), sqlCacheFactory.get(clazz),
+                    getStatementInfoTimeout, minStatementInfo, maxStatementInfo);
         }
     };
 
@@ -2207,14 +2159,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
             // End fix
 
-            parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), value));
+            parameterInfoList.add(new SqlParameter(
+                    getSqlDataSourceDialectPolicies().getSqlTypePolicy(sqlFieldInfo.getColumnType()), value));
         }
         return updateParams.toString();
     }
 
     private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        sqlCriteriaPolicies.get(restriction.getType()).translate(sql, sqlEntityInfo, restriction);
+        getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(restriction.getType()).translate(sql, sqlEntityInfo,
+                restriction);
     }
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,
@@ -2370,7 +2324,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private List<SqlResult> getSqlResultList(List<SqlFieldInfo> sqlFieldInfoList) {
         List<SqlResult> resultInfoList = new ArrayList<SqlResult>();
         for (SqlFieldInfo sqlFieldInfo : sqlFieldInfoList) {
-            resultInfoList.add(new SqlResult(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType()), sqlFieldInfo));
+            resultInfoList.add(new SqlResult(
+                    getSqlDataSourceDialectPolicies().getSqlTypePolicy(sqlFieldInfo.getColumnType()), sqlFieldInfo));
         }
         return resultInfoList;
     }

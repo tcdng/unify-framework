@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.sql.dynamic;
 
+import com.tcdng.unify.core.database.dynamic.DynamicDatabase;
 import com.tcdng.unify.core.database.sql.SqlDatabase;
 
 /**
@@ -24,6 +25,6 @@ import com.tcdng.unify.core.database.sql.SqlDatabase;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DynamicSqlDatabase extends SqlDatabase {
+public interface DynamicSqlDatabase extends SqlDatabase, DynamicDatabase {
 
 }

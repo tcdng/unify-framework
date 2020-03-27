@@ -21,6 +21,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.NativeQuery;
+import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.database.sql.SqlTableInfo;
@@ -57,12 +58,12 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
     /**
      * Returns true if data source is configured.
      * 
-     * @param configName
+     * @param dataSourceConfigName
      *            the data source configuration name
      * @throws UnifyException
      *             if an error occurs
      */
-    boolean isConfigured(String configName) throws UnifyException;
+    boolean isConfigured(String dataSourceConfigName) throws UnifyException;
 
     /**
      * Returns the number of data sources currently being managed.
@@ -75,17 +76,17 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
     /**
      * Returns a list of schemas in data source.
      * 
-     * @param configName
+     * @param dataSourceConfigName
      *            the data source configuration name
      * @throws UnifyException
      *             if configuration is unknown. if an error occurs
      */
-    List<String> getSchemas(String configName) throws UnifyException;
+    List<String> getSchemas(String dataSourceConfigName) throws UnifyException;
 
     /**
      * Returns a list information on tables that belong to supplied schema.
      * 
-     * @param configName
+     * @param dataSourceConfigName
      *            the data source configuration name
      * @param schemaName
      *            the name of schema to check
@@ -96,13 +97,14 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * @throws UnifyException
      *             if configuration is unknown. if an error occurs
      */
-    List<SqlTableInfo> getTables(String configName, String schemaName, SqlTableType sqlTableType) throws UnifyException;
+    List<SqlTableInfo> getTables(String dataSourceConfigName, String schemaName, SqlTableType sqlTableType)
+            throws UnifyException;
 
     /**
      * Returns a list information on columns that belong to specified table in a
      * particular schema.
      * 
-     * @param configName
+     * @param dataSourceConfigName
      *            the data source configuration name
      * @param schemaName
      *            the schema name
@@ -113,12 +115,13 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * @throws UnifyException
      *             if configuration is unknown. if an error occurs
      */
-    List<SqlColumnInfo> getColumns(String configName, String schemaName, String tableName) throws UnifyException;
+    List<SqlColumnInfo> getColumns(String dataSourceConfigName, String schemaName, String tableName)
+            throws UnifyException;
 
     /**
      * Executes supplied native query and returns rows.
      * 
-     * @param configName
+     * @param dataSourceConfigName
      *            the data source configuration name
      * @param query
      *            the native query to run
@@ -127,34 +130,47 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Object[]> getRows(String configName, NativeQuery query) throws UnifyException;
+    List<Object[]> getRows(String dataSourceConfigName, NativeQuery query) throws UnifyException;
 
     /**
      * Returns dynamic data source for supplied configuration.
      * 
-     * @param configName
-     *            the configuration name
+     * @param dataSourceConfigName
+     *            the data source configuration name
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlDataSource getDataSource(String configName) throws UnifyException;
+    SqlDataSource getDataSource(String dataSourceConfigName) throws UnifyException;
+
+    /**
+     * Creates of updates dynamic entity schema objects for dynamic data source.
+     * 
+     * @param dataSourceConfigName
+     *            the data source configuration name
+     * @param dynamicEntityInfoList
+     *            the new dynamic entity structure list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void createOrUpdateDynamicEntitySchemaObjects(String dataSourceConfigName, List<DynamicEntityInfo> dynamicEntityInfoList)
+            throws UnifyException;
 
     /**
      * Gets a connection object from configured data source connection pool.
      * 
-     * @param configName
-     *            the configuration name
+     * @param dataSourceConfigName
+     *            the data source configuration name
      * @throws UnifyException
      *             if data source with supplied configuration name is not
      *             configured. If an error occurs
      */
-    Connection getConnection(String configName) throws UnifyException;
+    Connection getConnection(String dataSourceConfigName) throws UnifyException;
 
     /**
      * Restores connection to configured data source connection pool.
      * 
-     * @param configName
-     *            the configuration name
+     * @param dataSourceConfigName
+     *            the data source configuration name
      * @param connection
      *            the connection to restore
      * @return a true value if connection was restored to the right data source
@@ -162,18 +178,18 @@ public interface DynamicSqlDataSourceManager extends UnifyComponent {
      *             if data source with supplied configuration name is not
      *             configured. If an error occurs
      */
-    boolean restoreConnection(String configName, Connection connection) throws UnifyException;
+    boolean restoreConnection(String dataSourceConfigName, Connection connection) throws UnifyException;
 
     /**
      * Terminates configuration from this dynamic SQl data source manager.
      * 
-     * @param configName
-     *            the configuration name
+     * @param dataSourceConfigName
+     *            the data source configuration name
      * @throws UnifyException
      *             if data source with supplied configuration name is not
      *             configured. If an error occurs
      */
-    void terminateConfiguration(String configName) throws UnifyException;
+    void terminateConfiguration(String dataSourceConfigName) throws UnifyException;
 
     /**
      * Terminates all configuration from this dynamic SQl data source manager.

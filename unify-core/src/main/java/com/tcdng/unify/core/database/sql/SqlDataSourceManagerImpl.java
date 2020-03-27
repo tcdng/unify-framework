@@ -79,12 +79,12 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         try {
             logInfo("Scanning datasource {0} schema...", dataSourceName);
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            for (Class<?> entityClass : getTableEntities(dataSourceName)) {
+            for (Class<?> entityClass : getStaticTableEntities(dataSourceName)) {
                 logDebug("Managing schema elements for table entity type {0}...", entityClass);
                 manageTableEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass, options);
             }
 
-            for (Class<? extends Entity> entityClass : getViewEntities(dataSourceName)) {
+            for (Class<? extends Entity> entityClass : getStaticViewEntities(dataSourceName)) {
                 logDebug("Managing schema elements for view entity type {0}...", entityClass);
                 manageViewEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass, options);
             }
@@ -490,31 +490,31 @@ public class SqlDataSourceManagerImpl extends AbstractUnifyComponent implements 
         }
     }
 
-    private List<Class<?>> getTableEntities(String dataSourceName) throws UnifyException {
+    private List<Class<?>> getStaticTableEntities(String dataSourceName) throws UnifyException {
         SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
-        buildSqlInformation(sqlDataSource);
+        buildStaticSqlInformation(sqlDataSource);
 
         List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
-        for (Class<?> entityClass : sqlDataSource.getTableEntityTypes()) {
+        for (Class<?> entityClass : sqlDataSource.getStaticTableEntityTypes()) {
             buildDependencyList(sqlDataSource, entityTypeList, entityClass);
         }
 
         return entityTypeList;
     }
 
-    private List<Class<? extends Entity>> getViewEntities(String dataSourceName) throws UnifyException {
+    private List<Class<? extends Entity>> getStaticViewEntities(String dataSourceName) throws UnifyException {
         SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
-        return sqlDataSource.getViewEntityTypes();
+        return sqlDataSource.getStaticViewEntityTypes();
     }
 
-    private void buildSqlInformation(SqlDataSource sqlDataSource) throws UnifyException {
+    private void buildStaticSqlInformation(SqlDataSource sqlDataSource) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        for (Class<?> entityClass : sqlDataSource.getTableEntityTypes()) {
+        for (Class<?> entityClass : sqlDataSource.getStaticTableEntityTypes()) {
             logDebug("Building SQL information for entity type {0}...", entityClass);
             sqlDataSourceDialect.getSqlEntityInfo(entityClass);
         }
 
-        for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
+        for (Class<?> entityClass : sqlDataSource.getStaticTableExtensionEntityTypes()) {
             logDebug("Building SQL information for entity extension type {0}...", entityClass);
             sqlDataSourceDialect.getSqlEntityInfo(entityClass);
         }

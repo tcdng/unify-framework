@@ -21,21 +21,28 @@ import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlCriteriaPolicy;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -46,6 +53,21 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 @Component(name = SqlDialectNameConstants.POSTGRESQL, description = "$m{sqldialect.postgresdb}")
 public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
+
+    private static final PostgreSqlDataSourceDialectPolicies sqlDataSourceDialectPolicies =
+            new PostgreSqlDataSourceDialectPolicies();
+
+    static {
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new HashMap<ColumnType, SqlDataTypePolicy>();
+        populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.BLOB, new PostgreSqlBlobPolicy());
+
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new HashMap<RestrictionType, SqlCriteriaPolicy>();
+        populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
+
+        sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
+        sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
+    }
 
     public PostgreSqlDialect() {
         super(true);
@@ -59,11 +81,6 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public String generateUTCTimestampSql() throws UnifyException {
         return "SELECT NOW() AT TIME ZONE 'utc'";
-    }
-
-    @Override
-    public int getMaxClauseValues() {
-        return -1;
     }
 
     @Override
@@ -156,10 +173,8 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    protected void onInitialize() throws UnifyException {
-        super.onInitialize();
-
-        setDataTypePolicy(ColumnType.BLOB, new PostgreSqlBlobPolicy());
+    protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
+        return sqlDataSourceDialectPolicies;
     }
 
     @Override
@@ -188,6 +203,22 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
         }
 
         return isAppend;
+    }
+
+    private static class PostgreSqlDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
+
+        public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+            this.sqlDataTypePolicies = sqlDataTypePolicies;
+        }
+
+        public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+            this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+        }
+
+        @Override
+        public int getMaxClauseValues() {
+            return -1;
+        }
     }
 }
 

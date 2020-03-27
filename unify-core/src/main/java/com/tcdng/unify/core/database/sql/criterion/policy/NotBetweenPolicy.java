@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * Not between operator policy.
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotBetweenPolicy extends DoubleParameterPolicy {
 
-    public NotBetweenPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" NOT BETWEEN ", sqlDataSourceDialect);
+    public NotBetweenPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" NOT BETWEEN ", rootPolicies);
     }
 }

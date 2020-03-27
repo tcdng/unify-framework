@@ -40,7 +40,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
     private DataSourceDialect dialect;
 
     @Override
-    public List<Class<?>> getTableEntityTypes() throws UnifyException {
+    public List<Class<?>> getStaticTableEntityTypes() throws UnifyException {
         List<Class<?>> entityList = new ArrayList<Class<?>>();
         String name = getName();
         // Enumeration constants
@@ -63,7 +63,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
     }
 
     @Override
-    public List<Class<?>> getTableExtensionEntityTypes() throws UnifyException {
+    public List<Class<?>> getStaticTableExtensionEntityTypes() throws UnifyException {
         List<Class<?>> entityList = new ArrayList<Class<?>>();
         String name = getName();
         // Extensions
@@ -81,7 +81,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
     }
 
     @Override
-    public List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException {
+    public List<Class<? extends Entity>> getStaticViewEntityTypes() throws UnifyException {
         List<Class<? extends Entity>> entityList = new ArrayList<Class<? extends Entity>>();
         String name = getName();
         // Entities

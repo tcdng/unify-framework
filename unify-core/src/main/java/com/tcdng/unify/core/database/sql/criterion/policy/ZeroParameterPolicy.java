@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.NoValueRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldInfo;
 import com.tcdng.unify.core.database.sql.SqlParameter;
@@ -34,8 +34,8 @@ import com.tcdng.unify.core.database.sql.SqlParameter;
  */
 public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-    public ZeroParameterPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
-        super(opSql, sqlDataSourceDialect);
+    public ZeroParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
+        super(opSql, rootPolicies);
     }
 
     @Override
