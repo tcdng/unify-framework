@@ -14,14 +14,16 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
+
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.database.DataSource;
-import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceManager;
-import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDatabase;
+import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.database.sql.AbstractSqlDatabase;
 
 /**
  * Convenient abstract base class for dynamic SQL databases.
@@ -46,6 +48,13 @@ public abstract class AbstractDynamicSqlDatabase extends AbstractSqlDatabase imp
     @Override
     public DataSource getDataSource() throws UnifyException {
         return dynamicSqlDataSourceManager.getDataSource(dataSourceConfigName);
+    }
+
+    @Override
+    public void createOrUpdateDynamicEntitySchemaObjects(List<DynamicEntityInfo> dynamicEntityInfoList)
+            throws UnifyException {
+        dynamicSqlDataSourceManager.createOrUpdateDynamicEntitySchemaObjects(dataSourceConfigName,
+                dynamicEntityInfoList);
     }
 
 }

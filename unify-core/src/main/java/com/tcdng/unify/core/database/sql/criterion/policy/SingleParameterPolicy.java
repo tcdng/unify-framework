@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.SingleValueRestriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldInfo;
 import com.tcdng.unify.core.database.sql.SqlParameter;
@@ -35,8 +35,8 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-    public SingleParameterPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
-        super(opSql, sqlDataSourceDialect);
+    public SingleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
+        super(opSql, rootPolicies);
     }
 
     @Override

@@ -533,17 +533,17 @@ public interface UnifyCoreErrorConstants {
      */
     String FORCELOGOUT_SYSTEM = "UC_008A";
 
-    /** Version {0} does not exist for root record ID {1} and category {2} */
+    /** Version {0} does not exist for rootPolicies record ID {1} and category {2} */
     String UNKNOWN_RECORD_ROOT_VERSION = "UC_008B";
 
-    /** No version root exists for root record ID {0} and category {1} */
+    /** No version rootPolicies exists for rootPolicies record ID {0} and category {1} */
     String NO_RECORD_VERSION_ROOT = "UC_008C";
 
-    /** No record versions for root record ID {0} and category {1} */
+    /** No record versions for rootPolicies record ID {0} and category {1} */
     String NO_RECORD_VERSIONS = "UC_008D";
 
     /**
-     * Cannot delete parent versioned record {0} for root record ID {1} and category
+     * Cannot delete parent versioned record {0} for rootPolicies record ID {1} and category
      * {2}
      */
     String CANNOT_DELETE_PARENT_VERSIONEDRECORD = "UC_008E";
@@ -554,7 +554,7 @@ public interface UnifyCoreErrorConstants {
     /** Parent record ID is required for child type {0} for category {1} */
     String PARENT_RECORDID_REQUIRED_FOR_VERSIONEDRECORD = "UC_0090";
 
-    /** Parent record ID {0} is unknown for root ID {0} for category {1} */
+    /** Parent record ID {0} is unknown for rootPolicies ID {0} for category {1} */
     String PARENT_RECORDID_UNKOWN = "UC_0091";
 
     /**
@@ -563,7 +563,7 @@ public interface UnifyCoreErrorConstants {
     String RECORD_DOESNT_REQUIRE_PARENT = "UC_0092";
 
     /**
-     * Versioned record with ID {0} is unknown for type {1}, root ID {2} and
+     * Versioned record with ID {0} is unknown for type {1}, rootPolicies ID {2} and
      * category {2}
      */
     String VERSIONED_RECORDID_UNKOWN = "UC_0093";

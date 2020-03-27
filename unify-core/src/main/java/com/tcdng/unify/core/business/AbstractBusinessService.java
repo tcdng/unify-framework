@@ -26,6 +26,7 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.dynamic.DynamicDatabase;
 import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDatabaseManager;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
@@ -94,7 +95,8 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     }
 
     /**
-     * Gets a database instance using data source with supplied configuration name.
+     * Gets a dynamic database instance using data source with supplied
+     * configuration name.
      * 
      * @param dataSourceConfigName
      *            the data source configuration name. Data source must be already
@@ -103,7 +105,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
      * @throws UnifyException
      *             if an error occurs
      */
-    protected Database db(String dataSourceConfigName) throws UnifyException {
+    protected DynamicDatabase db(String dataSourceConfigName) throws UnifyException {
         return dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceConfigName);
     }
 

@@ -13,37 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * SQL data source column list command.
+ * SQL datasource schema list command.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("sqldatasourcecolumnlist")
-public class SqlDataSourceColumnListCommand extends AbstractDynamicSqlDataSourceListCommand {
+@Component("sqldatasourceschemalist")
+public class DynamicSqlDataSourceSchemaListCommand extends AbstractDynamicSqlDataSourceListCommand {
 
     @Override
     public List<? extends Listable> execute(Locale locale, DynamicSqlParams params) throws UnifyException {
-        if (StringUtils.isNotBlank(params.getConfigName()) && StringUtils.isNotBlank(params.getSchemaName())
-                && StringUtils.isNotBlank(params.getTableName())) {
-            List<SqlColumnInfo> columnList =
-                    getDsManager().getColumns(params.getConfigName(), params.getSchemaName(), params.getTableName());
-            DataUtils.sortAscending(columnList, SqlColumnInfo.class, "listDescription");
-            return columnList;
+        if (StringUtils.isNotBlank(params.getConfigName())) {
+            List<Listable> schemaList = new ArrayList<Listable>();
+            for (String schema : getDsManager().getSchemas(params.getConfigName())) {
+                schemaList.add(new ListData(schema, schema));
+            }
+            DataUtils.sortAscending(schemaList, Listable.class, "listDescription");
+            return schemaList;
         }
 
         return Collections.emptyList();
     }
+
 }

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql.dynamic;
+package com.tcdng.unify.core.database.dynamic;
 
 import java.util.List;
 
@@ -29,15 +29,18 @@ import com.tcdng.unify.core.util.DataUtils;
 public class DynamicEntityInfo {
 
     private String tableName;
-    
+
     private String className;
-    
+
     private List<DynamicFieldInfo> fieldInfos;
 
-    private DynamicEntityInfo(String tableName, String className, List<DynamicFieldInfo> fieldInfos) {
+    private long version;
+
+    private DynamicEntityInfo(String tableName, String className, List<DynamicFieldInfo> fieldInfos, long version) {
         this.tableName = tableName;
         this.className = className;
         this.fieldInfos = DataUtils.unmodifiableList(fieldInfos);
+        this.version = version;
     }
 
     public String getTableName() {
@@ -50,5 +53,9 @@ public class DynamicEntityInfo {
 
     public List<DynamicFieldInfo> getFieldInfos() {
         return fieldInfos;
+    }
+
+    public long getVersion() {
+        return version;
     }
 }

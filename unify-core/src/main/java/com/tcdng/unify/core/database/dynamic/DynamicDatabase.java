@@ -13,30 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql.criterion.policy;
+
+package com.tcdng.unify.core.database.dynamic;
+
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
-import com.tcdng.unify.core.database.sql.SqlLikeType;
+import com.tcdng.unify.core.database.Database;
 
 /**
- * Like operator policy.
+ * Dynamic database with changing entity structures.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LikePolicy extends SingleParameterPolicy {
+public interface DynamicDatabase extends Database {
 
-    public LikePolicy(SqlDataSourceDialectPolicies rootPolicies) {
-        super(" LIKE ", rootPolicies);
-    }
-
-    @Override
-    protected Object resolveParam(Object param) throws UnifyException{
-        return resolveParam(SqlLikeType.CONTAINS, param);
-    }
-    
-    protected String resolveParam(SqlLikeType type, Object param) throws UnifyException{
-        return getRootPolicies().generateLikeParameter(type, param);
-    }
+    /**
+     * Creates of updates dynamic entity schema objects for database.
+     * 
+     * @param dynamicEntityInfoList
+     *            the new dynamic entity structure list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void createOrUpdateDynamicEntitySchemaObjects(List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException;
 }

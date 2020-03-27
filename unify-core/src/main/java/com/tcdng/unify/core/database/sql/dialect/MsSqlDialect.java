@@ -18,16 +18,22 @@ package com.tcdng.unify.core.database.sql.dialect;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlCriteriaPolicy;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
@@ -37,6 +43,7 @@ import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -47,6 +54,25 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 @Component(name = SqlDialectNameConstants.MSSQL, description = "$m{sqldialect.mssqldb}")
 public class MsSqlDialect extends AbstractSqlDataSourceDialect {
+
+    private static final MsSqlDataSourceDialectPolicies sqlDataSourceDialectPolicies =
+            new MsSqlDataSourceDialectPolicies();
+
+    static {
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new HashMap<ColumnType, SqlDataTypePolicy>();
+        populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.TIMESTAMP_UTC, new MsSqlTimestampUTCPolicy());
+        tempMap1.put(ColumnType.TIMESTAMP, new MsSqlTimestampPolicy());
+        tempMap1.put(ColumnType.DATE, new MsSqlDatePolicy());
+        tempMap1.put(ColumnType.BLOB, new MsSqlBlobPolicy());
+        tempMap1.put(ColumnType.CLOB, new MsSqlClobPolicy());
+
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new HashMap<RestrictionType, SqlCriteriaPolicy>();
+        populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
+
+        sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
+        sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
+    }
 
     public MsSqlDialect() {
         super(false); // useCallableFunctionMode
@@ -60,11 +86,6 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public String generateUTCTimestampSql() throws UnifyException {
         return "SELECT GETUTCDATE()";
-    }
-
-    @Override
-    public int getMaxClauseValues() {
-        return -1;
     }
 
     @Override
@@ -228,14 +249,28 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
-
-        setDataTypePolicy(ColumnType.TIMESTAMP_UTC, new MsSqlTimestampUTCPolicy());
-        setDataTypePolicy(ColumnType.TIMESTAMP, new MsSqlTimestampPolicy());
-        setDataTypePolicy(ColumnType.DATE, new MsSqlDatePolicy());
-        setDataTypePolicy(ColumnType.BLOB, new MsSqlBlobPolicy());
-        setDataTypePolicy(ColumnType.CLOB, new MsSqlClobPolicy());
-        
         includeNoPrecisionType("INT");
+    }
+
+    @Override
+    protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
+        return sqlDataSourceDialectPolicies;
+    }
+
+    private static class MsSqlDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
+
+        public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+            this.sqlDataTypePolicies = sqlDataTypePolicies;
+        }
+
+        public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+            this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+        }
+
+        @Override
+        public int getMaxClauseValues() {
+            return -1;
+        }
     }
 
     private void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo) throws UnifyException {
@@ -259,6 +294,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
             }
         }
     }
+
 }
 
 class MsSqlTimestampUTCPolicy extends TimestampUTCPolicy {

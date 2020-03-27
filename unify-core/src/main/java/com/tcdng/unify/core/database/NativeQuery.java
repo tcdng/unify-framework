@@ -184,7 +184,7 @@ public class NativeQuery {
             }
 
             if (rootFilter != null) {
-                throw new IllegalStateException("Can not have multiple root compound filter.");
+                throw new IllegalStateException("Can not have multiple rootPolicies compound filter.");
             }
 
             Filter filter = new Filter(op, new ArrayList<Filter>());

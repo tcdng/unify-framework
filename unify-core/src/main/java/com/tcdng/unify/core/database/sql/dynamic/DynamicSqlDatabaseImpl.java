@@ -18,7 +18,6 @@ package com.tcdng.unify.core.database.sql.dynamic;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.database.sql.AbstractDynamicSqlDatabase;
 
 /**
  * Dynamic SQL database implementation.

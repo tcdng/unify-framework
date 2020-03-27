@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql.dynamic;
+package com.tcdng.unify.core.database.dynamic;
 
 import com.tcdng.unify.core.constant.EntityFieldType;
 

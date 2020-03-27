@@ -37,4 +37,5 @@ public interface DynamicSqlDatabaseManager extends UnifyComponent {
      *             if an error occurs
      */
     DynamicSqlDatabase getDynamicSqlDatabase(String dataSourceConfigName) throws UnifyException;
+
 }

@@ -23,7 +23,7 @@ import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
 import com.tcdng.unify.core.database.sql.SqlCriteriaPolicy;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlParameter;
 import com.tcdng.unify.core.database.sql.SqlTableNativeAliasGenerator;
@@ -36,8 +36,8 @@ import com.tcdng.unify.core.database.sql.SqlTableNativeAliasGenerator;
  */
 public abstract class CompoundPolicy extends AbstractSqlCriteriaPolicy {
 
-    public CompoundPolicy(String opSql, SqlDataSourceDialect sqlDataSourceDialect) {
-        super(opSql, sqlDataSourceDialect);
+    public CompoundPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
+        super(opSql, rootPolicies);
     }
 
     @Override

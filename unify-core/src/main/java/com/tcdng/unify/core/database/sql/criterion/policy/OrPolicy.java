@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * OR operator policy.
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class OrPolicy extends CompoundPolicy {
 
-    public OrPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" OR ", sqlDataSourceDialect);
+    public OrPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" OR ", rootPolicies);
     }
 }

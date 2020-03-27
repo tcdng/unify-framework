@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * Not equal operator policy.
@@ -25,8 +25,8 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotEqualPolicy extends SingleParameterPolicy {
 
-    public NotEqualPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" != ", sqlDataSourceDialect);
+    public NotEqualPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" != ", rootPolicies);
     }
 
 }

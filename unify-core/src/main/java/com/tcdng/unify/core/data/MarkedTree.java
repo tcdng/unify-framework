@@ -56,7 +56,7 @@ public class MarkedTree<T> {
      * Sets marked tree chain mode.
      * 
      * @param chain
-     *            A true value points parent to root node and descends to the last
+     *            A true value points parent to rootPolicies node and descends to the last
      *            child and enables chain-only operations. A false value enable
      *            unchained operations only.
      */
@@ -107,9 +107,9 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Gets marked tree root node.
+     * Gets marked tree rootPolicies node.
      * 
-     * @return the root node
+     * @return the rootPolicies node
      */
     public Node<T> getRoot() {
         return root;
@@ -200,7 +200,7 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Finds first node, starting from root node, whose item is matched by matcher.
+     * Finds first node, starting from rootPolicies node, whose item is matched by matcher.
      * 
      * @param matcher
      *            the matcher
@@ -234,7 +234,7 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Finds all node, starting from root node, whose items are matched by matcher.
+     * Finds all node, starting from rootPolicies node, whose items are matched by matcher.
      * 
      * @param matcher
      *            the matcher
@@ -570,7 +570,7 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Updates root node and all descendants using supplied update policy.
+     * Updates rootPolicies node and all descendants using supplied update policy.
      * 
      * @param updater
      *            the update policy
@@ -582,7 +582,7 @@ public class MarkedTree<T> {
     }
 
     /**
-     * Updates root node and all descendants that are matched by supplied matcher
+     * Updates rootPolicies node and all descendants that are matched by supplied matcher
      * using supplied update policy.
      * 
      * @param matcher
@@ -704,7 +704,7 @@ public class MarkedTree<T> {
 
     // RemoveChildPolicy
     /**
-     * Clears tree of all items except root and enters chained mode.
+     * Clears tree of all items except rootPolicies and enters chained mode.
      */
     public void clear() {
         nodes = new HashMap<Long, Node<T>>();
