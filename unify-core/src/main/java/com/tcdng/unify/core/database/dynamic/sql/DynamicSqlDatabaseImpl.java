@@ -14,17 +14,18 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.sql.dynamic;
+package com.tcdng.unify.core.database.dynamic.sql;
 
-import com.tcdng.unify.core.database.dynamic.DynamicDatabase;
-import com.tcdng.unify.core.database.sql.SqlDatabase;
+import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.annotation.Component;
 
 /**
- * Dynamic SQL database.
+ * Dynamic SQL database implementation.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DynamicSqlDatabase extends SqlDatabase, DynamicDatabase {
+@Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE)
+public class DynamicSqlDatabaseImpl extends AbstractDynamicSqlDatabase {
 
 }
