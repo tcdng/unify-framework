@@ -31,6 +31,8 @@ import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.database.sql.SqlTableInfo;
 import com.tcdng.unify.core.database.sql.SqlTableType;
+import com.tcdng.unify.core.util.LockUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Default implementation of dynamic SQL data source manager.
@@ -40,6 +42,8 @@ import com.tcdng.unify.core.database.sql.SqlTableType;
  */
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
 public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent implements DynamicSqlDataSourceManager {
+
+    private static final String DYNAMICSQLDATASOURCEMNGR_APPLICATION = "app::dynSqlDataSourceMngr";
 
     private FactoryMap<String, DynamicSqlDataSource> dynamicSqlDataSoureMap;
 
@@ -56,7 +60,8 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
     public void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
         String dataSourceConfigName = dynamicSqlDataSourceConfig.getName();
         if (dynamicSqlDataSoureMap.isKey(dataSourceConfigName)) {
-            throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED, dataSourceConfigName);
+            throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED,
+                    dataSourceConfigName);
         }
 
         dynamicSqlDataSoureMap.get(dataSourceConfigName, dynamicSqlDataSourceConfig);
@@ -159,8 +164,13 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
     @Override
     public void createOrUpdateDynamicEntitySchemaObjects(String dataSourceConfigName,
             List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException {
-        // TODO Auto-generated method stub
-        
+        String lockName = getDataSourceLockObject(dataSourceConfigName);
+        beginClusterLock(lockName);
+        try {
+            // TODO
+        } finally {
+            endClusterLock(lockName);
+        }
     }
 
     @Override
@@ -198,6 +208,11 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
     @Override
     protected void onTerminate() throws UnifyException {
         terminateAll();
+    }
+
+    private String getDataSourceLockObject(String dataSourceConfigName) throws UnifyException {
+        return LockUtils
+                .getStringLockObject(StringUtils.dotify(DYNAMICSQLDATASOURCEMNGR_APPLICATION, dataSourceConfigName));
     }
 
     private DynamicSqlDataSource getDynamicSqlDataSource(String dataSourceConfigName) throws UnifyException {
