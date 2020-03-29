@@ -13,23 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+
+package com.tcdng.unify.core.database.sql.dynamic;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 
 /**
- * Default implementation of an SQL data source manager.
+ * Dynamic SQL database implementation.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
-public class SqlDataSourceManagerImpl extends AbstractSqlDataSourceManager {
+@Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE)
+public class DynamicSqlDatabaseImpl extends AbstractDynamicSqlDatabase {
 
-    @Override
-    protected SqlDataSource getSqlDataSource(String dataSourceName) throws UnifyException {
-        return (SqlDataSource) getComponent(dataSourceName);
-    }
 }

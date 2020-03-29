@@ -13,17 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.dynamic.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
 import java.sql.Connection;
 import java.util.List;
 
-import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
+import com.tcdng.unify.core.database.sql.SqlDataSourceManager;
 import com.tcdng.unify.core.database.sql.SqlTableInfo;
 import com.tcdng.unify.core.database.sql.SqlTableType;
 
@@ -33,7 +33,7 @@ import com.tcdng.unify.core.database.sql.SqlTableType;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DynamicSqlDataSourceManager extends UnifyComponent {
+public interface DynamicSqlDataSourceManager extends SqlDataSourceManager {
 
     /**
      * Configures data source using supplied configuration.

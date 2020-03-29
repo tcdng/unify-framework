@@ -13,24 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.dynamic.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicForeignKeyFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamiicEntityUtils;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceManager;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.database.sql.SqlTableInfo;
 import com.tcdng.unify.core.database.sql.SqlTableType;
+import com.tcdng.unify.core.runtime.RuntimeJavaClassManager;
+import com.tcdng.unify.core.runtime.StringJavaClassSource;
 import com.tcdng.unify.core.util.LockUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -41,14 +47,17 @@ import com.tcdng.unify.core.util.StringUtils;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
-public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent implements DynamicSqlDataSourceManager {
+public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManager implements DynamicSqlDataSourceManager {
 
     private static final String DYNAMICSQLDATASOURCEMNGR_APPLICATION = "app::dynSqlDataSourceMngr";
 
-    private FactoryMap<String, DynamicSqlDataSource> dynamicSqlDataSoureMap;
+    @Configurable
+    private RuntimeJavaClassManager runtimeJavaClassManager;
+
+    private FactoryMap<String, DynamicSqlDataSource> dynamicSqlDataSourceMap;
 
     public DynamicSqlDataSourceManagerImpl() {
-        dynamicSqlDataSoureMap = new FactoryMap<String, DynamicSqlDataSource>() {
+        dynamicSqlDataSourceMap = new FactoryMap<String, DynamicSqlDataSource>() {
             @Override
             protected DynamicSqlDataSource create(String key, Object... params) throws Exception {
                 return newDynamicSqlDataSource((DynamicSqlDataSourceConfig) params[0]);
@@ -59,19 +68,19 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
     @Override
     public void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
         String dataSourceConfigName = dynamicSqlDataSourceConfig.getName();
-        if (dynamicSqlDataSoureMap.isKey(dataSourceConfigName)) {
+        if (dynamicSqlDataSourceMap.isKey(dataSourceConfigName)) {
             throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED,
                     dataSourceConfigName);
         }
 
-        dynamicSqlDataSoureMap.get(dataSourceConfigName, dynamicSqlDataSourceConfig);
+        dynamicSqlDataSourceMap.get(dataSourceConfigName, dynamicSqlDataSourceConfig);
     }
 
     @Override
     public boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
         String dataSourceConfigName = dynamicSqlDataSourceConfig.getName();
-        if (dynamicSqlDataSoureMap.isKey(dataSourceConfigName)) {
-            dynamicSqlDataSoureMap.get(dataSourceConfigName).reconfigure(dynamicSqlDataSourceConfig);
+        if (dynamicSqlDataSourceMap.isKey(dataSourceConfigName)) {
+            dynamicSqlDataSourceMap.get(dataSourceConfigName).reconfigure(dynamicSqlDataSourceConfig);
             return true;
         }
 
@@ -123,15 +132,15 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
 
     @Override
     public boolean isConfigured(String dataSourceConfigName) throws UnifyException {
-        if (dynamicSqlDataSoureMap.isKey(dataSourceConfigName)) {
-            return dynamicSqlDataSoureMap.get(dataSourceConfigName).isConfigured();
+        if (dynamicSqlDataSourceMap.isKey(dataSourceConfigName)) {
+            return dynamicSqlDataSourceMap.get(dataSourceConfigName).isConfigured();
         }
         return false;
     }
 
     @Override
     public int getDataSourceCount() throws UnifyException {
-        return dynamicSqlDataSoureMap.size();
+        return dynamicSqlDataSourceMap.size();
     }
 
     @Override
@@ -167,7 +176,12 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
         String lockName = getDataSourceLockObject(dataSourceConfigName);
         beginClusterLock(lockName);
         try {
-            // TODO
+            // Compile classes first
+            for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
+                generateAndCompileJavaClass(dynamicEntityInfo);
+            }
+            
+            // Construct entity information
         } finally {
             endClusterLock(lockName);
         }
@@ -189,15 +203,20 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
         try {
             dynamicSqlDataSource.terminate();
         } finally {
-            dynamicSqlDataSoureMap.remove(dataSourceConfigName);
+            dynamicSqlDataSourceMap.remove(dataSourceConfigName);
         }
     }
 
     @Override
     public void terminateAll() throws UnifyException {
-        for (String dataSourceConfigName : new ArrayList<String>(dynamicSqlDataSoureMap.keySet())) {
+        for (String dataSourceConfigName : new ArrayList<String>(dynamicSqlDataSourceMap.keySet())) {
             terminateConfiguration(dataSourceConfigName);
         }
+    }
+
+    @Override
+    protected SqlDataSource getSqlDataSource(String dataSourceName) throws UnifyException {
+        return getDynamicSqlDataSource(dataSourceName);
     }
 
     @Override
@@ -210,17 +229,37 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractUnifyComponent impl
         terminateAll();
     }
 
+    private void generateAndCompileJavaClass(DynamicEntityInfo dynamicEntityInfo) throws UnifyException {
+        final String className = dynamicEntityInfo.getClassName();
+        final long version = dynamicEntityInfo.getVersion();
+        if (runtimeJavaClassManager.getSavedJavaClassVersion(DYNAMICSQLDATASOURCEMNGR_APPLICATION,
+                className) < version) {
+            // Compile and save parent entities first
+            for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
+                if (dynamicFieldInfo.getFieldType().isForeignKey()) {
+                    generateAndCompileJavaClass(
+                            ((DynamicForeignKeyFieldInfo) dynamicFieldInfo).getParentDynamicEntityInfo());
+                }
+            }
+
+            // Compile and save
+            String src = DynamiicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo);
+            runtimeJavaClassManager.compileAndSaveJavaClass(DYNAMICSQLDATASOURCEMNGR_APPLICATION,
+                    new StringJavaClassSource(className, src, version));
+        }
+    }
+
     private String getDataSourceLockObject(String dataSourceConfigName) throws UnifyException {
         return LockUtils
                 .getStringLockObject(StringUtils.dotify(DYNAMICSQLDATASOURCEMNGR_APPLICATION, dataSourceConfigName));
     }
 
     private DynamicSqlDataSource getDynamicSqlDataSource(String dataSourceConfigName) throws UnifyException {
-        if (!dynamicSqlDataSoureMap.isKey(dataSourceConfigName)) {
+        if (!dynamicSqlDataSourceMap.isKey(dataSourceConfigName)) {
             throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_IS_UNKNOWN, dataSourceConfigName);
         }
 
-        return dynamicSqlDataSoureMap.get(dataSourceConfigName);
+        return dynamicSqlDataSourceMap.get(dataSourceConfigName);
     }
 
     private DynamicSqlDataSource newDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)

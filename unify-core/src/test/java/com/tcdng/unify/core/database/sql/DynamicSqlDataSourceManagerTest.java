@@ -27,8 +27,8 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
-import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceConfig;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceManager;
 
 /**
  * Dynamic SQL data source manager test.

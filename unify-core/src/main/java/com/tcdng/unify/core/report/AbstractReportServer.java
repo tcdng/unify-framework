@@ -28,7 +28,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.DataSource;
-import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.IOUtils;
 

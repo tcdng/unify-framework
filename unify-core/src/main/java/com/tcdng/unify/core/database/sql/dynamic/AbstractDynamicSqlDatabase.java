@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.dynamic.sql;
+package com.tcdng.unify.core.database.sql.dynamic;
 
 import java.util.List;
 

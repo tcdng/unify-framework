@@ -27,7 +27,7 @@ import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.dynamic.DynamicDatabase;
-import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDatabaseManager;
+import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDatabaseManager;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
