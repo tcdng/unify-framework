@@ -38,7 +38,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     private static final String BOOT_DEPLOYMENT_LOCK = "bootdeployment-lock";
     
-    @Configurable
+    @Configurable(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
     private DataSourceManager dataSourceManager;
 
     @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)

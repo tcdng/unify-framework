@@ -458,8 +458,9 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
             Class<? extends Entity> extensionEntityClass, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap)
             throws UnifyException {
-        if (!isExtended()) {
-            // TODO Throw extension
+        if (isExtended()) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_ALREADY_EXTENDED, extensionEntityClass,
+                    entityClass, extensionSqlEntityInfo.getEntityClass());
         }
 
         this.viewName = viewName;

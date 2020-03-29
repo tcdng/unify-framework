@@ -13,23 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.database.DataSourceManager;
 
 /**
- * Default implementation of an SQL data source manager.
+ * SQl data source manager component.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
-public class SqlDataSourceManagerImpl extends AbstractSqlDataSourceManager {
+public interface SqlDataSourceManager extends DataSourceManager {
 
-    @Override
-    protected SqlDataSource getSqlDataSource(String dataSourceName) throws UnifyException {
-        return (SqlDataSource) getComponent(dataSourceName);
-    }
 }
