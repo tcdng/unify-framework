@@ -47,7 +47,8 @@ import com.tcdng.unify.core.util.StringUtils;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER)
-public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManager implements DynamicSqlDataSourceManager {
+public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManager
+        implements DynamicSqlDataSourceManager {
 
     private static final String DYNAMICSQLDATASOURCEMNGR_APPLICATION = "app::dynSqlDataSourceMngr";
 
@@ -177,10 +178,11 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         beginClusterLock(lockName);
         try {
             // Compile classes first
+            List<String> updateEntityClassList = new ArrayList<String>();
             for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
-                generateAndCompileJavaClass(dynamicEntityInfo);
+                generateAndCompileJavaClass(dynamicEntityInfo, updateEntityClassList);
             }
-            
+
             // Construct entity information
         } finally {
             endClusterLock(lockName);
@@ -229,7 +231,8 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         terminateAll();
     }
 
-    private void generateAndCompileJavaClass(DynamicEntityInfo dynamicEntityInfo) throws UnifyException {
+    private void generateAndCompileJavaClass(DynamicEntityInfo dynamicEntityInfo, List<String> updateEntityClassList)
+            throws UnifyException {
         final String className = dynamicEntityInfo.getClassName();
         final long version = dynamicEntityInfo.getVersion();
         if (runtimeJavaClassManager.getSavedJavaClassVersion(DYNAMICSQLDATASOURCEMNGR_APPLICATION,
@@ -238,14 +241,19 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
             for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
                 if (dynamicFieldInfo.getFieldType().isForeignKey()) {
                     generateAndCompileJavaClass(
-                            ((DynamicForeignKeyFieldInfo) dynamicFieldInfo).getParentDynamicEntityInfo());
+                            ((DynamicForeignKeyFieldInfo) dynamicFieldInfo).getParentDynamicEntityInfo(),
+                            updateEntityClassList);
                 }
             }
 
             // Compile and save
             String src = DynamiicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo);
-            runtimeJavaClassManager.compileAndSaveJavaClass(DYNAMICSQLDATASOURCEMNGR_APPLICATION,
-                    new StringJavaClassSource(className, src, version));
+            if (runtimeJavaClassManager.compileAndSaveJavaClass(DYNAMICSQLDATASOURCEMNGR_APPLICATION,
+                    new StringJavaClassSource(className, src, version))) {
+                if (!updateEntityClassList.contains(className)) {
+                    updateEntityClassList.add(className);
+                }
+            }
         }
     }
 
