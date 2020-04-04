@@ -39,6 +39,17 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
     SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException;
 
     /**
+     * Removes the SQL entity information for a entity type from factory.
+     * 
+     * @param entityClass
+     *            the entity class
+     * @return entity information for specified entity type if removed otherwise null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlEntityInfo removeSqlEntityInfo(Class<?> entityClass) throws UnifyException;
+
+    /**
      * Returns the SQL callable information for type.
      * 
      * @param callableClass

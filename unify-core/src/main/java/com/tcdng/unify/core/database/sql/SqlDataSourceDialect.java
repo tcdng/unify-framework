@@ -72,10 +72,22 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param clazz
      *            the entity type
+     * @return the type SQL entity information
      * @throws UnifyException
      *             if an error occurs
      */
     SqlEntityInfo getSqlEntityInfo(Class<?> clazz) throws UnifyException;
+
+    /**
+     * Removes the SQL entity information for an entity.
+     * 
+     * @param clazz
+     *            the entity type
+     * @return the type removed SQL entity information otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlEntityInfo removeSqlEntityInfo(Class<?> clazz) throws UnifyException;
 
     /**
      * Returns the SQL callable information for a callable type.
