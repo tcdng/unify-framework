@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.dynamic.sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,6 +32,7 @@ import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDatabase;
+import com.tcdng.unify.core.database.sql.NameSqlDataSourceSchemaImpl;
 import com.tcdng.unify.core.util.SqlUtils;
 
 /**

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql;
+package com.tcdng.unify.core.database.dynamic.sql;
 
 import java.util.Date;
 
