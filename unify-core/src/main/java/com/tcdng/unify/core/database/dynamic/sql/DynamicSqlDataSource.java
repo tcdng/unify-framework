@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql.dynamic;
+package com.tcdng.unify.core.database.dynamic.sql;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.sql.SqlDataSource;

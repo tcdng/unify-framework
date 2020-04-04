@@ -29,9 +29,9 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
-import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceConfig;
-import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDataSourceManager;
-import com.tcdng.unify.core.database.sql.dynamic.DynamicSqlDatabase;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDatabase;
 import com.tcdng.unify.core.util.SqlUtils;
 
 /**
