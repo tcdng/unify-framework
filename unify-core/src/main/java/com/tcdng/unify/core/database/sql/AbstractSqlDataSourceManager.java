@@ -55,7 +55,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         Connection connection = (Connection) sqlDataSource.getConnection();
         PreparedStatement pstmt = null;
         try {
-            buildSqlEntityFactoryInformation(sqlDataSource);
+            buildSqlEntityFactoryInformation(dataSourceName, sqlDataSource);
             for (SqlStatement sqlStatement : sqlDataSource.getDialect().prepareDataSourceInitStatements()) {
                 pstmt = connection.prepareStatement(sqlStatement.getSql());
                 pstmt.executeUpdate();
@@ -76,12 +76,12 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         try {
             logInfo("Scanning datasource {0} schema...", dataSourceName);
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            for (Class<?> entityClass : getStaticTableEntities(dataSourceName)) {
+            for (Class<?> entityClass : getTableEntities(dataSourceName)) {
                 logDebug("Managing schema elements for table entity type {0}...", entityClass);
                 manageTableEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass, options);
             }
 
-            for (Class<? extends Entity> entityClass : getStaticViewEntities(dataSourceName)) {
+            for (Class<? extends Entity> entityClass : getViewEntities(dataSourceName)) {
                 logDebug("Managing schema elements for view entity type {0}...", entityClass);
                 manageViewEntitySchemaElements(databaseMetaData, sqlDataSource, entityClass, options);
             }
@@ -476,33 +476,22 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         }
     }
 
-    protected void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
-            throws UnifyException {
-        logDebug("Building dependency list for entity type {0}...", entityClass);
-        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
-
-        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
-            if (sqlFieldInfo.isForeignKey()) {
-                SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
-                buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
-            }
-        }
-
-        if (!entityTypeList.contains(entityClass)) {
-            entityTypeList.add(entityClass);
-        }
+    protected List<Class<?>> getTableEntityTypes(String dataSourceName, SqlDataSource sqlDataSource)
+            throws UnifyException{
+        return sqlDataSource.getTableEntityTypes();
     }
-
-    protected void buildSqlEntityFactoryInformation(SqlDataSource sqlDataSource) throws UnifyException {
+    
+    private void buildSqlEntityFactoryInformation(String dataSourceName, SqlDataSource sqlDataSource)
+            throws UnifyException {
+        logDebug("Building SQL information for data source [{0}]...", dataSourceName);
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        for (Class<?> entityClass : sqlDataSource.getStaticTableEntityTypes()) {
-            logDebug("Building SQL information for entity type {0}...", entityClass);
+        for (Class<?> entityClass : getTableEntityTypes(dataSourceName, sqlDataSource)) {
+            logDebug("Building SQL information for entity type [{0}]...", entityClass);
             sqlDataSourceDialect.getSqlEntityInfo(entityClass);
         }
 
-        for (Class<?> entityClass : sqlDataSource.getStaticTableExtensionEntityTypes()) {
-            logDebug("Building SQL information for entity extension type {0}...", entityClass);
+        for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
+            logDebug("Building SQL information for entity extension type [{0}]...", entityClass);
             sqlDataSourceDialect.getSqlEntityInfo(entityClass);
         }
     }
@@ -521,18 +510,37 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         return false;
     }
 
-    private List<Class<?>> getStaticTableEntities(String dataSourceName) throws UnifyException {
-        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
+    private List<Class<?>> getTableEntities(String dataSourceName) throws UnifyException {
+        SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
         List<Class<?>> entityTypeList = new ArrayList<Class<?>>();
-        for (Class<?> entityClass : sqlDataSource.getStaticTableEntityTypes()) {
+        for (Class<?> entityClass : getTableEntityTypes(dataSourceName, sqlDataSource)) {
             buildDependencyList(sqlDataSource, entityTypeList, entityClass);
         }
+
         return entityTypeList;
     }
 
-    private List<Class<? extends Entity>> getStaticViewEntities(String dataSourceName) throws UnifyException {
-        SqlDataSource sqlDataSource = (SqlDataSource) getComponent(dataSourceName);
-        return sqlDataSource.getStaticViewEntityTypes();
+    private List<Class<? extends Entity>> getViewEntities(String dataSourceName) throws UnifyException {
+        SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
+        return sqlDataSource.getViewEntityTypes();
+    }
+
+    private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
+            throws UnifyException {
+        logDebug("Building dependency list for entity type [{0}]...", entityClass);
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+
+        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
+            if (sqlFieldInfo.isForeignKey()) {
+                SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
+                buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
+            }
+        }
+
+        if (!entityTypeList.contains(entityClass)) {
+            entityTypeList.add(entityClass);
+        }
     }
 
     private boolean matchViewColumns(SqlEntityInfo sqlEntityInfo, Set<String> columnNames) {

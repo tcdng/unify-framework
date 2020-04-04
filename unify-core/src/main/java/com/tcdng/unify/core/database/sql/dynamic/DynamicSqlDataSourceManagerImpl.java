@@ -81,6 +81,7 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         dynamicSqlDataSourceMap.get(dataSourceConfigName, dynamicSqlDataSourceConfig);
         DataSourceManagerOptions options = new DataSourceManagerOptions();
         initDataSource(dataSourceConfigName, options);
+        manageDataSource(dataSourceConfigName, options);
     }
 
     @Override
@@ -88,6 +89,9 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         String dataSourceConfigName = dynamicSqlDataSourceConfig.getName();
         if (dynamicSqlDataSourceMap.isKey(dataSourceConfigName)) {
             dynamicSqlDataSourceMap.get(dataSourceConfigName).reconfigure(dynamicSqlDataSourceConfig);
+            DataSourceManagerOptions options = new DataSourceManagerOptions();
+            initDataSource(dataSourceConfigName, options);
+            manageDataSource(dataSourceConfigName, options);
             return true;
         }
 
@@ -187,19 +191,23 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
             // Compile classes first
             Map<String, Class<?>> updateEntityClassList = new LinkedHashMap<String, Class<?>>();
             for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
-                generateAndCompileJavaClass(runtimeClassCategory, dynamicEntityInfo, updateEntityClassList);
+                generateAndCompileNewJavaClass(runtimeClassCategory, dynamicEntityInfo, updateEntityClassList);
             }
 
             // Construct entity information
-            SqlDataSourceDialect sqlDataSourceDialect = getDynamicSqlDataSource(dataSourceConfigName).getDialect();
-            for (Map.Entry<String, Class<?>> entry : updateEntityClassList.entrySet()) {
-                Class<?> oldEntityClass = entry.getValue();
-                if (oldEntityClass != null) {
-                    sqlDataSourceDialect.removeSqlEntityInfo(oldEntityClass);
+            if (!updateEntityClassList.isEmpty()) {
+                SqlDataSourceDialect sqlDataSourceDialect = getDynamicSqlDataSource(dataSourceConfigName).getDialect();
+                for (Map.Entry<String, Class<?>> entry : updateEntityClassList.entrySet()) {
+                    Class<?> oldEntityClass = entry.getValue();
+                    if (oldEntityClass != null) {
+                        sqlDataSourceDialect.removeSqlEntityInfo(oldEntityClass);
+                    }
+
+                    sqlDataSourceDialect.getSqlEntityInfo(
+                            runtimeJavaClassManager.getSavedJavaClass(runtimeClassCategory, entry.getKey()));
                 }
 
-                sqlDataSourceDialect.getSqlEntityInfo(
-                        runtimeJavaClassManager.getSavedJavaClass(runtimeClassCategory, entry.getKey()));
+                manageDataSource(dataSourceConfigName, new DataSourceManagerOptions());
             }
         } finally {
             endClusterLock(lockName);
@@ -239,6 +247,15 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
     }
 
     @Override
+    protected List<Class<?>> getTableEntityTypes(String dataSourceName, SqlDataSource sqlDataSource)
+            throws UnifyException {
+        List<Class<?>> entityTypeList = super.getTableEntityTypes(dataSourceName, sqlDataSource);
+        final String runtimeClassCategory = getDataSourceRuntimeClassCategory(dataSourceName);
+        entityTypeList.addAll(runtimeJavaClassManager.getSavedJavaClasses(runtimeClassCategory));
+        return entityTypeList;
+    }
+
+    @Override
     protected void onInitialize() throws UnifyException {
 
     }
@@ -248,7 +265,7 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         terminateAll();
     }
 
-    private void generateAndCompileJavaClass(String runtimeClassCategory, DynamicEntityInfo dynamicEntityInfo,
+    private void generateAndCompileNewJavaClass(String runtimeClassCategory, DynamicEntityInfo dynamicEntityInfo,
             Map<String, Class<?>> updateEntityClassList) throws UnifyException {
         final String className = dynamicEntityInfo.getClassName();
         final long newVersion = dynamicEntityInfo.getVersion();
@@ -262,7 +279,7 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
             // Compile and save parent entities first
             for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
                 if (dynamicFieldInfo.getFieldType().isForeignKey()) {
-                    generateAndCompileJavaClass(runtimeClassCategory,
+                    generateAndCompileNewJavaClass(runtimeClassCategory,
                             ((DynamicForeignKeyFieldInfo) dynamicFieldInfo).getParentDynamicEntityInfo(),
                             updateEntityClassList);
                 }

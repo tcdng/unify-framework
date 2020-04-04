@@ -19,6 +19,7 @@ package com.tcdng.unify.core.runtime;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -175,6 +176,28 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
      *             if class is not found in group. if an error occurs
      */
     Class<?> getSavedJavaClass(String groupName, String className) throws UnifyException;
+
+    /**
+     * Gets the names of all java classes that belong to a group.
+     * 
+     * @param groupName
+     *            the group name
+     * @return names of saved java classes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> getSavedJavaClassNames(String groupName) throws UnifyException;
+
+    /**
+     * Gets all java classes that belong to a group.
+     * 
+     * @param groupName
+     *            the group name
+     * @return list of saved java classes
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<Class<?>> getSavedJavaClasses(String groupName) throws UnifyException;
 
     /**
      * Gets the version of a saved java class belonging to s group.

@@ -22,6 +22,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
@@ -114,7 +117,7 @@ public class SingleVersionLargeObjectServiceTest extends AbstractUnifyComponentT
         long version = svlos.getBlobVersion("testApp", "category1", "userImg");
         assertEquals(4, version);
     }
-    
+
     @Test
     public void testRetreiveBlobNotExist() throws Exception {
         SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
@@ -162,6 +165,20 @@ public class SingleVersionLargeObjectServiceTest extends AbstractUnifyComponentT
         assertEquals(2, blob.length);
         assertEquals((byte) 0xba, blob[0]);
         assertEquals((byte) 0xbe, blob[1]);
+    }
+
+    @Test
+    public void testRetreiveBlobObjectNames() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        svlos.storeBlob("testApp", "category1", "userImg1", new byte[] { (byte) 0xca, (byte) 0xfe }, 1);
+        svlos.storeBlob("testApp", "category1", "userImg2", new byte[] { (byte) 0xba, (byte) 0xbe }, 1);
+
+        List<String> objectNames = svlos.retrieveBlobObjectNames("testApp", "category1");
+        assertNotNull(objectNames);
+        assertEquals(2, objectNames.size());
+        Collections.sort(objectNames);
+        assertEquals("userImg1", objectNames.get(0));
+        assertEquals("userImg2", objectNames.get(1));
     }
 
     @Test(expected = UnifyException.class)
@@ -255,6 +272,20 @@ public class SingleVersionLargeObjectServiceTest extends AbstractUnifyComponentT
         clob = svlos.retrieveClob("testApp", "category1", "userImg2");
         assertNotNull(clob);
         assertEquals("babe", clob);
+    }
+
+    @Test
+    public void testRetreiveClobObjectNames() throws Exception {
+        SingleVersionLargeObjectService svlos = getSingleVersionLargeObjectService();
+        svlos.storeClob("testApp", "category1", "userImg1", "cafe", 1);
+        svlos.storeClob("testApp", "category1", "userImg2", "babe", 1);
+
+        List<String> objectNames = svlos.retrieveClobObjectNames("testApp", "category1");
+        assertNotNull(objectNames);
+        assertEquals(2, objectNames.size());
+        Collections.sort(objectNames);
+        assertEquals("userImg1", objectNames.get(0));
+        assertEquals("userImg2", objectNames.get(1));
     }
 
     @Test

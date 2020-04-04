@@ -21,12 +21,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.system.entities.SingleVersionBlob;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
@@ -290,6 +294,63 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
         Class<?> clazz2 = rjcm.getSavedJavaClass("languageGrp1", "com.tcdng.unify.core.runtime.NaijaHello");
         assertNotNull(clazz2);
         hello = (Hello) ReflectUtils.newInstance(clazz2);
+        assertEquals("How far?", hello.sayHello());
+    }
+
+    @Test
+    public void testGetSavedJavaClassNames() throws Exception {
+        rjcm.compileAndSaveJavaClass("languageGrp1",
+                new StringJavaClassSource("com.tcdng.unify.core.runtime.EnglishHello", engHelloSrc, 1));
+        rjcm.compileAndSaveJavaClass("languageGrp1",
+                new StringJavaClassSource("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc1, 1));
+        rjcm.compileAndSaveJavaClass("languageGrp2",
+                new StringJavaClassSource("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc2, 1));
+        List<String> classNames = rjcm.getSavedJavaClassNames("languageGrp1");
+        assertNotNull(classNames);
+        assertEquals(2, classNames.size());
+        Collections.sort(classNames);
+        assertEquals("com.tcdng.unify.core.runtime.EnglishHello", classNames.get(0));
+        assertEquals("com.tcdng.unify.core.runtime.NaijaHello", classNames.get(1));
+
+        classNames = rjcm.getSavedJavaClassNames("languageGrp2");
+        assertNotNull(classNames);
+        assertEquals(1, classNames.size());
+        assertEquals("com.tcdng.unify.core.runtime.NaijaHello", classNames.get(0));
+    }
+
+    @Test
+    public void testGetSavedJavaClasses() throws Exception {
+        rjcm.compileAndSaveJavaClass("languageGrp1",
+                new StringJavaClassSource("com.tcdng.unify.core.runtime.EnglishHello", engHelloSrc, 1));
+        rjcm.compileAndSaveJavaClass("languageGrp1",
+                new StringJavaClassSource("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc1, 1));
+        rjcm.compileAndSaveJavaClass("languageGrp2",
+                new StringJavaClassSource("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc2, 1));
+        List<Class<?>> classList = rjcm.getSavedJavaClasses("languageGrp1");
+        assertNotNull(classList);
+        assertEquals(2, classList.size());
+        DataUtils.sortAscending(classList, Class.class, "name");
+
+        Class<?> clazz = classList.get(0);
+        assertNotNull(clazz);
+        assertEquals("com.tcdng.unify.core.runtime.EnglishHello", clazz.getName());
+        Hello hello = (Hello) ReflectUtils.newInstance(clazz);
+        assertEquals("Hello", hello.sayHello());
+
+        clazz = classList.get(1);
+        assertNotNull(clazz);
+        assertEquals("com.tcdng.unify.core.runtime.NaijaHello", clazz.getName());
+        hello = (Hello) ReflectUtils.newInstance(clazz);
+        assertEquals("How now?", hello.sayHello());
+
+        classList = rjcm.getSavedJavaClasses("languageGrp2");
+        assertNotNull(classList);
+        assertEquals(1, classList.size());
+
+        clazz = classList.get(0);
+        assertNotNull(clazz);
+        assertEquals("com.tcdng.unify.core.runtime.NaijaHello", clazz.getName());
+        hello = (Hello) ReflectUtils.newInstance(clazz);
         assertEquals("How far?", hello.sayHello());
     }
 

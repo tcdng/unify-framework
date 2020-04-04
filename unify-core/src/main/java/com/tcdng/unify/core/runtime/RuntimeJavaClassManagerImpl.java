@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.codehaus.janino.SimpleCompiler;
 
@@ -31,6 +34,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.system.SingleVersionLargeObjectService;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.LockUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -142,6 +146,34 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
         }
 
         return null;
+    }
+
+    @Override
+    public List<String> getSavedJavaClassNames(String groupName) throws UnifyException {
+        SingleVersionLargeObjectService svlos = (SingleVersionLargeObjectService) getComponent(
+                ApplicationComponents.APPLICATION_SINGLEVERSIONLOBSERVICE);
+        return svlos.retrieveBlobObjectNames(RUNTIMECLASS_APPLICATION, groupName);
+    }
+
+    @Override
+    public List<Class<?>> getSavedJavaClasses(String groupName) throws UnifyException {
+        SingleVersionLargeObjectService svlos = (SingleVersionLargeObjectService) getComponent(
+                ApplicationComponents.APPLICATION_SINGLEVERSIONLOBSERVICE);
+        List<String> classNames = svlos.retrieveBlobObjectNames(RUNTIMECLASS_APPLICATION, groupName);
+        if (!DataUtils.isBlank(classNames)) {
+            try {
+                List<Class<?>> resultList = new ArrayList<Class<?>>();
+                for (String className : classNames) {
+                    resultList.add(Class.forName(className, true, groupSavedJavaClassLoaders.get(groupName)));
+                }
+
+                return resultList;
+            } catch (ClassNotFoundException e) {
+                throwOperationErrorException(e);
+            }
+        }
+
+        return Collections.emptyList();
     }
 
     @Override

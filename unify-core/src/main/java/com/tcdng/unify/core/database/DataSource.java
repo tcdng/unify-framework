@@ -42,7 +42,7 @@ public interface DataSource extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<?>> getStaticTableEntityTypes() throws UnifyException;
+    List<Class<?>> getTableEntityTypes() throws UnifyException;
 
     /**
      * Returns a list of entity extension types annotated with {@link TableExt} that
@@ -51,7 +51,7 @@ public interface DataSource extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<?>> getStaticTableExtensionEntityTypes() throws UnifyException;
+    List<Class<?>> getTableExtensionEntityTypes() throws UnifyException;
 
     /**
      * Returns a list of entity types annotated with {@link View} that are
@@ -60,7 +60,7 @@ public interface DataSource extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<? extends Entity>> getStaticViewEntityTypes() throws UnifyException;
+    List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException;
 
     /**
      * Returns the data source dialect.

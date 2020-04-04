@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.system;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.business.BusinessService;
 
@@ -61,6 +63,19 @@ public interface SingleVersionLargeObjectService extends BusinessService {
      * @throws UnifyException
      */
     byte[] retrieveBlob(String applicationName, String categoryName, String objectName) throws UnifyException;
+
+    /**
+     * Retrieves binary large object names.
+     * 
+     * @param applicationName
+     *            the application name
+     * @param categoryName
+     *            the category name
+     * @return list of object names
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> retrieveBlobObjectNames(String applicationName, String categoryName) throws UnifyException;
 
     /**
      * Gets the current version of binary large object maintained by service.
@@ -111,6 +126,19 @@ public interface SingleVersionLargeObjectService extends BusinessService {
      * @throws UnifyException
      */
     String retrieveClob(String applicationName, String categoryName, String objectName) throws UnifyException;
+
+    /**
+     * Retrieves character large object names.
+     * 
+     * @param applicationName
+     *            the application name
+     * @param categoryName
+     *            the category name
+     * @return list of object names
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> retrieveClobObjectNames(String applicationName, String categoryName) throws UnifyException;
 
     /**
      * Gets the current version of character large object maintained by service.

@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.system;
 
+import java.util.List;
+
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -89,6 +91,12 @@ public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
     }
 
     @Override
+    public List<String> retrieveBlobObjectNames(String applicationName, String categoryName) throws UnifyException {
+        return db().valueList(String.class, "objectName", new SingleVersionBlobQuery().applicationName(applicationName)
+                .categoryName(categoryName));
+    }
+
+    @Override
     public long getBlobVersion(String applicationName, String categoryName, String objectName) throws UnifyException {
         SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery().applicationName(applicationName)
                 .categoryName(categoryName).objectName(objectName).addSelect("version"));
@@ -145,6 +153,12 @@ public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
         }
 
         return null;
+    }
+
+    @Override
+    public List<String> retrieveClobObjectNames(String applicationName, String categoryName) throws UnifyException {
+        return db().valueList(String.class, "objectName", new SingleVersionClobQuery().applicationName(applicationName)
+                .categoryName(categoryName));
     }
 
     @Override
