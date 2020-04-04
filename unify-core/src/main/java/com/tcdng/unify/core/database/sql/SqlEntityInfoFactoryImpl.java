@@ -1355,6 +1355,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     }
 
     @Override
+    public SqlEntityInfo removeSqlEntityInfo(Class<?> entityClass) throws UnifyException {
+        return sqlEntityInfoMap.remove(entityClass);
+    }
+
+    @Override
     public SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> callableClass) throws UnifyException {
         return sqlCallableInfoMap.get(callableClass);
     }

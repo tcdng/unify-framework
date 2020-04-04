@@ -31,10 +31,6 @@ public class DataSourceManagerOptions {
 
     private ForceConstraints forceConstraints;
 
-    private boolean manageStaticTables;
-
-    private boolean manageStaticViews;
-
     public DataSourceManagerOptions() {
         this(PrintFormat.PRETTY, ForceConstraints.TRUE);
     }
@@ -42,8 +38,6 @@ public class DataSourceManagerOptions {
     public DataSourceManagerOptions(PrintFormat printFormat, ForceConstraints forceConstraints) {
         this.printFormat = printFormat;
         this.forceConstraints = forceConstraints;
-        manageStaticTables = true;
-        manageStaticViews = true;
     }
 
     public PrintFormat getPrintFormat() {
@@ -52,22 +46,6 @@ public class DataSourceManagerOptions {
 
     public ForceConstraints getForceConstraints() {
         return forceConstraints;
-    }
-
-    public boolean isManageStaticTables() {
-        return manageStaticTables;
-    }
-
-    public void setManageStaticTables(boolean manageStaticTables) {
-        this.manageStaticTables = manageStaticTables;
-    }
-
-    public boolean isManageStaticViews() {
-        return manageStaticViews;
-    }
-
-    public void setManageStaticViews(boolean manageStaticViews) {
-        this.manageStaticViews = manageStaticViews;
     }
 
 }

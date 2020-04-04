@@ -24,6 +24,7 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.database.DataSourceManager;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
+import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.VersionUtils;
 
@@ -41,9 +42,6 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     @Configurable(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
     private DataSourceManager dataSourceManager;
 
-    @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
-    private String[] datasources;
-
     private List<StartupShutdownHook> startupShutdownHooks;
 
     @SuppressWarnings("unchecked")
@@ -52,6 +50,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     public void startup() throws UnifyException {
         logInfo("Initializing datasources...");
         DataSourceManagerOptions options = new DataSourceManagerOptions();
+        List<String> datasources = getApplicationDataSources();
         for (String datasource : datasources) {
             dataSourceManager.initDataSource(datasource, options);
         }
@@ -61,7 +60,11 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
             boolean isDataSourcesManaged = false;
             if (deploymentFeature == null) {
                 // Blank database. Manage data sources first time.
-                manageDataSources(options);
+                logInfo("Managing datasources...");
+                for (String datasource : datasources) {
+                    dataSourceManager.manageDataSource(datasource, options);
+                }
+
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
                 isDataSourcesManaged = true;
             }
@@ -77,7 +80,10 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                     // If not already managed, manage data sources if not production mode or if
                     // deploying new version
                     if (!isProductionMode() || isDeployNewVersion) {
-                        manageDataSources(options);
+                        logInfo("Managing datasources...");
+                        for (String datasource : datasources) {
+                            dataSourceManager.manageDataSource(datasource, options);
+                        }
                     }
                 }
 
@@ -154,13 +160,12 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     protected abstract void onShutdown() throws UnifyException;
 
-    private void manageDataSources(DataSourceManagerOptions options) throws UnifyException {
-        logInfo("Managing datasources...");
-        for (String datasource : datasources) {
-            dataSourceManager.manageDataSource(datasource, options);
-        }
+    private List<String> getApplicationDataSources() throws UnifyException {
+        List<String> appDataSourceNames = getComponentNames(SqlDataSource.class);
+        appDataSourceNames.remove(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        return appDataSourceNames;
     }
-
+    
     private Feature getFeature(String code, String defaultVal) throws UnifyException {
         try {
             grabClusterMasterLock(); // Check integrity of cluster lock table

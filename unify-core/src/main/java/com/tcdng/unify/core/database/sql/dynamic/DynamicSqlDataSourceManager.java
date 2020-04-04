@@ -50,6 +50,7 @@ public interface DynamicSqlDataSourceManager extends SqlDataSourceManager {
      * 
      * @param dynamicSqlDataSourceConfig
      *            the configuration to use
+     * @return true if data source is existing and is reconfigured
      * @throws UnifyException
      *             if an error occurs
      */
@@ -152,8 +153,8 @@ public interface DynamicSqlDataSourceManager extends SqlDataSourceManager {
      * @throws UnifyException
      *             if an error occurs
      */
-    void createOrUpdateDynamicEntitySchemaObjects(String dataSourceConfigName, List<DynamicEntityInfo> dynamicEntityInfoList)
-            throws UnifyException;
+    void createOrUpdateDynamicEntitySchemaObjects(String dataSourceConfigName,
+            List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException;
 
     /**
      * Gets a connection object from configured data source connection pool.

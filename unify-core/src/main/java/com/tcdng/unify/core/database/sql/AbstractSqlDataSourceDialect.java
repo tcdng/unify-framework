@@ -811,6 +811,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
+    public SqlEntityInfo removeSqlEntityInfo(Class<?> clazz) throws UnifyException {
+        return sqlEntityInfoFactory.removeSqlEntityInfo(clazz);
+    }
+
+    @Override
     public SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> clazz) throws UnifyException {
         return sqlEntityInfoFactory.getSqlCallableInfo(clazz);
     }
