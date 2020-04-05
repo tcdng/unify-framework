@@ -31,6 +31,8 @@ public class DynamicSqlDataSourceConfig {
 
     private String connectionUrl;
 
+    private String dbSchema;
+    
     private String dbUsername;
 
     private String dbPassword;
@@ -40,12 +42,13 @@ public class DynamicSqlDataSourceConfig {
     private boolean shutdownOnTerminate;
 
     public DynamicSqlDataSourceConfig(String name, String dialect, String driver, String connectionUrl,
-            String dbUsername, String dbPassword, int maxConnection,
+            String dbSchema, String dbUsername, String dbPassword, int maxConnection,
             boolean shutdownOnTerminate) {
         this.name = name;
         this.dialect = dialect;
         this.driver = driver;
         this.connectionUrl = connectionUrl;
+        this.dbSchema = dbSchema;
         this.dbUsername = dbUsername;
         this.dbPassword = dbPassword;
         this.maxConnection = maxConnection;
@@ -66,6 +69,10 @@ public class DynamicSqlDataSourceConfig {
 
     public String getConnectionUrl() {
         return connectionUrl;
+    }
+
+    public String getDbSchema() {
+        return dbSchema;
     }
 
     public String getDbUsername() {

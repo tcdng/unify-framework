@@ -74,6 +74,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String getDefaultSchema() {
+        return "public";
+    }
+
+    @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT 1";
     }

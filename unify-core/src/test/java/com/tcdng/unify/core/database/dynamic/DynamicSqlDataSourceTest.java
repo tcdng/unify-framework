@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.dynamic.sql;
+package com.tcdng.unify.core.database.dynamic;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -114,7 +114,7 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
     }
 
     private DynamicSqlDataSourceConfig getConfig(int schemaIndex) {
-        return new DynamicSqlDataSourceConfig("test-config.PUBLIC", "hsqldb-dialect", "org.hsqldb.jdbcDriver",
-                "jdbc:hsqldb:mem:dyntest" + schemaIndex, null, null, 2, true);
+        return new DynamicSqlDataSourceConfig("test-config", "hsqldb-dialect", "org.hsqldb.jdbcDriver",
+                "jdbc:hsqldb:mem:dyntest" + schemaIndex, null, null, null, 2, true);
     }
 }

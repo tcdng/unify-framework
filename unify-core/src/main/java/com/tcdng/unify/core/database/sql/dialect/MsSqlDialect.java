@@ -79,6 +79,11 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String getDefaultSchema() {
+        return "dbo";
+    }
+
+    @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT CURRENT_TIMESTAMP";
     }

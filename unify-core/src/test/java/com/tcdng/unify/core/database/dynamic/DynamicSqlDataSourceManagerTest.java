@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.dynamic.sql;
+package com.tcdng.unify.core.database.dynamic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -31,7 +32,10 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.system.entities.SingleVersionBlob;
+import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
  * Dynamic SQL data source manager test.
@@ -41,7 +45,7 @@ import com.tcdng.unify.core.system.entities.SingleVersionBlob;
  */
 public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest {
 
-    private static final String TEST_CONFIG = "test-config.PUBLIC";
+    private static final String TEST_CONFIG = "test-config";
 
     private DynamicSqlDataSourceManager dsm;
 
@@ -135,6 +139,55 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
                         .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
                         .build();
         dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, Arrays.asList(dynamicEntityInfo));
+        Class<?> entityClass1 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
+        assertNotNull(entityClass1);
+        Class<?> entityClass2 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
+        assertNotNull(entityClass2);
+        assertTrue(entityClass1 == entityClass2);
+    }
+
+    @Test
+    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsSingleSimpleEntityNewSchema() throws Exception {
+        dsm.configure(getConfig());
+        DynamicEntityInfo dynamicEntityInfo =
+                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
+                        .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
+                        .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
+                        .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
+                        .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, false)
+                        .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
+                        .build();
+        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, Arrays.asList(dynamicEntityInfo));
+        Class<?> entityClass1 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
+        assertNotNull(entityClass1);
+        List<String> beanFieldList = ReflectUtils.getBeanCompliantFieldNames(entityClass1);
+        assertTrue(beanFieldList.contains("name"));
+        assertTrue(beanFieldList.contains("serialNo"));
+        assertTrue(beanFieldList.contains("price"));
+        assertTrue(beanFieldList.contains("expiryDt"));
+        assertTrue(beanFieldList.contains("createDt"));
+        assertFalse(beanFieldList.contains("active"));
+        
+        dynamicEntityInfo =
+                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(2L)
+                        .addField(DataType.STRING, "EQUIPMENT_NM", "name", 64, 0, 0, false)
+                        .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
+                        .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
+                        .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
+                        .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
+                        .addField(DataType.BOOLEAN, "ACTIVE_FG", "active", 0, 0, 0, false)
+                        .build();
+        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, Arrays.asList(dynamicEntityInfo));        
+        Class<?> entityClass2 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
+        assertNotNull(entityClass2);
+        assertFalse(entityClass1 == entityClass2);
+        beanFieldList = ReflectUtils.getBeanCompliantFieldNames(entityClass2);
+        assertTrue(beanFieldList.contains("name"));
+        assertTrue(beanFieldList.contains("serialNo"));
+        assertTrue(beanFieldList.contains("price"));
+        assertTrue(beanFieldList.contains("expiryDt"));
+        assertTrue(beanFieldList.contains("createDt"));
+        assertTrue(beanFieldList.contains("active"));
     }
 
     @Override
@@ -151,7 +204,7 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
 
     private DynamicSqlDataSourceConfig getConfig() {
         return new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect", "org.hsqldb.jdbcDriver",
-                "jdbc:hsqldb:mem:dyntest", null, null, 2, true);
+                "jdbc:hsqldb:mem:dyntest", null, null, null, 2, true);
     }
 
 }

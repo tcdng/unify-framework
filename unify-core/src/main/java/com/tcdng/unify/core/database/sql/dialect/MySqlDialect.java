@@ -70,6 +70,11 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String getDefaultSchema() {
+        return null;
+    }
+
+    @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT 1";
     }

@@ -38,6 +38,13 @@ import com.tcdng.unify.core.database.Query;
 public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 
     /**
+     * Gets the data source dialect default schema.
+     * 
+     * @return the default schema
+     */
+    String getDefaultSchema();
+
+    /**
      * Returns the SQL policy for a data type.
      * 
      * @param clazz

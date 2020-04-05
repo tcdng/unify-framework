@@ -290,7 +290,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
         dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig(MockService.CREDITCHECK_DATASOURCECONFIG,
-                "hsqldb-dialect", "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, 2, true));
+                "hsqldb-dialect", "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, null, 2, true));
         Connection connection = dynamicSqlDataSourceManager.getConnection(MockService.CREDITCHECK_DATASOURCECONFIG);
         Statement stmt = null;
         try {

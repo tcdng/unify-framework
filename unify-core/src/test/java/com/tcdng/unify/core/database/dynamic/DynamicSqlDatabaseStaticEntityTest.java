@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.dynamic.sql;
+package com.tcdng.unify.core.database.dynamic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -41,7 +41,7 @@ import com.tcdng.unify.core.util.SqlUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
+public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTest {
 
     private static final String TEST_CONFIG = "test-datasource.PUBLIC";
 
@@ -160,7 +160,7 @@ public class DynamicSqlDatabaseTest extends AbstractUnifyComponentTest {
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
         dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect",
-                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, 2, true));
+                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, null, 2, true));
         Connection connection = dynamicSqlDataSourceManager.getConnection(TEST_CONFIG);
         Statement stmt = null;
         try {

@@ -1380,6 +1380,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             if (ucc != null) {
                 schema = (String) ucc.getSettings().getSettingValue("appSchema");
             }
+            
+            if (StringUtils.isBlank(schema)) {
+                schema = sqlDataSourceDialect.getDefaultSchema();
+            }
         }
 
         return schema;

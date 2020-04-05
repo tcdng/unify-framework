@@ -75,6 +75,11 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String getDefaultSchema() {
+        return "PUBLIC";
+    }
+
+    @Override
     public String generateTestSql() throws UnifyException {
         return "VALUES CURRENT_TIMESTAMP";
     }

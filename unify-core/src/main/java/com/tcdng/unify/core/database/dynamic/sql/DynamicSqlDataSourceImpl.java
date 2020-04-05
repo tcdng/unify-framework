@@ -72,6 +72,7 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
         setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
         setDriver(dataSourceConfig.getDriver());
         setConnectionUrl(dataSourceConfig.getConnectionUrl());
+        setAppSchema(dataSourceConfig.getDbSchema());
         setUsername(dataSourceConfig.getDbUsername());
         setPassword(dataSourceConfig.getDbPassword());
         setMaxConnections(dataSourceConfig.getMaxConnection());
