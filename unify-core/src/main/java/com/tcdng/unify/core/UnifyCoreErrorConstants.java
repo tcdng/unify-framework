@@ -976,4 +976,7 @@ public interface UnifyCoreErrorConstants {
     
     /** Invalid large object version specified. Application {0}, category {1}, object = {2}, version {3}*/
     String INVALID_LARGEOBJECT_VERSION = "UC_00FA";
+    
+    /** SQL entity information not found for type {0}.*/
+    String SQLENTITYINFOFACTORY_ENTITYINFO_NOT_FOUND = "UC_00FB";
 }

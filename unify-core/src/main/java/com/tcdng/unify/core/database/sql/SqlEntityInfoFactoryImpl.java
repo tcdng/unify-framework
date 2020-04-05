@@ -218,7 +218,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     viewName = tableName;
                 }
 
-                String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()), ta.datasource());
+                final String schema =
+                        getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()), ta.datasource());
                 String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
 
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
@@ -1350,7 +1351,29 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     }
 
     @Override
-    public SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException {
+    public SqlEntityInfo findSqlEntityInfo(Class<?> entityClass) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = sqlEntityInfoMap.find(entityClass);
+        if (sqlEntityInfo == null) {
+            if (entityClass.isAnnotationPresent(Table.class)) {
+                if (entityClass.getAnnotation(Table.class).adhoc()) {
+                    return sqlEntityInfoMap.get(entityClass);
+                }
+            }
+
+            if (entityClass.isAnnotationPresent(TableExt.class)) {
+                if (entityClass.getAnnotation(TableExt.class).adhoc()) {
+                    return sqlEntityInfoMap.get(entityClass);
+                }
+            }
+
+            throw new UnifyException(UnifyCoreErrorConstants.SQLENTITYINFOFACTORY_ENTITYINFO_NOT_FOUND, entityClass);
+        }
+
+        return sqlEntityInfo;
+    }
+
+    @Override
+    public SqlEntityInfo createSqlEntityInfo(Class<?> entityClass) throws UnifyException {
         return sqlEntityInfoMap.get(entityClass);
     }
 
@@ -1379,10 +1402,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             UnifyComponentConfig ucc = getComponentConfig(NameSqlDataSourceSchema.class, dataSource);
             if (ucc != null) {
                 schema = (String) ucc.getSettings().getSettingValue("appSchema");
-            }
-            
-            if (StringUtils.isBlank(schema)) {
-                schema = sqlDataSourceDialect.getDefaultSchema();
             }
         }
 
