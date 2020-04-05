@@ -32,7 +32,6 @@ import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicForeignKeyFieldInfo;
-import com.tcdng.unify.core.database.dynamic.DynamiicEntityUtils;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceManager;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
@@ -41,6 +40,7 @@ import com.tcdng.unify.core.database.sql.SqlTableInfo;
 import com.tcdng.unify.core.database.sql.SqlTableType;
 import com.tcdng.unify.core.runtime.RuntimeJavaClassManager;
 import com.tcdng.unify.core.runtime.StringJavaClassSource;
+import com.tcdng.unify.core.util.DynamicEntityUtils;
 import com.tcdng.unify.core.util.LockUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -182,8 +182,16 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
     }
 
     @Override
-    public void createOrUpdateDynamicEntitySchemaObjects(String dataSourceConfigName,
+    public Class<?> getDataSourceDynamicEntityClass(String dataSourceConfigName, String className)
+            throws UnifyException {
+        final String runtimeClassCategory = getDataSourceRuntimeClassCategory(dataSourceConfigName);
+        return runtimeJavaClassManager.getSavedJavaClass(runtimeClassCategory, className);
+    }
+
+    @Override
+    public void createOrUpdateDataSourceDynamicEntitySchemaObjects(String dataSourceConfigName,
             List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException {
+        SqlDataSourceDialect sqlDataSourceDialect = getDynamicSqlDataSource(dataSourceConfigName).getDialect();
         final String runtimeClassCategory = getDataSourceRuntimeClassCategory(dataSourceConfigName);
         String lockName = getDataSourceLockObject(runtimeClassCategory);
         beginClusterLock(lockName);
@@ -196,7 +204,6 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
 
             // Construct entity information
             if (!updateEntityClassList.isEmpty()) {
-                SqlDataSourceDialect sqlDataSourceDialect = getDynamicSqlDataSource(dataSourceConfigName).getDialect();
                 for (Map.Entry<String, Class<?>> entry : updateEntityClassList.entrySet()) {
                     Class<?> oldEntityClass = entry.getValue();
                     if (oldEntityClass != null) {
@@ -286,7 +293,7 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
             }
 
             // Compile and save
-            String src = DynamiicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo);
+            String src = DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo);
             if (runtimeJavaClassManager.compileAndSaveJavaClass(runtimeClassCategory,
                     new StringJavaClassSource(className, src, newVersion))) {
                 if (!updateEntityClassList.containsKey(className)) {

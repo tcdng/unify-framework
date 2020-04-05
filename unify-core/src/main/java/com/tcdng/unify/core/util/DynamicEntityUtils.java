@@ -14,17 +14,24 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.dynamic;
+package com.tcdng.unify.core.util;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.tcdng.unify.core.annotation.Column;
+import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
+import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.database.dynamic.DynamicColumnFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicForeignKeyFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicListOnlyFieldInfo;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
-import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.core.util.TypeInfo;
 
 /**
  * Dynamic entity utilities.
@@ -32,9 +39,9 @@ import com.tcdng.unify.core.util.TypeInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public final class DynamiicEntityUtils {
+public final class DynamicEntityUtils {
 
-    private DynamiicEntityUtils() {
+    private DynamicEntityUtils() {
 
     }
 
@@ -47,17 +54,24 @@ public final class DynamiicEntityUtils {
         boolean importListOnly = false;
         boolean importDate = false;
         boolean importBigDecimal = false;
+        boolean importColumnType = false;
 
         // Evaluate fields
+        Set<String> fieldNames = new HashSet<String>();
         for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
+            fieldNames.add(dynamicFieldInfo.getFieldName());
             if (dynamicFieldInfo.getFieldType().isForeignKey()) {
-                DynamiicEntityUtils.generateForeignKeyAnnotation(fsb, (DynamicForeignKeyFieldInfo) dynamicFieldInfo);
+                DynamicEntityUtils.generateForeignKeyAnnotation(fsb, (DynamicForeignKeyFieldInfo) dynamicFieldInfo);
                 importFk = true;
             } else if (dynamicFieldInfo.getFieldType().isTableColumn()) {
-                DynamiicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
+                DynamicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
+                if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
+                    importColumnType = true;
+                }
+                
                 importColumn = true;
             } else {
-                DynamiicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
+                DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
                 importListOnly = true;
             }
 
@@ -103,11 +117,21 @@ public final class DynamiicEntityUtils {
             esb.append("import ").append(ListOnly.class.getCanonicalName()).append(";\n");
         }
 
+        if (importColumnType) {
+            esb.append("import ").append(ColumnType.class.getCanonicalName()).append(";\n");
+        }
+        
+        esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
         esb.append("import ").append(sequencedEntityInfo.getCanonicalName()).append(";\n");
 
+        esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
         esb.append("public class ").append(typeInfo.getSimpleName()).append(" extends ")
                 .append(sequencedEntityInfo.getSimpleName()).append(" {\n");
         esb.append(fsb);
+        if(!fieldNames.contains("description")) {
+            esb.append(" public String getDescription(){return null;}\n");
+        }
+        
         esb.append(msb);
         esb.append("}\n");
         return esb.toString();
@@ -131,66 +155,71 @@ public final class DynamiicEntityUtils {
     private static void generateColumnAnnotation(StringBuilder fsb, DynamicColumnFieldInfo dynamicColumnFieldInfo) {
         fsb.append(" @Column(");
         boolean appendSym = false;
+        if (!DataUtils.isMappedColumnType(dynamicColumnFieldInfo.getDataType().columnType())) {
+            fsb.append("type = ColumnType.").append(dynamicColumnFieldInfo.getDataType().columnType());
+            appendSym = true;
+        }
+
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getColumnName())) {
             if (appendSym) {
-                fsb.append(",");
+                fsb.append(", ");
             }
 
-            fsb.append(" name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
+            fsb.append("name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
             appendSym = true;
         }
 
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getTransformer())) {
             if (appendSym) {
-                fsb.append(",");
+                fsb.append(", ");
             }
 
-            fsb.append(" transformer = \"").append(dynamicColumnFieldInfo.getTransformer()).append("\"");
+            fsb.append("transformer = \"").append(dynamicColumnFieldInfo.getTransformer()).append("\"");
             appendSym = true;
         }
 
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getDefaultVal())) {
             if (appendSym) {
-                fsb.append(",");
+                fsb.append(", ");
             }
 
-            fsb.append(" defaultVal = \"").append(dynamicColumnFieldInfo.getDefaultVal()).append("\"");
+            fsb.append("defaultVal = \"").append(dynamicColumnFieldInfo.getDefaultVal()).append("\"");
             appendSym = true;
         }
 
         if (dynamicColumnFieldInfo.getLength() > 0) {
             if (appendSym) {
-                fsb.append(",");
+                fsb.append(", ");
             }
 
-            fsb.append(" length = ").append(dynamicColumnFieldInfo.getLength());
+            fsb.append("length = ").append(dynamicColumnFieldInfo.getLength());
             appendSym = true;
         }
 
         if (dynamicColumnFieldInfo.getPrecision() > 0) {
             if (appendSym) {
-                fsb.append(",");
+                fsb.append(", ");
             }
 
-            fsb.append(" precision = ").append(dynamicColumnFieldInfo.getPrecision());
+            fsb.append("precision = ").append(dynamicColumnFieldInfo.getPrecision());
             appendSym = true;
         }
 
         if (dynamicColumnFieldInfo.getScale() > 0) {
             if (appendSym) {
-                fsb.append(",");
+                fsb.append(", ");
             }
 
-            fsb.append(" scale = ").append(dynamicColumnFieldInfo.getScale());
+            fsb.append("scale = ").append(dynamicColumnFieldInfo.getScale());
             appendSym = true;
         }
 
         if (dynamicColumnFieldInfo.isNullable()) {
             if (appendSym) {
-                fsb.append(",");
+                fsb.append(", ");
             }
 
-            fsb.append(" nullable = true");
+            fsb.append("nullable = true");
             appendSym = true;
         }
 

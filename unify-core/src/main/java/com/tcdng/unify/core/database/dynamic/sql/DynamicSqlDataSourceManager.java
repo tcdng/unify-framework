@@ -144,6 +144,20 @@ public interface DynamicSqlDataSourceManager extends SqlDataSourceManager {
     SqlDataSource getDataSource(String dataSourceConfigName) throws UnifyException;
 
     /**
+     * Gets a data source dynamic entity java class.
+     * 
+     * @param dataSourceConfigName
+     *            the data source configuration name
+     * @param className
+     *            the entity class name
+     * @return the entity class name
+     * @throws UnifyException
+     *             if data source configuration is unknown. if entity type with
+     *             class name is unknown. if an error occurs
+     */
+    Class<?> getDataSourceDynamicEntityClass(String dataSourceConfigName, String className) throws UnifyException;
+
+    /**
      * Creates of updates dynamic entity schema objects for dynamic data source.
      * 
      * @param dataSourceConfigName
@@ -151,9 +165,9 @@ public interface DynamicSqlDataSourceManager extends SqlDataSourceManager {
      * @param dynamicEntityInfoList
      *            the new dynamic entity structure list
      * @throws UnifyException
-     *             if an error occurs
+     *             if data source is unknown. if an error occurs
      */
-    void createOrUpdateDynamicEntitySchemaObjects(String dataSourceConfigName,
+    void createOrUpdateDataSourceDynamicEntitySchemaObjects(String dataSourceConfigName,
             List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException;
 
     /**

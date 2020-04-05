@@ -128,7 +128,7 @@ public final class ReflectUtils {
                 Method[] methods = beanClass.getMethods();
                 Set<String> fieldNames = declaredFieldMap.get(beanClass).keySet();
                 for (Method method : methods) {
-                    if (method.isBridge()) {
+                    if (method.isBridge() || method.isSynthetic()) {
                         continue;
                     }
 

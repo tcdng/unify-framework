@@ -518,6 +518,25 @@ public final class DataUtils {
     }
 
     /**
+     * Checks if supplied column type is mapped to a Java class.
+     * 
+     * @param type
+     *            the column type to check
+     * @return true if mapped otherwise false
+     */
+    public static boolean isMappedColumnType(ColumnType type) {
+        if (ColumnType.ENUMCONST.equals(type)) {
+            return true;
+        }
+
+        if (classToColumnMap.containsValue(type)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the column type equivalence of supplied data type.
      * 
      * @param className
@@ -942,8 +961,7 @@ public final class DataUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static <T> void sortAscending(List<?> list, Class<T> beanClass, String property)
-            throws UnifyException {
+    public static <T> void sortAscending(List<?> list, Class<T> beanClass, String property) throws UnifyException {
         DataUtils.sort(list, beanClass, property, true);
     }
 
@@ -959,9 +977,8 @@ public final class DataUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static <T> void sortDescending(List<?> list, Class<T> beanClass, String property)
-            throws UnifyException {
-       DataUtils.sort(list, beanClass, property, false);
+    public static <T> void sortDescending(List<?> list, Class<T> beanClass, String property) throws UnifyException {
+        DataUtils.sort(list, beanClass, property, false);
     }
 
     /**
@@ -1341,8 +1358,7 @@ public final class DataUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static void writeJsonObject(Object object, Writer writer, PrintFormat printFormat)
-            throws UnifyException {
+    public static void writeJsonObject(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
         try {
             JsonObject jsonObject = Json.object();
             DataUtils.writeJsonObject(object, jsonObject, printFormat);

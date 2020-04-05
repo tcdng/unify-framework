@@ -21,14 +21,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
-import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.constant.DataType;
+import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.system.entities.SingleVersionBlob;
 
 /**
  * Dynamic SQL data source manager test.
@@ -40,109 +43,110 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
 
     private static final String TEST_CONFIG = "test-config.PUBLIC";
 
+    private DynamicSqlDataSourceManager dsm;
+
     @Test
     public void testConfigureDataSource() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        DynamicSqlDataSourceConfig dsConfig = getConfig();
-        dm.configure(dsConfig);
+        dsm.configure(getConfig());
     }
 
     @Test(expected = UnifyException.class)
     public void testConfigureSameDataSourceMultiple() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
         DynamicSqlDataSourceConfig dsConfig = getConfig();
-        dm.configure(dsConfig);
-        dm.configure(dsConfig);
+        dsm.configure(dsConfig);
+        dsm.configure(dsConfig);
     }
 
     @Test
     public void testIsDataSourceConfigured() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        DynamicSqlDataSourceConfig dsConfig = getConfig();
-        dm.configure(dsConfig);
-        assertTrue(dm.isConfigured(TEST_CONFIG));
+        dsm.configure(getConfig());
+        assertTrue(dsm.isConfigured(TEST_CONFIG));
     }
 
     @Test
     public void testReconfigureDataSource() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
         DynamicSqlDataSourceConfig dsConfig = getConfig();
-        dm.configure(dsConfig);
-        assertTrue(dm.reconfigure(dsConfig));
+        dsm.configure(dsConfig);
+        assertTrue(dsm.reconfigure(dsConfig));
     }
 
     @Test
     public void testReconfigureNonManagedDataSource() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        DynamicSqlDataSourceConfig dsConfig = getConfig();
-        assertFalse(dm.reconfigure(dsConfig));
+        assertFalse(dsm.reconfigure(getConfig()));
     }
 
     @Test
     public void testGetDataSourceCount() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        assertEquals(0, dm.getDataSourceCount());
+        assertEquals(0, dsm.getDataSourceCount());
 
-        DynamicSqlDataSourceConfig dsConfig = getConfig();
-        dm.configure(dsConfig);
-        assertEquals(1, dm.getDataSourceCount());
+        dsm.configure(getConfig());
+        assertEquals(1, dsm.getDataSourceCount());
     }
 
     @Test
     public void testTestDataSourceConfiguration() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        DynamicSqlDataSourceConfig dsConfig = getConfig();
-        assertTrue(dm.testConfiguration(dsConfig));
-        assertEquals(0, dm.getDataSourceCount());
+        assertTrue(dsm.testConfiguration(getConfig()));
+        assertEquals(0, dsm.getDataSourceCount());
     }
 
     @Test
     public void testGetAndRestoreConnection() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        DynamicSqlDataSourceConfig dsConfig = getConfig();
-        dm.configure(dsConfig);
+        dsm.configure(getConfig());
 
-        Connection connection = dm.getConnection(TEST_CONFIG);
+        Connection connection = dsm.getConnection(TEST_CONFIG);
         assertNotNull(connection);
-        assertTrue(dm.restoreConnection(TEST_CONFIG, connection));
+        assertTrue(dsm.restoreConnection(TEST_CONFIG, connection));
     }
 
     @Test
     public void testTerminateConfiguration() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        DynamicSqlDataSourceConfig dsConfig = getConfig();
-        dm.configure(dsConfig);
-        assertEquals(1, dm.getDataSourceCount());
+        dsm.configure(getConfig());
+        assertEquals(1, dsm.getDataSourceCount());
 
-        dm.terminateConfiguration(TEST_CONFIG);
-        assertEquals(0, dm.getDataSourceCount());
+        dsm.terminateConfiguration(TEST_CONFIG);
+        assertEquals(0, dsm.getDataSourceCount());
     }
 
     @Test(expected = UnifyException.class)
     public void testTerminateUnknownConfiguration() throws Exception {
-        DynamicSqlDataSourceManager dm = (DynamicSqlDataSourceManager) getComponent(
-                ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        dm.terminateConfiguration(TEST_CONFIG);
+        dsm.terminateConfiguration(TEST_CONFIG);
+    }
+
+    @Test(expected = UnifyException.class)
+    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsUnknownConfig() throws Exception {
+        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects("someConfig", new ArrayList<DynamicEntityInfo>());
+    }
+
+    @Test
+    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsEmptyList() throws Exception {
+        dsm.configure(getConfig());
+        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, new ArrayList<DynamicEntityInfo>());
+    }
+
+    @Test
+    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsSingleSimpleEntity() throws Exception {
+        dsm.configure(getConfig());
+        DynamicEntityInfo dynamicEntityInfo =
+                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
+                        .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
+                        .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
+                        .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
+                        .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, false)
+                        .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
+                        .build();
+        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, Arrays.asList(dynamicEntityInfo));
     }
 
     @Override
     protected void onSetup() throws Exception {
-
+        dsm = (DynamicSqlDataSourceManager) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onTearDown() throws Exception {
-        ((DynamicSqlDataSourceManager) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER))
-                .terminateAll();
+        dsm.terminateAll();
+        deleteAll(SingleVersionBlob.class);
     }
 
     private DynamicSqlDataSourceConfig getConfig() {
