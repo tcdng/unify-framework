@@ -107,7 +107,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
     protected void manageTableEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
             Class<?> entityClass, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
         final PrintFormat printFormat = options.getPrintFormat();
         final ForceConstraints forceConstraints = options.getForceConstraints();
 
@@ -117,15 +117,19 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         try {
             connection = databaseMetaData.getConnection();
             // Manage entity table
-            String appSchema = sqlDataSource.getAppSchema();
+            String schema = sqlEntityInfo.getSchema();
+            if (StringUtils.isBlank(schema)) {
+                schema = sqlDataSource.getAppSchema();
+            }
+            
             List<String> tableUpdateSql = new ArrayList<String>();
-            rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getTableName(), null);
+            rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getTableName(), null);
             if (rs.next()) {
                 // Table exists. Check for updates
                 String tableType = rs.getString("TABLE_TYPE");
                 if ("TABLE".equalsIgnoreCase(tableType)) {
                     Map<String, SqlColumnInfo> columnMap =
-                            sqlDataSource.getColumnMap(appSchema, sqlEntityInfo.getTableName());
+                            sqlDataSource.getColumnMap(schema, sqlEntityInfo.getTableName());
                     List<String> columnUpdateSql =
                             detectColumnUpdates(sqlDataSourceDialect, sqlEntityInfo, columnMap, printFormat);
                     tableUpdateSql.addAll(columnUpdateSql);
@@ -138,7 +142,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 
                 Map<String, TableConstraint> managedTableConstraints = new HashMap<String, TableConstraint>();
                 // Fetch foreign keys
-                rs = databaseMetaData.getImportedKeys(null, appSchema, sqlEntityInfo.getTableName());
+                rs = databaseMetaData.getImportedKeys(null, schema, sqlEntityInfo.getTableName());
                 while (rs.next()) {
                     String fkName = SqlUtils.resolveConstraintName(rs.getString("FK_NAME"),
                             sqlDataSourceDialect.isAllObjectsInLowerCase());
@@ -158,7 +162,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 
                 SqlUtils.close(rs);
                 // Fetch indexes
-                rs = databaseMetaData.getIndexInfo(null, appSchema, sqlEntityInfo.getTableName(), false, false);
+                rs = databaseMetaData.getIndexInfo(null, schema, sqlEntityInfo.getTableName(), false, false);
                 while (rs.next()) {
                     String idxName = SqlUtils.resolveConstraintName(rs.getString("INDEX_NAME"),
                             sqlDataSourceDialect.isAllObjectsInLowerCase());
@@ -308,7 +312,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
             List<String> viewUpdateSQL = new ArrayList<String>();
             if (sqlEntityInfo.isViewable()) {
                 boolean isDropView = false;
-                rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getViewName(), null);
+                rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getViewName(), null);
                 if (rs.next()) {
                     isDropView = isTableNewOrAltered;
                     String tableType = rs.getString("TABLE_TYPE");
@@ -320,7 +324,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
                     if (!isDropView) {
                         // Check is list-only fields have changed
                         isDropView = !matchViewColumns(sqlEntityInfo,
-                                sqlDataSource.getColumns(appSchema, sqlEntityInfo.getViewName()));
+                                sqlDataSource.getColumns(schema, sqlEntityInfo.getViewName()));
                     }
                 } else {
                     // Force creation of view
@@ -412,7 +416,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
     protected void manageViewEntitySchemaElements(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
             Class<? extends Entity> entityClass, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
         final PrintFormat printFormat = options.getPrintFormat();
 
         Connection connection = null;
@@ -487,12 +491,17 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         for (Class<?> entityClass : getTableEntityTypes(dataSourceName, sqlDataSource)) {
             logDebug("Building SQL information for entity type [{0}]...", entityClass);
-            sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+            sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 
         for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
             logDebug("Building SQL information for entity extension type [{0}]...", entityClass);
-            sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+            sqlDataSourceDialect.createSqlEntityInfo(entityClass);
+        }
+
+        for (Class<?> entityClass : sqlDataSource.getViewEntityTypes()) {
+            logDebug("Building SQL information for view type [{0}]...", entityClass);
+            sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
     }
 
@@ -529,7 +538,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
             throws UnifyException {
         logDebug("Building dependency list for entity type [{0}]...", entityClass);
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(entityClass);
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 
         for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
             if (sqlFieldInfo.isForeignKey()) {

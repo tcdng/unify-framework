@@ -806,8 +806,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public SqlEntityInfo getSqlEntityInfo(Class<?> clazz) throws UnifyException {
-        return sqlEntityInfoFactory.getSqlEntityInfo(clazz);
+    public SqlEntityInfo findSqlEntityInfo(Class<?> clazz) throws UnifyException {
+        return sqlEntityInfoFactory.findSqlEntityInfo(clazz);
+    }
+
+    @Override
+    public SqlEntityInfo createSqlEntityInfo(Class<?> clazz) throws UnifyException {
+        return sqlEntityInfoFactory.createSqlEntityInfo(clazz);
     }
 
     @Override
@@ -1200,7 +1205,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     public String generateNativeQuery(Query<? extends Entity> query) throws UnifyException {
         Class<?> entityClass = SqlUtils.getEntityClass(query);
-        SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(entityClass);
+        SqlEntityInfo sqlEntityInfo = findSqlEntityInfo(entityClass);
         StringBuilder listSql = new StringBuilder();
         Select select = query.getSelect();
 
@@ -1294,7 +1299,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public Map<String, String> getFieldToNativeColumnMap(Class<? extends Entity> clazz) throws UnifyException {
-        return getSqlEntityInfo(clazz).getListColumnsByFieldNames();
+        return findSqlEntityInfo(clazz).getListColumnsByFieldNames();
     }
 
     @Override
@@ -1311,7 +1316,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public SqlStatement prepareUpdateStatement(Class<?> clazz, Object pk, Update update) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = findSqlEntityInfo(clazz);
         List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
         String updateParams = translateUpdateParams(sqlEntityInfo, parameterInfoList, update);
 
@@ -1873,7 +1878,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     protected SqlEntityInfo resolveSqlEntityInfo(Class<?> clazz) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlEntityInfoFactory.getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = sqlEntityInfoFactory.findSqlEntityInfo(clazz);
         if (sqlEntityInfo.isExtended()) {
             return sqlEntityInfo.getExtensionSqlEntityInfo();
         }
@@ -2063,7 +2068,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 sb.append('\t');
             }
 
-            sb.append(getSqlEntityInfo(entry.getValue()).getPreferredTableName()).append(' ').append(entry.getKey());
+            sb.append(findSqlEntityInfo(entry.getValue()).getPreferredTableName()).append(' ').append(entry.getKey());
         }
 
         if (sqlEntitySchemaInfo.isViewRestriction()) {
@@ -2098,7 +2103,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private class SqlStatementPoolsFactory extends FactoryMap<Class<?>, SqlStatementPools> {
         @Override
         protected SqlStatementPools create(Class<?> clazz, Object... params) throws Exception {
-            return new SqlStatementPools(sqlEntityInfoFactory.getSqlEntityInfo(clazz),
+            return new SqlStatementPools(sqlEntityInfoFactory.findSqlEntityInfo(clazz),
                     getSqlDataSourceDialectPolicies().getSqlDataTypePolicies(), sqlCacheFactory.get(clazz),
                     getStatementInfoTimeout, minStatementInfo, maxStatementInfo);
         }
@@ -2300,7 +2305,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private class SqlCacheFactory extends FactoryMap<Class<?>, SqlCache> {
         @Override
         protected SqlCache create(Class<?> clazz, Object... params) throws Exception {
-            SqlEntitySchemaInfo sqlEntitySchemaInfo = sqlEntityInfoFactory.getSqlEntityInfo(clazz);
+            SqlEntitySchemaInfo sqlEntitySchemaInfo = sqlEntityInfoFactory.findSqlEntityInfo(clazz);
             if (sqlEntitySchemaInfo.isViewOnly()) {
                 return new SqlCache(generateListRecordSql(sqlEntitySchemaInfo),
                         generateListRecordSql(sqlEntitySchemaInfo), generateListRecordByPkSql(sqlEntitySchemaInfo),

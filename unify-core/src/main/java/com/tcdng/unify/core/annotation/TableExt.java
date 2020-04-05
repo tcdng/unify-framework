@@ -35,4 +35,9 @@ public @interface TableExt {
 
     /** Table indexes */
     Index[] indexes() default {};
+    
+    /**
+     * Indicates table can belong to any data source.
+     */
+    boolean adhoc() default false;
 }

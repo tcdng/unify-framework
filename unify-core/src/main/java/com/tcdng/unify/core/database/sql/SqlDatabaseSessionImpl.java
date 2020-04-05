@@ -80,7 +80,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public Object create(Entity record) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(SqlUtils.getEntityClass(record));
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(SqlUtils.getEntityClass(record));
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
                     sqlEntityInfo.getEntityClass(), "CREATE");
@@ -122,7 +122,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     @SuppressWarnings({ "unchecked" })
     @Override
     public <T extends Entity> T findConstraint(T record) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(record.getClass());
         if (sqlEntityInfo.isUniqueConstraints()) {
             Query<T> query = Query.of((Class<T>) record.getClass());
             for (SqlUniqueConstraintInfo suci : sqlEntityInfo.getUniqueConstraintList().values()) {
@@ -390,7 +390,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public void populateListOnly(Entity record) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(record.getClass());
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(record.getClass());
         try {
             Map<String, Object> fkItemMap = new HashMap<String, Object>();
             for (SqlForeignKeyInfo sqlForeignKeyInfo : sqlEntityInfo.getForeignKeyList()) {
@@ -1007,7 +1007,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                             }
 
                             SqlEntityInfo childSqlEntityInfo =
-                                    sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
+                                    sqlDataSourceDialect.findSqlEntityInfo(clfi.getChildEntityClass());
                             Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
                             query.addEquals(clfi.getChildFkField().getName(), id)
                                     .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
@@ -1044,7 +1044,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                             }
 
                             SqlEntityInfo childSqlEntityInfo =
-                                    sqlDataSourceDialect.getSqlEntityInfo(clfi.getChildEntityClass());
+                                    sqlDataSourceDialect.findSqlEntityInfo(clfi.getChildEntityClass());
                             Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
                             query.addEquals(clfi.getChildFkField().getName(), id)
                                     .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
@@ -1260,7 +1260,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     private SqlEntityInfo resolveSqlEntityInfo(Class<?> clazz) throws UnifyException {
-        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.getSqlEntityInfo(clazz);
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(clazz);
         if (sqlEntityInfo.isExtended()) {
             return sqlEntityInfo.getExtensionSqlEntityInfo();
         }

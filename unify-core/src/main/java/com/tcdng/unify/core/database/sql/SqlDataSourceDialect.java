@@ -75,7 +75,18 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) throws UnifyException;
 
     /**
-     * Returns the SQL entity information for an entity.
+     * Finds the SQL entity information for an entity.
+     * 
+     * @param clazz
+     *            the entity type
+     * @return the type SQL entity information
+     * @throws UnifyException
+     *             if supplied entity type is not found. if an error occurs
+     */
+    SqlEntityInfo findSqlEntityInfo(Class<?> clazz) throws UnifyException;
+
+    /**
+     * Creates the SQL entity information for an entity if not existing.
      * 
      * @param clazz
      *            the entity type
@@ -83,7 +94,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlEntityInfo getSqlEntityInfo(Class<?> clazz) throws UnifyException;
+    SqlEntityInfo createSqlEntityInfo(Class<?> clazz) throws UnifyException;
 
     /**
      * Removes the SQL entity information for an entity.

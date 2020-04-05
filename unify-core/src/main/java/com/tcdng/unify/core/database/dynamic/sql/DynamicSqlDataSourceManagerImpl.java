@@ -210,7 +210,7 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
                         sqlDataSourceDialect.removeSqlEntityInfo(oldEntityClass);
                     }
 
-                    sqlDataSourceDialect.getSqlEntityInfo(
+                    sqlDataSourceDialect.createSqlEntityInfo(
                             runtimeJavaClassManager.getSavedJavaClass(runtimeClassCategory, entry.getKey()));
                 }
 

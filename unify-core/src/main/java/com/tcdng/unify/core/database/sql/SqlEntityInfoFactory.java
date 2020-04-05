@@ -28,7 +28,18 @@ import com.tcdng.unify.core.database.CallableProc;
 public interface SqlEntityInfoFactory extends UnifyComponent {
 
     /**
-     * Returns the SQL entity information for a entity type.
+     * Finds the SQL entity information for an entity.
+     * 
+     * @param clazz
+     *            the entity type
+     * @return the type SQL entity information
+     * @throws UnifyException
+     *             if supplied entity type is not found. if an error occurs
+     */
+    SqlEntityInfo findSqlEntityInfo(Class<?> clazz) throws UnifyException;
+
+    /**
+     * Creates the SQL entity information for a entity type if not existing.
      * 
      * @param entityClass
      *            the entity class
@@ -36,7 +47,7 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException;
+    SqlEntityInfo createSqlEntityInfo(Class<?> entityClass) throws UnifyException;
 
     /**
      * Removes the SQL entity information for a entity type from factory.

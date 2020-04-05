@@ -98,4 +98,9 @@ public @interface Table {
 
     /** Foreign key overrides */
     ForeignKeyOverride[] foreignKeyOverrides() default {};
+    
+    /**
+     * Indicates table can belong to any data source.
+     */
+    boolean adhoc() default false;
 }
