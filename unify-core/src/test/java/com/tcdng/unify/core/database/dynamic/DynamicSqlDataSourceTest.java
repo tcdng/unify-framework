@@ -76,33 +76,6 @@ public class DynamicSqlDataSourceTest extends AbstractUnifyComponentTest {
         }
     }
 
-    @Test
-    public void testReconfigure() throws Exception {
-        DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-        try {
-            DynamicSqlDataSourceConfig config = getConfig(0);
-            dsds.configure(config);
-            boolean result = dsds.reconfigure(config);
-            assertTrue(result);
-        } finally {
-            dsds.terminate();
-        }
-    }
-
-    @Test
-    public void testReconfigureNotConfigured() throws Exception {
-        DynamicSqlDataSource dsds =
-                (DynamicSqlDataSource) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-        try {
-            DynamicSqlDataSourceConfig config = getConfig(0);
-            boolean result = dsds.reconfigure(config);
-            assertFalse(result);
-        } finally {
-            dsds.terminate();
-        }
-    }
-
     @Override
     protected void onSetup() throws Exception {
 
