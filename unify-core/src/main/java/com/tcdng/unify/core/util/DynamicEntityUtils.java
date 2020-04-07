@@ -31,7 +31,6 @@ import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicForeignKeyFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicListOnlyFieldInfo;
-import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
 
 /**
  * Dynamic entity utilities.
@@ -94,7 +93,7 @@ public final class DynamicEntityUtils {
         }
 
         // Construct class
-        TypeInfo sequencedEntityInfo = new TypeInfo(AbstractSequencedEntity.class);
+        TypeInfo baseEntityInfo = new TypeInfo(dynamicEntityInfo.getBaseClassName());
         TypeInfo typeInfo = new TypeInfo(dynamicEntityInfo.getClassName());
         esb.append("package ").append(typeInfo.getPackageName()).append(";\n");
         if (importDate) {
@@ -122,11 +121,11 @@ public final class DynamicEntityUtils {
         }
         
         esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
-        esb.append("import ").append(sequencedEntityInfo.getCanonicalName()).append(";\n");
+        esb.append("import ").append(baseEntityInfo.getCanonicalName()).append(";\n");
 
         esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
         esb.append("public class ").append(typeInfo.getSimpleName()).append(" extends ")
-                .append(sequencedEntityInfo.getSimpleName()).append(" {\n");
+                .append(baseEntityInfo.getSimpleName()).append(" {\n");
         esb.append(fsb);
         if(!fieldNames.contains("description")) {
             esb.append(" public String getDescription(){return null;}\n");

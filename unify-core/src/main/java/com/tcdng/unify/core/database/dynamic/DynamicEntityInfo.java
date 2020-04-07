@@ -24,6 +24,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.DataType;
+import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -36,15 +37,18 @@ public class DynamicEntityInfo {
 
     private String tableName;
 
+    private String baseClassName;
+
     private String className;
 
     private Map<String, DynamicFieldInfo> fieldInfos;
 
     private long version;
 
-    private DynamicEntityInfo(String tableName, String className, Map<String, DynamicFieldInfo> fieldInfos,
-            long version) {
+    private DynamicEntityInfo(String tableName, String baseClassName, String className,
+            Map<String, DynamicFieldInfo> fieldInfos, long version) {
         this.tableName = tableName;
+        this.baseClassName = baseClassName;
         this.className = className;
         this.fieldInfos = DataUtils.unmodifiableMap(fieldInfos);
         this.version = version;
@@ -52,6 +56,10 @@ public class DynamicEntityInfo {
 
     public String getTableName() {
         return tableName;
+    }
+
+    public String getBaseClassName() {
+        return baseClassName;
     }
 
     public String getClassName() {
@@ -84,6 +92,8 @@ public class DynamicEntityInfo {
 
         private String tableName;
 
+        private String baseClassName;
+
         private String className;
 
         private Map<String, DynamicForeignKeyFieldInfo> fkFields;
@@ -95,6 +105,7 @@ public class DynamicEntityInfo {
         private long version;
 
         private Builder() {
+            baseClassName = AbstractSequencedEntity.class.getCanonicalName();
             fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
             columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
             listOnlyFields = new LinkedHashMap<String, DynamicListOnlyFieldInfo>();
@@ -102,6 +113,11 @@ public class DynamicEntityInfo {
 
         public Builder tableName(String tableName) {
             this.tableName = tableName;
+            return this;
+        }
+
+        public Builder baseClassName(String baseClassName) {
+            this.baseClassName = baseClassName;
             return this;
         }
 
@@ -164,7 +180,7 @@ public class DynamicEntityInfo {
             fieldInfos.putAll(fkFields);
             fieldInfos.putAll(columnFields);
             fieldInfos.putAll(listOnlyFields);
-            return new DynamicEntityInfo(tableName, className, fieldInfos, version);
+            return new DynamicEntityInfo(tableName, baseClassName, className, fieldInfos, version);
         }
     }
 

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNull;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -31,6 +32,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDatabase;
@@ -107,6 +109,95 @@ public class DynamicSqlDatabaseDynamicEntityTest extends AbstractUnifyComponentT
     }
 
     @Test
+    public void testDynamicEntityFindAllEmptyQuery() throws Exception {
+        tm.beginTransaction();
+        try {
+            Date createDt = new Date();
+            DynamicSqlDatabase db = dbm.getDynamicSqlDatabase(TEST_CONFIG);
+            Class<? extends Entity> entityClass = db.getDynamicEntityClass("com.tcdng.test.Equipment");
+            Entity inst = ReflectUtils.newInstance(entityClass);
+            ReflectUtils.setBeanProperty(inst, "name", "4dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0002");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(2.99));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            db.create(inst);
+
+            inst = ReflectUtils.newInstance(entityClass);
+            ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(12.99));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            db.create(inst);
+
+            Query<? extends Entity> query = Query.of(entityClass).ignoreEmptyCriteria(true);
+            List<? extends Entity> list = db.listAll(query);
+            assertNotNull(list);
+            assertEquals(2, list.size());
+            
+            Entity foundInst = list.get(0);
+            assertEquals("4dPrinter", ReflectUtils.getBeanProperty(foundInst, "name"));
+            assertEquals("202004-0002", ReflectUtils.getBeanProperty(foundInst, "serialNo"));
+            assertEquals(BigDecimal.valueOf(2.99), ReflectUtils.getBeanProperty(foundInst, "price"));
+            assertEquals(createDt, ReflectUtils.getBeanProperty(foundInst, "createDt"));
+            assertNull(ReflectUtils.getBeanProperty(foundInst, "expiryDt"));
+            
+            foundInst = list.get(1);
+            assertEquals("5dPrinter", ReflectUtils.getBeanProperty(foundInst, "name"));
+            assertEquals("202004-0003", ReflectUtils.getBeanProperty(foundInst, "serialNo"));
+            assertEquals(BigDecimal.valueOf(12.99), ReflectUtils.getBeanProperty(foundInst, "price"));
+            assertEquals(createDt, ReflectUtils.getBeanProperty(foundInst, "createDt"));
+            assertNull(ReflectUtils.getBeanProperty(foundInst, "expiryDt"));
+            
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testDynamicEntityFindAllNonEmptyQuery() throws Exception {
+        tm.beginTransaction();
+        try {
+            Date createDt = new Date();
+            DynamicSqlDatabase db = dbm.getDynamicSqlDatabase(TEST_CONFIG);
+            Class<? extends Entity> entityClass = db.getDynamicEntityClass("com.tcdng.test.Equipment");
+            Entity inst = ReflectUtils.newInstance(entityClass);
+            ReflectUtils.setBeanProperty(inst, "name", "4dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0002");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(2.99));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            db.create(inst);
+
+            inst = ReflectUtils.newInstance(entityClass);
+            ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(12.99));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            db.create(inst);
+
+            Query<? extends Entity> query = Query.of(entityClass).addEquals("name", "5dPrinter").ignoreEmptyCriteria(true);
+            List<? extends Entity> list = db.listAll(query);
+            assertNotNull(list);
+            assertEquals(1, list.size());
+            
+            Entity foundInst = list.get(0);
+            assertEquals("5dPrinter", ReflectUtils.getBeanProperty(foundInst, "name"));
+            assertEquals("202004-0003", ReflectUtils.getBeanProperty(foundInst, "serialNo"));
+            assertEquals(BigDecimal.valueOf(12.99), ReflectUtils.getBeanProperty(foundInst, "price"));
+            assertEquals(createDt, ReflectUtils.getBeanProperty(foundInst, "createDt"));
+            assertNull(ReflectUtils.getBeanProperty(foundInst, "expiryDt"));
+            
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testDynamicEntityFindRecordByIdNewSchema() throws Exception {
         tm.beginTransaction();
         try {
@@ -120,7 +211,7 @@ public class DynamicSqlDatabaseDynamicEntityTest extends AbstractUnifyComponentT
             ReflectUtils.setBeanProperty(inst, "createDt", createDt);
             Long id = (Long) db.create(inst);
 
-            tm.commit();
+            tm.commit(); // Can not alter table when insert is pending (HSQLDB hangs)
             changeEquipmentEntitySchema();
 
             entityClass = db.getDynamicEntityClass("com.tcdng.test.Equipment");
