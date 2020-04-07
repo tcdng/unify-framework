@@ -33,6 +33,8 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataSource;
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE)
 public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements DynamicSqlDataSource {
 
+    private String preferredName;
+    
     private boolean configured;
     
     @Override
@@ -42,6 +44,8 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
                     dataSourceConfig.getName());
         }
 
+        preferredName = dataSourceConfig.getPreferredName();
+        configured = true;
         setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
         setDriver(dataSourceConfig.getDriver());
         setConnectionUrl(dataSourceConfig.getConnectionUrl());
@@ -51,7 +55,11 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
         setMaxConnections(dataSourceConfig.getMaxConnection());
         setShutdownOnTerminate(dataSourceConfig.isShutdownOnTerminate());
         doInitConnectionPool();
-        configured = true;
+    }
+
+    @Override
+    public String getPreferredName() {
+        return preferredName;
     }
 
     @Override

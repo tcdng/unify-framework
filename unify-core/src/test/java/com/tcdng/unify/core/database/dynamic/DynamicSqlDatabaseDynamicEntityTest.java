@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.annotation.EntityType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
@@ -239,7 +240,7 @@ public class DynamicSqlDatabaseDynamicEntityTest extends AbstractUnifyComponentT
         dsm.configure(new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect", "org.hsqldb.jdbcDriver",
                 "jdbc:hsqldb:mem:dyntest", null, null, null, 4, true));
         DynamicEntityInfo dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
+                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
                         .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
                         .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
                         .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
@@ -268,7 +269,7 @@ public class DynamicSqlDatabaseDynamicEntityTest extends AbstractUnifyComponentT
 
     private void changeEquipmentEntitySchema() throws Exception {
         DynamicEntityInfo dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(2L)
+                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(2L)
                         .addField(DataType.STRING, "EQUIPMENT_NM", "name", 64, 0, 0, false)
                         .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
                         .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)

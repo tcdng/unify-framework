@@ -100,7 +100,7 @@ public @interface Table {
     ForeignKeyOverride[] foreignKeyOverrides() default {};
     
     /**
-     * Indicates table can belong to any data source.
+     * Indicates table can belong to any data source. Ad-hoc tables are not managed.
      */
     boolean adhoc() default false;
 }

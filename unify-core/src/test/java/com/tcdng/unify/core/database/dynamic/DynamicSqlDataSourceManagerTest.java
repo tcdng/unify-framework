@@ -30,6 +30,7 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.EntityType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
@@ -131,7 +132,7 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
     public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsSingleSimpleEntity() throws Exception {
         dsm.configure(getConfig());
         DynamicEntityInfo dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
+                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
                         .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
                         .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
                         .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
@@ -150,7 +151,7 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
     public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsSingleSimpleEntityNewSchema() throws Exception {
         dsm.configure(getConfig());
         DynamicEntityInfo dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
+                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
                         .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
                         .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
                         .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
@@ -169,7 +170,7 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
         assertFalse(beanFieldList.contains("active"));
         
         dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder().tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(2L)
+                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(2L)
                         .addField(DataType.STRING, "EQUIPMENT_NM", "name", 64, 0, 0, false)
                         .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
                         .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
