@@ -24,65 +24,67 @@ import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.database.AbstractEntity;
 
 /**
- * Account details record.
+ * Product entity.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Policy("accountdetails-policy")
-@Table(name = "ACCOUNT_DETAILS", adhoc = true)
-public class AccountDetails extends AbstractEntity {
+@Policy("product-policy")
+@Table(name = "PRODUCT", datasource= "inventory")
+public class Product extends AbstractEntity {
 
-    @Id(name = "ACCOUNT_NM")
-    private String accountName;
+    @Id(name = "PRODUCT_NM")
+    private String name;
 
-    @Column(name = "ACCOUNT_NO")
-    private String accountNo;
+    @Column(name = "QUANTITY")
+    private Integer quantity;
 
-    @Column(name = "AVAILABLE_BAL")
-    private BigDecimal availBal;
+    @Column(name = "PRICE")
+    private BigDecimal price;
 
-    public AccountDetails(String accountName, String accountNo, BigDecimal availBal) {
-        this.accountName = accountName;
-        this.accountNo = accountNo;
-        this.availBal = availBal;
+
+    public Product(String name, Integer quantity, BigDecimal price) {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
     }
 
-    public AccountDetails() {
+    public Product() {
 
     }
 
     @Override
     public Object getId() {
-        return accountName;
+        return name;
     }
 
     @Override
     public String getDescription() {
-        return accountNo;
+        return name;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public String getName() {
+        return name;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getAccountNo() {
-        return accountNo;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setAccountNo(String accountNo) {
-        this.accountNo = accountNo;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public BigDecimal getAvailBal() {
-        return availBal;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setAvailBal(BigDecimal availBal) {
-        this.availBal = availBal;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
+
 }

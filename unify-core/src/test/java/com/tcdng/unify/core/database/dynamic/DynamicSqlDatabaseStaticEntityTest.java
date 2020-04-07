@@ -36,14 +36,14 @@ import com.tcdng.unify.core.database.sql.NameSqlDataSourceSchemaImpl;
 import com.tcdng.unify.core.util.SqlUtils;
 
 /**
- * Dynamic SQL database test.
+ * Dynamic SQL database static entities test.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTest {
 
-    private static final String TEST_CONFIG = "test-datasource.PUBLIC";
+    private static final String TEST_CONFIG = "test-config";
 
     private DatabaseTransactionManager tm;
     
@@ -73,7 +73,7 @@ public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTe
     }
 
     @Test
-    public void testCreateRecord() throws Exception {
+    public void testCreateRecordAdhocEntity() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
@@ -87,7 +87,7 @@ public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTe
     }
 
     @Test
-    public void testFindRecordById() throws Exception {
+    public void testFindRecordByIdAdhocEntity() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
@@ -107,7 +107,7 @@ public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTe
     }
 
     @Test
-    public void testUpdateRecordById() throws Exception {
+    public void testUpdateRecordByIdAdhocEntity() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
@@ -130,7 +130,7 @@ public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTe
     }
 
     @Test
-    public void testDeleteRecordById() throws Exception {
+    public void testDeleteRecordByIdAdhocEntity() throws Exception {
         DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
                 new Setting("dataSourceConfigName", TEST_CONFIG));
         assertNotNull(db);
@@ -140,6 +140,79 @@ public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTe
             assertEquals(1, db.countAll(new AccountDetailsQuery().addEquals("accountName", id)));
             db.delete(AccountDetails.class, id);
             assertEquals(0, db.countAll(new AccountDetailsQuery().addEquals("accountName", id)));
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testCreateRecordPreferredEntity() throws Exception {
+        DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                new Setting("dataSourceConfigName", TEST_CONFIG));
+        assertNotNull(db);
+        tm.beginTransaction();
+        try {
+            String id = (String) db.create(new Product("Compact Disc", 200, BigDecimal.valueOf(0.25)));
+            assertEquals("Compact Disc", id);
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordByIdPreferredEntity() throws Exception {
+        DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                new Setting("dataSourceConfigName", TEST_CONFIG));
+        assertNotNull(db);
+        tm.beginTransaction();
+        try {
+            Product product = new Product("Compact Disc", 200, BigDecimal.valueOf(0.25));
+            db.create(product);
+
+            Product foundProduct = db.find(Product.class, product.getId());
+            assertNotNull(foundProduct);
+            assertEquals("Compact Disc", foundProduct.getName());
+            assertEquals(BigDecimal.valueOf(0.25), foundProduct.getPrice());
+            assertEquals(Integer.valueOf(200), foundProduct.getQuantity());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateRecordByIdPreferredEntity() throws Exception {
+        DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                new Setting("dataSourceConfigName", TEST_CONFIG));
+        assertNotNull(db);
+        tm.beginTransaction();
+        try {
+            Product product = new Product("Compact Disc", 200, BigDecimal.valueOf(0.25));
+            db.create(product);
+            product.setQuantity(125);
+            product.setPrice(BigDecimal.valueOf(0.45));
+            assertEquals(1, db.updateById(product));
+
+            Product foundProduct = db.find(Product.class, product.getId());
+            assertNotNull(foundProduct);
+            assertEquals("Compact Disc", foundProduct.getName());
+            assertEquals(BigDecimal.valueOf(0.45), foundProduct.getPrice());
+            assertEquals(Integer.valueOf(125), foundProduct.getQuantity());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testDeleteRecordByIdPreferredEntity() throws Exception {
+        DynamicSqlDatabase db = (DynamicSqlDatabase) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLDATABASE,
+                new Setting("dataSourceConfigName", TEST_CONFIG));
+        assertNotNull(db);
+        tm.beginTransaction();
+        try {
+            String id = (String) db.create(new Product("Compact Disc", 82, BigDecimal.valueOf(0.72)));
+            assertEquals(1, db.countAll(new ProductQuery().addEquals("name", id)));
+            db.delete(Product.class, id);
+            assertEquals(0, db.countAll(new ProductQuery().addEquals("name", id)));
         } finally {
             tm.endTransaction();
         }
@@ -156,10 +229,10 @@ public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTe
         // Get transaction manager
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);;
         
-        // Configure and create data source
+        // Configure data source and create adhoc (unmanaged) tables
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig(TEST_CONFIG, "hsqldb-dialect",
+        dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig("inventory", TEST_CONFIG, "hsqldb-dialect",
                 "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, null, 2, true));
         Connection connection = dynamicSqlDataSourceManager.getConnection(TEST_CONFIG);
         Statement stmt = null;
