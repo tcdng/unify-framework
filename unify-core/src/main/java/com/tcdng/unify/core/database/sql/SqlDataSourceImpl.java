@@ -23,4 +23,9 @@ package com.tcdng.unify.core.database.sql;
  */
 public class SqlDataSourceImpl extends AbstractSqlDataSource {
 
+    @Override
+    public String getPreferredName() {
+        return null;
+    }
+
 }

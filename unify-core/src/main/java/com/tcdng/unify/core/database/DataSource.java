@@ -34,6 +34,13 @@ import com.tcdng.unify.core.annotation.View;
 public interface DataSource extends UnifyComponent {
 
     /**
+     * Gets the data source preferred name.
+     * 
+     * @return the preferred name otherwise null
+     */
+    String getPreferredName();
+
+    /**
      * Returns a list of entity types annotated with {@link Table} and enumerations
      * annotated with {@link StaticList} that are maintained in this data source.
      * Entity types in list are expected to be ordered based on dependency with

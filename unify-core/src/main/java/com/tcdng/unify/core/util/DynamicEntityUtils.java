@@ -21,11 +21,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.annotation.EntityType;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.database.dynamic.DynamicColumnFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
@@ -44,7 +48,22 @@ public final class DynamicEntityUtils {
 
     }
 
-    public static String generateEntityJavaClassSource(DynamicEntityInfo dynamicEntityInfo) {
+    public static String generateEntityJavaClassSource(DynamicEntityInfo dynamicEntityInfo) throws UnifyException {
+        switch (dynamicEntityInfo.getType()) {
+            case TABLE:
+            case TABLE_EXT:
+                return DynamicEntityUtils.generateTableEntityJavaClassSource(dynamicEntityInfo);
+            case VIEW:
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, DynamicEntityUtils.class,
+                        "View entity type is unsupported for class source generation.");
+            default:
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, DynamicEntityUtils.class,
+                        "Entity type not specified for class source generation.");
+        }
+    }
+
+    private static String generateTableEntityJavaClassSource(DynamicEntityInfo dynamicEntityInfo)
+            throws UnifyException {
         StringBuilder esb = new StringBuilder();
         StringBuilder fsb = new StringBuilder();
         StringBuilder msb = new StringBuilder();
@@ -67,7 +86,7 @@ public final class DynamicEntityUtils {
                 if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
                     importColumnType = true;
                 }
-                
+
                 importColumn = true;
             } else {
                 DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
@@ -119,18 +138,24 @@ public final class DynamicEntityUtils {
         if (importColumnType) {
             esb.append("import ").append(ColumnType.class.getCanonicalName()).append(";\n");
         }
-        
-        esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
+
         esb.append("import ").append(baseEntityInfo.getCanonicalName()).append(";\n");
 
-        esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
+        if(EntityType.TABLE.equals(dynamicEntityInfo.getType())) {
+            esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
+            esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
+        } else {
+            esb.append("import ").append(TableExt.class.getCanonicalName()).append(";\n");
+            esb.append("@TableExt\n");
+        }
+        
         esb.append("public class ").append(typeInfo.getSimpleName()).append(" extends ")
                 .append(baseEntityInfo.getSimpleName()).append(" {\n");
         esb.append(fsb);
-        if(!fieldNames.contains("description")) {
+        if (!fieldNames.contains("description")) {
             esb.append(" public String getDescription(){return null;}\n");
         }
-        
+
         esb.append(msb);
         esb.append("}\n");
         return esb.toString();

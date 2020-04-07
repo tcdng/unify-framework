@@ -111,7 +111,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         if (sqlEntityInfo.isSchemaAlreadyManaged()) {
             return;
         }
-        
+
         final PrintFormat printFormat = options.getPrintFormat();
         final ForceConstraints forceConstraints = options.getForceConstraints();
 
@@ -125,7 +125,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
             if (StringUtils.isBlank(schema)) {
                 schema = sqlDataSource.getAppSchema();
             }
-            
+
             List<String> tableUpdateSql = new ArrayList<String>();
             rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getTableName(), null);
             if (rs.next()) {
@@ -486,10 +486,20 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
     }
 
     protected List<Class<?>> getTableEntityTypes(String dataSourceName, SqlDataSource sqlDataSource)
-            throws UnifyException{
+            throws UnifyException {
         return sqlDataSource.getTableEntityTypes();
     }
-    
+
+    protected List<Class<?>> getTableExtensionEntityTypes(String dataSourceName, SqlDataSource sqlDataSource)
+            throws UnifyException {
+        return sqlDataSource.getTableExtensionEntityTypes();
+    }
+
+    protected List<Class<? extends Entity>> getViewEntityTypes(String dataSourceName, SqlDataSource sqlDataSource)
+            throws UnifyException {
+        return sqlDataSource.getViewEntityTypes();
+    }
+
     private void buildSqlEntityFactoryInformation(String dataSourceName, SqlDataSource sqlDataSource)
             throws UnifyException {
         logDebug("Building SQL information for data source [{0}]...", dataSourceName);
@@ -499,12 +509,12 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 
-        for (Class<?> entityClass : sqlDataSource.getTableExtensionEntityTypes()) {
+        for (Class<?> entityClass : getTableExtensionEntityTypes(dataSourceName, sqlDataSource)) {
             logDebug("Building SQL information for entity extension type [{0}]...", entityClass);
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 
-        for (Class<?> entityClass : sqlDataSource.getViewEntityTypes()) {
+        for (Class<?> entityClass : getViewEntityTypes(dataSourceName, sqlDataSource)) {
             logDebug("Building SQL information for view type [{0}]...", entityClass);
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
@@ -536,7 +546,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 
     private List<Class<? extends Entity>> getViewEntities(String dataSourceName) throws UnifyException {
         SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
-        return sqlDataSource.getViewEntityTypes();
+        return getViewEntityTypes(dataSourceName, sqlDataSource);
     }
 
     private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)

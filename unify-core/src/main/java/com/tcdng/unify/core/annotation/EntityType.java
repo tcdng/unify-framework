@@ -13,31 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * Annotation for indicating an entity extension.
+ * Entity type enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface TableExt {
-
-    /** Table unique constraints */
-    UniqueConstraint[] uniqueConstraints() default {};
-
-    /** Table indexes */
-    Index[] indexes() default {};
-
-    /**
-     * Indicates table can belong to any data source. Ad-hoc tables are not managed.
-     */
-    boolean adhoc() default false;
+public enum EntityType {
+    TABLE,
+    TABLE_EXT,
+    VIEW
 }

@@ -23,6 +23,8 @@ package com.tcdng.unify.core.database.dynamic.sql;
  */
 public class DynamicSqlDataSourceConfig {
 
+    private String preferredName;
+
     private String name;
 
     private String dialect;
@@ -32,7 +34,7 @@ public class DynamicSqlDataSourceConfig {
     private String connectionUrl;
 
     private String dbSchema;
-    
+
     private String dbUsername;
 
     private String dbPassword;
@@ -41,9 +43,16 @@ public class DynamicSqlDataSourceConfig {
 
     private boolean shutdownOnTerminate;
 
-    public DynamicSqlDataSourceConfig(String name, String dialect, String driver, String connectionUrl,
-            String dbSchema, String dbUsername, String dbPassword, int maxConnection,
+    public DynamicSqlDataSourceConfig(String name, String dialect, String driver, String connectionUrl, String dbSchema,
+            String dbUsername, String dbPassword, int maxConnection, boolean shutdownOnTerminate) {
+        this(null, name, dialect, driver, connectionUrl, dbSchema, dbUsername, dbPassword, maxConnection,
+                shutdownOnTerminate);
+    }
+
+    public DynamicSqlDataSourceConfig(String preferredName, String name, String dialect, String driver,
+            String connectionUrl, String dbSchema, String dbUsername, String dbPassword, int maxConnection,
             boolean shutdownOnTerminate) {
+        this.preferredName = preferredName;
         this.name = name;
         this.dialect = dialect;
         this.driver = driver;
@@ -53,6 +62,10 @@ public class DynamicSqlDataSourceConfig {
         this.dbPassword = dbPassword;
         this.maxConnection = maxConnection;
         this.shutdownOnTerminate = shutdownOnTerminate;
+    }
+
+    public String getPreferredName() {
+        return preferredName;
     }
 
     public String getName() {

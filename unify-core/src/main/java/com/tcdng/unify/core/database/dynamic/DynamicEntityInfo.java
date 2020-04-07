@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.EntityType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
 import com.tcdng.unify.core.util.DataUtils;
@@ -35,6 +36,8 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class DynamicEntityInfo {
 
+    private EntityType type;
+
     private String tableName;
 
     private String baseClassName;
@@ -45,13 +48,18 @@ public class DynamicEntityInfo {
 
     private long version;
 
-    private DynamicEntityInfo(String tableName, String baseClassName, String className,
+    private DynamicEntityInfo(EntityType type, String tableName, String baseClassName, String className,
             Map<String, DynamicFieldInfo> fieldInfos, long version) {
+        this.type = type;
         this.tableName = tableName;
         this.baseClassName = baseClassName;
         this.className = className;
         this.fieldInfos = DataUtils.unmodifiableMap(fieldInfos);
         this.version = version;
+    }
+
+    public EntityType getType() {
+        return type;
     }
 
     public String getTableName() {
@@ -84,11 +92,13 @@ public class DynamicEntityInfo {
         return version;
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
+    public static Builder newBuilder(EntityType type) {
+        return new Builder(type);
     }
 
     public static class Builder {
+
+        private EntityType type;
 
         private String tableName;
 
@@ -104,7 +114,8 @@ public class DynamicEntityInfo {
 
         private long version;
 
-        private Builder() {
+        private Builder(EntityType type) {
+            this.type = type;
             baseClassName = AbstractSequencedEntity.class.getCanonicalName();
             fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
             columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
@@ -180,7 +191,7 @@ public class DynamicEntityInfo {
             fieldInfos.putAll(fkFields);
             fieldInfos.putAll(columnFields);
             fieldInfos.putAll(listOnlyFields);
-            return new DynamicEntityInfo(tableName, baseClassName, className, fieldInfos, version);
+            return new DynamicEntityInfo(type, tableName, baseClassName, className, fieldInfos, version);
         }
     }
 
