@@ -108,6 +108,10 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
             Class<?> entityClass, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
+        if (sqlEntityInfo.isSchemaAlreadyManaged()) {
+            return;
+        }
+        
         final PrintFormat printFormat = options.getPrintFormat();
         final ForceConstraints forceConstraints = options.getForceConstraints();
 
@@ -410,6 +414,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         } finally {
             SqlUtils.close(rs);
             SqlUtils.close(pstmt);
+            sqlEntityInfo.setSchemaAlreadyManaged();
         }
     }
 

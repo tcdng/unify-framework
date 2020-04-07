@@ -108,6 +108,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private List<SqlViewRestrictionInfo> viewRestrictionList;
 
+    private boolean schemaAlreadyManaged;
+    
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
             EntityPolicy recordPolicy, String schema, String tableName, String preferredTableName,
             String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
@@ -130,6 +132,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.schemaViewName = schemaViewName;
         this.idFieldInfo = idFieldInfo;
         this.versionFieldInfo = versionFieldInfo;
+        this.schemaAlreadyManaged = false;
 
         if (isAllObjectsInLowerCase) {
             this.tableName = StringUtils.toLowerCase(tableName);
@@ -194,6 +197,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.viewRestrictionList = originSqlEntityInfo.viewRestrictionList;
         this.uniqueConstraintMap = originSqlEntityInfo.uniqueConstraintMap;
         this.indexMap = originSqlEntityInfo.indexMap;
+        this.schemaAlreadyManaged = false;
 
         if (sQLFieldInfoMap != null) {
             Map<String, SqlFieldInfo> newSQLFieldInfoMap =
@@ -369,6 +373,14 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public List<SqlForeignKeyInfo> getForeignKeyList() {
         return foreignKeyList;
+    }
+
+    public boolean isSchemaAlreadyManaged() {
+        return schemaAlreadyManaged;
+    }
+
+    public void setSchemaAlreadyManaged() {
+        this.schemaAlreadyManaged = true;
     }
 
     public Class<? extends Entity> getEntityClass() {

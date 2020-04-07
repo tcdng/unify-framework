@@ -33,42 +33,15 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataSource;
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE)
 public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements DynamicSqlDataSource {
 
+    private boolean configured;
+    
     @Override
-    public void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
+    public void configure(DynamicSqlDataSourceConfig dataSourceConfig) throws UnifyException {
         if (isConfigured()) {
             throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_ALREADY_CONFIGURED,
-                    dynamicSqlDataSourceConfig.getName());
+                    dataSourceConfig.getName());
         }
 
-        innerConfigure(dynamicSqlDataSourceConfig);
-    }
-
-    @Override
-    public boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException {
-        if (isConfigured()) {
-            // Get old pool
-            SqlConnectionPool oldConnectionPool = getSqlConnectionPool();
-
-            // Create new pool
-            innerConfigure(dynamicSqlDataSourceConfig);
-
-            // Terminate old pool
-            if (oldConnectionPool != null) {
-                oldConnectionPool.terminate();
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean isConfigured() throws UnifyException {
-        return getDriver() != null;
-    }
-
-    private void innerConfigure(DynamicSqlDataSourceConfig dataSourceConfig) throws UnifyException {
         setDialect((DataSourceDialect) getComponent(dataSourceConfig.getDialect()));
         setDriver(dataSourceConfig.getDriver());
         setConnectionUrl(dataSourceConfig.getConnectionUrl());
@@ -78,5 +51,11 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
         setMaxConnections(dataSourceConfig.getMaxConnection());
         setShutdownOnTerminate(dataSourceConfig.isShutdownOnTerminate());
         doInitConnectionPool();
+        configured = true;
+    }
+
+    @Override
+    public boolean isConfigured() throws UnifyException {
+        return configured;
     }
 }

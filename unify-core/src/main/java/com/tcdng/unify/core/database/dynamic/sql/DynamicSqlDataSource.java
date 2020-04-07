@@ -37,17 +37,6 @@ public interface DynamicSqlDataSource extends SqlDataSource {
     void configure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
 
     /**
-     * Reconfigures data source using supplied configuration.
-     * 
-     * @param dynamicSqlDataSourceConfig
-     *            the configuration to use
-     * @return true if reconfigured otherwise false
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    boolean reconfigure(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig) throws UnifyException;
-
-    /**
      * Returns true if data source is configured.
      * 
      * @throws UnifyException
