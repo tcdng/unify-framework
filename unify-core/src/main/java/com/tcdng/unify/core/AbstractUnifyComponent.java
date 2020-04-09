@@ -1596,12 +1596,13 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
     private void log(TaskMonitor taskMonitor, LoggingLevel loggingLevel, String message, Object... params) {
         try {
             Logger logger = unifyComponentContext.getLogger();
-            if (logger.isEnabled(loggingLevel)) {
+            boolean enabled = logger.isEnabled(loggingLevel);
+            if (enabled || taskMonitor != null) {
                 String resolvedMsg = resolveApplicationMessage(message, params);
-                logger.log(loggingLevel, resolvedMsg);
-                if (taskMonitor != null) {
-                    taskMonitor.addMessage(resolvedMsg);
+                if (enabled) {
+                    logger.log(loggingLevel, resolvedMsg);
                 }
+                taskMonitor.addMessage(resolvedMsg);
             }
         } catch (UnifyException e) {
             e.printStackTrace();
