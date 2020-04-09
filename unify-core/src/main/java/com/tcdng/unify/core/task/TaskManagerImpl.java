@@ -667,7 +667,6 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                 }
 
                 messages.add(message);
-                logDebug("Task Monitor ({0}): {1}", getTaskId(currentTaskIndex), message);
             }
         }
 
