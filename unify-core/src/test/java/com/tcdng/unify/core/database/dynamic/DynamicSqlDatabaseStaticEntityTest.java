@@ -232,8 +232,10 @@ public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTe
         // Configure data source and create adhoc (unmanaged) tables
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
-        dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig("inventory", TEST_CONFIG, "hsqldb-dialect",
-                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, null, 2, true));
+        DynamicSqlDataSourceConfig config = new DynamicSqlDataSourceConfig("inventory", TEST_CONFIG, "hsqldb-dialect",
+                "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, null, 2, true);
+        config.setManageSchema(true);
+        dynamicSqlDataSourceManager.configure(config);
         Connection connection = dynamicSqlDataSourceManager.getConnection(TEST_CONFIG);
         Statement stmt = null;
         try {

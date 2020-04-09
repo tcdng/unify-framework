@@ -368,7 +368,9 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         dynamicSqlDataSourceMap.get(dynamicSqlDataSourceConfig.getName(), dynamicSqlDataSourceConfig);
         DataSourceManagerOptions options = new DataSourceManagerOptions();
         initDataSource(dynamicSqlDataSourceConfig.getName(), options);
-        manageDataSource(dynamicSqlDataSourceConfig.getName(), options);
+        if (dynamicSqlDataSourceConfig.isManageSchema()) {
+            manageDataSource(dynamicSqlDataSourceConfig.getName(), options);
+        }
     }
 
     private DynamicSqlDataSource getNewDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)

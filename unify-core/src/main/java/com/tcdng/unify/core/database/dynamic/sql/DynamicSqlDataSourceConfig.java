@@ -43,6 +43,8 @@ public class DynamicSqlDataSourceConfig {
 
     private boolean shutdownOnTerminate;
 
+    private boolean manageSchema;
+    
     public DynamicSqlDataSourceConfig(String name, String dialect, String driver, String connectionUrl, String dbSchema,
             String dbUsername, String dbPassword, int maxConnection, boolean shutdownOnTerminate) {
         this(null, name, dialect, driver, connectionUrl, dbSchema, dbUsername, dbPassword, maxConnection,
@@ -102,5 +104,13 @@ public class DynamicSqlDataSourceConfig {
 
     public boolean isShutdownOnTerminate() {
         return shutdownOnTerminate;
+    }
+
+    public boolean isManageSchema() {
+        return manageSchema;
+    }
+
+    public void setManageSchema(boolean manageSchema) {
+        this.manageSchema = manageSchema;
     }
 }
