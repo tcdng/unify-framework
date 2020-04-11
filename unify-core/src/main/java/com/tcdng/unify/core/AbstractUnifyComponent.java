@@ -1602,7 +1602,10 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
                 if (enabled) {
                     logger.log(loggingLevel, resolvedMsg);
                 }
-                taskMonitor.addMessage(resolvedMsg);
+                
+                if (taskMonitor != null) {
+                    taskMonitor.addMessage(resolvedMsg);
+                }
             }
         } catch (UnifyException e) {
             e.printStackTrace();
