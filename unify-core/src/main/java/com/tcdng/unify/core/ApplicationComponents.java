@@ -63,6 +63,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_JSONOBJECTSTREAMER = "application-jsonobjectstreamer";
 
+    String APPLICATION_JSONWEBSERVICECALLER = "application-jsonwebservicecaller";
+
     String APPLICATION_LISTMANAGER = "application-listmanager";
 
     String APPLICATION_MENULOADER = "application-menuloader";
