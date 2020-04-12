@@ -195,8 +195,12 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
                             TableConstraint fkConst = managedTableConstraints.get(fkConstName);
                             boolean update = true;
                             if (fkConst != null) {
+                                logDebug(
+                                        "Checking foreign key: fkConst = [{0}], entity.tableName = [{1}], field.columnName = [{2}]...",
+                                        fkConst, sqlFieldInfo.getForeignEntityInfo().getTableName(),
+                                        sqlFieldInfo.getForeignFieldInfo().getColumnName());
                                 // Check if foreign key matches database constraint
-                                if (fkConst.isForeignKey() && fkConst.getColumns().size() == 1
+                                if (fkConst.isForeignKey() /*&& fkConst.getColumns().size() == 1*/
                                         && fkConst.getTableName()
                                                 .equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
                                         && fkConst.getColumns()
@@ -619,7 +623,8 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
         boolean defaultChange = !DataUtils.equals(columnInfo.getDefaultVal(), sqlfieldInfo.getDefaultVal());
         if (defaultChange && StringUtils.isBlank(sqlfieldInfo.getDefaultVal())) {
-            if (columnInfo.getDefaultVal().equals(sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()))) {
+            if (StringUtils.isBlank(columnInfo.getDefaultVal()) || columnInfo.getDefaultVal()
+                    .equals(sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()))) {
                 defaultChange = false;
             }
         }

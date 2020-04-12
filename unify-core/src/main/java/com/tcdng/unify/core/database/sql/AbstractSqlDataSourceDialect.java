@@ -433,9 +433,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" ");
         }
-        // sb.append("DROP CONSTRAINT ")
-        // .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(),
-        // dbForeignKeyName));
+
         sb.append("DROP CONSTRAINT ").append(dbForeignKeyName);
         return sb.toString();
     }
@@ -489,9 +487,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             sb.append(" ");
         }
-        // sb.append("DROP CONSTRAINT ").append(
-        // SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(),
-        // dbUniqueConstraintName));
+
         sb.append("DROP CONSTRAINT ").append(dbUniqueConstraintName);
         return sb.toString();
     }
@@ -536,9 +532,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
             throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        // sb.append("DROP INDEX ")
-        // .append(SqlUtils.generateFullSchemaElementName(sqlEntitySchemaInfo.getSchema(),
-        // dbIndexName));
         sb.append("DROP INDEX ").append(dbIndexName);
         return sb.toString();
     }

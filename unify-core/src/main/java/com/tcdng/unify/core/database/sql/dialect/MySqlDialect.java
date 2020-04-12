@@ -38,6 +38,7 @@ import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -57,6 +58,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
         Map<ColumnType, SqlDataTypePolicy> tempMap1 = new HashMap<ColumnType, SqlDataTypePolicy>();
         populateDefaultSqlDataTypePolicies(tempMap1);
         tempMap1.put(ColumnType.BLOB, new MySqlBlobPolicy());
+        tempMap1.put(ColumnType.CLOB, new MySqlClobPolicy());
 
         Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new HashMap<RestrictionType, SqlCriteriaPolicy>();
         populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
@@ -82,6 +84,27 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public String generateUTCTimestampSql() throws UnifyException {
         return "SELECT UTC_TIMESTAMP";
+    }
+
+    @Override
+    public boolean isAllObjectsInLowerCase() throws UnifyException {
+        return true;
+    }
+
+    @Override
+    public String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbForeignKeyName,
+            PrintFormat format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        String tableName = sqlEntitySchemaInfo.getSchemaTableName();
+        sb.append("ALTER TABLE ").append(tableName);
+        if (format.isPretty()) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(" ");
+        }
+
+        sb.append("DROP FOREIGN KEY ").append(dbForeignKeyName);
+        return sb.toString();
     }
 
     @Override
@@ -223,5 +246,13 @@ class MySqlBlobPolicy extends BlobPolicy {
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" MEDIUMBLOB");
+    }
+}
+
+class MySqlClobPolicy extends ClobPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append(" MEDIUMTEXT");
     }
 }
