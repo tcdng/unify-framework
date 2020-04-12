@@ -61,6 +61,7 @@ public abstract class AbstractWebServiceCaller extends AbstractUnifyComponent im
             conn.setDoInput(true);
             conn.setRequestMethod(command);
             conn.setUseCaches(false);
+            setHeaders(conn);
 
             conn.connect();
 

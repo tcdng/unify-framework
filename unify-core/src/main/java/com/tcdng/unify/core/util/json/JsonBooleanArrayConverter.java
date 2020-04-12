@@ -32,6 +32,10 @@ public class JsonBooleanArrayConverter extends AbstractJsonArrayConverter<Boolea
 
     @Override
     protected Boolean getValue(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return jsonValue.asBoolean();
     }
 

@@ -32,6 +32,10 @@ public class JsonIntArrayConverter extends AbstractJsonArrayConverter<Integer> {
 
     @Override
     protected Integer getValue(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return jsonValue.asInt();
     }
 

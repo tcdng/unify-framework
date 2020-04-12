@@ -27,6 +27,10 @@ import com.eclipsesource.json.JsonValue;
 public class JsonLongConverter implements JsonValueConverter<Long> {
     @Override
     public Long read(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return jsonValue.asLong();
     }
 

@@ -34,6 +34,10 @@ public class JsonBigDecimalArrayConverter extends AbstractJsonArrayConverter<Big
 
     @Override
     protected BigDecimal getValue(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return BigDecimal.valueOf(jsonValue.asDouble());
     }
 

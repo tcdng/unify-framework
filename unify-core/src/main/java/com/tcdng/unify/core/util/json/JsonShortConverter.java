@@ -27,6 +27,10 @@ import com.eclipsesource.json.JsonValue;
 public class JsonShortConverter implements JsonValueConverter<Short> {
     @Override
     public Short read(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return (short) jsonValue.asInt();
     }
 

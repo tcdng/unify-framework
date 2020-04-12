@@ -32,6 +32,10 @@ public class JsonStringArrayConverter extends AbstractJsonArrayConverter<String>
 
     @Override
     protected String getValue(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return jsonValue.asString();
     }
 

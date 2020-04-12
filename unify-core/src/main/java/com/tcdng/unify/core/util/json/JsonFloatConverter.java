@@ -27,6 +27,10 @@ import com.eclipsesource.json.JsonValue;
 public class JsonFloatConverter implements JsonValueConverter<Float> {
     @Override
     public Float read(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return jsonValue.asFloat();
     }
 

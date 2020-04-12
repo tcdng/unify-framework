@@ -32,6 +32,10 @@ public class JsonFloatArrayConverter extends AbstractJsonArrayConverter<Float> {
 
     @Override
     protected Float getValue(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return jsonValue.asFloat();
     }
 
