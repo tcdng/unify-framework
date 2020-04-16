@@ -40,6 +40,9 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
     @Configurable
     private DataSourceDialect dialect;
 
+    @Configurable("false")
+    private boolean allObjectsInLowercase;
+
     @Override
     public List<Class<?>> getTableEntityTypes() throws UnifyException {
         List<Class<?>> entityList = new ArrayList<Class<?>>();
@@ -103,7 +106,9 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
     @Override
     protected void onInitialize() throws UnifyException {
-
+        if (dialect != null) {
+            dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+        }
     }
 
     @Override
@@ -111,8 +116,11 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
     }
 
-    protected void setDialect(DataSourceDialect dialect) {
+    protected void setDialect(DataSourceDialect dialect) throws UnifyException {
         this.dialect = dialect;
+        if (dialect != null) {
+            dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+        }
     }
 
     private String getEntityMatchingName() {

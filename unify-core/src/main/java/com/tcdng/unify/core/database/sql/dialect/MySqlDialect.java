@@ -87,11 +87,6 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public boolean isAllObjectsInLowerCase() throws UnifyException {
-        return true;
-    }
-
-    @Override
     public String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbForeignKeyName,
             PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();

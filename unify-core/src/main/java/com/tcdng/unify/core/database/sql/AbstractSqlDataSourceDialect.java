@@ -130,6 +130,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private String terminationSql;
 
     private String newLineSql;
+    
+    private boolean allObjectsInLowerCase;
 
     private boolean useCallableFunctionMode;
 
@@ -784,11 +786,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public boolean isAllObjectsInLowerCase() throws UnifyException {
-        return false;
-    }
-
-    @Override
     public SqlDataTypePolicy getSqlTypePolicy(Class<?> clazz) throws UnifyException {
         return getSqlDataSourceDialectPolicies().getSqlTypePolicy(DataUtils.getColumnType(clazz));
     }
@@ -1382,6 +1379,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     public String getPreferredName(String name) {
         return name;
+    }
+
+    @Override
+    public final boolean isAllObjectsInLowerCase() {
+        return allObjectsInLowerCase;
+    }
+
+    @Override
+    public final void setAllObjectsInLowerCase(boolean allObjectsInLowerCase) {
+        this.allObjectsInLowerCase = allObjectsInLowerCase;
     }
 
     @Override
