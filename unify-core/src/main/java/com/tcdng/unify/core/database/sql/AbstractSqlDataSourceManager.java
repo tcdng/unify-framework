@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +49,13 @@ import com.tcdng.unify.core.util.StringUtils;
  * @since 1.0
  */
 public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponent implements SqlDataSourceManager {
+
+    private static final Map<String, Set<String>> swappableValueSet;
+
+    static {
+        swappableValueSet = new HashMap<String, Set<String>>();
+        swappableValueSet.put("0", new HashSet<String>(Arrays.asList("(0)")));
+    }
 
     @Override
     public void initDataSource(String dataSourceName, DataSourceManagerOptions options) throws UnifyException {
@@ -200,7 +208,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
                                         fkConst, sqlFieldInfo.getForeignEntityInfo().getTableName(),
                                         sqlFieldInfo.getForeignFieldInfo().getColumnName());
                                 // Check if foreign key matches database constraint
-                                if (fkConst.isForeignKey() /*&& fkConst.getColumns().size() == 1*/
+                                if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
                                         && fkConst.getTableName()
                                                 .equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
                                         && fkConst.getColumns()
@@ -621,7 +629,8 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         }
 
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
-        boolean defaultChange = !DataUtils.equals(columnInfo.getDefaultVal(), sqlfieldInfo.getDefaultVal());
+        boolean defaultChange = !DataUtils.equals(columnInfo.getDefaultVal(), sqlfieldInfo.getDefaultVal())
+                && !isSwappableValues(sqlfieldInfo.getDefaultVal(), columnInfo.getDefaultVal());
         if (defaultChange && StringUtils.isBlank(sqlfieldInfo.getDefaultVal())) {
             if (StringUtils.isBlank(columnInfo.getDefaultVal()) || columnInfo.getDefaultVal()
                     .equals(sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()))) {
@@ -726,5 +735,10 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
             sb.append(", columns = ").append(columns).append("}");
             return sb.toString();
         }
+    }
+
+    private boolean isSwappableValues(String origin, String alternative) {
+        Set<String> set = swappableValueSet.get(origin);
+        return set != null && set.contains(alternative);
     }
 }
