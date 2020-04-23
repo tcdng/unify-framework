@@ -13,20 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
-import com.tcdng.unify.core.database.sql.SqlLikeType;
+package com.tcdng.unify.core.criterion;
 
 /**
- * Not like begin with operator policy.
+ * Restriction for a property greater than a field value.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotLikeBeginPolicy extends NotLikePolicy {
+public class GreaterField extends Greater {
 
-    public NotLikeBeginPolicy(SqlDataSourceDialectPolicies rootPolicies) {
-        super(SqlLikeType.BEGINS_WITH, rootPolicies);
+    public GreaterField(String propertyName, String fieldName) {
+        super(propertyName, new RestrictionField(fieldName));
     }
 }

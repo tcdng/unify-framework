@@ -65,18 +65,13 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
     public SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) {
         return sqlCriteriaPolicies.get(restrictionType);
     }
-    
+
     public int getMaxClauseValues() {
         return 0;
     }
-    
-    public String translateValue(Object param) throws UnifyException {
-        if (param instanceof String) {
-            String paramStr = (String) param;
-            if (paramStr.indexOf('.') > 0) {
-                return paramStr;
-            }
 
+    public String translateToNativeSqlParam(Object param) throws UnifyException {
+        if (param instanceof String) {
             return "\'" + param + "\'";
         }
 
@@ -92,15 +87,26 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
     }
 
     @Override
-    public String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException {
+    public String generateLikeParameter(SqlLikeType type, String tableName, Object param) throws UnifyException {
         String paramStr = null;
         if (param instanceof SqlViewColumnInfo) {
             SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
             paramStr = sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
-        } else {
-            paramStr = String.valueOf(param);
+        } else if (param instanceof SqlFieldInfo) {
+            paramStr = tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
         }
 
+        if (paramStr != null) {
+            if (type.equals(SqlLikeType.BEGINS_WITH)) {
+                return paramStr + " + '%'";
+            } else if (type.equals(SqlLikeType.ENDS_WITH)) {
+                return "'%' + " + paramStr;
+            }
+
+            return "'%' + " + paramStr + " + '%'";
+        }
+
+        paramStr = String.valueOf(param);
         if (type.equals(SqlLikeType.BEGINS_WITH)) {
             return paramStr + "%";
         } else if (type.equals(SqlLikeType.ENDS_WITH)) {

@@ -38,9 +38,9 @@ public interface SqlDataSourceDialectPolicies {
 
     SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType);
 
-    String translateValue(Object param) throws UnifyException;
+    String translateToNativeSqlParam(Object param) throws UnifyException;
 
     int getMaxClauseValues();
 
-    String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException;
+    String generateLikeParameter(SqlLikeType type, String tableName, Object param) throws UnifyException;
 }

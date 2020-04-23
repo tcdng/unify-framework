@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql.criterion.policy;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.SingleValueRestriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
@@ -48,7 +49,15 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
             columnName = sqlEntityInfo.getListFieldInfo(svc.getFieldName()).getPreferredColumnName();
         }
 
-        translate(sql, sqlEntityInfo.getTableAlias(), columnName, svc.getValue(), null);
+        final String tableName = sqlEntityInfo.getTableAlias();
+        final Object val = svc.getValue();
+        if (val instanceof RestrictionField) {
+            sql.append(tableName).append('.').append(columnName).append(opSql).append(
+                    resolveParam(tableName, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
+            return;
+        }
+
+        translate(sql, tableName, columnName, val, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -57,12 +66,19 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         SingleValueRestriction svc = (SingleValueRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getFieldName());
+        final Object val = svc.getValue();
+        if (val instanceof RestrictionField) {
+            sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append(
+                    sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()).getPreferredColumnName());
+            return;
+        }
+
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
         if (sqlFieldInfo.isTransformed()) {
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), resolveParam(
-                    ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(svc.getValue()))));
+            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), resolveParam(null,
+                    ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(val))));
         } else {
-            Object postOp = convertType(sqlFieldInfo, resolveParam(svc.getValue()));
+            Object postOp = convertType(sqlFieldInfo, resolveParam(null, val));
             parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
         }
     }
@@ -70,6 +86,6 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
             throws UnifyException {
-        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlStringValue(param1));
+        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1));
     }
 }

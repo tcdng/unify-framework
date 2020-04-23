@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlLikeType;
 
@@ -28,11 +27,6 @@ import com.tcdng.unify.core.database.sql.SqlLikeType;
 public class LikeEndPolicy extends LikePolicy {
 
     public LikeEndPolicy(SqlDataSourceDialectPolicies rootPolicies) {
-        super(rootPolicies);
-    }
-
-    @Override
-    protected Object resolveParam(Object param) throws UnifyException {
-        return resolveParam(SqlLikeType.ENDS_WITH, param);
+        super(SqlLikeType.ENDS_WITH, rootPolicies);
     }
 }

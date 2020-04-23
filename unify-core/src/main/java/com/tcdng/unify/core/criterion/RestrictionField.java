@@ -13,20 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
-import com.tcdng.unify.core.database.sql.SqlLikeType;
+package com.tcdng.unify.core.criterion;
 
 /**
- * Not like begin with operator policy.
+ * Operand field object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotLikeBeginPolicy extends NotLikePolicy {
+public class RestrictionField {
 
-    public NotLikeBeginPolicy(SqlDataSourceDialectPolicies rootPolicies) {
-        super(SqlLikeType.BEGINS_WITH, rootPolicies);
+    String name;
+
+    public RestrictionField(String name) {
+        this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }    
 }
