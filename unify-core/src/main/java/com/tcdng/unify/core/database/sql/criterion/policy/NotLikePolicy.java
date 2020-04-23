@@ -39,7 +39,7 @@ public class NotLikePolicy extends SingleParameterPolicy {
     }
 
     @Override
-    protected Object resolveParam(Object param) throws UnifyException{
-        return getRootPolicies().generateLikeParameter(type, param);
+    protected Object resolveParam(String tableName, Object param) throws UnifyException{
+        return getRootPolicies().generateLikeParameter(type, tableName, param);
     }
 }

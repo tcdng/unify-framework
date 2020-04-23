@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.DoubleValueRestriction;
+import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
@@ -48,7 +49,34 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
             columnName = sqlEntityInfo.getListFieldInfo(dvc.getFieldName()).getPreferredColumnName();
         }
 
-        translate(sql, sqlEntityInfo.getTableAlias(), columnName, dvc.getFirstValue(), dvc.getSecondValue());
+        final String tableName = sqlEntityInfo.getTableAlias();
+        final Object val1 = dvc.getFirstValue();
+        final Object val2 = dvc.getSecondValue();
+        final boolean val1IsField = val1 instanceof RestrictionField;
+        final boolean val2IsField = val2 instanceof RestrictionField;
+        if (val1IsField || val2IsField) {
+            sql.append("(");
+            sql.append(tableName).append('.').append(columnName).append(opSql);
+            if (val1IsField) {
+                sql.append(tableName).append('.').append(
+                        sqlEntityInfo.getListFieldInfo(((RestrictionField) val1).getName()).getPreferredColumnName());
+            } else {
+                sql.append(getNativeSqlParam(resolveParam(null, val1)));
+            }
+
+            sql.append(" AND ");
+            if (val2IsField) {
+                sql.append(tableName).append('.').append(
+                        sqlEntityInfo.getListFieldInfo(((RestrictionField) val2).getName()).getPreferredColumnName());
+            } else {
+                sql.append(getNativeSqlParam(resolveParam(null, val2)));
+            }
+
+            sql.append(")");
+            return;
+        }
+
+        translate(sql, tableName, columnName, val1, val2);
     }
 
     @SuppressWarnings("unchecked")
@@ -56,21 +84,49 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
+        final Object val1 = dvc.getFirstValue();
+        final Object val2 = dvc.getSecondValue();
+        final boolean val1IsField = val1 instanceof RestrictionField;
+        final boolean val2IsField = val2 instanceof RestrictionField;
+
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(dvc.getFieldName());
         sql.append("(");
-        sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("? AND ?");
+        sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);
+        if (val1IsField) {
+            sql.append(sqlEntityInfo.getListFieldInfo(((RestrictionField) val1).getName()).getPreferredColumnName());
+        } else {
+            sql.append('?');
+        }
+
+        sql.append(" AND ");
+        if (val2IsField) {
+            sql.append(sqlEntityInfo.getListFieldInfo(((RestrictionField) val2).getName()).getPreferredColumnName());
+        } else {
+            sql.append('?');
+        }
+
         sql.append(")");
-        Object value1 = convertType(sqlFieldInfo, dvc.getFirstValue());
-        Object value2 = convertType(sqlFieldInfo, dvc.getSecondValue());
+
         if (sqlFieldInfo.isTransformed()) {
             Transformer<Object, Object> transformer = (Transformer<Object, Object>) sqlFieldInfo.getTransformer();
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                    transformer.forwardTransform(value1)));
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                    transformer.forwardTransform(value2)));
+            if (!val1IsField) {
+                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+                        transformer.forwardTransform(convertType(sqlFieldInfo, val1))));
+            }
+            if (!val2IsField) {
+                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+                        transformer.forwardTransform(convertType(sqlFieldInfo, val2))));
+            }
         } else {
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), value1));
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), value2));
+            if (!val1IsField) {
+                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+                        convertType(sqlFieldInfo, val1)));
+            }
+
+            if (!val2IsField) {
+                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+                        convertType(sqlFieldInfo, val2)));
+            }
         }
     }
 

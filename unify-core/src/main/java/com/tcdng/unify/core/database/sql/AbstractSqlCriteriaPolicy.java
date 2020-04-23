@@ -41,7 +41,8 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     @Override
     public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
             throws UnifyException {
-        doTranslate(sql, tableName, columnName, resolveParam(param1), resolveParam(param2));
+        doTranslate(sql, tableName, columnName, param1 != null ? resolveParam(tableName, param1) : null,
+                param2 != null ? resolveParam(tableName, param2) : null);
     }
 
     /**
@@ -129,13 +130,19 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     /**
      * Resolves parameter.
      * 
+     * @param tableName
+     *            the table name
      * @param param
      *            the parameter to resolve
      * @return the resolved parameter
      * @throws UnifyException
      *             if an error occurs
      */
-    protected Object resolveParam(Object param) throws UnifyException {
+    protected Object resolveParam(String tableName, Object param) throws UnifyException {
+        if (param instanceof SqlFieldInfo) {
+            return tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
+        }
+
         return param;
     }
 

@@ -42,5 +42,5 @@ public interface SqlDataSourceDialectPolicies {
 
     int getMaxClauseValues();
 
-    String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException;
+    String generateLikeParameter(SqlLikeType type, String tableName, Object param) throws UnifyException;
 }

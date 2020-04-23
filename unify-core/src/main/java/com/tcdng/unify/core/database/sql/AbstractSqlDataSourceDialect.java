@@ -772,7 +772,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public final String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException {
-        return getSqlDataSourceDialectPolicies().generateLikeParameter(type, param);
+        return getSqlDataSourceDialectPolicies().generateLikeParameter(type, null, param);
     }
 
     @Override
