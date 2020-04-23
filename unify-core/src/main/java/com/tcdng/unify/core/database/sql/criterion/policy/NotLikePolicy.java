@@ -27,16 +27,19 @@ import com.tcdng.unify.core.database.sql.SqlLikeType;
  */
 public class NotLikePolicy extends SingleParameterPolicy {
 
+    private SqlLikeType type;
+    
     public NotLikePolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        this(SqlLikeType.CONTAINS, rootPolicies);
+    }
+    
+    public NotLikePolicy(SqlLikeType type, SqlDataSourceDialectPolicies rootPolicies) {
         super(" NOT LIKE ", rootPolicies);
+        this.type = type;
     }
 
     @Override
     protected Object resolveParam(Object param) throws UnifyException{
-        return resolveParam(SqlLikeType.CONTAINS, param);
-    }
-    
-    protected String resolveParam(SqlLikeType type, Object param) throws UnifyException{
         return getRootPolicies().generateLikeParameter(type, param);
     }
 }

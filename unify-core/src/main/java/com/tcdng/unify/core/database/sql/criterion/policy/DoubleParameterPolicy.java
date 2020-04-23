@@ -78,8 +78,8 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
             throws UnifyException {
         sql.append("(");
-        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlStringValue(param1))
-                .append(" AND ").append(getNativeSqlStringValue(param2));
+        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1))
+                .append(" AND ").append(getNativeSqlParam(param2));
         sql.append(")");
     }
 }

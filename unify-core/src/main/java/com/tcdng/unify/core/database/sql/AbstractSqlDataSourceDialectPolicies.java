@@ -70,13 +70,8 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
         return 0;
     }
     
-    public String translateValue(Object param) throws UnifyException {
+    public String translateToNativeSqlParam(Object param) throws UnifyException {
         if (param instanceof String) {
-            String paramStr = (String) param;
-            if (paramStr.indexOf('.') > 0) {
-                return paramStr;
-            }
-
             return "\'" + param + "\'";
         }
 

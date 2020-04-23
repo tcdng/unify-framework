@@ -70,6 +70,6 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
             throws UnifyException {
-        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlStringValue(param1));
+        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1));
     }
 }

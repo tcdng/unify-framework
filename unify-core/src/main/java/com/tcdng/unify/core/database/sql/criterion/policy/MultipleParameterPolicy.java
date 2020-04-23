@@ -133,7 +133,7 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
                 sql.append(", ");
             }
 
-            sql.append(getNativeSqlStringValue(value));
+            sql.append(getNativeSqlParam(value));
 
             if ((++i) >= iLen) {
                 sql.append(")");

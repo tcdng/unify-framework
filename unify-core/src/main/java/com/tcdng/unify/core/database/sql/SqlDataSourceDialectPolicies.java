@@ -38,7 +38,7 @@ public interface SqlDataSourceDialectPolicies {
 
     SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType);
 
-    String translateValue(Object param) throws UnifyException;
+    String translateToNativeSqlParam(Object param) throws UnifyException;
 
     int getMaxClauseValues();
 

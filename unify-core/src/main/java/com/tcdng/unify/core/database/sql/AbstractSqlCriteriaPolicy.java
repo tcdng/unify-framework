@@ -85,14 +85,19 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     /**
      * Converts a value to its native SQL string equivalent.
      * 
-     * @param value
+     * @param val
      *            the value to convert
      * @return the converted value
      * @throws UnifyException
      *             if an error occurs
      */
-    protected String getNativeSqlStringValue(Object value) throws UnifyException {
-        return rootPolicies.translateValue(value);
+    protected String getNativeSqlParam(Object val) throws UnifyException {
+        if (val instanceof SqlViewColumnInfo) {
+            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) val;
+            return sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
+        }
+
+        return rootPolicies.translateToNativeSqlParam(val);
     }
 
     /**
@@ -131,11 +136,6 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if an error occurs
      */
     protected Object resolveParam(Object param) throws UnifyException {
-        if (param instanceof SqlViewColumnInfo) {
-            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
-            return sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
-        }
-
         return param;
     }
 

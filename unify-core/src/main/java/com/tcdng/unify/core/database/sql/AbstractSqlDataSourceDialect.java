@@ -665,7 +665,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 psb.append(',');
             }
             fsb.append(sqlFieldInfo.getPreferredColumnName());
-            psb.append(translateValue(params.get(fieldName)));
+            psb.append(translateNativeSqlParam(params.get(fieldName)));
         }
 
         StringBuilder insertSql = new StringBuilder();
@@ -1352,8 +1352,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public final String translateValue(Object param) throws UnifyException {
-        return getSqlDataSourceDialectPolicies().translateValue(param);
+    public final String translateNativeSqlParam(Object param) throws UnifyException {
+        return getSqlDataSourceDialectPolicies().translateToNativeSqlParam(param);
     }
 
     @Override
