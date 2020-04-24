@@ -61,7 +61,7 @@ public class UniqueValidation extends AbstractPageValidation {
             String idProperty = getUplAttribute(String.class, "idProperty");
             Object id = getTransferValue(idClazz, idProperty, dataTransfer);
             if (id != null) {
-                criteria.addNotEqual("id", id);
+                criteria.addNotEquals("id", id);
             }
 
             StringBuilder sb = new StringBuilder();

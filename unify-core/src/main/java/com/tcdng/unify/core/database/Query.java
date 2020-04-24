@@ -49,8 +49,8 @@ import com.tcdng.unify.core.criterion.NotBeginWithField;
 import com.tcdng.unify.core.criterion.NotBetween;
 import com.tcdng.unify.core.criterion.NotEndWith;
 import com.tcdng.unify.core.criterion.NotEndWithField;
-import com.tcdng.unify.core.criterion.NotEqual;
-import com.tcdng.unify.core.criterion.NotEqualField;
+import com.tcdng.unify.core.criterion.NotEquals;
+import com.tcdng.unify.core.criterion.NotEqualsField;
 import com.tcdng.unify.core.criterion.NotLike;
 import com.tcdng.unify.core.criterion.NotLikeField;
 import com.tcdng.unify.core.criterion.Order;
@@ -231,13 +231,13 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
-    public Query<T> addNotEqual(String field, Object value) {
-        restrictions.add(new NotEqual(field, value));
+    public Query<T> addNotEquals(String field, Object value) {
+        restrictions.add(new NotEquals(field, value));
         return this;
     }
 
-    public Query<T> addNotEqualField(String field1, String field2) {
-        restrictions.add(new NotEqualField(field1, field2));
+    public Query<T> addNotEqualsField(String field1, String field2) {
+        restrictions.add(new NotEqualsField(field1, field2));
         return this;
     }
 

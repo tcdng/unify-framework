@@ -43,7 +43,7 @@ import com.tcdng.unify.core.criterion.Greater;
 import com.tcdng.unify.core.criterion.Less;
 import com.tcdng.unify.core.criterion.LessOrEqual;
 import com.tcdng.unify.core.criterion.Like;
-import com.tcdng.unify.core.criterion.NotEqual;
+import com.tcdng.unify.core.criterion.NotEquals;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Update;
 
@@ -174,7 +174,7 @@ public class DatabaseTableEntityPreQueryTest extends AbstractUnifyComponentTest 
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
 
-            testEntityPolicy.setRestriction(new NotEqual("color", "cyan"));
+            testEntityPolicy.setRestriction(new NotEquals("color", "cyan"));
             assertEquals(3, db.deleteAll(new FruitQuery()));
 
             testEntityPolicy.clearRestriction();
@@ -199,7 +199,7 @@ public class DatabaseTableEntityPreQueryTest extends AbstractUnifyComponentTest 
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
 
-            testEntityPolicy.setRestriction(new NotEqual("color", "cyan"));
+            testEntityPolicy.setRestriction(new NotEquals("color", "cyan"));
             assertEquals(3, db.deleteAll(new FruitQuery()));
 
             // Order should be ignored

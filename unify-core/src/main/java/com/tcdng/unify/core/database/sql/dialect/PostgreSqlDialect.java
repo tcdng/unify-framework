@@ -219,6 +219,23 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
         public int getMaxClauseValues() {
             return -1;
         }
+
+        protected String concat(String... expressions) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("CONCAT(");
+            boolean appSym = false;
+            for (String expression : expressions) {
+                if (appSym) {
+                    sb.append(", ");
+                } else {
+                    appSym = true;
+                }
+
+                sb.append(expression);
+            }
+            sb.append(")");
+            return sb.toString();
+        }
     }
 }
 

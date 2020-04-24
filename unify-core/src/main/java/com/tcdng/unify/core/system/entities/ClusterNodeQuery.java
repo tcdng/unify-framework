@@ -41,7 +41,7 @@ public class ClusterNodeQuery extends Query<ClusterNode> {
     }
 
     public ClusterNodeQuery nodeNotEqual(String nodeId) {
-        return (ClusterNodeQuery) addNotEqual("nodeId", nodeId);
+        return (ClusterNodeQuery) addNotEquals("nodeId", nodeId);
     }
 
     public ClusterNodeQuery lastHeartBeatOlderThan(Date expiryDt) {
