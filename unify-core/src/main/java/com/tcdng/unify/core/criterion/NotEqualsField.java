@@ -13,22 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.criterion;
 
 /**
- * Restriction for a property not equal to a value.
+ * Restriction for a property not equal to a field value.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotEqual extends AbstractSingleValueRestriction {
+public class NotEqualsField extends NotEquals {
 
-    public NotEqual(String propertyName, Object value) {
-        super(propertyName, value);
+    public NotEqualsField(String propertyName, String fieldName) {
+        super(propertyName, new RestrictionField(fieldName));
     }
 
-    @Override
-    public RestrictionType getType() {
-        return RestrictionType.NOT_EQUAL;
-    }
 }

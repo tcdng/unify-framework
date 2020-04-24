@@ -93,17 +93,21 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
             SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
             paramStr = sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
         } else if (param instanceof SqlFieldInfo) {
-            paramStr = tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
+            if (tableName == null) {
+                paramStr = ((SqlFieldInfo) param).getPreferredColumnName();
+            } else {
+                paramStr = tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
+            }
         }
 
         if (paramStr != null) {
             if (type.equals(SqlLikeType.BEGINS_WITH)) {
-                return paramStr + " + '%'";
+                return concat(paramStr, "'%'");
             } else if (type.equals(SqlLikeType.ENDS_WITH)) {
-                return "'%' + " + paramStr;
+                return concat("'%'", paramStr);
             }
 
-            return "'%' + " + paramStr + " + '%'";
+            return concat("'%'", paramStr, "'%'");
         }
 
         paramStr = String.valueOf(param);
@@ -116,4 +120,5 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
         return "%" + paramStr + "%";
     }
 
+    protected abstract String concat(String... expressions);
 }

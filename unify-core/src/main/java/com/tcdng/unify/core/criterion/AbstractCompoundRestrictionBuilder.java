@@ -99,7 +99,7 @@ public abstract class AbstractCompoundRestrictionBuilder {
     }
 
     public AbstractCompoundRestrictionBuilder notEqual(String propertyName, Object value) {
-        getCompoundRestriction().add(new NotEqual(propertyName, value));
+        getCompoundRestriction().add(new NotEquals(propertyName, value));
         return this;
     }
 

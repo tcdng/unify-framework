@@ -140,6 +140,10 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      */
     protected Object resolveParam(String tableName, Object param) throws UnifyException {
         if (param instanceof SqlFieldInfo) {
+            if (tableName == null) {
+                return ((SqlFieldInfo) param).getPreferredColumnName();
+            }
+            
             return tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
         }
 

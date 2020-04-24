@@ -68,8 +68,8 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getFieldName());
         final Object val = svc.getValue();
         if (val instanceof RestrictionField) {
-            sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append(
-                    sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()).getPreferredColumnName());
+            sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append(resolveParam(
+                    null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
             return;
         }
 
