@@ -18,14 +18,14 @@ package com.tcdng.unify.core.database.sql.criterion.policy;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
- * Not equal operator policy.
+ * Not equals operator policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotEqualPolicy extends SingleParameterPolicy {
+public class NotEqualsPolicy extends SingleParameterPolicy {
 
-    public NotEqualPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+    public NotEqualsPolicy(SqlDataSourceDialectPolicies rootPolicies) {
         super(" != ", rootPolicies);
     }
 

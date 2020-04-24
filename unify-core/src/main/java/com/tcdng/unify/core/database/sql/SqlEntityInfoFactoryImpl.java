@@ -1076,7 +1076,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             case LIKE:
                             case NOT_BEGIN_WITH:
                             case NOT_END_WITH:
-                            case NOT_EQUAL:
+                            case NOT_EQUALS:
                             case NOT_LIKE:
                                 String rightProperty = AnnotationUtils.getAnnotationString(vra.rightProperty());
                                 if (StringUtils.isNotBlank(rightProperty)) {

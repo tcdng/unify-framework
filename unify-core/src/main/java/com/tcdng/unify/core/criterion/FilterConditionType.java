@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.EnumUtils;
 public enum FilterConditionType implements EnumConst {
 
     EQUALS("EQ", RestrictionType.EQUALS),
-    NOT_EQUAL("NEQ", RestrictionType.NOT_EQUAL),
+    NOT_EQUALS("NEQ", RestrictionType.NOT_EQUALS),
     GREATER("GT", RestrictionType.GREATER),
     GREATER_OR_EQUAL("GTE", RestrictionType.GREATER_OR_EQUAL),
     LESS("LT", RestrictionType.LESS_THAN),

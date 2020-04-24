@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("restrictiontypelist")
 public enum RestrictionType implements EnumConst {
     EQUALS("EQ", true),
-    NOT_EQUAL("NEQ", true),
+    NOT_EQUALS("NEQ", true),
     LESS_THAN("LT", true),
     LESS_OR_EQUAL("LTE", true),
     GREATER("GT", true),

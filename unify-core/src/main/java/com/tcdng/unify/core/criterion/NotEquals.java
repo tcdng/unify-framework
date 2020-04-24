@@ -29,6 +29,6 @@ public class NotEquals extends AbstractSingleValueRestriction {
 
     @Override
     public RestrictionType getType() {
-        return RestrictionType.NOT_EQUAL;
+        return RestrictionType.NOT_EQUALS;
     }
 }
