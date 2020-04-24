@@ -37,7 +37,7 @@ public class Product extends AbstractTestVersionedTableEntity {
     @Column
     private Double costPrice;
 
-    @Column
+    @Column(nullable = true)
     private Double salesPrice;
 
 
