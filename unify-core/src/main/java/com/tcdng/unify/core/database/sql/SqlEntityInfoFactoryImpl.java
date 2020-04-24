@@ -150,13 +150,24 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
             @SuppressWarnings("unchecked")
             private SqlEntityInfo createEnumConstEntityInfo(Class<?> entityClass) throws Exception {
-                String tableName =
-                        ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
+                String tableName = null;
+                Table ta = entityClass.getAnnotation(Table.class);
+                if (ta != null) {
+                    tableName = AnnotationUtils.getAnnotationString(ta.value());
+                    if (StringUtils.isBlank(tableName)) {
+                        tableName = AnnotationUtils.getAnnotationString(ta.name());
+                    }
+                }
 
-                String preferredTableName = sqlDataSourceDialect.getPreferredName(tableName);
-                String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
+                if (StringUtils.isBlank(tableName)) {
+                    tableName =
+                            ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
+                }
+
+                final String preferredTableName = sqlDataSourceDialect.getPreferredName(tableName);
+                final String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
                         ApplicationComponents.APPLICATION_DATASOURCE).getSettings().getSettingValue("appSchema");
-                String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
+                final String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
 
                 SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
                 Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
