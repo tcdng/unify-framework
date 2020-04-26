@@ -31,7 +31,7 @@ public class CriteriaBuilder {
 
     private CompoundRestriction rootCondition;
 
-    private CriteriaBuilder() {
+    public CriteriaBuilder() {
         buildStack = new Stack<CompoundRestriction>();
     }
 

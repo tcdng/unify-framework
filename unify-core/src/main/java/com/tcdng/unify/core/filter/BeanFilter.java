@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.filter;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.criterion.CompoundRestriction;
+import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.util.BeanFilterPolicyUtils;
 
 /**
@@ -27,14 +27,14 @@ import com.tcdng.unify.core.util.BeanFilterPolicyUtils;
  */
 public class BeanFilter {
 
-    private CompoundRestriction compoundRestriction;
+    private Restriction restriction;
 
-    public BeanFilter(CompoundRestriction compoundRestriction) {
-        this.compoundRestriction = compoundRestriction;
+    public BeanFilter(Restriction restriction) {
+        this.restriction = restriction;
     }
 
     public boolean match(Object bean) throws UnifyException {
-        return BeanFilterPolicyUtils.getBeanFilterPolicy(compoundRestriction.getConditionType()).match(bean,
-                compoundRestriction);
+        return BeanFilterPolicyUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean,
+                restriction);
     }
 }

@@ -42,11 +42,11 @@ public abstract class AbstractDoubleParamBeanFilterPolicy implements BeanFilterP
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, doubleParamRestriction.getFieldName());
         if (fieldVal != null) {
             if (useFieldParams) {
-                return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getFirstParam(), null),
-                        DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getSecondParam(), null));
-            } else {
                 return doMatch(fieldVal, DataUtils.getNestedBeanProperty(bean, String.valueOf(doubleParamRestriction.getFirstParam())),
                         DataUtils.getNestedBeanProperty(bean, String.valueOf(doubleParamRestriction.getSecondParam())));
+            } else {
+                return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getFirstParam(), null),
+                        DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getSecondParam(), null));
             }
         }
 

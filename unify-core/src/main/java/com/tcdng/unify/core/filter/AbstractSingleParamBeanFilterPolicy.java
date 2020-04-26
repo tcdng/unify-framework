@@ -44,10 +44,10 @@ public abstract class AbstractSingleParamBeanFilterPolicy implements BeanFilterP
         if (fieldVal != null) {
             if (useFieldParams) {
                 return doMatch(fieldVal,
-                        DataUtils.convert(fieldVal.getClass(), singleParamRestriction.getParam(), null));
+                        DataUtils.getNestedBeanProperty(bean, String.valueOf(singleParamRestriction.getParam())));
             } else {
                 return doMatch(fieldVal,
-                        DataUtils.getNestedBeanProperty(bean, String.valueOf(singleParamRestriction.getParam())));
+                        DataUtils.convert(fieldVal.getClass(), singleParamRestriction.getParam(), null));
             }
         }
 
