@@ -18,6 +18,7 @@ package com.tcdng.unify.core.filter;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.DoubleParamRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -42,10 +43,14 @@ public abstract class AbstractDoubleParamBeanFilterPolicy implements BeanFilterP
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, doubleParamRestriction.getFieldName());
         if (fieldVal != null) {
             if (useFieldParams) {
-                return doMatch(fieldVal, DataUtils.getNestedBeanProperty(bean, String.valueOf(doubleParamRestriction.getFirstParam())),
-                        DataUtils.getNestedBeanProperty(bean, String.valueOf(doubleParamRestriction.getSecondParam())));
+                return doMatch(fieldVal,
+                        DataUtils.getNestedBeanProperty(bean,
+                                ((RestrictionField) doubleParamRestriction.getFirstParam()).getName()),
+                        DataUtils.getNestedBeanProperty(bean,
+                                ((RestrictionField) doubleParamRestriction.getSecondParam()).getName()));
             } else {
-                return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getFirstParam(), null),
+                return doMatch(fieldVal,
+                        DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getFirstParam(), null),
                         DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getSecondParam(), null));
             }
         }

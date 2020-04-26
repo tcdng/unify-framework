@@ -17,6 +17,7 @@ package com.tcdng.unify.core.filter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.SingleParamRestriction;
 import com.tcdng.unify.core.util.DataUtils;
 
@@ -43,8 +44,8 @@ public abstract class AbstractSingleParamBeanFilterPolicy implements BeanFilterP
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, singleParamRestriction.getFieldName());
         if (fieldVal != null) {
             if (useFieldParams) {
-                return doMatch(fieldVal,
-                        DataUtils.getNestedBeanProperty(bean, String.valueOf(singleParamRestriction.getParam())));
+                return doMatch(fieldVal, DataUtils.getNestedBeanProperty(bean,
+                        ((RestrictionField) singleParamRestriction.getParam()).getName()));
             } else {
                 return doMatch(fieldVal,
                         DataUtils.convert(fieldVal.getClass(), singleParamRestriction.getParam(), null));
