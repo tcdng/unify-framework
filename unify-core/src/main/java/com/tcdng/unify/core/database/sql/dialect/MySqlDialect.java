@@ -17,7 +17,7 @@ package com.tcdng.unify.core.database.sql.dialect;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,12 +55,12 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
             new MySqlDataSourceDialectPolicies();
 
     static {
-        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new HashMap<ColumnType, SqlDataTypePolicy>();
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
         tempMap1.put(ColumnType.BLOB, new MySqlBlobPolicy());
         tempMap1.put(ColumnType.CLOB, new MySqlClobPolicy());
 
-        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new HashMap<RestrictionType, SqlCriteriaPolicy>();
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
         populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
 
         sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));

@@ -28,4 +28,9 @@ public class BeginsWithField extends BeginsWith {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.BEGINS_WITH_FIELD;
+    }
+
 }

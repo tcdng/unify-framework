@@ -28,4 +28,9 @@ public class NotBeginWithField extends NotBeginWith {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.NOT_BEGIN_WITH_FIELD;
+    }
+
 }

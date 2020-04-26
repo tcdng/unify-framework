@@ -20,7 +20,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.criterion.SingleValueRestriction;
+import com.tcdng.unify.core.criterion.SingleParamRestriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlEntityInfo;
@@ -43,14 +43,14 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        SingleValueRestriction svc = (SingleValueRestriction) restriction;
+        SingleParamRestriction svc = (SingleParamRestriction) restriction;
         String columnName = svc.getFieldName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(svc.getFieldName()).getPreferredColumnName();
         }
 
         final String tableName = sqlEntityInfo.getTableAlias();
-        final Object val = svc.getValue();
+        final Object val = svc.getParam();
         if (val instanceof RestrictionField) {
             sql.append(tableName).append('.').append(columnName).append(opSql).append(
                     resolveParam(tableName, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
@@ -64,9 +64,9 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
-        SingleValueRestriction svc = (SingleValueRestriction) restriction;
+        SingleParamRestriction svc = (SingleParamRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getFieldName());
-        final Object val = svc.getValue();
+        final Object val = svc.getParam();
         if (val instanceof RestrictionField) {
             sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append(resolveParam(
                     null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));

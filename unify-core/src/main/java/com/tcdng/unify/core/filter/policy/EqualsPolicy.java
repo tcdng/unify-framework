@@ -13,29 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.filter.policy;
 
-package com.tcdng.unify.core.criterion;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 
 /**
- * Single value restriction object.
+ * EqualsPolicy to policy..
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface SingleValueRestriction extends SimpleRestriction {
+public class EqualsPolicy extends AbstractSingleParamBeanFilterPolicy {
 
-    /**
-     * Gets the single value for this restriction.
-     * 
-     * @return the single value
-     */
-    Object getValue();
+    public EqualsPolicy() {
+        this(false);
+    }
 
-    /**
-     * Sets the single value for this restriction.
-     * 
-     * @param val
-     *            the value to set
-     */
-    void setValue(Object val);
+    public EqualsPolicy(boolean useFieldParams) {
+        super(useFieldParams, false);
+    }
+
+    @Override
+    protected boolean doMatch(Object fieldVal, Object param) throws UnifyException {
+        return fieldVal.equals(param);
+    }
+
 }

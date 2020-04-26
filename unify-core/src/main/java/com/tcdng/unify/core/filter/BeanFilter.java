@@ -13,15 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.filter;
 
-package com.tcdng.unify.core.criterion;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.CompoundRestriction;
+import com.tcdng.unify.core.util.BeanFilterPolicyUtils;
 
 /**
- * No values restriction object.
+ * Bean filter class.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface NoValueRestriction extends SimpleRestriction {
+public class BeanFilter {
 
+    private CompoundRestriction compoundRestriction;
+
+    public BeanFilter(CompoundRestriction compoundRestriction) {
+        this.compoundRestriction = compoundRestriction;
+    }
+
+    public boolean match(Object bean) throws UnifyException {
+        return BeanFilterPolicyUtils.getBeanFilterPolicy(compoundRestriction.getConditionType()).match(bean,
+                compoundRestriction);
+    }
 }

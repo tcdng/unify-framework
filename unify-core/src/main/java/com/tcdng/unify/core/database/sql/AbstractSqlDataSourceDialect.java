@@ -130,7 +130,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private String terminationSql;
 
     private String newLineSql;
-    
+
     private boolean allObjectsInLowerCase;
 
     private boolean useCallableFunctionMode;
@@ -1615,7 +1615,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         if (!query.isEmptyCriteria()) {
             Restriction restriction = query.getRestrictions();
-            SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(restriction.getType());
+            SqlCriteriaPolicy sqlCriteriaPolicy =
+                    getSqlCriteriaPolicy(restriction.getConditionType().restrictionType());
             StringBuilder critSql = new StringBuilder();
             sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo, restriction);
             sql.append(" WHERE ");
@@ -2177,8 +2178,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(restriction.getType()).translate(sql, sqlEntityInfo,
-                restriction);
+        getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(restriction.getConditionType().restrictionType())
+                .translate(sql, sqlEntityInfo, restriction);
     }
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,

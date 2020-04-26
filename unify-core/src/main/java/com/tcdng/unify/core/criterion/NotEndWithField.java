@@ -28,4 +28,9 @@ public class NotEndWithField extends NotEndWith {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.NOT_END_WITH_FIELD;
+    }
+
 }

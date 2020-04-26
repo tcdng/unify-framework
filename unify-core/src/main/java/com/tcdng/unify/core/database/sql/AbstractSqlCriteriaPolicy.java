@@ -55,7 +55,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if an error occurs
      */
     protected SqlCriteriaPolicy getOperatorPolicy(Restriction restriction) throws UnifyException {
-        return rootPolicies.getSqlCriteriaPolicy(restriction.getType());
+        return rootPolicies.getSqlCriteriaPolicy(restriction.getConditionType().restrictionType());
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
             if (tableName == null) {
                 return ((SqlFieldInfo) param).getPreferredColumnName();
             }
-            
+
             return tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
         }
 

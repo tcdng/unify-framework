@@ -14,30 +14,17 @@
  * the License.
  */
 
-package com.tcdng.unify.core.criterion;
-
-import java.util.Collection;
+package com.tcdng.unify.core.filter.policy;
 
 /**
- * Multiple values restriction object.
+ * Ends with field policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface MultipleValueRestriction extends SimpleRestriction {
+public class EndsWithFieldPolicy extends EndsWithPolicy {
 
-    /**
-     * Gets values for this restriction.
-     * 
-     * @return the values
-     */
-    Collection<Object> getValues();
-
-    /**
-     * Set values for this restriction.
-     * 
-     * @param val
-     *            the values to set
-     */
-    void setValues(Collection<Object> val);
+    public EndsWithFieldPolicy() {
+        super(true);
+    }
 }

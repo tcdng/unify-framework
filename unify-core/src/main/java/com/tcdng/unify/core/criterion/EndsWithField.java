@@ -28,4 +28,9 @@ public class EndsWithField extends EndsWith {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.ENDS_WITH_FIELD;
+    }
+
 }

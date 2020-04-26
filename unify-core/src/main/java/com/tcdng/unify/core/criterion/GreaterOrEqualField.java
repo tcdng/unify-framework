@@ -28,4 +28,9 @@ public class GreaterOrEqualField extends GreaterOrEqual {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.GREATER_OR_EQUAL_FIELD;
+    }
+
 }

@@ -28,4 +28,9 @@ public class EqualsField extends Equals {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.EQUALS_FIELD;
+    }
+
 }

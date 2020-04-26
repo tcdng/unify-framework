@@ -13,19 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.filter.policy;
 
-package com.tcdng.unify.core.criterion;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 
 /**
- * Convenient abstract base class for no-value restrictions.
+ * Not equal policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractNoValueRestriction extends AbstractSimpleRestriction implements NoValueRestriction {
+public class NotEqualsPolicy extends AbstractSingleParamBeanFilterPolicy {
 
-    public AbstractNoValueRestriction(String propertyName) {
-        super(propertyName);
+    public NotEqualsPolicy() {
+        this(false);
+    }
+
+    public NotEqualsPolicy(boolean useFieldParams) {
+        super(useFieldParams, true);
+    }
+
+    @Override
+    protected boolean doMatch(Object fieldVal, Object param) throws UnifyException {
+        return !fieldVal.equals(param);
     }
 
 }

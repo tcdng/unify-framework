@@ -28,4 +28,9 @@ public class LikeField extends Like {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.LIKE_FIELD;
+    }
+
 }

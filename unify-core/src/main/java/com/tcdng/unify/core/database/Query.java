@@ -112,6 +112,10 @@ public class Query<T extends Entity> implements Cloneable {
         return new Query<U>(entityClass, applyAppQueryLimit);
     }
 
+    public static <U extends Entity> Query<U> of(Class<U> entityClass, CompoundRestriction restrictions) {
+        return new Query<U>(entityClass, restrictions, false);
+    }
+
     public static <U extends Entity> Query<U> of(Class<U> entityClass, CompoundRestriction restrictions,
             boolean applyAppQueryLimit) {
         return new Query<U>(entityClass, restrictions, applyAppQueryLimit);

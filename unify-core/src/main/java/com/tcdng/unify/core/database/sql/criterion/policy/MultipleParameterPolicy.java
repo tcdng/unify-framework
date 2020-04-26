@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.criterion.MultipleValueRestriction;
+import com.tcdng.unify.core.criterion.MultipleParamRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
@@ -50,20 +50,20 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
     @Override
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        MultipleValueRestriction mvc = (MultipleValueRestriction) restriction;
+        MultipleParamRestriction mvc = (MultipleParamRestriction) restriction;
         String columnName = mvc.getFieldName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(mvc.getFieldName()).getPreferredColumnName();
         }
-        translate(sql, sqlEntityInfo.getTableAlias(), columnName, mvc.getValues(), null);
+        translate(sql, sqlEntityInfo.getTableAlias(), columnName, mvc.getParams(), null);
     }
 
     @Override
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
-        MultipleValueRestriction mvc = (MultipleValueRestriction) restriction;
+        MultipleParamRestriction mvc = (MultipleParamRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo((String) mvc.getFieldName());
-        Collection<Object> values = mvc.getValues();
+        Collection<Object> values = (Collection<Object>) mvc.getParams();
         if (values == null || values.isEmpty()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_AT_LEAST_ONE_VALUE_EXPECTED,
                     sqlEntityInfo.getEntityClass());
@@ -71,7 +71,7 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
 
         if (sqlFieldInfo.isTransformed()) {
             Transformer<Object, Object> transformer = (Transformer<Object, Object>) sqlFieldInfo.getTransformer();
-            Collection<?> origValues = (Collection<?>) mvc.getValues();
+            Collection<?> origValues = (Collection<?>) mvc.getParams();
             values = new ArrayList<Object>();
             for (Object value : origValues) {
                 values.add(transformer.forwardTransform(value));

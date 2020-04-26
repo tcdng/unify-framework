@@ -18,7 +18,7 @@ package com.tcdng.unify.core.database.sql.criterion.policy;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.criterion.DoubleValueRestriction;
+import com.tcdng.unify.core.criterion.DoubleParamRestriction;
 import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
@@ -43,15 +43,15 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
+        DoubleParamRestriction dvc = (DoubleParamRestriction) restriction;
         String columnName = dvc.getFieldName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(dvc.getFieldName()).getPreferredColumnName();
         }
 
         final String tableName = sqlEntityInfo.getTableAlias();
-        final Object val1 = dvc.getFirstValue();
-        final Object val2 = dvc.getSecondValue();
+        final Object val1 = dvc.getFirstParam();
+        final Object val2 = dvc.getSecondParam();
         final boolean val1IsField = val1 instanceof RestrictionField;
         final boolean val2IsField = val2 instanceof RestrictionField;
         if (val1IsField || val2IsField) {
@@ -83,9 +83,9 @@ public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
-        DoubleValueRestriction dvc = (DoubleValueRestriction) restriction;
-        final Object val1 = dvc.getFirstValue();
-        final Object val2 = dvc.getSecondValue();
+        DoubleParamRestriction dvc = (DoubleParamRestriction) restriction;
+        final Object val1 = dvc.getFirstParam();
+        final Object val2 = dvc.getSecondParam();
         final boolean val1IsField = val1 instanceof RestrictionField;
         final boolean val2IsField = val2 instanceof RestrictionField;
 

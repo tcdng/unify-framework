@@ -17,38 +17,38 @@
 package com.tcdng.unify.core.criterion;
 
 /**
- * Convenient abstract base class for double-value restrictions.
+ * Convenient abstract base class for double parameter restrictions.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractDoubleValueRestriction extends AbstractSimpleRestriction
-        implements DoubleValueRestriction {
+public abstract class AbstractDoubleParamRestriction extends AbstractSimpleRestriction
+        implements DoubleParamRestriction {
 
-    private Object firstValue;
+    private Object firstParam;
 
-    private Object secondValue;
+    private Object secondParam;
 
-    public AbstractDoubleValueRestriction(String propertyName, Object firstValue, Object secondValue) {
+    public AbstractDoubleParamRestriction(String propertyName, Object firstParam, Object secondParam) {
         super(propertyName);
-        this.firstValue = firstValue;
-        this.secondValue = secondValue;
+        this.firstParam = firstParam;
+        this.secondParam = secondParam;
     }
 
     @Override
-    public Object getFirstValue() {
-        return firstValue;
+    public Object getFirstParam() {
+        return firstParam;
     }
 
     @Override
-    public Object getSecondValue() {
-        return secondValue;
+    public Object getSecondParam() {
+        return secondParam;
     }
 
     @Override
-    public void setValues(Object firstVal, Object secondVal) {
-        this.firstValue = firstVal;
-        this.secondValue = secondVal;
+    public void setParams(Object firstParam, Object secondParam) {
+        this.firstParam = firstParam;
+        this.secondParam = secondParam;
     }
 
 }

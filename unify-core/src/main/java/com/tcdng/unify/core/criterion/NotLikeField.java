@@ -28,4 +28,9 @@ public class NotLikeField extends NotLike {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.NOT_LIKE_FIELD;
+    }
+
 }

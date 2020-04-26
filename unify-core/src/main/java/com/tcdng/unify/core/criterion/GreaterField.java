@@ -27,4 +27,9 @@ public class GreaterField extends Greater {
     public GreaterField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));
     }
+
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.GREATER_THAN_FIELD;
+    }
 }

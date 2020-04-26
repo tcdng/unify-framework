@@ -28,4 +28,9 @@ public class LessField extends Less {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.LESS_THAN_FIELD;
+    }
+
 }

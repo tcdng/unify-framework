@@ -13,33 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.filter.policy;
 
-package com.tcdng.unify.core.criterion;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.filter.AbstractZeroParamBeanFilterPolicy;
 
 /**
- * Convenient abstract base class for single-value restrictions.
+ * Restriction for a property that is not null.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractSingleValueRestriction extends AbstractSimpleRestriction
-        implements SingleValueRestriction {
-
-    private Object value;
-
-    public AbstractSingleValueRestriction(String propertyName, Object value) {
-        super(propertyName);
-        this.value = value;
-    }
+public class IsNotNullPolicy extends AbstractZeroParamBeanFilterPolicy {
 
     @Override
-    public Object getValue() {
-        return value;
+    protected boolean doMatch(Object fieldVal) throws UnifyException {
+        return fieldVal != null;
     }
-
-    @Override
-    public void setValue(Object val) {
-        this.value = val;
-    }
-
 }

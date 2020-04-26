@@ -28,4 +28,9 @@ public class LessOrEqualField extends LessOrEqual {
         super(propertyName, new RestrictionField(fieldName));
     }
 
+    @Override
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.LESS_OR_EQUAL_FIELD;
+    }
+
 }

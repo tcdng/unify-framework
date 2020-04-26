@@ -14,37 +14,18 @@
  * the License.
  */
 
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.core.filter.policy;
 
 /**
- * Double value restriction object.
+ * Less than or equal to field policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DoubleValueRestriction extends SimpleRestriction {
+public class LessOrEqualFieldPolicy extends LessOrEqualPolicy {
 
-    /**
-     * Gets the first value for this restriction.
-     * 
-     * @return the first value
-     */
-    Object getFirstValue();
+    public LessOrEqualFieldPolicy() {
+        super(true);
+    }
 
-    /**
-     * Gets the second value for this restriction.
-     * 
-     * @return the second value
-     */
-    Object getSecondValue();
-
-    /**
-     * Sets the restriction values.
-     * 
-     * @param firstVal
-     *            the first value to set
-     * @param secondVal
-     *            the second value to set
-     */
-    void setValues(Object firstVal, Object secondVal);
 }

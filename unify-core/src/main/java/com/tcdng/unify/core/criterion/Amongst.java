@@ -23,14 +23,14 @@ import java.util.Collection;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Amongst extends AbstractMultipleValueRestriction {
+public class Amongst extends AbstractMultipleParamRestriction {
 
-    public Amongst(String propertyName, Collection<? extends Object> values) {
+    public Amongst(String propertyName, Collection<?> values) {
         super(propertyName, values);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.AMONGST;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.AMONGST;
     }
 }

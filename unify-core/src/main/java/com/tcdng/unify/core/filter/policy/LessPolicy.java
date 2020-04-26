@@ -13,36 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.filter.policy;
 
-package com.tcdng.unify.core.criterion;
-
-import java.util.Collection;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 
 /**
- * Convenient abstract base class for multiple-value restrictions.
+ * Less than policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractMultipleValueRestriction extends AbstractSimpleRestriction
-        implements MultipleValueRestriction {
+public class LessPolicy extends AbstractSingleParamBeanFilterPolicy {
 
-    private Collection<Object> values;
-
-    @SuppressWarnings("unchecked")
-    public AbstractMultipleValueRestriction(String propertyName, Collection<? extends Object> values) {
-        super(propertyName);
-        this.values = (Collection<Object>) values;
+    public LessPolicy() {
+        this(false);
     }
 
-    @Override
-    public Collection<Object> getValues() {
-        return values;
+    public LessPolicy(boolean useFieldParams) {
+        super(useFieldParams, false);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public void setValues(Collection<Object> val) {
-        this.values = val;
+    protected boolean doMatch(Object fieldVal, Object param) throws UnifyException {
+        return ((Comparable) fieldVal).compareTo((Comparable) param) < 0;
     }
 
 }

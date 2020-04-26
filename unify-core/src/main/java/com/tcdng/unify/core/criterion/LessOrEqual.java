@@ -21,14 +21,14 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LessOrEqual extends AbstractSingleValueRestriction {
+public class LessOrEqual extends AbstractSingleParamRestriction {
 
     public LessOrEqual(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.LESS_OR_EQUAL;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.LESS_OR_EQUAL;
     }
 }

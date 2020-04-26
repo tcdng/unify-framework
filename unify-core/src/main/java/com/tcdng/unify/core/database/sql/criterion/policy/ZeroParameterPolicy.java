@@ -18,7 +18,7 @@ package com.tcdng.unify.core.database.sql.criterion.policy;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.criterion.NoValueRestriction;
+import com.tcdng.unify.core.criterion.ZeroParamRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
@@ -41,7 +41,7 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        NoValueRestriction nvc = (NoValueRestriction) restriction;
+        ZeroParamRestriction nvc = (ZeroParamRestriction) restriction;
         String columnName = nvc.getFieldName();
         if (sqlEntityInfo != null) {
             columnName = sqlEntityInfo.getListFieldInfo(nvc.getFieldName()).getPreferredColumnName();
@@ -52,7 +52,7 @@ public class ZeroParameterPolicy extends AbstractSqlCriteriaPolicy {
     @Override
     public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
-        NoValueRestriction nvc = (NoValueRestriction) restriction;
+        ZeroParamRestriction nvc = (ZeroParamRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(nvc.getFieldName());
         sql.append("(");
         sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);
