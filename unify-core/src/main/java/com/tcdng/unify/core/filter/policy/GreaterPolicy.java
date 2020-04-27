@@ -27,11 +27,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 public class GreaterPolicy extends AbstractSingleParamBeanFilterPolicy {
 
     public GreaterPolicy() {
-        this(false);
-    }
-
-    public GreaterPolicy(boolean useFieldParams) {
-        super(useFieldParams, false);
+        super(false);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

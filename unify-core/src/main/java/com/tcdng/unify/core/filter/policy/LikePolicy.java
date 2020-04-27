@@ -27,11 +27,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 public class LikePolicy extends AbstractSingleParamBeanFilterPolicy {
 
     public LikePolicy() {
-        this(false);
-    }
-
-    public LikePolicy(boolean useFieldParams) {
-        super(useFieldParams, false);
+        super(false);
     }
 
     @Override

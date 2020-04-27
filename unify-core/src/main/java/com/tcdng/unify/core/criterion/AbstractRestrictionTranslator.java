@@ -14,18 +14,27 @@
  * the License.
  */
 
-package com.tcdng.unify.core.filter.policy;
+package com.tcdng.unify.core.criterion;
+
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Less than or equal to field policy.
+ * Convenient abstract base class for restriction translators.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LessOrEqualFieldPolicy extends LessOrEqualPolicy {
+public abstract class AbstractRestrictionTranslator extends AbstractUnifyComponent implements RestrictionTranslator {
 
-    public LessOrEqualFieldPolicy() {
-        super(true);
+    @Override
+    protected void onInitialize() throws UnifyException {
+
+    }
+
+    @Override
+    protected void onTerminate() throws UnifyException {
+
     }
 
 }

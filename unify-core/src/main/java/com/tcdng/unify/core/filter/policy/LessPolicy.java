@@ -27,11 +27,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 public class LessPolicy extends AbstractSingleParamBeanFilterPolicy {
 
     public LessPolicy() {
-        this(false);
-    }
-
-    public LessPolicy(boolean useFieldParams) {
-        super(useFieldParams, false);
+        super(false);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

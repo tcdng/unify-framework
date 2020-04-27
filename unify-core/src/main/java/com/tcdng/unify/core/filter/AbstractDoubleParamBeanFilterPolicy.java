@@ -29,12 +29,10 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractDoubleParamBeanFilterPolicy implements BeanFilterPolicy {
 
-    private boolean useFieldParams;
-
     private boolean inverted;
 
-    public AbstractDoubleParamBeanFilterPolicy(boolean useFieldParams, boolean inverted) {
-        this.useFieldParams = useFieldParams;
+    public AbstractDoubleParamBeanFilterPolicy(boolean inverted) {
+        this.inverted = inverted;
     }
 
     @Override
@@ -42,17 +40,21 @@ public abstract class AbstractDoubleParamBeanFilterPolicy implements BeanFilterP
         DoubleParamRestriction doubleParamRestriction = (DoubleParamRestriction) restriction;
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, doubleParamRestriction.getFieldName());
         if (fieldVal != null) {
-            if (useFieldParams) {
-                return doMatch(fieldVal,
-                        DataUtils.getNestedBeanProperty(bean,
-                                ((RestrictionField) doubleParamRestriction.getFirstParam()).getName()),
-                        DataUtils.getNestedBeanProperty(bean,
-                                ((RestrictionField) doubleParamRestriction.getSecondParam()).getName()));
+            Object paramA = doubleParamRestriction.getFirstParam();
+            if (paramA instanceof RestrictionField) {
+                paramA = DataUtils.getNestedBeanProperty(bean, ((RestrictionField) paramA).getName());
             } else {
-                return doMatch(fieldVal,
-                        DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getFirstParam(), null),
-                        DataUtils.convert(fieldVal.getClass(), doubleParamRestriction.getSecondParam(), null));
+                paramA = DataUtils.convert(fieldVal.getClass(), paramA, null);
             }
+
+            Object paramB = doubleParamRestriction.getSecondParam();
+            if (paramB instanceof RestrictionField) {
+                paramB = DataUtils.getNestedBeanProperty(bean, ((RestrictionField) paramB).getName());
+            } else {
+                paramB = DataUtils.convert(fieldVal.getClass(), paramB, null);
+            }
+
+            return doMatch(fieldVal, paramA, paramB);
         }
 
         return inverted;

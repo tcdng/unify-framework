@@ -77,6 +77,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_REGEXPATTERNSTORE = "appication-regexpatternstore";
 
+    String APPLICATION_RESTRICTIONTRANSLATOR = "appication-restrictiontranslator";
+
     String APPLICATION_REQUESTCONTEXTMANAGER = "application-requestcontextmanager";
 
     String APPLICATION_RUNTIMEJAVACLASSMANAGER = "application-runtimejavaclassmanager";

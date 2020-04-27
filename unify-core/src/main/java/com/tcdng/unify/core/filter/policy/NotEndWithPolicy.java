@@ -27,11 +27,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 public class NotEndWithPolicy extends AbstractSingleParamBeanFilterPolicy {
 
     public NotEndWithPolicy() {
-        this(false);
-    }
-
-    public NotEndWithPolicy(boolean useFieldParams) {
-        super(useFieldParams, true);
+        super(true);
     }
 
     @Override

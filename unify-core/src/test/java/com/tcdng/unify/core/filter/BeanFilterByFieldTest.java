@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.tcdng.unify.core.criterion.BeginsWithField;
+import com.tcdng.unify.core.criterion.CriteriaBuilder;
 import com.tcdng.unify.core.criterion.EndsWithField;
 import com.tcdng.unify.core.criterion.EqualsField;
 import com.tcdng.unify.core.criterion.GreaterField;
@@ -220,5 +221,35 @@ public class BeanFilterByFieldTest {
         assertTrue(beanFilter.match(b));
         assertTrue(beanFilter.match(c));
         assertFalse(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterShallowAndField() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("Hat", "Red Hat", 60.00, 60.00);
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 45.00);
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
+
+        BeanFilter beanFilter = new BeanFilter(new CriteriaBuilder().beginAnd()
+                .addEqualsField("salesPrice", "costPrice").addLikeField("description", "name").endCompound().build());
+        assertFalse(beanFilter.match(a));
+        assertTrue(beanFilter.match(b));
+        assertFalse(beanFilter.match(c));
+        assertFalse(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterShallowOrField() throws Exception {
+        Product a = new Product("bandana", "Bandana", 20.00, 19.25);
+        Product b = new Product("Hat", "Red Hat", 60.00, 60.00);
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 45.00);
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
+
+        BeanFilter beanFilter = new BeanFilter(new CriteriaBuilder().beginOr().addEqualsField("salesPrice", "costPrice")
+                .addLikeField("description", "name").endCompound().build());
+        assertFalse(beanFilter.match(a));
+        assertTrue(beanFilter.match(b));
+        assertTrue(beanFilter.match(c));
+        assertTrue(beanFilter.match(d));
     }
 }

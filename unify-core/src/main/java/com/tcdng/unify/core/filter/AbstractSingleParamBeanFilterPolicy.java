@@ -29,12 +29,9 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractSingleParamBeanFilterPolicy implements BeanFilterPolicy {
 
-    private boolean useFieldParams;
-
     private boolean inverted;
 
-    public AbstractSingleParamBeanFilterPolicy(boolean useFieldParams, boolean inverted) {
-        this.useFieldParams = useFieldParams;
+    public AbstractSingleParamBeanFilterPolicy(boolean inverted) {
         this.inverted = inverted;
     }
 
@@ -43,12 +40,11 @@ public abstract class AbstractSingleParamBeanFilterPolicy implements BeanFilterP
         SingleParamRestriction singleParamRestriction = (SingleParamRestriction) restriction;
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, singleParamRestriction.getFieldName());
         if (fieldVal != null) {
-            if (useFieldParams) {
-                return doMatch(fieldVal, DataUtils.getNestedBeanProperty(bean,
-                        ((RestrictionField) singleParamRestriction.getParam()).getName()));
+            Object param = singleParamRestriction.getParam();
+            if (param instanceof RestrictionField) {
+                return doMatch(fieldVal, DataUtils.getNestedBeanProperty(bean, ((RestrictionField) param).getName()));
             } else {
-                return doMatch(fieldVal,
-                        DataUtils.convert(fieldVal.getClass(), singleParamRestriction.getParam(), null));
+                return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), param, null));
             }
         }
 

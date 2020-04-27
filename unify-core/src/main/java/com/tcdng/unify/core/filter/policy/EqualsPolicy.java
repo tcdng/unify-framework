@@ -27,11 +27,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 public class EqualsPolicy extends AbstractSingleParamBeanFilterPolicy {
 
     public EqualsPolicy() {
-        this(false);
-    }
-
-    public EqualsPolicy(boolean useFieldParams) {
-        super(useFieldParams, false);
+        super(false);
     }
 
     @Override

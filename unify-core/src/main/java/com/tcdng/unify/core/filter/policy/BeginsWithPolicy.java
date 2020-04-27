@@ -27,11 +27,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
 public class BeginsWithPolicy extends AbstractSingleParamBeanFilterPolicy {
 
     public BeginsWithPolicy() {
-        this(false);
-    }
-
-    public BeginsWithPolicy(boolean useFieldParams) {
-        super(useFieldParams, false);
+        super(false);
     }
 
     @Override

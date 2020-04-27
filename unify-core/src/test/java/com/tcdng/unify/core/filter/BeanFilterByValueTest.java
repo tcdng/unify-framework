@@ -321,6 +321,24 @@ public class BeanFilterByValueTest {
     }
 
     @Test
+    public void testFilterDeepAnd() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 25.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00);
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 45.00);
+        Product d = new Product("pants", "Wonder pants", 49.50, 17.45);
+        Product e = new Product("tie", "Blue Tie", 60.00, 60.00);
+
+        BeanFilter beanFilter = new BeanFilter(new CriteriaBuilder().beginAnd().beginAnd()
+                .addGreaterThanEqual("costPrice", 45.00).addLessThanEqual("costPrice", 50.00).endCompound()
+                .addBeginsWith("description", "B").endCompound().build());
+        assertFalse(beanFilter.match(a));
+        assertFalse(beanFilter.match(b));
+        assertTrue(beanFilter.match(c));
+        assertFalse(beanFilter.match(d));
+        assertFalse(beanFilter.match(e));
+    }
+
+    @Test
     public void testFilterShallowOr() throws Exception {
         Product a = new Product("bandana", "bandana", 20.00, 25.25);
         Product b = new Product("hat", "Red Hat", 60.00, 60.00);
@@ -329,6 +347,24 @@ public class BeanFilterByValueTest {
         Product e = new Product("tie", "Blue Tie", 60.00, 60.00);
 
         BeanFilter beanFilter = new BeanFilter(new CriteriaBuilder().beginOr().addBetween("costPrice", 45.00, 50.00)
+                .addBeginsWith("description", "B").endCompound().build());
+        assertFalse(beanFilter.match(a));
+        assertFalse(beanFilter.match(b));
+        assertTrue(beanFilter.match(c));
+        assertTrue(beanFilter.match(d));
+        assertTrue(beanFilter.match(e));
+    }
+
+    @Test
+    public void testFilterDeepOr() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 25.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00);
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 45.00);
+        Product d = new Product("pants", "Wonder pants", 49.50, 17.45);
+        Product e = new Product("tie", "Blue Tie", 60.00, 60.00);
+
+        BeanFilter beanFilter = new BeanFilter(new CriteriaBuilder().beginOr().beginAnd()
+                .addGreaterThanEqual("costPrice", 45.00).addLessThanEqual("costPrice", 50.00).endCompound()
                 .addBeginsWith("description", "B").endCompound().build());
         assertFalse(beanFilter.match(a));
         assertFalse(beanFilter.match(b));

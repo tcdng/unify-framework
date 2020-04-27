@@ -27,11 +27,7 @@ import com.tcdng.unify.core.filter.AbstractDoubleParamBeanFilterPolicy;
 public class BetweenPolicy extends AbstractDoubleParamBeanFilterPolicy {
 
     public BetweenPolicy() {
-        this(false);
-    }
-
-    public BetweenPolicy(boolean useFieldParams) {
-        super(useFieldParams, false);
+        super(false);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
