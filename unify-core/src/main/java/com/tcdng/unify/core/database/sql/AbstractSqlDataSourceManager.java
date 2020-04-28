@@ -134,6 +134,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
                 schema = sqlDataSource.getAppSchema();
             }
 
+            logDebug("Getting metadata for table [{0}] in schema [{1}]...", sqlEntityInfo.getTableName(), schema);
             List<String> tableUpdateSql = new ArrayList<String>();
             rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getTableName(), null);
             if (rs.next()) {
