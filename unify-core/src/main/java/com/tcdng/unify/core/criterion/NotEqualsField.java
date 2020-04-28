@@ -22,7 +22,7 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotEqualsField extends NotEquals {
+public class NotEqualsField extends AbstractSingleParamRestriction {
 
     public NotEqualsField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));

@@ -22,7 +22,7 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class EndsWithField extends EndsWith {
+public class EndsWithField extends AbstractSingleParamRestriction {
 
     public EndsWithField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));

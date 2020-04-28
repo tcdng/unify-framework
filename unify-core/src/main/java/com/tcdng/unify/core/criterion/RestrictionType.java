@@ -67,7 +67,7 @@ public enum RestrictionType implements EnumConst {
         return EQUALS.code;
     }
 
-    public boolean isCollection() {
+    public boolean isAmongst() {
         return AMONGST.equals(this) || NOT_AMONGST.equals(this);
     }
 

@@ -22,7 +22,7 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class EqualsField extends Equals {
+public class EqualsField extends AbstractSingleParamRestriction {
 
     public EqualsField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));

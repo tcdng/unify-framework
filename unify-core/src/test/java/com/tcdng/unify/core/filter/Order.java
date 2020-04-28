@@ -14,22 +14,38 @@
  * the License.
  */
 
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.core.filter;
 
 /**
- * Restriction for a property greater than a field value.
+ * Test order class;
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class GreaterField extends AbstractSingleParamRestriction {
+public class Order {
 
-    public GreaterField(String propertyName, String fieldName) {
-        super(propertyName, new RestrictionField(fieldName));
+    private String customerName;
+
+    private String address;
+
+    private int quantity;
+
+    public Order(String customerName, String address, int quantity) {
+        this.customerName = customerName;
+        this.address = address;
+        this.quantity = quantity;
     }
 
-    @Override
-    public FilterConditionType getConditionType() {
-        return FilterConditionType.GREATER_THAN_FIELD;
+    public String getCustomerName() {
+        return customerName;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
 }

@@ -118,7 +118,7 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
     public boolean replaceAll(String propertyName, Collection<Object> val) {
         boolean replaced = false;
         for (Restriction restriction : restrictionList) {
-            if (restriction.getConditionType().isCollection()) {
+            if (restriction.getConditionType().isAmongst()) {
                 ((MultipleParamRestriction) restriction).setParams(val);
                 replaced = true;
             } else if (restriction.getConditionType().isCompound()) {

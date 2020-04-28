@@ -13,23 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.core.filter.policy;
 
-package com.tcdng.unify.core.criterion;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.filter.AbstractCollectionSizeBeanFilterPolicy;
 
 /**
- * Restriction for a property greater than a field value.
+ * Collection size equals policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class GreaterField extends AbstractSingleParamRestriction {
+public class EqualsCollectionPolicy extends AbstractCollectionSizeBeanFilterPolicy {
 
-    public GreaterField(String propertyName, String fieldName) {
-        super(propertyName, new RestrictionField(fieldName));
+    public EqualsCollectionPolicy() {
+        super(false);
     }
 
     @Override
-    public FilterConditionType getConditionType() {
-        return FilterConditionType.GREATER_THAN_FIELD;
+    protected boolean doMatch(int collSize, int param) throws UnifyException {
+        return collSize == param;
     }
+
 }

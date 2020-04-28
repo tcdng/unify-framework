@@ -13,23 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.tcdng.unify.core.criterion;
 
 /**
- * Restriction for a property greater than a field value.
+ * Restriction for a collection size less than a value.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class GreaterField extends AbstractSingleParamRestriction {
+public class LessCollection extends AbstractSingleParamRestriction {
 
-    public GreaterField(String propertyName, String fieldName) {
-        super(propertyName, new RestrictionField(fieldName));
+    public LessCollection(String propertyName, Integer value) {
+        super(propertyName, value);
     }
 
     @Override
     public FilterConditionType getConditionType() {
-        return FilterConditionType.GREATER_THAN_FIELD;
+        return FilterConditionType.LESS_THAN_COLLECTION;
     }
 }

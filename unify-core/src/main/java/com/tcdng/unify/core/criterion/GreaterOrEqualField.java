@@ -22,7 +22,7 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class GreaterOrEqualField extends GreaterOrEqual {
+public class GreaterOrEqualField extends AbstractSingleParamRestriction {
 
     public GreaterOrEqualField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));

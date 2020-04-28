@@ -22,7 +22,7 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotEndWithField extends NotEndWith {
+public class NotEndWithField extends AbstractSingleParamRestriction {
 
     public NotEndWithField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));

@@ -22,7 +22,7 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LessOrEqualField extends LessOrEqual {
+public class LessOrEqualField extends AbstractSingleParamRestriction {
 
     public LessOrEqualField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));

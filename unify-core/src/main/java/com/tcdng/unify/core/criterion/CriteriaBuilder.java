@@ -85,6 +85,11 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addCollectionSizeEquals(String fieldName, Integer value) {
+        addSimpleCondition(new EqualsCollection(fieldName, value));
+        return this;
+    }
+
     public CriteriaBuilder addGreaterThan(String fieldName, Object value) {
         addSimpleCondition(new Greater(fieldName, value));
         return this;
@@ -95,6 +100,11 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addCollectionSizeGreaterThan(String fieldName, Integer value) {
+        addSimpleCondition(new GreaterCollection(fieldName, value));
+        return this;
+    }
+
     public CriteriaBuilder addGreaterThanEqual(String fieldName, Object value) {
         addSimpleCondition(new GreaterOrEqual(fieldName, value));
         return this;
@@ -102,6 +112,11 @@ public class CriteriaBuilder {
 
     public CriteriaBuilder addGreaterThanEqualField(String fieldNameA, String fieldNameB) {
         addSimpleCondition(new GreaterOrEqualField(fieldNameA, fieldNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addCollectionSizeGreaterThanEqual(String fieldName, Integer value) {
+        addSimpleCondition(new GreaterOrEqualCollection(fieldName, value));
         return this;
     }
 
@@ -125,6 +140,11 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addCollectionSizeLessThan(String fieldName, Integer value) {
+        addSimpleCondition(new LessCollection(fieldName, value));
+        return this;
+    }
+
     public CriteriaBuilder addLessThanEqual(String fieldName, Object value) {
         addSimpleCondition(new LessOrEqual(fieldName, value));
         return this;
@@ -132,6 +152,11 @@ public class CriteriaBuilder {
 
     public CriteriaBuilder addLessThanEqualField(String fieldNameA, String fieldNameB) {
         addSimpleCondition(new LessOrEqualField(fieldNameA, fieldNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addCollectionSizeLessThanEqual(String fieldName, Integer value) {
+        addSimpleCondition(new LessOrEqualCollection(fieldName, value));
         return this;
     }
 
@@ -182,6 +207,11 @@ public class CriteriaBuilder {
 
     public CriteriaBuilder addNotEqualsField(String fieldNameA, String fieldNameB) {
         addSimpleCondition(new NotEqualsField(fieldNameA, fieldNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addCollectionSizeNotEquals(String fieldName, Integer value) {
+        addSimpleCondition(new NotEqualsCollection(fieldName, value));
         return this;
     }
 

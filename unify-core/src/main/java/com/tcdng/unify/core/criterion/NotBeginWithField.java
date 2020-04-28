@@ -22,7 +22,7 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotBeginWithField extends NotBeginWith {
+public class NotBeginWithField extends AbstractSingleParamRestriction {
 
     public NotBeginWithField(String propertyName, String fieldName) {
         super(propertyName, new RestrictionField(fieldName));

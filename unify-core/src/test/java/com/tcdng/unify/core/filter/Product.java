@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.filter;
 
+import java.util.List;
+
 /**
  * Test product class;
  * 
@@ -32,6 +34,7 @@ public class Product {
 
     private Double salesPrice;
 
+    private List<Order> orders;
 
     public Product(String name, String description, Double costPrice, Double salesPrice) {
         this.name = name;
@@ -40,24 +43,32 @@ public class Product {
         this.salesPrice = salesPrice;
     }
 
+    public Product(String name, String description, Double costPrice, Double salesPrice, List<Order> orders) {
+        this.name = name;
+        this.description = description;
+        this.costPrice = costPrice;
+        this.salesPrice = salesPrice;
+        this.orders = orders;
+    }
 
     public String getName() {
         return name;
     }
 
-
     public String getDescription() {
         return description;
     }
-
 
     public Double getCostPrice() {
         return costPrice;
     }
 
-
     public Double getSalesPrice() {
         return salesPrice;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 
 }
