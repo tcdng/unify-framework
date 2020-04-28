@@ -59,6 +59,8 @@ public final class ReflectUtils {
 
     private static final FactoryMap<Class<?>, List<String>> beanNestedFieldNamesMap;
 
+    private static final FactoryMap<Class<?>, List<PropertyInfo>> beanNestedPropertiesWithGetterMap;
+
     private static final FactoryMap<Class<?>, ConstructorInfo> largeConstructorMap;
 
     private static final Map<String, Class<?>> primitiveToClassMap = new HashMap<String, Class<?>>();
@@ -234,8 +236,10 @@ public final class ReflectUtils {
                 List<String> names = new ArrayList<String>();
                 for (String name : beanFieldNamesMap.get(beanClass)) {
                     GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(name);
-                    for (String childName : beanNestedFieldNamesMap.get(gsi.getType())) {
-                        names.add(name + '.' + childName);
+                    if (!beanNestedFieldNamesMap.isKey(gsi.getType())) {
+                        for (String childName : beanNestedFieldNamesMap.get(gsi.getType())) {
+                            names.add(name + '.' + childName);
+                        }
                     }
 
                     names.add(name);
@@ -251,6 +255,38 @@ public final class ReflectUtils {
 
                 Collections.sort(names);
                 return Collections.unmodifiableList(names);
+            }
+
+        };
+
+        beanNestedPropertiesWithGetterMap = new FactoryMap<Class<?>, List<PropertyInfo>>() {
+
+            @Override
+            protected List<PropertyInfo> create(Class<?> beanClass, Object... params) throws Exception {
+                List<PropertyInfo> propertyInfoList = new ArrayList<PropertyInfo>();
+                Set<Class<?>> cycleCheck = new HashSet<Class<?>>();
+                extractPropertiesWithGetters(cycleCheck, propertyInfoList, beanClass, null);
+                Collections.sort(propertyInfoList);
+                return Collections.unmodifiableList(propertyInfoList);
+            }
+
+            private void extractPropertiesWithGetters(Set<Class<?>> cycleCheck, List<PropertyInfo> propertyInfoList,
+                    Class<?> beanClass, String parentName) throws Exception {
+                cycleCheck.add(beanClass);
+                for (Field field : declaredFieldMap.get(beanClass).values()) {
+                    GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(field.getName());
+                    if (gsi != null && gsi.isGetter()) {
+                        String name = gsi.getName();
+                        if (parentName != null) {
+                            name = parentName + '.' + name;
+                        }
+
+                        propertyInfoList.add(new PropertyInfo(name, gsi.getType(), gsi.getArgumentType()));
+                        if (!cycleCheck.contains(gsi.getType())) {
+                            extractPropertiesWithGetters(cycleCheck, propertyInfoList, gsi.getType(), name);
+                        }
+                    }
+                }
             }
 
         };
@@ -587,13 +623,14 @@ public final class ReflectUtils {
      * Returns a list of all the bean compliant nested field names of a supplied
      * type.
      * 
-     * @param beanClass
-     *            the type
+     * @param beanClassName
+     *            the name of the bean class
+     * @return a list of nested field names
      * @throws UnifyException
      *             if an error occurs
      */
-    public static List<String> getBeanCompliantNestedFieldNames(String beanClass) throws UnifyException {
-        return beanNestedFieldNamesMap.get(ReflectUtils.getClassForName(beanClass));
+    public static List<String> getBeanCompliantNestedFieldNames(String beanClassName) throws UnifyException {
+        return beanNestedFieldNamesMap.get(ReflectUtils.getClassForName(beanClassName));
     }
 
     /**
@@ -602,11 +639,40 @@ public final class ReflectUtils {
      * 
      * @param beanClass
      *            the bean type
+     * @return a list of nested field names
      * @throws UnifyException
      *             if an error occurs
      */
     public static List<String> getBeanCompliantNestedFieldNames(Class<?> beanClass) throws UnifyException {
         return beanNestedFieldNamesMap.get(beanClass);
+    }
+
+    /**
+     * Returns a list of all the nested properties with getters of a supplied type.
+     * 
+     * @param beanClassName
+     *            the bean class name
+     * @return a list of properties with getters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static List<PropertyInfo> getBeanCompliantNestedPropertiesWithGetters(String beanClassName)
+            throws UnifyException {
+        return beanNestedPropertiesWithGetterMap.get(ReflectUtils.getClassForName(beanClassName));
+    }
+
+    /**
+     * Returns a list of all the nested properties with getters of a supplied type.
+     * 
+     * @param beanClass
+     *            the bean type
+     * @return a list of properties with getters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static List<PropertyInfo> getBeanCompliantNestedPropertiesWithGetters(Class<?> beanClass)
+            throws UnifyException {
+        return beanNestedPropertiesWithGetterMap.get(beanClass);
     }
 
     /**
