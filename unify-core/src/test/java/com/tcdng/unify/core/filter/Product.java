@@ -36,6 +36,8 @@ public class Product {
 
     private List<Order> orders;
 
+    private String[] days;
+
     public Product(String name, String description, Double costPrice, Double salesPrice) {
         this.name = name;
         this.description = description;
@@ -49,6 +51,14 @@ public class Product {
         this.costPrice = costPrice;
         this.salesPrice = salesPrice;
         this.orders = orders;
+    }
+
+    public Product(String name, String description, Double costPrice, Double salesPrice, String[] days) {
+        this.name = name;
+        this.description = description;
+        this.costPrice = costPrice;
+        this.salesPrice = salesPrice;
+        this.days = days;
     }
 
     public String getName() {
@@ -69,6 +79,10 @@ public class Product {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public String[] getDays() {
+        return days;
     }
 
 }

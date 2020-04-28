@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.filter;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 
 import com.tcdng.unify.core.UnifyException;
@@ -42,12 +43,14 @@ public abstract class AbstractCollectionSizeBeanFilterPolicy implements BeanFilt
         SingleParamRestriction singleParamRestriction = (SingleParamRestriction) restriction;
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, singleParamRestriction.getFieldName());
         if (fieldVal != null) {
+            int collSize =
+                    fieldVal.getClass().isArray() ? Array.getLength(fieldVal) : ((Collection<?>) fieldVal).size();
             Object param = singleParamRestriction.getParam();
             if (param instanceof RestrictionField) {
-                return doMatch(((Collection<?>) fieldVal).size(), DataUtils.convert(int.class,
+                return doMatch(collSize, DataUtils.convert(int.class,
                         DataUtils.getNestedBeanProperty(bean, ((RestrictionField) param).getName()), null));
             } else {
-                return doMatch(((Collection<?>) fieldVal).size(), DataUtils.convert(int.class, param, null));
+                return doMatch(collSize, DataUtils.convert(int.class, param, null));
             }
         }
 

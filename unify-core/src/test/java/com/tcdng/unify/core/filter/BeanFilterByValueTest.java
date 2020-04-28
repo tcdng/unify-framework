@@ -385,9 +385,8 @@ public class BeanFilterByValueTest {
         Product b = new Product("hat", "Red Hat", 60.00, 60.00, Arrays.asList(new Order("Abel", "24 Parklane", 2)));
         Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00,
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
-        Product d =
-                new Product("pants", "Wonder pants", 15.00, 17.45, Arrays.asList(new Order("Abel", "24 Parklane", 2),
-                        new Order("Scott", "Oracle Avenue", 5)));
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45,
+                Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         BeanFilter beanFilter = new BeanFilter(new IsNull("orders"));
         assertTrue(beanFilter.match(a));
@@ -402,9 +401,8 @@ public class BeanFilterByValueTest {
         Product b = new Product("hat", "Red Hat", 60.00, 60.00, Arrays.asList(new Order("Abel", "24 Parklane", 2)));
         Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00,
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
-        Product d =
-                new Product("pants", "Wonder pants", 15.00, 17.45, Arrays.asList(new Order("Abel", "24 Parklane", 2),
-                        new Order("Scott", "Oracle Avenue", 5)));
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45,
+                Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         BeanFilter beanFilter = new BeanFilter(new IsNotNull("orders"));
         assertFalse(beanFilter.match(a));
@@ -419,9 +417,8 @@ public class BeanFilterByValueTest {
         Product b = new Product("hat", "Red Hat", 60.00, 60.00, Arrays.asList(new Order("Abel", "24 Parklane", 2)));
         Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00,
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
-        Product d =
-                new Product("pants", "Wonder pants", 15.00, 17.45, Arrays.asList(new Order("Abel", "24 Parklane", 2),
-                        new Order("Scott", "Oracle Avenue", 5)));
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45,
+                Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         BeanFilter beanFilter = new BeanFilter(new EqualsCollection("orders", 2));
         assertFalse(beanFilter.match(a));
@@ -436,9 +433,8 @@ public class BeanFilterByValueTest {
         Product b = new Product("hat", "Red Hat", 60.00, 60.00, Arrays.asList(new Order("Abel", "24 Parklane", 2)));
         Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00,
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
-        Product d =
-                new Product("pants", "Wonder pants", 15.00, 17.45, Arrays.asList(new Order("Abel", "24 Parklane", 2),
-                        new Order("Scott", "Oracle Avenue", 5)));
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45,
+                Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         BeanFilter beanFilter = new BeanFilter(new NotEqualsCollection("orders", 2));
         assertTrue(beanFilter.match(a));
@@ -505,6 +501,118 @@ public class BeanFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         BeanFilter beanFilter = new BeanFilter(new LessOrEqualCollection("orders", 2));
+        assertFalse(beanFilter.match(a));
+        assertTrue(beanFilter.match(b));
+        assertTrue(beanFilter.match(c));
+        assertFalse(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArrayNull() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
+
+        BeanFilter beanFilter = new BeanFilter(new IsNull("days"));
+        assertTrue(beanFilter.match(a));
+        assertFalse(beanFilter.match(b));
+        assertFalse(beanFilter.match(c));
+        assertFalse(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArraynNotNull() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
+
+        BeanFilter beanFilter = new BeanFilter(new IsNotNull("days"));
+        assertFalse(beanFilter.match(a));
+        assertTrue(beanFilter.match(b));
+        assertTrue(beanFilter.match(c));
+        assertTrue(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArrayLengthEquals() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
+
+        BeanFilter beanFilter = new BeanFilter(new EqualsCollection("days", 2));
+        assertFalse(beanFilter.match(a));
+        assertFalse(beanFilter.match(b));
+        assertTrue(beanFilter.match(c));
+        assertTrue(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArrayLengthNotEquals() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
+
+        BeanFilter beanFilter = new BeanFilter(new NotEqualsCollection("days", 2));
+        assertTrue(beanFilter.match(a));
+        assertTrue(beanFilter.match(b));
+        assertFalse(beanFilter.match(c));
+        assertFalse(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArrayLengthGreaterThan() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday", "Wednesday" });
+
+        BeanFilter beanFilter = new BeanFilter(new GreaterCollection("days", 2));
+        assertFalse(beanFilter.match(a));
+        assertFalse(beanFilter.match(b));
+        assertFalse(beanFilter.match(c));
+        assertTrue(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArrayLengthGreaterThanEqual() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday", "Wednesday" });
+
+        BeanFilter beanFilter = new BeanFilter(new GreaterOrEqualCollection("days", 2));
+        assertFalse(beanFilter.match(a));
+        assertFalse(beanFilter.match(b));
+        assertTrue(beanFilter.match(c));
+        assertTrue(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArrayLengthLessThan() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
+
+        BeanFilter beanFilter = new BeanFilter(new LessCollection("days", 2));
+        assertFalse(beanFilter.match(a));
+        assertTrue(beanFilter.match(b));
+        assertFalse(beanFilter.match(c));
+        assertFalse(beanFilter.match(d));
+    }
+
+    @Test
+    public void testFilterArrayLengthLessThanEqual() throws Exception {
+        Product a = new Product("bandana", "bandana", 20.00, 19.25);
+        Product b = new Product("hat", "Red Hat", 60.00, 60.00, new String[] { "Monday" });
+        Product c = new Product("specs", "Blue Spectacles", 45.00, 42.00, new String[] { "Monday", "Tuesday" });
+        Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
+
+        BeanFilter beanFilter = new BeanFilter(new LessOrEqualCollection("days", 2));
         assertFalse(beanFilter.match(a));
         assertTrue(beanFilter.match(b));
         assertTrue(beanFilter.match(c));
