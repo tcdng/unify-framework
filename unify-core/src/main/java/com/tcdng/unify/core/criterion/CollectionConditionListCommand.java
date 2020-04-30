@@ -27,6 +27,7 @@ import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.list.AbstractZeroParamsListCommand;
 import com.tcdng.unify.core.list.ZeroParams;
+import com.tcdng.unify.core.util.FilterUtils;
 
 /**
  * Collection condition list command.
@@ -42,14 +43,9 @@ public class CollectionConditionListCommand extends AbstractZeroParamsListComman
         @Override
         protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
             List<Listable> list = new ArrayList<Listable>();
-            list.add(getListable(locale, FilterConditionType.EQUALS_COLLECTION));
-            list.add(getListable(locale, FilterConditionType.GREATER_THAN_COLLECTION));
-            list.add(getListable(locale, FilterConditionType.GREATER_OR_EQUAL_COLLECTION));
-            list.add(getListable(locale, FilterConditionType.LESS_THAN_COLLECTION));
-            list.add(getListable(locale, FilterConditionType.LESS_OR_EQUAL_COLLECTION));
-            list.add(getListable(locale, FilterConditionType.IS_NULL));
-            list.add(getListable(locale, FilterConditionType.IS_NOT_NULL));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS_COLLECTION));
+            for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(List.class)) {
+                list.add(getListable(locale, condType));
+            }
             return list;
         }
         

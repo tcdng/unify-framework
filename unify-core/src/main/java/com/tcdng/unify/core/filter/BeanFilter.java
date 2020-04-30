@@ -17,7 +17,7 @@ package com.tcdng.unify.core.filter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.util.BeanFilterPolicyUtils;
+import com.tcdng.unify.core.util.FilterUtils;
 
 /**
  * Bean filter class.
@@ -34,7 +34,7 @@ public class BeanFilter {
     }
 
     public boolean match(Object bean) throws UnifyException {
-        return BeanFilterPolicyUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean,
+        return FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean,
                 restriction);
     }
 }

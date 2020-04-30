@@ -21,12 +21,14 @@ import java.util.Locale;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.criterion.FilterConditionType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.list.AbstractZeroParamsListCommand;
 import com.tcdng.unify.core.list.ZeroParams;
+import com.tcdng.unify.core.util.FilterUtils;
 
 /**
  * Enumeration constants condition list command.
@@ -42,12 +44,9 @@ public class EnumConstConditionListCommand extends AbstractZeroParamsListCommand
         @Override
         protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
             List<Listable> list = new ArrayList<Listable>();
-            list.add(getListable(locale, FilterConditionType.EQUALS));
-            list.add(getListable(locale, FilterConditionType.AMONGST));
-            list.add(getListable(locale, FilterConditionType.IS_NULL));
-            list.add(getListable(locale, FilterConditionType.IS_NOT_NULL));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS));
-            list.add(getListable(locale, FilterConditionType.NOT_AMONGST));
+            for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(EnumConst.class)) {
+                list.add(getListable(locale, condType));
+            }
             return list;
         }
 

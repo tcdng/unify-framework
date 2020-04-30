@@ -27,6 +27,7 @@ import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.list.AbstractZeroParamsListCommand;
 import com.tcdng.unify.core.list.ZeroParams;
+import com.tcdng.unify.core.util.FilterUtils;
 
 /**
  * Number condition list command.
@@ -42,26 +43,9 @@ public class NumberConditionListCommand extends AbstractZeroParamsListCommand {
         @Override
         protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
             List<Listable> list = new ArrayList<Listable>();
-            list.add(getListable(locale, FilterConditionType.EQUALS));
-            list.add(getListable(locale, FilterConditionType.GREATER_THAN));
-            list.add(getListable(locale, FilterConditionType.GREATER_OR_EQUAL));
-            list.add(getListable(locale, FilterConditionType.LESS_THAN));
-            list.add(getListable(locale, FilterConditionType.LESS_OR_EQUAL));
-            list.add(getListable(locale, FilterConditionType.BETWEEN));
-            list.add(getListable(locale, FilterConditionType.AMONGST));
-            list.add(getListable(locale, FilterConditionType.IS_NULL));
-            list.add(getListable(locale, FilterConditionType.IS_NOT_NULL));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS));
-            list.add(getListable(locale, FilterConditionType.NOT_BETWEEN));
-            list.add(getListable(locale, FilterConditionType.NOT_AMONGST));
-            list.add(getListable(locale, FilterConditionType.EQUALS_FIELD));
-            list.add(getListable(locale, FilterConditionType.GREATER_THAN_FIELD));
-            list.add(getListable(locale, FilterConditionType.GREATER_OR_EQUAL_FIELD));
-            list.add(getListable(locale, FilterConditionType.LESS_THAN_FIELD));
-            list.add(getListable(locale, FilterConditionType.LESS_OR_EQUAL_FIELD));
-            list.add(getListable(locale, FilterConditionType.BETWEEN_FIELD));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS_FIELD));
-            list.add(getListable(locale, FilterConditionType.NOT_BETWEEN_FIELD));
+            for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(int.class)) {
+                list.add(getListable(locale, condType));
+            }
             return list;
         }
         

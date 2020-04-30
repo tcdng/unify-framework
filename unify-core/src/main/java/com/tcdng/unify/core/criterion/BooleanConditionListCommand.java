@@ -27,6 +27,7 @@ import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.list.AbstractZeroParamsListCommand;
 import com.tcdng.unify.core.list.ZeroParams;
+import com.tcdng.unify.core.util.FilterUtils;
 
 /**
  * Boolean condition list command.
@@ -37,25 +38,22 @@ import com.tcdng.unify.core.list.ZeroParams;
 @Component("booleanconditionlist")
 public class BooleanConditionListCommand extends AbstractZeroParamsListCommand {
 
-    private final FactoryMap<Locale, List<Listable>> listMap  = new FactoryMap<Locale, List<Listable>>() {
+    private final FactoryMap<Locale, List<Listable>> listMap = new FactoryMap<Locale, List<Listable>>() {
 
         @Override
         protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
             List<Listable> list = new ArrayList<Listable>();
-            list.add(getListable(locale, FilterConditionType.EQUALS));
-            list.add(getListable(locale, FilterConditionType.IS_NULL));
-            list.add(getListable(locale, FilterConditionType.IS_NOT_NULL));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS));
-            list.add(getListable(locale, FilterConditionType.EQUALS_FIELD));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS_FIELD));
+            for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(boolean.class)) {
+                list.add(getListable(locale, condType));
+            }
             return list;
         }
-        
-        private Listable getListable(Locale locale, FilterConditionType filterConditionType)  throws UnifyException {
+
+        private Listable getListable(Locale locale, FilterConditionType filterConditionType) throws UnifyException {
             return new ListData(filterConditionType.code(), getMessage(locale, filterConditionType.labelKey()));
         }
     };
-    
+
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams zeroParams) throws UnifyException {
         return listMap.get(locale);

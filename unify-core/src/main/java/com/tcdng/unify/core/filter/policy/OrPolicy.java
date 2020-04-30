@@ -20,7 +20,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.filter.AbstractCompoundBeanFilterPolicy;
-import com.tcdng.unify.core.util.BeanFilterPolicyUtils;
+import com.tcdng.unify.core.util.FilterUtils;
 
 /**
  * Logical disjunction policy.
@@ -33,7 +33,7 @@ public class OrPolicy extends AbstractCompoundBeanFilterPolicy {
     @Override
     protected boolean doMatch(Object bean, List<Restriction> restrictionList) throws UnifyException {
         for (Restriction restriction : restrictionList) {
-            if (BeanFilterPolicyUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean, restriction)) {
+            if (FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean, restriction)) {
                 return true;
             }
         }

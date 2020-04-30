@@ -27,6 +27,7 @@ import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.list.AbstractZeroParamsListCommand;
 import com.tcdng.unify.core.list.ZeroParams;
+import com.tcdng.unify.core.util.FilterUtils;
 
 /**
  * String condition list command.
@@ -42,26 +43,9 @@ public class StringConditionListCommand extends AbstractZeroParamsListCommand {
         @Override
         protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
             List<Listable> list = new ArrayList<Listable>();
-            list.add(getListable(locale, FilterConditionType.EQUALS));
-            list.add(getListable(locale, FilterConditionType.BEGINS_WITH));
-            list.add(getListable(locale, FilterConditionType.ENDS_WITH));
-            list.add(getListable(locale, FilterConditionType.LIKE));
-            list.add(getListable(locale, FilterConditionType.AMONGST));
-            list.add(getListable(locale, FilterConditionType.IS_NULL));
-            list.add(getListable(locale, FilterConditionType.IS_NOT_NULL));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS));
-            list.add(getListable(locale, FilterConditionType.NOT_BEGIN_WITH));
-            list.add(getListable(locale, FilterConditionType.NOT_END_WITH));
-            list.add(getListable(locale, FilterConditionType.NOT_LIKE));
-            list.add(getListable(locale, FilterConditionType.NOT_AMONGST));
-            list.add(getListable(locale, FilterConditionType.EQUALS_FIELD));
-            list.add(getListable(locale, FilterConditionType.BEGINS_WITH_FIELD));
-            list.add(getListable(locale, FilterConditionType.ENDS_WITH_FIELD));
-            list.add(getListable(locale, FilterConditionType.LIKE_FIELD));
-            list.add(getListable(locale, FilterConditionType.NOT_EQUALS_FIELD));
-            list.add(getListable(locale, FilterConditionType.NOT_BEGIN_WITH_FIELD));
-            list.add(getListable(locale, FilterConditionType.NOT_END_WITH_FIELD));
-            list.add(getListable(locale, FilterConditionType.NOT_LIKE_FIELD));
+            for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(String.class)) {
+                list.add(getListable(locale, condType));
+            }
             return list;
         }
         
