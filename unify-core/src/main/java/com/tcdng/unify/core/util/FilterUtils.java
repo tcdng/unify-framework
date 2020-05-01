@@ -69,23 +69,23 @@ public final class FilterUtils {
 
     static {
         Map<Class<?>, String> map = new HashMap<Class<?>, String>();
-        map.put(boolean.class, "!booleanconditionlist");
-        map.put(Boolean.class, "!booleanconditionlist");
-        map.put(char.class, "!stringconditionlist");
-        map.put(Character.class, "!stringconditionlist");
-        map.put(short.class, "!numberconditionlist");
-        map.put(Short.class, "!numberconditionlist");
-        map.put(int.class, "!numberconditionlist");
-        map.put(Integer.class, "!numberconditionlist");
-        map.put(long.class, "!numberconditionlist");
-        map.put(Long.class, "!numberconditionlist");
-        map.put(float.class, "!numberconditionlist");
-        map.put(Float.class, "!numberconditionlist");
-        map.put(double.class, "!numberconditionlist");
-        map.put(Double.class, "!numberconditionlist");
-        map.put(BigDecimal.class, "!numberconditionlist");
-        map.put(Date.class, "!numberconditionlist");
-        map.put(String.class, "!stringconditionlist");
+        map.put(boolean.class, "booleanconditionlist");
+        map.put(Boolean.class, "booleanconditionlist");
+        map.put(char.class, "stringconditionlist");
+        map.put(Character.class, "stringconditionlist");
+        map.put(short.class, "numberconditionlist");
+        map.put(Short.class, "numberconditionlist");
+        map.put(int.class, "numberconditionlist");
+        map.put(Integer.class, "numberconditionlist");
+        map.put(long.class, "numberconditionlist");
+        map.put(Long.class, "numberconditionlist");
+        map.put(float.class, "numberconditionlist");
+        map.put(Float.class, "numberconditionlist");
+        map.put(double.class, "numberconditionlist");
+        map.put(Double.class, "numberconditionlist");
+        map.put(BigDecimal.class, "numberconditionlist");
+        map.put(Date.class, "numberconditionlist");
+        map.put(String.class, "stringconditionlist");
         classToFilterConditionSelectorMap = Collections.unmodifiableMap(map);
     }
 
@@ -239,21 +239,21 @@ public final class FilterUtils {
         
     }
     
-    public static String getFilterConditionTypeSelectDescriptior(Class<?> fieldType) {
+    public static String getFilterConditionTypeListCommand(Class<?> fieldType) {
         String descriptor = classToFilterConditionSelectorMap.get(fieldType);
         if (descriptor != null) {
             return descriptor;
         }
 
         if (EnumConst.class.isAssignableFrom(fieldType)) {
-            return "!enumconstconditionlist";
+            return "enumconstconditionlist";
         }
 
         if (fieldType.isArray() || Collection.class.isAssignableFrom(fieldType)) {
-            return "!collectionconditionlist";
+            return "collectionconditionlist";
         }
 
-        return "!objectconditionlist";
+        return "objectconditionlist";
     }
 
     public static Set<FilterConditionType> getSupportedFilterConditionTypes(Class<?> fieldType) {
