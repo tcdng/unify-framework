@@ -403,11 +403,12 @@ z-index:400;}
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
 .ui-text-popup .tpbutton img {width:14px;height:14px;}
 .ui-text-popup .tread {/*padding-left:2px;*/}
-.ui-text-popup .tnread {text-align: right; padding-right: 4px;}
+.ui-text-popup .trread {text-align: right; padding-right: 4px;}
+.ui-text-popup .tcread {text-align: center;}
 .ui-text-popup .tplbutton {height:28px; padding:6px 4px; background-color: #E8E8E8 !important; color:#484848;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
 
-.ui-text-popup-win {position:absolute; display:none; width: auto; z-index: 300;color:#000;}
+.ui-text-popup-win {position:absolute; display:none; width: auto; z-index: 300;color:#000; text-align:left;}
 .ui-text-popup-win span {display: inline-block !important;}
 
 /*********************** CONTROLS **********************/
@@ -727,7 +728,8 @@ z-index:400;}
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
 .ui-miniselect .tpbutton img {width:10px;height:10px;}
 .ui-miniselect .tread {height:14px; font-size:7pt !important;}
-.ui-miniselect .tnread {text-align: right; padding-right: 2px;}
+.ui-miniselect .trread {text-align: right; padding-right: 2px;}
+.ui-miniselect .tcread {text-align: center;}
 .ui-miniselect .tplbutton {height:18px; padding:2px 2px; background-color: #E8E8E8 !important; color:#484848;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
 
