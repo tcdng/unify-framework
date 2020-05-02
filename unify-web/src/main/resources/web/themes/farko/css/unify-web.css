@@ -399,9 +399,9 @@ z-index:400;}
 
 /** Popup Text Field */
 .ui-text-popup {position:relative}
-.ui-text-popup .tpbutton {width:24px; height:28px; padding:6px 4px; background-color: #E8E8E8 !important;
+.ui-text-popup .tpbutton {min-width:24px !important; width:24px; height:28px; padding:0px 2px; background-color: #E8E8E8 !important;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
-.ui-text-popup .tpbutton img {width:14px;height:14px;}
+.ui-text-popup .tpbutton img {vertical-align:middle; display: inline-block; width:14px;height:14px;}
 .ui-text-popup .tread {/*padding-left:2px;*/}
 .ui-text-popup .trread {text-align: right; padding-right: 4px;}
 .ui-text-popup .tcread {text-align: center;}
@@ -694,7 +694,7 @@ z-index:400;}
 
 /** Shift buttons*/
 .ui-shiftbuttons {}
-.ui-shiftbuttons .sbutton {width: 16px; height:16px; cursor: pointer;}
+.ui-shiftbuttons .sbutton {width: 16px; height:16px; cursor: pointer; color:#808080; background-color: #E8E8E8;}
 
 /** Single Select*/
 .ui-select {width: 160px;}
@@ -725,9 +725,9 @@ z-index:400;}
 .ui-miniselect .sslist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-miniselect .sslist .selorange {background-color: #C07833; color: #FFF;}
 .ui-miniselect .sslist .selgray {background-color: #787878; color: #FFF;}
-.ui-miniselect .tpbutton {width:16px; height:18px; padding:2px 2px; background-color: #E8E8E8 !important;
+.ui-miniselect .tpbutton {min-width:16px !important; width:16px; height:18px; padding:0px 2px; background-color: #E8E8E8 !important;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
-.ui-miniselect .tpbutton img {width:10px;height:10px;}
+.ui-miniselect .tpbutton img {vertical-align:middle; display: inline-block; width:10px;height:10px;}
 .ui-miniselect .tread {height:14px; font-size:7pt !important;}
 .ui-miniselect .trread {text-align: right; padding-right: 2px;}
 .ui-miniselect .tcread {text-align: center;}
@@ -759,6 +759,9 @@ z-index:400;}
 /** Swappable image */
 .ui-swappableimage {}
 
+/** Symbol */
+.ui-symbol {display:inline-block !important;}
+
 /** Table */
 .ui-table {height:100%;}
 .ui-table .twin {border: 1px solid #A9A9A9;}
@@ -772,7 +775,7 @@ z-index:400;}
 .ui-table .thead {border: 0px; border-collapse: collapse; background-color: #ECECEC; vertical-align: middle;}
 .ui-table .thead th {border-right: 1px solid #A9A9A9; padding: 2px; font-weight: normal;}
 .ui-table .theadtitle {display:inline-block !important; width:70%; vertical-align:middle;}
-.ui-table .theadwdg {display:inline-block !important; width:24%; vertical-align:middle; text-align:right;}
+.ui-table .theadwdg {display:inline-block !important; width:24%; vertical-align:middle; text-align:right;color:#606060;}
 .ui-table .theadellipsis {white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .ui-table .tbody {height:100%;padding: 0px; border: 0px;overflow:scroll;}
 .ui-table .ttable {padding: 3px; border: 1px solid #A9A9A9; border-collapse: collapse;

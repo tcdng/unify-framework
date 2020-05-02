@@ -41,8 +41,10 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         super.onInitialize();
         
         // Register symbols by name
+        registerSymbol("angle-double-down", "&#xf103;");
         registerSymbol("angle-double-left", "&#xf100;");
         registerSymbol("angle-double-right", "&#xf101;");
+        registerSymbol("angle-double-up", "&#xf102;");
         registerSymbol("angle-down", "&#xf107;");
         registerSymbol("angle-left", "&#xf104;");
         registerSymbol("angle-right", "&#xf105;");
@@ -77,7 +79,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("file", "&#xf15b;");
         registerSymbol("file-excel", "&#x1c3;");
         registerSymbol("file-pdf", "&#xf1c1;");
-        registerSymbol("file-word", "&#x1c2;");
+        registerSymbol("file-word", "&#xf1c2;");
+        registerSymbol("filter", "&#xf0b0;");
         registerSymbol("folder", "&#xf07b;");
         registerSymbol("folder-open", "&#xf07c;");
         registerSymbol("harddisk", "&#xf0a0;");
@@ -91,6 +94,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("search", "&#xf002;");
         registerSymbol("sign-in", "&#xf2f6;");
         registerSymbol("sign-out", "&#xf2f5;");
+        registerSymbol("sort", "&#xf0dc;");
+        registerSymbol("swap", "&#xf362;");
         registerSymbol("sync", "&#xf2f1;");
         registerSymbol("undo", "&#xf2ea;");
         registerSymbol("user", "&#xf007;");
