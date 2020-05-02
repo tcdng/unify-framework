@@ -37,17 +37,20 @@ public class ButtonWriter extends AbstractTargetControlWriter {
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
         Button button = (Button) targetControl;
-        String imageSrc = button.getUplAttribute(String.class, "imageSrc");
         writer.write("<button type=\"button\"");
         writeTagAttributes(writer, button);
         writer.write("</>");
+        String imageSrc = button.getUplAttribute(String.class, "imageSrc");
         if (StringUtils.isNotBlank(imageSrc)) {
             writer.write("<img src=\"");
             writer.writeFileImageContextURL(imageSrc);
             writer.write("\">");
-            writer.write("<span>");
-            writeCaption(writer, button);
-            writer.write("</span>");
+            String caption = button.getCaption();
+            if (caption != null) {
+                writer.write("<span>");
+                writer.writeWithHtmlEscape(caption);
+                writer.write("</span>");
+            }
         } else {
             writeCaption(writer, button);
         }
