@@ -23,6 +23,7 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.DocumentLayout;
 import com.tcdng.unify.web.ui.Panel;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -46,7 +47,10 @@ public class DocumentWriter extends AbstractPageWriter {
 
     @Configurable
     private BasicDocumentResources resources;
-    
+
+    @Configurable
+    private FontSymbolManager fontSymbolManager;
+
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
@@ -96,6 +100,9 @@ public class DocumentWriter extends AbstractPageWriter {
         }
 
         writeResourcesStyleSheet(writer);
+
+        // Write font symbols
+        writeImportFontSymbols(writer, document);
 
         // Write javascript sources
         writeJavascript(writer, "web/js/unify-web.js");
@@ -195,8 +202,29 @@ public class DocumentWriter extends AbstractPageWriter {
 
     }
 
-    private void writeResourcesStyleSheet(ResponseWriter writer)
-            throws UnifyException {
+    private void writeImportFontSymbols(ResponseWriter writer, BasicDocument document) throws UnifyException {
+        if (fontSymbolManager != null) {
+            writer.write("<style>");
+            StringBuilder fsb = new StringBuilder();
+            int i = 0;
+            fsb.append(".g_fsm {font-family: ").append(document.getUplAttribute(String.class, "fontFamily"));
+            for (String fontResource : fontSymbolManager.getFontResources()) {
+                fsb.append(", 'FontSymbolMngr").append(i).append('\'');
+
+                writer.write("@font-face {font-family: 'FontSymbolMngr").write(i).write("'; src: url(");
+                writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(),
+                        fontResource);
+                writer.write(");} ");
+                i++;
+            }
+            fsb.append(";}");
+
+            writer.write(fsb);
+            writer.write("</style>");
+        }
+    }
+
+    private void writeResourcesStyleSheet(ResponseWriter writer) throws UnifyException {
         if (resources != null) {
             for (String sheetLink : resources.getStyleSheetResourceLinks()) {
                 writer.write("<link href=\"");

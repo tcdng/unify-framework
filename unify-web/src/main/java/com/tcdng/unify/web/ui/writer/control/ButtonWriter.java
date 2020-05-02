@@ -17,8 +17,10 @@ package com.tcdng.unify.web.ui.writer.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.TargetControl;
 import com.tcdng.unify.web.ui.control.Button;
@@ -34,12 +36,15 @@ import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 @Component("button-writer")
 public class ButtonWriter extends AbstractTargetControlWriter {
 
+    @Configurable
+    private FontSymbolManager fontSymbolManager;
+
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
         Button button = (Button) targetControl;
         writer.write("<button type=\"button\"");
-        writeTagAttributes(writer, button);
-        writer.write("</>");
+        writeTagAttributesWithTrailingExtraStyleClass(writer, button, "g_fsm");
+        writer.write("/>");
         String imageSrc = button.getUplAttribute(String.class, "imageSrc");
         if (StringUtils.isNotBlank(imageSrc)) {
             writer.write("<img src=\"");
@@ -52,6 +57,13 @@ public class ButtonWriter extends AbstractTargetControlWriter {
                 writer.write("</span>");
             }
         } else {
+            if (fontSymbolManager != null) {
+                String symbol = button.getUplAttribute(String.class, "symbol");
+                if (!StringUtils.isBlank(symbol)) {
+                    writer.write(fontSymbolManager.resolveSymbolHtmlHexCode(symbol)).write("&nbsp;");
+                }
+            }
+
             writeCaption(writer, button);
         }
 
