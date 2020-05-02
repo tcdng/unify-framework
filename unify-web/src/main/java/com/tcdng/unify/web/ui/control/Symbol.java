@@ -21,16 +21,15 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.ui.AbstractTargetControl;
 
 /**
- * A button widget.
+ * A symbol widget.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("ui-button")
-@UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class),
-        @UplAttribute(name = "symbol", type = String.class),
+@Component("ui-symbol")
+@UplAttributes({ @UplAttribute(name = "symbol", type = String.class, mandatory = true),
         @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
-public class Button extends AbstractTargetControl {
+public class Symbol extends AbstractTargetControl {
 
     @Override
     public boolean isLayoutCaption() {

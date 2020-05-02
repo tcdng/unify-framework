@@ -19,54 +19,37 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.TargetControl;
-import com.tcdng.unify.web.ui.control.Button;
+import com.tcdng.unify.web.ui.control.Symbol;
 import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 
 /**
- * Button writer.
+ * Symbol writer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Writes(Button.class)
-@Component("button-writer")
-public class ButtonWriter extends AbstractTargetControlWriter {
+@Writes(Symbol.class)
+@Component("symbol-writer")
+public class SymbolWriter extends AbstractTargetControlWriter {
 
     @Configurable
     private FontSymbolManager fontSymbolManager;
 
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
-        Button button = (Button) targetControl;
-        writer.write("<button type=\"button\"");
-        writeTagAttributesWithTrailingExtraStyleClass(writer, button, "g_fsm");
+        Symbol symbolWidget = (Symbol) targetControl;
+        writer.write("<span ");
+        writeTagAttributesWithTrailingExtraStyleClass(writer, symbolWidget, "g_fsm");
         writer.write("/>");
-        String imageSrc = button.getUplAttribute(String.class, "imageSrc");
-        if (StringUtils.isNotBlank(imageSrc)) {
-            writer.write("<img src=\"");
-            writer.writeFileImageContextURL(imageSrc);
-            writer.write("\">");
-            String caption = button.getCaption();
-            if (caption != null) {
-                writer.write("<span>");
-                writer.writeWithHtmlEscape(caption);
-                writer.write("</span>");
-            }
+        if (fontSymbolManager != null) {
+            String symbol = symbolWidget.getUplAttribute(String.class, "symbol");
+            writer.write(fontSymbolManager.resolveSymbolHtmlHexCode(symbol));
         } else {
-            if (fontSymbolManager != null) {
-                String symbol = button.getUplAttribute(String.class, "symbol");
-                if (!StringUtils.isBlank(symbol)) {
-                    writer.write(fontSymbolManager.resolveSymbolHtmlHexCode(symbol)).write("&nbsp;");
-                }
-            }
-
-            writeCaption(writer, button);
+            writer.write("&#x25e6;");
         }
-
-        writer.write("</button>");
+        writer.write("</span>");
     }
 }

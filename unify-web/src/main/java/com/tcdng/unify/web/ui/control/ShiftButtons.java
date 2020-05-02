@@ -17,6 +17,8 @@ package com.tcdng.unify.web.ui.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
 
@@ -29,6 +31,9 @@ import com.tcdng.unify.web.ui.Control;
 @Component("ui-shiftbuttons")
 public class ShiftButtons extends AbstractMultiControl {
 
+    @Configurable
+    private FontSymbolManager fontSymbolManager;
+
     private Control shiftTopCtrl;
 
     private Control shiftUpCtrl;
@@ -40,17 +45,30 @@ public class ShiftButtons extends AbstractMultiControl {
     @Override
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
-        shiftTopCtrl = addInternalChildControl(
-                "!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
-                false);
-        shiftUpCtrl = addInternalChildControl(
-                "!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
-        shiftDownCtrl = addInternalChildControl(
-                "!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
-                false);
-        shiftBottomCtrl = addInternalChildControl(
-                "!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
-                false);
+        if (fontSymbolManager != null) {
+            shiftTopCtrl = addInternalChildControl(
+                    "!ui-symbol symbol:$s{angle-double-up} styleClass:$e{sbutton} hint:$m{move.to.top}", true, false);
+            shiftUpCtrl = addInternalChildControl(
+                    "!ui-symbol symbol:$s{angle-up} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
+            shiftDownCtrl = addInternalChildControl(
+                    "!ui-symbol symbol:$s{angle-down} styleClass:$e{sbutton} hint:$m{move.down}", true, false);
+            shiftBottomCtrl = addInternalChildControl(
+                    "!ui-symbol symbol:$s{angle-double-down} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
+                    false);
+        } else {
+            shiftTopCtrl = addInternalChildControl(
+                    "!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
+                    false);
+            shiftUpCtrl = addInternalChildControl(
+                    "!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true,
+                    false);
+            shiftDownCtrl = addInternalChildControl(
+                    "!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
+                    false);
+            shiftBottomCtrl = addInternalChildControl(
+                    "!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}",
+                    true, false);
+        }
 
         shiftTopCtrl.setGroupId(getPrefixedId("shft_"));
         shiftUpCtrl.setGroupId(getPrefixedId("shfu_"));

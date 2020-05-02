@@ -13,28 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.control;
-
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.UplAttribute;
-import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.web.ui.AbstractTargetControl;
+package com.tcdng.unify.fontawesome;
 
 /**
- * A button widget.
+ * Font Awesome application components.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("ui-button")
-@UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class),
-        @UplAttribute(name = "symbol", type = String.class),
-        @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
-public class Button extends AbstractTargetControl {
+public interface FontAwesomeApplicationComponents {
 
-    @Override
-    public boolean isLayoutCaption() {
-        return false;
-    }
-
+    String FONTAWESOME_FONTSYMBOLMANAGER = "fontawesome-symmanager";
 }

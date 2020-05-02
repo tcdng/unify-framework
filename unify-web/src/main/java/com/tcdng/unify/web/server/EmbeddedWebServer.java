@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web.embedded;
+package com.tcdng.unify.web.server;
 
 import com.tcdng.unify.web.http.HttpWebInterface;
 

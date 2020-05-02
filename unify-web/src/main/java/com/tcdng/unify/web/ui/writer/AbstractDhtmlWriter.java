@@ -60,7 +60,43 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
-        writeTagAttributes(writer, widget, widget.getStyleClass());
+        writeTagAttributesUsingStyleClass(writer, widget, widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title with leading extra
+     * style class
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesWithLeadingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagAttributesUsingStyleClass(writer, widget, extraStyleClass + " " + widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title with trailing extra
+     * style class
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesWithTrailingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagAttributesUsingStyleClass(writer, widget, widget.getStyleClass() + " " + extraStyleClass);
     }
 
     /**
@@ -75,7 +111,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected final void writeTagAttributes(ResponseWriter writer, Widget widget, String styleClass)
+    protected final void writeTagAttributesUsingStyleClass(ResponseWriter writer, Widget widget, String styleClass)
             throws UnifyException {
         writer.write(" id=\"").write(widget.getId()).write("\"");
 

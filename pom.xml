@@ -35,6 +35,7 @@
 		<module>unify-web</module>
 		<module>unify-jetty</module>
 		<module>unify-xchart</module>
+		<module>unify-fontawesome</module>
 	</modules>
 
 	<scm>
