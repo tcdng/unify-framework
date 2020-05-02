@@ -449,7 +449,8 @@ z-index:400;}
 .ui-button {padding: 0px 16px; min-height:28px; background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
 .ui-button:disabled {cursor:default;}
 .ui-button:hover:enabled {color: #FFF; background-color: #6080F0;}
-.ui-button span {padding-left:16px;}
+.ui-button img {vertical-align:middle; display: inline-block; width: 16px; height: 16px; border: none;}
+.ui-button span {padding-left:4px;}
 .ui-button-alert {padding: 0px 16px; min-height:28px; background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
 .ui-button-alert:disabled {cursor:default;}
 .ui-button-alert:hover:enabled {color: #FFF; background-color: #F06060;}

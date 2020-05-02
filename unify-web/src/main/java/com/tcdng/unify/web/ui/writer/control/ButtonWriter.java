@@ -40,15 +40,11 @@ public class ButtonWriter extends AbstractTargetControlWriter {
         String imageSrc = button.getUplAttribute(String.class, "imageSrc");
         writer.write("<button type=\"button\"");
         writeTagAttributes(writer, button);
-        boolean isImage = StringUtils.isNotBlank(imageSrc);
-        if (isImage) {
-            writer.write(" style=\"background: url('");
+        writer.write("</>");
+        if (StringUtils.isNotBlank(imageSrc)) {
+            writer.write("<img src=\"");
             writer.writeFileImageContextURL(imageSrc);
-            writer.write("') no-repeat left 8px center/14px 14px;\"");
-        }
-        writer.write(">");
-
-        if (isImage) {
+            writer.write("\">");
             writer.write("<span>");
             writeCaption(writer, button);
             writer.write("</span>");
