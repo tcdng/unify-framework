@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -90,7 +91,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
             onInternalChildPopulated(control);
         }
     }
-    
+
     @Override
     public ChildControlInfo getChildControlInfo(String childId) {
         return controlInfoMap.get(childId);
@@ -138,6 +139,21 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         Control control = (Control) getUplComponent(getSessionLocale(), descriptor, false);
         doAddChildControl(control, true, false, false, true);
         return control;
+    }
+
+    /**
+     * Removes all external child controls.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void removeAllExternalChildControl() throws UnifyException {
+        for (Iterator<Map.Entry<String, ChildControlInfo>> it = controlInfoMap.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<String, ChildControlInfo> entry = it.next();
+            if (entry.getValue().isExternal()) {
+                it.remove();
+            }
+        }
     }
 
     /**
@@ -199,11 +215,11 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
     }
 
     protected void onInternalChildPopulated(Control control) throws UnifyException {
-        
+
     }
 
-    private void doAddChildControl(Control control, boolean pageConstruct, boolean conforming, boolean ignoreParentState,
-            boolean external) throws UnifyException {
+    private void doAddChildControl(Control control, boolean pageConstruct, boolean conforming,
+            boolean ignoreParentState, boolean external) throws UnifyException {
         int childIndex = controlInfoMap.size();
         String childId = WidgetUtils.getChildId(getId(), control.getId(), childIndex);
         control.setId(childId);
