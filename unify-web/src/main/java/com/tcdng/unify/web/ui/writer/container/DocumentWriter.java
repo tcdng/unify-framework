@@ -102,7 +102,7 @@ public class DocumentWriter extends AbstractPageWriter {
         writeResourcesStyleSheet(writer);
 
         // Write font symbols
-        writeImportFontSymbols(writer, document);
+        writeEmbeddedStyle(writer, document);
 
         // Write javascript sources
         writeJavascript(writer, "web/js/unify-web.js");
@@ -202,9 +202,16 @@ public class DocumentWriter extends AbstractPageWriter {
 
     }
 
-    private void writeImportFontSymbols(ResponseWriter writer, BasicDocument document) throws UnifyException {
+    private void writeEmbeddedStyle(ResponseWriter writer, BasicDocument document) throws UnifyException {
+        writer.write("<style>");
+        // Write custom check box images
+        writeImageBeforeCss(writer, " .g_cba", "$t{images/checked.png}");
+        writeImageBeforeCss(writer, " .g_cbb", "$t{images/unchecked.png}");
+        writeImageBeforeCss(writer, " .g_cbc", "$t{images/checked_gray.png}");
+        writeImageBeforeCss(writer, " .g_cbd", "$t{images/unchecked_gray.png}");
+
+        // Write font symbols
         if (fontSymbolManager != null) {
-            writer.write("<style>");
             StringBuilder fsb = new StringBuilder();
             int i = 0;
             fsb.append(".g_fsm {font-family: ").append(document.getUplAttribute(String.class, "fontFamily"));
@@ -220,8 +227,15 @@ public class DocumentWriter extends AbstractPageWriter {
             fsb.append(";}");
 
             writer.write(fsb);
-            writer.write("</style>");
         }
+        writer.write("</style>");
+    }
+
+    private void writeImageBeforeCss(ResponseWriter writer, String className, String imgSrc) throws UnifyException {
+        writer.write(className).write(" {vertical-align:middle;display: inline-block;} ").write(className).write(
+                ":before {content: \"\";vertical-align:middle;display: inline-block;width: 100%;height: 100%;background: url(");
+        writer.writeFileImageContextURL(imgSrc);
+        writer.write(")no-repeat center/100% 100%; }");
     }
 
     private void writeResourcesStyleSheet(ResponseWriter writer) throws UnifyException {

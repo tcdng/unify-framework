@@ -465,7 +465,8 @@ z-index:400;}
 .ui-minibutton-alert:hover:enabled {color: #FFF; background-color: #F06060;}
 
 /** Checkbox*/
-.ui-checkbox {width:16px; height:16px;}
+.ui-checkbox {width:20px; height:20px;}
+.ui-checkbox input {display:none;}
 
 /** Check list */
 .ui-checklist {}

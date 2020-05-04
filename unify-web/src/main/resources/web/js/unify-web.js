@@ -677,7 +677,10 @@ ux.clear = function(uEv) {
 			var elem = _id(pgNm);
 			if (elem) {
 				if (!elem.disabled && elem.type != "button") {
-					if (elem.type == "checkbox" || elem.type == "radio") {
+					if (elem.type == "checkbox") {
+						elem.checked = false;
+						ux.cbSwitchImg(elem);
+					} else if (elem.type == "radio") {
 						elem.checked = false;
 					} else if (elem.type == "select-multiple") {
 						for (var k = 0; k < elem.options.length; k++) {
@@ -745,6 +748,7 @@ ux.setAllChecked = function(uEv) {
 						var elem = elems[j];
 						if (elem.type == "checkbox") {
 							elem.checked = refElem.checked;
+							ux.cbSwitchImg(elem);
 						}
 					}
 				}
@@ -1306,6 +1310,36 @@ ux.rigAssignmentBox = function(rgp) {
 			rgp.pUnassnSelId);
 	assnBoxRigBtns(rgp, rgp.pUnassnBtnId, rgp.pUnassnAllBtnId,
 			rgp.pAssnSelId);
+}
+
+/** Checkbox */
+ux.rigCheckbox = function(rgp) {
+	var evp = {};
+	evp.uId = rgp.pId;	
+	ux.attachHandler(_id("fac_" + evp.uId), "click",
+			ux.cbClick, evp);	
+}
+
+ux.cbClick = function(uEv) {
+	var evp = uEv.evp;
+	var selBox = _id(evp.uId);
+	if (selBox) {
+		selBox.checked = !selBox.checked;
+		ux.cbSwitchImg(selBox);
+		ux.fireEvent(_id("fac_" + selBox.id), "change", true);
+		ux.fireEvent(hid, "click", true);
+	}
+}
+
+ux.cbSwitchImg = function(selBox) {
+	var fac = _id("fac_" + selBox.id);
+	if (fac && fac.className) {
+		if (selBox.checked) {
+			fac.className = fac.className.replace("g_cbb", "g_cba");
+		} else {
+			fac.className = fac.className.replace("g_cba", "g_cbb");
+		}
+	}
 }
 
 /** Date Field */
@@ -2320,7 +2354,7 @@ ux.rigTable = function(rgp) {
 			selBox.uIndex = i;
 			
 			// Wire handlers
-			ux.attachHandler(selBox, "click", ux.tableMultiSelClick,
+			ux.attachHandler(_id("fac_" + selBox.id), "click", ux.tableMultiSelClick,
 					evp);
 			if (!rgp.pShiftable) {
 				var evpRw = {};
@@ -2444,16 +2478,18 @@ ux.tableSelAllClick = function(uEv) {
 		// Update visuals for rows
 		var selBoxes = rigTbl.uSelBoxes;
 		if (selBoxes) {
-			if (selAllBox.checked ==  true) {
+			if (selAllBox.checked == true) {
 				for (var i = 0; i < selBoxes.length; i++) {
 					var selBox = selBoxes[i];
 					selBox.checked = selAllBox.checked;
+					ux.cbSwitchImg(selBox);
 					selBox.uRow.className = rigTbl.uSelCls;
 				}
 			} else {
 				for (var i = 0; i < selBoxes.length; i++) {
 					var selBox = selBoxes[i];
 					selBox.checked = selAllBox.checked;
+					ux.cbSwitchImg(selBox);
 					selBox.uRow.className = selBox.uRowClass;
 				}
 			}
@@ -2520,6 +2556,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 	var changed = false;
 	if (selBox != rigTbl.uLastSelClick && selBox.checked != true) {
 		selBox.checked = true;
+		ux.cbSwitchImg(selBox);
 		selBox.uRow.className = rigTbl.uSelCls;
 		rigTbl.uVisibleSel++;
 		
@@ -2537,6 +2574,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 				var cSelBox = selBoxes[i];
 				if (cSelBox.checked != true) {
 					cSelBox.checked = true;
+					ux.cbSwitchImg(cSelBox);
 					cSelBox.uRow.className = rigTbl.uSelCls;
 					rigTbl.uVisibleSel++;
 				}
@@ -2554,6 +2592,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 			if (unSelBox.checked == true) {
 				if (unSelBox != selBox) {
 					unSelBox.checked = false;
+					ux.cbSwitchImg(unSelBox);
 					unSelBox.uRow.className = unSelBox.uRowClass;
 					changed = true;
 				}
@@ -2659,6 +2698,7 @@ ux.tableDisableMultiSelElements = function(rigTbl) {
 	var selAllElem = _id(rigTbl.uSelAllId);
 	if (rigTbl.uVisibleSel <= 0 && selAllElem.checked) {
 		selAllElem.checked = false;
+		ux.cbSwitchImg(selAllElem);
 	}
 }
 
