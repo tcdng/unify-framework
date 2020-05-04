@@ -24,6 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.util.WidgetUtils;
 
@@ -107,8 +108,9 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     @Override
     public void setId(String id) throws UnifyException {
+        boolean changed = !DataUtils.equals(getId(), id);
         super.setId(id);
-        if (controlInfoMap.isEmpty()) {
+        if (changed && !controlInfoMap.isEmpty()) {
             Map<String, ChildControlInfo> map = new LinkedHashMap<String, ChildControlInfo>();
             for (ChildControlInfo childControlInfo : controlInfoMap.values()) {
                 Control control = childControlInfo.getControl();
