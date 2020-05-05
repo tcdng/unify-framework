@@ -232,7 +232,7 @@ public class DocumentWriter extends AbstractPageWriter {
     }
 
     private void writeImageBeforeCss(ResponseWriter writer, String className, String imgSrc) throws UnifyException {
-        writer.write(className).write(" {vertical-align:middle;display: inline-block;} ").write(className).write(
+        writer.write(className).write(" {vertical-align:middle;display: inline-block !important;} ").write(className).write(
                 ":before {content: \"\";vertical-align:middle;display: inline-block;width: 100%;height: 100%;background: url(");
         writer.writeFileImageContextURL(imgSrc);
         writer.write(")no-repeat center/100% 100%; }");
