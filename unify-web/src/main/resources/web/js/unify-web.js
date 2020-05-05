@@ -737,19 +737,22 @@ ux.hide = function(uEv) {
 }
 
 ux.setAllChecked = function(uEv) {
-	var refElem = uEv.uTrg;
-	if (refElem.type == "checkbox") {
-		var trgNms = uEv.evp.uRef;
-		if (trgNms) {
-			for (var i = 0; i < trgNms.length; i++) {
-				var elems = _name(trgNms[i]);
-				if (elems) {
-					for (var j = 0; j < elems.length; j++) {
-						var elem = elems[j];
-						if (elem.type == "checkbox") {
-							elem.checked = refElem.checked;
-							ux.cbSwitchImg(elem);
-						}
+	var evp = uEv.evp;
+	var trgNms = evp.uRef;
+	if (trgNms) {
+		var rElem = uEv.uTrg;
+		if (evp.uSrcId) {
+			rElem = _id(evp.uSrcId);
+		}
+
+		for (var i = 0; i < trgNms.length; i++) {
+			var elems = _name(trgNms[i]);
+			if (elems) {
+				for (var j = 0; j < elems.length; j++) {
+					var elem = elems[j];
+					if (elem.type == "checkbox") {
+						elem.checked = rElem.checked;
+						ux.cbSwitchImg(elem);
 					}
 				}
 			}
@@ -1353,6 +1356,26 @@ ux.rigChecklist = function(rgp) {
 					ux.cbClick, evp);	
 		}
 	}
+}
+
+/** Dropdown checklist */
+ux.rigDropdownChecklist = function(rgp) {
+	// Select all
+	if (rgp.pSelAllId) {
+		var evp = {};
+		evp.uId = rgp.pSelAllId;
+		_id(rgp.pSelAllId).checked = false;
+		var selFac = _id("fac_" + rgp.pSelAllId);
+		ux.attachHandler(selFac, "click", ux.cbClick, evp);
+		
+		evp = {};
+		evp.uSrcId = rgp.pSelAllId;
+		evp.uRef = [rgp.pId];
+		ux.attachHandler(selFac, "change", ux.setAllChecked, evp);	
+	}
+
+	// Rig checklist
+	ux.rigChecklist(rgp);
 }
 
 /** Date Field */

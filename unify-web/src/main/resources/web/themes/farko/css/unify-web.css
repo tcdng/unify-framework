@@ -506,6 +506,8 @@ z-index:400;}
 /** Drop-down with check list */
 .ui-dropdownchecklist {width:180px;}
 .ui-dropdownchecklist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
+.ui-dropdownchecklist .dclframe span {width:20px; height:20px;}
+.ui-dropdownchecklist .dclframe input {display:none;}
 
 /** Duration select */
 .ui-durationselect {}

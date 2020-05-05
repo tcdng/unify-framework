@@ -61,16 +61,23 @@ public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
 
             writeHiddenPush(writer, dropdownCheckList, PushType.CHECKBOX);
 
+            boolean isContainerDisabled = dropdownCheckList.isContainerDisabled();
             writer.write("<div class=\"dclframe\"><table>");
             String selectAllOption = dropdownCheckList.getSelectAllOption();
             if (selectAllOption != null) {
                 writer.write("<tr><td colspan=\"").write(columns * 2).write("\">");
-                writer.write("<input type=\"checkbox\"");
-                writeTagId(writer, dropdownCheckList.getSelectAllId());
-                if (dropdownCheckList.isDisabled()) {
-                    writer.write(" disabled=\"true\"");
+                writer.write("<span ");
+                writeTagId(writer, "fac_" + dropdownCheckList.getSelectAllId());
+                if (isContainerDisabled) {
+                    writeTagStyleClass(writer, "g_cbd");
+                } else {
+                    writeTagStyleClass(writer, "g_cbb");
                 }
                 writer.write("/>");
+                writer.write("<input type=\"checkbox\"");
+                writeTagId(writer, dropdownCheckList.getSelectAllId());
+                writer.write("/>");
+                writer.write("</span>");
                 if (StringUtils.isNotBlank(selectAllOption)) {
                     writer.writeWithHtmlEscape(selectAllOption);
                 } else {
@@ -86,16 +93,37 @@ public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
                     if (i < length) {
                         Listable listable = listableList.get(i);
                         writer.write("<td>");
-                        writer.write("<input type=\"checkbox\"");
-                        writeTagId(writer, dropdownCheckList.getNamingIndexedId(i));
-                        writeTagName(writer, groupId);
                         String key = listable.getListKey();
-                        if (values != null && values.contains(key)) {
+                        boolean checked = values != null && values.contains(key);
+                        String namingIndexId = dropdownCheckList.getNamingIndexedId(i);
+                        writer.write("<span ");
+                        writeTagId(writer, "fac_" + namingIndexId);
+                        if (checked) {
+                            if (isContainerDisabled) {
+                                writeTagStyleClass(writer, "g_cbc");
+                            } else {
+                                writeTagStyleClass(writer, "g_cba");
+                            }
+                        } else {
+                            if (isContainerDisabled) {
+                                writeTagStyleClass(writer, "g_cbd");
+                            } else {
+                                writeTagStyleClass(writer, "g_cbb");
+                            }
+                        }
+
+                        writer.write("/>");
+                        writer.write("<input type=\"checkbox\"");
+                        writeTagId(writer, namingIndexId);
+                        writeTagName(writer, groupId);
+                        if (checked) {
                             writer.write(" checked=\"checked\"");
                         }
 
                         writeTagValue(writer, key);
-                        writer.write("/></td><td>");
+                        writer.write("/>");
+                        writer.write("</span>");
+                        writer.write("</td><td>");
                         writer.writeWithHtmlEscape(listable.getListDescription());
                         writer.write("</td>");
                     } else {
@@ -113,11 +141,14 @@ public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
     protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
-
-        // If select option, add select all behavior also
-        if (dropdownCheckList.getSelectAllOption() != null) {
-            String pageName = dropdownCheckList.getId();
-            writeEventJs(writer, "onclick", "setallchecked", dropdownCheckList.getSelectAllId(), pageName);
+        if (dropdownCheckList.isContainerEditable() && !dropdownCheckList.isContainerDisabled()) {
+            writer.write("ux.rigDropdownChecklist({");
+            writer.write("\"pId\":\"").write(dropdownCheckList.getId()).write('"');
+            writer.write(",\"pNm\":\"").write(dropdownCheckList.getId()).write('"');
+            if (dropdownCheckList.getSelectAllOption() != null) {
+                writer.write(",\"pSelAllId\":\"").write(dropdownCheckList.getSelectAllId()).write('"');
+            }
+            writer.write("});");
         }
     }
 
