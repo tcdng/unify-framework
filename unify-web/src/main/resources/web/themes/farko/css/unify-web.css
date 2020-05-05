@@ -469,7 +469,8 @@ z-index:400;}
 .ui-checkbox input {display:none;}
 
 /** Check list */
-.ui-checklist {}
+.ui-checklist {width:20px; height:20px;}
+.ui-checklist input {display:none;}
 
 
 /** Date field */

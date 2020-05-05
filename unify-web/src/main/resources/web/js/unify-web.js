@@ -1341,6 +1341,20 @@ ux.cbSwitchImg = function(selBox) {
 	}
 }
 
+/** Checklist */
+ux.rigChecklist = function(rgp) {
+	var elems = _name(rgp.pNm);
+	if(elems) {
+		for(var i = 0; i < elems.length; i++) {
+			var elem = elems[i];
+			var evp = {};
+			evp.uId = elem.id;	
+			ux.attachHandler(_id("fac_" + elem.id), "click",
+					ux.cbClick, evp);	
+		}
+	}
+}
+
 /** Date Field */
 ux.rigDateField = function(rgp) {
 	var id = rgp.pId;

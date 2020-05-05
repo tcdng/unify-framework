@@ -75,7 +75,6 @@ public class CheckBoxWriter extends AbstractControlWriter {
             super.doWriteBehavior(writer, widget, true); // Use facade
             writer.write("ux.rigCheckbox({");
             writer.write("\"pId\":\"").write(checkBox.getId()).write('"');
-            writer.write(",\"pFId\":\"").write(checkBox.getFacadeId()).write('"');
             writer.write("});");
         }
     }

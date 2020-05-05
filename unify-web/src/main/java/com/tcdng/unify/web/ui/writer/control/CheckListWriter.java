@@ -46,23 +46,58 @@ public class CheckListWriter extends AbstractControlWriter {
 
         List<String> values = checkList.getValue(ArrayList.class, String.class);
         List<? extends Listable> listableList = checkList.getListables();
-        int breaks = listableList.size();
+        int len = listableList.size();
         boolean appendSym = !checkList.getUplAttribute(boolean.class, "flow");
-        for (Listable listable : listableList) {
-            writer.write("<input type=\"checkbox\"");
-            writeTagName(writer, checkList);
-            writeTagStyleClass(writer, checkList);
-            writeTagStyle(writer, checkList);
-
+        boolean isContainerDisabled = checkList.isContainerDisabled();
+        String baseId = checkList.getId();
+        String baseFacId = checkList.getFacadeId();
+        for (int i = 0, breaks = len; i < len; i++) {
+            Listable listable = listableList.get(i);
             String key = listable.getListKey();
-            if (values != null && values.contains(key)) {
+            boolean checked = values != null && values.contains(key);
+            writer.write("<span ");
+            writeTagId(writer, baseFacId + i);
+            if (checked) {
+                if (isContainerDisabled) {
+                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbc");
+                } else {
+                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cba");
+                }
+            } else {
+                if (isContainerDisabled) {
+                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbd");
+                } else {
+                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbb");
+                }
+            }
+
+            writer.write("/>");
+            writer.write("<input type=\"checkbox\"");
+            writeTagId(writer, baseId + i);
+            writeTagName(writer, checkList);
+            if (checked) {
                 writer.write(" checked=\"checked\"");
             }
+            
             writer.write(" value=\"").write(key).write("\"/>");
+            writer.write("</span>");
+
             writer.writeWithHtmlEscape(listable.getListDescription());
             if (appendSym && ((--breaks) > 0)) {
                 writer.write("<br />");
             }
+        }
+    }
+
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        CheckList checkList = (CheckList) widget;
+        if (checkList.isContainerEditable() && !checkList.isContainerDisabled()) {
+            super.doWriteBehavior(writer, widget, true); // Use facade
+            writer.write("ux.rigChecklist({");
+            writer.write("\"pId\":\"").write(checkList.getId()).write('"');
+            writer.write(",\"pNm\":\"").write(checkList.getGroupId()).write('"');
+            writer.write("});");
         }
     }
 }
