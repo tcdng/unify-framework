@@ -1327,7 +1327,6 @@ ux.cbClick = function(uEv) {
 		selBox.checked = !selBox.checked;
 		ux.cbSwitchImg(selBox);
 		ux.fireEvent(_id("fac_" + selBox.id), "change", true);
-		ux.fireEvent(hid, "click", true);
 	}
 }
 
@@ -2343,7 +2342,10 @@ ux.rigTable = function(rgp) {
 		var evp = {};
 		evp.uRigTbl = tblToRig;
 		tblToRig.uSelBoxes = selBoxes;
-		ux.attachHandler(_id(rgp.pSelAllId),
+		var selAll = _id(rgp.pSelAllId);
+		var selAllFac = _id("fac_" + rgp.pSelAllId);
+		selAllFac.selAll = selAll;
+		ux.attachHandler(selAllFac,
 				"click", ux.tableSelAllClick, evp);
 		
 		for (var i = 0; i < selBoxes.length; i++) {
@@ -2354,7 +2356,9 @@ ux.rigTable = function(rgp) {
 			selBox.uIndex = i;
 			
 			// Wire handlers
-			ux.attachHandler(_id("fac_" + selBox.id), "click", ux.tableMultiSelClick,
+			var selBoxFac = _id("fac_" + selBox.id);
+			selBoxFac.selBox = selBox;
+			ux.attachHandler(selBoxFac, "click", ux.tableMultiSelClick,
 					evp);
 			if (!rgp.pShiftable) {
 				var evpRw = {};
@@ -2465,8 +2469,9 @@ ux.tableSortClickHandler = function(uEv) {
 }
 
 ux.tableSelAllClick = function(uEv) {
-	var selAllBox = uEv.uTrg;
-	if (selAllBox) {
+	var selAllFac = uEv.uTrg;
+	if (selAllFac) {
+		var selAllBox = selAllFac.selAll;
 		var rigTbl = uEv.evp.uRigTbl;
 		// Update table values
 		if (selAllBox.checked == true) {
@@ -2505,8 +2510,9 @@ ux.tableSelAllClick = function(uEv) {
 
 ux.tableMultiSelClick = function(uEv) {
 	var changed = false;
-	var selBox = uEv.uTrg;
-	if (selBox) {
+	var selBoxFac = uEv.uTrg;
+	if (selBoxFac) {
+		var selBox = selBoxFac.selBox;
 		var rigTbl = uEv.evp.uRigTbl;
 		rigTbl.uLastSelClick = null;
 		if (selBox.checked == true) {

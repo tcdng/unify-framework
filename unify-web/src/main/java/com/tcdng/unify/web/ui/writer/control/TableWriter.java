@@ -149,7 +149,14 @@ public class TableWriter extends AbstractControlWriter {
         // Internal control behavior
         Control itemsPerPageCtrl = table.getItemsPerPageCtrl();
         if (itemsPerPageCtrl != null) {
-            writer.writeBehaviour(itemsPerPageCtrl);
+            writer.writeBehavior(itemsPerPageCtrl);
+        }
+
+        Control multiSelectCtrl = table.getMultiSelectCtrl();
+        if (multiSelectCtrl != null) {
+            multiSelectCtrl.setValueStore(null);
+            multiSelectCtrl.setGroupId(null);
+            writer.writeBehavior(multiSelectCtrl, table.getSelectAllId());
         }
 
         // External control behavior
@@ -159,11 +166,16 @@ public class TableWriter extends AbstractControlWriter {
         for (; index < lastIndex; index++) {
             ValueStore itemValueStore = writeRowList.get(index).getRowValueStore();
 
+            if (multiSelectCtrl != null) {
+                multiSelectCtrl.setValueStore(itemValueStore);
+                writer.writeBehavior(multiSelectCtrl);
+            }
+            
             for (Column column : table.getColumnList()) {
                 if (column.isVisible()) {
                     Control control = column.getControl();
                     control.setValueStore(itemValueStore);
-                    writer.writeBehaviour(control);
+                    writer.writeBehavior(control);
                 }
             }
         }
