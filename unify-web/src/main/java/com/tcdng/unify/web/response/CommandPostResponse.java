@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
+import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
 
@@ -32,16 +33,22 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class CommandPostResponse extends AbstractJsonPageControllerResponse {
 
     public CommandPostResponse() {
-        super("commandPostHdl");
+        super("commandPostHdl", false);
     }
 
     @Override
     protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         logDebug("Preparing command post response: path ID = [{0}]", page.getPathId());
-        String path = getRequestContextUtil().getCommandResponsePath();
-        if (StringUtils.isNotBlank(path)) {
-            writer.write(",");
-            writer.writeJsonPathVariable("postPath", path);
+        TargetPath targetPath = getRequestContextUtil().getCommandResponsePath();
+        if(targetPath != null) {
+            if (StringUtils.isNotBlank(targetPath.getPath())) {
+                writer.write(",");
+                writer.writeJsonPathVariable("postPath", targetPath.getPath());
+            }
+            
+            if (StringUtils.isNotBlank(targetPath.getTarget())) {
+                writer.write(",\"target\":").writeJsonQuote(targetPath.getTarget());
+            }
         }
     }
 }

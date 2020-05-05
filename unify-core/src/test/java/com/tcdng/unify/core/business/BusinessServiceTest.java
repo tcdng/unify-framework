@@ -31,9 +31,9 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.Setting;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
-import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceConfig;
-import com.tcdng.unify.core.database.sql.DynamicSqlDataSourceManager;
-import com.tcdng.unify.core.database.sql.DynamicSqlDatabase;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
+import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDatabase;
 import com.tcdng.unify.core.database.sql.NameSqlDataSourceSchemaImpl;
 import com.tcdng.unify.core.database.sql.SqlDatabase;
 import com.tcdng.unify.core.util.SqlUtils;
@@ -290,7 +290,7 @@ public class BusinessServiceTest extends AbstractUnifyComponentTest {
         DynamicSqlDataSourceManager dynamicSqlDataSourceManager = (DynamicSqlDataSourceManager) getComponent(
                 ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCEMANAGER);
         dynamicSqlDataSourceManager.configure(new DynamicSqlDataSourceConfig(MockService.CREDITCHECK_DATASOURCECONFIG,
-                "hsqldb-dialect", "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, 2, true));
+                "hsqldb-dialect", "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:dyntest", null, null, null, 2, true));
         Connection connection = dynamicSqlDataSourceManager.getConnection(MockService.CREDITCHECK_DATASOURCECONFIG);
         Statement stmt = null;
         try {

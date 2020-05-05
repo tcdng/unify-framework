@@ -41,6 +41,9 @@ const UNIFY_LASTUSERACT_EFFECT_PERIOD = 180000; // 3 minutes.
 
 const UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 
+const UNIFY_MINUTES_IN_DAY = 1440;
+const UNIFY_MINUTES_IN_HOUR = 60;
+
 ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
@@ -356,8 +359,12 @@ ux.postPath = function(resp) {
 			}
 		}
 		
-		var ajaxPrms = ux.ajaxConstructCallParam(path, "req_doc="
-				+ _enc(ux.docPath), false, true, false, ux.processJSON);
+		var prm = "req_doc=" + _enc(ux.docPath);
+		if(resp.target) {
+			prm += "&req_trg=" + _enc(resp.target);
+		}
+		
+		var ajaxPrms = ux.ajaxConstructCallParam(path, prm, false, true, false, ux.processJSON);
 		ux.ajaxCall(ajaxPrms);
 	}
 }
@@ -670,7 +677,10 @@ ux.clear = function(uEv) {
 			var elem = _id(pgNm);
 			if (elem) {
 				if (!elem.disabled && elem.type != "button") {
-					if (elem.type == "checkbox" || elem.type == "radio") {
+					if (elem.type == "checkbox") {
+						elem.checked = false;
+						ux.cbSwitchImg(elem);
+					} else if (elem.type == "radio") {
 						elem.checked = false;
 					} else if (elem.type == "select-multiple") {
 						for (var k = 0; k < elem.options.length; k++) {
@@ -727,18 +737,22 @@ ux.hide = function(uEv) {
 }
 
 ux.setAllChecked = function(uEv) {
-	var refElem = uEv.uTrg;
-	if (refElem.type == "checkbox") {
-		var trgNms = uEv.evp.uRef;
-		if (trgNms) {
-			for (var i = 0; i < trgNms.length; i++) {
-				var elems = _name(trgNms[i]);
-				if (elems) {
-					for (var j = 0; j < elems.length; j++) {
-						var elem = elems[j];
-						if (elem.type == "checkbox") {
-							elem.checked = refElem.checked;
-						}
+	var evp = uEv.evp;
+	var trgNms = evp.uRef;
+	if (trgNms) {
+		var rElem = uEv.uTrg;
+		if (evp.uSrcId) {
+			rElem = _id(evp.uSrcId);
+		}
+
+		for (var i = 0; i < trgNms.length; i++) {
+			var elems = _name(trgNms[i]);
+			if (elems) {
+				for (var j = 0; j < elems.length; j++) {
+					var elem = elems[j];
+					if (elem.type == "checkbox") {
+						elem.checked = rElem.checked;
+						ux.cbSwitchImg(elem);
 					}
 				}
 			}
@@ -1301,6 +1315,69 @@ ux.rigAssignmentBox = function(rgp) {
 			rgp.pAssnSelId);
 }
 
+/** Checkbox */
+ux.rigCheckbox = function(rgp) {
+	var evp = {};
+	evp.uId = rgp.pId;	
+	ux.attachHandler(_id("fac_" + evp.uId), "click",
+			ux.cbClick, evp);	
+}
+
+ux.cbClick = function(uEv) {
+	var evp = uEv.evp;
+	var selBox = _id(evp.uId);
+	if (selBox) {
+		selBox.checked = !selBox.checked;
+		ux.cbSwitchImg(selBox);
+		ux.fireEvent(_id("fac_" + selBox.id), "change", true);
+	}
+}
+
+ux.cbSwitchImg = function(selBox) {
+	var fac = _id("fac_" + selBox.id);
+	if (fac && fac.className) {
+		if (selBox.checked) {
+			fac.className = fac.className.replace("g_cbb", "g_cba");
+		} else {
+			fac.className = fac.className.replace("g_cba", "g_cbb");
+		}
+	}
+}
+
+/** Checklist */
+ux.rigChecklist = function(rgp) {
+	var elems = _name(rgp.pNm);
+	if(elems) {
+		for(var i = 0; i < elems.length; i++) {
+			var elem = elems[i];
+			var evp = {};
+			evp.uId = elem.id;	
+			ux.attachHandler(_id("fac_" + elem.id), "click",
+					ux.cbClick, evp);	
+		}
+	}
+}
+
+/** Dropdown checklist */
+ux.rigDropdownChecklist = function(rgp) {
+	// Select all
+	if (rgp.pSelAllId) {
+		var evp = {};
+		evp.uId = rgp.pSelAllId;
+		_id(rgp.pSelAllId).checked = false;
+		var selFac = _id("fac_" + rgp.pSelAllId);
+		ux.attachHandler(selFac, "click", ux.cbClick, evp);
+		
+		evp = {};
+		evp.uSrcId = rgp.pSelAllId;
+		evp.uRef = [rgp.pId];
+		ux.attachHandler(selFac, "change", ux.setAllChecked, evp);	
+	}
+
+	// Rig checklist
+	ux.rigChecklist(rgp);
+}
+
 /** Date Field */
 ux.rigDateField = function(rgp) {
 	var id = rgp.pId;
@@ -1482,6 +1559,46 @@ ux.dateCalendarDayClick = function(id, dayCount) {
 	ux.setPatternValue(_id(id).uRigPrm);
 	ux.hidePopup(null);
 	ux.datePopulateCalendar(_id(id).evp);
+}
+
+/** Duration Select */
+ux.rigDurationSelect = function(rgp) {
+	var evp = {};
+	if (rgp.pDaySelId) {
+		evp.daySel = _id(rgp.pDaySelId);
+	}
+
+	if (rgp.pHourSelId) {
+		evp.hourSel = _id(rgp.pHourSelId);
+	}
+
+	evp.minSel = _id(rgp.pMinSelId);
+	evp.durationHid = _id(rgp.pDurationId);
+
+	if (evp.daySel) {
+		ux.attachHandler(evp.daySel, "change", ux.durationSelCalc, evp);
+	}
+
+	if (evp.hourSel) {
+		ux.attachHandler(evp.hourSel, "change", ux.durationSelCalc, evp);
+	}
+
+	ux.attachHandler(evp.minSel, "change", ux.durationSelCalc, evp);
+}
+
+ux.durationSelCalc = function(uEv) {
+	var evp = uEv.evp;
+	var totalMinutes = 0;
+	if (evp.daySel) {
+		totalMinutes = totalMinutes + evp.daySel.value * UNIFY_MINUTES_IN_DAY;
+	}
+
+	if (evp.hourSel) {
+		totalMinutes = totalMinutes + evp.hourSel.value * UNIFY_MINUTES_IN_HOUR;
+	}
+
+	totalMinutes = totalMinutes + evp.minSel.value * 1;
+	evp.durationHid.value = totalMinutes;
 }
 
 /** FileAttachment */
@@ -2262,7 +2379,10 @@ ux.rigTable = function(rgp) {
 		var evp = {};
 		evp.uRigTbl = tblToRig;
 		tblToRig.uSelBoxes = selBoxes;
-		ux.attachHandler(_id(rgp.pSelAllId),
+		var selAll = _id(rgp.pSelAllId);
+		var selAllFac = _id("fac_" + rgp.pSelAllId);
+		selAllFac.selAll = selAll;
+		ux.attachHandler(selAllFac,
 				"click", ux.tableSelAllClick, evp);
 		
 		for (var i = 0; i < selBoxes.length; i++) {
@@ -2273,7 +2393,9 @@ ux.rigTable = function(rgp) {
 			selBox.uIndex = i;
 			
 			// Wire handlers
-			ux.attachHandler(selBox, "click", ux.tableMultiSelClick,
+			var selBoxFac = _id("fac_" + selBox.id);
+			selBoxFac.selBox = selBox;
+			ux.attachHandler(selBoxFac, "click", ux.tableMultiSelClick,
 					evp);
 			if (!rgp.pShiftable) {
 				var evpRw = {};
@@ -2384,8 +2506,9 @@ ux.tableSortClickHandler = function(uEv) {
 }
 
 ux.tableSelAllClick = function(uEv) {
-	var selAllBox = uEv.uTrg;
-	if (selAllBox) {
+	var selAllFac = uEv.uTrg;
+	if (selAllFac) {
+		var selAllBox = selAllFac.selAll;
 		var rigTbl = uEv.evp.uRigTbl;
 		// Update table values
 		if (selAllBox.checked == true) {
@@ -2397,16 +2520,18 @@ ux.tableSelAllClick = function(uEv) {
 		// Update visuals for rows
 		var selBoxes = rigTbl.uSelBoxes;
 		if (selBoxes) {
-			if (selAllBox.checked ==  true) {
+			if (selAllBox.checked == true) {
 				for (var i = 0; i < selBoxes.length; i++) {
 					var selBox = selBoxes[i];
 					selBox.checked = selAllBox.checked;
+					ux.cbSwitchImg(selBox);
 					selBox.uRow.className = rigTbl.uSelCls;
 				}
 			} else {
 				for (var i = 0; i < selBoxes.length; i++) {
 					var selBox = selBoxes[i];
 					selBox.checked = selAllBox.checked;
+					ux.cbSwitchImg(selBox);
 					selBox.uRow.className = selBox.uRowClass;
 				}
 			}
@@ -2422,8 +2547,9 @@ ux.tableSelAllClick = function(uEv) {
 
 ux.tableMultiSelClick = function(uEv) {
 	var changed = false;
-	var selBox = uEv.uTrg;
-	if (selBox) {
+	var selBoxFac = uEv.uTrg;
+	if (selBoxFac) {
+		var selBox = selBoxFac.selBox;
 		var rigTbl = uEv.evp.uRigTbl;
 		rigTbl.uLastSelClick = null;
 		if (selBox.checked == true) {
@@ -2473,6 +2599,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 	var changed = false;
 	if (selBox != rigTbl.uLastSelClick && selBox.checked != true) {
 		selBox.checked = true;
+		ux.cbSwitchImg(selBox);
 		selBox.uRow.className = rigTbl.uSelCls;
 		rigTbl.uVisibleSel++;
 		
@@ -2490,6 +2617,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 				var cSelBox = selBoxes[i];
 				if (cSelBox.checked != true) {
 					cSelBox.checked = true;
+					ux.cbSwitchImg(cSelBox);
 					cSelBox.uRow.className = rigTbl.uSelCls;
 					rigTbl.uVisibleSel++;
 				}
@@ -2507,6 +2635,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 			if (unSelBox.checked == true) {
 				if (unSelBox != selBox) {
 					unSelBox.checked = false;
+					ux.cbSwitchImg(unSelBox);
 					unSelBox.uRow.className = unSelBox.uRowClass;
 					changed = true;
 				}
@@ -2612,6 +2741,7 @@ ux.tableDisableMultiSelElements = function(rigTbl) {
 	var selAllElem = _id(rigTbl.uSelAllId);
 	if (rigTbl.uVisibleSel <= 0 && selAllElem.checked) {
 		selAllElem.checked = false;
+		ux.cbSwitchImg(selAllElem);
 	}
 }
 
@@ -3411,50 +3541,59 @@ ux.buildNameParams = function(name, builtNames, param) {
 
 ux.extractObjParams = function(elem, param) {
 	if (elem && !elem.disabled && elem.type != "button") {
-		var transferId = elem.id;
+		var trnId = elem.id;
 		if (elem.type == "hidden") {
+			var pblank = false;
 			if(elem.value == "pushc_") {
-				var cElems = _name(transferId);
+				pblank = true;
+				var cElems = _name(trnId);
 				for(var i = 0; i < cElems.length; i++) {
 					if (cElems[i].checked) {
-						ux.appendParam(transferId, cElems[i].value, param);
+						ux.appendParam(trnId, cElems[i].value, param);
+						pblank = false;
 					}
 				}
 			} else if(elem.value == "pushr_") {
-				var rElems = _name(transferId);
+				pblank = true;
+				var rElems = _name(trnId);
 				for(var i = 0; i < rElems.length; i++) {
 					if (rElems[i].checked) {
-						ux.appendParam(transferId, rElems[i].value, param);
+						ux.appendParam(trnId, rElems[i].value, param);
+						pblank = false;
 						break;
 					}
 				}
 			} else if(elem.value == "pushg_") {
-				var gElems = _name(transferId);
+				var gElems = _name(trnId);
 				for(var i = 0; i < gElems.length; i++) {
 					ux.extractObjParams(gElems[i], param);
 				}
 			} else {
-				ux.appendParam(transferId, elem.value, param);
+				ux.appendParam(trnId, elem.value, param);
+			}
+			
+			if (pblank) {
+				ux.appendParam(trnId, "", param);
 			}
 		} else if (elem.type == "checkbox") {
-			ux.appendParam(transferId, elem.checked, param);
+			ux.appendParam(trnId, elem.checked, param);
 		} else if (elem.type == "select-multiple") {
 			for (var i = 0; i < elem.options.length; i++) {
 				if (elem.options[i].selected) {
-					ux.appendParam(transferId, elem.options[i].value, param);
+					ux.appendParam(trnId, elem.options[i].value, param);
 				}
 			}
 		} else if (elem.type == "file") {
 			if (elem.value) {
 				var files = elem.files;
 				for (var i = 0; i < files.length; i++) {
-					param.value.append(transferId, files[i],
+					param.value.append(trnId, files[i],
 							files[i].name);
 				}
 			}
 		} else {
 			if (elem.value != undefined) {
-				ux.appendParam(transferId, elem.value, param);
+				ux.appendParam(trnId, elem.value, param);
 			}
 		}
 	}

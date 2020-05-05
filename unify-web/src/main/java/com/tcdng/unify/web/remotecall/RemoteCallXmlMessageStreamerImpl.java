@@ -37,6 +37,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.TaggedXmlMessage;
 import com.tcdng.unify.core.stream.AbstractObjectStreamer;
 import com.tcdng.unify.core.util.StringUtils;
@@ -68,7 +69,8 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
     }
 
     @Override
-    public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
+    public void marshal(Object object, OutputStream outputStream, Charset charset, PrintFormat printFormat)
+            throws UnifyException {
         if (charset != null) {
             marshal(object, new OutputStreamWriter(outputStream, charset));
         } else {
@@ -77,7 +79,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
     }
 
     @Override
-    public void marshal(Object object, Writer writer) throws UnifyException {
+    public void marshal(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
         SAXParser saxParser = null;
         try {
             if (PushXmlMessageParams.class.equals(object.getClass())) {
@@ -173,7 +175,7 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
     }
 
     @Override
-    public byte[] marshal(Object object) throws UnifyException {
+    public byte[] marshal(Object object, PrintFormat printFormat) throws UnifyException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         marshal(object, baos);
         return baos.toByteArray();
@@ -459,9 +461,9 @@ public class RemoteCallXmlMessageStreamerImpl extends AbstractObjectStreamer imp
         private String tag;
 
         private String branchCode;
-        
+
         private String departmentCode;
-        
+
         private String consumer;
 
         private Stack<String> track;

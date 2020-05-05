@@ -21,14 +21,14 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class EndsWith extends AbstractSingleValueRestriction {
+public class EndsWith extends AbstractSingleParamRestriction {
 
     public EndsWith(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.ENDS_WITH;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.ENDS_WITH;
     }
 }

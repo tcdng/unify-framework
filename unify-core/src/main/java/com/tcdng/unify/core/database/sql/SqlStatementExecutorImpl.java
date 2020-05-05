@@ -35,7 +35,13 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.EnumConst;
-import com.tcdng.unify.core.data.Aggregate;
+import com.tcdng.unify.core.constant.MustMatch;
+import com.tcdng.unify.core.criterion.AggregateFunction;
+import com.tcdng.unify.core.criterion.AggregateType;
+import com.tcdng.unify.core.criterion.GroupBy;
+import com.tcdng.unify.core.data.Aggregation;
+import com.tcdng.unify.core.data.GroupAggregation;
+import com.tcdng.unify.core.data.GroupAggregation.Grouping;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.StaticReference;
@@ -57,7 +63,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         int result = 0;
         PreparedStatement pStmt = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             result = pStmt.executeUpdate();
         } catch (UnifyException e) {
@@ -73,13 +79,13 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T executeSingleObjectResultQuery(Connection connection, Class<T> clazz,
-            SqlDataTypePolicy sqlDataTypePolicy, SqlStatement sqlStatement, boolean mustMatch) throws UnifyException {
+            SqlDataTypePolicy sqlDataTypePolicy, SqlStatement sqlStatement, MustMatch mustMatch) throws UnifyException {
         T result = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
 
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
@@ -87,7 +93,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
-            } else if (mustMatch) {
+            } else if (mustMatch.isTrue()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_SINGLEOBJECT_NO_MATCHING_RECORD, clazz);
             }
         } catch (UnifyException e) {
@@ -104,7 +110,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T executeSingleObjectResultQuery(Connection connection, Class<T> clazz,
-            SqlDataTypePolicy sqlDataTypePolicy, String sqlQuery, boolean mustMatch) throws UnifyException {
+            SqlDataTypePolicy sqlDataTypePolicy, String sqlQuery, MustMatch mustMatch) throws UnifyException {
         T result = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
@@ -113,12 +119,12 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             pStmt = connection.prepareStatement(sqlQuery);
             rs = pStmt.executeQuery();
             if (rs.next()) {
-                long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+                final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
                 result = (T) sqlDataTypePolicy.executeGetResult(rs, clazz, 1, timeZoneOffset);
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
-            } else if (mustMatch) {
+            } else if (mustMatch.isTrue()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_SINGLEOBJECT_NO_MATCHING_RECORD, clazz);
             }
         } catch (UnifyException e) {
@@ -182,7 +188,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -243,7 +249,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
 
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -271,13 +277,13 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Entity> T executeSingleRecordResultQuery(Connection connection, SqlStatement sqlStatement,
-            boolean mustMatch) throws UnifyException {
+            MustMatch mustMatch) throws UnifyException {
         T result = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
             SqlEntityInfo sqlEntityInfo = sqlStatement.getSqlEntityInfo();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
@@ -294,7 +300,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
-            } else if (mustMatch) {
+            } else if (mustMatch.isTrue()) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_MATCHING_RECORD,
                         sqlEntityInfo.getEntityClass());
             }
@@ -323,7 +329,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -381,7 +387,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -446,7 +452,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             Class<? extends Entity> entityClass = sqlEntityInfo.getEntityClass();
             Class<? extends EnumConst> enumConstClass = sqlEntityInfo.getEnumConstClass();
             boolean isEnumConst = sqlEntityInfo.isEnumConst();
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
@@ -481,29 +487,31 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         return resultMap;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Aggregate<?> executeSingleAggregateResultQuery(Connection connection,
+    public Aggregation executeSingleAggregateResultQuery(AggregateFunction aggregateFunction, Connection connection,
             SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
-                int resultIndex = 0;
-                int count =
-                        ((Number) countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex, timeZoneOffset))
-                                .intValue();
                 List<SqlResult> sqlResultList = sqlStatement.getResultInfoList();
                 if (sqlResultList.isEmpty() || sqlResultList.size() > 1) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_OR_NOFIELD_SELECTED);
                 }
-                
+
+                int resultIndex = 0;
                 SqlResult sqlResult = sqlResultList.get(0);
-                Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
-                        ++resultIndex, timeZoneOffset);
+                Object value = null;
+                if (AggregateType.COUNT.equals(aggregateFunction.getType())) {
+                    value = countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex, timeZoneOffset);
+                } else {
+                    value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(), ++resultIndex,
+                            timeZoneOffset);
+                }
+
                 if (value == null) {
                     value = DataUtils.convert(sqlResult.getType(), 0, null);
                 }
@@ -512,7 +520,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
 
-                return new Aggregate(sqlResult.getName(), count, value);
+                return new Aggregation(aggregateFunction, value);
             }
         } catch (UnifyException e) {
             throw e;
@@ -524,35 +532,94 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         }
         return null;
     }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+
     @Override
-    public List<Aggregate<?>> executeMultipleAggregateResultQuery(Connection connection,
-            SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
-        List<Aggregate<?>> resultList = new ArrayList<Aggregate<?>>();
+    public List<Aggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList,
+            Connection connection, SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement)
+            throws UnifyException {
+        List<Aggregation> resultList = new ArrayList<Aggregation>();
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             if (rs.next()) {
                 int resultIndex = 0;
-                int count =
-                        ((Number) countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex, timeZoneOffset))
-                                .intValue();
                 for (SqlResult sqlResult : sqlStatement.getResultInfoList()) {
-                    Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
-                            ++resultIndex, timeZoneOffset);
+                    AggregateFunction aggregateFunction = aggregateFunctionList.get(resultIndex);
+                    Object value = null;
+                    if (AggregateType.COUNT.equals(aggregateFunction.getType())) {
+                        value = countSqlDataTypePolicy.executeGetResult(rs, int.class, ++resultIndex, timeZoneOffset);
+                    } else {
+                        value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
+                                ++resultIndex, timeZoneOffset);
+                    }
+
                     if (value == null) {
                         value = DataUtils.convert(sqlResult.getType(), 0, null);
                     }
-                    resultList.add(new Aggregate(sqlResult.getName(), count, value));
+
+                    resultList.add(new Aggregation(aggregateFunction, value));
                 }
 
                 if (rs.next()) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throwOperationErrorException(e);
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pStmt);
+        }
+        return resultList;
+    }
+
+    @Override
+    public List<GroupAggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList, GroupBy groupBy, 
+            Connection connection, SqlDataTypePolicy countSqlDataTypePolicy, SqlStatement sqlStatement)
+            throws UnifyException {
+        List<GroupAggregation> resultList = new ArrayList<GroupAggregation>();
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+        try {
+            List<String> groupByFieldList = new ArrayList<String>(groupBy.values());
+            final int glen = groupByFieldList.size();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
+            rs = pStmt.executeQuery();
+            while (rs.next()) {
+                List<Grouping> groupingList = new ArrayList<Grouping>();
+                List<Aggregation> aggregationList = new ArrayList<Aggregation>();
+                int rlen = sqlStatement.getResultInfoList().size();
+                for (int rIndex = 0; rIndex < rlen; rIndex++) {
+                    SqlResult sqlResult = sqlStatement.getResultInfoList().get(rIndex);
+                    if (rIndex < glen) {
+                        Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
+                                rIndex + 1, timeZoneOffset);
+                        groupingList.add(new Grouping(groupByFieldList.get(rIndex), value));
+                    } else {
+                        AggregateFunction aggregateFunction = aggregateFunctionList.get(rIndex - glen);
+                        Object value = null;
+                        if (AggregateType.COUNT.equals(aggregateFunction.getType())) {
+                            value = countSqlDataTypePolicy.executeGetResult(rs, int.class, rIndex + 1, timeZoneOffset);
+                        } else {
+                            value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
+                                    rIndex + 1, timeZoneOffset);
+                        }
+
+                        if (value == null) {
+                            value = DataUtils.convert(sqlResult.getType(), 0, null);
+                        }
+                        
+                        aggregationList.add(new Aggregation(aggregateFunction, value));
+                    }
+                }
+                
+                resultList.add(new GroupAggregation(groupingList, aggregationList));
             }
         } catch (UnifyException e) {
             throw e;
@@ -572,7 +639,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
         try {
             // Prepare and execute callable statement
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             cStmt = getCallableStatement(connection, sqlCallableStatement, timeZoneOffset);
 
             if (sqlCallableStatement.isWithReturn() && sqlCallableStatement.isFunctionMode()) {
@@ -608,7 +675,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         ResultSet rs = null;
         try {
             // Prepare and execute callable statement
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             cStmt = getCallableStatement(connection, sqlCallableStatement, timeZoneOffset);
 
             boolean isResults = cStmt.execute();
@@ -677,7 +744,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     @SuppressWarnings("unchecked")
     private PreparedStatement getPreparedStatement(Connection connection, SqlStatement sqlStatement,
-            long timeZoneOffset) throws Exception {
+            final long timeZoneOffset) throws Exception {
         logDebug("Preparing SQl: statement = {0}", sqlStatement);
         PreparedStatement pStmt = connection.prepareStatement(sqlStatement.getSql());
         int index = 0;
@@ -696,7 +763,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     private CallableStatement getCallableStatement(Connection connection, SqlCallableStatement sqlCallableStatement,
-            long timeZoneOffset) throws Exception {
+            final long timeZoneOffset) throws Exception {
         logDebug("Preparing SQl: callable statement = {0}", sqlCallableStatement);
         CallableStatement cStmt = connection.prepareCall(sqlCallableStatement.getSql());
         int sqlIndex = 1;
@@ -721,7 +788,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs, long timeZoneOffset) throws Exception {
+    private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs, final long timeZoneOffset) throws Exception {
         Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
                 sqlResult.getColumnName(), timeZoneOffset);
         if (sqlResult.isTransformed()) {
@@ -736,7 +803,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         PreparedStatement pStmt = null;
         ResultSet rs = null;
         try {
-            long timeZoneOffset = getSessionContext().getTimeZoneOffset();
+            final long timeZoneOffset = getSessionContext().getTimeZoneOffset();
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
 
             rs = pStmt.executeQuery();
@@ -765,7 +832,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     private void populateCallableOutParameters(CallableStatement cStmt, CallableProc callableProc,
-            SqlCallableStatement sqlCallableStatement, long timeZoneOffset) throws Exception {
+            SqlCallableStatement sqlCallableStatement, final long timeZoneOffset) throws Exception {
         while (cStmt.getMoreResults()) {
             // Nothing here. Just clearing results if any left.
         }

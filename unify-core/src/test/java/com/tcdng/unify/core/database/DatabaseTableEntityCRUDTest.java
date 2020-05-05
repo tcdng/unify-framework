@@ -37,10 +37,13 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.BooleanType;
 import com.tcdng.unify.core.constant.Gender;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.criterion.Aggregate;
+import com.tcdng.unify.core.criterion.AggregateFunction;
+import com.tcdng.unify.core.criterion.AggregateType;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.Aggregate;
-import com.tcdng.unify.core.data.AggregateType;
+import com.tcdng.unify.core.data.Aggregation;
+import com.tcdng.unify.core.data.GroupAggregation;
 import com.tcdng.unify.core.util.CalendarUtils;
 
 /**
@@ -68,29 +71,30 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
 
-            Aggregate<?> aggregate =
-                    db.aggregate(AggregateType.SUM, new FruitQuery().addSelect("price").ignoreEmptyCriteria(true));
+            Aggregation aggregate = db.aggregate(new AggregateFunction(AggregateType.SUM, "price"),
+                    new FruitQuery().ignoreEmptyCriteria(true));
             assertNotNull(aggregate);
-            assertEquals(4, aggregate.getCount());
             assertEquals(140.00, aggregate.getValue());
 
-            aggregate =
-                    db.aggregate(AggregateType.AVERAGE, new FruitQuery().addLike("name", "apple").addSelect("price"));
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.AVERAGE, "price"),
+                    new FruitQuery().addLike("name", "apple"));
             assertNotNull(aggregate);
-            assertEquals(2, aggregate.getCount());
             assertEquals(40.00, aggregate.getValue());
 
-            aggregate =
-                    db.aggregate(AggregateType.MAXIMUM, new FruitQuery().addSelect("price").ignoreEmptyCriteria(true));
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.MAXIMUM, "price"),
+                    new FruitQuery().ignoreEmptyCriteria(true));
             assertNotNull(aggregate);
-            assertEquals(4, aggregate.getCount());
             assertEquals(60.00, aggregate.getValue());
 
-            aggregate =
-                    db.aggregate(AggregateType.MINIMUM, new FruitQuery().addLike("name", "apple").addSelect("price"));
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.MINIMUM, "price"),
+                    new FruitQuery().addLike("name", "apple"));
             assertNotNull(aggregate);
-            assertEquals(2, aggregate.getCount());
             assertEquals(20.00, aggregate.getValue());
+
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.COUNT, "price"),
+                    new FruitQuery().addGreaterThanEqual("price", 20.00));
+            assertNotNull(aggregate);
+            assertEquals(3, aggregate.getValue());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -99,6 +103,28 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test
+    public void testAggregateSingleListCriteria() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
+
+
+            Aggregation aggregate = db.aggregate(new AggregateFunction(AggregateType.SUM, "age"),
+                    new AuthorQuery().addEquals("officeTelephone", "+2348888888"));
+            assertNotNull(aggregate);
+            assertEquals(Integer.valueOf(125), aggregate.getValue());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+    
+    
     @Test
     public void testAggregateMultiple() throws Exception {
         tm.beginTransaction();
@@ -109,24 +135,25 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             // Sum
-            List<Aggregate<?>> list = db.aggregateMany(AggregateType.SUM,
-                    new FruitQuery().addSelect("price", "quantity").ignoreEmptyCriteria(true));
+            List<Aggregation> list =
+                    db.aggregateMany(new Aggregate().add(AggregateType.SUM, "price").add(AggregateType.SUM, "quantity"),
+                            new FruitQuery().ignoreEmptyCriteria(true));
             assertNotNull(list);
             assertEquals(2, list.size());
 
-            Aggregate<?> priceAggregate = list.get(0);
-            Aggregate<?> qtyAggregate = list.get(1);
+            Aggregation priceAggregate = list.get(0);
+            Aggregation qtyAggregate = list.get(1);
             assertNotNull(priceAggregate);
             assertNotNull(qtyAggregate);
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(4, priceAggregate.getCount());
+            assertEquals("price", priceAggregate.getFunction().getFieldName());
             assertEquals(140.00, priceAggregate.getValue());
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(4, qtyAggregate.getCount());
-            assertEquals(84, qtyAggregate.getValue());
+            assertEquals(Double.valueOf(140.00), priceAggregate.getValue(Double.class));
+            assertEquals("quantity", qtyAggregate.getFunction().getFieldName());
+            assertEquals(Integer.valueOf(84), qtyAggregate.getValue(Integer.class));
 
-            // Average
-            list = db.aggregateMany(AggregateType.AVERAGE,
+            // Combine Average and sum
+            list = db.aggregateMany(
+                    new Aggregate().add(AggregateType.AVERAGE, "quantity").add(AggregateType.SUM, "price"),
                     new FruitQuery().addLike("name", "apple").addSelect("quantity", "price"));
             assertNotNull(list);
             assertEquals(2, list.size());
@@ -135,46 +162,10 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             priceAggregate = list.get(1);
             assertNotNull(qtyAggregate);
             assertNotNull(priceAggregate);
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(2, qtyAggregate.getCount());
+            assertEquals("quantity", qtyAggregate.getFunction().getFieldName());
             assertEquals(14, qtyAggregate.getValue());
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(2, priceAggregate.getCount());
-            assertEquals(40.00, priceAggregate.getValue());
-
-            // Maximum
-            list = db.aggregateMany(AggregateType.MAXIMUM,
-                    new FruitQuery().addSelect("price", "quantity").ignoreEmptyCriteria(true));
-            assertNotNull(list);
-            assertEquals(2, list.size());
-
-            priceAggregate = list.get(0);
-            qtyAggregate = list.get(1);
-            assertNotNull(priceAggregate);
-            assertNotNull(qtyAggregate);
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(4, priceAggregate.getCount());
-            assertEquals(60.00, priceAggregate.getValue());
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(4, qtyAggregate.getCount());
-            assertEquals(45, qtyAggregate.getValue());
-
-            // Minimum
-            list = db.aggregateMany(AggregateType.MINIMUM,
-                    new FruitQuery().addLike("name", "apple").addSelect("quantity", "price"));
-            assertNotNull(list);
-            assertEquals(2, list.size());
-
-            qtyAggregate = list.get(0);
-            priceAggregate = list.get(1);
-            assertNotNull(qtyAggregate);
-            assertNotNull(priceAggregate);
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(2, qtyAggregate.getCount());
-            assertEquals(3, qtyAggregate.getValue());
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(2, priceAggregate.getCount());
-            assertEquals(20.00, priceAggregate.getValue());
+            assertEquals("price", priceAggregate.getFunction().getFieldName());
+            assertEquals(80.00, priceAggregate.getValue());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -194,24 +185,137 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             // Count
-            Aggregate<?> countAggregate = db.aggregate(AggregateType.COUNT,
-                    new FruitQuery().addSelect("color").addLessThanEqual("price", 45.00));
+            Aggregation countAggregate = db.aggregate(new AggregateFunction(AggregateType.COUNT, "color"),
+                    new FruitQuery().addLessThanEqual("price", 45.00));
             assertNotNull(countAggregate);
-            assertEquals("color", countAggregate.getFieldName());
-            assertEquals(4, countAggregate.getCount());
-            assertEquals("4", countAggregate.getValue());
+            assertEquals("color", countAggregate.getFunction().getFieldName());
+            assertEquals(4, countAggregate.getValue());
 
             // Count with distinct
-            countAggregate = db.aggregate(AggregateType.COUNT,
+            countAggregate = db.aggregate(new AggregateFunction(AggregateType.COUNT, "color"),
                     new FruitQuery().addSelect("color").addLessThanEqual("price", 45.00).setDistinct(true));
             assertNotNull(countAggregate);
-            assertEquals("color", countAggregate.getFieldName());
-            assertEquals(4, countAggregate.getCount());
-            assertEquals("3", countAggregate.getValue());
+            assertEquals("color", countAggregate.getFunction().getFieldName());
+            assertEquals(3, countAggregate.getValue());
 
         } catch (Exception e) {
             tm.setRollback();
             throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testGroupAggregateMultiple() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("grape", "red", 25.00, 11));
+            db.create(new Fruit("orange", "yellow", 15.00, 11));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+
+            List<GroupAggregation> aggregationList = db.aggregateGroupMany(
+                    new Aggregate().add(AggregateType.SUM, "price").add(AggregateType.SUM, "quantity")
+                            .add(AggregateType.COUNT, "quantity"),
+                    new FruitQuery().addGroupBy("color").addOrder("color").ignoreEmptyCriteria(true));
+            assertNotNull(aggregationList);
+            assertEquals(3, aggregationList.size());
+
+            GroupAggregation aggregation = aggregationList.get(0);
+            assertNotNull(aggregation);
+            assertEquals(1, aggregation.getGroupingList().size());
+            assertEquals("color", aggregation.getGroupingList().get(0).getFieldName());
+            assertEquals("cyan", aggregation.getGroupingList().get(0).getValue());
+            assertEquals("cyan", aggregation.getGroupingValue(String.class, 0));
+            assertEquals("cyan", aggregation.getGroupingValue(String.class, "color"));
+            assertEquals(3, aggregation.getAggregationList().size());
+            assertEquals("price", aggregation.getAggregationList().get(0).getFunction().getFieldName());
+            assertEquals(60.00, aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals(Double.valueOf(60.00), aggregation.getAggregationValue(Double.class, 0));
+            assertEquals("quantity", aggregation.getAggregationList().get(1).getFunction().getFieldName());
+            assertEquals(3, aggregation.getAggregationList().get(1).getValue()); // SUM
+            assertEquals(Integer.valueOf(3), aggregation.getAggregationValue(Integer.class, 1));
+            assertEquals("quantity", aggregation.getAggregationList().get(2).getFunction().getFieldName());
+            assertEquals(1, aggregation.getAggregationList().get(2).getValue()); // COUNT
+            assertEquals(Integer.valueOf(1), aggregation.getAggregationValue(Integer.class, 2));
+
+            aggregation = aggregationList.get(1);
+            assertNotNull(aggregation);
+            assertEquals(1, aggregation.getGroupingList().size());
+            assertEquals("color", aggregation.getGroupingList().get(0).getFieldName());
+            assertEquals("red", aggregation.getGroupingList().get(0).getValue());
+            assertEquals(3, aggregation.getAggregationList().size());
+            assertEquals("price", aggregation.getAggregationList().get(0).getFunction().getFieldName());
+            assertEquals(45.00, aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals("quantity", aggregation.getAggregationList().get(1).getFunction().getFieldName());
+            assertEquals(36, aggregation.getAggregationList().get(1).getValue()); // SUM
+            assertEquals("quantity", aggregation.getAggregationList().get(2).getFunction().getFieldName());
+            assertEquals(2, aggregation.getAggregationList().get(2).getValue()); // COUNT
+
+            aggregation = aggregationList.get(2);
+            assertNotNull(aggregation);
+            assertEquals(1, aggregation.getGroupingList().size());
+            assertEquals("color", aggregation.getGroupingList().get(0).getFieldName());
+            assertEquals("yellow", aggregation.getGroupingList().get(0).getValue());
+            assertEquals(3, aggregation.getAggregationList().size());
+            assertEquals("price", aggregation.getAggregationList().get(0).getFunction().getFieldName());
+            assertEquals(60.00, aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals("quantity", aggregation.getAggregationList().get(1).getFunction().getFieldName());
+            assertEquals(56, aggregation.getAggregationList().get(1).getValue()); // SUM
+            assertEquals("quantity", aggregation.getAggregationList().get(2).getFunction().getFieldName());
+            assertEquals(2, aggregation.getAggregationList().get(2).getValue()); // COUNT
+
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testGroupAggregateMultipleListCriteria() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Salmer Hayek", 52, Gender.FEMALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.TRUE, warehouseOfficeId));
+
+
+            List<GroupAggregation> aggregationList = db.aggregateGroupMany(new Aggregate().add(AggregateType.SUM, "age"),
+                    new AuthorQuery().addEquals("officeTelephone", "+2348888888").addGroupBy("gender").addOrder("gender"));
+            assertNotNull(aggregationList);
+            assertEquals(2, aggregationList.size());
+
+            GroupAggregation aggregation = aggregationList.get(0);
+            assertNotNull(aggregation);
+            assertEquals(1, aggregation.getGroupingList().size());
+            assertEquals("gender", aggregation.getGroupingList().get(0).getFieldName());
+            assertEquals(Gender.FEMALE, aggregation.getGroupingList().get(0).getValue());
+            assertEquals(Gender.FEMALE, aggregation.getGroupingValue(Gender.class, 0));
+            assertEquals(Gender.FEMALE, aggregation.getGroupingValue(Gender.class, "gender"));
+            assertEquals(1, aggregation.getAggregationList().size());
+            assertEquals("age", aggregation.getAggregationList().get(0).getFunction().getFieldName());
+            assertEquals(Integer.valueOf(52), aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals(Integer.valueOf(52), aggregation.getAggregationValue(Integer.class, 0));
+
+            aggregation = aggregationList.get(1);
+            assertNotNull(aggregation);
+            assertEquals(1, aggregation.getGroupingList().size());
+            assertEquals("gender", aggregation.getGroupingList().get(0).getFieldName());
+            assertEquals(Gender.MALE, aggregation.getGroupingList().get(0).getValue());
+            assertEquals(Gender.MALE, aggregation.getGroupingValue(Gender.class, 0));
+            assertEquals(Gender.MALE, aggregation.getGroupingValue(Gender.class, "gender"));
+            assertEquals(1, aggregation.getAggregationList().size());
+            assertEquals("age", aggregation.getAggregationList().get(0).getFunction().getFieldName());
+            assertEquals(Integer.valueOf(125), aggregation.getAggregationList().get(0).getValue()); // SUM
+            assertEquals(Integer.valueOf(125), aggregation.getAggregationValue(Integer.class, 0));          
         } finally {
             tm.endTransaction();
         }
@@ -536,7 +640,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.deleteAll(new FruitQuery().addNotEqual("color", "cyan")));
+            assertEquals(3, db.deleteAll(new FruitQuery().addNotEquals("color", "cyan")));
             List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
@@ -557,7 +661,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.deleteAll(new FruitQuery().addNotEqual("color", "cyan")));
+            assertEquals(3, db.deleteAll(new FruitQuery().addNotEquals("color", "cyan")));
             // Order should be ignored
             List<Fruit> testFruitList = db.findAll(new FruitQuery().addOrder("color").ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());

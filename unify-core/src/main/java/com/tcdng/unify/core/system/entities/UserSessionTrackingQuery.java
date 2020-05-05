@@ -37,7 +37,7 @@ public class UserSessionTrackingQuery extends Query<UserSessionTracking> {
     }
 
     public UserSessionTrackingQuery idNot(String id) {
-        return (UserSessionTrackingQuery) addNotEqual("sessionId", id);
+        return (UserSessionTrackingQuery) addNotEquals("sessionId", id);
     }
 
     public UserSessionTrackingQuery idAmongst(Collection<String> ids) {

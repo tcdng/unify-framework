@@ -23,23 +23,36 @@ import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.And;
 import com.tcdng.unify.core.criterion.BeginsWith;
+import com.tcdng.unify.core.criterion.BeginsWithField;
 import com.tcdng.unify.core.criterion.Between;
 import com.tcdng.unify.core.criterion.CompoundRestriction;
 import com.tcdng.unify.core.criterion.EndsWith;
+import com.tcdng.unify.core.criterion.EndsWithField;
 import com.tcdng.unify.core.criterion.Equals;
+import com.tcdng.unify.core.criterion.EqualsField;
 import com.tcdng.unify.core.criterion.Greater;
+import com.tcdng.unify.core.criterion.GreaterField;
 import com.tcdng.unify.core.criterion.GreaterOrEqual;
+import com.tcdng.unify.core.criterion.GreaterOrEqualField;
+import com.tcdng.unify.core.criterion.GroupBy;
 import com.tcdng.unify.core.criterion.IsNotNull;
 import com.tcdng.unify.core.criterion.IsNull;
 import com.tcdng.unify.core.criterion.Less;
+import com.tcdng.unify.core.criterion.LessField;
 import com.tcdng.unify.core.criterion.LessOrEqual;
+import com.tcdng.unify.core.criterion.LessOrEqualField;
 import com.tcdng.unify.core.criterion.Like;
+import com.tcdng.unify.core.criterion.LikeField;
 import com.tcdng.unify.core.criterion.NotAmongst;
 import com.tcdng.unify.core.criterion.NotBeginWith;
+import com.tcdng.unify.core.criterion.NotBeginWithField;
 import com.tcdng.unify.core.criterion.NotBetween;
 import com.tcdng.unify.core.criterion.NotEndWith;
-import com.tcdng.unify.core.criterion.NotEqual;
+import com.tcdng.unify.core.criterion.NotEndWithField;
+import com.tcdng.unify.core.criterion.NotEquals;
+import com.tcdng.unify.core.criterion.NotEqualsField;
 import com.tcdng.unify.core.criterion.NotLike;
+import com.tcdng.unify.core.criterion.NotLikeField;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Select;
@@ -57,6 +70,8 @@ public class Query<T extends Entity> implements Cloneable {
     private CompoundRestriction restrictions;
 
     private Select select;
+
+    private GroupBy groupBy;
 
     private Order order;
 
@@ -97,6 +112,10 @@ public class Query<T extends Entity> implements Cloneable {
         return new Query<U>(entityClass, applyAppQueryLimit);
     }
 
+    public static <U extends Entity> Query<U> of(Class<U> entityClass, CompoundRestriction restrictions) {
+        return new Query<U>(entityClass, restrictions, false);
+    }
+
     public static <U extends Entity> Query<U> of(Class<U> entityClass, CompoundRestriction restrictions,
             boolean applyAppQueryLimit) {
         return new Query<U>(entityClass, restrictions, applyAppQueryLimit);
@@ -121,13 +140,28 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addEqualsField(String field1, String field2) {
+        restrictions.add(new EqualsField(field1, field2));
+        return this;
+    }
+
     public Query<T> addGreaterThan(String field, Object value) {
         restrictions.add(new Greater(field, value));
         return this;
     }
 
+    public Query<T> addGreaterThanField(String field1, String field2) {
+        restrictions.add(new GreaterField(field1, field2));
+        return this;
+    }
+
     public Query<T> addGreaterThanEqual(String field, Object value) {
         restrictions.add(new GreaterOrEqual(field, value));
+        return this;
+    }
+
+    public Query<T> addGreaterThanEqualField(String field1, String field2) {
+        restrictions.add(new GreaterOrEqualField(field1, field2));
         return this;
     }
 
@@ -146,8 +180,18 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addLessThanField(String field1, String field2) {
+        restrictions.add(new LessField(field1, field2));
+        return this;
+    }
+
     public Query<T> addLessThanEqual(String field, Object value) {
         restrictions.add(new LessOrEqual(field, value));
+        return this;
+    }
+
+    public Query<T> addLessThanEqualField(String field1, String field2) {
+        restrictions.add(new LessOrEqualField(field1, field2));
         return this;
     }
 
@@ -156,13 +200,28 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addLikeField(String field1, String field2) {
+        restrictions.add(new LikeField(field1, field2));
+        return this;
+    }
+
     public Query<T> addBeginsWith(String field, String value) {
         restrictions.add(new BeginsWith(field, value));
         return this;
     }
 
+    public Query<T> addBeginsWithField(String field1, String field2) {
+        restrictions.add(new BeginsWithField(field1, field2));
+        return this;
+    }
+
     public Query<T> addEndsWith(String field, String value) {
         restrictions.add(new EndsWith(field, value));
+        return this;
+    }
+
+    public Query<T> addEndsWithField(String field1, String field2) {
+        restrictions.add(new EndsWithField(field1, field2));
         return this;
     }
 
@@ -176,8 +235,13 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
-    public Query<T> addNotEqual(String field, Object value) {
-        restrictions.add(new NotEqual(field, value));
+    public Query<T> addNotEquals(String field, Object value) {
+        restrictions.add(new NotEquals(field, value));
+        return this;
+    }
+
+    public Query<T> addNotEqualsField(String field1, String field2) {
+        restrictions.add(new NotEqualsField(field1, field2));
         return this;
     }
 
@@ -186,13 +250,28 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addNotLikeField(String field1, String field2) {
+        restrictions.add(new NotLikeField(field1, field2));
+        return this;
+    }
+
     public Query<T> addNotBeginWith(String field, String value) {
         restrictions.add(new NotBeginWith(field, value));
         return this;
     }
 
+    public Query<T> addNotBeginWithField(String field1, String field2) {
+        restrictions.add(new NotBeginWithField(field1, field2));
+        return this;
+    }
+
     public Query<T> addNotEndWith(String field, String value) {
         restrictions.add(new NotEndWith(field, value));
+        return this;
+    }
+
+    public Query<T> addNotEndWithField(String field1, String field2) {
+        restrictions.add(new NotEndWithField(field1, field2));
         return this;
     }
 
@@ -212,6 +291,18 @@ public class Query<T extends Entity> implements Cloneable {
     public Query<T> addSelect(String... fields) {
         for (String field : fields) {
             innerGetSelect().add(field);
+        }
+        return this;
+    }
+
+    public Query<T> addGroupBy(String field) {
+        innerGetGroupBy().add(field);
+        return this;
+    }
+
+    public Query<T> addGroupBy(String... fields) {
+        for (String field : fields) {
+            innerGetGroupBy().add(field);
         }
         return this;
     }
@@ -290,6 +381,22 @@ public class Query<T extends Entity> implements Cloneable {
 
     public void setSelect(Select select) {
         this.select = select;
+    }
+
+    public boolean isSelect() {
+        return select != null && !select.isEmpty();
+    }
+
+    public GroupBy getGroupBy() {
+        return groupBy;
+    }
+
+    public void setGroupBy(GroupBy groupBy) {
+        this.groupBy = groupBy;
+    }
+
+    public boolean isGroupBy() {
+        return groupBy != null && !groupBy.isEmpty();
     }
 
     public Order getOrder() {
@@ -387,6 +494,10 @@ public class Query<T extends Entity> implements Cloneable {
             select.clear();
         }
 
+        if (groupBy != null) {
+            groupBy.clear();
+        }
+
         if (order != null) {
             order.clear();
         }
@@ -408,6 +519,12 @@ public class Query<T extends Entity> implements Cloneable {
         }
     }
 
+    public void clearGroupBy() {
+        if (groupBy != null) {
+            groupBy.clear();
+        }
+    }
+
     public void clearOrder() {
         if (order != null) {
             order.clear();
@@ -419,6 +536,7 @@ public class Query<T extends Entity> implements Cloneable {
         Query<T> query = new Query(entityClass, applyAppQueryLimit);
         query.restrictions = restrictions;
         query.select = select;
+        query.groupBy = groupBy;
         query.order = order;
         query.offset = offset;
         query.limit = limit;
@@ -431,6 +549,7 @@ public class Query<T extends Entity> implements Cloneable {
     public Query<T> copyNoCriteria() {
         Query<T> query = new Query(entityClass, applyAppQueryLimit);
         query.select = select;
+        query.groupBy = groupBy;
         query.order = order;
         query.offset = offset;
         query.limit = limit;
@@ -449,5 +568,12 @@ public class Query<T extends Entity> implements Cloneable {
             select = new Select();
         }
         return select;
+    }
+
+    private GroupBy innerGetGroupBy() {
+        if (groupBy == null) {
+            groupBy = new GroupBy();
+        }
+        return groupBy;
     }
 }

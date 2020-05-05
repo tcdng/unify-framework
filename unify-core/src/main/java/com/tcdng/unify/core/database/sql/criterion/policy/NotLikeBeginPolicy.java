@@ -15,8 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlLikeType;
 
 /**
@@ -27,12 +26,7 @@ import com.tcdng.unify.core.database.sql.SqlLikeType;
  */
 public class NotLikeBeginPolicy extends NotLikePolicy {
 
-    public NotLikeBeginPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(sqlDataSourceDialect);
-    }
-
-    @Override
-    protected Object resolveParam(Object param) throws UnifyException {
-        return resolveParam(SqlLikeType.BEGINS_WITH, param);
+    public NotLikeBeginPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(SqlLikeType.BEGINS_WITH, rootPolicies);
     }
 }

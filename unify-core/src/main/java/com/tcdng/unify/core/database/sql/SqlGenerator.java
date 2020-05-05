@@ -20,6 +20,12 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.ForeignConstraints;
+import com.tcdng.unify.core.constant.Indexes;
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.constant.QueryAgainst;
+import com.tcdng.unify.core.constant.UniqueConstraints;
+import com.tcdng.unify.core.constant.Views;
 
 /**
  * SQL generator interface.
@@ -48,8 +54,9 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateAllCreateSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean foreignConstraints,
-            boolean uniqueConstraints, boolean indexes, boolean views, boolean format) throws UnifyException;
+    String generateAllCreateSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, ForeignConstraints foreignConstraints,
+            UniqueConstraints uniqueConstraints, Indexes indexes, Views views, PrintFormat format)
+            throws UnifyException;
 
     /**
      * Generates all native upgrade SQL for record type.
@@ -73,8 +80,8 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateAllUpgradeSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlEntitySchemaInfo oldSqlEntitySchemaInfo,
-            boolean foreignConstraints, boolean uniqueConstraints, boolean indexes, boolean views, boolean format)
-            throws UnifyException;
+            ForeignConstraints foreignConstraints, UniqueConstraints uniqueConstraints, Indexes indexes, Views views,
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates a native create table SQL for specified record type.
@@ -87,7 +94,7 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCreateTableSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean format) throws UnifyException;
+    String generateCreateTableSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates native drop table SQL for specified record type.
@@ -114,7 +121,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateRenameTable(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlEntitySchemaInfo oldSqlEntitySchemaInfo,
-            boolean format) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates add column SQL.
@@ -130,7 +137,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates alter column SQL.
@@ -148,7 +155,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlColumnAlterInfo sqlColumnAlterInfo, boolean format) throws UnifyException;
+            SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates alter column to nullable SQL.
@@ -163,8 +170,8 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo, boolean format)
-            throws UnifyException;
+    String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates rename column SQL.
@@ -182,7 +189,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateRenameColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException;
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates drop column SQL.
@@ -198,7 +205,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates native add foreign key constraint SQL for specified constraint.
@@ -214,7 +221,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateAddForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlForeignKeySchemaInfo sqlForeignKeyInfo, boolean format) throws UnifyException;
+            SqlForeignKeySchemaInfo sqlForeignKeyInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates native drop foreign key constraint SQL for specified constraint.
@@ -230,7 +237,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlForeignKeySchemaInfo sqlForeignKeyInfo, boolean format) throws UnifyException;
+            SqlForeignKeySchemaInfo sqlForeignKeyInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates native drop foreign key constraint SQL for specified constraint.
@@ -246,7 +253,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbForeignKeyName,
-            boolean format) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates native add unique key constraint SQL for specified unique
@@ -263,7 +270,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateAddUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException;
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates native drop unique key constraint SQL for specified unique
@@ -280,7 +287,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException;
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates native drop unique key constraint SQL for specified unique
@@ -297,7 +304,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbUniqueConstraintName,
-            boolean format) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates native create index SQL for specified index.
@@ -313,7 +320,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateCreateIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
-            boolean format) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generate native drop index SQL for specified index.
@@ -329,7 +336,7 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
-            boolean format) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generate native drop index SQL for specified index.
@@ -344,7 +351,7 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, boolean format)
+    String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
             throws UnifyException;
 
     /**
@@ -358,7 +365,7 @@ public interface SqlGenerator extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCreateViewSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean format) throws UnifyException;
+    String generateCreateViewSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates native drop view SQL for specified record type.
@@ -377,13 +384,14 @@ public interface SqlGenerator extends UnifyComponent {
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
-     * @param useView
-     *            indicates SQL should be based on view.
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the generated find SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView) throws UnifyException;
+    String generateFindRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, QueryAgainst queryAgainst)
+            throws UnifyException;
 
     /**
      * Generates native find record by primary key SQL for specified record type.
@@ -466,14 +474,14 @@ public interface SqlGenerator extends UnifyComponent {
      *            record schema information
      * @param params
      *            the parameter data of field name to value map
-     * @param formatSql
+     * @param format
      *            indicates if SQL is formatted
      * @return the insert record SQL
      * @throws UnifyException
      *             if an error occurs
      */
     String generateInsertValuesSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, Map<String, Object> params,
-            boolean formatSql) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates native insert record SQL using supplied values for specified record
@@ -482,14 +490,14 @@ public interface SqlGenerator extends UnifyComponent {
      * @param sqlEntitySchemaInfo
      *            record schema information
      * @param insertValueList
-     * @param formatSql
+     * @param format
      *            indicates if SQL is formatted
      * @return the insert records SQL
      * @throws UnifyException
      *             if an error occurs
      */
     String generateInsertValuesSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, List<Map<String, Object>> insertValueList,
-            boolean formatSql) throws UnifyException;
+            PrintFormat format) throws UnifyException;
 
     /**
      * Generates native update record SQL for specified record type.
@@ -564,13 +572,13 @@ public interface SqlGenerator extends UnifyComponent {
      * 
      * @param sqlEntitySchemaInfo
      *            record schema information
-     * @param useView
-     *            indicates SQL should be based on view.
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the count SQL
      * @throws UnifyException
      *             if an error occurs
      */
-    String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, boolean useView) throws UnifyException;
+    String generateCountRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, QueryAgainst queryAgainst) throws UnifyException;
 
     /**
      * Generates connection test SQL.

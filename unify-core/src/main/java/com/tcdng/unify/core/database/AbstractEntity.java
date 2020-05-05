@@ -30,7 +30,7 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 @Tooling(name = "plainCommon", description = "Plain Common")
 public abstract class AbstractEntity implements Entity {
-
+    
     @Override
     public String getListKey() {
         return String.valueOf(getId());

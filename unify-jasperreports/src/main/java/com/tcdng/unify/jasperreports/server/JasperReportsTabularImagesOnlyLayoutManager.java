@@ -123,7 +123,7 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
             ReportColumn reportColumn = groupingColumnList.get(i);
             JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, reportColumn);
 
-            // Group header
+            // Grouping header
             JRDesignBand groupHeaderBand = new JRDesignBand();
             groupHeaderBand.setHeight(columnHeaderHeight);
 
@@ -143,7 +143,7 @@ public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperR
             ((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(groupHeaderBand);
 
             if (!summationColumnList.isEmpty()) {
-                // Group footer
+                // Grouping footer
                 JRDesignBand groupFooterBand = new JRDesignBand();
                 groupFooterBand.setHeight(columnHeaderHeight);
                 grpJRDesignRectangle =

@@ -36,14 +36,46 @@ public class CheckBoxWriter extends AbstractControlWriter {
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         CheckBox checkBox = (CheckBox) widget;
+        boolean checked = checkBox.getValue(boolean.class);
+        writer.write("<span ");
+        writeTagId(writer, checkBox.getFacadeId());
+        if (checked) {
+            if (checkBox.isContainerDisabled()) {
+                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbc");
+            } else {
+                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cba");
+            }
+        } else {
+            if (checkBox.isContainerDisabled()) {
+                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbd");
+            } else {
+                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbb");
+            }
+        }
+
+        writer.write("/>");
         writer.write("<input type=\"checkbox\"");
-        writeTagAttributes(writer, checkBox);
-        if (checkBox.getValue(boolean.class)) {
+        writeTagId(writer, checkBox);
+        writeTagName(writer, checkBox);
+        if (checked) {
             writer.write(" checked=\"checked\"");
         }
         writer.write("/>");
+        writer.write("</span>");
+
         if (!checkBox.isLayoutCaption()) {
             writeCaption(writer, checkBox);
+        }
+    }
+
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        CheckBox checkBox = (CheckBox) widget;
+        if (checkBox.isContainerEditable() && !checkBox.isContainerDisabled()) {
+            super.doWriteBehavior(writer, widget, true); // Use facade
+            writer.write("ux.rigCheckbox({");
+            writer.write("\"pId\":\"").write(checkBox.getId()).write('"');
+            writer.write("});");
         }
     }
 

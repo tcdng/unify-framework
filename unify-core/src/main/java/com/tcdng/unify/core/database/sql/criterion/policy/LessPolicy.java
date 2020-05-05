@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * Less than operator policy.
@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  * @since 1.0
  */
 public class LessPolicy extends SingleParameterPolicy {
-    public LessPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" < ", sqlDataSourceDialect);
+    public LessPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" < ", rootPolicies);
     }
 }

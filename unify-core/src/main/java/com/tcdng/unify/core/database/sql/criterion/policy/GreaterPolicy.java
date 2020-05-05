@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * Greater than operator policy.
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class GreaterPolicy extends SingleParameterPolicy {
 
-    public GreaterPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" > ", sqlDataSourceDialect);
+    public GreaterPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" > ", rootPolicies);
     }
 }

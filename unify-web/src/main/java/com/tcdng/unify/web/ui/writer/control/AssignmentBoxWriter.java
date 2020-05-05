@@ -37,15 +37,14 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         AssignmentBox assignmentBox = (AssignmentBox) widget;
-        assignmentBox.updateState();
         writer.write("<div");
         writeTagAttributes(writer, assignmentBox);
         writer.write(">");
 
         writer.write("<div class=\"abftable\">");
         writer.write("<div class=\"abrow\">");
-        writeFilter(writer, assignmentBox, assignmentBox.getFilterSel1(), assignmentBox.getFilterCaption1());
-        writeFilter(writer, assignmentBox, assignmentBox.getFilterSel2(), assignmentBox.getFilterCaption2());
+        writeFilter(writer, assignmentBox.getFilterSel1(), assignmentBox.getFilterCaption1());
+        writeFilter(writer, assignmentBox.getFilterSel2(), assignmentBox.getFilterCaption2());
         writer.write("</div></div>");
 
         writer.write("<div class=\"abtable\">");
@@ -72,17 +71,17 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
         super.doWriteBehavior(writer, widget);
 
         AssignmentBox assignmentBox = (AssignmentBox) widget;
-        writer.writeBehaviour(assignmentBox.getAssignSel());
-        writer.writeBehaviour(assignmentBox.getUnassignSel());
+        writer.writeBehavior(assignmentBox.getAssignSel());
+        writer.writeBehavior(assignmentBox.getUnassignSel());
 
         Control filter1 = assignmentBox.getFilterSel1();
         if (filter1 != null) {
-            writer.writeBehaviour(filter1);
+            writer.writeBehavior(filter1);
         }
 
         Control filter2 = assignmentBox.getFilterSel2();
         if (filter2 != null) {
-            writer.writeBehaviour(filter2);
+            writer.writeBehavior(filter2);
         }
 
         // Append rigging
@@ -110,7 +109,7 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
         writer.write("});");
     }
 
-    private void writeFilter(ResponseWriter writer, AssignmentBox assignmentBox, Control filter, String caption)
+    private void writeFilter(ResponseWriter writer, Control filter, String caption)
             throws UnifyException {
         if (filter != null) {
             writer.write("<div class=\"abscell\"> <span class=\"ablabel\">");

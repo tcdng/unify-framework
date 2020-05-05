@@ -20,19 +20,28 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlCriteriaPolicy;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -45,6 +54,20 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(name = SqlDialectNameConstants.HSQLDB, description = "$m{sqldialect.hsqldb}")
 public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
+    private static final HsqlDbDataSourceDialectPolicies sqlDataSourceDialectPolicies =
+            new HsqlDbDataSourceDialectPolicies();
+
+    static {
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
+        populateDefaultSqlDataTypePolicies(tempMap1);
+
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
+        populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
+
+        sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
+        sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
+    }
+
     private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
 
     public HSqlDbDialect() {
@@ -52,8 +75,8 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public int getMaxClauseValues() {
-        return -1;
+    public String getDefaultSchema() {
+        return "PUBLIC";
     }
 
     @Override
@@ -73,7 +96,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
         if (sqlColumnAlterInfo.isAltered()) {
             List<String> sqlList = new ArrayList<String>();
@@ -81,7 +104,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
             SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
             if (sqlColumnAlterInfo.isDataChange()) {
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -95,7 +118,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
             if (sqlColumnAlterInfo.isDefaultChange()) {
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -124,7 +147,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
                 }
 
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -147,16 +170,21 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
         }
         sb.append("ALTER COLUMN ").append(sqlColumnInfo.getColumnName()).append(" SET NULL");
         return sb.toString();
+    }
+
+    @Override
+    protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
+        return sqlDataSourceDialectPolicies;
     }
 
     @Override
@@ -185,6 +213,39 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
         }
 
         return isAppend;
+    }
+
+    private static class HsqlDbDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
+
+        public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+            this.sqlDataTypePolicies = sqlDataTypePolicies;
+        }
+
+        public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+            this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+        }
+
+        @Override
+        public int getMaxClauseValues() {
+            return -1;
+        }
+
+        protected String concat(String... expressions) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("CONCAT(");
+            boolean appSym = false;
+            for (String expression : expressions) {
+                if (appSym) {
+                    sb.append(", ");
+                } else {
+                    appSym = true;
+                }
+
+                sb.append(expression);
+            }
+            sb.append(")");
+            return sb.toString();
+        }
     }
 
     private class HSqlDbShutdownHook implements SqlShutdownHook {

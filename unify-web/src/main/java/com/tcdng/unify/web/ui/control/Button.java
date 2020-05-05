@@ -28,6 +28,7 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
  */
 @Component("ui-button")
 @UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class),
+        @UplAttribute(name = "symbol", type = String.class),
         @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
 public class Button extends AbstractTargetControl {
 

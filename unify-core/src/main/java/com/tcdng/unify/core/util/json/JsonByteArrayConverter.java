@@ -31,6 +31,10 @@ import com.eclipsesource.json.JsonValue;
 public class JsonByteArrayConverter implements JsonValueConverter<byte[]> {
     @Override
     public byte[] read(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return Base64.decodeBase64(jsonValue.asString().getBytes(StandardCharsets.UTF_8));
     }
 

@@ -37,7 +37,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class RefreshMenuResponse extends AbstractJsonPageControllerResponse {
 
     public RefreshMenuResponse() {
-        super("refreshMenuHdl");
+        super("refreshMenuHdl", false);
     }
 
     @Override

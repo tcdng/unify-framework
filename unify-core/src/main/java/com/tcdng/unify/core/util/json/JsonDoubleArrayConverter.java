@@ -32,6 +32,10 @@ public class JsonDoubleArrayConverter extends AbstractJsonArrayConverter<Double>
 
     @Override
     protected Double getValue(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return jsonValue.asDouble();
     }
 

@@ -17,8 +17,10 @@ package com.tcdng.unify.web.ui.writer.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.TargetControl;
 import com.tcdng.unify.web.ui.control.Button;
@@ -34,25 +36,34 @@ import com.tcdng.unify.web.ui.writer.AbstractTargetControlWriter;
 @Component("button-writer")
 public class ButtonWriter extends AbstractTargetControlWriter {
 
+    @Configurable
+    private FontSymbolManager fontSymbolManager;
+
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
         Button button = (Button) targetControl;
-        String imageSrc = button.getUplAttribute(String.class, "imageSrc");
         writer.write("<button type=\"button\"");
-        writeTagAttributes(writer, button);
-        boolean isImage = StringUtils.isNotBlank(imageSrc);
-        if (isImage) {
-            writer.write(" style=\"background: url('");
+        writeTagAttributesWithTrailingExtraStyleClass(writer, button, "g_fsm");
+        writer.write("/>");
+        String imageSrc = button.getUplAttribute(String.class, "imageSrc");
+        if (StringUtils.isNotBlank(imageSrc)) {
+            writer.write("<img src=\"");
             writer.writeFileImageContextURL(imageSrc);
-            writer.write("') no-repeat left 8px center/14px 14px;\"");
-        }
-        writer.write(">");
-
-        if (isImage) {
-            writer.write("<span>");
-            writeCaption(writer, button);
-            writer.write("</span>");
+            writer.write("\">");
+            String caption = button.getCaption();
+            if (caption != null) {
+                writer.write("<span>");
+                writer.writeWithHtmlEscape(caption);
+                writer.write("</span>");
+            }
         } else {
+            if (fontSymbolManager != null) {
+                String symbol = button.getUplAttribute(String.class, "symbol");
+                if (!StringUtils.isBlank(symbol)) {
+                    writer.write(fontSymbolManager.resolveSymbolHtmlHexCode(symbol)).write("&nbsp;");
+                }
+            }
+
             writeCaption(writer, button);
         }
 

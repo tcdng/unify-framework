@@ -15,11 +15,14 @@
  */
 package com.tcdng.unify.core.database.sql;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.constant.QueryAgainst;
+import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.AggregateType;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.Entity;
@@ -33,6 +36,13 @@ import com.tcdng.unify.core.database.Query;
  * @since 1.0
  */
 public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
+
+    /**
+     * Gets the data source dialect default schema.
+     * 
+     * @return the default schema
+     */
+    String getDefaultSchema();
 
     /**
      * Returns the SQL policy for a data type.
@@ -65,14 +75,37 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) throws UnifyException;
 
     /**
-     * Returns the SQL entity information for an entity.
+     * Finds the SQL entity information for an entity.
      * 
      * @param clazz
      *            the entity type
+     * @return the type SQL entity information
+     * @throws UnifyException
+     *             if supplied entity type is not found. if an error occurs
+     */
+    SqlEntityInfo findSqlEntityInfo(Class<?> clazz) throws UnifyException;
+
+    /**
+     * Creates the SQL entity information for an entity if not existing.
+     * 
+     * @param clazz
+     *            the entity type
+     * @return the type SQL entity information
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlEntityInfo getSqlEntityInfo(Class<?> clazz) throws UnifyException;
+    SqlEntityInfo createSqlEntityInfo(Class<?> clazz) throws UnifyException;
+
+    /**
+     * Removes the SQL entity information for an entity.
+     * 
+     * @param clazz
+     *            the entity type
+     * @return the type removed SQL entity information otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlEntityInfo removeSqlEntityInfo(Class<?> clazz) throws UnifyException;
 
     /**
      * Returns the SQL callable information for a callable type.
@@ -127,13 +160,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the query object
-     * @param useView
-     *            indicates view should be used
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the find statement
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareFindStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
+    SqlStatement prepareFindStatement(Query<? extends Entity> query, QueryAgainst queryAgainst) throws UnifyException;
 
     /**
      * Prepares list record by primary key statement.
@@ -288,13 +321,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * 
      * @param query
      *            the record criteria
-     * @param useView
-     *            indicates view should be used
+     * @param queryAgainst
+     *            indicates what to query against
      * @return the count statement.
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlStatement prepareCountStatement(Query<? extends Entity> query, boolean useView) throws UnifyException;
+    SqlStatement prepareCountStatement(Query<? extends Entity> query, QueryAgainst queryAgainst) throws UnifyException;
 
     /**
      * Prepares select min statement.
@@ -327,13 +360,25 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     /**
      * Prepares an aggregate field statement.
      * 
-     * @param aggregateType
-     *            the aggregate type
+     * @param aggregateFunction
+     *            the aggregate function
      * @param query
      *            the aggregation query
      * @return the aggregate statement
      */
-    SqlStatement prepareAggregateStatement(AggregateType aggregateType, Query<? extends Entity> query)
+    SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query)
+            throws UnifyException;
+
+    /**
+     * Prepares an aggregate field statement.
+     * 
+     * @param aggregateFunctionList
+     *            the aggregate function list
+     * @param query
+     *            the aggregation query
+     * @return the aggregate statement
+     */
+    SqlStatement prepareAggregateStatement(List<AggregateFunction> aggregateFunctionList, Query<? extends Entity> query)
             throws UnifyException;
 
     /**
@@ -387,15 +432,6 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      *             if an error occurs
      */
     boolean isQueryOffsetOrLimit(Query<? extends Entity> query) throws UnifyException;
-
-    /**
-     * Checks if object are all renamed to lower case in dialect.
-     * 
-     * @return true if all lower case objects
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    boolean isAllObjectsInLowerCase() throws UnifyException;
 
     /**
      * Restores a statement info. This applies to implementations that maintain a

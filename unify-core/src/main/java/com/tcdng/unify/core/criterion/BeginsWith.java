@@ -21,15 +21,15 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BeginsWith extends AbstractSingleValueRestriction {
+public class BeginsWith extends AbstractSingleParamRestriction {
 
     public BeginsWith(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.BEGINS_WITH;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.BEGINS_WITH;
     }
 }
 

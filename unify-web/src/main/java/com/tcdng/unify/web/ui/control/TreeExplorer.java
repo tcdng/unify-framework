@@ -27,6 +27,7 @@ import com.tcdng.unify.core.data.MarkedTree.Node;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
@@ -130,7 +131,7 @@ public class TreeExplorer extends AbstractMultiControl {
                 tree.registerEvent(eventType, menuCode);
             }
 
-            getRequestContextUtil().setCommandResponsePath(treeEventPath);
+            setCommandResponsePath(new TargetPath(treeEventPath));
             menuCode = null;
         }
     }
@@ -327,7 +328,7 @@ public class TreeExplorer extends AbstractMultiControl {
     public List<Integer> getMultiSelectMenuSequence() {
         return tree.getMultiSelectMenuSequence();
     }
-    
+
     public boolean isMultiSelectMenu() {
         return tree.isMultiSelectMenu();
     }

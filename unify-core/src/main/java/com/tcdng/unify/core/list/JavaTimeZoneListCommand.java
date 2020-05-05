@@ -54,7 +54,7 @@ public class JavaTimeZoneListCommand extends AbstractZeroParamsListCommand {
                 }
             }
 
-            DataUtils.sort(javaTimeZoneList, ListData.class, "listDescription", true);
+            DataUtils.sortAscending(javaTimeZoneList, ListData.class, "listDescription");
         }
 
         return javaTimeZoneList;

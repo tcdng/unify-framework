@@ -18,9 +18,12 @@ package com.tcdng.unify.core.stream;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.charset.Charset;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
  * Convenient base class for object streamer.
@@ -36,8 +39,28 @@ public abstract class AbstractObjectStreamer extends AbstractUnifyComponent impl
     }
 
     @Override
+    public void marshal(Object object, OutputStream outputStream, Charset charset) throws UnifyException {
+        marshal(object, outputStream, charset, PrintFormat.NONE);
+    }
+
+    @Override
+    public void marshal(Object object, Writer writer) throws UnifyException {
+        marshal(object, writer, PrintFormat.NONE);
+    }
+
+    @Override
+    public Object marshal(Object object) throws UnifyException {
+        return marshal(object, PrintFormat.NONE);
+    }
+
+    @Override
     public void marshal(Object object, OutputStream outputStream) throws UnifyException {
-        marshal(object, outputStream, null);
+        marshal(object, outputStream, null, PrintFormat.NONE);
+    }
+
+    @Override
+    public void marshal(Object object, OutputStream outputStream, PrintFormat printFormat) throws UnifyException {
+        marshal(object, outputStream, null, printFormat);
     }
 
     @Override

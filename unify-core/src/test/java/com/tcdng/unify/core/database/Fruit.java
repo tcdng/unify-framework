@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
  * @since 1.0
  */
 @Table(name = "FRUIT", uniqueConstraints = { @UniqueConstraint({ "name" }) })
-public class Fruit extends AbstractTestTableEntity {
+public class Fruit extends AbstractTestVersionedTableEntity {
 
     @Column
     private String name;

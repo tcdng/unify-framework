@@ -133,12 +133,12 @@ public interface RequestContextUtil extends UnifyComponent {
     /**
      * Sets current request context's command response path.
      * 
-     * @param path
+     * @param targetPath
      *            the path to set
      * @throws UnifyException
      *             if an error occurs
      */
-    void setCommandResponsePath(String path) throws UnifyException;
+    void setCommandResponsePath(TargetPath targetPath) throws UnifyException;
 
     /**
      * Returns current request context's command response path.
@@ -146,7 +146,7 @@ public interface RequestContextUtil extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String getCommandResponsePath() throws UnifyException;
+    TargetPath getCommandResponsePath() throws UnifyException;
 
     /**
      * Extracts request parameters for current request context
@@ -392,6 +392,14 @@ public interface RequestContextUtil extends UnifyComponent {
     List<String> getOnSaveContentWidgets() throws UnifyException;
 
     /**
+     * Clears on-save-content widget IDs
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void clearOnSaveContentWidgets() throws UnifyException;
+
+    /**
      * Adds a user hint message to current request in {@link Hint.MODE#INFO} mode
      * using supplied message key and optional parameters.
      * 
@@ -546,6 +554,14 @@ public interface RequestContextUtil extends UnifyComponent {
      *             if an error occurs
      */
     String getFocusOnWidgetId() throws UnifyException;
+
+    /**
+     * Clears request focus on widget.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void clearFocusOnWidget() throws UnifyException;
 
     /**
      * Registers a widget for debounce in current request.

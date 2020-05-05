@@ -29,7 +29,7 @@ import com.tcdng.unify.core.constant.Gender;
  * @since 1.0
  */
 @Table(name = "AUTHOR")
-public class Author extends AbstractTestTableEntity {
+public class Author extends AbstractTestVersionedTableEntity {
 
     @ForeignKey(type = Office.class, onDeleteCascade = true)
     private Long officeId;

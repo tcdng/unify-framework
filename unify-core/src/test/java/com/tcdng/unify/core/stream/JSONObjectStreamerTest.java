@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
  * Jackson JSON object streaming manager implementation test.
@@ -72,7 +73,7 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
                 (JSONObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        josm.marshal(book, baos, null);
+        josm.marshal(book, baos, PrintFormat.NONE);
         Book jsonBook = josm.unmarshal(Book.class, new String(baos.toByteArray()));
         assertEquals(book.getGenre(), jsonBook.getGenre());
         assertEquals(book.getPrice(), jsonBook.getPrice());
@@ -101,7 +102,7 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        josm.marshal(author, baos, null);
+        josm.marshal(author, baos, PrintFormat.NONE);
     }
 
     @Test
@@ -111,7 +112,7 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        josm.marshal(author, baos, null);
+        josm.marshal(author, baos, PrintFormat.NONE);
         Author unAuthor = josm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
         byte[] picture = unAuthor.getPicture();
         assertNotNull(picture);
@@ -134,7 +135,7 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
         author.setBooks(books);
         author.setAccount(account);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        josm.marshal(author, baos, null);
+        josm.marshal(author, baos, PrintFormat.NONE);
     }
 
     @Test
@@ -149,7 +150,7 @@ public class JSONObjectStreamerTest extends AbstractUnifyComponentTest {
         author.setBooks(books);
         author.setAccount(account);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        josm.marshal(author, baos, null);
+        josm.marshal(author, baos, PrintFormat.NONE);
         Author unAuthor = josm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
         byte[] picture = unAuthor.getPicture();
         assertNotNull(picture);

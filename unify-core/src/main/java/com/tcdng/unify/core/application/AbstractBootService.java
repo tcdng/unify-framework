@@ -16,19 +16,15 @@
 package com.tcdng.unify.core.application;
 
 import java.util.List;
-import java.util.Map;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
-import com.tcdng.unify.core.constant.EnumConst;
-import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.database.DataSourceManager;
-import com.tcdng.unify.core.database.StaticReference;
-import com.tcdng.unify.core.database.StaticReferenceQuery;
+import com.tcdng.unify.core.database.DataSourceManagerOptions;
+import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.VersionUtils;
 
@@ -43,11 +39,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     private static final String BOOT_DEPLOYMENT_LOCK = "bootdeployment-lock";
     
-    @Configurable
+    @Configurable(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
     private DataSourceManager dataSourceManager;
-
-    @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
-    private String[] datasources;
 
     private List<StartupShutdownHook> startupShutdownHooks;
 
@@ -56,8 +49,10 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     @Transactional
     public void startup() throws UnifyException {
         logInfo("Initializing datasources...");
+        DataSourceManagerOptions options = new DataSourceManagerOptions();
+        List<String> datasources = getApplicationDataSources();
         for (String datasource : datasources) {
-            dataSourceManager.initDataSource(datasource);
+            dataSourceManager.initDataSource(datasource, options);
         }
 
         if (isDeploymentMode()) {
@@ -65,7 +60,11 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
             boolean isDataSourcesManaged = false;
             if (deploymentFeature == null) {
                 // Blank database. Manage data sources first time.
-                manageDataSources();
+                logInfo("Managing datasources...");
+                for (String datasource : datasources) {
+                    dataSourceManager.manageDataSource(datasource, options);
+                }
+
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
                 isDataSourcesManaged = true;
             }
@@ -81,7 +80,10 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                     // If not already managed, manage data sources if not production mode or if
                     // deploying new version
                     if (!isProductionMode() || isDeployNewVersion) {
-                        manageDataSources();
+                        logInfo("Managing datasources...");
+                        for (String datasource : datasources) {
+                            dataSourceManager.manageDataSource(datasource, options);
+                        }
                     }
                 }
 
@@ -89,8 +91,6 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 if (isDeployNewVersion) {
                     logInfo("Installing newer application version {0}. Current version is {1}.", versionToDeploy,
                             lastDeploymentVersion);
-
-                    updateStaticReferenceTables();
 
                     BootInstallationInfo<T> bootInstallationInfo = prepareBootInstallation();
                     if (bootInstallationInfo.isInstallers() && bootInstallationInfo.isFeatures()) {
@@ -160,41 +160,12 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     protected abstract void onShutdown() throws UnifyException;
 
-    private void manageDataSources() throws UnifyException {
-        logInfo("Managing datasources...");
-        for (String datasource : datasources) {
-            dataSourceManager.manageDataSource(datasource);
-        }
+    private List<String> getApplicationDataSources() throws UnifyException {
+        List<String> appDataSourceNames = getComponentNames(SqlDataSource.class);
+        appDataSourceNames.remove(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
+        return appDataSourceNames;
     }
-
-    private void updateStaticReferenceTables() throws UnifyException {
-        // Update reference tables
-        logDebug("Updating static reference tables...");
-        List<Class<? extends EnumConst>> enumConstList = getAnnotatedClasses(EnumConst.class, StaticList.class);
-
-        for (Class<? extends EnumConst> clazz : enumConstList) {
-            StaticList ra = clazz.getAnnotation(StaticList.class);
-            logDebug("Updating static reference table [{0}]...", ra.value());
-            Map<String, String> map = getListMap(LocaleType.APPLICATION, ra.value());
-            StaticReferenceQuery query = new StaticReferenceQuery(clazz);
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String description = entry.getValue();
-                query.clear();
-                query.code(entry.getKey());
-                StaticReference staticData = db().find(query);
-                if (staticData == null) {
-                    staticData = new StaticReference(clazz);
-                    staticData.setCode(entry.getKey());
-                    staticData.setDescription(description);
-                    db().create(staticData);
-                } else if (!description.equals(staticData.getDescription())) {
-                    staticData.setDescription(description);
-                    db().updateById(staticData);
-                }
-            }
-        }
-    }
-
+    
     private Feature getFeature(String code, String defaultVal) throws UnifyException {
         try {
             grabClusterMasterLock(); // Check integrity of cluster lock table

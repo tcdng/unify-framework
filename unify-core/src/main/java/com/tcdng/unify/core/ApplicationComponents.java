@@ -63,6 +63,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_JSONOBJECTSTREAMER = "application-jsonobjectstreamer";
 
+    String APPLICATION_JSONWEBSERVICECALLER = "application-jsonwebservicecaller";
+
     String APPLICATION_LISTMANAGER = "application-listmanager";
 
     String APPLICATION_MENULOADER = "application-menuloader";
@@ -75,9 +77,15 @@ public interface ApplicationComponents {
 
     String APPLICATION_REGEXPATTERNSTORE = "appication-regexpatternstore";
 
+    String APPLICATION_RESTRICTIONTRANSLATOR = "appication-restrictiontranslator";
+
     String APPLICATION_REQUESTCONTEXTMANAGER = "application-requestcontextmanager";
 
+    String APPLICATION_RUNTIMEJAVACLASSMANAGER = "application-runtimejavaclassmanager";
+
     String APPLICATION_SEQUENCENUMBERSERVICE = "application-sequencenumberservice";
+
+    String APPLICATION_SINGLEVERSIONLOBSERVICE = "application-singleversionlobservice";
 
     String APPLICATION_SQLENTITYINFOFACTORY = "application-sqlentityinfofactory";
 

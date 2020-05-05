@@ -50,6 +50,23 @@ public abstract class FactoryMap<T, U> {
     }
 
     /**
+     * Finds a value by supplied key.
+     * 
+     * @param key
+     *            the value key
+     * @return the value identified by the supplied key
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public U find(T key) throws UnifyException {
+        if (key == null) {
+            throw new IllegalArgumentException("Parameter key can not be null!");
+        }
+
+        return map.get(key);
+    }
+
+    /**
      * Gets a value by supplied key. Functions like {@link #get(Object, Object...)}
      * with no parameters.
      * 

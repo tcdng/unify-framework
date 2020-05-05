@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * AND operator policy.
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class AndPolicy extends CompoundPolicy {
 
-    public AndPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" AND ", sqlDataSourceDialect);
+    public AndPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" AND ", rootPolicies);
     }
 }

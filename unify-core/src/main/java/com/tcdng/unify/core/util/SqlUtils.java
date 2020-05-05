@@ -44,13 +44,16 @@ import com.tcdng.unify.core.database.sql.SqlFieldDimensions;
  */
 public final class SqlUtils {
 
-    public static final String IDENTIFIER_SUFFIX_FOREIGNKEY = "_FK";
-    public static final String IDENTIFIER_SUFFIX_UNIQUECONSTRAINT = "_UC";
-    public static final String IDENTIFIER_SUFFIX_INDEX = "_IX";
+    private static final String IDENTIFIER_PREFIX_VIEW = "V_";
 
-    public static final String IDENTIFIER_SUFFIX_FOREIGNKEY_LOWERCASE = IDENTIFIER_SUFFIX_FOREIGNKEY.toLowerCase();
-    public static final String IDENTIFIER_SUFFIX_UNIQUECONSTRAINT_LOWERCASE = IDENTIFIER_SUFFIX_UNIQUECONSTRAINT.toLowerCase();
-    public static final String IDENTIFIER_SUFFIX_INDEX_LOWERCASE = IDENTIFIER_SUFFIX_INDEX.toLowerCase();
+    private static final String IDENTIFIER_SUFFIX_FOREIGNKEY = "_FK";
+    private static final String IDENTIFIER_SUFFIX_UNIQUECONSTRAINT = "_UC";
+    private static final String IDENTIFIER_SUFFIX_INDEX = "_IX";
+
+    private static final String IDENTIFIER_SUFFIX_FOREIGNKEY_LOWERCASE = IDENTIFIER_SUFFIX_FOREIGNKEY.toLowerCase();
+    private static final String IDENTIFIER_SUFFIX_UNIQUECONSTRAINT_LOWERCASE =
+            IDENTIFIER_SUFFIX_UNIQUECONSTRAINT.toLowerCase();
+    private static final String IDENTIFIER_SUFFIX_INDEX_LOWERCASE = IDENTIFIER_SUFFIX_INDEX.toLowerCase();
 
     private static final List<String> VENDOR_IDENTIFIER_PREFIXES =
             Collections.unmodifiableList(Arrays.asList("SYS_IDX_", "SYS_"));
@@ -184,7 +187,7 @@ public final class SqlUtils {
      * @param name
      *            the name to convert
      * @param applySpacing
-     *            indicates if spacing with undescore be applied at name
+     *            indicates if spacing with underscore be applied at name
      *            lowercase-uppercase boundaries. For example age -&gt; AGE sQLName
      *            - SQLNAME sortCode -&gt; SORT_CODE., moduleActivityId -&gt;
      *            MODULE_ACTIVITY_ID
@@ -208,6 +211,34 @@ public final class SqlUtils {
         }
 
         return name.toUpperCase();
+    }
+
+    /**
+     * Translate name to SQL view name equivalent. Used for automatic generation of
+     * table and column names. This implementation converts all lower-case
+     * characters in name to upper-case.
+     * 
+     * @param name
+     *            the name to convert
+     * @param applySpacing
+     *            indicates if spacing with underscore be applied at name
+     *            lowercase-uppercase boundaries. For example address -&gt;
+     *            V_ADDRESS, moduleActivity -&gt; V_MODULE_ACTIVITY
+     * @return String the converted name
+     */
+    public static String generateViewName(String name, boolean applySpacing) {
+        return String.format("%s%s", IDENTIFIER_PREFIX_VIEW, SqlUtils.generateSchemaElementName(name, applySpacing));
+    }
+
+    /**
+     * Genarates a view name.
+     * 
+     * @param tableSchemaName
+     *            the table name
+     * @return the view name
+     */
+    public static String generateViewName(String tableSchemaName) {
+        return String.format("%s%s", IDENTIFIER_PREFIX_VIEW, tableSchemaName);
     }
 
     /**
@@ -256,7 +287,8 @@ public final class SqlUtils {
      * 
      * @param suggestedName
      *            the suggested name
-     * @param isAllObjectsInLowerCase all objects in lower case
+     * @param isAllObjectsInLowerCase
+     *            all objects in lower case
      * @return the resolved constraint name otherwise null
      */
     public static String resolveConstraintName(String suggestedName, boolean isAllObjectsInLowerCase) {
@@ -266,7 +298,7 @@ public final class SqlUtils {
             if (isAllObjectsInLowerCase) {
                 refList = VENDOR_IDENTIFIER_PREFIXES_LOWERCASE;
             }
-            
+
             for (String vendorPrefix : refList) {
                 if (suggestedName.startsWith(vendorPrefix)) {
                     suggestedName = suggestedName.substring(vendorPrefix.length());
@@ -279,7 +311,7 @@ public final class SqlUtils {
             if (isAllObjectsInLowerCase) {
                 refList = MANAGED_IDENTIFIER_SUFFIXES_LOWERCASE;
             }
-            
+
             for (String managedSuffix : refList) {
                 int index = suggestedName.lastIndexOf(managedSuffix);
                 if (index > 0) {
@@ -294,7 +326,12 @@ public final class SqlUtils {
         }
         return null;
     }
-    
+
+    public static boolean isUniqueConstraintName(String elementName) {
+        return elementName.indexOf(SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT) > 0
+                || elementName.indexOf(SqlUtils.IDENTIFIER_SUFFIX_UNIQUECONSTRAINT_LOWERCASE) > 0;
+    }
+
     /**
      * Tests if supplied type is a supported version number type.
      * 

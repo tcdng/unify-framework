@@ -46,24 +46,15 @@ public class PieChartGeneratorUnit extends AbstractXChartGeneratorUnit<PieChart>
 
     private static final Map<PieChart.AnnotationType, PieStyler.AnnotationType> annotationMapping;
 
-    private static final Map<PieChart.ValueFormat, String> valueFormatMapping;
-
     static {
-        Map<PieChart.AnnotationType, PieStyler.AnnotationType> map1 =
+        Map<PieChart.AnnotationType, PieStyler.AnnotationType> tempAnnotationMapping =
                 new HashMap<PieChart.AnnotationType, PieStyler.AnnotationType>();
-        map1.put(PieChart.AnnotationType.LABEL, PieStyler.AnnotationType.Label);
-        map1.put(PieChart.AnnotationType.LABEL_PERCENTAGE, PieStyler.AnnotationType.LabelAndPercentage);
-        map1.put(PieChart.AnnotationType.LABEL_VALUE, PieStyler.AnnotationType.LabelAndValue);
-        map1.put(PieChart.AnnotationType.PERCENTAGE, PieStyler.AnnotationType.Percentage);
-        map1.put(PieChart.AnnotationType.VALUE, PieStyler.AnnotationType.Value);
-        annotationMapping = DataUtils.unmodifiableMap(map1);
-
-        Map<PieChart.ValueFormat, String> map2 = new HashMap<PieChart.ValueFormat, String>();
-        map2.put(PieChart.ValueFormat.AMOUNT, "###,##0.00");
-        map2.put(PieChart.ValueFormat.DECIMAL, "#####0.00");
-        map2.put(PieChart.ValueFormat.INTEGER, "#####0");
-        map2.put(PieChart.ValueFormat.COUNT, "###,##0");
-        valueFormatMapping = DataUtils.unmodifiableMap(map2);
+        tempAnnotationMapping.put(PieChart.AnnotationType.LABEL, PieStyler.AnnotationType.Label);
+        tempAnnotationMapping.put(PieChart.AnnotationType.LABEL_PERCENTAGE, PieStyler.AnnotationType.LabelAndPercentage);
+        tempAnnotationMapping.put(PieChart.AnnotationType.LABEL_VALUE, PieStyler.AnnotationType.LabelAndValue);
+        tempAnnotationMapping.put(PieChart.AnnotationType.PERCENTAGE, PieStyler.AnnotationType.Percentage);
+        tempAnnotationMapping.put(PieChart.AnnotationType.VALUE, PieStyler.AnnotationType.Value);
+        annotationMapping = DataUtils.unmodifiableMap(tempAnnotationMapping);
     }
 
     public PieChartGeneratorUnit() {
@@ -81,7 +72,7 @@ public class PieChartGeneratorUnit extends AbstractXChartGeneratorUnit<PieChart>
         pieChart.getStyler().setLegendVisible(chart.isShowLegend());
         pieChart.getStyler().setAnnotationDistance(1.2);
         pieChart.getStyler().setAnnotationType(annotationMapping.get(chart.getAnnotationType()));
-        pieChart.getStyler().setPlotContentSize(.6);
+        pieChart.getStyler().setPlotContentSize(chart.getPlotContentSize());
         pieChart.getStyler().setStartAngleInDegrees(45);
         pieChart.getStyler().setPlotBackgroundColor(Color.WHITE);
         pieChart.getStyler().setChartBackgroundColor(Color.WHITE);

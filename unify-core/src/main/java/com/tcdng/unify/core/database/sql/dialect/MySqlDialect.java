@@ -17,20 +17,29 @@ package com.tcdng.unify.core.database.sql.dialect;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlCriteriaPolicy;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -42,8 +51,29 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(name = SqlDialectNameConstants.MYSQL, description = "$m{sqldialect.mysqldb}")
 public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
+    private static final MySqlDataSourceDialectPolicies sqlDataSourceDialectPolicies =
+            new MySqlDataSourceDialectPolicies();
+
+    static {
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
+        populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.BLOB, new MySqlBlobPolicy());
+        tempMap1.put(ColumnType.CLOB, new MySqlClobPolicy());
+
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
+        populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
+
+        sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
+        sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
+    }
+
     public MySqlDialect() {
         super(true);
+    }
+
+    @Override
+    public String getDefaultSchema() {
+        return null;
     }
 
     @Override
@@ -57,17 +87,28 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public int getMaxClauseValues() {
-        return -1;
+    public String generateDropForeignKeyConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbForeignKeyName,
+            PrintFormat format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        String tableName = sqlEntitySchemaInfo.getSchemaTableName();
+        sb.append("ALTER TABLE ").append(tableName);
+        if (format.isPretty()) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(" ");
+        }
+
+        sb.append("DROP FOREIGN KEY ").append(dbForeignKeyName);
+        return sb.toString();
     }
 
     @Override
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, boolean format) throws UnifyException {
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         String tableName = sqlRecordSchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(" ");
@@ -79,10 +120,10 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -94,7 +135,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
         if (sqlColumnAlterInfo.isAltered()) {
             List<String> sqlList = new ArrayList<String>();
@@ -114,7 +155,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
             }
 
             sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-            if (format) {
+            if (format.isPretty()) {
                 sb.append(getLineSeparator());
             } else {
                 sb.append(' ');
@@ -131,10 +172,10 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -146,10 +187,8 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    protected void onInitialize() throws UnifyException {
-        super.onInitialize();
-
-        setDataTypePolicy(ColumnType.BLOB, new MySqlBlobPolicy());
+    protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
+        return sqlDataSourceDialectPolicies;
     }
 
     @Override
@@ -179,6 +218,39 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
         return isAppend;
     }
+
+    private static class MySqlDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
+
+        public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+            this.sqlDataTypePolicies = sqlDataTypePolicies;
+        }
+
+        public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+            this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+        }
+
+        @Override
+        public int getMaxClauseValues() {
+            return -1;
+        }
+
+        protected String concat(String... expressions) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("CONCAT(");
+            boolean appSym = false;
+            for (String expression : expressions) {
+                if (appSym) {
+                    sb.append(", ");
+                } else {
+                    appSym = true;
+                }
+
+                sb.append(expression);
+            }
+            sb.append(")");
+            return sb.toString();
+        }
+    }
 }
 
 class MySqlBlobPolicy extends BlobPolicy {
@@ -186,5 +258,13 @@ class MySqlBlobPolicy extends BlobPolicy {
     @Override
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" MEDIUMBLOB");
+    }
+}
+
+class MySqlClobPolicy extends ClobPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append(" MEDIUMTEXT");
     }
 }

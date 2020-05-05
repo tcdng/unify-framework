@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
 
     public ShowPopupResponse() {
-        super("showPopupHdl");
+        super("showPopupHdl", true);
     }
 
     @Override

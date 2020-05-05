@@ -35,6 +35,7 @@ import com.tcdng.unify.web.ui.data.RefreshSection;
 @Component("ui-search")
 @UplAttributes({ @UplAttribute(name = "filterLabel", type = String.class, defaultVal = "$m{search.filter}"),
         @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/search.png}"),
+        @UplAttribute(name = "buttonSymbol", type = String.class, defaultVal = "search"),
         @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "immediate") })
 public class SearchField extends AbstractListPopupTextField {
 

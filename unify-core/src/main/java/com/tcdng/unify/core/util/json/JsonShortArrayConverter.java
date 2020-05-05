@@ -32,6 +32,10 @@ public class JsonShortArrayConverter extends AbstractJsonArrayConverter<Short> {
 
     @Override
     protected Short getValue(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return (short) jsonValue.asInt();
     }
 

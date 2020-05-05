@@ -29,6 +29,10 @@ import com.eclipsesource.json.JsonValue;
 public class JsonBigDecimalConverter implements JsonValueConverter<BigDecimal> {
     @Override
     public BigDecimal read(JsonValue jsonValue) throws Exception {
+        if (jsonValue.isNull()) {
+            return null;
+        }
+        
         return BigDecimal.valueOf(jsonValue.asDouble());
     }
 

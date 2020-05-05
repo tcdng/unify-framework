@@ -71,7 +71,7 @@ public abstract class AbstractContainerWriter extends AbstractWidgetWriter imple
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
             if (widget.isVisible() || widget.isHidden() || widget.isBehaviorAlways()) {
-                writer.writeBehaviour(widget);
+                writer.writeBehavior(widget);
             }
         }
     }

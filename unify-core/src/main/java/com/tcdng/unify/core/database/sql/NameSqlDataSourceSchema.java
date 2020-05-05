@@ -17,6 +17,7 @@
 package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
  * Named SQL DataSource schema component.
@@ -26,5 +27,5 @@ import com.tcdng.unify.core.UnifyComponent;
  */
 public interface NameSqlDataSourceSchema extends UnifyComponent {
 
-    String getAppSchema();
+    String getAppSchema() throws UnifyException;
 }

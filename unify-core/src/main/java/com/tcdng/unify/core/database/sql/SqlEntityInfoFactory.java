@@ -27,18 +27,19 @@ import com.tcdng.unify.core.database.CallableProc;
  */
 public interface SqlEntityInfoFactory extends UnifyComponent {
 
-    String VIEW_PREFIX = "V_";
-
     /**
-     * Sets the factory SQL data source dialect.
+     * Finds the SQL entity information for an entity.
      * 
-     * @param sqlDataSourceDialect
-     *            the dialect to set
+     * @param clazz
+     *            the entity type
+     * @return the type SQL entity information
+     * @throws UnifyException
+     *             if supplied entity type is not found. if an error occurs
      */
-    void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect);
+    SqlEntityInfo findSqlEntityInfo(Class<?> clazz) throws UnifyException;
 
     /**
-     * Returns the SQL entity information for a entity type.
+     * Creates the SQL entity information for a entity type if not existing.
      * 
      * @param entityClass
      *            the entity class
@@ -46,7 +47,18 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException;
+    SqlEntityInfo createSqlEntityInfo(Class<?> entityClass) throws UnifyException;
+
+    /**
+     * Removes the SQL entity information for a entity type from factory.
+     * 
+     * @param entityClass
+     *            the entity class
+     * @return entity information for specified entity type if removed otherwise null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlEntityInfo removeSqlEntityInfo(Class<?> entityClass) throws UnifyException;
 
     /**
      * Returns the SQL callable information for type.
@@ -58,4 +70,12 @@ public interface SqlEntityInfoFactory extends UnifyComponent {
      *             if an error occurs
      */
     SqlCallableInfo getSqlCallableInfo(Class<? extends CallableProc> callableClass) throws UnifyException;
+
+    /**
+     * Sets the factory SQL data source dialect.
+     * 
+     * @param sqlDataSourceDialect
+     *            the dialect to set
+     */
+    void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect);
 }

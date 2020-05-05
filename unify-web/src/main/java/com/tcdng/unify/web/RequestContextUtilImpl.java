@@ -142,13 +142,13 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void setCommandResponsePath(String path) throws UnifyException {
-        setRequestAttribute(COMMAND_POSTRESPONSE_PATH, path);
+    public void setCommandResponsePath(TargetPath targetPath) throws UnifyException {
+        setRequestAttribute(COMMAND_POSTRESPONSE_PATH, targetPath);
     }
 
     @Override
-    public String getCommandResponsePath() throws UnifyException {
-        return (String) getRequestAttribute(COMMAND_POSTRESPONSE_PATH);
+    public TargetPath getCommandResponsePath() throws UnifyException {
+        return (TargetPath) getRequestAttribute(COMMAND_POSTRESPONSE_PATH);
     }
 
     @Override
@@ -231,7 +231,7 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
             setRequestAttribute(DYNAMICPANEL_PAGENAME, dynamicPanelNameList);
         }
 
-        dynamicPanelNameList.add(new DynamicPanelNames(pageName, parentPageName));
+        dynamicPanelNameList.add(0, new DynamicPanelNames(pageName, parentPageName));
     }
 
     @Override
@@ -375,6 +375,11 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
+    public void clearOnSaveContentWidgets() throws UnifyException {
+        removeRequestAttribute(ON_SAVE_LIST);
+    }
+
+    @Override
     public void hintUser(String message, Object... params) throws UnifyException {
         hintUser(Hint.MODE.INFO, message, params);
     }
@@ -444,6 +449,11 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     @Override
     public String getFocusOnWidgetId() throws UnifyException {
         return (String) getRequestAttribute(FOCUS_ON_WIDGET);
+    }
+
+    @Override
+    public void clearFocusOnWidget() throws UnifyException {
+        removeRequestAttribute(FOCUS_ON_WIDGET);       
     }
 
     @Override

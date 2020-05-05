@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
  * CalendarUtils tests.
@@ -177,49 +178,49 @@ public class DataUtilsTest {
 
     @Test
     public void testSortAscending() throws Exception {
-        DataUtils.sort(bookList, Book.class, "author", true);
+        DataUtils.sortAscending(bookList, Book.class, "author");
         assertEquals("Aladin", bookList.get(0).getAuthor());
         assertEquals("Maladin", bookList.get(1).getAuthor());
         assertEquals("Paladin", bookList.get(2).getAuthor());
         assertEquals("Saladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "price", true);
+        DataUtils.sortAscending(bookList, Book.class, "price");
         assertEquals("Saladin", bookList.get(0).getAuthor());
         assertEquals("Maladin", bookList.get(1).getAuthor());
         assertEquals("Aladin", bookList.get(2).getAuthor());
         assertEquals("Paladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "copies", true);
+        DataUtils.sortAscending(bookList, Book.class, "copies");
         assertEquals("Maladin", bookList.get(0).getAuthor());
         assertEquals("Paladin", bookList.get(1).getAuthor());
         assertEquals("Aladin", bookList.get(2).getAuthor());
         assertEquals("Saladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "censored", true);
+        DataUtils.sortAscending(bookList, Book.class, "censored");
         assertEquals("Paladin", bookList.get(3).getAuthor());
     }
 
     @Test
     public void testSortDescending() throws Exception {
-        DataUtils.sort(bookList, Book.class, "author", false);
+        DataUtils.sortDescending(bookList, Book.class, "author");
         assertEquals("Saladin", bookList.get(0).getAuthor());
         assertEquals("Paladin", bookList.get(1).getAuthor());
         assertEquals("Maladin", bookList.get(2).getAuthor());
         assertEquals("Aladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "price", false);
+        DataUtils.sortDescending(bookList, Book.class, "price");
         assertEquals("Paladin", bookList.get(0).getAuthor());
         assertEquals("Aladin", bookList.get(1).getAuthor());
         assertEquals("Maladin", bookList.get(2).getAuthor());
         assertEquals("Saladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "copies", false);
+        DataUtils.sortDescending(bookList, Book.class, "copies");
         assertEquals("Saladin", bookList.get(0).getAuthor());
         assertEquals("Aladin", bookList.get(1).getAuthor());
         assertEquals("Paladin", bookList.get(2).getAuthor());
         assertEquals("Maladin", bookList.get(3).getAuthor());
 
-        DataUtils.sort(bookList, Book.class, "censored", false);
+        DataUtils.sortDescending(bookList, Book.class, "censored");
         assertEquals("Paladin", bookList.get(0).getAuthor());
     }
 
@@ -338,7 +339,7 @@ public class DataUtilsTest {
 
     @Test
     public void testWriteEmptyJsonObject() throws Exception {
-        String json = DataUtils.writeJsonObject(new Inventory());
+        String json = DataUtils.writeJsonObject(new Inventory(), PrintFormat.NONE);
         assertNotNull(json);
         assertEquals("{}", json);
     }
@@ -347,7 +348,7 @@ public class DataUtilsTest {
     public void testWriteJsonObject() throws Exception {
         Book book = new Book("Saladin", BigDecimal.valueOf(10.0), 20, false);
         book.setPriceHistory(new Double[] { 8.32, 9.14 });
-        String json = DataUtils.writeJsonObject(book);
+        String json = DataUtils.writeJsonObject(book, PrintFormat.NONE);
         assertNotNull(json);
 
         Book jsonBook = DataUtils.readJsonObject(Book.class, json);
@@ -372,7 +373,7 @@ public class DataUtilsTest {
         book.setPriceHistory(new Double[] { 12.45, 11.0, 11.22 });
         entry.setBook(book);
 
-        String json = DataUtils.writeJsonObject(entry);
+        String json = DataUtils.writeJsonObject(entry, PrintFormat.NONE);
         assertNotNull(json);
 
         InventoryEntry jsonEntry = DataUtils.readJsonObject(InventoryEntry.class, json);
@@ -410,7 +411,7 @@ public class DataUtilsTest {
 
         Inventory inventory = new Inventory();
         inventory.setEntries(new InventoryEntry[] { entry1, entry2 });
-        String json = DataUtils.writeJsonObject(inventory);
+        String json = DataUtils.writeJsonObject(inventory, PrintFormat.NONE);
         assertNotNull(json);
 
         Inventory jsonInventory = DataUtils.readJsonObject(Inventory.class, json);
@@ -462,7 +463,7 @@ public class DataUtilsTest {
         ((Picture) pictureAsset.getResource()).setWidth(200);
         ((Picture) pictureAsset.getResource()).setHeight(50);
 
-        String json = DataUtils.writeJsonObject(pictureAsset);
+        String json = DataUtils.writeJsonObject(pictureAsset, PrintFormat.NONE);
         assertNotNull(json);
 
         PictureAsset jsonPictureAsset = DataUtils.readJsonObject(PictureAsset.class, json);

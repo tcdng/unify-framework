@@ -28,6 +28,26 @@ import com.tcdng.unify.core.criterion.Restriction;
  * @since 1.0
  */
 public interface DataSourceDialect extends UnifyComponent {
+
+    /**
+     * Checks if object are all renamed to lower case in dialect.
+     * 
+     * @return true if all lower case objects
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isAllObjectsInLowerCase() throws UnifyException;
+
+    /**
+     * Set all objects in lower case flag.
+     * 
+     * @param objectsInLowerCase
+     *            the flag to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setAllObjectsInLowerCase(boolean objectsInLowerCase) throws UnifyException;
+
     /**
      * Translates specified restriction to data source dialect.
      * 
@@ -48,7 +68,7 @@ public interface DataSourceDialect extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String translateValue(Object value) throws UnifyException;
+    String translateNativeSqlParam(Object value) throws UnifyException;
 
     /**
      * Generates a native query.

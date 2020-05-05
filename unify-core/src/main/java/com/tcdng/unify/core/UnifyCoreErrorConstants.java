@@ -533,17 +533,17 @@ public interface UnifyCoreErrorConstants {
      */
     String FORCELOGOUT_SYSTEM = "UC_008A";
 
-    /** Version {0} does not exist for root record ID {1} and category {2} */
+    /** Version {0} does not exist for rootPolicies record ID {1} and category {2} */
     String UNKNOWN_RECORD_ROOT_VERSION = "UC_008B";
 
-    /** No version root exists for root record ID {0} and category {1} */
+    /** No version rootPolicies exists for rootPolicies record ID {0} and category {1} */
     String NO_RECORD_VERSION_ROOT = "UC_008C";
 
-    /** No record versions for root record ID {0} and category {1} */
+    /** No record versions for rootPolicies record ID {0} and category {1} */
     String NO_RECORD_VERSIONS = "UC_008D";
 
     /**
-     * Cannot delete parent versioned record {0} for root record ID {1} and category
+     * Cannot delete parent versioned record {0} for rootPolicies record ID {1} and category
      * {2}
      */
     String CANNOT_DELETE_PARENT_VERSIONEDRECORD = "UC_008E";
@@ -554,7 +554,7 @@ public interface UnifyCoreErrorConstants {
     /** Parent record ID is required for child type {0} for category {1} */
     String PARENT_RECORDID_REQUIRED_FOR_VERSIONEDRECORD = "UC_0090";
 
-    /** Parent record ID {0} is unknown for root ID {0} for category {1} */
+    /** Parent record ID {0} is unknown for rootPolicies ID {0} for category {1} */
     String PARENT_RECORDID_UNKOWN = "UC_0091";
 
     /**
@@ -563,7 +563,7 @@ public interface UnifyCoreErrorConstants {
     String RECORD_DOESNT_REQUIRE_PARENT = "UC_0092";
 
     /**
-     * Versioned record with ID {0} is unknown for type {1}, root ID {2} and
+     * Versioned record with ID {0} is unknown for type {1}, rootPolicies ID {2} and
      * category {2}
      */
     String VERSIONED_RECORDID_UNKOWN = "UC_0093";
@@ -875,7 +875,7 @@ public interface UnifyCoreErrorConstants {
      */
     String DATABASE_NOT_PART_OF_TRANSACTION = "UC_00D8";
 
-    /** Callable result type information not found. Callable type = {0}, Result type = {1} */
+    /** Callable result type information not found. Callable type = {0}, AggregateItem type = {1} */
     String CALLABLE_RESULT_TYPE_NOT_FOUND = "UC_00D9";
 
     /** Callable field can not be annotated with multiple parameter annotation. Callable field = {0}.*/
@@ -943,4 +943,40 @@ public interface UnifyCoreErrorConstants {
 
     /** No report layout manager is available for layout name {0}. Report server = {1}*/
     String REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER = "UC_00EF";
+
+    /** Conflicting types found for component with name {0}. Conflicting types = {1} */
+    String COMPONENT_CONFLICTING_COMPONENTS_FOUND_IN_CONFIG = "UC_00F0";
+
+    /** Aggregation grouping field with name {0} is unknown. */
+    String AGGREGATION_GROUPING_FIELD_UNKNOWN = "UC_00F1";
+
+    /** Compilation error {0}*/
+    String JAVA_SOURCE_COMPILATION_ERROR = "UC_00F2";
+
+    /** Entity class {0} attempting to extend entity {1} which is already extended by {2}.*/
+    String MULTIPLE_TABLE_EXTENSIONS = "UC_00F3";
+
+    /** Entity type annotation {0} is unsupported for table extension. field {1}. */
+    String RECORD_EXTENSION_UNSUPPORTED_ANNOTATION = "UC_00F4";
+    
+    /** Entity type foreign reference to table extension not allowed. Type = {0}, field {1}. */
+    String RECORD_EXTENSION_REFERENCE_NOT_ALLOWED = "UC_00F5";
+    
+    /** Entity type {0} super class {1} must be annotated with {2}.*/
+    String RECORD_EXTENSION_SUPERCLASS_INCOMPATIBLE = "UC_00F6";
+    
+    /** Entity type foreign reference to superclass not allowed. Type = {0}, field {1}. */
+    String RECORD_SUPERCLASS_REFERENCE_NOT_ALLOWED = "UC_00F7";
+    
+    /** Entity type field already exists in super hierarchy. Type = {0}, field {1}. */
+    String RECORD_SUPERCLASS_FIELD_EXIST = "UC_00F8";
+    
+    /** Entity type {0} super class {1} is already extended by {2}. */
+    String RECORD_SUPERCLASS_ALREADY_EXTENDED = "UC_00F9";
+    
+    /** Invalid large object version specified. Application {0}, category {1}, object = {2}, version {3}*/
+    String INVALID_LARGEOBJECT_VERSION = "UC_00FA";
+    
+    /** SQL entity information not found for type {0}.*/
+    String SQLENTITYINFOFACTORY_ENTITYINFO_NOT_FOUND = "UC_00FB";
 }

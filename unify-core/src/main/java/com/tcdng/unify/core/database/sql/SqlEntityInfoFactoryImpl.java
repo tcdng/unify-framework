@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +50,7 @@ import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.ResultField;
 import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.TableRef;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.annotation.Version;
@@ -122,12 +124,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 Table ta = entityClass.getAnnotation(Table.class);
                 View va = entityClass.getAnnotation(View.class);
-                if (ta != null && va != null) {
+                TableExt tae = entityClass.getAnnotation(TableExt.class);
+                if ((ta != null && va != null) || (ta != null && tae != null) || (va != null && tae != null)) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_TABLE_VIEW_ANNOTATION_COMBO,
                             entityClass);
                 }
 
-                if (ta == null && va == null) {
+                if (ta == null && va == null && tae == null) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_TABLE_OR_VIEW_ANNOTATION, entityClass);
                 }
 
@@ -136,30 +139,47 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     return createTableEntityInfo(entityClass, entityCycleDetector);
                 }
 
+                // Table extensions
+                if (tae != null) {
+                    return createTableExtensionEntityInfo(entityClass, entityCycleDetector);
+                }
+
                 // Views
                 return createViewEntityInfo(entityClass, entityCycleDetector);
             }
 
             @SuppressWarnings("unchecked")
             private SqlEntityInfo createEnumConstEntityInfo(Class<?> entityClass) throws Exception {
-                String tableName =
-                        ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
+                String tableName = null;
+                Table ta = entityClass.getAnnotation(Table.class);
+                if (ta != null) {
+                    tableName = AnnotationUtils.getAnnotationString(ta.value());
+                    if (StringUtils.isBlank(tableName)) {
+                        tableName = AnnotationUtils.getAnnotationString(ta.name());
+                    }
+                }
 
-                String preferredTableName = sqlDataSourceDialect.getPreferredName(tableName);
-                String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
+                if (StringUtils.isBlank(tableName)) {
+                    tableName =
+                            ENUM_TABLE_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(), false);
+                }
+
+                final String preferredTableName = sqlDataSourceDialect.getPreferredName(tableName);
+                final String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
                         ApplicationComponents.APPLICATION_DATASOURCE).getSettings().getSettingValue("appSchema");
-                String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
+                final String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
 
                 SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(StaticReference.CODE_LENGTH, -1, -1);
                 Map<String, SqlFieldInfo> propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
                 GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(StaticReference.class, "code");
-                boolean isForeignKey = false;
-                boolean isIgnoreFkConstraint = false;
-                boolean isListOnly = false;
+                final boolean isForeignKey = false;
+                final boolean isIgnoreFkConstraint = false;
+                final boolean isListOnly = false;
+                final boolean isNullable = false;
                 SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
                         ColumnType.STRING, null, null, null, "code", "REF_CD",
                         sqlDataSourceDialect.getPreferredName("REF_CD"), null, null, true, isForeignKey, isListOnly,
-                        isIgnoreFkConstraint, null, sqlFieldDimensions, false, null,
+                        isIgnoreFkConstraint, null, sqlFieldDimensions, isNullable, null,
                         ReflectUtils.getField(StaticReference.class, "code"), getterSetterInfo.getGetter(),
                         getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
@@ -168,7 +188,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 SqlFieldInfo descFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.COLUMN_POSITION,
                         ColumnType.STRING, null, null, null, "description", "REF_DESC",
                         sqlDataSourceDialect.getPreferredName("REF_DESC"), null, null, false, isForeignKey, isListOnly,
-                        isIgnoreFkConstraint, null, sqlFieldDimensions, false, null,
+                        isIgnoreFkConstraint, null, sqlFieldDimensions, isNullable, null,
                         ReflectUtils.getField(StaticReference.class, "description"), getterSetterInfo.getGetter(),
                         getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
@@ -209,7 +229,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     viewName = tableName;
                 }
 
-                String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()), ta.datasource());
+                final String schema =
+                        getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()), ta.datasource());
                 String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
 
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
@@ -406,6 +427,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                             "foreignType", fka.getClass(), field);
                                 }
 
+                                if (foreignType.isAnnotationPresent(TableExt.class)) {
+                                    throw new UnifyException(
+                                            UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED, entityClass,
+                                            field);
+                                }
+
                                 entityCycleDetector.addReference(entityClass, foreignType);
                                 foreignEntityInfo = get(foreignType, entityCycleDetector);
                                 onDeleteCascade = fka.onDeleteCascade();
@@ -454,6 +481,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             }
 
                             Class<?> childType = field.getType();
+                            if (childType.isAnnotationPresent(TableExt.class)) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED,
+                                        entityClass, field);
+                            }
+
                             Field attrFkField = getAttributeOnlyForeignKeyField(entityClass, childType);
                             if (attrFkField == null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_NO_MATCHING_FK, field,
@@ -473,6 +505,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             }
 
                             Class<?> argumentType = ReflectUtils.getArgumentType(field.getGenericType(), 0);
+                            if (argumentType.isAnnotationPresent(TableExt.class)) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED,
+                                        entityClass, field);
+                            }
+
                             Field attrFkField = getAttributeOnlyForeignKeyField(entityClass, argumentType);
                             if (attrFkField == null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILDLIST_NO_MATCHING_FK, field,
@@ -499,8 +536,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                             SqlFieldDimensions sqlFieldDimensions =
                                     SqlUtils.getNormalizedSqlFieldDimensions(columnType, length, precision, scale);
-                            boolean isIgnoreFkConstraint = false;
-                            boolean isListOnly = false;
+                            final boolean isIgnoreFkConstraint = false;
+                            final boolean isListOnly = false;
                             GetterSetterInfo getterSetterInfo =
                                     ReflectUtils.getGetterSetterInfo(searchClass, field.getName());
                             SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(position, columnType, foreignEntityInfo,
@@ -525,11 +562,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 // Rename view if necessary
                 if (!listOnlyFieldMap.isEmpty() && viewName.equals(tableName)) {
-                    viewName = VIEW_PREFIX + tableName;
+                    viewName = SqlUtils.generateViewName(tableName);
                 }
 
                 String preferredViewName = sqlDataSourceDialect.getPreferredName(viewName);
-
                 String schemaViewName = SqlUtils.generateFullSchemaElementName(schema, preferredViewName);
 
                 // Process list-only fields
@@ -567,10 +603,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 foreignFieldInfo.getPrecision(), foreignFieldInfo.getScale());
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(entry.getKey(), field.getName());
-                        boolean isPrimaryKey = false;
-                        boolean isForeignKey = false;
-                        boolean isIgnoreFkConstraint = false;
-                        boolean isListOnly = true;
+                        final boolean isPrimaryKey = false;
+                        final boolean isForeignKey = false;
+                        final boolean isIgnoreFkConstraint = false;
+                        final boolean isListOnly = true;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
                                 foreignFieldInfo.getColumnType(), foreignEntityInfo, foreignFieldInfo,
                                 foreignKeySQLFieldInfo, field.getName(), column,
@@ -603,82 +639,15 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     entityPolicy = (EntityPolicy) getComponent(pa.value());
                 }
 
-                // Unique constraints
-                Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = null;
-                if (ta.uniqueConstraints().length > 0) {
-                    uniqueConstraintMap = new LinkedHashMap<String, SqlUniqueConstraintInfo>();
-                    for (UniqueConstraint uca : ta.uniqueConstraints()) {
-                        String[] fieldNames = uca.value();
-                        String name = SqlUtils.generateUniqueConstraintName(tableName, fieldNames);
-                        if (fieldNames.length == 0) {
-                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_UNIQUECONSTRAINT,
-                                    entityClass, name);
-                        }
-
-                        if (sqlDataSourceDialect.isAllObjectsInLowerCase()) {
-                            name = name.toLowerCase();
-                        }
-
-                        for (String fieldName : fieldNames) {
-                            SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(fieldName);
-                            if (sqlFieldInfo == null) {
-                                throw new UnifyException(
-                                        UnifyCoreErrorConstants.RECORD_NO_PROPERTY_FOR_UNIQUECONSTRAINT, entityClass,
-                                        fieldName);
-                            }
-
-                            if (sqlFieldInfo.isListOnly()) {
-                                throw new UnifyException(
-                                        UnifyCoreErrorConstants.RECORD_LISTONLY_PROPERTY_FOR_UNIQUECONSTRAINT,
-                                        entityClass, fieldName);
-                            }
-                        }
-
-                        uniqueConstraintMap.put(name, new SqlUniqueConstraintInfo(name, Arrays.asList(fieldNames)));
-                    }
-                }
-
-                // Indexes
-                Map<String, SqlIndexInfo> indexMap = null;
-                if (ta.indexes().length > 0) {
-                    indexMap = new LinkedHashMap<String, SqlIndexInfo>();
-                    for (Index idxa : ta.indexes()) {
-                        String[] fieldNames = idxa.value();
-                        String name = SqlUtils.generateIndexName(tableName, fieldNames);
-                        if (fieldNames.length == 0) {
-                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_INDEX,
-                                    entityClass, name);
-                        }
-
-                        if (sqlDataSourceDialect.isAllObjectsInLowerCase()) {
-                            name = name.toLowerCase();
-                        }
-
-                        for (String fieldName : fieldNames) {
-                            SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(fieldName);
-                            if (sqlFieldInfo == null) {
-                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_PROPERTY_FOR_INDEX,
-                                        entityClass, fieldName);
-                            }
-
-                            if (sqlFieldInfo.isListOnly()) {
-                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTONLY_PROPERTY_FOR_INDEX,
-                                        entityClass, fieldName);
-                            }
-                        }
-
-                        indexMap.put(name, new SqlIndexInfo(name, Arrays.asList(fieldNames), idxa.unique()));
-                    }
-
-                    if (indexMap.isEmpty()) {
-                        indexMap = null;
-                    }
-                }
+                Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap =
+                        extractUniqueConstraints(tableName, entityClass, propertyInfoMap, ta.uniqueConstraints());
+                Map<String, SqlIndexInfo> indexMap =
+                        extractIndexes(tableName, entityClass, propertyInfoMap, ta.indexes());
 
                 if (sqlOrderColumns) {
                     List<SqlFieldInfo> tempList = new ArrayList<SqlFieldInfo>(propertyInfoMap.values());
-                    DataUtils.sort(tempList, SqlFieldInfo.class, "columnName", true);
-                    DataUtils.sort(tempList, SqlFieldInfo.class, "orderIndex", true);
+                    DataUtils.sortAscending(tempList, SqlFieldInfo.class, "columnName");
+                    DataUtils.sortAscending(tempList, SqlFieldInfo.class, "orderIndex");
 
                     propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
                     for (SqlFieldInfo sqlFieldInfo : tempList) {
@@ -696,13 +665,285 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             }
 
             @SuppressWarnings("unchecked")
+            private SqlEntityInfo createTableExtensionEntityInfo(Class<?> entityClass,
+                    EntityCycleDetector entityCycleDetector) throws Exception {
+                TableExt tae = entityClass.getAnnotation(TableExt.class);
+                Class<?> extendedEntityClass = entityClass.getSuperclass();
+                if (extendedEntityClass == null || !extendedEntityClass.isAnnotationPresent(Table.class)) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_SUPERCLASS_INCOMPATIBLE,
+                            entityClass, extendedEntityClass, Table.class);
+                }
+
+                SqlEntityInfo toExtendSqlEntityInfo = get(extendedEntityClass, entityCycleDetector);
+                if (toExtendSqlEntityInfo.isExtended()) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_ALREADY_EXTENDED, entityClass,
+                            extendedEntityClass, toExtendSqlEntityInfo.getEntityClass());
+                }
+
+                final String tableName = toExtendSqlEntityInfo.getTableName();
+
+                // Process all fields including super class fields
+                Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
+                List<Field> listOnlyFieldList = new ArrayList<Field>();
+                Field[] fields = entityClass.getDeclaredFields();
+                for (Field field : fields) {
+                    if (toExtendSqlEntityInfo.isListField(field.getName())) {
+                        throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_FIELD_EXIST, entityClass,
+                                field);
+                    }
+
+                    boolean isEnumConst = EnumConst.class.isAssignableFrom(field.getType());
+                    boolean isPersistent = false;
+                    boolean isPrimaryKey = false;
+                    boolean isForeignKey = false;
+                    final boolean isNullable = true; // All extension fields are nullable
+                    int length = -1;
+                    int precision = -1;
+                    int scale = -1;
+                    int position = 0;
+                    String defaultVal = null;
+
+                    String column = null;
+                    ColumnType columnType = ColumnType.AUTO;
+                    Transformer<?, ?> transformer = null;
+                    SqlEntityInfo foreignEntityInfo = null;
+                    SqlFieldInfo foreignFieldInfo = null;
+
+                    ForeignKey fka = field.getAnnotation(ForeignKey.class);
+                    Column ca = field.getAnnotation(Column.class);
+                    ListOnly loa = field.getAnnotation(ListOnly.class);
+                    checkUnsupported(field, Id.class);
+                    checkUnsupported(field, Version.class);
+                    checkUnsupported(field, Child.class);
+                    checkUnsupported(field, ChildList.class);
+
+                    // Process column
+                    if (ca != null) {
+                        isPersistent = true;
+                        position = ca.position();
+                        defaultVal = AnnotationUtils.getAnnotationString(ca.defaultVal());
+
+                        if (loa != null || fka != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
+                                    entityClass, field);
+                        }
+
+                        if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
+                            column = ca.name();
+                        }
+                        columnType = ca.type(); // Overrides default
+                                                // AUTO
+                                                // type
+
+                        String transformerName = AnnotationUtils.getAnnotationString(ca.transformer());
+                        if (transformerName != null) {
+                            transformer = (Transformer<?, ?>) getComponent(transformerName);
+                        }
+
+                        length = ca.length();
+                        precision = ca.precision();
+                        scale = ca.scale();
+                    }
+
+                    // Process foreign key
+                    if (fka != null) {
+                        position = fka.position();
+                        defaultVal = AnnotationUtils.getAnnotationString(fka.defaultVal());
+
+                        if (loa != null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
+                                    entityClass, field);
+                        }
+
+                        isPersistent = true;
+                        isForeignKey = true;
+                        String fkName = null;
+                        boolean onDeleteCascade = false;
+
+                        fkName = fka.name();
+                        Class<?> foreignType = fka.value();
+                        if (foreignType.equals(Entity.class)) {
+                            foreignType = fka.type();
+                        } else if (!fka.type().equals(Entity.class)) {
+                            throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION,
+                                    "value", "foreignType", fka.getClass(), field);
+                        }
+
+                        if (isEnumConst) {
+                            if (!fka.type().equals(Entity.class)) {
+                                throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_FOREIGN_TYPE_NOT_PERMITTED,
+                                        field.getType(), fka.getClass(), field);
+                            }
+
+                            foreignType = field.getType();
+                        }
+
+                        if (foreignType.equals(Entity.class)) {
+                            throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_MUST_SPECIFY_ATTRIBUTE_OF_TWO,
+                                    "value", "foreignType", fka.getClass(), field);
+                        }
+
+                        if (foreignType.isAnnotationPresent(TableExt.class)) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED,
+                                    entityClass, field);
+                        }
+
+                        if (foreignType.equals(extendedEntityClass)) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_REFERENCE_NOT_ALLOWED,
+                                    entityClass, field);
+                        }
+
+                        entityCycleDetector.addReference(extendedEntityClass, foreignType);
+                        foreignEntityInfo = get(foreignType, entityCycleDetector);
+                        onDeleteCascade = fka.onDeleteCascade();
+
+                        foreignFieldInfo = foreignEntityInfo.getIdFieldInfo();
+                        length = foreignFieldInfo.getLength();
+                        precision = foreignFieldInfo.getPrecision();
+                        scale = foreignFieldInfo.getScale();
+
+                        // Set column name
+                        column = AnnotationUtils.getAnnotationString(fkName);
+                        if (!isEnumConst && !field.getType().equals(foreignFieldInfo.getField().getType())) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_FOREIGNKEY_TYPE_MUST_MATCH_ID,
+                                    entityClass, field, foreignFieldInfo.getField());
+                        }
+
+                        // Add on delete info to parent entity class
+                        if (onDeleteCascade) {
+                            foreignEntityInfo.expandOnDeleteCascade(
+                                    new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field));
+                        }
+                    }
+
+                    // Save list-only fields. Would be processed later since
+                    // they depend on foreign key fields
+                    if (loa != null) {
+                        listOnlyFieldList.add(field);
+                    }
+
+                    if (isPersistent) {
+                        if (ColumnType.AUTO.equals(columnType)) {
+                            columnType = DataUtils.getColumnType(field.getType());
+                        }
+
+                        if (StringUtils.isBlank(column)) {
+                            column = SqlUtils.generateSchemaElementName(field.getName(), true);
+                        }
+
+                        String constraintName = null;
+                        if (isForeignKey) {
+                            constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
+                        }
+
+                        SqlFieldDimensions sqlFieldDimensions =
+                                SqlUtils.getNormalizedSqlFieldDimensions(columnType, length, precision, scale);
+                        final boolean isIgnoreFkConstraint = false;
+                        final boolean isListOnly = false;
+                        GetterSetterInfo getterSetterInfo =
+                                ReflectUtils.getGetterSetterInfo(entityClass, field.getName());
+                        SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(position, columnType, foreignEntityInfo,
+                                foreignFieldInfo, null, field.getName(), column,
+                                sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
+                                isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
+                                isNullable, defaultVal, field, getterSetterInfo.getGetter(),
+                                getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
+                        propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
+                    }
+                }
+
+                // Process list-only fields
+                String viewName = toExtendSqlEntityInfo.getViewName();
+                String preferredViewName = toExtendSqlEntityInfo.getPreferredViewName();
+                String schemaViewName = toExtendSqlEntityInfo.getSchemaViewName();
+                if (!listOnlyFieldList.isEmpty()) {
+                    if (!toExtendSqlEntityInfo.isViewable()) {
+                        viewName = SqlUtils.generateViewName(tableName);
+                        preferredViewName = sqlDataSourceDialect.getPreferredName(viewName);
+                        schemaViewName = SqlUtils.generateFullSchemaElementName(toExtendSqlEntityInfo.getSchema(),
+                                preferredViewName);
+                    }
+
+                    for (Field field : listOnlyFieldList) {
+                        ListOnly loa = field.getAnnotation(ListOnly.class);
+                        SqlFieldInfo foreignKeySQLFieldInfo = propertyInfoMap.get(loa.key());
+                        if (foreignKeySQLFieldInfo == null && toExtendSqlEntityInfo.isListField(loa.key())) {
+                            foreignKeySQLFieldInfo = toExtendSqlEntityInfo.getListFieldInfo(loa.key());
+                        }
+
+                        if (foreignKeySQLFieldInfo == null) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_UNKNOWN_FOREIGN_KEY, entityClass,
+                                    field, loa.key());
+                        }
+
+                        if (!foreignKeySQLFieldInfo.isForeignKey()) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTONLY_KEY_NOT_REF_FOREIGN_KEY,
+                                    entityClass, field, loa.key());
+                        }
+
+                        SqlEntityInfo foreignEntityInfo = foreignKeySQLFieldInfo.getForeignEntityInfo();
+                        SqlFieldInfo foreignFieldInfo = foreignEntityInfo.getListFieldInfo(loa.property());
+
+                        // Make sure field type is the same with foreign field
+                        // type
+                        if (!field.getType().equals(foreignFieldInfo.getField().getType())) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_FOREIGNKEY_TYPE_MUST_MATCH_ID,
+                                    entityClass, field, foreignFieldInfo.getField());
+                        }
+
+                        // Set column name
+                        String column = AnnotationUtils.getAnnotationString(loa.name());
+                        if (StringUtils.isBlank(column)) {
+                            column = SqlUtils.generateSchemaElementName(field.getName(), true);
+                        }
+
+                        SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(foreignFieldInfo.getLength(),
+                                foreignFieldInfo.getPrecision(), foreignFieldInfo.getScale());
+                        GetterSetterInfo getterSetterInfo =
+                                ReflectUtils.getGetterSetterInfo(entityClass, field.getName());
+                        final boolean isPrimaryKey = false;
+                        final boolean isForeignKey = false;
+                        final boolean isIgnoreFkConstraint = false;
+                        final boolean isListOnly = true;
+                        SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
+                                foreignFieldInfo.getColumnType(), foreignEntityInfo, foreignFieldInfo,
+                                foreignKeySQLFieldInfo, field.getName(), column,
+                                sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey, isForeignKey,
+                                isListOnly, isIgnoreFkConstraint, foreignFieldInfo.getTransformer(), sqlFieldDimensions,
+                                foreignFieldInfo.isNullable(), null, field, getterSetterInfo.getGetter(),
+                                getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
+
+                        propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
+                    }
+                }
+
+                Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap =
+                        extractUniqueConstraints(tableName, entityClass, propertyInfoMap, tae.uniqueConstraints());
+                Map<String, SqlIndexInfo> indexMap =
+                        extractIndexes(tableName, entityClass, propertyInfoMap, tae.indexes());
+
+                if (sqlOrderColumns) {
+                    List<SqlFieldInfo> tempList = new ArrayList<SqlFieldInfo>(propertyInfoMap.values());
+                    DataUtils.sortAscending(tempList, SqlFieldInfo.class, "columnName");
+                    DataUtils.sortAscending(tempList, SqlFieldInfo.class, "orderIndex");
+
+                    propertyInfoMap = new LinkedHashMap<String, SqlFieldInfo>();
+                    for (SqlFieldInfo sqlFieldInfo : tempList) {
+                        propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
+                    }
+                }
+
+                return toExtendSqlEntityInfo.extend(viewName, preferredViewName, schemaViewName,
+                        (Class<? extends Entity>) entityClass, propertyInfoMap, uniqueConstraintMap, indexMap);
+            }
+
+            @SuppressWarnings("unchecked")
             private SqlEntityInfo createViewEntityInfo(Class<?> entityClass, EntityCycleDetector entityCycleDetector)
                     throws Exception {
                 View va = entityClass.getAnnotation(View.class);
                 String viewName = AnnotationUtils.getAnnotationString(va.name());
                 if (StringUtils.isBlank(viewName)) {
-                    viewName = VIEW_PREFIX + SqlUtils.generateSchemaElementName(entityClass.getSimpleName(),
-                            sqlGenerationApplySpacing);
+                    viewName = SqlUtils.generateViewName(entityClass.getSimpleName(), sqlGenerationApplySpacing);
                 }
 
                 String preferredViewName = sqlDataSourceDialect.getPreferredName(viewName);
@@ -793,15 +1034,16 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 refFieldInfo.getPrecision(), refFieldInfo.getScale());
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(searchClass, field.getName());
-                        boolean isForeignKey = false;
-                        boolean isIgnoreFkConstraint = false;
-                        boolean isListOnly = true;
+                        final boolean isForeignKey = false;
+                        final boolean isIgnoreFkConstraint = false;
+                        final boolean isListOnly = true;
+                        final boolean isNullable = false;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
                                 refFieldInfo.getColumnType(), refEntityInfo, refFieldInfo, null, field.getName(),
                                 column, sqlDataSourceDialect.getPreferredName(column), null,
                                 refEntityPreferredAlias.toUpperCase(), isPrimaryKey, isForeignKey, isListOnly,
-                                isIgnoreFkConstraint, refFieldInfo.getTransformer(), sqlFieldDimensions, false, null,
-                                field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
+                                isIgnoreFkConstraint, refFieldInfo.getTransformer(), sqlFieldDimensions, isNullable,
+                                null, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
                                 sqlDataSourceDialect.isAllObjectsInLowerCase());
 
                         if (isPrimaryKey) {
@@ -845,7 +1087,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             case LIKE:
                             case NOT_BEGIN_WITH:
                             case NOT_END_WITH:
-                            case NOT_EQUAL:
+                            case NOT_EQUALS:
                             case NOT_LIKE:
                                 String rightProperty = AnnotationUtils.getAnnotationString(vra.rightProperty());
                                 if (StringUtils.isNotBlank(rightProperty)) {
@@ -895,6 +1137,96 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         get(tableReferences.getEntityClass(propertyRef.getTableAlias()), entityCycleDetector);
                 String columnName = sqlEntityInfo.getFieldInfo(propertyRef.getFieldName()).getPreferredColumnName();
                 return new SqlViewColumnInfo(propertyRef.getTableAlias(), columnName);
+            }
+
+            private void checkUnsupported(Field field, Class<? extends Annotation> annotationClass)
+                    throws UnifyException {
+                if (field.getAnnotation(annotationClass) != null) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_UNSUPPORTED_ANNOTATION,
+                            annotationClass.getName(), field);
+                }
+            }
+
+            private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(String tableName,
+                    Class<?> entityClass, Map<String, SqlFieldInfo> propertyInfoMap,
+                    UniqueConstraint[] uniqueConstraints) throws UnifyException {
+                // Unique constraints
+                Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = null;
+                if (uniqueConstraints.length > 0) {
+                    uniqueConstraintMap = new LinkedHashMap<String, SqlUniqueConstraintInfo>();
+                    for (UniqueConstraint uca : uniqueConstraints) {
+                        String[] fieldNames = uca.value();
+                        String name = SqlUtils.generateUniqueConstraintName(tableName, fieldNames);
+                        if (fieldNames.length == 0) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_UNIQUECONSTRAINT,
+                                    entityClass, name);
+                        }
+
+                        if (sqlDataSourceDialect.isAllObjectsInLowerCase()) {
+                            name = name.toLowerCase();
+                        }
+
+                        for (String fieldName : fieldNames) {
+                            SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(fieldName);
+                            if (sqlFieldInfo == null) {
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.RECORD_NO_PROPERTY_FOR_UNIQUECONSTRAINT, entityClass,
+                                        fieldName);
+                            }
+
+                            if (sqlFieldInfo.isListOnly()) {
+                                throw new UnifyException(
+                                        UnifyCoreErrorConstants.RECORD_LISTONLY_PROPERTY_FOR_UNIQUECONSTRAINT,
+                                        entityClass, fieldName);
+                            }
+                        }
+
+                        uniqueConstraintMap.put(name, new SqlUniqueConstraintInfo(name, Arrays.asList(fieldNames)));
+                    }
+                }
+                return uniqueConstraintMap;
+            }
+
+            private Map<String, SqlIndexInfo> extractIndexes(String tableName, Class<?> entityClass,
+                    Map<String, SqlFieldInfo> propertyInfoMap, Index[] indexes) throws UnifyException {
+                // Indexes
+                Map<String, SqlIndexInfo> indexMap = null;
+                if (indexes.length > 0) {
+                    indexMap = new LinkedHashMap<String, SqlIndexInfo>();
+                    for (Index idxa : indexes) {
+                        String[] fieldNames = idxa.value();
+                        String name = SqlUtils.generateIndexName(tableName, fieldNames);
+                        if (fieldNames.length == 0) {
+                            throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_INDEX,
+                                    entityClass, name);
+                        }
+
+                        if (sqlDataSourceDialect.isAllObjectsInLowerCase()) {
+                            name = name.toLowerCase();
+                        }
+
+                        for (String fieldName : fieldNames) {
+                            SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(fieldName);
+                            if (sqlFieldInfo == null) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_PROPERTY_FOR_INDEX,
+                                        entityClass, fieldName);
+                            }
+
+                            if (sqlFieldInfo.isListOnly()) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTONLY_PROPERTY_FOR_INDEX,
+                                        entityClass, fieldName);
+                            }
+                        }
+
+                        indexMap.put(name, new SqlIndexInfo(name, Arrays.asList(fieldNames), idxa.unique()));
+                    }
+
+                    if (indexMap.isEmpty()) {
+                        indexMap = null;
+                    }
+                }
+
+                return indexMap;
             }
 
         };
@@ -1030,8 +1362,35 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     }
 
     @Override
-    public SqlEntityInfo getSqlEntityInfo(Class<?> entityClass) throws UnifyException {
+    public SqlEntityInfo findSqlEntityInfo(Class<?> entityClass) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = sqlEntityInfoMap.find(entityClass);
+        if (sqlEntityInfo == null) {
+            if (entityClass.isAnnotationPresent(Table.class)) {
+                if (entityClass.getAnnotation(Table.class).adhoc()) {
+                    return sqlEntityInfoMap.get(entityClass);
+                }
+            }
+
+            if (entityClass.isAnnotationPresent(TableExt.class)) {
+                if (entityClass.getAnnotation(TableExt.class).adhoc()) {
+                    return sqlEntityInfoMap.get(entityClass);
+                }
+            }
+
+            throw new UnifyException(UnifyCoreErrorConstants.SQLENTITYINFOFACTORY_ENTITYINFO_NOT_FOUND, entityClass);
+        }
+
+        return sqlEntityInfo;
+    }
+
+    @Override
+    public SqlEntityInfo createSqlEntityInfo(Class<?> entityClass) throws UnifyException {
         return sqlEntityInfoMap.get(entityClass);
+    }
+
+    @Override
+    public SqlEntityInfo removeSqlEntityInfo(Class<?> entityClass) throws UnifyException {
+        return sqlEntityInfoMap.remove(entityClass);
     }
 
     @Override

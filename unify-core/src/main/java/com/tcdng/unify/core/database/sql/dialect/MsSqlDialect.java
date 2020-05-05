@@ -18,15 +18,22 @@ package com.tcdng.unify.core.database.sql.dialect;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlCriteriaPolicy;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
@@ -36,6 +43,7 @@ import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -47,8 +55,32 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(name = SqlDialectNameConstants.MSSQL, description = "$m{sqldialect.mssqldb}")
 public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
+    private static final MsSqlDataSourceDialectPolicies sqlDataSourceDialectPolicies =
+            new MsSqlDataSourceDialectPolicies();
+
+    static {
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
+        populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.TIMESTAMP_UTC, new MsSqlTimestampUTCPolicy());
+        tempMap1.put(ColumnType.TIMESTAMP, new MsSqlTimestampPolicy());
+        tempMap1.put(ColumnType.DATE, new MsSqlDatePolicy());
+        tempMap1.put(ColumnType.BLOB, new MsSqlBlobPolicy());
+        tempMap1.put(ColumnType.CLOB, new MsSqlClobPolicy());
+
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
+        populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
+
+        sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
+        sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
+    }
+
     public MsSqlDialect() {
         super(false); // useCallableFunctionMode
+    }
+
+    @Override
+    public String getDefaultSchema() {
+        return "dbo";
     }
 
     @Override
@@ -59,11 +91,6 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public String generateUTCTimestampSql() throws UnifyException {
         return "SELECT GETUTCDATE()";
-    }
-
-    @Override
-    public int getMaxClauseValues() {
-        return -1;
     }
 
     @Override
@@ -105,7 +132,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateRenameTable(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-            SqlEntitySchemaInfo oldSqlRecordSchemaInfo, boolean format) throws UnifyException {
+            SqlEntitySchemaInfo oldSqlRecordSchemaInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("sp_RENAME '").append(oldSqlRecordSchemaInfo.getSchemaTableName()).append('.')
                 .append(sqlRecordSchemaInfo.getSchemaTableName()).append("'");
@@ -114,10 +141,10 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -129,7 +156,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
         if (sqlColumnAlterInfo.isAltered()) {
             List<String> sqlList = new ArrayList<String>();
@@ -149,7 +176,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
             }
 
             sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-            if (format) {
+            if (format.isPretty()) {
                 sb.append(getLineSeparator());
             } else {
                 sb.append(' ');
@@ -162,7 +189,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
             if (sqlFieldSchemaInfo.isWithDefaultVal()) {
                 sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format) {
+                if (format.isPretty()) {
                     sb.append(getLineSeparator());
                 } else {
                     sb.append(' ');
@@ -185,10 +212,10 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -202,7 +229,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateRenameColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, boolean format) throws UnifyException {
+            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("sp_RENAME '").append(sqlRecordSchemaInfo.getSchemaTableName()).append('.')
                 .append(oldSqlFieldSchemaInfo.getPreferredColumnName()).append("', '");
@@ -212,10 +239,10 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -227,12 +254,46 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
+        includeNoPrecisionType("INT");
+    }
 
-        setDataTypePolicy(ColumnType.TIMESTAMP_UTC, new MsSqlTimestampUTCPolicy());
-        setDataTypePolicy(ColumnType.TIMESTAMP, new MsSqlTimestampPolicy());
-        setDataTypePolicy(ColumnType.DATE, new MsSqlDatePolicy());
-        setDataTypePolicy(ColumnType.BLOB, new MsSqlBlobPolicy());
-        setDataTypePolicy(ColumnType.CLOB, new MsSqlClobPolicy());
+    @Override
+    protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
+        return sqlDataSourceDialectPolicies;
+    }
+
+    private static class MsSqlDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
+
+        public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+            this.sqlDataTypePolicies = sqlDataTypePolicies;
+        }
+
+        public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+            this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+        }
+
+        @Override
+        public int getMaxClauseValues() {
+            return -1;
+        }
+
+        @Override
+        protected String concat(String... expressions) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(");
+            boolean appSym = false;
+            for (String expression : expressions) {
+                if (appSym) {
+                    sb.append(" + ");
+                } else {
+                    appSym = true;
+                }
+
+                sb.append(expression);
+            }
+            sb.append(")");
+            return sb.toString();
+        }
     }
 
     private void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo) throws UnifyException {
@@ -256,6 +317,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
             }
         }
     }
+
 }
 
 class MsSqlTimestampUTCPolicy extends TimestampUTCPolicy {

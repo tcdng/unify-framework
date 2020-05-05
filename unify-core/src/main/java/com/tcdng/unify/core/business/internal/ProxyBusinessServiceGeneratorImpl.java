@@ -15,14 +15,11 @@
  */
 package com.tcdng.unify.core.business.internal;
 
-import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.codehaus.janino.SimpleCompiler;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
@@ -43,6 +40,8 @@ import com.tcdng.unify.core.business.BusinessLogicInput;
 import com.tcdng.unify.core.business.BusinessLogicOutput;
 import com.tcdng.unify.core.business.BusinessLogicUnit;
 import com.tcdng.unify.core.business.BusinessService;
+import com.tcdng.unify.core.constant.DeploymentMode;
+import com.tcdng.unify.core.runtime.RuntimeJavaClassManager;
 import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.util.NameUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -55,6 +54,9 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 @Component(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR)
 public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent implements ProxyBusinessServiceGenerator {
+
+    @Configurable
+    private RuntimeJavaClassManager runtimeJavaClassManager;
 
     @Configurable("proxy")
     private String proxyPackageExtension;
@@ -86,7 +88,8 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
 
     @Override
     public String generateProxyBusinessServiceSource(String name, Class<? extends BusinessService> businessServiceClazz,
-            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, boolean isClusterMode) throws UnifyException {
+            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, DeploymentMode deploymentMode)
+            throws UnifyException {
         String simpleName = generateProxyBusinessServiceSimpleName(businessServiceClazz);
         String packageName = businessServiceClazz.getPackage().getName() + "." + proxyPackageExtension;
 
@@ -330,17 +333,20 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
             Map<String, List<UnifyPluginInfo>> pluginsBySocketMap) throws UnifyException {
         boolean isClusterMode = isClusterMode();
         try {
+            DeploymentMode deploymentMode = DeploymentMode.STANDALONE;
+            if (isClusterMode) {
+                deploymentMode = DeploymentMode.CLUSTER;
+            }
+
             String source =
-                    generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap, isClusterMode);
+                    generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap, deploymentMode);
             if (logSource) {
                 logDebug("Generated source for [{0}]. Cluster mode: [{1}], Source:\n [{2}]", businessServiceClazz,
                         isClusterMode, source);
             }
 
-            String className = generateProxyBusinessServiceName(businessServiceClazz);
-            SimpleCompiler compiler = new SimpleCompiler();
-            compiler.cook(new StringReader(source));
-            return (Class<? extends BusinessService>) compiler.getClassLoader().loadClass(className);
+            return (Class<? extends BusinessService>) runtimeJavaClassManager
+                    .compileAndLoadJavaClass(generateProxyBusinessServiceName(businessServiceClazz), source);
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {

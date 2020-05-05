@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.control.GroupControl;
 import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 
 /**
- * Group control writer.
+ * Grouping control writer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
@@ -87,7 +87,7 @@ public class GroupControlWriter extends AbstractControlWriter {
                 Control control = childControlInfo.getControl();
                 if (control.isVisible() || control.isHidden()) {
                     control.setValueStore(valueStore);
-                    writer.writeBehaviour(control);
+                    writer.writeBehavior(control);
                 }
             }
         }

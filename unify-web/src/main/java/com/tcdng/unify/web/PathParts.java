@@ -19,7 +19,7 @@ package com.tcdng.unify.web;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * Path parts.
+ * TargetPath parts.
  * 
  * @author Lateef Ojulari
  * @since 1.0

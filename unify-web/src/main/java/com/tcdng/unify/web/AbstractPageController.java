@@ -26,7 +26,10 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.constant.ReadOnly;
+import com.tcdng.unify.web.constant.ResetOnWrite;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
+import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.DataTransferWidget;
 import com.tcdng.unify.web.ui.Document;
@@ -59,10 +62,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     private Class<T> pageBeanClass;
 
     public AbstractPageController(Class<T> pageBeanClass) {
-        this(pageBeanClass, false, false, false);
+        this(pageBeanClass, Secured.FALSE, ReadOnly.FALSE, ResetOnWrite.FALSE);
     }
 
-    public AbstractPageController(Class<T> pageBeanClass, boolean secured, boolean readOnly, boolean resetOnWrite) {
+    public AbstractPageController(Class<T> pageBeanClass, Secured secured, ReadOnly readOnly,
+            ResetOnWrite resetOnWrite) {
         super(secured, readOnly, resetOnWrite);
         this.pageBeanClass = pageBeanClass;
     }

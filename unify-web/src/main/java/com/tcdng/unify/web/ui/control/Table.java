@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.AbstractValueStore;
@@ -32,6 +33,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.AbstractValueListMultiControl;
 import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.EventHandler;
@@ -64,6 +66,9 @@ import com.tcdng.unify.web.ui.EventHandler;
 public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     private static final int DEFAULT_ITEMS_PER_PAGE = 50;
+    
+    @Configurable
+    private FontSymbolManager fontSymbolManager;
 
     private Control viewIndexCtrl;
 
@@ -127,6 +132,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     @Override
     public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         viewIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:viewIndex");
         if (isPagination()) {
             currentPageCtrl = (Control) addInternalChildControl("!ui-hidden binding:currentPage");
@@ -140,10 +146,17 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
         getColumnList(); // Do this here to ensure sortable is appropriately set
         if (sortable) {
-            ascendingImageCtrl = addInternalChildControl(
-                    "!ui-image src:$t{images/ascending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
-            descendingImageCtrl = addInternalChildControl(
-                    "!ui-image src:$t{images/descending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
+            if (fontSymbolManager != null) {
+                ascendingImageCtrl = addInternalChildControl(
+                        "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
+                descendingImageCtrl = addInternalChildControl(
+                        "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
+            } else {
+                ascendingImageCtrl = addInternalChildControl(
+                        "!ui-image src:$t{images/ascending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
+                descendingImageCtrl = addInternalChildControl(
+                        "!ui-image src:$t{images/descending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
+            }
             columnIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:columnIndex", false, true);
             sortDirectionCtrl = (Control) addInternalChildControl("!ui-hidden binding:sortDirection", false, true);
         }
@@ -298,7 +311,11 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
                 // Sort original list to
                 List<?> items = (List<?>) getValue();
-                DataUtils.sort(items, items.get(0).getClass(), columnState.getFieldName(), sortDirection);
+               if(sortDirection) {
+                   DataUtils.sortAscending(items, items.get(0).getClass(), columnState.getFieldName());
+               } else {
+                   DataUtils.sortDescending(items, items.get(0).getClass(), columnState.getFieldName());
+               }
             }
         }
     }
@@ -879,8 +896,13 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         @Override
         public int compare(Row row1, Row row2) {
             try {
-                return DataUtils.compareForSort((Comparable<Object>) row1.getRowValueStore().retrieve(property),
-                        (Comparable<Object>) row2.getRowValueStore().retrieve(property), ascending);
+                if (ascending) {
+                    return DataUtils.compareForSortAscending((Comparable<Object>) row1.getRowValueStore().retrieve(property),
+                            (Comparable<Object>) row2.getRowValueStore().retrieve(property));
+                }
+
+                return DataUtils.compareForSortDescending((Comparable<Object>) row1.getRowValueStore().retrieve(property),
+                        (Comparable<Object>) row2.getRowValueStore().retrieve(property));
             } catch (UnifyException e) {
             }
             return 0;

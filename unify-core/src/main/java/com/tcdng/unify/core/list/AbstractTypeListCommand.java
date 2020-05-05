@@ -52,7 +52,7 @@ public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends 
                     list.add(new ListData(unifyComponentConfig.getName(),
                             resolveSessionMessage(unifyComponentConfig.getDescription())));
                 }
-                DataUtils.sort(list, Listable.class, "listDescription", true);
+                DataUtils.sortAscending(list, Listable.class, "listDescription");
                 return list;
             }
         };

@@ -45,7 +45,7 @@ import com.tcdng.unify.web.ui.ListParamType;
         @UplAttribute(name = "list", type = String.class, defaultVal = "currencylist"),
         @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "immediate"),
         @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!decimalformat}"),
-        @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tnread"),
+        @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "trread"),
         @UplAttribute(name = "extReadOnly", type = boolean.class, defaultVal = "false") })
 public class MoneyField extends AbstractListPopupTextField {
 

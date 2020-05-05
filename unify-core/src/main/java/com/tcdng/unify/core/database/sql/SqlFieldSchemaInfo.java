@@ -55,7 +55,7 @@ public interface SqlFieldSchemaInfo {
      * Returns the field nullable attribute
      */
     boolean isNullable();
-
+    
     /**
      * Returns the field length.
      */

@@ -43,11 +43,9 @@ import com.tcdng.unify.core.criterion.Greater;
 import com.tcdng.unify.core.criterion.Less;
 import com.tcdng.unify.core.criterion.LessOrEqual;
 import com.tcdng.unify.core.criterion.Like;
-import com.tcdng.unify.core.criterion.NotEqual;
+import com.tcdng.unify.core.criterion.NotEquals;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.Aggregate;
-import com.tcdng.unify.core.data.AggregateType;
 
 /**
  * Database table entity pre-query tests.
@@ -66,147 +64,6 @@ public class DatabaseTableEntityPreQueryTest extends AbstractUnifyComponentTest 
     private Database db;
 
     private TestEntityPolicy testEntityPolicy;
-
-    @Test
-    public void testAggregateSingle() throws Exception {
-        tm.beginTransaction();
-        try {
-            db.create(new Fruit("apple", "red", 20.00));
-            db.create(new Fruit("pineapple", "cyan", 60.00));
-            db.create(new Fruit("banana", "yellow", 45.00));
-            db.create(new Fruit("orange", "orange", 15.00));
-
-            testEntityPolicy.setRestriction(new Like("name", "apple")); // Apply restriction through policy
-
-            Aggregate<?> aggregate = db.aggregate(AggregateType.SUM, new FruitQuery().addSelect("price"));
-            assertNotNull(aggregate);
-            assertEquals(2, aggregate.getCount());
-            assertEquals(80.00, aggregate.getValue());
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
-
-    @Test
-    public void testAggregateMultiple() throws Exception {
-        tm.beginTransaction();
-        try {
-            db.create(new Fruit("apple", "red", 20.00, 25));
-            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
-            db.create(new Fruit("banana", "yellow", 45.00, 45));
-            db.create(new Fruit("orange", "orange", 15.00, 11));
-
-            testEntityPolicy.setRestriction(new Like("name", "apple")); // Apply restriction through policy
-
-            // Sum
-            List<Aggregate<?>> list = db.aggregateMany(AggregateType.SUM,
-                    new FruitQuery().addSelect("price", "quantity").ignoreEmptyCriteria(true));
-            assertNotNull(list);
-            assertEquals(2, list.size());
-
-            Aggregate<?> priceAggregate = list.get(0);
-            Aggregate<?> qtyAggregate = list.get(1);
-            assertNotNull(priceAggregate);
-            assertNotNull(qtyAggregate);
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(2, priceAggregate.getCount());
-            assertEquals(80.00, priceAggregate.getValue());
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(2, qtyAggregate.getCount());
-            assertEquals(28, qtyAggregate.getValue());
-
-            // Average
-            list = db.aggregateMany(AggregateType.AVERAGE, new FruitQuery().addSelect("quantity", "price"));
-            assertNotNull(list);
-            assertEquals(2, list.size());
-
-            qtyAggregate = list.get(0);
-            priceAggregate = list.get(1);
-            assertNotNull(qtyAggregate);
-            assertNotNull(priceAggregate);
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(2, qtyAggregate.getCount());
-            assertEquals(14, qtyAggregate.getValue());
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(2, priceAggregate.getCount());
-            assertEquals(40.00, priceAggregate.getValue());
-
-            // Maximum
-            list = db.aggregateMany(AggregateType.MAXIMUM, new FruitQuery().addSelect("price", "quantity"));
-            assertNotNull(list);
-            assertEquals(2, list.size());
-
-            priceAggregate = list.get(0);
-            qtyAggregate = list.get(1);
-            assertNotNull(priceAggregate);
-            assertNotNull(qtyAggregate);
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(2, priceAggregate.getCount());
-            assertEquals(60.00, priceAggregate.getValue());
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(2, qtyAggregate.getCount());
-            assertEquals(25, qtyAggregate.getValue());
-
-            // Minimum
-            list = db.aggregateMany(AggregateType.MINIMUM,
-                    new FruitQuery().addLike("name", "apple").addSelect("quantity", "price"));
-            assertNotNull(list);
-            assertEquals(2, list.size());
-
-            qtyAggregate = list.get(0);
-            priceAggregate = list.get(1);
-            assertNotNull(qtyAggregate);
-            assertNotNull(priceAggregate);
-            assertEquals("quantity", qtyAggregate.getFieldName());
-            assertEquals(2, qtyAggregate.getCount());
-            assertEquals(3, qtyAggregate.getValue());
-            assertEquals("price", priceAggregate.getFieldName());
-            assertEquals(2, priceAggregate.getCount());
-            assertEquals(20.00, priceAggregate.getValue());
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
-
-    @Test
-    public void testAggregateCountDistinct() throws Exception {
-        tm.beginTransaction();
-        try {
-            db.create(new Fruit("apple", "red", 20.00, 25));
-            db.create(new Fruit("grape", "red", 25.00, 11));
-            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
-            db.create(new Fruit("banana", "yellow", 45.00, 45));
-            db.create(new Fruit("orange", "orange", 15.00, 11));
-
-            testEntityPolicy.setRestriction(new LessOrEqual("price", 45.00)); // Apply restriction through policy
-
-            // Count
-            Aggregate<?> countAggregate = db.aggregate(AggregateType.COUNT, new FruitQuery().addSelect("color"));
-            assertNotNull(countAggregate);
-            assertEquals("color", countAggregate.getFieldName());
-            assertEquals(4, countAggregate.getCount());
-            assertEquals("4", countAggregate.getValue());
-
-            // Count with distinct
-            countAggregate = db.aggregate(AggregateType.COUNT, new FruitQuery().addSelect("color").setDistinct(true));
-            assertNotNull(countAggregate);
-            assertEquals("color", countAggregate.getFieldName());
-            assertEquals(4, countAggregate.getCount());
-            assertEquals("3", countAggregate.getValue());
-
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
 
     @Test
     public void testCountRecord() throws Exception {
@@ -317,7 +174,7 @@ public class DatabaseTableEntityPreQueryTest extends AbstractUnifyComponentTest 
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
 
-            testEntityPolicy.setRestriction(new NotEqual("color", "cyan"));
+            testEntityPolicy.setRestriction(new NotEquals("color", "cyan"));
             assertEquals(3, db.deleteAll(new FruitQuery()));
 
             testEntityPolicy.clearRestriction();
@@ -342,7 +199,7 @@ public class DatabaseTableEntityPreQueryTest extends AbstractUnifyComponentTest 
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
 
-            testEntityPolicy.setRestriction(new NotEqual("color", "cyan"));
+            testEntityPolicy.setRestriction(new NotEquals("color", "cyan"));
             assertEquals(3, db.deleteAll(new FruitQuery()));
 
             // Order should be ignored
@@ -1975,7 +1832,7 @@ public class DatabaseTableEntityPreQueryTest extends AbstractUnifyComponentTest 
     protected void onSetup() throws Exception {
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        testEntityPolicy = (TestEntityPolicy) getComponent("testentity-policy");
+        testEntityPolicy = (TestEntityPolicy) getComponent("testversionedentity-policy");
     }
 
     @SuppressWarnings({ "unchecked" })

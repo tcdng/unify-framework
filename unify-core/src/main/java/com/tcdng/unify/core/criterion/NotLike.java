@@ -21,14 +21,14 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotLike extends AbstractSingleValueRestriction {
+public class NotLike extends AbstractSingleParamRestriction {
 
     public NotLike(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.NOT_LIKE;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.NOT_LIKE;
     }
 }

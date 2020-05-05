@@ -206,6 +206,12 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         return false;
     }
 
+    @Override
+    public final void setValue(Object value) throws UnifyException {
+        super.setValue(value);
+        cascadeValueStore();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void cascadeValueStore() throws UnifyException {

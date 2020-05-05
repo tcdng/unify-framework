@@ -176,7 +176,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             ReportColumn grpReportColumn = groupingColumnList.get(i);
             JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, grpReportColumn);
 
-            // Group header
+            // Grouping header
             boolean showColumnHeader = isWithGroupColumns && ((i + 1) == glen);
             JRDesignBand groupHeaderBand = new JRDesignBand();
             if (showColumnHeader) {
@@ -210,7 +210,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             ((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(groupHeaderBand);
 
             if (!summationColumnList.isEmpty()) {
-                // Group footer
+                // Grouping footer
                 JRDesignBand groupFooterBand = new JRDesignBand();
                 groupFooterBand.setHeight(columnHeaderHeight);
                 grpJRDesignRectangle =
@@ -262,7 +262,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                     sumStartX -= totalElemWidth;
                     if (sumStartX >= 0) {
                         jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
-                                totalElemWidth, columnHeaderHeight - 4, newJRDesignExpression(grpReportColumn), HAlignType.RIGHT);;
+                                totalElemWidth, columnHeaderHeight - 4, newJRDesignExpression(grpReportColumn), HAlignType.RIGHT);
                         groupFooterBand.addElement(jRDesignElement);
                     }
                 }
@@ -274,24 +274,30 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
         }
 
         // Construct final summary if necessary
-        boolean isGrandSummation = false; // TODO Get from report object
+        final boolean isGrandSummation = report.isShowGrandFooter();
         if (isGrandSummation && !summationColumnList.isEmpty()) {
+            final int grandSummaryHeight = columnHeaderHeight * 2;
             JRDesignBand summaryBand = new JRDesignBand();
-            summaryBand.setHeight(columnHeaderHeight);
+            summaryBand.setHeight(grandSummaryHeight);
 
             ThemeColors grandTheme = theme.getGrandSummaryTheme();
             JRDesignRectangle jRDesignRectangle =
-                    newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth, columnHeaderHeight, grandTheme);
+                    newJRDesignRectangle(jasperDesign, 0, 2, actualColumnWidth, grandSummaryHeight - 2, grandTheme);
             summaryBand.addElement(jRDesignRectangle);
 
+            int sumStartX = actualColumnWidth;
             for (ReportColumn sumReportColumn : summationColumnList) {
                 JRDesignVariable sumJRDesignVariable = newReportSumJRDesignVariable(jasperDesign, sumReportColumn);
                 JRDesignElement jRDesignElement = detailJRElementMap.get(sumReportColumn);
 
                 JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
                         grandTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
+                int sumX = jRDesignElement.getX();
+                if (sumStartX > sumX) {
+                    sumStartX = sumX;
+                }
 
-                sumJRDesignElement.setX(jRDesignElement.getX());
+                sumJRDesignElement.setX(sumX);
                 sumJRDesignElement.setY(jRDesignElement.getY());
                 sumJRDesignElement.setWidth(jRDesignElement.getWidth());
                 sumJRDesignElement.setHeight(columnHeaderHeight - (4));
@@ -306,6 +312,19 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 }
                 summaryBand.addElement(sumJRDesignElement);
             }
+            
+            
+            // Total legend
+            final int totalElemWidth = actualColumnWidth / 4;
+            sumStartX -= totalElemWidth;
+            if (sumStartX >= 0) {
+                JRDesignExpression totalExpression = newJRDesignExpression(
+                        "$V{REPORT_COUNT} + \" line item(s)  Grand Total :\"");
+                JRDesignElement jRDesignElement = newJRDesignTextField(grandTheme, columnStyles.getNormalStyle(), sumStartX, 2,
+                        totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
+                summaryBand.addElement(jRDesignElement);
+            }
+            
             jasperDesign.setSummary(summaryBand);
         }
     }

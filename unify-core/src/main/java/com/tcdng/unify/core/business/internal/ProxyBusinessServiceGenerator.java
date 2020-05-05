@@ -21,6 +21,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyPluginInfo;
 import com.tcdng.unify.core.business.BusinessService;
+import com.tcdng.unify.core.constant.DeploymentMode;
 
 /**
  * Proxy business service generator by extension class generator.
@@ -63,14 +64,14 @@ public interface ProxyBusinessServiceGenerator extends ProxyBusinessServiceMetho
      *            the business service type
      * @param pluginsBySocketMap
      *            plug-ins by socket name
-     * @param clusterMode
-     *            Flag indicates generation should be done for cluster mode
+     * @param deploymentMode
+     *            deployment mode for which code generation should be done
      * @return the generated java code
      * @throws UnifyException
      *             if an error occurs
      */
     String generateProxyBusinessServiceSource(String name, Class<? extends BusinessService> businessServiceClazz,
-            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, boolean clusterMode) throws UnifyException;
+            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, DeploymentMode deploymentMode) throws UnifyException;
 
     /**
      * Generates, compiles and loads a business service proxy class.

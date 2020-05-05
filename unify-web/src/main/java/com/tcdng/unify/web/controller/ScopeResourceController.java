@@ -25,6 +25,7 @@ import com.tcdng.unify.core.resource.ResourceGenerator;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.AbstractResourceController;
 import com.tcdng.unify.web.annotation.RequestParameter;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Resource controller for fetching resources from application or session scope.
@@ -46,7 +47,7 @@ public class ScopeResourceController extends AbstractResourceController {
     private Object resource;
 
     public ScopeResourceController() {
-        super(false);
+        super(Secured.FALSE);
     }
 
     @Override

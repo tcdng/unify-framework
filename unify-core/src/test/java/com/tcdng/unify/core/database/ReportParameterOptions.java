@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.Table;
  */
 @Policy("testentitynorest-policy")
 @Table(name = "REPORT_PARAMETEROPT")
-public class ReportParameterOptions extends AbstractTestTableEntity {
+public class ReportParameterOptions extends AbstractTestVersionedTableEntity {
 
     @ForeignKey(ReportParameter.class)
     private Long reportParameterId;

@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
  * XML object streamer implementation test.
@@ -73,7 +74,7 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
                 (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(book, baos, null);
+        xosm.marshal(book, baos, PrintFormat.NONE);
         assertEquals(BOOK_XML, new String(baos.toByteArray()));
     }
 
@@ -94,7 +95,7 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, null);
+        xosm.marshal(author, baos, PrintFormat.NONE);
     }
 
     @Test
@@ -104,7 +105,7 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, null);
+        xosm.marshal(author, baos, PrintFormat.NONE);
         Author unAuthor = xosm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
         byte[] picture = unAuthor.getPicture();
         assertNotNull(picture);
@@ -127,7 +128,7 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         author.setBooks(books);
         author.setAccount(account);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, null);
+        xosm.marshal(author, baos, PrintFormat.NONE);
     }
 
     @Test
@@ -142,7 +143,7 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         author.setBooks(books);
         author.setAccount(account);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, null);
+        xosm.marshal(author, baos, PrintFormat.NONE);
         Author unAuthor = xosm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
         byte[] picture = unAuthor.getPicture();
         assertNotNull(picture);

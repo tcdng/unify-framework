@@ -112,7 +112,7 @@ public class FormWriter extends AbstractContainerWriter {
                     widget.setValueStore(valueStore);
                 }
 
-                writer.writeBehaviour(widget);
+                writer.writeBehavior(widget);
             }
         }
     }

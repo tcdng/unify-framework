@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.ResponseWriter;
 public class DocViewResponse extends AbstractJsonPageControllerResponse {
 
     public DocViewResponse() {
-        super("docViewHdl");
+        super("docViewHdl", false);
     }
 
     @Override

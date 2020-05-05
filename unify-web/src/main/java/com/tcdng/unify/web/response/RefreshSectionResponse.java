@@ -35,7 +35,7 @@ import com.tcdng.unify.web.ui.data.RefreshSection;
 public class RefreshSectionResponse extends AbstractJsonPageControllerResponse {
 
     public RefreshSectionResponse() {
-        super("refreshSectionHdl");
+        super("refreshSectionHdl", false);
     }
 
     @Override

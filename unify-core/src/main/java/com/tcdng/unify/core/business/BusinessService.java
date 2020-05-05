@@ -20,6 +20,7 @@ import java.util.Date;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
+import com.tcdng.unify.core.database.Entity;
 
 /**
  * Interface that must be implemented by any class that is to be considered a
@@ -40,6 +41,17 @@ public interface BusinessService extends UnifyComponent {
      *             if an error occurs
      */
     DatabaseTransactionManager tm() throws UnifyException;
+
+    /**
+     * Gets a new instance of an entity extension type.
+     * 
+     * @param entityClass
+     *            the extended entity type
+     * @return a new instance of extension type if entity is extended otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException;
 
     /**
      * Returns the today's date.

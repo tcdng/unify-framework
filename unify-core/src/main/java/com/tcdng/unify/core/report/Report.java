@@ -84,6 +84,8 @@ public class Report {
 
     private boolean showParameterHeader;
 
+    private boolean showGrandFooter;
+
     private boolean underlineRows;
 
     private boolean shadeOddRows;
@@ -95,7 +97,7 @@ public class Report {
             List<ReportColumn> columns, ReportFilter filter, ReportFormat format, String layout,
             ReportParameters reportParameters, int pageWidth, int pageHeight, String summationLegend,
             String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
-            boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
+            boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader, boolean showGrandFooter,
             boolean underlineRows, boolean shadeOddRows, boolean landscape) {
         this.code = code;
         this.title = title;
@@ -121,6 +123,7 @@ public class Report {
         this.printGroupColumnNames = printGroupColumnNames;
         this.invertGroupColors = invertGroupColors;
         this.showParameterHeader = showParameterHeader;
+        this.showGrandFooter = showGrandFooter;
         this.underlineRows = underlineRows;
         this.shadeOddRows = shadeOddRows;
         this.landscape = landscape;
@@ -232,6 +235,10 @@ public class Report {
 
     public boolean isShowParameterHeader() {
         return showParameterHeader;
+    }
+
+    public boolean isShowGrandFooter() {
+        return showGrandFooter;
     }
 
     public boolean isUnderlineRows() {
@@ -367,6 +374,8 @@ public class Report {
         private boolean invertGroupColors;
 
         private boolean showParameterHeader;
+        
+        private boolean showGrandFooter;
 
         private boolean underlineRows;
 
@@ -384,6 +393,7 @@ public class Report {
             this.printColumnNames = true;
             this.printGroupColumnNames = true;
             this.showParameterHeader = true;
+            this.showGrandFooter = false;
         }
 
         public Builder code(String code) {
@@ -481,6 +491,11 @@ public class Report {
             return this;
         }
 
+        public Builder showGrandFooter(boolean showGrandFooter) {
+            this.showGrandFooter = showGrandFooter;
+            return this;
+        }
+
         public Builder underlineRows(boolean underlineRows) {
             this.underlineRows = underlineRows;
             return this;
@@ -550,7 +565,7 @@ public class Report {
             }
 
             if (rootFilter != null) {
-                throw new IllegalStateException("Can not have multiple root compound filter.");
+                throw new IllegalStateException("Can not have multiple rootPolicies compound filter.");
             }
 
             ReportFilter reportFilter = new ReportFilter(op);
@@ -617,7 +632,7 @@ public class Report {
             Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
                     table, Collections.unmodifiableList(joins), columns, rootFilter, format, layout, reportParameters,
                     pageWidth, pageHeight, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,
-                    printGroupColumnNames, invertGroupColors, showParameterHeader, underlineRows, shadeOddRows,
+                    printGroupColumnNames, invertGroupColors, showParameterHeader, showGrandFooter, underlineRows, shadeOddRows,
                     landscape);
             return report;
         }

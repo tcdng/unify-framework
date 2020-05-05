@@ -84,7 +84,7 @@ public class UnifyComponentSettings {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\tsettings = {\n");
+        sb.append("\t{\n");
         boolean isAppendSymbol = false;
         for (Map.Entry<String, Setting> entry : settings.entrySet()) {
             if (isAppendSymbol) {

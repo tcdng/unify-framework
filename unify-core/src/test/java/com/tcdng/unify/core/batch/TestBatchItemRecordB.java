@@ -18,7 +18,7 @@ package com.tcdng.unify.core.batch;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.database.AbstractTestTableEntity;
+import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
 
 /**
  * Test batch item record B.
@@ -27,7 +27,7 @@ import com.tcdng.unify.core.database.AbstractTestTableEntity;
  * @since 1.0
  */
 @Table(name = "TESTBATCHITEMB")
-public class TestBatchItemRecordB extends AbstractTestTableEntity implements BatchItemRecord {
+public class TestBatchItemRecordB extends AbstractTestVersionedTableEntity implements BatchItemRecord {
 
     @ForeignKey(TestBatchRecordB.class)
     private Long batchId;

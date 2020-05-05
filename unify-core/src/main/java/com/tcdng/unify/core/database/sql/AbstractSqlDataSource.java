@@ -79,7 +79,11 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     private SqlConnectionPool sqlConnectionPool;
 
     @Override
-    public String getAppSchema() {
+    public String getAppSchema() throws UnifyException {
+        if(StringUtils.isBlank(appSchema)) {
+            return getDialect().getDefaultSchema();
+        }
+        
         return appSchema;
     }
 
@@ -422,6 +426,10 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     protected Authentication getPasswordAuthentication() {
         return passwordAuthentication;
+    }
+
+    protected void setAppSchema(String appSchema) {
+        this.appSchema = appSchema;
     }
 
     protected String getUsername() {

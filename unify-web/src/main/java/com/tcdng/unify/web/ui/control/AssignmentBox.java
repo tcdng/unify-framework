@@ -77,6 +77,7 @@ public class AssignmentBox extends AbstractMultiControl {
 
     @Override
     public void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();
         String filterList1 = getUplAttribute(String.class, "filterList1");
         if (StringUtils.isNotBlank(filterList1)) {
             filterCtrl1 = (Control) addInternalChildControl("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
@@ -99,15 +100,15 @@ public class AssignmentBox extends AbstractMultiControl {
                 constructMultiSelect("assignList", "assignListKey", "assignListDesc", "assignedSelList", msStyle));
         unassignedSelCtrl = (Control) addInternalChildControl(constructMultiSelect("unassignList", "unassignListKey",
                 "unassignListDesc", "unassignedSelList", msStyle));
-        assignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assign}");
-        assignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assignall}");
-        unassignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassign}");
-        unassignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassignall}");
+        assignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assign} debounce:false");
+        assignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.assignall} debounce:false");
+        unassignCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassign} debounce:false");
+        unassignAllCtrl = addInternalChildControl("!ui-button styleClass:$e{abbutton} caption:$m{button.unassignall} debounce:false");
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void updateState() throws UnifyException {
+    public void updateInternalState() throws UnifyException {
         List<String> valueList = getValue(List.class, String.class);
         if (assignedIdList != valueList) {
             assignedIdList = valueList;

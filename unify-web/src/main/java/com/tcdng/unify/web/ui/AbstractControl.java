@@ -127,11 +127,6 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
     }
 
     @Override
-    public void updateState() throws UnifyException {
-
-    }
-
-    @Override
     public void setColorMode(ControlColorMode colorMode) {
         this.colorMode = colorMode;
     }

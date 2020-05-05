@@ -22,15 +22,22 @@ import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
+import com.tcdng.unify.core.database.sql.SqlCriteriaPolicy;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
@@ -40,6 +47,7 @@ import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.LongPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ShortPolicy;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -51,8 +59,32 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(name = SqlDialectNameConstants.ORACLE, description = "$m{sqldialect.oracledb}")
 public class OracleDialect extends AbstractSqlDataSourceDialect {
 
+    private static final OracleDataSourceDialectPolicies sqlDataSourceDialectPolicies =
+            new OracleDataSourceDialectPolicies();
+
+    static {
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
+        populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.BLOB, new OracleBlobPolicy());
+        tempMap1.put(ColumnType.CLOB, new OracleClobPolicy());
+        tempMap1.put(ColumnType.LONG, new OracleLongPolicy());
+        tempMap1.put(ColumnType.INTEGER, new OracleIntegerPolicy());
+        tempMap1.put(ColumnType.SHORT, new OracleShortPolicy());
+
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
+        populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
+
+        sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
+        sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
+    }
+
     public OracleDialect() {
         super(false); // useCallableFunctionMode
+    }
+
+    @Override
+    public String getDefaultSchema() {
+        return null;
     }
 
     @Override
@@ -71,16 +103,11 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public int getMaxClauseValues() {
-        return 1000;
-    }
-
-    @Override
     public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -91,10 +118,10 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -106,7 +133,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, boolean format)
+            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
         if (sqlColumnAlterInfo.isAltered()) {
             List<String> sqlList = new ArrayList<String>();
@@ -126,7 +153,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
             }
 
             sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-            if (format) {
+            if (format.isPretty()) {
                 sb.append(getLineSeparator());
             } else {
                 sb.append(' ');
@@ -143,10 +170,10 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
     @Override
     public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            boolean format) throws UnifyException {
+            PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format) {
+        if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(' ');
@@ -187,17 +214,47 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    protected void onInitialize() throws UnifyException {
-        super.onInitialize();
+    protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
+        return sqlDataSourceDialectPolicies;
+    }
 
-        setDataTypePolicy(ColumnType.BLOB, new OracleBlobPolicy());
-        setDataTypePolicy(ColumnType.CLOB, new OracleClobPolicy());
-        setDataTypePolicy(ColumnType.LONG, new OracleLongPolicy());
-        setDataTypePolicy(ColumnType.INTEGER, new OracleIntegerPolicy());
-        setDataTypePolicy(ColumnType.SHORT, new OracleShortPolicy());
+    private static class OracleDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
 
-        setTimestampFormat(
-                new SimpleDateFormat("('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))"));
+        public OracleDataSourceDialectPolicies() {
+            timestampFormat =
+                    new SimpleDateFormat("('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))");
+        }
+
+        public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+            this.sqlDataTypePolicies = sqlDataTypePolicies;
+        }
+
+        public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+            this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+        }
+
+        @Override
+        public int getMaxClauseValues() {
+            return 1000;
+        }
+
+        @Override
+        protected String concat(String... expressions) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(");
+            boolean appSym = false;
+            for (String expression : expressions) {
+                if (appSym) {
+                    sb.append(" || ");
+                } else {
+                    appSym = true;
+                }
+
+                sb.append(expression);
+            }
+            sb.append(")");
+            return sb.toString();
+        }
     }
 }
 
@@ -258,7 +315,8 @@ class OracleShortPolicy extends ShortPolicy {
 class OracleBlobPolicy extends BlobPolicy {
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset)
+            throws Exception {
         if (data == null || ((byte[]) data).length == 0) {
             ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
         } else {
@@ -272,7 +330,8 @@ class OracleBlobPolicy extends BlobPolicy {
 class OracleClobPolicy extends ClobPolicy {
 
     @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset) throws Exception {
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset)
+            throws Exception {
         if (data == null || ((String) data).isEmpty()) {
             ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
         } else {

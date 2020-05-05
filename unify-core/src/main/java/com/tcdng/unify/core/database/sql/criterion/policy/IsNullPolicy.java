@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * Is null operator policy.
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class IsNullPolicy extends ZeroParameterPolicy {
 
-    public IsNullPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" IS NULL ", sqlDataSourceDialect);
+    public IsNullPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" IS NULL ", rootPolicies);
     }
 }

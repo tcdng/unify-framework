@@ -18,7 +18,7 @@ package com.tcdng.unify.web;
 import com.tcdng.unify.core.constant.MimeType;
 
 /**
- * Result mapping data object.
+ * AggregateItem mapping data object.
  * 
  * @author Lateef Ojulari
  * @since 1.0

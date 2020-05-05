@@ -385,26 +385,26 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                         // document controller
                         if (!pbbInfo.hasResultWithName(resultName) && !page.isDocument()) {
                             if (docPageController != null) {
-                                logDebug("Result with name [{0}] not found for controller [{1}]...", resultName,
+                                logDebug("AggregateItem with name [{0}] not found for controller [{1}]...", resultName,
                                         pageController.getName());
                                 respPathParts = docPathParts;
                                 pageController = docPageController;
                                 page = loadRequestPage(respPathParts);
                                 pbbInfo = pageControllerInfoMap.get(pageController.getName());
-                                logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
+                                logDebug("AggregateItem with name [{0}] routed to controller [{1}]...", resultName,
                                         pageController.getName());
                             }
                         }
 
                         // Route to common utilities if necessary
                         if (!pbbInfo.hasResultWithName(resultName)) {
-                            logDebug("Result with name [{0}] not found for controller [{1}]...", resultName,
+                            logDebug("AggregateItem with name [{0}] not found for controller [{1}]...", resultName,
                                     pageController.getName());
                             respPathParts = pathInfoRepository.getPathParts(commonUtilitiesControllerName);
                             pageController = (PageController<?>) getController(respPathParts, false);
                             page = loadRequestPage(respPathParts);
                             pbbInfo = pageControllerInfoMap.get(pageController.getName());
-                            logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
+                            logDebug("AggregateItem with name [{0}] routed to controller [{1}]...", resultName,
                                     pageController.getName());
                         }
                     }
@@ -502,6 +502,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
         defaultResultMap.put(ResultMappingConstants.OPEN,
                 new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
                         (PageControllerResponse) getUplComponent(defaultLocale, "!loadcontentresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 
@@ -512,6 +513,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
         defaultResultMap.put(ResultMappingConstants.CLOSE,
                 new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
                         (PageControllerResponse) getUplComponent(defaultLocale, "!unloadcontentresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 

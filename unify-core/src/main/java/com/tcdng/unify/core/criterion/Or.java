@@ -24,8 +24,8 @@ package com.tcdng.unify.core.criterion;
 public class Or extends AbstractCompoundRestriction {
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.OR;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.OR;
     }
 
 }

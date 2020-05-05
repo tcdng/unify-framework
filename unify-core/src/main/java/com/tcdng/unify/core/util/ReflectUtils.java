@@ -47,6 +47,8 @@ import com.tcdng.unify.core.data.WrappedData;
  */
 public final class ReflectUtils {
 
+    // TODO Clear classes for dynamic class loaders to prevent leakage.
+
     private static final FactoryMap<Class<?>, Map<String, Field>> declaredFieldMap;
 
     private static final FactoryMap<Class<?>, Map<String, GetterSetterInfo>> caseSensitiveGetterSetterMap;
@@ -56,6 +58,8 @@ public final class ReflectUtils {
     private static final FactoryMap<Class<?>, List<String>> beanFieldNamesMap;
 
     private static final FactoryMap<Class<?>, List<String>> beanNestedFieldNamesMap;
+
+    private static final FactoryMap<Class<?>, List<PropertyInfo>> beanNestedPropertiesWithGetterMap;
 
     private static final FactoryMap<Class<?>, ConstructorInfo> largeConstructorMap;
 
@@ -128,50 +132,53 @@ public final class ReflectUtils {
                 Method[] methods = beanClass.getMethods();
                 Set<String> fieldNames = declaredFieldMap.get(beanClass).keySet();
                 for (Method method : methods) {
-                    if (method.isBridge()) {
+                    if (method.isBridge() || method.isSynthetic()) {
                         continue;
                     }
 
                     String name = method.getName();
                     if (!void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
                         boolean isIs = false;
-                        if (name.length() >= 3 && (name.startsWith("get") || (isIs = name.startsWith("is")))) {
+                        if ((name.length() > 3 && (name.startsWith("get"))
+                                || (isIs = name.length() > 2 && name.startsWith("is")))) {
                             int index = 3;
                             if (isIs) {
                                 index = 2;
                             }
 
-                            StringBuilder sb = new StringBuilder();
-                            sb.append(Character.toLowerCase(name.charAt(index)));
-                            sb.append(name.substring(index + 1));
-                            String fieldName = sb.toString();
-                            GetterSetterInfo gsInfo = map.get(fieldName);
-                            Class<?> argumentType = ReflectUtils.getArgumentType(method.getGenericReturnType(), 0);
-                            boolean isField = fieldNames.contains(fieldName);
-                            if (gsInfo == null) {
-                                if ("getData".equals(name) && WrappedData.class.isAssignableFrom(beanClass)) {
-                                    WrappedData<?> wrappedBean =
-                                            ReflectUtils.newInstance((Class<? extends WrappedData>) beanClass);
-                                    map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
-                                            wrappedBean.getDataType(), null, false));
+                            if (Character.isUpperCase(name.charAt(index))) {
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(Character.toLowerCase(name.charAt(index)));
+                                sb.append(name.substring(index + 1));
+                                String fieldName = sb.toString();
+                                GetterSetterInfo gsInfo = map.get(fieldName);
+                                Class<?> argumentType = ReflectUtils.getArgumentType(method.getGenericReturnType(), 0);
+                                boolean isField = fieldNames.contains(fieldName);
+                                if (gsInfo == null) {
+                                    if ("getData".equals(name) && WrappedData.class.isAssignableFrom(beanClass)) {
+                                        WrappedData<?> wrappedBean =
+                                                ReflectUtils.newInstance((Class<? extends WrappedData>) beanClass);
+                                        map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
+                                                wrappedBean.getDataType(), null, false));
+                                    } else {
+                                        map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
+                                                method.getReturnType(), argumentType, isField));
+                                    }
                                 } else {
-                                    map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
+                                    if (!gsInfo.getType().equals(method.getReturnType())
+                                            || ((gsInfo.getArgumentType() != null)
+                                                    && !gsInfo.getArgumentType().equals(argumentType))) {
+                                        throw new UnifyException(
+                                                UnifyCoreErrorConstants.REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER,
+                                                fieldName, beanClass);
+                                    }
+                                    map.put(fieldName, new GetterSetterInfo(fieldName, method, gsInfo.getSetter(),
                                             method.getReturnType(), argumentType, isField));
                                 }
-                            } else {
-                                if (!gsInfo.getType().equals(method.getReturnType())
-                                        || ((gsInfo.getArgumentType() != null)
-                                                && !gsInfo.getArgumentType().equals(argumentType))) {
-                                    throw new UnifyException(
-                                            UnifyCoreErrorConstants.REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER, fieldName,
-                                            beanClass);
-                                }
-                                map.put(fieldName, new GetterSetterInfo(fieldName, method, gsInfo.getSetter(),
-                                        method.getReturnType(), argumentType, isField));
                             }
                         }
                     } else if (void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 1) {
-                        if (name.length() > 3 && name.startsWith("set")) {
+                        if (name.length() > 3 && Character.isUpperCase(name.charAt(3)) && name.startsWith("set")) {
                             StringBuilder sb = new StringBuilder();
                             sb.append(Character.toLowerCase(name.charAt(3)));
                             sb.append(name.substring(4));
@@ -229,8 +236,10 @@ public final class ReflectUtils {
                 List<String> names = new ArrayList<String>();
                 for (String name : beanFieldNamesMap.get(beanClass)) {
                     GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(name);
-                    for (String childName : beanNestedFieldNamesMap.get(gsi.getType())) {
-                        names.add(name + '.' + childName);
+                    if (!beanNestedFieldNamesMap.isKey(gsi.getType())) {
+                        for (String childName : beanNestedFieldNamesMap.get(gsi.getType())) {
+                            names.add(name + '.' + childName);
+                        }
                     }
 
                     names.add(name);
@@ -246,6 +255,38 @@ public final class ReflectUtils {
 
                 Collections.sort(names);
                 return Collections.unmodifiableList(names);
+            }
+
+        };
+
+        beanNestedPropertiesWithGetterMap = new FactoryMap<Class<?>, List<PropertyInfo>>() {
+
+            @Override
+            protected List<PropertyInfo> create(Class<?> beanClass, Object... params) throws Exception {
+                List<PropertyInfo> propertyInfoList = new ArrayList<PropertyInfo>();
+                Set<Class<?>> cycleCheck = new HashSet<Class<?>>();
+                extractPropertiesWithGetters(cycleCheck, propertyInfoList, beanClass, null);
+                Collections.sort(propertyInfoList);
+                return Collections.unmodifiableList(propertyInfoList);
+            }
+
+            private void extractPropertiesWithGetters(Set<Class<?>> cycleCheck, List<PropertyInfo> propertyInfoList,
+                    Class<?> beanClass, String parentName) throws Exception {
+                cycleCheck.add(beanClass);
+                for (Field field : declaredFieldMap.get(beanClass).values()) {
+                    GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(field.getName());
+                    if (gsi != null && gsi.isGetter()) {
+                        String name = gsi.getName();
+                        if (parentName != null) {
+                            name = parentName + '.' + name;
+                        }
+
+                        propertyInfoList.add(new PropertyInfo(name, gsi.getType(), gsi.getArgumentType()));
+                        if (!cycleCheck.contains(gsi.getType())) {
+                            extractPropertiesWithGetters(cycleCheck, propertyInfoList, gsi.getType(), name);
+                        }
+                    }
+                }
             }
 
         };
@@ -411,7 +452,7 @@ public final class ReflectUtils {
                     propertyName);
         }
     }
-    
+
     /**
      * Sets nested bean property by long name. Does a deep get until the last bean
      * then sets property which is the last name in supplied long name. For instance
@@ -582,13 +623,14 @@ public final class ReflectUtils {
      * Returns a list of all the bean compliant nested field names of a supplied
      * type.
      * 
-     * @param beanClass
-     *            the type
+     * @param beanClassName
+     *            the name of the bean class
+     * @return a list of nested field names
      * @throws UnifyException
      *             if an error occurs
      */
-    public static List<String> getBeanCompliantNestedFieldNames(String beanClass) throws UnifyException {
-        return beanNestedFieldNamesMap.get(ReflectUtils.getClassForName(beanClass));
+    public static List<String> getBeanCompliantNestedFieldNames(String beanClassName) throws UnifyException {
+        return beanNestedFieldNamesMap.get(ReflectUtils.getClassForName(beanClassName));
     }
 
     /**
@@ -597,11 +639,40 @@ public final class ReflectUtils {
      * 
      * @param beanClass
      *            the bean type
+     * @return a list of nested field names
      * @throws UnifyException
      *             if an error occurs
      */
     public static List<String> getBeanCompliantNestedFieldNames(Class<?> beanClass) throws UnifyException {
         return beanNestedFieldNamesMap.get(beanClass);
+    }
+
+    /**
+     * Returns a list of all the nested properties with getters of a supplied type.
+     * 
+     * @param beanClassName
+     *            the bean class name
+     * @return a list of properties with getters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static List<PropertyInfo> getBeanCompliantNestedPropertiesWithGetters(String beanClassName)
+            throws UnifyException {
+        return beanNestedPropertiesWithGetterMap.get(ReflectUtils.getClassForName(beanClassName));
+    }
+
+    /**
+     * Returns a list of all the nested properties with getters of a supplied type.
+     * 
+     * @param beanClass
+     *            the bean type
+     * @return a list of properties with getters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static List<PropertyInfo> getBeanCompliantNestedPropertiesWithGetters(Class<?> beanClass)
+            throws UnifyException {
+        return beanNestedPropertiesWithGetterMap.get(beanClass);
     }
 
     /**
@@ -829,7 +900,7 @@ public final class ReflectUtils {
         if (a.getClass() != b.getClass()) {
             return false;
         }
-        
+
         Set<String> ignoreSet = new HashSet<String>();
         Collections.addAll(ignoreSet, ignore);
         return ReflectUtils.innerBeanEquals(a, b, ignoreSet);

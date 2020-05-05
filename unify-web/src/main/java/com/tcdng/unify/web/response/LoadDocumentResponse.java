@@ -36,6 +36,6 @@ public class LoadDocumentResponse extends AbstractPageControllerResponse {
         logDebug("Preparing load document response: path ID = [{0}]", page.getPathId());
         Document document = (Document) page;
         writer.writeStructureAndContent(document);
-        writer.writeBehaviour(document);
+        writer.writeBehavior(document);
     }
 }

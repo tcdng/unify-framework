@@ -63,7 +63,7 @@ public class SchedulableTaskListCommand extends AbstractZeroParamsListCommand {
                     }
                 }
 
-                DataUtils.sort(list, Listable.class, "listDescription", true);
+                DataUtils.sortAscending(list, Listable.class, "listDescription");
                 return list;
             }
         };

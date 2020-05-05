@@ -21,15 +21,15 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class IsNull extends AbstractNoValueRestriction {
+public class IsNull extends AbstractZeroParamRestriction {
 
     public IsNull(String propertyName) {
         super(propertyName);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.IS_NULL;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.IS_NULL;
     }
 
 }

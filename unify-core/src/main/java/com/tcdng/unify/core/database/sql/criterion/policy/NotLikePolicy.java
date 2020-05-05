@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlLikeType;
 
 /**
@@ -27,16 +27,19 @@ import com.tcdng.unify.core.database.sql.SqlLikeType;
  */
 public class NotLikePolicy extends SingleParameterPolicy {
 
-    public NotLikePolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" NOT LIKE ", sqlDataSourceDialect);
+    private SqlLikeType type;
+    
+    public NotLikePolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        this(SqlLikeType.CONTAINS, rootPolicies);
+    }
+    
+    public NotLikePolicy(SqlLikeType type, SqlDataSourceDialectPolicies rootPolicies) {
+        super(" NOT LIKE ", rootPolicies);
+        this.type = type;
     }
 
     @Override
-    protected Object resolveParam(Object param) throws UnifyException{
-        return resolveParam(SqlLikeType.CONTAINS, param);
-    }
-    
-    protected String resolveParam(SqlLikeType type, Object param) throws UnifyException{
-        return getSqlDataSourceDialect().generateLikeParameter(type, param);
+    protected Object resolveParam(String tableName, Object param) throws UnifyException{
+        return getRootPolicies().generateLikeParameter(type, tableName, param);
     }
 }

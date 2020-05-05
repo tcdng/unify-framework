@@ -50,7 +50,7 @@ public class CurrencyListCommand extends AbstractListCommand<CurrencyListParams>
                     list.add(new ListData(currency.getCurrencyCode(), currency.getDisplayName(locale)));
                 }
 
-                DataUtils.sort(list, ListData.class, "listDescription", true);
+                DataUtils.sortAscending(list, ListData.class, "listDescription");
                 return list;
             }
 
@@ -66,7 +66,7 @@ public class CurrencyListCommand extends AbstractListCommand<CurrencyListParams>
                 list.add(new ListData(currency.getCurrencyCode(), currency.getDisplayName(locale)));
             }
 
-            DataUtils.sort(list, ListData.class, "listDescription", true);
+            DataUtils.sortAscending(list, ListData.class, "listDescription");
             return list;
         }
 

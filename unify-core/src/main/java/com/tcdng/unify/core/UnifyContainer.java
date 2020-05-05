@@ -167,9 +167,9 @@ public class UnifyContainer {
     private String accessKey;
 
     private Date startTime;
-    
+
     private Locale applicationLocale;
-    
+
     private TimeZone applicationTimeZone;
 
     private boolean toConsole;
@@ -277,10 +277,10 @@ public class UnifyContainer {
 
         toConsole = true;
         if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE) != null) {
-            toConsole = Boolean.valueOf(
-                    String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE)));
+            toConsole = Boolean
+                    .valueOf(String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE)));
         }
-        
+
         // Banner
         List<String> banner = getApplicationBanner();
         if (!banner.isEmpty()) {
@@ -299,6 +299,24 @@ public class UnifyContainer {
         toConsole("Container initialization started...");
         toConsole("Validating and loading configuration...");
         for (UnifyComponentConfig unifyComponentConfig : ucc.getComponentConfigs()) {
+            // Check conflicts
+            if (unifyComponentConfig.isWithConfict()) {
+                StringBuilder sb = new StringBuilder();
+                boolean appendSym = false;
+                for (UnifyComponentConfig conflictConfig : unifyComponentConfig.getConflictList()) {
+                    if (appendSym) {
+                        sb.append(", ");
+                    } else {
+                        appendSym = true;
+                    }
+
+                    sb.append(conflictConfig);
+                }
+
+                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_CONFLICTING_COMPONENTS_FOUND_IN_CONFIG,
+                        unifyComponentConfig, sb.toString());
+            }
+
             // Validate configuration
             Class<?> type = unifyComponentConfig.getType();
             for (String property : unifyComponentConfig.getSettings().getPropertyNames()) {
@@ -458,7 +476,8 @@ public class UnifyContainer {
             // Generate and install proxy business service objects
             logInfo("Generating and installing proxy business service objects...");
             for (UnifyComponentConfig unifyComponentConfig : managedBusinessServiceConfigList) {
-                Map<String, List<UnifyPluginInfo>> pluginMap = allPluginsBySocketMap.get(unifyComponentConfig.getName());
+                Map<String, List<UnifyPluginInfo>> pluginMap =
+                        allPluginsBySocketMap.get(unifyComponentConfig.getName());
                 if (pluginMap == null) {
                     pluginMap = Collections.emptyMap();
                 }
@@ -480,12 +499,14 @@ public class UnifyContainer {
 
             // Cluster manager
             clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
-            userSessionManager = (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
+            userSessionManager =
+                    (UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
 
             // Initialize utilities
             ImageUtils.scanForPlugins();
-            DataUtils.registerDefaultFormatters((DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
-            
+            DataUtils.registerDefaultFormatters(
+                    (DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
+
             // Run application startup service
             toConsole("Initializing application bootup service...");
             String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
@@ -510,15 +531,17 @@ public class UnifyContainer {
                 getComponent(componentEntry.getKey());
                 for (Map.Entry<String, Periodic> periodicEntry : componentEntry.getValue().entrySet()) {
                     Periodic pa = periodicEntry.getValue();
-                    // Skip if periodic should run in cluster mode and container is not in cluster mode
+                    // Skip if periodic should run in cluster mode and container is not in cluster
+                    // mode
                     if (pa.clusterMode() && !clusterMode) {
                         continue;
                     }
-                    
+
                     PeriodicType periodicType = pa.value();
                     String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
-                    TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType, componentEntry.getKey(),
-                            periodicEntry.getKey(), taskStatusLoggerName, PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC);
+                    TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType,
+                            componentEntry.getKey(), periodicEntry.getKey(), taskStatusLoggerName,
+                            PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC);
                     periodicTaskMonitorList.add(taskMonitor);
                 }
             }
@@ -733,7 +756,7 @@ public class UnifyContainer {
                 componentList.add((T) getComponent(iuc.getName()));
             }
         }
-        
+
         return componentList;
     }
 
@@ -1155,7 +1178,7 @@ public class UnifyContainer {
                         List<String> names = namelessConfigurableSuggestions.get(field.getType());
                         if (names.size() == 1) { // Check perfect suggestion
                             value = names.get(0);
-                        } else if(names.size() > 1) {
+                        } else if (names.size() > 1) {
                             // TODO throw exception to many possible types to inject
                         }
                     }
@@ -1284,6 +1307,7 @@ public class UnifyContainer {
         Class<? extends BusinessService> proxyClazz =
                 bspg.generateCompileLoadProxyBusinessServiceClass(businessLogicConfig.getName(),
                         (Class<? extends BusinessService>) businessLogicConfig.getType(), pluginMap);
+        logDebug("Proxy business class [{0}] generated...", proxyClazz.getName());
         UnifyComponentConfig internalComponentConfig =
                 new UnifyComponentConfig(businessLogicConfig.getSettings(), businessLogicConfig.getName(),
                         businessLogicConfig.getDescription(), proxyClazz, businessLogicConfig.isSingleton());
@@ -1459,12 +1483,12 @@ public class UnifyContainer {
                 applicationLocale = Locale.getDefault();
             }
         }
-        
+
         return applicationLocale;
     }
 
     public TimeZone getApplicationTimeZone() throws UnifyException {
-        if(applicationTimeZone == null) {
+        if (applicationTimeZone == null) {
             String timeZone = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TIMEZONE);
             if (StringUtils.isNotBlank(timeZone)) {
                 applicationTimeZone = TimeZone.getTimeZone(timeZone);
@@ -1472,7 +1496,7 @@ public class UnifyContainer {
                 applicationTimeZone = TimeZone.getDefault();
             }
         }
-        
+
         return applicationTimeZone;
     }
 

@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
  * Not amongst operator policy.
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
  */
 public class NotAmongstPolicy extends MultipleParameterPolicy {
 
-    public NotAmongstPolicy(SqlDataSourceDialect sqlDataSourceDialect) {
-        super(" NOT IN ", sqlDataSourceDialect, " AND ");
+    public NotAmongstPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(" NOT IN ", rootPolicies, " AND ");
     }
 }

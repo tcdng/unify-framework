@@ -28,7 +28,6 @@ import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.PageAction;
 import com.tcdng.unify.web.ui.PageManager;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -61,6 +60,59 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
+        writeTagAttributesUsingStyleClass(writer, widget, widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title with leading extra
+     * style class
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesWithLeadingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagAttributesUsingStyleClass(writer, widget, extraStyleClass + " " + widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title with trailing extra
+     * style class
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesWithTrailingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagAttributesUsingStyleClass(writer, widget, widget.getStyleClass() + " " + extraStyleClass);
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param styleClass
+     *            the style class to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesUsingStyleClass(ResponseWriter writer, Widget widget, String styleClass)
+            throws UnifyException {
         writer.write(" id=\"").write(widget.getId()).write("\"");
 
         String groupId = widget.getGroupId();
@@ -68,7 +120,118 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             writer.write(" name=\"").write(groupId).write("\"");
         }
 
-        writer.write(" class=\"").write(widget.getStyleClass());
+        writer.write(" class=\"").write(styleClass);
+        String valStyleClass = widget.getStyleClassValue();
+        if (valStyleClass != null) {
+            writer.write(" ").write(valStyleClass);
+        }
+        writer.write("\"");
+
+        String style = widget.getStyle();
+        if (style != null) {
+            writer.write(" style=\"").write(style).write("\"");
+        }
+
+        String title = widget.getHint();
+        if (title != null) {
+            writer.write(" title=\"").write(title).write("\"");
+        }
+
+        if (widget.isSupportDisabled()) {
+            if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
+                writer.write(" disabled");
+            }
+        }
+
+        if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
+            writer.write(" readonly");
+        }
+    }
+
+    /**
+     * Writes tag identification attributes id and name.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagIdentificationAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
+        writer.write(" id=\"").write(widget.getId()).write("\"");
+
+        String groupId = widget.getGroupId();
+        if (groupId != null) {
+            writer.write(" name=\"").write(groupId).write("\"");
+        }
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
+        writeTagVisualAttributesUsingStyleClass(writer, widget, widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title with leading extra style
+     * class.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributesWithLeadingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagVisualAttributesUsingStyleClass(writer, widget, extraStyleClass + " " + widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title with trailing extra style
+     * class.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributesWithTrailingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagVisualAttributesUsingStyleClass(writer, widget, widget.getStyleClass() + " " + extraStyleClass);
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param styleClass
+     *            the style class to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributesUsingStyleClass(ResponseWriter writer, Widget widget,
+            String styleClass) throws UnifyException {
+        writer.write(" class=\"").write(styleClass);
         String valStyleClass = widget.getStyleClassValue();
         if (valStyleClass != null) {
             writer.write(" ").write(valStyleClass);
@@ -384,6 +547,22 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     }
 
     /**
+     * Writes tag readonly attribute
+     * 
+     * @param writer
+     *            the writer to use
+     * @param widget
+     *            the widget
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagReadOnly(ResponseWriter writer, Widget widget) throws UnifyException {
+        if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
+            writer.write(" readonly");
+        }
+    }
+
+    /**
      * Writes tag id attribute.
      * 
      * @param sb
@@ -597,8 +776,6 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
 
             if (pageAction.isUplAttribute("command")) {
-                boolean isPage = Page.class.isAssignableFrom(
-                        getComponentType(getRequestContextUtil().getResponsePathParts().getControllerName()));
                 String cmd = pageAction.getUplAttribute(String.class, "command");
                 if (cmd != null) {
                     writer.write(",\"uCmdURL\":\"");
@@ -607,34 +784,28 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                     writer.write(",\"uTrgCmd\":\"").write(cmd).write("\"");
                 }
 
-                String dynamicPanelPgNm = getRequestContextUtil().getDynamicPanelPageName();
-                String targetPgNm = dynamicPanelPgNm;
-                if (isPage) {
-                    targetPgNm = pageManager.getPageName(pageAction.getParentLongName());
-                }
-
+                String targetCmdPgNm = null;
                 String commandTarget = pageAction.getUplAttribute(String.class, "target");
                 if (commandTarget != null) {
-                    targetPgNm = pageManager.getPageName(commandTarget);
+                    targetCmdPgNm = pageManager.getPageName(commandTarget);
                 }
 
-                if (targetPgNm == null) {
-                    targetPgNm = pageManager.getPageName(pageAction.getParentLongName());
+                if (targetCmdPgNm == null) {
+                    targetCmdPgNm = pageManager.getPageName(pageAction.getParentLongName());
                 }
 
-                writer.write(",\"uTrgPnl\":\"").write(targetPgNm).write("\"");
+                writer.write(",\"uTrgPnl\":\"").write(targetCmdPgNm).write("\"");
 
                 UplElementReferences uer = pageAction.getUplAttribute(UplElementReferences.class, "refresh");
                 if (uer != null) {
                     writer.write(",\"uRefreshPnls\":").writeJsonArray(pageManager.getPageNames(uer.getLongNames()));
                 } else {
-                    writer.write(",\"uRefreshPnls\":[\"");
-                    if (targetPgNm == dynamicPanelPgNm) {
-                        writer.write(getRequestContextUtil().getDynamicPanelParentPageName());
-                    } else {
-                        writer.write(targetPgNm);
+                    String targetRefreshPgNm = getRequestContextUtil().getDynamicPanelParentPageName();
+                    if (targetRefreshPgNm == null) {
+                        targetRefreshPgNm = pageManager.getPageName(pageAction.getParentLongName());
                     }
-                    writer.write("\"]");
+
+                    writer.write(",\"uRefreshPnls\":[\"").write(targetRefreshPgNm).write("\"]");
                 }
             }
 
@@ -678,7 +849,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 writer.write(",\"uIsDebounce\":");
                 writer.write(pageAction.getUplAttribute(boolean.class, "debounce"));
             }
-            
+
             if (pageAction.isUplAttribute("confirm")) {
                 String confirm = pageAction.getUplAttribute(String.class, "confirm");
                 if (StringUtils.isNotBlank(confirm)) {

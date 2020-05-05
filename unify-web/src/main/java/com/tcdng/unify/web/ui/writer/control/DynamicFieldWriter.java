@@ -45,7 +45,7 @@ public class DynamicFieldWriter extends AbstractControlWriter {
         DynamicField dynamicField = (DynamicField) widget;
         Control control = dynamicField.getControl();
         if (control != null) {
-            writer.writeBehaviour(control);
+            writer.writeBehavior(control);
         }
     }
 }

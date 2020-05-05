@@ -16,6 +16,7 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
  * Convenient base class for plain controllers.
@@ -27,7 +28,7 @@ import com.tcdng.unify.core.annotation.Singleton;
 public abstract class AbstractPlainController extends AbstractController implements PlainController {
 
     public AbstractPlainController() {
-        super(false);
+        super(Secured.FALSE);
     }
 
     @Override

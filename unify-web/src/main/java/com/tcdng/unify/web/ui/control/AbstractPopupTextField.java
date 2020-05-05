@@ -26,6 +26,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/droparrow.png}"),
+        @UplAttribute(name = "buttonSymbol", type = String.class, defaultVal = "angle-down"),
         @UplAttribute(name = "timeout", type = long.class, defaultVal = "-1"),
         @UplAttribute(name = "clearable", type = boolean.class),
         @UplAttribute(name = "popupAlways", type = boolean.class, defaultVal = "false") })
@@ -51,6 +52,10 @@ public abstract class AbstractPopupTextField extends TextField {
 
     public String getButtonImageSrc() throws UnifyException {
         return getUplAttribute(String.class, "buttonImgSrc");
+    }
+
+    public String getButtonSymbol() throws UnifyException {
+        return getUplAttribute(String.class, "buttonSymbol");
     }
 
     public long getDisplayTimeOut() throws UnifyException {
