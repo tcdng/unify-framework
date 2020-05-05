@@ -71,17 +71,17 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
         super.doWriteBehavior(writer, widget);
 
         AssignmentBox assignmentBox = (AssignmentBox) widget;
-        writer.writeBehaviour(assignmentBox.getAssignSel());
-        writer.writeBehaviour(assignmentBox.getUnassignSel());
+        writer.writeBehavior(assignmentBox.getAssignSel());
+        writer.writeBehavior(assignmentBox.getUnassignSel());
 
         Control filter1 = assignmentBox.getFilterSel1();
         if (filter1 != null) {
-            writer.writeBehaviour(filter1);
+            writer.writeBehavior(filter1);
         }
 
         Control filter2 = assignmentBox.getFilterSel2();
         if (filter2 != null) {
-            writer.writeBehaviour(filter2);
+            writer.writeBehavior(filter2);
         }
 
         // Append rigging

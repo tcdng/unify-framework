@@ -34,7 +34,7 @@ public abstract class AbstractSwitchPanelWriter extends AbstractPanelWriter {
         SwitchPanel switchPanel = (SwitchPanel) widget;
         Widget currentComponent = switchPanel.getCurrentWidget();
         if (currentComponent != null && currentComponent.isVisible()) {
-            writer.writeBehaviour(currentComponent);
+            writer.writeBehavior(currentComponent);
         }
     }
 

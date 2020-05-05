@@ -169,7 +169,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
         // Write layout behavior
         DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
-        writer.writeBehaviour(documentLayout, document);
+        writer.writeBehavior(documentLayout, document);
 
         // Write inherited behavior
         super.doWriteBehavior(writer, document);
@@ -272,7 +272,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
     private void writeBehaviour(ResponseWriter writer, Panel panel) throws UnifyException {
         if (panel != null) {
-            writer.writeBehaviour(panel);
+            writer.writeBehavior(panel);
         }
     }
 }

@@ -96,7 +96,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         writer.write("});");
 
         if (contentPanelImpl.isSidebar()) {
-            writer.writeBehaviour(contentPanelImpl.getSidebar());
+            writer.writeBehavior(contentPanelImpl.getSidebar());
         }
 
         if (contentPanelImpl.getPageCount() > 0) {
@@ -105,7 +105,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
             PathParts currentRespPathParts = rcu.getResponsePathParts();
             ContentInfo currentContentInfo = contentPanelImpl.getCurrentContentInfo();
             rcu.setResponsePathParts(currentContentInfo.getPathParts());
-            writer.writeBehaviour(currentContentInfo.getPage());
+            writer.writeBehavior(currentContentInfo.getPage());
 
             // Restore response controller
             rcu.setResponsePathParts(currentRespPathParts);

@@ -47,7 +47,7 @@ public class RepeatPanelWriter extends AbstractPanelWriter {
             for (ValueStore valueStore : valueStoreList) {
                 if (innerWidget.isVisible()) {
                     innerWidget.setValueStore(valueStore);
-                    writer.writeBehaviour(innerWidget);
+                    writer.writeBehavior(innerWidget);
                 }
             }
         }

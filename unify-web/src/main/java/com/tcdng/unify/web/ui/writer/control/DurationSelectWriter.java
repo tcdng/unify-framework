@@ -65,14 +65,14 @@ public class DurationSelectWriter extends AbstractControlWriter {
 
         DurationSelect durationSelect = (DurationSelect) widget;
         if (durationSelect.isShowDays()) {
-            writer.writeBehaviour(durationSelect.getDaySelCtrl());
+            writer.writeBehavior(durationSelect.getDaySelCtrl());
         }
 
         if (durationSelect.isShowHours()) {
-            writer.writeBehaviour(durationSelect.getHourSelCtrl());
+            writer.writeBehavior(durationSelect.getHourSelCtrl());
         }
 
-        writer.writeBehaviour(durationSelect.getMinuteSelCtrl());
+        writer.writeBehavior(durationSelect.getMinuteSelCtrl());
 
         writer.write("ux.rigDurationSelect({");
         writer.write("\"pId\":\"").write(durationSelect.getId()).write('"');

@@ -102,7 +102,7 @@ public interface ResponseWriter extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    ResponseWriter writeBehaviour(DocumentLayout documentLayout, Document document) throws UnifyException;
+    ResponseWriter writeBehavior(DocumentLayout documentLayout, Document document) throws UnifyException;
 
     /**
      * Writes component behavior.
@@ -112,7 +112,19 @@ public interface ResponseWriter extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    ResponseWriter writeBehaviour(Widget component) throws UnifyException;
+    ResponseWriter writeBehavior(Widget component) throws UnifyException;
+
+    /**
+     * Writes component behavior.
+     * 
+     * @param component
+     *            the user interface component to write
+     * @param id
+     *            the id to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeBehavior(Widget component, String id) throws UnifyException;
 
     /**
      * Writes behavior for a specified behavior.

@@ -75,7 +75,7 @@ public class TitleBarWriter extends AbstractControlWriter {
                 Control control = childControlInfo.getControl();
                 ValueStore origValueStore = control.getValueStore();
                 control.setValueStore(valueStore);
-                writer.writeBehaviour(childControlInfo.getControl());
+                writer.writeBehavior(childControlInfo.getControl());
                 control.setValueStore(origValueStore);
             }
         }
