@@ -50,14 +50,14 @@ public class BadgeWriter extends AbstractControlWriter {
             scheme = badgeInfo.getColorScheme();
             caption = resolveSessionMessage(badgeInfo.getCaption());
         }
-            
+
         writer.write("<span");
         String sel = "badgesel";
         if (scheme != null) {
             sel += scheme.code();
         }
         writeTagId(writer, badge);
-        writeTagStyleClass(writer, badge, false, sel);
+        writeTagStyleClassWithTrailingExtraStyleClasses(writer, badge, sel);
         writeTagStyle(writer, badge);
         writer.write(">");
         if (StringUtils.isBlank(caption)) {

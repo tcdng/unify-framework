@@ -54,7 +54,7 @@ public class TableWriter extends AbstractControlWriter {
         table.pageCalculations();
         writer.write("<div");
         if (table.isContentEllipsis()) {
-            writeTagStyleClass(writer, table, false, "ui-table-cellipsis");
+            writeTagStyleClassWithTrailingExtraStyleClasses(writer, table, "ui-table-cellipsis");
         } else {
             writeTagStyleClass(writer, table);
         }
@@ -170,7 +170,7 @@ public class TableWriter extends AbstractControlWriter {
                 multiSelectCtrl.setValueStore(itemValueStore);
                 writer.writeBehavior(multiSelectCtrl);
             }
-            
+
             for (Column column : table.getColumnList()) {
                 if (column.isVisible()) {
                     Control control = column.getControl();
