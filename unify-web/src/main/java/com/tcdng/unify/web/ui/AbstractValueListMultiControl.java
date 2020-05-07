@@ -56,6 +56,14 @@ public abstract class AbstractValueListMultiControl<T, U> extends AbstractMultiC
         return valueList;
     }
 
+    protected U getItem(int index) {
+        if (oldItemList != null && index < oldItemList.size()) {
+            return oldItemList.get(index);
+        }
+        
+        return null;
+    }
+    
     protected void invalidateValueList() {
         oldItemList = null;
         valueList = null;
