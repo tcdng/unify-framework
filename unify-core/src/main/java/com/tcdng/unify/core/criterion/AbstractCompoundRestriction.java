@@ -75,6 +75,21 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
     }
 
     @Override
+    public boolean isValid() {
+        if (restrictionList.isEmpty()) {
+            return false;
+        }
+
+        for (Restriction restriction : restrictionList) {
+            if (!restriction.isValid()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    @Override
     public int size() {
         return restrictionList.size();
     }

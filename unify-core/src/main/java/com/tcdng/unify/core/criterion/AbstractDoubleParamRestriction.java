@@ -51,4 +51,9 @@ public abstract class AbstractDoubleParamRestriction extends AbstractSimpleRestr
         this.secondParam = secondParam;
     }
 
+    @Override
+    public boolean isValid() {
+        return firstParam != null && secondParam != null;
+    }
+
 }

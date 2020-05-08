@@ -42,4 +42,9 @@ public abstract class AbstractSingleParamRestriction extends AbstractSimpleRestr
         this.param = val;
     }
 
+    @Override
+    public boolean isValid() {
+        return param != null;
+    }
+
 }

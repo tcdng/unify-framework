@@ -44,4 +44,9 @@ public abstract class AbstractMultipleParamRestriction extends AbstractSimpleRes
         this.params = val;
     }
 
+    @Override
+    public boolean isValid() {
+        return params !=null && !params.isEmpty();
+    }
+
 }

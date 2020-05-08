@@ -28,4 +28,9 @@ public abstract class AbstractZeroParamRestriction extends AbstractSimpleRestric
         super(propertyName);
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
 }

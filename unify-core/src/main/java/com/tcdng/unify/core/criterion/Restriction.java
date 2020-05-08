@@ -63,4 +63,11 @@ public interface Restriction {
      * @return a true if simple otherwise false
      */
     boolean isSimple();
+
+    /**
+     * Checks if restriction is valid.
+     * 
+     * @return a true if valid otherwise false
+     */
+    boolean isValid();
 }
