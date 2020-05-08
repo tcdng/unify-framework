@@ -50,6 +50,11 @@ public class RestrictionTranslatorTest extends AbstractUnifyComponentTest {
     private RestrictionTranslator rt;
 
     @Test
+    public void testTranslateNullRestriction() throws Exception {
+        assertEquals("All", rt.translate(null));
+    }
+
+    @Test
     public void testTranslateEquals() throws Exception {
         assertEquals("$f{name} == 'specs'", rt.translate(new Equals("name", "specs")));
         assertEquals("Name == 'specs'", rt.translate(new Equals("name", "specs"), fieldLabels));

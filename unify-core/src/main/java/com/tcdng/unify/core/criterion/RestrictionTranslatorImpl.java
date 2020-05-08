@@ -45,6 +45,10 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
 
     @Override
     public String translate(Restriction restriction, Map<String, String> fieldLabels) throws UnifyException {
+        if (restriction == null) {
+            return getSessionMessage("filter.fetchall");
+        }
+        
         StringBuilder sb = new StringBuilder();
         translators.get(restriction.getConditionType()).translate(sb, restriction, fieldLabels, 0);
         return sb.toString();
