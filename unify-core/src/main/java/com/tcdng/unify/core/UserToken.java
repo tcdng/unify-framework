@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core;
 
+import com.tcdng.unify.core.util.StringUtils;
+
 /**
  * Represents an application user token.
  * 
@@ -51,7 +53,7 @@ public class UserToken {
 
     private boolean remote;
 
-    public UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
+    private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
             String tenantCode, String colorScheme, boolean globalAccess, boolean reservedUser,
             boolean allowMultipleLogin, boolean remote) {
         this.userLoginId = userLoginId;
@@ -134,4 +136,102 @@ public class UserToken {
     public boolean isRemote() {
         return remote;
     }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String userLoginId;
+
+        private String userName;
+
+        private String branchCode;
+
+        private String tenantCode;
+
+        private String colorScheme;
+
+        private String ipAddress;
+
+        private String zoneCode;
+
+        private boolean globalAccess;
+
+        private boolean reservedUser;
+
+        private boolean allowMultipleLogin;
+
+        private boolean remote;
+
+        private Builder() {
+
+        }
+
+        public Builder userLoginId(String userLoginId) {
+            this.userLoginId = userLoginId;
+            return this;
+        }
+
+        public Builder userName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public Builder branchCode(String branchCode) {
+            this.branchCode = branchCode;
+            return this;
+        }
+
+        public Builder tenantCode(String tenantCode) {
+            this.tenantCode = tenantCode;
+            return this;
+        }
+
+        public Builder colorScheme(String colorScheme) {
+            this.colorScheme = colorScheme;
+            return this;
+        }
+
+        public Builder ipAddress(String ipAddress) {
+            this.ipAddress = ipAddress;
+            return this;
+        }
+
+        public Builder zoneCode(String zoneCode) {
+            this.zoneCode = zoneCode;
+            return this;
+        }
+
+        public Builder globalAccess(boolean globalAccess) {
+            this.globalAccess = globalAccess;
+            return this;
+        }
+
+        public Builder reservedUser(boolean reservedUser) {
+            this.reservedUser = reservedUser;
+            return this;
+        }
+
+        public Builder allowMultipleLogin(boolean allowMultipleLogin) {
+            this.allowMultipleLogin = allowMultipleLogin;
+            return this;
+        }
+
+        public Builder remote(boolean remote) {
+            this.remote = remote;
+            return this;
+        }
+
+        public UserToken build() {
+            if (StringUtils.isBlank(userLoginId)) {
+                throw new RuntimeException("Login ID is required!");
+            }
+
+            return new UserToken(userLoginId, userName, ipAddress, branchCode, zoneCode, tenantCode, colorScheme,
+                    globalAccess, reservedUser, allowMultipleLogin, remote);
+        }
+    }
+
 }
