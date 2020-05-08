@@ -61,7 +61,7 @@ public class CriteriaBuilder {
         } else {
             buildStack.get(buildStack.size() - 1).getRestrictionList().add(cr);
         }
-        
+
         return this;
     }
 
@@ -72,6 +72,11 @@ public class CriteriaBuilder {
 
     public CriteriaBuilder addBetween(String fieldName, Object lowerValue, Object upperValue) {
         addSimpleCondition(new Between(fieldName, lowerValue, upperValue));
+        return this;
+    }
+
+    public CriteriaBuilder addBetweenField(String fieldName, String lowerFieldName, String upperFieldName) {
+        addSimpleCondition(new BetweenField(fieldName, lowerFieldName, upperFieldName));
         return this;
     }
 
@@ -190,13 +195,18 @@ public class CriteriaBuilder {
         return this;
     }
 
-    public CriteriaBuilder addNotAmongst(String fieldName, Collection<Object> values) {
+    public CriteriaBuilder addNotAmongst(String fieldName, Collection<?> values) {
         addSimpleCondition(new NotAmongst(fieldName, values));
         return this;
     }
 
     public CriteriaBuilder addNotBetween(String fieldName, Object lowerValue, Object upperValue) {
         addSimpleCondition(new NotBetween(fieldName, lowerValue, upperValue));
+        return this;
+    }
+
+    public CriteriaBuilder addNotBetweenField(String fieldName, String lowerFieldName, String upperFieldName) {
+        addSimpleCondition(new NotBetweenField(fieldName, lowerFieldName, upperFieldName));
         return this;
     }
 
@@ -260,7 +270,6 @@ public class CriteriaBuilder {
 
         buildStack.push(compoundRestriction);
     }
-
 
     private CriteriaBuilder addSimpleCondition(SimpleRestriction sr) {
         if (rootCondition != null) {
