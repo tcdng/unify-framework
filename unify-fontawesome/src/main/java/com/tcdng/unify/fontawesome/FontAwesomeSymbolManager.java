@@ -97,6 +97,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("sort", "&#xf0dc;");
         registerSymbol("swap", "&#xf362;");
         registerSymbol("sync", "&#xf2f1;");
+        registerSymbol("thumbtack", "&#xf08d;");
         registerSymbol("undo", "&#xf2ea;");
         registerSymbol("user", "&#xf007;");
     }
