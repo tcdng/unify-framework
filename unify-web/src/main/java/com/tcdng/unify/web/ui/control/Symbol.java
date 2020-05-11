@@ -36,4 +36,9 @@ public class Symbol extends AbstractTargetControl {
         return false;
     }
 
+    @Override
+    public boolean isSupportDisabled() {
+        return false;
+    }
+
 }

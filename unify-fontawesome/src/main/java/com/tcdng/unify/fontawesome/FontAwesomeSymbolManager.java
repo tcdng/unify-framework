@@ -53,6 +53,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("arrow-left", "&#xf060;");
         registerSymbol("arrow-right", "&#xf061;");
         registerSymbol("arrow-up", "&#xf062;");
+        registerSymbol("backward", "&#xf04a;");
+        registerSymbol("backward-fast", "&#xf049;");
         registerSymbol("bell", "&#xf0f3;");
         registerSymbol("bell-slash", "&#xf1f6;");
         registerSymbol("calendar", "&#xf133;");
@@ -61,8 +63,10 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("caret-left", "&#xf0d9;");
         registerSymbol("caret-right", "&#xf0da;");
         registerSymbol("caret-up", "&#xf0d8;");
-        registerSymbol("caret-left-fast", "&#xf04a;");
-        registerSymbol("caret-right-fast", "&#xf04e;");
+        registerSymbol("chevron-down", "&#xf078;");
+        registerSymbol("chevron-left", "&#xf053;");
+        registerSymbol("chevron-right", "&#xf054;");
+        registerSymbol("chevron-up", "&#xf077;");
         registerSymbol("clock", "&#xf017;");
         registerSymbol("cloud", "&#xf0c2;");
         registerSymbol("cloud-download", "&#xf381;");
@@ -83,6 +87,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("filter", "&#xf0b0;");
         registerSymbol("folder", "&#xf07b;");
         registerSymbol("folder-open", "&#xf07c;");
+        registerSymbol("forward", "&#xf04e;");
+        registerSymbol("forward-fast", "&#xf050;");
         registerSymbol("harddisk", "&#xf0a0;");
         registerSymbol("id-card", "&#xf2c2;");
         registerSymbol("image", "&#xf03e;");
