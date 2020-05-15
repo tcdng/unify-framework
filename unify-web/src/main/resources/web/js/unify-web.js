@@ -1961,7 +1961,7 @@ ux.rigSearchField = function(rgp) {
 	if (fElem) {
 		var evp = ux.newEvPrm(rgp);
 		evp.uCmd = id + "->search";
-		evp.uReqTrg = true;
+		evp.uIsReqTrg = true;
 		ux.attachHandler(fElem, "enter", ux.post, evp);
 	}
 
@@ -3473,6 +3473,12 @@ ux.buildObjParams = function(trgObj, evp, param) {
 		}
 
 		if (evp.uReqTrg) {
+			if (isForm) {
+				pb.append("req_trg", evp.uReqTrg);
+			} else {
+				pb += ("&req_trg=" + _enc(evp.uReqTrg));
+			}
+		} else if (evp.uIsReqTrg) {
 			if (isForm) {
 				pb.append("req_trg", trgObj.value);
 			} else {
