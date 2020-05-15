@@ -43,7 +43,7 @@ public class SplitPanelWriter extends AbstractPanelWriter {
         for (int i = 0; i < 2; i++) {
             Widget innerWidget = splitPanel.getWidgetByLongName(longNames.get(i));
             if (innerWidget.isVisible() || innerWidget.isHidden()) {
-                writer.writeBehaviour(innerWidget);
+                writer.writeBehavior(innerWidget);
             }
         }
         writer.write("ux.rigSplitPanel({");

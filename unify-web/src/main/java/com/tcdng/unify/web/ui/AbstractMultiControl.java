@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.util.WidgetUtils;
 
@@ -89,7 +91,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
             onInternalChildPopulated(control);
         }
     }
-    
+
     @Override
     public ChildControlInfo getChildControlInfo(String childId) {
         return controlInfoMap.get(childId);
@@ -107,8 +109,9 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     @Override
     public void setId(String id) throws UnifyException {
+        boolean changed = !DataUtils.equals(getId(), id);
         super.setId(id);
-        if (controlInfoMap.isEmpty()) {
+        if (changed && !controlInfoMap.isEmpty()) {
             Map<String, ChildControlInfo> map = new LinkedHashMap<String, ChildControlInfo>();
             for (ChildControlInfo childControlInfo : controlInfoMap.values()) {
                 Control control = childControlInfo.getControl();
@@ -136,6 +139,21 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         Control control = (Control) getUplComponent(getSessionLocale(), descriptor, false);
         doAddChildControl(control, true, false, false, true);
         return control;
+    }
+
+    /**
+     * Removes all external child controls.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void removeAllExternalChildControl() throws UnifyException {
+        for (Iterator<Map.Entry<String, ChildControlInfo>> it = controlInfoMap.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<String, ChildControlInfo> entry = it.next();
+            if (entry.getValue().isExternal()) {
+                it.remove();
+            }
+        }
     }
 
     /**
@@ -197,11 +215,11 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
     }
 
     protected void onInternalChildPopulated(Control control) throws UnifyException {
-        
+
     }
 
-    private void doAddChildControl(Control control, boolean pageConstruct, boolean conforming, boolean ignoreParentState,
-            boolean external) throws UnifyException {
+    private void doAddChildControl(Control control, boolean pageConstruct, boolean conforming,
+            boolean ignoreParentState, boolean external) throws UnifyException {
         int childIndex = controlInfoMap.size();
         String childId = WidgetUtils.getChildId(getId(), control.getId(), childIndex);
         control.setId(childId);

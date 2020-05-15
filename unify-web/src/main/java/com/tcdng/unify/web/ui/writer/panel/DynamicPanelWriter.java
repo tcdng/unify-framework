@@ -59,7 +59,7 @@ public class DynamicPanelWriter extends AbstractPanelWriter {
         DynamicPanel dynamicPanel = (DynamicPanel) widget;
         getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
         try {
-            writer.writeBehaviour(dynamicPanel.getStandalonePanel());
+            writer.writeBehavior(dynamicPanel.getStandalonePanel());
         } finally {
             getRequestContextUtil().clearDynamicPanelPageName();
         }

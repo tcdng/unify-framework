@@ -113,14 +113,20 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
-    public ResponseWriter writeBehaviour(DocumentLayout documentLayout, Document document) throws UnifyException {
+    public ResponseWriter writeBehavior(DocumentLayout documentLayout, Document document) throws UnifyException {
         ((DocumentLayoutWriter) getWriter(documentLayout)).writeBehaviour(this, documentLayout, document);
         return this;
     }
 
     @Override
-    public ResponseWriter writeBehaviour(Widget component) throws UnifyException {
+    public ResponseWriter writeBehavior(Widget component) throws UnifyException {
         ((WidgetWriter) getWriter(component)).writeBehavior(this, component);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeBehavior(Widget component, String id) throws UnifyException {
+        ((WidgetWriter) getWriter(component)).writeBehavior(this, component, id);
         return this;
     }
 
@@ -332,7 +338,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         WebStringWriter htmlLsw = discardSecondary();
 
         useSecondary();
-        writeBehaviour(panel);
+        writeBehavior(panel);
         WebStringWriter scriptLsw = discardSecondary();
 
         buf.append("{\"target\":\"").append(panel.getId()).append('"');

@@ -623,6 +623,55 @@ public final class DataUtils {
         return classToNullMap.get(clazz);
     }
 
+    public static Object getNestedBeanProperty(Object bean, String longPropertyName) throws UnifyException {
+        try {
+            if (longPropertyName.indexOf('.') >= 0) {
+                String[] properties = longPropertyName.split("\\.");
+                int len = properties.length - 1;
+                int j = 0;
+                for (; j < len && bean != null; j++) {
+                    bean = ReflectUtils.getGetterInfo(bean.getClass(), properties[j]).getGetter().invoke(bean);
+                }
+
+                if (bean != null) {
+                    return ReflectUtils.getBeanProperty(bean, properties[j]);
+                }
+            }
+
+            return ReflectUtils.getBeanProperty(bean, longPropertyName);
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.REFLECT_REFLECTION_ERROR, bean.getClass(),
+                    longPropertyName);
+        }
+    }
+
+    public static <T> T getNestedBeanProperty(Class<T> targetClazz, Object bean, String longPropertyName)
+            throws UnifyException {
+        try {
+            if (longPropertyName.indexOf('.') >= 0) {
+                String[] properties = longPropertyName.split("\\.");
+                int len = properties.length - 1;
+                int j = 0;
+                for (; j < len && bean != null; j++) {
+                    bean = ReflectUtils.getGetterInfo(bean.getClass(), properties[j]).getGetter().invoke(bean);
+                }
+
+                if (bean != null) {
+                    return DataUtils.getBeanProperty(targetClazz, bean, properties[j]);
+                }
+            }
+
+            return DataUtils.getBeanProperty(targetClazz, bean, longPropertyName);
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.REFLECT_REFLECTION_ERROR, bean.getClass(),
+                    longPropertyName);
+        }
+    }
+
     public static <T> T getBeanProperty(Class<T> targetClazz, Object bean, String propertyName) throws UnifyException {
         return DataUtils.convert(targetClazz, ReflectUtils.getBeanProperty(bean, propertyName), null);
     }
@@ -1074,15 +1123,19 @@ public final class DataUtils {
     public static void setNestedBeanProperty(Object bean, String longPropertyName, Object value, Formatter<?> formatter)
             throws UnifyException {
         try {
-            String[] properties = longPropertyName.split("\\.");
-            int len = properties.length - 1;
-            int j = 0;
-            for (; j < len && bean != null; j++) {
-                bean = ReflectUtils.getGetterInfo(bean.getClass(), properties[j]).getGetter().invoke(bean);
-            }
+            if (longPropertyName.indexOf('.') >= 0) {
+                String[] properties = longPropertyName.split("\\.");
+                int len = properties.length - 1;
+                int j = 0;
+                for (; j < len && bean != null; j++) {
+                    bean = ReflectUtils.getGetterInfo(bean.getClass(), properties[j]).getGetter().invoke(bean);
+                }
 
-            if (bean != null) {
-                DataUtils.setBeanProperty(bean, properties[j], value, formatter);
+                if (bean != null) {
+                    DataUtils.setBeanProperty(bean, properties[j], value, formatter);
+                }
+            } else {
+                DataUtils.setBeanProperty(bean, longPropertyName, value, formatter);
             }
         } catch (UnifyException e) {
             throw e;

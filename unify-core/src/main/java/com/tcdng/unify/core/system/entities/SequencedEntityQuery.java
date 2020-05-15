@@ -45,7 +45,7 @@ public class SequencedEntityQuery<T extends SequencedEntity> extends Query<T> {
     }
 
     public SequencedEntityQuery<T> idNot(Long id) {
-        return (SequencedEntityQuery<T>) addNotEqual("id", id);
+        return (SequencedEntityQuery<T>) addNotEquals("id", id);
     }
 
     public SequencedEntityQuery<T> idIn(Collection<Long> ids) {

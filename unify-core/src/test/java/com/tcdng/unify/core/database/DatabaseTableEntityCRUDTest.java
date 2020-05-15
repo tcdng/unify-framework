@@ -640,7 +640,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.deleteAll(new FruitQuery().addNotEqual("color", "cyan")));
+            assertEquals(3, db.deleteAll(new FruitQuery().addNotEquals("color", "cyan")));
             List<Fruit> testFruitList = db.findAll(new FruitQuery().ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());
             assertEquals(pineapple, testFruitList.get(0));
@@ -661,7 +661,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(pineapple);
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
-            assertEquals(3, db.deleteAll(new FruitQuery().addNotEqual("color", "cyan")));
+            assertEquals(3, db.deleteAll(new FruitQuery().addNotEquals("color", "cyan")));
             // Order should be ignored
             List<Fruit> testFruitList = db.findAll(new FruitQuery().addOrder("color").ignoreEmptyCriteria(true));
             assertEquals(1, testFruitList.size());

@@ -15,10 +15,14 @@
  */
 package com.tcdng.unify.web.ui;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.TriState;
+import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.ui.control.ControlColorMode;
 import com.tcdng.unify.web.util.WidgetUtils;
@@ -32,7 +36,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
 @UplAttributes({ @UplAttribute(name = "focus", type = boolean.class),
         @UplAttribute(name = "sortable", type = boolean.class),
         @UplAttribute(name = "required", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultVal = "false")})
+        @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractControl extends AbstractWidget implements Control {
 
     private TriState required;
@@ -134,5 +138,13 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
     @Override
     public ControlColorMode getColorMode() {
         return colorMode;
+    }
+
+    protected List<String> getPageNames(UplElementReferences uer) throws UnifyException {
+        if (uer != null) {
+            return getPageManager().getPageNames(uer.getLongNames());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

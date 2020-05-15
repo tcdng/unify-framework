@@ -31,6 +31,7 @@ import com.tcdng.unify.core.format.Pattern;
  */
 @Component("ui-date")
 @UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/calendar.png}"),
+        @UplAttribute(name = "buttonSymbol", type = String.class, defaultVal = "calendar-alt"),
         @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!dateformat style:customshort}") })
 public class DateField extends AbstractTimeField {
 

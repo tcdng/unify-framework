@@ -41,7 +41,8 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     @Override
     public void translate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
             throws UnifyException {
-        doTranslate(sql, tableName, columnName, resolveParam(param1), resolveParam(param2));
+        doTranslate(sql, tableName, columnName, param1 != null ? resolveParam(tableName, param1) : null,
+                param2 != null ? resolveParam(tableName, param2) : null);
     }
 
     /**
@@ -54,7 +55,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if an error occurs
      */
     protected SqlCriteriaPolicy getOperatorPolicy(Restriction restriction) throws UnifyException {
-        return rootPolicies.getSqlCriteriaPolicy(restriction.getType());
+        return rootPolicies.getSqlCriteriaPolicy(restriction.getConditionType().restrictionType());
     }
 
     /**
@@ -85,14 +86,19 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     /**
      * Converts a value to its native SQL string equivalent.
      * 
-     * @param value
+     * @param val
      *            the value to convert
      * @return the converted value
      * @throws UnifyException
      *             if an error occurs
      */
-    protected String getNativeSqlStringValue(Object value) throws UnifyException {
-        return rootPolicies.translateValue(value);
+    protected String getNativeSqlParam(Object val) throws UnifyException {
+        if (val instanceof SqlViewColumnInfo) {
+            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) val;
+            return sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
+        }
+
+        return rootPolicies.translateToNativeSqlParam(val);
     }
 
     /**
@@ -124,16 +130,21 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
     /**
      * Resolves parameter.
      * 
+     * @param tableName
+     *            the table name
      * @param param
      *            the parameter to resolve
      * @return the resolved parameter
      * @throws UnifyException
      *             if an error occurs
      */
-    protected Object resolveParam(Object param) throws UnifyException {
-        if (param instanceof SqlViewColumnInfo) {
-            SqlViewColumnInfo sqlViewColumnInfo = (SqlViewColumnInfo) param;
-            return sqlViewColumnInfo.getTableAlias() + "." + sqlViewColumnInfo.getColumnName();
+    protected Object resolveParam(String tableName, Object param) throws UnifyException {
+        if (param instanceof SqlFieldInfo) {
+            if (tableName == null) {
+                return ((SqlFieldInfo) param).getPreferredColumnName();
+            }
+
+            return tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
         }
 
         return param;

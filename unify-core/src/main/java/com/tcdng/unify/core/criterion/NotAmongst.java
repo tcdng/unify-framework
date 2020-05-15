@@ -23,14 +23,14 @@ import java.util.Collection;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotAmongst extends AbstractMultipleValueRestriction {
+public class NotAmongst extends AbstractMultipleParamRestriction {
 
-    public NotAmongst(String propertyName, Collection<? extends Object> values) {
+    public NotAmongst(String propertyName, Collection<?> values) {
         super(propertyName, values);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.NOT_AMONGST;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.NOT_AMONGST;
     }
 }

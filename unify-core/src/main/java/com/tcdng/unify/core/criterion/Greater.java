@@ -21,15 +21,15 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Greater extends AbstractSingleValueRestriction {
+public class Greater extends AbstractSingleParamRestriction {
 
     public Greater(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.GREATER;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.GREATER_THAN;
     }
 }
 

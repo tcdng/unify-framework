@@ -270,8 +270,18 @@ public class HttpApplicationServlet extends HttpServlet {
                             request.getParameter(RequestParameterConstants.REMOTE_COLOR_SCHEME));
                     boolean globalAccess =
                             Boolean.valueOf(request.getParameter(RequestParameterConstants.REMOTE_GLOBAL_ACCESS));
-                    UserToken userToken = new UserToken(userLoginId, userName, userSession.getRemoteAddress(),
-                            branchCode, zoneCode, tenantCode, colorScheme, globalAccess, true, true, true);
+
+                    UserToken userToken = UserToken.newBuilder()
+                            .userLoginId(userLoginId)
+                            .userName(userName)
+                            .ipAddress(userSession.getRemoteAddress())
+                            .branchCode(branchCode)
+                            .zoneCode(zoneCode)
+                            .tenantCode(tenantCode)
+                            .colorScheme(colorScheme).globalAccess(globalAccess)
+                            .allowMultipleLogin(true)
+                            .remote(true)
+                            .build();
                     userToken.setRoleCode(roleCode);
                     userSession.getSessionContext().setUserToken(userToken);
                 }

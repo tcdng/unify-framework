@@ -57,7 +57,7 @@ public class TextAreaWriter extends AbstractControlWriter {
         if (StringUtils.isBlank(styleClass)) {
             writeTagAttributes(writer, textArea);
         } else {
-            writeTagAttributes(writer, textArea, styleClass);
+            writeTagAttributesUsingStyleClass(writer, textArea, styleClass);
         }
         int columns = textArea.getColumns();
         if (columns > 0) {

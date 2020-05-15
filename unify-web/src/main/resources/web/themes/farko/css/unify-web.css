@@ -399,15 +399,16 @@ z-index:400;}
 
 /** Popup Text Field */
 .ui-text-popup {position:relative}
-.ui-text-popup .tpbutton {width:24px; height:28px; padding:6px 4px; background-color: #E8E8E8 !important;
+.ui-text-popup .tpbutton {min-width:24px !important; width:24px; height:28px; padding:0px 2px; background-color: #E8E8E8 !important;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
-.ui-text-popup .tpbutton img {width:14px;height:14px;}
+.ui-text-popup .tpbutton img {vertical-align:middle; display: inline-block; width:14px;height:14px;}
 .ui-text-popup .tread {/*padding-left:2px;*/}
-.ui-text-popup .tnread {text-align: right; padding-right: 4px;}
+.ui-text-popup .trread {text-align: right; padding-right: 4px;}
+.ui-text-popup .tcread {text-align: center;}
 .ui-text-popup .tplbutton {height:28px; padding:6px 4px; background-color: #E8E8E8 !important; color:#484848;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
 
-.ui-text-popup-win {position:absolute; display:none; width: auto; z-index: 300;color:#000;}
+.ui-text-popup-win {position:absolute; display:none; width: auto; z-index: 300;color:#000; text-align:left;}
 .ui-text-popup-win span {display: inline-block !important;}
 
 /*********************** CONTROLS **********************/
@@ -448,7 +449,8 @@ z-index:400;}
 .ui-button {padding: 0px 16px; min-height:28px; background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
 .ui-button:disabled {cursor:default;}
 .ui-button:hover:enabled {color: #FFF; background-color: #6080F0;}
-.ui-button span {padding-left:16px;}
+.ui-button img {vertical-align:middle; display: inline-block; width: 16px; height: 16px; border: none;}
+.ui-button span {padding-left:4px;}
 .ui-button-alert {padding: 0px 16px; min-height:28px; background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
 .ui-button-alert:disabled {cursor:default;}
 .ui-button-alert:hover:enabled {color: #FFF; background-color: #F06060;}
@@ -463,10 +465,12 @@ z-index:400;}
 .ui-minibutton-alert:hover:enabled {color: #FFF; background-color: #F06060;}
 
 /** Checkbox*/
-.ui-checkbox {width:16px; height:16px;}
+.ui-checkbox {width:20px; height:20px;}
+.ui-checkbox input {display:none;}
 
 /** Check list */
-.ui-checklist {}
+.ui-checklist {width:20px; height:20px;}
+.ui-checklist input {display:none;}
 
 
 /** Date field */
@@ -502,6 +506,8 @@ z-index:400;}
 /** Drop-down with check list */
 .ui-dropdownchecklist {width:180px;}
 .ui-dropdownchecklist .dclframe {border: solid 1px #A0A0A0; background-color: white;}
+.ui-dropdownchecklist .dclframe span {width:20px; height:20px;}
+.ui-dropdownchecklist .dclframe input {display:none;}
 
 /** Duration select */
 .ui-durationselect {}
@@ -692,7 +698,7 @@ z-index:400;}
 
 /** Shift buttons*/
 .ui-shiftbuttons {}
-.ui-shiftbuttons .sbutton {width: 16px; height:16px; cursor: pointer;}
+.ui-shiftbuttons .sbutton {width: 16px; height:16px; cursor: pointer; color:#808080; background-color: #E8E8E8;}
 
 /** Single Select*/
 .ui-select {width: 160px;}
@@ -723,11 +729,12 @@ z-index:400;}
 .ui-miniselect .sslist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-miniselect .sslist .selorange {background-color: #C07833; color: #FFF;}
 .ui-miniselect .sslist .selgray {background-color: #787878; color: #FFF;}
-.ui-miniselect .tpbutton {width:16px; height:18px; padding:2px 2px; background-color: #E8E8E8 !important;
+.ui-miniselect .tpbutton {min-width:16px !important; width:16px; height:18px; padding:0px 2px; background-color: #E8E8E8 !important;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer; vertical-align:top;}
-.ui-miniselect .tpbutton img {width:10px;height:10px;}
+.ui-miniselect .tpbutton img {vertical-align:middle; display: inline-block; width:10px;height:10px;}
 .ui-miniselect .tread {height:14px; font-size:7pt !important;}
-.ui-miniselect .tnread {text-align: right; padding-right: 2px;}
+.ui-miniselect .trread {text-align: right; padding-right: 2px;}
+.ui-miniselect .tcread {text-align: center;}
 .ui-miniselect .tplbutton {height:18px; padding:2px 2px; background-color: #E8E8E8 !important; color:#484848;
     border: 1px solid #C8C8C8; border-left: none; cursor: pointer}
 
@@ -756,6 +763,9 @@ z-index:400;}
 /** Swappable image */
 .ui-swappableimage {}
 
+/** Symbol */
+.ui-symbol {display:inline-block !important;}
+
 /** Table */
 .ui-table {height:100%;}
 .ui-table .twin {border: 1px solid #A9A9A9;}
@@ -769,7 +779,7 @@ z-index:400;}
 .ui-table .thead {border: 0px; border-collapse: collapse; background-color: #ECECEC; vertical-align: middle;}
 .ui-table .thead th {border-right: 1px solid #A9A9A9; padding: 2px; font-weight: normal;}
 .ui-table .theadtitle {display:inline-block !important; width:70%; vertical-align:middle;}
-.ui-table .theadwdg {display:inline-block !important; width:24%; vertical-align:middle; text-align:right;}
+.ui-table .theadwdg {display:inline-block !important; width:24%; vertical-align:middle; text-align:right;color:#606060;}
 .ui-table .theadellipsis {white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .ui-table .tbody {height:100%;padding: 0px; border: 0px;overflow:scroll;}
 .ui-table .ttable {padding: 3px; border: 1px solid #A9A9A9; border-collapse: collapse;

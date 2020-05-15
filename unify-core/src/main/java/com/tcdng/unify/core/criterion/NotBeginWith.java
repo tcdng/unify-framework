@@ -21,15 +21,15 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotBeginWith extends AbstractSingleValueRestriction {
+public class NotBeginWith extends AbstractSingleParamRestriction {
 
     public NotBeginWith(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.NOT_BEGIN_WITH;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.NOT_BEGIN_WITH;
     }
 }
 

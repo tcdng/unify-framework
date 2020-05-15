@@ -21,14 +21,14 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Equals extends AbstractSingleValueRestriction {
+public class Equals extends AbstractSingleParamRestriction {
 
     public Equals(String propertyName, Object value) {
         super(propertyName, value);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.EQUALS;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.EQUALS;
     }
 }

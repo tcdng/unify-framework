@@ -68,7 +68,7 @@ public interface DataSourceDialect extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String translateValue(Object value) throws UnifyException;
+    String translateNativeSqlParam(Object value) throws UnifyException;
 
     /**
      * Generates a native query.

@@ -27,11 +27,11 @@ import java.util.Set;
 public interface Restriction {
 
     /**
-     * Gets the restriction type.
+     * Gets the condition type.
      * 
-     * @return the restriction type.
+     * @return the condition type.
      */
-    RestrictionType getType();
+    FilterConditionType getConditionType();
 
     /**
      * Writes restricted fields into supplied bucket.
@@ -63,4 +63,11 @@ public interface Restriction {
      * @return a true if simple otherwise false
      */
     boolean isSimple();
+
+    /**
+     * Checks if restriction is valid.
+     * 
+     * @return a true if valid otherwise false
+     */
+    boolean isValid();
 }

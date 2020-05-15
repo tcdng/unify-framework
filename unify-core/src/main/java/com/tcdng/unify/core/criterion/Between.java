@@ -21,15 +21,15 @@ package com.tcdng.unify.core.criterion;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class Between extends AbstractDoubleValueRestriction {
+public class Between extends AbstractDoubleParamRestriction {
 
     public Between(String propertyName, Object firstValue, Object secondValue) {
         super(propertyName, firstValue, secondValue);
     }
 
     @Override
-    public RestrictionType getType() {
-        return RestrictionType.BETWEEN;
+    public FilterConditionType getConditionType() {
+        return FilterConditionType.BETWEEN;
     }
 
 }

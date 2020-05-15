@@ -89,7 +89,7 @@ public class MultiDynamicWriter extends AbstractControlWriter {
             int len = valueStoreList.size();
             for (int i = 0; i < len; i++) {
                 valueCtrl.setValueStore(valueStoreList.get(i).getValueStore());
-                writer.writeBehaviour(valueCtrl);
+                writer.writeBehavior(valueCtrl);
                 if (multiDynamic.isContainerEditable()) {
                     addPageAlias(multiDynamic.getId(), valueCtrl);
                 }

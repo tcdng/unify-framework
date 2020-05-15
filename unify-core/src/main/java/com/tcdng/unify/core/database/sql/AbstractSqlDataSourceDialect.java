@@ -67,7 +67,7 @@ import com.tcdng.unify.core.database.sql.criterion.policy.LikeEndPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.LikePolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.NotAmongstPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.NotBetweenPolicy;
-import com.tcdng.unify.core.database.sql.criterion.policy.NotEqualPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.NotEqualsPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.NotLikeBeginPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.NotLikeEndPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.NotLikePolicy;
@@ -130,7 +130,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     private String terminationSql;
 
     private String newLineSql;
-    
+
     private boolean allObjectsInLowerCase;
 
     private boolean useCallableFunctionMode;
@@ -665,7 +665,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 psb.append(',');
             }
             fsb.append(sqlFieldInfo.getPreferredColumnName());
-            psb.append(translateValue(params.get(fieldName)));
+            psb.append(translateNativeSqlParam(params.get(fieldName)));
         }
 
         StringBuilder insertSql = new StringBuilder();
@@ -772,7 +772,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     @Override
     public final String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException {
-        return getSqlDataSourceDialectPolicies().generateLikeParameter(type, param);
+        return getSqlDataSourceDialectPolicies().generateLikeParameter(type, null, param);
     }
 
     @Override
@@ -1352,8 +1352,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public final String translateValue(Object param) throws UnifyException {
-        return getSqlDataSourceDialectPolicies().translateValue(param);
+    public final String translateNativeSqlParam(Object param) throws UnifyException {
+        return getSqlDataSourceDialectPolicies().translateToNativeSqlParam(param);
     }
 
     @Override
@@ -1434,7 +1434,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected static void populateDefaultSqlCriteriaPolicies(SqlDataSourceDialectPolicies rootPolicies,
             Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
         sqlCriteriaPolicies.put(RestrictionType.EQUALS, new EqualPolicy(rootPolicies));
-        sqlCriteriaPolicies.put(RestrictionType.NOT_EQUAL, new NotEqualPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.NOT_EQUALS, new NotEqualsPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.LESS_THAN, new LessPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.LESS_OR_EQUAL, new LessOrEqualPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.GREATER, new GreaterPolicy(rootPolicies));
@@ -1615,7 +1615,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         if (!query.isEmptyCriteria()) {
             Restriction restriction = query.getRestrictions();
-            SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(restriction.getType());
+            SqlCriteriaPolicy sqlCriteriaPolicy =
+                    getSqlCriteriaPolicy(restriction.getConditionType().restrictionType());
             StringBuilder critSql = new StringBuilder();
             sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo, restriction);
             sql.append(" WHERE ");
@@ -2177,8 +2178,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
             throws UnifyException {
-        getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(restriction.getType()).translate(sql, sqlEntityInfo,
-                restriction);
+        getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(restriction.getConditionType().restrictionType())
+                .translate(sql, sqlEntityInfo, restriction);
     }
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,

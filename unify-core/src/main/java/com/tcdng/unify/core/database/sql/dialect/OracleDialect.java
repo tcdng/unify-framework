@@ -22,7 +22,7 @@ import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +63,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
             new OracleDataSourceDialectPolicies();
 
     static {
-        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new HashMap<ColumnType, SqlDataTypePolicy>();
+        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
         tempMap1.put(ColumnType.BLOB, new OracleBlobPolicy());
         tempMap1.put(ColumnType.CLOB, new OracleClobPolicy());
@@ -71,7 +71,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
         tempMap1.put(ColumnType.INTEGER, new OracleIntegerPolicy());
         tempMap1.put(ColumnType.SHORT, new OracleShortPolicy());
 
-        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new HashMap<RestrictionType, SqlCriteriaPolicy>();
+        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
         populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
 
         sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
@@ -236,6 +236,24 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
         @Override
         public int getMaxClauseValues() {
             return 1000;
+        }
+
+        @Override
+        protected String concat(String... expressions) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(");
+            boolean appSym = false;
+            for (String expression : expressions) {
+                if (appSym) {
+                    sb.append(" || ");
+                } else {
+                    appSym = true;
+                }
+
+                sb.append(expression);
+            }
+            sb.append(")");
+            return sb.toString();
         }
     }
 }

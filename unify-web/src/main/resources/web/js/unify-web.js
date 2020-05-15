@@ -677,7 +677,10 @@ ux.clear = function(uEv) {
 			var elem = _id(pgNm);
 			if (elem) {
 				if (!elem.disabled && elem.type != "button") {
-					if (elem.type == "checkbox" || elem.type == "radio") {
+					if (elem.type == "checkbox") {
+						elem.checked = false;
+						ux.cbSwitchImg(elem);
+					} else if (elem.type == "radio") {
 						elem.checked = false;
 					} else if (elem.type == "select-multiple") {
 						for (var k = 0; k < elem.options.length; k++) {
@@ -734,18 +737,22 @@ ux.hide = function(uEv) {
 }
 
 ux.setAllChecked = function(uEv) {
-	var refElem = uEv.uTrg;
-	if (refElem.type == "checkbox") {
-		var trgNms = uEv.evp.uRef;
-		if (trgNms) {
-			for (var i = 0; i < trgNms.length; i++) {
-				var elems = _name(trgNms[i]);
-				if (elems) {
-					for (var j = 0; j < elems.length; j++) {
-						var elem = elems[j];
-						if (elem.type == "checkbox") {
-							elem.checked = refElem.checked;
-						}
+	var evp = uEv.evp;
+	var trgNms = evp.uRef;
+	if (trgNms) {
+		var rElem = uEv.uTrg;
+		if (evp.uSrcId) {
+			rElem = _id(evp.uSrcId);
+		}
+
+		for (var i = 0; i < trgNms.length; i++) {
+			var elems = _name(trgNms[i]);
+			if (elems) {
+				for (var j = 0; j < elems.length; j++) {
+					var elem = elems[j];
+					if (elem.type == "checkbox") {
+						elem.checked = rElem.checked;
+						ux.cbSwitchImg(elem);
 					}
 				}
 			}
@@ -1306,6 +1313,69 @@ ux.rigAssignmentBox = function(rgp) {
 			rgp.pUnassnSelId);
 	assnBoxRigBtns(rgp, rgp.pUnassnBtnId, rgp.pUnassnAllBtnId,
 			rgp.pAssnSelId);
+}
+
+/** Checkbox */
+ux.rigCheckbox = function(rgp) {
+	var evp = {};
+	evp.uId = rgp.pId;	
+	ux.attachHandler(_id("fac_" + evp.uId), "click",
+			ux.cbClick, evp);	
+}
+
+ux.cbClick = function(uEv) {
+	var evp = uEv.evp;
+	var selBox = _id(evp.uId);
+	if (selBox) {
+		selBox.checked = !selBox.checked;
+		ux.cbSwitchImg(selBox);
+		ux.fireEvent(_id("fac_" + selBox.id), "change", true);
+	}
+}
+
+ux.cbSwitchImg = function(selBox) {
+	var fac = _id("fac_" + selBox.id);
+	if (fac && fac.className) {
+		if (selBox.checked) {
+			fac.className = fac.className.replace("g_cbb", "g_cba");
+		} else {
+			fac.className = fac.className.replace("g_cba", "g_cbb");
+		}
+	}
+}
+
+/** Checklist */
+ux.rigChecklist = function(rgp) {
+	var elems = _name(rgp.pNm);
+	if(elems) {
+		for(var i = 0; i < elems.length; i++) {
+			var elem = elems[i];
+			var evp = {};
+			evp.uId = elem.id;	
+			ux.attachHandler(_id("fac_" + elem.id), "click",
+					ux.cbClick, evp);	
+		}
+	}
+}
+
+/** Dropdown checklist */
+ux.rigDropdownChecklist = function(rgp) {
+	// Select all
+	if (rgp.pSelAllId) {
+		var evp = {};
+		evp.uId = rgp.pSelAllId;
+		_id(rgp.pSelAllId).checked = false;
+		var selFac = _id("fac_" + rgp.pSelAllId);
+		ux.attachHandler(selFac, "click", ux.cbClick, evp);
+		
+		evp = {};
+		evp.uSrcId = rgp.pSelAllId;
+		evp.uRef = [rgp.pId];
+		ux.attachHandler(selFac, "change", ux.setAllChecked, evp);	
+	}
+
+	// Rig checklist
+	ux.rigChecklist(rgp);
 }
 
 /** Date Field */
@@ -2309,7 +2379,10 @@ ux.rigTable = function(rgp) {
 		var evp = {};
 		evp.uRigTbl = tblToRig;
 		tblToRig.uSelBoxes = selBoxes;
-		ux.attachHandler(_id(rgp.pSelAllId),
+		var selAll = _id(rgp.pSelAllId);
+		var selAllFac = _id("fac_" + rgp.pSelAllId);
+		selAllFac.selAll = selAll;
+		ux.attachHandler(selAllFac,
 				"click", ux.tableSelAllClick, evp);
 		
 		for (var i = 0; i < selBoxes.length; i++) {
@@ -2320,7 +2393,9 @@ ux.rigTable = function(rgp) {
 			selBox.uIndex = i;
 			
 			// Wire handlers
-			ux.attachHandler(selBox, "click", ux.tableMultiSelClick,
+			var selBoxFac = _id("fac_" + selBox.id);
+			selBoxFac.selBox = selBox;
+			ux.attachHandler(selBoxFac, "click", ux.tableMultiSelClick,
 					evp);
 			if (!rgp.pShiftable) {
 				var evpRw = {};
@@ -2431,8 +2506,9 @@ ux.tableSortClickHandler = function(uEv) {
 }
 
 ux.tableSelAllClick = function(uEv) {
-	var selAllBox = uEv.uTrg;
-	if (selAllBox) {
+	var selAllFac = uEv.uTrg;
+	if (selAllFac) {
+		var selAllBox = selAllFac.selAll;
 		var rigTbl = uEv.evp.uRigTbl;
 		// Update table values
 		if (selAllBox.checked == true) {
@@ -2444,16 +2520,18 @@ ux.tableSelAllClick = function(uEv) {
 		// Update visuals for rows
 		var selBoxes = rigTbl.uSelBoxes;
 		if (selBoxes) {
-			if (selAllBox.checked ==  true) {
+			if (selAllBox.checked == true) {
 				for (var i = 0; i < selBoxes.length; i++) {
 					var selBox = selBoxes[i];
 					selBox.checked = selAllBox.checked;
+					ux.cbSwitchImg(selBox);
 					selBox.uRow.className = rigTbl.uSelCls;
 				}
 			} else {
 				for (var i = 0; i < selBoxes.length; i++) {
 					var selBox = selBoxes[i];
 					selBox.checked = selAllBox.checked;
+					ux.cbSwitchImg(selBox);
 					selBox.uRow.className = selBox.uRowClass;
 				}
 			}
@@ -2469,8 +2547,9 @@ ux.tableSelAllClick = function(uEv) {
 
 ux.tableMultiSelClick = function(uEv) {
 	var changed = false;
-	var selBox = uEv.uTrg;
-	if (selBox) {
+	var selBoxFac = uEv.uTrg;
+	if (selBoxFac) {
+		var selBox = selBoxFac.selBox;
 		var rigTbl = uEv.evp.uRigTbl;
 		rigTbl.uLastSelClick = null;
 		if (selBox.checked == true) {
@@ -2520,6 +2599,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 	var changed = false;
 	if (selBox != rigTbl.uLastSelClick && selBox.checked != true) {
 		selBox.checked = true;
+		ux.cbSwitchImg(selBox);
 		selBox.uRow.className = rigTbl.uSelCls;
 		rigTbl.uVisibleSel++;
 		
@@ -2537,6 +2617,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 				var cSelBox = selBoxes[i];
 				if (cSelBox.checked != true) {
 					cSelBox.checked = true;
+					ux.cbSwitchImg(cSelBox);
 					cSelBox.uRow.className = rigTbl.uSelCls;
 					rigTbl.uVisibleSel++;
 				}
@@ -2554,6 +2635,7 @@ ux.tableMultiRowSelect =  function(selBox, rigTbl, uncheckOthers, wideSelect) {
 			if (unSelBox.checked == true) {
 				if (unSelBox != selBox) {
 					unSelBox.checked = false;
+					ux.cbSwitchImg(unSelBox);
 					unSelBox.uRow.className = unSelBox.uRowClass;
 					changed = true;
 				}
@@ -2659,6 +2741,7 @@ ux.tableDisableMultiSelElements = function(rigTbl) {
 	var selAllElem = _id(rigTbl.uSelAllId);
 	if (rigTbl.uVisibleSel <= 0 && selAllElem.checked) {
 		selAllElem.checked = false;
+		ux.cbSwitchImg(selAllElem);
 	}
 }
 

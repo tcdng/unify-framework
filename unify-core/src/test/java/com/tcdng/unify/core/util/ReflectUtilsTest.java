@@ -19,10 +19,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
@@ -163,6 +165,53 @@ public class ReflectUtilsTest {
         List<String> fieldNames2 = ReflectUtils.getBeanCompliantNestedFieldNames(Customer.class.getName());
         assertSame(fieldNames1, fieldNames2);
         assertEquals(fieldNames1, fieldNames2);
+    }
+
+    @Test
+    public void testGetBeanCompliantNestedPropertiesWithGetters() throws Exception {
+        List<PropertyInfo> propertyInfoList = ReflectUtils.getBeanCompliantNestedPropertiesWithGetters(Customer.class);
+        assertNotNull(propertyInfoList);
+        assertEquals(8, propertyInfoList.size());
+
+        PropertyInfo po = propertyInfoList.get(0);
+        assertEquals("address", po.getName());
+        assertEquals(Address.class, po.getType());
+        assertNull(po.getArgumentType());
+
+        po = propertyInfoList.get(1);
+        assertEquals("address.addressLine1", po.getName());
+        assertEquals(String.class, po.getType());
+        assertNull(po.getArgumentType());
+
+        po = propertyInfoList.get(2);
+        assertEquals("address.addressLine2", po.getName());
+        assertEquals(String.class, po.getType());
+        assertNull(po.getArgumentType());
+
+        po = propertyInfoList.get(3);
+        assertEquals("firstName", po.getName());
+        assertEquals(String.class, po.getType());
+        assertNull(po.getArgumentType());
+
+        po = propertyInfoList.get(4);
+        assertEquals("id", po.getName());
+        assertEquals(Long.class, po.getType());
+        assertNull(po.getArgumentType());
+
+        po = propertyInfoList.get(5);
+        assertEquals("lastName", po.getName());
+        assertEquals(String.class, po.getType());
+        assertNull(po.getArgumentType());
+
+        po = propertyInfoList.get(6);
+        assertEquals("officeAddresses", po.getName());
+        assertEquals(Collection.class, po.getType());
+        assertEquals(Address.class, po.getArgumentType());
+
+        po = propertyInfoList.get(7);
+        assertEquals("orders", po.getName());
+        assertEquals(Integer[].class, po.getType());
+        assertNull(po.getArgumentType());
     }
 
     @Test

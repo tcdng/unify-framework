@@ -87,7 +87,7 @@ public class GroupControlWriter extends AbstractControlWriter {
                 Control control = childControlInfo.getControl();
                 if (control.isVisible() || control.isHidden()) {
                     control.setValueStore(valueStore);
-                    writer.writeBehaviour(control);
+                    writer.writeBehavior(control);
                 }
             }
         }

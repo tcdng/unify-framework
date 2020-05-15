@@ -81,6 +81,20 @@ public interface WidgetWriter extends UplComponentWriter {
     void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException;
 
     /**
+     * Writes widget behavior to response writer.
+     * 
+     * @param writer
+     *            the response writer
+     * @param widget
+     *            the user interface widget to write
+     * @param id
+     *            the id to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void writeBehavior(ResponseWriter writer, Widget widget, String id) throws UnifyException;
+
+    /**
      * Writes widget section behavior to response writer.
      * 
      * @param writer

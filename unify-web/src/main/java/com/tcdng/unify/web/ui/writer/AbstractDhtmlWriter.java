@@ -60,7 +60,43 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *             if an error occurs
      */
     protected final void writeTagAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
-        writeTagAttributes(writer, widget, widget.getStyleClass());
+        writeTagAttributesUsingStyleClass(writer, widget, widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title with leading extra
+     * style class
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesWithLeadingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagAttributesUsingStyleClass(writer, widget, extraStyleClass + " " + widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag attributes id, name, class, style and title with trailing extra
+     * style class
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagAttributesWithTrailingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagAttributesUsingStyleClass(writer, widget, widget.getStyleClass() + " " + extraStyleClass);
     }
 
     /**
@@ -75,7 +111,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * @throws UnifyException
      *             if an error occurs
      */
-    protected final void writeTagAttributes(ResponseWriter writer, Widget widget, String styleClass)
+    protected final void writeTagAttributesUsingStyleClass(ResponseWriter writer, Widget widget, String styleClass)
             throws UnifyException {
         writer.write(" id=\"").write(widget.getId()).write("\"");
 
@@ -84,6 +120,117 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             writer.write(" name=\"").write(groupId).write("\"");
         }
 
+        writer.write(" class=\"").write(styleClass);
+        String valStyleClass = widget.getStyleClassValue();
+        if (valStyleClass != null) {
+            writer.write(" ").write(valStyleClass);
+        }
+        writer.write("\"");
+
+        String style = widget.getStyle();
+        if (style != null) {
+            writer.write(" style=\"").write(style).write("\"");
+        }
+
+        String title = widget.getHint();
+        if (title != null) {
+            writer.write(" title=\"").write(title).write("\"");
+        }
+
+        if (widget.isSupportDisabled()) {
+            if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
+                writer.write(" disabled");
+            }
+        }
+
+        if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
+            writer.write(" readonly");
+        }
+    }
+
+    /**
+     * Writes tag identification attributes id and name.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagIdentificationAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
+        writer.write(" id=\"").write(widget.getId()).write("\"");
+
+        String groupId = widget.getGroupId();
+        if (groupId != null) {
+            writer.write(" name=\"").write(groupId).write("\"");
+        }
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
+        writeTagVisualAttributesUsingStyleClass(writer, widget, widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title with leading extra style
+     * class.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributesWithLeadingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagVisualAttributesUsingStyleClass(writer, widget, extraStyleClass + " " + widget.getStyleClass());
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title with trailing extra style
+     * class.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param extraStyleClass
+     *            the extra style class
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributesWithTrailingExtraStyleClass(ResponseWriter writer, Widget widget,
+            String extraStyleClass) throws UnifyException {
+        writeTagVisualAttributesUsingStyleClass(writer, widget, widget.getStyleClass() + " " + extraStyleClass);
+    }
+
+    /**
+     * Writes tag visual attributes class, style and title.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose attributes to write
+     * @param styleClass
+     *            the style class to use
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagVisualAttributesUsingStyleClass(ResponseWriter writer, Widget widget,
+            String styleClass) throws UnifyException {
         writer.write(" class=\"").write(styleClass);
         String valStyleClass = widget.getStyleClassValue();
         if (valStyleClass != null) {
@@ -224,6 +371,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * @throws UnifyException
      *             if an error occurs
      */
+    @Deprecated
     protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, boolean extraLeading,
             String... extraClasses) throws UnifyException {
         writer.write(" class=\"");
@@ -240,6 +388,66 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 if (extraClass != null) {
                     writer.write(" ").write(extraClass);
                 }
+            }
+        }
+
+        String valStyleClass = widget.getStyleClassValue();
+        if (valStyleClass != null) {
+            writer.write(" ").write(valStyleClass);
+        }
+        writer.write("\"");
+    }
+
+    /**
+     * Writes tag class attribute with leading extra classes.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose style class to write
+     * @param extraLeading
+     *            indicates extra classes should be leading
+     * @param extraClasses
+     *            the extra classes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagStyleClassWithLeadingExtraStyleClasses(ResponseWriter writer, Widget widget,
+            String... extraClasses) throws UnifyException {
+        writer.write(" class=\"");
+        for (String extraClass : extraClasses) {
+            if (extraClass != null) {
+                writer.write(extraClass).write(" ");
+            }
+        }
+        writer.write(widget.getStyleClass());
+
+        String valStyleClass = widget.getStyleClassValue();
+        if (valStyleClass != null) {
+            writer.write(" ").write(valStyleClass);
+        }
+        writer.write("\"");
+    }
+
+    /**
+     * Writes tag class attribute with trailing extra classes.
+     * 
+     * @param writer
+     *            the writer to use to write
+     * @param widget
+     *            the widget whose style class to write
+     * @param extraClasses
+     *            the extra classes to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagStyleClassWithTrailingExtraStyleClasses(ResponseWriter writer, Widget widget,
+            String... extraClasses) throws UnifyException {
+        writer.write(" class=\"");
+        writer.write(widget.getStyleClass());
+        for (String extraClass : extraClasses) {
+            if (extraClass != null) {
+                writer.write(" ").write(extraClass);
             }
         }
 
