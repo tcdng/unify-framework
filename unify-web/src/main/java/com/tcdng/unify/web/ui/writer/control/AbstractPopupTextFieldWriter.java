@@ -61,18 +61,6 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
             // Append type specific JS
             appendPopupBehaviour(writer, popupTextField);
         }
-
-        if (extensionType.isExtended()) {
-            writer.write("ux.textPopupFitFacade({");
-            writer.write("\"pBrdId\":\"").write(popupTextField.getBorderId()).write('"');
-            writer.write(",\"pBtnId\":\"").write(popupTextField.getPopupButtonId()).write('"');
-            if (extensionType.isFacade()) {
-                writer.write(",\"pFacId\":\"").write(popupTextField.getFacadeId()).write('"');
-            } else {
-                writer.write(",\"pFacId\":\"").write(popupTextField.getId()).write('"');
-            }
-            writer.write("});");
-        }
     }
 
     @Override

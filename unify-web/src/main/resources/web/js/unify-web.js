@@ -3700,25 +3700,6 @@ ux.setDisplayModeByName = function(name, mode) {
 }
 
 /** ************************** MISCELLANEOUS ****************** */
-/** Popup text fields */
-ux.textPopupFitFacade = function(prm) {
-	var brdElem = _id(prm.pBrdId);
-	var btnElem = _id(prm.pBtnId);
-	if (brdElem && btnElem) {
-		var w1 = brdElem.clientWidth;
-		var w2 = btnElem.clientWidth;
-		if (w1 == 0) {
-			w1 = parseInt(window.getComputedStyle(brdElem, null).getPropertyValue("width"));
-			w2 = parseInt(window.getComputedStyle(btnElem, null).getPropertyValue("width"));
-		}
-
-		var facElem = _id(prm.pFacId);
-		if (facElem) {
-			facElem.style.width = (w1 - w2 - 4) + "px";
-		}
-	}
-};
-
 /** Lists */
 ux.listWirePopFrame = function(sCom, rgp) {
 	var evp = {};
