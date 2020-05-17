@@ -125,6 +125,21 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         }
     }
 
+    @Override
+    public Object getValue() throws UnifyException {
+        String binding = getUplAttribute(String.class, "binding");
+        if (binding != null) {
+            return getValue(binding);
+        }
+        
+        ValueStore valueStore =  getValueStore();
+        if (valueStore != null) {
+            return valueStore.getValueObject();
+        }
+        
+        return null;
+    }
+
     /**
      * Creates and adds a non-conforming external child control that doesn't ignore
      * parent state.
