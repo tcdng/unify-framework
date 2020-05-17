@@ -89,10 +89,7 @@ public final class StringUtils {
      * @return the result tokens
      */
     public static String[] commaSplit(String string) {
-        if (string != null) {
-            return string.split(",");
-        }
-        return DataUtils.ZEROLEN_STRING_ARRAY;
+        return StringUtils.split(string, ',');
     }
 
     /**
@@ -103,10 +100,7 @@ public final class StringUtils {
      * @return the result tokens
      */
     public static String[] dotSplit(String string) {
-        if (string != null) {
-            return string.split("\\.");
-        }
-        return DataUtils.ZEROLEN_STRING_ARRAY;
+        return StringUtils.split(string, '.');
     }
 
     /**
@@ -114,7 +108,8 @@ public final class StringUtils {
      * 
      * @param string
      *            the string to split
-     * @param separator the separator
+     * @param separator
+     *            the separator
      * @return the result tokens
      */
     public static String[] split(String string, String separator) {
@@ -534,21 +529,20 @@ public final class StringUtils {
         }
         return null;
     }
-    
+
     public static String toUpperCase(String text) {
         if (text != null && text.length() > 0) {
             return text.toUpperCase();
         }
         return text;
     }
-    
+
     public static String toLowerCase(String text) {
         if (text != null && text.length() > 0) {
             return text.toLowerCase();
         }
         return text;
     }
-
 
     /**
      * Builds a string by concatenating supplied objects.
@@ -599,14 +593,14 @@ public final class StringUtils {
 
         return "";
     }
-    
+
     public static String getFirstNonBlank(String... values) {
-        for(String val: values) {
-            if(StringUtils.isNotBlank(val)) {
+        for (String val : values) {
+            if (StringUtils.isNotBlank(val)) {
                 return val;
             }
         }
-        
+
         return null;
     }
 
@@ -654,7 +648,7 @@ public final class StringUtils {
         for (StringToken stringToken : tokenList) {
             if (stringToken.isParam()) {
                 Object val = parameters.get(stringToken.getToken());
-                if(val != null) {
+                if (val != null) {
                     sb.append(val);
                 }
             } else {
@@ -670,7 +664,7 @@ public final class StringUtils {
             sb.delete(0, sb.length());
         }
     }
-    
+
     public static class StringToken {
 
         private String token;
@@ -694,4 +688,29 @@ public final class StringUtils {
             return param;
         }
     }
+
+    private static String[] split(String string, char ch) {
+        if (string != null) {
+            int len = string.length();
+            if (len > 0) {
+                List<String> list = new ArrayList<String>();
+                int start = 0;
+                while (start < len) {
+                    int end = string.indexOf(ch, start);
+                    if (end >= 0) {
+                        list.add(string.substring(start, end));
+                        start = end + 1;
+                    } else {
+                        list.add(string.substring(start));
+                        start = len;
+                    }
+                }
+                
+                return list.toArray(new String[list.size()]);
+            }
+        }
+
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
 }

@@ -175,6 +175,86 @@ public class StringUtilsTest {
     }
 
     @Test
+    public void testCommaSplit() throws Exception {
+        String[] result = StringUtils.commaSplit(null);
+        assertEquals(0, result.length);
+
+        String testValue1 = "";
+        result = StringUtils.commaSplit(testValue1);
+        assertEquals(0, result.length);
+
+        String testValue2 = "     ";
+        result = StringUtils.commaSplit(testValue2);
+        assertEquals(1, result.length);
+        assertEquals("     ", result[0]);
+
+        String testValue3 = "I,Dig,It";
+        result = StringUtils.commaSplit(testValue3);
+        assertEquals(3, result.length);
+        assertEquals("I", result[0]);
+        assertEquals("Dig", result[1]);
+        assertEquals("It", result[2]);
+
+        String testValue4 = ",I Dig";
+        result = StringUtils.commaSplit(testValue4);
+        assertEquals(2, result.length);
+        assertEquals("", result[0]);
+        assertEquals("I Dig", result[1]);
+
+        String testValue5 = ",I Dig,";
+        result = StringUtils.commaSplit(testValue5);
+        assertEquals(2, result.length);
+        assertEquals("", result[0]);
+        assertEquals("I Dig", result[1]);
+
+        String testValue6 = ",,";
+        result = StringUtils.commaSplit(testValue6);
+        assertEquals(2, result.length);
+        assertEquals("", result[0]);
+        assertEquals("", result[1]);
+    }
+
+    @Test
+    public void testDotSplit() throws Exception {
+        String[] result = StringUtils.dotSplit(null);
+        assertEquals(0, result.length);
+
+        String testValue1 = "";
+        result = StringUtils.dotSplit(testValue1);
+        assertEquals(0, result.length);
+
+        String testValue2 = "     ";
+        result = StringUtils.dotSplit(testValue2);
+        assertEquals(1, result.length);
+        assertEquals("     ", result[0]);
+
+        String testValue3 = "I.Dig.It";
+        result = StringUtils.dotSplit(testValue3);
+        assertEquals(3, result.length);
+        assertEquals("I", result[0]);
+        assertEquals("Dig", result[1]);
+        assertEquals("It", result[2]);
+
+        String testValue4 = ".I Dig";
+        result = StringUtils.dotSplit(testValue4);
+        assertEquals(2, result.length);
+        assertEquals("", result[0]);
+        assertEquals("I Dig", result[1]);
+
+        String testValue5 = ".I Dig.";
+        result = StringUtils.dotSplit(testValue5);
+        assertEquals(2, result.length);
+        assertEquals("", result[0]);
+        assertEquals("I Dig", result[1]);
+
+        String testValue6 = "..";
+        result = StringUtils.dotSplit(testValue6);
+        assertEquals(2, result.length);
+        assertEquals("", result[0]);
+        assertEquals("", result[1]);
+    }
+
+    @Test
     public void testGetCommaSeparatedString() throws Exception {
         String[] testValue1 = {};
         String result = StringUtils.buildCommaSeparatedString(testValue1, false);
