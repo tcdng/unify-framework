@@ -78,6 +78,7 @@ import com.tcdng.unify.web.ui.PageManager;
 import com.tcdng.unify.web.ui.PropertyInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.ResponseWriterPool;
+import com.tcdng.unify.web.util.DataTransferUtils;
 
 /**
  * Default implementation of application controller manager.
@@ -1032,7 +1033,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             }
 
             DataTransferHeader header = new DataTransferHeader(values);
-            DataTransferBlock transferBlock = createTransferBlock(transferId, header);
+            DataTransferBlock transferBlock = DataTransferUtils.createTransferBlock(transferId, header);
             String id = transferBlock.getId();
             header.setLongName(pageManager.getLongName(id));
             header.setBindingInfo(uiControllerInfo.getPropertyInfo(id));
@@ -1047,28 +1048,6 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         }
 
         return new DataTransfer(validationClass, validationIdClass, actionId, transferBlocks);
-    }
-
-    private DataTransferBlock createTransferBlock(String transferId, DataTransferHeader header) {
-        DataTransferBlock transferBlock = null;
-
-        String id = transferId;
-        int index = 0;
-        do {
-            int itemIndex = -1;
-            index = id.lastIndexOf('d');
-            if (index > 0) {
-                itemIndex = Integer.parseInt(id.substring(index + 1));
-                id = id.substring(0, index);
-            }
-
-            transferBlock = new DataTransferBlock(header, id, itemIndex, transferBlock);
-            index = id.lastIndexOf('.');
-            if (index > 0) {
-                id = id.substring(0, index);
-            }
-        } while (index > 0);
-        return transferBlock;
     }
 
     private void setIdRequestParameterBindings(Class<? extends Controller> controllerClass,
