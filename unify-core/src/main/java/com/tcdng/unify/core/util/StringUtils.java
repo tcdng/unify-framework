@@ -89,7 +89,7 @@ public final class StringUtils {
      * @return the result tokens
      */
     public static String[] commaSplit(String string) {
-        return StringUtils.split(string, ',');
+        return StringUtils.charSplit(string, ',');
     }
 
     /**
@@ -100,7 +100,39 @@ public final class StringUtils {
      * @return the result tokens
      */
     public static String[] dotSplit(String string) {
-        return StringUtils.split(string, '.');
+        return StringUtils.charSplit(string, '.');
+    }
+
+    /**
+     * Split a string into tokens using supplied character character.
+     * 
+     * @param string
+     *            the string to split
+     * @param ch the character to use
+     * @return the result tokens
+     */
+    public static String[] charSplit(String string, char ch) {
+        if (string != null) {
+            int len = string.length();
+            if (len > 0) {
+                List<String> list = new ArrayList<String>();
+                int start = 0;
+                while (start < len) {
+                    int end = string.indexOf(ch, start);
+                    if (end >= 0) {
+                        list.add(string.substring(start, end));
+                        start = end + 1;
+                    } else {
+                        list.add(string.substring(start));
+                        start = len;
+                    }
+                }
+                
+                return list.toArray(new String[list.size()]);
+            }
+        }
+
+        return DataUtils.ZEROLEN_STRING_ARRAY;
     }
 
     /**
@@ -687,30 +719,6 @@ public final class StringUtils {
         public boolean isParam() {
             return param;
         }
-    }
-
-    private static String[] split(String string, char ch) {
-        if (string != null) {
-            int len = string.length();
-            if (len > 0) {
-                List<String> list = new ArrayList<String>();
-                int start = 0;
-                while (start < len) {
-                    int end = string.indexOf(ch, start);
-                    if (end >= 0) {
-                        list.add(string.substring(start, end));
-                        start = end + 1;
-                    } else {
-                        list.add(string.substring(start));
-                        start = len;
-                    }
-                }
-                
-                return list.toArray(new String[list.size()]);
-            }
-        }
-
-        return DataUtils.ZEROLEN_STRING_ARRAY;
     }
 
 }
