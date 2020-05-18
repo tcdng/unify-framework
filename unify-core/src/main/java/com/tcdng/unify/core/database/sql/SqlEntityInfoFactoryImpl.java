@@ -229,8 +229,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     viewName = tableName;
                 }
 
-                final String schema =
-                        getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()), ta.datasource());
+                final String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()),
+                        sqlDataSourceDialect.getDataSourceName());
                 String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
 
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
@@ -948,7 +948,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 String preferredViewName = sqlDataSourceDialect.getPreferredName(viewName);
 
-                String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(va.schema()), va.datasource());
+                String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(va.schema()),
+                        sqlDataSourceDialect.getDataSourceName());
                 String schemaViewName = SqlUtils.generateFullSchemaElementName(schema, preferredViewName);
 
                 TableReferences tableReferences = new TableReferences(entityClass);
