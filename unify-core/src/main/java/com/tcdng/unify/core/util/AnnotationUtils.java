@@ -25,6 +25,9 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Parameters;
 import com.tcdng.unify.core.annotation.Schedulable;
+import com.tcdng.unify.core.annotation.StaticList;
+import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.constant.AnnotationConstants;
 
 /**
@@ -35,6 +38,10 @@ import com.tcdng.unify.core.constant.AnnotationConstants;
  */
 public final class AnnotationUtils {
 
+    private AnnotationUtils() {
+        
+    }
+    
     public static String getAnnotationString(String value) {
         if (AnnotationConstants.NONE.equals(value)) {
             return null;
@@ -74,5 +81,28 @@ public final class AnnotationUtils {
         }
 
         return new ArrayList<Parameter>(map.values());
+    }
+    
+    public static boolean isStaticListDataSource(StaticList sa, String dataSourceToCheck) {
+        return AnnotationUtils.isSchemaElementDataSource(sa.datasource(), dataSourceToCheck);
+    }
+    
+    public static boolean isTableDataSource(Table ta, String dataSourceToCheck) {
+        return AnnotationUtils.isSchemaElementDataSource(ta.datasource(), dataSourceToCheck);
+    }
+    
+    public static boolean isViewDataSource(View va, String dataSourceToCheck) {
+        return AnnotationUtils.isSchemaElementDataSource(va.datasource(), dataSourceToCheck);
+    }
+    
+    private static boolean isSchemaElementDataSource(String entityDataSources, String dataSourceToCheck) {
+        String[] datasources = StringUtils.commaSplit(entityDataSources);
+        for(String datasource: datasources) {
+            if(dataSourceToCheck.equals(datasource)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

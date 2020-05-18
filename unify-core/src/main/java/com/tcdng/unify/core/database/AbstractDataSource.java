@@ -26,6 +26,7 @@ import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -50,7 +51,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
         // Enumeration constants
         for (Class<? extends EnumConst> enumConstClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
             StaticList sa = enumConstClass.getAnnotation(StaticList.class);
-            if (sa.datasource().equals(name)) {
+            if (AnnotationUtils.isStaticListDataSource(sa, name)) {
                 entityList.add(enumConstClass);
             }
         }
@@ -58,7 +59,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
         // Entities
         for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, Table.class)) {
             Table ta = entityClass.getAnnotation(Table.class);
-            if (ta.datasource().equals(name)) {
+            if (AnnotationUtils.isTableDataSource(ta, name)) {
                 entityList.add(entityClass);
             }
         }
@@ -75,7 +76,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
             Class<?> extendedEntityClass = entityClass.getSuperclass();
             if (extendedEntityClass != null) {
                 Table ta = extendedEntityClass.getAnnotation(Table.class);
-                if (ta.datasource().equals(name)) {
+                if (AnnotationUtils.isTableDataSource(ta, name)) {
                     entityList.add(entityClass);
                 }
             }
@@ -91,7 +92,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
         // Entities
         for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, View.class)) {
             View va = entityClass.getAnnotation(View.class);
-            if (va.datasource().equals(name)) {
+            if (AnnotationUtils.isViewDataSource(va, name)) {
                 entityList.add(entityClass);
             }
         }
@@ -107,6 +108,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
     @Override
     protected void onInitialize() throws UnifyException {
         if (dialect != null) {
+            dialect.setDataSourceName(getEntityMatchingName());
             dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
         }
     }
@@ -119,6 +121,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
     protected void setDialect(DataSourceDialect dialect) throws UnifyException {
         this.dialect = dialect;
         if (dialect != null) {
+            dialect.setDataSourceName(getEntityMatchingName());
             dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
         }
     }

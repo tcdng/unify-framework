@@ -131,6 +131,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
     private String newLineSql;
 
+    private String dataSourceName;
+    
     private boolean allObjectsInLowerCase;
 
     private boolean useCallableFunctionMode;
@@ -147,6 +149,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlCacheFactory = new SqlCacheFactory();
         sqlStatementPoolsFactory = new SqlStatementPoolsFactory();
         noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME"));
+    }
+
+    @Override
+    public String getDataSourceName() {
+        return dataSourceName;
+    }
+
+    @Override
+    public void setDataSourceName(String dataSourceName) {
+        this.dataSourceName = dataSourceName;
     }
 
     @Override

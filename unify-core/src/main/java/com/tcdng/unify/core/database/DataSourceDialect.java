@@ -30,6 +30,18 @@ import com.tcdng.unify.core.criterion.Restriction;
 public interface DataSourceDialect extends UnifyComponent {
 
     /**
+     * Sets the name of the data source utilizing this dialect object.
+     * 
+     * @param dataSourceName the data source name
+     */
+    void setDataSourceName(String dataSourceName);
+    
+    /**
+     * Gets the name of the data source utilizing this dialect object.
+     */
+    String getDataSourceName();
+    
+    /**
      * Checks if object are all renamed to lower case in dialect.
      * 
      * @return true if all lower case objects
