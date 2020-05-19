@@ -98,7 +98,7 @@ public final class AnnotationUtils {
     private static boolean isSchemaElementDataSource(String entityDataSources, String dataSourceToCheck) {
         String[] datasources = StringUtils.commaSplit(entityDataSources);
         for(String datasource: datasources) {
-            if(dataSourceToCheck.equals(datasource)) {
+            if(dataSourceToCheck.equals(datasource.trim())) {
                 return true;
             }
         }
