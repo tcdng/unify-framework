@@ -49,22 +49,24 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
         pathParts = new FactoryMap<String, PathParts>() {
 
             @Override
-            protected PathParts create(String path, Object... params) throws Exception {
-                int colIndex = path.lastIndexOf(':');
+            protected PathParts create(final String path, Object... params) throws Exception {
+                UnifyComponentConfig ucc = null;
                 String pathId = path;
                 String controllerName = path;
                 String actionName = null;
-                boolean variablePath = false;
+                String pathVariable = null;
+                int colIndex = path.lastIndexOf(':');
                 if (colIndex >= 0) {
                     controllerName = path.substring(0, colIndex);
                     int actionPartIndex = path.lastIndexOf('/');
                     if (actionPartIndex > colIndex) {
                         pathId = path.substring(0, actionPartIndex);
+                        pathVariable = path.substring(colIndex + 1, actionPartIndex);
                         actionName = path.substring(actionPartIndex);
+                    } else {
+                        pathVariable = path.substring(colIndex + 1);
                     }
-
-                    variablePath = true;
-                } else if (getComponentConfig(Controller.class, path) == null) {
+                } else if ((ucc = getComponentConfig(Controller.class, controllerName)) == null) {
                     int actionPartIndex = path.lastIndexOf('/');
                     if (actionPartIndex > 0) {
                         controllerName = path.substring(0, actionPartIndex);
@@ -74,12 +76,15 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
                 }
 
                 boolean uiController = false;
-                UnifyComponentConfig ucc = getComponentConfig(Controller.class, controllerName);
+                if(ucc == null) {
+                    ucc = getComponentConfig(Controller.class, controllerName);
+                }
+                
                 if (ucc != null) {
                     uiController = UIController.class.isAssignableFrom(ucc.getType());
                 }
 
-                return new PathParts(path, pathId, controllerName, actionName, uiController, variablePath);
+                return new PathParts(path, pathId, controllerName, pathVariable, actionName, uiController);
             }
 
             @Override
