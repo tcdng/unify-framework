@@ -32,20 +32,20 @@ public class PathParts {
 
     private String controllerName;
 
+    private String pathVariable;
+
     private String actionName;
 
     private boolean uiController;
 
-    private boolean variablePath;
-
-    public PathParts(String fullPath, String pathId, String controllerName, String actionName, boolean uiController,
-            boolean variablePath) {
+    public PathParts(String fullPath, String pathId, String controllerName, String pathVariable, String actionName,
+            boolean uiController) {
         this.fullPath = fullPath;
         this.pathId = pathId;
         this.controllerName = controllerName;
+        this.pathVariable = pathVariable;
         this.actionName = actionName;
         this.uiController = uiController;
-        this.variablePath = variablePath;
     }
 
     public String getFullPath() {
@@ -64,12 +64,16 @@ public class PathParts {
         return actionName;
     }
 
+    public String getPathVariable() {
+        return pathVariable;
+    }
+
     public boolean isUiController() {
         return uiController;
     }
 
     public boolean isVariablePath() {
-        return variablePath;
+        return pathVariable != null;
     }
 
     public boolean isActionPath() {

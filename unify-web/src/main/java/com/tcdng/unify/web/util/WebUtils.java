@@ -32,50 +32,6 @@ public final class WebUtils {
 
     }
 
-    public static String generateBeanIndexedPathFromPath(String path, Object index) throws UnifyException {
-        if (index != null) {
-            int intIndex = path.lastIndexOf('/');
-            if (intIndex >= 0) {
-                StringBuilder sb = new StringBuilder(path);
-                sb.insert(intIndex, ':');
-                sb.insert(intIndex + 1, index);
-                return sb.toString();
-            }
-        }
-
-        return path;
-    }
-
-    public static String extractPathFromBeanIndexedPath(String beanIndexedPath) throws UnifyException {
-        int index0 = beanIndexedPath.lastIndexOf(':');
-        if (index0 >= 0) {
-            int index1 = beanIndexedPath.lastIndexOf('/');
-            if (index1 > index0) {
-                StringBuilder sb = new StringBuilder(beanIndexedPath);
-                sb.replace(index0, index1, "");
-                return sb.toString();
-            } else {
-                return beanIndexedPath.substring(0, index0);
-            }
-        }
-
-        return beanIndexedPath;
-    }
-
-    public static String extractBeanIdFromBeanIndexedPath(String beanIndexedPath) throws UnifyException {
-        int colIndex = beanIndexedPath.lastIndexOf(':');
-        int slashIndex = beanIndexedPath.lastIndexOf('/');
-        if (colIndex >= 0) {
-            if (slashIndex > colIndex) {
-                return beanIndexedPath.substring(0, slashIndex);
-            } else {
-                return beanIndexedPath;
-            }
-        }
-
-        return beanIndexedPath.substring(0, slashIndex);
-    }
-
     /**
      * Encodes a shortcut string.
      * 

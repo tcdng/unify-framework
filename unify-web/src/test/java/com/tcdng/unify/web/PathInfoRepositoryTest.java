@@ -31,10 +31,10 @@ import org.junit.Test;
  */
 public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
+    private PathInfoRepository pir;
+
     @Test
     public void testGetPagePathInfo() throws Exception {
-        PathInfoRepository pir =
-                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
         PagePathInfo pagePathInfo = pir.getPagePathInfo("/testauthor");
         assertNotNull(pagePathInfo);
         assertEquals("/testauthor", pagePathInfo.getPathId());
@@ -47,13 +47,12 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsNoAction() throws Exception {
-        PathInfoRepository pir =
-                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
         PathParts pathParts = pir.getPathParts("/testauthor");
         assertNotNull(pathParts);
         assertEquals("/testauthor", pathParts.getFullPath());
         assertEquals("/testauthor", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
+        assertNull(pathParts.getPathVariable());
         assertNull(pathParts.getActionName());
         assertTrue(pathParts.isUiController());
         assertFalse(pathParts.isActionPath());
@@ -62,13 +61,12 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsWithAction() throws Exception {
-        PathInfoRepository pir =
-                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
         PathParts pathParts = pir.getPathParts("/testauthor/createAuthor");
         assertNotNull(pathParts);
         assertEquals("/testauthor/createAuthor", pathParts.getFullPath());
         assertEquals("/testauthor", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
+        assertNull(pathParts.getPathVariable());
         assertEquals("/createAuthor", pathParts.getActionName());
         assertTrue(pathParts.isUiController());
         assertTrue(pathParts.isActionPath());
@@ -77,13 +75,12 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsVariablePathNoAction() throws Exception {
-        PathInfoRepository pir =
-                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
         PathParts pathParts = pir.getPathParts("/testauthor:20");
         assertNotNull(pathParts);
         assertEquals("/testauthor:20", pathParts.getFullPath());
         assertEquals("/testauthor:20", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
+        assertEquals("20", pathParts.getPathVariable());
         assertNull(pathParts.getActionName());
         assertTrue(pathParts.isUiController());
         assertFalse(pathParts.isActionPath());
@@ -92,13 +89,12 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsVariablePathWithAction() throws Exception {
-        PathInfoRepository pir =
-                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
         PathParts pathParts = pir.getPathParts("/testauthor:35/createAuthor");
         assertNotNull(pathParts);
         assertEquals("/testauthor:35/createAuthor", pathParts.getFullPath());
         assertEquals("/testauthor:35", pathParts.getPathId());
         assertEquals("/testauthor", pathParts.getControllerName());
+        assertEquals("35", pathParts.getPathVariable());
         assertEquals("/createAuthor", pathParts.getActionName());
         assertTrue(pathParts.isUiController());
         assertTrue(pathParts.isActionPath());
@@ -107,24 +103,22 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsReuse() throws Exception {
-        PathInfoRepository pir =
-                (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
         PathParts pathParts1 = pir.getPathParts("/testauthor:35/createAuthor");
         PathParts pathParts2 = pir.getPathParts("/testauthor:35/createAuthor");
         assertNotNull(pathParts1);
         assertNotNull(pathParts2);
         assertFalse(pathParts1 == pathParts2);
-        
+
         PathParts pathParts3 = pir.getPathParts("/testauthor/createAuthor");
         PathParts pathParts4 = pir.getPathParts("/testauthor/createAuthor");
         assertNotNull(pathParts3);
         assertNotNull(pathParts4);
         assertTrue(pathParts3 == pathParts4);
     }
-    
+
     @Override
     protected void onSetup() throws Exception {
-
+        pir = (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
     }
 
     @Override
