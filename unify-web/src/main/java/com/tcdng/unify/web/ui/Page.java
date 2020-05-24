@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.PageBean;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.ui.panel.StandalonePanel;
 
 /**
@@ -126,17 +127,22 @@ public interface Page extends StandalonePanel {
     boolean isDocument();
 
     /**
-     * Sets this page path ID
+     * Sets this page path parts
      * 
-     * @param pathId
-     *            the path ID to set
+     * @param pathParts
+     *            the path parts to set
      */
-    void setPathId(String pathId);
+    void setPathParts(PathParts pathParts);
 
     /**
      * Returns the page path ID
      */
     String getPathId();
+
+    /**
+     * Returns the page path variable
+     */
+    String getPathVariable();
 
     /**
      * Returns popup base ID

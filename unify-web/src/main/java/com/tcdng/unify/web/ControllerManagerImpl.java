@@ -267,7 +267,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 try {
                     PageController<?> pageController = (PageController<?>) controller;
                     page = pageManager.createPage(sessionContext.getLocale(), controllerName);
-                    page.setPathId(pathParts.getPathId());
+                    page.setPathParts(pathParts);
                     Class<? extends PageBean> pageBeanClass = pageController.getPageBeanClass();
                     if (VoidPageBean.class.equals(pageBeanClass)) {
                         page.setPageBean(VoidPageBean.INSTANCE);

@@ -24,6 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.web.PageBean;
+import com.tcdng.unify.web.PathParts;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.ui.panel.AbstractStandalonePanel;
 import com.tcdng.unify.web.ui.panel.StandalonePanel;
@@ -43,22 +44,36 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
     private Map<String, Object> attributes;
 
-    private String pathId;
+    private PathParts pathParts;
 
     @Override
-    public String getPathId() {
-        return pathId;
+    public void setPathParts(PathParts pathParts) {
+        this.pathParts = pathParts;
     }
 
     @Override
-    public void setPathId(String pathId) {
-        this.pathId = pathId;
+    public String getPathId() {
+        if (pathParts != null) {
+            return pathParts.getPathId();
+        }
+
+        return null;
+    }
+
+    @Override
+    public String getPathVariable() {
+        if (pathParts != null) {
+            return pathParts.getPathVariable();
+        }
+
+        return null;
     }
 
     @Override
     public void setPageBean(PageBean pageBean) throws UnifyException {
         setValueStore(((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(pageBean, -1));    }
+                .getValueStore(pageBean, -1));
+    }
 
     @Override
     public PageBean getPageBean() throws UnifyException {
@@ -103,9 +118,9 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
             if (panel != null) {
                 return panel;
             }
-            
+
             // Check stand-alone panel widgets
-            for(StandalonePanel standalonePanel: standalonePanels.values()) {
+            for (StandalonePanel standalonePanel : standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {
                     return (Panel) standalonePanel.getWidgetByLongName(longName);
                 }
@@ -161,14 +176,14 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
         if (isWidget(longName)) {
             return super.getWidgetByLongName(longName);
         }
-        
+
         // Fix 30/09/19 Long name may be referring to stand-alone panel
         StandalonePanel panel = standalonePanels.get(longName);
         if (panel != null) {
             return panel;
         }
         // End fix
-        
+
         if (standalonePanels != null) {
             for (StandalonePanel standalonePanel : standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {

@@ -206,6 +206,17 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     }
 
     /**
+     * Gets the path variable for the current page object.
+     * 
+     * @return the page path variable
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected String getPathVariable() throws UnifyException {
+        return getRequestContextUtil().getRequestPage().getPathVariable();
+    }
+
+    /**
      * Sets up a file for download in current request context and returns a file
      * download response.
      * 
