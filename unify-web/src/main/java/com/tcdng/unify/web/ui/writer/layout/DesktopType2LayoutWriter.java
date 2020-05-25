@@ -60,7 +60,9 @@ public class DesktopType2LayoutWriter extends AbstractDocumentLayoutWriter {
         writer.write("<div style=\"display:table; width:100%; height:100%\">");
         writer.write("<div style=\"display:table-row; width:100%;\">");
         writer.write("<div id=\"").write(docPageName).write("_menu\" class=\"menuopen\">");
-        writer.writeStructureAndContent(document.getMenuPanel());
+        if (document.getMenuPanel() != null) {
+            writer.writeStructureAndContent(document.getMenuPanel());
+        }
         writer.write("</div>");
         if (isCollapsible) {
             writer.write("<div class=\"collapser\">");
