@@ -34,9 +34,12 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
         TargetControl targetControl = (TargetControl) widget;
         writer.write("<input type=\"hidden\"");
         writeTagId(writer, targetControl.getTargetId());
-        String value = targetControl.getStaticBindingValue();
-        if (value == null) {
-            value = targetControl.getStringValue();
+        String value = null;
+        if (!targetControl.isAlwaysValueIndex()) {
+            value = targetControl.getStaticBindingValue();
+            if (value == null) {
+                value = targetControl.getStringValue();
+            }
         }
 
         if (value != null) {

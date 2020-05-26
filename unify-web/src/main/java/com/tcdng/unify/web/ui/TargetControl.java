@@ -51,4 +51,13 @@ public interface TargetControl extends Control {
      *             if an error occurs
      */
     boolean isDebounce() throws UnifyException;
+
+    /**
+     * Indicates if target control should always bind value to value store index.
+     * 
+     * @return true if bind to value store index otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isAlwaysValueIndex() throws UnifyException;
 }

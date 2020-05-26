@@ -26,7 +26,9 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "staticBindingValue", type = String.class),
+@UplAttributes({
+    @UplAttribute(name = "staticBindingValue", type = String.class),
+    @UplAttribute(name = "alwaysValueIndex", type = boolean.class),
     @UplAttribute(name = "debounce", type = boolean.class)})
 public abstract class AbstractTargetControl extends AbstractControl implements TargetControl {
 
@@ -38,6 +40,11 @@ public abstract class AbstractTargetControl extends AbstractControl implements T
     @Override
     public String getTargetId() throws UnifyException {
         return getPrefixedId("trg_");
+    }
+
+    @Override
+    public boolean isAlwaysValueIndex() throws UnifyException {
+        return getUplAttribute(boolean.class, "alwaysValueIndex");
     }
 
     @Override
