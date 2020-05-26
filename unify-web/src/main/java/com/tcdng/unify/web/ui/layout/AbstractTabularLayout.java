@@ -30,6 +30,7 @@ import com.tcdng.unify.web.ui.TabularLayout;
  */
 @UplAttributes({ @UplAttribute(name = "cellType", type = TabularCellType.class, defaultVal = "top"),
         @UplAttribute(name = "cellPadding", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "cellStyle", type = String.class),
         @UplAttribute(name = "widths", type = String[].class),
         @UplAttribute(name = "heights", type = String[].class), })
 public abstract class AbstractTabularLayout extends AbstractLayout implements TabularLayout {
@@ -42,6 +43,11 @@ public abstract class AbstractTabularLayout extends AbstractLayout implements Ta
     @Override
     public boolean isCellPadding() throws UnifyException {
         return getUplAttribute(boolean.class, "cellPadding");
+    }
+
+    @Override
+    public String getCellStyle() throws UnifyException {
+        return getUplAttribute(String.class, "cellStyle");
     }
 
     @Override

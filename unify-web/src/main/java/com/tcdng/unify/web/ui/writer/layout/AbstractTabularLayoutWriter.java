@@ -69,14 +69,23 @@ public abstract class AbstractTabularLayoutWriter extends AbstractLayoutWriter {
         }
 
         writer.write("<div class=\"").write(cellCls).write("\"");
-        boolean isCaptionVisible = layout.isShowCaption();
         boolean isStyle = false;
+        String cellStyle = layout.getCellStyle();
+        if (cellStyle != null) {
+            isStyle = true;
+            writer.write(" style=\"").write(cellStyle);
+        }
+        
+        boolean isCaptionVisible = layout.isShowCaption();
         if (columnIndex == 0) {
             String[] heights = layout.getHeights();
             if (heights != null) {
                 if (!"none".equals(heights[rowIndex])) {
-                    isStyle = true;
-                    writer.write(" style=\"height:").write(heights[rowIndex]).write(";");
+                    if (!isStyle) {
+                        writer.write(" style=\"");
+                        isStyle = true;
+                    }
+                    writer.write("height:").write(heights[rowIndex]).write(";");
                 }
             }
         }

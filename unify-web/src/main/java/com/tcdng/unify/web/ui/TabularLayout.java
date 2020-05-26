@@ -27,6 +27,14 @@ import com.tcdng.unify.core.UnifyException;
 public interface TabularLayout extends Layout {
 
     /**
+     * Returns the layout cell style.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getCellStyle() throws UnifyException;
+
+    /**
      * Returns the layout cell type.
      * 
      * @throws UnifyException
