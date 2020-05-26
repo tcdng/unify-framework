@@ -35,7 +35,7 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_TOCONSOLE = "application.toconsole";
 
-    String APPLICATION_BOOT = "application.boot.component";
+    String APPLICATION_BOOT = "application.boot";
 
     String APPLICATION_INTERFACES = "application.interfaces";
 
