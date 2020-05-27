@@ -764,7 +764,8 @@ z-index:400;}
 .ui-swappableimage {}
 
 /** Symbol */
-.ui-symbol {display:inline-block !important;}
+.ui-symbol {padding: 0px 4px; min-height:28px; font-size:14px; background-color: transparent; border: none; cursor: pointer; color:#202020;}
+.ui-symbol:disabled {cursor:default; color:#C8C8C8;}
 
 /** Table */
 .ui-table {height:100%;}
