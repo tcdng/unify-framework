@@ -28,6 +28,7 @@ import com.tcdng.unify.web.ControllerManager;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.WebApplicationComponents;
+import com.tcdng.unify.web.ui.panel.StandalonePanel;
 import com.tcdng.unify.web.util.WidgetUtils;
 
 /**
@@ -421,6 +422,18 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         while (container != null) {
             if (container instanceof Panel) {
                 return (Panel) container;
+            }
+            container = container.getContainer();
+        }
+        return null;
+    }
+
+    @Override
+    public StandalonePanel getStandalonePanel() throws UnifyException {
+        Widget container = this.container;
+        while (container != null) {
+            if (container instanceof StandalonePanel) {
+                return (StandalonePanel) container;
             }
             container = container.getContainer();
         }

@@ -20,6 +20,7 @@ import java.util.Collection;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplComponent;
+import com.tcdng.unify.web.ui.panel.StandalonePanel;
 
 /**
  * Interface for all classes that are user interface components. At runtime and
@@ -318,6 +319,14 @@ public interface Widget extends UplComponent {
      *             if an error occurs.
      */
     Panel getPanel() throws UnifyException;
+
+    /**
+     * Returns this component's containing standalone panel.
+     * 
+     * @throws UnifyException
+     *             if an error occurs.
+     */
+    StandalonePanel getStandalonePanel() throws UnifyException;
 
     /**
      * Returns the relay widget otherwise null.

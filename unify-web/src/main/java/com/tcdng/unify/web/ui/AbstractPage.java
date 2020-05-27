@@ -106,6 +106,16 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
+    public void resolvePageActions(EventHandler[] eventHandlers) throws UnifyException {
+        super.resolvePageActions(eventHandlers);
+        if (standalonePanels != null && eventHandlers != null) {
+            for (StandalonePanel standalonePanel : standalonePanels.values()) {
+                standalonePanel.resolvePageActions(eventHandlers);
+            }
+        }
+    }
+
+    @Override
     public Panel getPanelByLongName(String longName) throws UnifyException {
         if (isWidget(longName)) {
             return (Panel) getWidgetByLongName(longName);
@@ -177,7 +187,7 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
             return super.getWidgetByLongName(longName);
         }
 
-        // Fix 30/09/19 Long name may be referring to stand-alone panel
+        // Fix 30/09/19 Long name may be referring to standalone panel
         StandalonePanel panel = standalonePanels.get(longName);
         if (panel != null) {
             return panel;
