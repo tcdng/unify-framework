@@ -41,7 +41,7 @@ public class SymbolWriter extends AbstractTargetControlWriter {
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
         Symbol symbolWidget = (Symbol) targetControl;
-        writer.write("<span ");
+        writer.write("<button type=\"button\"");
         writeTagAttributesWithTrailingExtraStyleClass(writer, symbolWidget, "g_fsm");
         writer.write("/>");
         if (fontSymbolManager != null) {
@@ -50,6 +50,6 @@ public class SymbolWriter extends AbstractTargetControlWriter {
         } else {
             writer.write("&#x25e6;");
         }
-        writer.write("</span>");
+        writer.write("</button>");
     }
 }
