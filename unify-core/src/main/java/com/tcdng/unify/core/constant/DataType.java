@@ -16,7 +16,11 @@
 package com.tcdng.unify.core.constant;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.StaticList;
@@ -34,17 +38,17 @@ public enum DataType implements EnumConst {
     CHAR("CH", Character.class, ColumnType.CHARACTER),
     BOOLEAN("BL", Boolean.class, ColumnType.BOOLEAN),
     SHORT("SH", Short.class, ColumnType.SHORT),
-    INTEGER("IN", Integer.class, ColumnType.INTEGER),
-    LONG("LN", Long.class, ColumnType.LONG),
+    INTEGER("IN", Integer.class, ColumnType.INTEGER, SHORT),
+    LONG("LN", Long.class, ColumnType.LONG, INTEGER, SHORT),
     FLOAT("FL", Float.class, ColumnType.FLOAT),
-    DOUBLE("DB", Double.class, ColumnType.DOUBLE),
-    DECIMAL("DC", BigDecimal.class, ColumnType.DECIMAL),
+    DOUBLE("DB", Double.class, ColumnType.DOUBLE, FLOAT),
+    DECIMAL("DC", BigDecimal.class, ColumnType.DECIMAL, DOUBLE, FLOAT, LONG, INTEGER, SHORT),
     DATE("DT", Date.class, ColumnType.DATE),
-    TIMESTAMP("TS", Date.class, ColumnType.TIMESTAMP),
-    TIMESTAMP_UTC("TU", Date.class, ColumnType.TIMESTAMP_UTC),
-    STRING("ST", String.class, ColumnType.STRING),
+    TIMESTAMP_UTC("TU", Date.class, ColumnType.TIMESTAMP_UTC, DATE),
+    TIMESTAMP("TS", Date.class, ColumnType.TIMESTAMP, DATE),
     CLOB("CT", String.class, ColumnType.CLOB),
-    BLOB("BT", byte[].class, ColumnType.BLOB);
+    BLOB("BT", byte[].class, ColumnType.BLOB),
+    STRING("ST", String.class, ColumnType.STRING, CHAR, BOOLEAN, DECIMAL, DOUBLE, FLOAT, LONG, INTEGER, SHORT, CLOB);
 
     private final String code;
 
@@ -52,10 +56,17 @@ public enum DataType implements EnumConst {
 
     private final ColumnType columnType;
 
-    private DataType(String code, Class<?> javaClass, ColumnType columnType) {
+    private final Set<DataType> convertibleFromTypes;
+
+    private DataType(String code, Class<?> javaClass, ColumnType columnType, DataType... convertibleFromTypes) {
         this.code = code;
         this.javaClass = javaClass;
         this.columnType = columnType;
+        if (convertibleFromTypes == null || convertibleFromTypes.length == 0) {
+            this.convertibleFromTypes = Collections.emptySet();
+        } else {
+            this.convertibleFromTypes = new HashSet<DataType>(Arrays.asList(convertibleFromTypes));
+        }
     }
 
     @Override
@@ -74,6 +85,10 @@ public enum DataType implements EnumConst {
 
     public ColumnType columnType() {
         return columnType;
+    }
+
+    public boolean isConvertibleFrom(DataType dataType) {
+        return this.equals(dataType) || convertibleFromTypes.contains(dataType);
     }
 
     public static DataType fromCode(String code) {
