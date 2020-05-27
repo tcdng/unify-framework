@@ -24,9 +24,12 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.PageWidgetValidator;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.AbstractPanel;
+import com.tcdng.unify.web.ui.EventHandler;
 import com.tcdng.unify.web.ui.PageAction;
 import com.tcdng.unify.web.ui.PageManager;
 import com.tcdng.unify.web.ui.PageValidation;
@@ -99,6 +102,39 @@ public abstract class AbstractStandalonePanel extends AbstractPanel implements S
     @Override
     public PageAction getPageAction(String longName) {
         return standalonePanelInfo.getPageActions().get(longName);
+    }
+
+    @Override
+    public void resolvePageActions(EventHandler[] eventHandlers) throws UnifyException {
+        if (eventHandlers != null) {
+            for (EventHandler eh : eventHandlers) {
+                if (eh.getPageAction() == null) {
+                    UplElementReferences uer = eh.getUplAttribute(UplElementReferences.class, "action");
+                    if (uer != null && !DataUtils.isBlank(uer.getIds())) {
+                        List<PageAction> pageActionList = null;
+                        for (Map.Entry<String, PageAction> entry : standalonePanelInfo.getPageActions().entrySet()) {
+                            String actionLongName = entry.getKey();
+                            for (String id : uer.getIds()) {
+                                int index = actionLongName.lastIndexOf(id);
+                                if (index > 0 && actionLongName.charAt(index - 1) == '.') {
+                                    if (pageActionList == null) {
+                                        pageActionList = new ArrayList<PageAction>();
+                                    }
+
+                                    pageActionList.add(entry.getValue());
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (pageActionList != null) {
+                            eh.setPageAction(pageActionList.toArray(new PageAction[pageActionList.size()]));
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
