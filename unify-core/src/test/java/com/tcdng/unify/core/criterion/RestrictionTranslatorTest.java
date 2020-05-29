@@ -92,14 +92,14 @@ public class RestrictionTranslatorTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testTranslateLike() throws Exception {
-        assertEquals("$f{description} contains 'an'", rt.translate(new Like("description", "an")));
-        assertEquals("Description contains 'an'", rt.translate(new Like("description", "an"), fieldLabels));
+        assertEquals("$f{description} like 'an'", rt.translate(new Like("description", "an")));
+        assertEquals("Description like 'an'", rt.translate(new Like("description", "an"), fieldLabels));
     }
 
     @Test
     public void testTranslateNotLike() throws Exception {
-        assertEquals("$f{description} not contain 'an'", rt.translate(new NotLike("description", "an")));
-        assertEquals("Description not contain 'an'", rt.translate(new NotLike("description", "an"), fieldLabels));
+        assertEquals("$f{description} not like 'an'", rt.translate(new NotLike("description", "an")));
+        assertEquals("Description not like 'an'", rt.translate(new NotLike("description", "an"), fieldLabels));
     }
 
     @Test

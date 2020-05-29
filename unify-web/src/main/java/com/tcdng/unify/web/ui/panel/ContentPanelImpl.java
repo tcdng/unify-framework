@@ -153,6 +153,17 @@ public class ContentPanelImpl extends AbstractContentPanel {
             return;
         }
 
+        if (!isTabbed()) {
+            // Discard old pages
+            for (ContentInfo oldContentInfo: contentList) {
+                getSessionContext().removeAttribute(oldContentInfo.getPage().getPathId());
+            }
+            
+            // Clear content list
+            contentList.clear();
+            contentByPathIdMap.clear();
+        }
+        
         contentIndex = contentList.size();
         contentInfo = new ContentInfo(page, contentIndex);
         contentList.add(contentInfo);
