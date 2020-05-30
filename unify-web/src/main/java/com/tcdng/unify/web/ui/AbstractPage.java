@@ -106,6 +106,15 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
+    public StandalonePanel removeStandalonePanel(String name) throws UnifyException {
+        if (standalonePanels != null) {
+            return standalonePanels.remove(name);
+        }
+
+        return null;
+    }
+
+    @Override
     public void resolvePageActions(EventHandler[] eventHandlers) throws UnifyException {
         super.resolvePageActions(eventHandlers);
         if (standalonePanels != null && eventHandlers != null) {

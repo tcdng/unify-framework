@@ -412,7 +412,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
                 return getRequestAttribute(attribute);
             }
         }
-
+        
         return null;
     }
 
@@ -457,6 +457,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         return getRequestContextUtil().getRequestPage().getAttribute(name);
     }
 
+    protected Page getPage() throws UnifyException {
+        return getRequestContextUtil().getRequestPage();
+    }
+    
     @SuppressWarnings("unchecked")
     protected <T> T getPageAttribute(Class<T> clazz, String name) throws UnifyException {
         return (T) getRequestContextUtil().getRequestPage().getAttribute(name);

@@ -39,14 +39,14 @@ public class Picture extends AbstractMultiControl {
 
     @Override
     public void onPageConstruct() throws UnifyException {
-        fileControl = (Control) addInternalChildControl(
+        fileControl = (Control) addInternalChildWidget(
                 "!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");
         StringBuilder sb = new StringBuilder();
         sb.append("!ui-image src:$t{images/camera.png}");
         appendUplAttribute(sb, "binding");
         appendUplAttribute(sb, "styleClass");
         appendUplAttribute(sb, "style");
-        imageControl = addInternalChildControl(sb.toString(), true, false);
+        imageControl = (Control) addInternalChildWidget(sb.toString(), true, false);
     }
 
     @Override

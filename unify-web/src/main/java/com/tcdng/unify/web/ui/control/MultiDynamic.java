@@ -42,14 +42,14 @@ public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.Val
 
     @Override
     public void onPageConstruct() throws UnifyException {
-        valueCtrl = (DynamicField) addInternalChildControl("!ui-dynamic binding:value descriptorBinding:editor");
+        valueCtrl = (DynamicField) addInternalChildWidget("!ui-dynamic binding:value descriptorBinding:editor");
     }
 
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock dynamicCtrlBlock = transferBlock.getChildBlock();
-            Control control = (Control) getChildControlInfo(dynamicCtrlBlock.getId()).getControl();
+            Control control = (Control) getChildWidgetInfo(dynamicCtrlBlock.getId()).getWidget();
             control.setValueStore(getValueList().get(dynamicCtrlBlock.getChildBlock().getItemIndex()).getValueStore());
             control.populate(dynamicCtrlBlock);
         }

@@ -25,6 +25,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.CalendarUtils.DateDifference;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
+import com.tcdng.unify.web.ui.Widget;
 
 /**
  * Widget used for selecting a duration.
@@ -59,14 +60,14 @@ public class DurationSelect extends AbstractMultiControl {
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
 
-        daySelCtrl = (Control) addInternalChildControl(
+        daySelCtrl = (Control) addInternalChildWidget(
                 "!ui-select styleClass:$e{dsselect} list:dayslist size:2 binding:days");
-        hourSelCtrl = (Control) addInternalChildControl(
+        hourSelCtrl = (Control) addInternalChildWidget(
                 "!ui-select styleClass:$e{dsselect} list:hourslist size:2 binding:hours");
-        minuteSelCtrl = (Control) addInternalChildControl(
+        minuteSelCtrl = (Control) addInternalChildWidget(
                 "!ui-select styleClass:$e{dsselect} list:minuteslist size:2 listParamType:IMMEDIATE listParams:$l{"
                         + MINUTE_JUMP + "} binding:minutes");
-        durationCtrl = (Control) addInternalChildControl("!ui-hidden binding:duration");
+        durationCtrl = (Control) addInternalChildWidget("!ui-hidden binding:duration");
     }
 
     @Override
@@ -97,8 +98,8 @@ public class DurationSelect extends AbstractMultiControl {
     }
 
     @Override
-    protected void onInternalChildPopulated(Control control) throws UnifyException {
-        if(durationCtrl.equals(control)) {
+    protected void onInternalChildPopulated(Widget widget) throws UnifyException {
+        if(durationCtrl.equals(widget)) {
             setValue(duration);
         }
     }

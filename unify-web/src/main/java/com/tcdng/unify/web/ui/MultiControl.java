@@ -18,40 +18,40 @@ package com.tcdng.unify.web.ui;
 import java.util.Collection;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.ui.AbstractMultiControl.ChildControlInfo;
+import com.tcdng.unify.web.ui.AbstractMultiControl.ChildWidgetInfo;
 
 /**
- * User interface control with multiple child controls.
+ * User interface control with multiple child widgets.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 public interface MultiControl extends Control {
     /**
-     * Adds a child control to this component.
+     * Adds a child widget to this component.
      * 
-     * @param control
-     *            the child control to add
+     * @param widget
+     *            the child widget to add
      * @throws UnifyException
      *             if and error occurs
      */
-    void addChildControl(Control control) throws UnifyException;
+    void addChildWidget(Widget widget) throws UnifyException;
 
     /**
-     * Returns child control information.
+     * Returns child widget information.
      * 
      * @param childId
-     *            the child control ID
+     *            the child widget ID
      */
-    ChildControlInfo getChildControlInfo(String childId);
+    ChildWidgetInfo getChildWidgetInfo(String childId);
 
     /**
-     * Returns all child control information.
+     * Returns all child widget information.
      */
-    Collection<ChildControlInfo> getChildControlInfos();
+    Collection<ChildWidgetInfo> getChildWidgetInfos();
 
     /**
-     * Returns child control count.
+     * Returns child widget count.
      */
-    int getChildControlCount();
+    int getChildWidgetCount();
 }

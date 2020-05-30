@@ -44,7 +44,7 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
     @Override
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
-        currentSelCtrl = (Control) addInternalControl("!ui-hidden binding:currentSel");
+        currentSelCtrl = (Control) addInternalWidget("!ui-hidden binding:currentSel");
     }
 
     @Override

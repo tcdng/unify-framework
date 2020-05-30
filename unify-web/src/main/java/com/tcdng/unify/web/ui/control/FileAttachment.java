@@ -55,13 +55,13 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
 
-        fileCtrl = (FileUpload) addInternalChildControl(
+        fileCtrl = (FileUpload) addInternalChildWidget(
                 "!ui-fileupload acceptBinding:typeName selectOnly:true hidden:true");
-        attachCtrl = addInternalChildControl(
+        attachCtrl = (Control) addInternalChildWidget(
                 "!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach} debounce:false");
-        viewCtrl = addInternalChildControl(
+        viewCtrl = (Control) addInternalChildWidget(
                 "!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view} debounce:false");
-        removeCtrl = addInternalChildControl(
+        removeCtrl = (Control) addInternalChildWidget(
                 "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} debounce:false");
     }
 

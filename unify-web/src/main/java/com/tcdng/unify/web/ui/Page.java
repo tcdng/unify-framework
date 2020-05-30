@@ -72,6 +72,17 @@ public interface Page extends StandalonePanel {
     void addStandalonePanel(String name, StandalonePanel standalonePanel) throws UnifyException;
 
     /**
+     * Removes a standalone panel by name.
+     * 
+     * @param name
+     *            the panel name
+     * @return the removed standalone panel otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    StandalonePanel removeStandalonePanel(String name) throws UnifyException;
+
+    /**
      * Returns a panel contained in this page by long name.
      * 
      * @param longName

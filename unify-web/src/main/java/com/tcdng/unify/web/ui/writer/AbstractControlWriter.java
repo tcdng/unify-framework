@@ -74,7 +74,7 @@ public abstract class AbstractControlWriter extends AbstractWidgetWriter impleme
         writer.write("</button>");
     }
 
-    protected void addPageAlias(String parentPageName, Control control) throws UnifyException {
-        getRequestContextUtil().addPageAlias(parentPageName, control.getId());
+    protected void addPageAlias(String parentPageName, Widget widget) throws UnifyException {
+        getRequestContextUtil().addPageAlias(parentPageName, widget.getId());
     }
 }

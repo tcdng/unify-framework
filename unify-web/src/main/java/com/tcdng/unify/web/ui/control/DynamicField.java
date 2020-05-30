@@ -61,7 +61,7 @@ public class DynamicField extends AbstractMultiControl {
     public void setGroupId(String groupId) throws UnifyException {
         super.setGroupId(groupId);
         for (String id : descriptorToIdMap.values()) {
-            getChildControlInfo(id).getControl().setGroupId(groupId);
+            getChildWidgetInfo(id).getWidget().setGroupId(groupId);
         }
     }
 
@@ -74,10 +74,10 @@ public class DynamicField extends AbstractMultiControl {
             if (id == null) {
                 StringBuilder sb = new StringBuilder(descriptor);
                 appendUplAttribute(sb, "binding");
-                control = addInternalChildControl(sb.toString(), true, false);
+                control = (Control) addInternalChildWidget(sb.toString(), true, false);
                 descriptorToIdMap.put(descriptor, control.getBaseId());
             } else {
-                control = getChildControlInfo(id).getControl();
+                control = (Control) getChildWidgetInfo(id).getWidget();
             }
 
             addPageAlias(control);

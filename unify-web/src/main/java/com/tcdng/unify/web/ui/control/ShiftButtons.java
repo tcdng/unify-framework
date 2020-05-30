@@ -46,26 +46,26 @@ public class ShiftButtons extends AbstractMultiControl {
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
         if (fontSymbolManager != null) {
-            shiftTopCtrl = addInternalChildControl(
+            shiftTopCtrl = (Control) addInternalChildWidget(
                     "!ui-symbol symbol:$s{angle-double-up} styleClass:$e{sbutton} hint:$m{move.to.top}", true, false);
-            shiftUpCtrl = addInternalChildControl(
+            shiftUpCtrl = (Control) addInternalChildWidget(
                     "!ui-symbol symbol:$s{angle-up} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
-            shiftDownCtrl = addInternalChildControl(
+            shiftDownCtrl = (Control) addInternalChildWidget(
                     "!ui-symbol symbol:$s{angle-down} styleClass:$e{sbutton} hint:$m{move.down}", true, false);
-            shiftBottomCtrl = addInternalChildControl(
+            shiftBottomCtrl = (Control) addInternalChildWidget(
                     "!ui-symbol symbol:$s{angle-double-down} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
                     false);
         } else {
-            shiftTopCtrl = addInternalChildControl(
+            shiftTopCtrl = (Control) addInternalChildWidget(
                     "!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
                     false);
-            shiftUpCtrl = addInternalChildControl(
+            shiftUpCtrl = (Control) addInternalChildWidget(
                     "!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true,
                     false);
-            shiftDownCtrl = addInternalChildControl(
+            shiftDownCtrl = (Control) addInternalChildWidget(
                     "!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
                     false);
-            shiftBottomCtrl = addInternalChildControl(
+            shiftBottomCtrl = (Control) addInternalChildWidget(
                     "!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}",
                     true, false);
         }

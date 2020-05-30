@@ -21,7 +21,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
-import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.PushType;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
@@ -52,12 +51,12 @@ public class GroupControlWriter extends AbstractControlWriter {
         if (groupControl.isContainerEditable()) {
             dataGroupId = groupControl.getDataGroupId();
         }
-        
-        for (AbstractMultiControl.ChildControlInfo childControlInfo : groupControl.getChildControlInfos()) {
-            if (childControlInfo.isExternal()) {
-                Control control = childControlInfo.getControl();
-                control.setGroupId(dataGroupId);
-                if (control.isVisible()) {
+
+        for (AbstractMultiControl.ChildWidgetInfo childWidgetInfo : groupControl.getChildWidgetInfos()) {
+            if (childWidgetInfo.isExternal()) {
+                Widget chWidget = childWidgetInfo.getWidget();
+                chWidget.setGroupId(dataGroupId);
+                if (chWidget.isVisible()) {
                     if (space) {
                         if (appendSym) {
                             writer.writeHtmlFixedSpace();
@@ -65,8 +64,8 @@ public class GroupControlWriter extends AbstractControlWriter {
                             appendSym = true;
                         }
                     }
-                    control.setValueStore(valueStore);
-                    writer.writeStructureAndContent(control);
+                    chWidget.setValueStore(valueStore);
+                    writer.writeStructureAndContent(chWidget);
                 }
             }
         }
@@ -82,12 +81,12 @@ public class GroupControlWriter extends AbstractControlWriter {
         GroupControl groupControl = (GroupControl) widget;
         super.doWriteBehavior(writer, groupControl);
         ValueStore valueStore = groupControl.getValueStore();
-        for (AbstractMultiControl.ChildControlInfo childControlInfo : groupControl.getChildControlInfos()) {
-            if (childControlInfo.isExternal()) {
-                Control control = childControlInfo.getControl();
-                if (control.isVisible() || control.isHidden()) {
-                    control.setValueStore(valueStore);
-                    writer.writeBehavior(control);
+        for (AbstractMultiControl.ChildWidgetInfo childWidgetInfo : groupControl.getChildWidgetInfos()) {
+            if (childWidgetInfo.isExternal()) {
+                Widget chWidget = childWidgetInfo.getWidget();
+                if (chWidget.isVisible() || chWidget.isHidden()) {
+                    chWidget.setValueStore(valueStore);
+                    writer.writeBehavior(chWidget);
                 }
             }
         }
