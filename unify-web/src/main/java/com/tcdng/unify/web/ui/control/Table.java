@@ -133,32 +133,32 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     @Override
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
-        viewIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:viewIndex");
+        viewIndexCtrl = (Control) addInternalChildWidget("!ui-hidden binding:viewIndex");
         if (isPagination()) {
-            currentPageCtrl = (Control) addInternalChildControl("!ui-hidden binding:currentPage");
-            itemsPerPageCtrl = (Control) addInternalChildControl(
+            currentPageCtrl = (Control) addInternalChildWidget("!ui-hidden binding:currentPage");
+            itemsPerPageCtrl = (Control) addInternalChildWidget(
                     "!ui-select styleClass:$e{tpselect} list:itemsperpagelist binding:itemsPerPage");
         }
 
         if (isMultiSelect()) {
-            multiSelectCtrl = (Control) addInternalChildControl("!ui-checkbox binding:selected");
+            multiSelectCtrl = (Control) addInternalChildWidget("!ui-checkbox binding:selected");
         }
 
         getColumnList(); // Do this here to ensure sortable is appropriately set
         if (sortable) {
             if (fontSymbolManager != null) {
-                ascendingImageCtrl = addInternalChildControl(
+                ascendingImageCtrl = (Control) addInternalChildWidget(
                         "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
-                descendingImageCtrl = addInternalChildControl(
+                descendingImageCtrl = (Control) addInternalChildWidget(
                         "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
             } else {
-                ascendingImageCtrl = addInternalChildControl(
+                ascendingImageCtrl = (Control) addInternalChildWidget(
                         "!ui-image src:$t{images/ascending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
-                descendingImageCtrl = addInternalChildControl(
+                descendingImageCtrl = (Control) addInternalChildWidget(
                         "!ui-image src:$t{images/descending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
             }
-            columnIndexCtrl = (Control) addInternalChildControl("!ui-hidden binding:columnIndex", false, true);
-            sortDirectionCtrl = (Control) addInternalChildControl("!ui-hidden binding:sortDirection", false, true);
+            columnIndexCtrl = (Control) addInternalChildWidget("!ui-hidden binding:columnIndex", false, true);
+            sortDirectionCtrl = (Control) addInternalChildWidget("!ui-hidden binding:sortDirection", false, true);
         }
 
         dataGroupId = getPrefixedId("data_");
@@ -168,10 +168,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
-            ChildControlInfo childControlInfo = getChildControlInfo(childBlock.getId());
-            Control control = (Control) childControlInfo.getControl();
+            ChildWidgetInfo childWidgetInfo = getChildWidgetInfo(childBlock.getId());
+            Control control = (Control) childWidgetInfo.getWidget();
 
-            if (childControlInfo.isExternal()) {
+            if (childWidgetInfo.isExternal()) {
                 control.setValueStore(getValueList().get(childBlock.getItemIndex()).getRowValueStore());
             } else {
                 if (control == multiSelectCtrl) {
@@ -308,9 +308,9 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     public List<String> getColumnPropertyList() throws UnifyException {
         List<String> propertyList = new ArrayList<String>();
-        for (ChildControlInfo childControlInfo : getChildControlInfos()) {
-            if (childControlInfo.isExternal()) {
-                propertyList.add(childControlInfo.getControl().getBinding());
+        for (ChildWidgetInfo childWidgetInfo : getChildWidgetInfos()) {
+            if (childWidgetInfo.isExternal()) {
+                propertyList.add(childWidgetInfo.getWidget().getBinding());
             }
         }
         return propertyList;
@@ -895,9 +895,9 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public List<Column> getColumnList() throws UnifyException {
         if (columnList == null) {
             columnList = new ArrayList<Column>();
-            for (ChildControlInfo childControlInfo : getChildControlInfos()) {
-                if (childControlInfo.isExternal()) {
-                    Column column = new Column(childControlInfo.getControl());
+            for (ChildWidgetInfo childWidgetInfo : getChildWidgetInfos()) {
+                if (childWidgetInfo.isExternal()) {
+                    Column column = new Column((Control) childWidgetInfo.getWidget());
                     if (column.isSortable()) {
                         sortable = true;
                     }

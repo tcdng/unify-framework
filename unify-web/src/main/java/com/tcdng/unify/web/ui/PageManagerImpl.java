@@ -472,7 +472,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                 if (cWidget instanceof Container) {
                     setContainerWidgetRepository(ctx, (Container) cWidget);
                 }
-                multiControl.addChildControl((Control) cWidget);
+                multiControl.addChildWidget((Control) cWidget);
             }
         }
     }

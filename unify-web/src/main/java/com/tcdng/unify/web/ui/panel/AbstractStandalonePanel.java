@@ -106,7 +106,7 @@ public abstract class AbstractStandalonePanel extends AbstractPanel implements S
 
     @Override
     public void resolvePageActions(EventHandler[] eventHandlers) throws UnifyException {
-        if (eventHandlers != null) {
+        if (eventHandlers != null && standalonePanelInfo != null) {
             for (EventHandler eh : eventHandlers) {
                 if (eh.getPageAction() == null) {
                     UplElementReferences uer = eh.getUplAttribute(UplElementReferences.class, "action");

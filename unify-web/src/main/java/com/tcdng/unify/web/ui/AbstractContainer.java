@@ -44,7 +44,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
 
     private WidgetRepository widgetRepository;
 
-    private Map<String, Control> internalControls;
+    private Map<String, Widget> internalWidgets;
 
     private Object oldValue;
 
@@ -63,6 +63,14 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     }
 
     @Override
+    public void setContainer(Container container) {
+        super.setContainer(container);
+        if(widgetRepository == null) {
+            widgetRepository = container.getWidgetRepository();
+        }
+    }
+
+    @Override
     public boolean isField() {
         return false;
     }
@@ -70,6 +78,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     @Override
     public void setWidgetRepository(WidgetRepository widgetRepository) throws UnifyException {
         this.widgetRepository = widgetRepository;
+    }
+
+    @Override
+    public WidgetRepository getWidgetRepository() {
+        return widgetRepository;
     }
 
     @Override
@@ -171,7 +184,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
-            Control childWidget = (Control) internalControls.get(childBlock.getId());
+            DataTransferWidget childWidget = (DataTransferWidget) internalWidgets.get(childBlock.getId());
             childWidget.populate(childBlock);
         }
     }
@@ -210,6 +223,19 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     public final void setValue(Object value) throws UnifyException {
         super.setValue(value);
         cascadeValueStore();
+    }
+
+    @Override
+    public final Object getValue(String attribute) throws UnifyException {
+        if (attribute != null) {
+            return super.getValue(attribute);
+        }
+
+        if (getValueStore() != null) {
+            return getValueStore().getValueObject();
+        }
+        
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -277,7 +303,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     }
 
     /**
-     * Adds an internal child control to this container.
+     * Adds an internal child widget to this container.
      * 
      * @param descriptor
      *            the internal control descriptor
@@ -285,20 +311,20 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * @throws UnifyException
      *             if an error occurs
      */
-    protected Control addInternalControl(String descriptor) throws UnifyException {
-        Control control = (Control) getUplComponent(getSessionLocale(), descriptor, false);
-        if (internalControls == null) {
-            internalControls = new HashMap<String, Control>();
+    protected Widget addInternalWidget(String descriptor) throws UnifyException {
+        Widget widget = (Widget) getUplComponent(getSessionLocale(), descriptor, false);
+        if (internalWidgets == null) {
+            internalWidgets = new HashMap<String, Widget>();
         }
 
-        int childIndex = internalControls.size();
-        String childId = WidgetUtils.getChildId(getId(), control.getId(), childIndex);
-        control.setId(childId);
-        control.onPageConstruct();
-        control.setContainer(getContainer());
-        setWidgetValueBeanToThis(control);
-        internalControls.put(childId, control);
-        return control;
+        int childIndex = internalWidgets.size();
+        String childId = WidgetUtils.getChildId(getId(), widget.getId(), childIndex);
+        widget.setId(childId);
+        widget.onPageConstruct();
+        widget.setContainer(getContainer());
+        setWidgetValueBeanToThis(widget);
+        internalWidgets.put(childId, widget);
+        return widget;
     }
 
     /**

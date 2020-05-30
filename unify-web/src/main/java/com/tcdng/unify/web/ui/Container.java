@@ -40,6 +40,13 @@ public interface Container extends DataTransferWidget {
     void setWidgetRepository(WidgetRepository widgetRepository) throws UnifyException;
 
     /**
+     * Gets the container's widget repository.
+     * 
+     * @return the widget repository
+     */
+    WidgetRepository getWidgetRepository();
+
+    /**
      * Returns true if container has a widget repository.
      */
     boolean hasWidgetRepository();

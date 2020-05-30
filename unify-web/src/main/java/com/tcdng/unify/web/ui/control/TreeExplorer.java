@@ -85,13 +85,13 @@ public class TreeExplorer extends AbstractMultiControl {
 
     @Override
     public void onPageConstruct() throws UnifyException {
-        eventTypeCtrl = (Control) addInternalChildControl("!ui-hidden binding:eventType");
-        menuCodeCtrl = (Control) addInternalChildControl("!ui-hidden binding:menuCode");
-        selectedItemIdsCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedItemIds");
-        selectedCtrlIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:selectedCtrlId");
-        dropTrgItemIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:dropTrgItemId");
-        dropSrcIdCtrl = (Control) addInternalChildControl("!ui-hidden binding:dropSrcId");
-        dropSrcItemIdsCtrl = (Control) addInternalChildControl("!ui-hidden binding:dropSrcItemIds");
+        eventTypeCtrl = (Control) addInternalChildWidget("!ui-hidden binding:eventType");
+        menuCodeCtrl = (Control) addInternalChildWidget("!ui-hidden binding:menuCode");
+        selectedItemIdsCtrl = (Control) addInternalChildWidget("!ui-hidden binding:selectedItemIds");
+        selectedCtrlIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:selectedCtrlId");
+        dropTrgItemIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropTrgItemId");
+        dropSrcIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropSrcId");
+        dropSrcItemIdsCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropSrcItemIds");
         singleSelectedItemId = new ArrayList<Long>(1);
         singleSelectedItemId.add(null);
     }

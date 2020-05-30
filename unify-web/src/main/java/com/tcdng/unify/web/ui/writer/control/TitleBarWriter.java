@@ -19,8 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.web.ui.AbstractMultiControl.ChildControlInfo;
-import com.tcdng.unify.web.ui.Control;
+import com.tcdng.unify.web.ui.AbstractMultiControl.ChildWidgetInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.TitleBar;
@@ -47,9 +46,9 @@ public class TitleBarWriter extends AbstractControlWriter {
         writeCaption(writer, titleBar);
         writer.write("</div>");
         writer.write("<div class=\"tbcontrols\">");
-        for (ChildControlInfo childControlInfo : titleBar.getChildControlInfos()) {
-            if (childControlInfo.isExternal() && childControlInfo.isPrivilegeVisible()) {
-                writer.writeStructureAndContent(childControlInfo.getControl());
+        for (ChildWidgetInfo childWidgetInfo : titleBar.getChildWidgetInfos()) {
+            if (childWidgetInfo.isExternal() && childWidgetInfo.isPrivilegeVisible()) {
+                writer.writeStructureAndContent(childWidgetInfo.getWidget());
             }
         }
         writer.write("</div>");
@@ -70,13 +69,13 @@ public class TitleBarWriter extends AbstractControlWriter {
 
         // Append external controls behavior
         ValueStore valueStore = titleBar.getValueStore();
-        for (ChildControlInfo childControlInfo : titleBar.getChildControlInfos()) {
-            if (childControlInfo.isExternal() && childControlInfo.isPrivilegeVisible()) {
-                Control control = childControlInfo.getControl();
-                ValueStore origValueStore = control.getValueStore();
-                control.setValueStore(valueStore);
-                writer.writeBehavior(childControlInfo.getControl());
-                control.setValueStore(origValueStore);
+        for (ChildWidgetInfo childWidgetInfo : titleBar.getChildWidgetInfos()) {
+            if (childWidgetInfo.isExternal() && childWidgetInfo.isPrivilegeVisible()) {
+                Widget chWidget = childWidgetInfo.getWidget();
+                ValueStore origValueStore = chWidget.getValueStore();
+                chWidget.setValueStore(valueStore);
+                writer.writeBehavior(childWidgetInfo.getWidget());
+                chWidget.setValueStore(origValueStore);
             }
         }
     }
