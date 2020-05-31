@@ -53,6 +53,7 @@ import com.tcdng.unify.core.criterion.NotEquals;
 import com.tcdng.unify.core.criterion.NotEqualsField;
 import com.tcdng.unify.core.criterion.NotLike;
 import com.tcdng.unify.core.criterion.NotLikeField;
+import com.tcdng.unify.core.criterion.Or;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Select;
@@ -110,6 +111,32 @@ public class Query<T extends Entity> implements Cloneable {
 
     public static <U extends Entity> Query<U> of(Class<U> entityClass, boolean applyAppQueryLimit) {
         return new Query<U>(entityClass, applyAppQueryLimit);
+    }
+
+    public static <U extends Entity> Query<U> ofDefaultingToAnd(Class<U> entityClass, Restriction restriction) {
+        return ofDefaultingToAnd(entityClass, restriction, false);
+    }
+
+    public static <U extends Entity> Query<U> ofDefaultingToAnd(Class<U> entityClass, Restriction restriction,
+            boolean applyAppQueryLimit) {
+        if (restriction instanceof CompoundRestriction) {
+            return new Query<U>(entityClass, (CompoundRestriction) restriction, applyAppQueryLimit);
+        }
+
+        return new Query<U>(entityClass, new And().add(restriction), applyAppQueryLimit);
+    }
+
+    public static <U extends Entity> Query<U> ofDefaultingToOr(Class<U> entityClass, Restriction restriction) {
+        return ofDefaultingToOr(entityClass, restriction, false);
+    }
+
+    public static <U extends Entity> Query<U> ofDefaultingToOr(Class<U> entityClass, Restriction restriction,
+            boolean applyAppQueryLimit) {
+        if (restriction instanceof CompoundRestriction) {
+            return new Query<U>(entityClass, (CompoundRestriction) restriction, applyAppQueryLimit);
+        }
+
+        return new Query<U>(entityClass, new Or().add(restriction), applyAppQueryLimit);
     }
 
     public static <U extends Entity> Query<U> of(Class<U> entityClass, CompoundRestriction restrictions) {
