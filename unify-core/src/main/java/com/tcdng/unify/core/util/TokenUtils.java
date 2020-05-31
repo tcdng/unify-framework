@@ -129,6 +129,16 @@ public final class TokenUtils {
     }
 
     /**
+     * Tests if a string is a path tag value.
+     * 
+     * @param string
+     *            the string to test
+     */
+    public static boolean isPathTag(String string) {
+        return string.startsWith("$p{") && string.endsWith("}");
+    }
+
+    /**
      * Tests if a string is a guarded tag value.
      * 
      * @param string

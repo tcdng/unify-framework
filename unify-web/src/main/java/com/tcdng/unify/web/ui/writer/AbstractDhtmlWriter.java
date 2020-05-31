@@ -809,7 +809,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
     protected String writeActionParamsJS(ResponseWriter writer, String event, String function, String id,
             PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
-        String getPathId = getRequestContextUtil().getResponsePathParts().getPathId();
+        String pathId = getRequestContextUtil().getResponsePathParts().getPathId();
         PageManager pageManager = getPageManager();
         String eventParams = "_act" + (WriterUtils.getNextRefId()) + "Prm";
         writer.write("var ").write(eventParams).write("={");
@@ -840,7 +840,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 String cmd = pageAction.getUplAttribute(String.class, "command");
                 if (cmd != null) {
                     writer.write(",\"uCmdURL\":\"");
-                    writer.writeCommandURL(getPathId);
+                    writer.writeCommandURL(pathId);
                     writer.write('"');
                     writer.write(",\"uTrgCmd\":\"").write(cmd).write("\"");
                 }
@@ -886,8 +886,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             if (pageAction.isUplAttribute("path")) {
                 String actionPath = pageAction.getUplAttribute(String.class, "path");
                 if (actionPath != null) {
-                    if (TokenUtils.isNameTag(actionPath)) {
-                        actionPath = getPathId + TokenUtils.extractTokenValue(actionPath);
+                    if (TokenUtils.isNameTag(actionPath) || TokenUtils.isPathTag(actionPath)) {
+                        actionPath = pathId + TokenUtils.extractTokenValue(actionPath);
                     } else if (TokenUtils.isQuickReferenceTag(actionPath)) {
                         actionPath = (String) ((ValueStore) getRequestContext().getQuickReference())
                                 .retrieve(TokenUtils.extractTokenValue(actionPath));
@@ -919,7 +919,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                     writer.write(",\"uIconIndex\":");
                     writer.write(pageAction.getUplAttribute(int.class, "iconIndex"));
                     writer.write(",\"uConfURL\":\"");
-                    writer.writeContextURL(getPathId, "/confirm");
+                    writer.writeContextURL(pathId, "/confirm");
                     writer.write('"');
                 }
             }
@@ -928,8 +928,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         } else if (StringUtils.isNotBlank(refObject)) {
             writer.write(",\"uRef\":").write(refObject);
         } else if (path != null) {
-            if (TokenUtils.isNameTag(path)) {
-                path = getPathId + TokenUtils.extractTokenValue(path);
+            if (TokenUtils.isNameTag(path) || TokenUtils.isPathTag(path)) {
+                path = pathId + TokenUtils.extractTokenValue(path);
             }
 
             writer.write(",\"uURL\":\"");
