@@ -1022,8 +1022,14 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 }
 
                 String[] commandElements = ((String) values).split("->");
+                String pageName = commandElements[0];
+                int dIndex = pageName.indexOf('d');
+                if (dIndex > 0) {
+                    pageName = pageName.substring(0, dIndex);
+                }
+
                 RequestCommand requestCommand =
-                        new RequestCommand(getPageManager().getLongName(commandElements[0]), commandElements[1]);
+                        new RequestCommand(getPageManager().getLongName(pageName), commandElements[1]);
                 requestContextUtil.setRequestCommand(requestCommand);
                 continue;
             }
