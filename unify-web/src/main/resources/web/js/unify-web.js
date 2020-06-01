@@ -424,7 +424,17 @@ ux.registerRespDebounce = function(resp) {
 ux.setPageNameAliases = function(resp) {
 	if (resp.pageNameAliases) {
 		for (var i = 0; i < resp.pageNameAliases.length; i++) {
-			ux.pagenamealiases[resp.pageNameAliases[i].pn] = resp.pageNameAliases[i].aliases;
+			var pn = resp.pageNameAliases[i].pn;
+			var aliases = resp.pageNameAliases[i].aliases;
+			ux.pagenamealiases[pn] = aliases;
+			// Generate dataless alias 2020-06-01
+			if(pn.indexOf(".") < 0) {
+				var dIndex = pn.indexOf("d");
+				if (dIndex > 0) {
+					ux.pagenamealiases[pn.substring(0, dIndex)] = aliases;
+				}
+			}
+			// End generate 2020-06-01
 		}
 	}
 }
