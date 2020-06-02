@@ -67,7 +67,7 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
      *             if an error occurs
      */
     protected ValueStore createValueStore(Object sourceObject) throws UnifyException {
-        return valueStoreFactory.getValueStore(sourceObject, 0);
+        return valueStoreFactory.getValueStore(sourceObject, null, 0);
     }
 
     /**

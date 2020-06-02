@@ -29,11 +29,11 @@ import com.tcdng.unify.core.util.ReflectUtils;
 public class PackableDocStore extends AbstractValueStore<PackableDoc> {
 
     public PackableDocStore(PackableDoc packableDoc) {
-        this(packableDoc, -1);
+        this(packableDoc, null, -1);
     }
 
-    public PackableDocStore(PackableDoc packableDoc, int dataIndex) {
-        super(packableDoc, dataIndex);
+    public PackableDocStore(PackableDoc packableDoc, String dataIndexPrefix, int dataIndex) {
+        super(packableDoc, dataIndexPrefix, dataIndex);
     }
 
     @Override

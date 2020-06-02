@@ -55,7 +55,7 @@ public abstract class AbstractBatchFileReadProcessor extends AbstractUnifyCompon
     }
 
     protected ValueStore getValueStore(Object bean) throws UnifyException {
-        return valueStoreFactory.getValueStore(bean, 0);
+        return valueStoreFactory.getValueStore(bean, null, 0);
     }
     
     protected abstract Object doProcess(BatchFileReadConfig batchFileReadConfig, BatchFileReader batchFileReader)

@@ -52,20 +52,6 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
     private Control removeCtrl;
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        super.onPageConstruct();
-
-        fileCtrl = (FileUpload) addInternalChildWidget(
-                "!ui-fileupload acceptBinding:typeName selectOnly:true hidden:true");
-        attachCtrl = (Control) addInternalChildWidget(
-                "!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach} debounce:false");
-        viewCtrl = (Control) addInternalChildWidget(
-                "!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view} debounce:false");
-        removeCtrl = (Control) addInternalChildWidget(
-                "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} debounce:false");
-    }
-
-    @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock nextBlock = transferBlock.getChildBlock();
@@ -142,6 +128,18 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
 
     public Control getRemoveCtrl() {
         return removeCtrl;
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        fileCtrl = (FileUpload) addInternalChildWidget(
+                "!ui-fileupload acceptBinding:typeName selectOnly:true hidden:true");
+        attachCtrl = (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach} debounce:false");
+        viewCtrl = (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view} debounce:false");
+        removeCtrl = (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} debounce:false");
     }
 
     @Override

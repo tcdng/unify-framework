@@ -40,7 +40,8 @@ import com.tcdng.unify.web.util.WidgetUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "components", type = UplElementReferences.class) })
+@UplAttributes({ @UplAttribute(name = "components", type = UplElementReferences.class),
+        @UplAttribute(name = "valueIndexPrefix", type = String.class) })
 public abstract class AbstractMultiControl extends AbstractControl implements MultiControl {
 
     private Map<String, ChildWidgetInfo> widgetInfoMap;
@@ -49,10 +50,19 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     private List<String> standalonePanelNames;
 
+    private String uplValueIndexPrefix;
+    
     public AbstractMultiControl() {
         widgetInfoMap = new LinkedHashMap<String, ChildWidgetInfo>();
     }
 
+    @Override
+    public final void onPageConstruct() throws UnifyException {
+        super.onPageConstruct();        
+        uplValueIndexPrefix = getUplAttribute(String.class, "valueIndexPrefix");   
+        doOnPageConstruct();
+    }
+    
     @Override
     public void addChildWidget(Widget widget) throws UnifyException {
         doAddChildWidget(widget, false, false, false, true);
@@ -144,6 +154,10 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         return null;
     }
 
+    protected String getUplValueIndexPrefix() {
+        return uplValueIndexPrefix;
+    }
+
     /**
      * Creates and adds a non-conforming external child widget that doesn't ignore
      * parent state.
@@ -207,6 +221,15 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
                 }
             }
         }
+    }
+
+    @Override
+    protected final ValueStore createValueStore(Object storageObject, int dataIndex) throws UnifyException {
+        if (uplValueIndexPrefix != null) {
+            return super.createValueStore(storageObject, uplValueIndexPrefix, dataIndex);
+        }
+        
+        return super.createValueStore(storageObject, dataIndex);
     }
 
     /**
@@ -294,6 +317,8 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
     protected void onInternalChildPopulated(Widget widget) throws UnifyException {
 
     }
+
+    protected abstract void doOnPageConstruct() throws UnifyException;
 
     private void doAddChildWidget(Widget widget, boolean pageConstruct, boolean conforming, boolean ignoreParentState,
             boolean external) throws UnifyException {

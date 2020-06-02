@@ -75,41 +75,6 @@ public class AssignmentBox extends AbstractMultiControl {
 
     private List<String> assignedIdList;
 
-    @Override
-    public void onPageConstruct() throws UnifyException {
-        super.onPageConstruct();
-        String filterList1 = getUplAttribute(String.class, "filterList1");
-        if (StringUtils.isNotBlank(filterList1)) {
-            filterCtrl1 = (Control) addInternalChildWidget("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
-                    + filterList1 + " binding:filterId1 popupAlways:true");
-        }
-
-        String filterList2 = getUplAttribute(String.class, "filterList2");
-        if (StringUtils.isNotBlank(filterList2)) {
-            filterCtrl2 = (Control) addInternalChildWidget("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
-                    + filterList2 + " listParams:$s{filterId1} binding:filterId2 popupAlways:true");
-        }
-
-        String msStyle = "";
-        String multiSelectStyle = getUplAttribute(String.class, "multiSelectStyle");
-        if (multiSelectStyle != null) {
-            msStyle = "style:$s{" + multiSelectStyle + "}";
-        }
-
-        assignedSelCtrl = (Control) addInternalChildWidget(
-                constructMultiSelect("assignList", "assignListKey", "assignListDesc", "assignedSelList", msStyle));
-        unassignedSelCtrl = (Control) addInternalChildWidget(constructMultiSelect("unassignList", "unassignListKey",
-                "unassignListDesc", "unassignedSelList", msStyle));
-        assignCtrl = (Control) addInternalChildWidget(
-                "!ui-button styleClass:$e{abbutton} caption:$m{button.assign} debounce:false");
-        assignAllCtrl = (Control) addInternalChildWidget(
-                "!ui-button styleClass:$e{abbutton} caption:$m{button.assignall} debounce:false");
-        unassignCtrl = (Control) addInternalChildWidget(
-                "!ui-button styleClass:$e{abbutton} caption:$m{button.unassign} debounce:false");
-        unassignAllCtrl = (Control) addInternalChildWidget(
-                "!ui-button styleClass:$e{abbutton} caption:$m{button.unassignall} debounce:false");
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void updateInternalState() throws UnifyException {
@@ -227,6 +192,40 @@ public class AssignmentBox extends AbstractMultiControl {
 
     public void setFilterId2(String filterId2) {
         this.filterId2 = filterId2;
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        String filterList1 = getUplAttribute(String.class, "filterList1");
+        if (StringUtils.isNotBlank(filterList1)) {
+            filterCtrl1 = (Control) addInternalChildWidget("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
+                    + filterList1 + " binding:filterId1 popupAlways:true");
+        }
+
+        String filterList2 = getUplAttribute(String.class, "filterList2");
+        if (StringUtils.isNotBlank(filterList2)) {
+            filterCtrl2 = (Control) addInternalChildWidget("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
+                    + filterList2 + " listParams:$s{filterId1} binding:filterId2 popupAlways:true");
+        }
+
+        String msStyle = "";
+        String multiSelectStyle = getUplAttribute(String.class, "multiSelectStyle");
+        if (multiSelectStyle != null) {
+            msStyle = "style:$s{" + multiSelectStyle + "}";
+        }
+
+        assignedSelCtrl = (Control) addInternalChildWidget(
+                constructMultiSelect("assignList", "assignListKey", "assignListDesc", "assignedSelList", msStyle));
+        unassignedSelCtrl = (Control) addInternalChildWidget(constructMultiSelect("unassignList", "unassignListKey",
+                "unassignListDesc", "unassignedSelList", msStyle));
+        assignCtrl = (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{abbutton} caption:$m{button.assign} debounce:false");
+        assignAllCtrl = (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{abbutton} caption:$m{button.assignall} debounce:false");
+        unassignCtrl = (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{abbutton} caption:$m{button.unassign} debounce:false");
+        unassignAllCtrl = (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{abbutton} caption:$m{button.unassignall} debounce:false");
     }
 
     private String constructMultiSelect(String listAttr, String listKeyAttr, String listDescAttr, String binding,

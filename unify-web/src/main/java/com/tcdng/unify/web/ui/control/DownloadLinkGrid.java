@@ -66,4 +66,9 @@ public class DownloadLinkGrid extends AbstractMultiControl {
 
         return Collections.emptyList();
     }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        
+    }
 }

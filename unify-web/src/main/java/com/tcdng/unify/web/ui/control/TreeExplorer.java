@@ -84,19 +84,6 @@ public class TreeExplorer extends AbstractMultiControl {
     private Tree tree;
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        eventTypeCtrl = (Control) addInternalChildWidget("!ui-hidden binding:eventType");
-        menuCodeCtrl = (Control) addInternalChildWidget("!ui-hidden binding:menuCode");
-        selectedItemIdsCtrl = (Control) addInternalChildWidget("!ui-hidden binding:selectedItemIds");
-        selectedCtrlIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:selectedCtrlId");
-        dropTrgItemIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropTrgItemId");
-        dropSrcIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropSrcId");
-        dropSrcItemIdsCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropSrcItemIds");
-        singleSelectedItemId = new ArrayList<Long>(1);
-        singleSelectedItemId.add(null);
-    }
-
-    @Override
     public void addPageAliases() throws UnifyException {
         addPageAlias(menuCodeCtrl);
         addPageAlias(selectedItemIdsCtrl);
@@ -331,6 +318,19 @@ public class TreeExplorer extends AbstractMultiControl {
 
     public boolean isMultiSelectMenu() {
         return tree.isMultiSelectMenu();
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        eventTypeCtrl = (Control) addInternalChildWidget("!ui-hidden binding:eventType");
+        menuCodeCtrl = (Control) addInternalChildWidget("!ui-hidden binding:menuCode");
+        selectedItemIdsCtrl = (Control) addInternalChildWidget("!ui-hidden binding:selectedItemIds");
+        selectedCtrlIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:selectedCtrlId");
+        dropTrgItemIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropTrgItemId");
+        dropSrcIdCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropSrcId");
+        dropSrcItemIdsCtrl = (Control) addInternalChildWidget("!ui-hidden binding:dropSrcItemIds");
+        singleSelectedItemId = new ArrayList<Long>(1);
+        singleSelectedItemId.add(null);
     }
 
 }

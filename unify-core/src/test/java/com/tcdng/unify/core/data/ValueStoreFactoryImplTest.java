@@ -40,9 +40,9 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
         ValueStoreFactory vsFactory =
                 (ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
 
-        ValueStore vs1 = vsFactory.getValueStore(new PackableDoc(custDocConfig, false), 0);
-        ValueStore vs2 = vsFactory.getValueStore(new Customer(), 0);
-        ValueStore vs3 = vsFactory.getValueStore(new Address(), 0);
+        ValueStore vs1 = vsFactory.getValueStore(new PackableDoc(custDocConfig, false), null, 0);
+        ValueStore vs2 = vsFactory.getValueStore(new Customer(), null, 0);
+        ValueStore vs3 = vsFactory.getValueStore(new Address(), null, 0);
         assertNotNull(vs1);
         assertNotNull(vs2);
         assertNotNull(vs3);
@@ -54,7 +54,7 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
     public void testGetValueStoreWithNullSource() throws Exception {
         ValueStoreFactory vsFactory =
                 (ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
-        ValueStore vs1 = vsFactory.getValueStore(null, 0);
+        ValueStore vs1 = vsFactory.getValueStore(null, null, 0);
         assertNull(vs1);
     }
 

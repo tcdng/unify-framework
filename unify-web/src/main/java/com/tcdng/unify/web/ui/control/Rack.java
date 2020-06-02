@@ -42,17 +42,6 @@ public class Rack extends Table {
     private int shiftDirection;
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        StringBuilder sb = new StringBuilder(
-                "!ui-shiftbuttons  caption:$m{table.rack.shift} columnStyle:$s{width:100px;} style:$s{text-align:center;}");
-        appendUplAttribute(sb, "binding");
-        shiftCtrl = (ShiftButtons) addExternalChildWidget(sb.toString());
-        shiftDirectionCtrl = (Control) addInternalChildWidget("!ui-hidden binding:shiftDirection");
-
-        super.onPageConstruct();
-    }
-
-    @Override
     public String getShiftDirectionId() throws UnifyException {
         return shiftDirectionCtrl.getId();
     }
@@ -93,6 +82,17 @@ public class Rack extends Table {
     public void addPageAliases() throws UnifyException {
         super.addPageAliases();
         addPageAlias(shiftDirectionCtrl);
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        StringBuilder sb = new StringBuilder(
+                "!ui-shiftbuttons  caption:$m{table.rack.shift} columnStyle:$s{width:100px;} style:$s{text-align:center;}");
+        appendUplAttribute(sb, "binding");
+        shiftCtrl = (ShiftButtons) addExternalChildWidget(sb.toString());
+        shiftDirectionCtrl = (Control) addInternalChildWidget("!ui-hidden binding:shiftDirection");
+
+        super.doOnPageConstruct();
     }
 
     @SuppressWarnings("unchecked")

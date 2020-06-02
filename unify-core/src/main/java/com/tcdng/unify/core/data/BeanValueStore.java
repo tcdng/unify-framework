@@ -29,11 +29,11 @@ import com.tcdng.unify.core.util.ReflectUtils;
 public class BeanValueStore extends AbstractValueStore<Object> {
 
     public BeanValueStore(Object valueBean) {
-        this(valueBean, -1);
+        this(valueBean, null, -1);
     }
 
-    public BeanValueStore(Object valueBean, int dataIndex) {
-        super(valueBean, dataIndex);
+    public BeanValueStore(Object valueBean, String dataIndexPrefix, int dataIndex) {
+        super(valueBean, dataIndexPrefix, dataIndex);
     }
 
     @Override

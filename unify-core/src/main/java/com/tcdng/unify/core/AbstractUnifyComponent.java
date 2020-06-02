@@ -452,7 +452,25 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected ValueStore createValueStore(Object storageObject, int dataIndex) throws UnifyException {
         return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(storageObject, dataIndex);
+                .getValueStore(storageObject, null, dataIndex);
+    }
+
+    /**
+     * Creates a value store with index information using supplied storage object.
+     * 
+     * @param storageObject
+     *            the storage object to use
+     * @param dataIndexPrefix
+     *            the data index prefix
+     * @param dataIndex
+     *            the data index
+     * @return ValueStore new instance of a value store
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected ValueStore createValueStore(Object storageObject, String dataIndexPrefix, int dataIndex) throws UnifyException {
+        return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
+                .getValueStore(storageObject, dataIndexPrefix, dataIndex);
     }
 
     /**
@@ -469,7 +487,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected ValueStore createArrayValueStore(Object[] storageObject, int dataIndex) throws UnifyException {
         return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getArrayValueStore(storageObject, dataIndex);
+                .getArrayValueStore(storageObject, null, dataIndex);
     }
 
     /**
@@ -486,7 +504,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      */
     protected ValueStore createListValueStore(List<Object> storageObject, int dataIndex) throws UnifyException {
         return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getListValueStore(Object.class, storageObject, dataIndex);
+                .getListValueStore(Object.class, storageObject, null, dataIndex);
     }
 
     /**

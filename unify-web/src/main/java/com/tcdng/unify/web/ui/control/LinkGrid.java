@@ -40,4 +40,9 @@ public class LinkGrid extends AbstractMultiControl {
         return false;
     }
 
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        
+    }
+
 }

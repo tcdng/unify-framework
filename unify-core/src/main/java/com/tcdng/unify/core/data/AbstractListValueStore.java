@@ -32,10 +32,13 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
 
     private List<T> storage;
 
+    private String dataIndexPrefix;
+
     private int dataIndex;
 
-    public AbstractListValueStore(List<T> storage, int dataIndex) {
+    public AbstractListValueStore(List<T> storage, String dataIndexPrefix, int dataIndex) {
         this.storage = storage;
+        this.dataIndexPrefix = dataIndexPrefix;
         this.dataIndex = dataIndex;
     }
 
@@ -91,6 +94,16 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     @Override
     public boolean isSettable(String name) throws UnifyException {
         return doSettable(storage.get(dataIndex), name);
+    }
+
+    @Override
+    public String getDataIndexPrefix() {
+        return dataIndexPrefix;
+    }
+
+    @Override
+    public void setDataIndexPrefix(String dataIndexPrefix) {
+        this.dataIndexPrefix = dataIndexPrefix;
     }
 
     @Override

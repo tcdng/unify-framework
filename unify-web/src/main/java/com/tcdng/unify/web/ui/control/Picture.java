@@ -38,18 +38,6 @@ public class Picture extends AbstractMultiControl {
     private UploadedFile[] uploadedFile;
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        fileControl = (Control) addInternalChildWidget(
-                "!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");
-        StringBuilder sb = new StringBuilder();
-        sb.append("!ui-image src:$t{images/camera.png}");
-        appendUplAttribute(sb, "binding");
-        appendUplAttribute(sb, "styleClass");
-        appendUplAttribute(sb, "style");
-        imageControl = (Control) addInternalChildWidget(sb.toString(), true, false);
-    }
-
-    @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         super.populate(transferBlock);
         if (uploadedFile != null && uploadedFile.length > 0) {
@@ -75,4 +63,15 @@ public class Picture extends AbstractMultiControl {
         this.uploadedFile = uploadedFile;
     }
 
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        fileControl = (Control) addInternalChildWidget(
+                "!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");
+        StringBuilder sb = new StringBuilder();
+        sb.append("!ui-image src:$t{images/camera.png}");
+        appendUplAttribute(sb, "binding");
+        appendUplAttribute(sb, "styleClass");
+        appendUplAttribute(sb, "style");
+        imageControl = (Control) addInternalChildWidget(sb.toString(), true, false);
+    }
 }

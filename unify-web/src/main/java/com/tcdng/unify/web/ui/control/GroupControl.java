@@ -36,12 +36,6 @@ public class GroupControl extends AbstractMultiControl implements Control {
     private String dataGroupId;
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        super.onPageConstruct();
-        dataGroupId = getPrefixedId("data_");
-    }
-
-    @Override
     public boolean isFocus() throws UnifyException {
         return false;
     }
@@ -59,5 +53,10 @@ public class GroupControl extends AbstractMultiControl implements Control {
 
     public boolean isSpace() throws UnifyException {
         return getUplAttribute(boolean.class, "space");
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        dataGroupId = getPrefixedId("data_");
     }
 }

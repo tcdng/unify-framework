@@ -86,4 +86,9 @@ public class DynamicField extends AbstractMultiControl {
         return control;
     }
 
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        
+    }
+
 }

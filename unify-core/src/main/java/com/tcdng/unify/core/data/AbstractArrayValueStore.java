@@ -29,10 +29,13 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
 
     private T[] storage;
 
+    private String dataIndexPrefix;
+
     private int dataIndex;
 
-    public AbstractArrayValueStore(T[] storage, int dataIndex) {
+    public AbstractArrayValueStore(T[] storage, String dataIndexPrefix, int dataIndex) {
         this.storage = storage;
+        this.dataIndexPrefix = dataIndexPrefix;
         this.dataIndex = dataIndex;
     }
 
@@ -84,6 +87,16 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
     @Override
     public boolean isSettable(String name) throws UnifyException {
         return doSettable(storage[dataIndex], name);
+    }
+
+    @Override
+    public String getDataIndexPrefix() {
+        return dataIndexPrefix;
+    }
+
+    @Override
+    public void setDataIndexPrefix(String dataIndexPrefix) {
+        this.dataIndexPrefix = dataIndexPrefix;
     }
 
     @Override

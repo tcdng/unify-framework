@@ -57,20 +57,6 @@ public class DurationSelect extends AbstractMultiControl {
     private int duration; // Duration in minutes
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        super.onPageConstruct();
-
-        daySelCtrl = (Control) addInternalChildWidget(
-                "!ui-select styleClass:$e{dsselect} list:dayslist size:2 binding:days");
-        hourSelCtrl = (Control) addInternalChildWidget(
-                "!ui-select styleClass:$e{dsselect} list:hourslist size:2 binding:hours");
-        minuteSelCtrl = (Control) addInternalChildWidget(
-                "!ui-select styleClass:$e{dsselect} list:minuteslist size:2 listParamType:IMMEDIATE listParams:$l{"
-                        + MINUTE_JUMP + "} binding:minutes");
-        durationCtrl = (Control) addInternalChildWidget("!ui-hidden binding:duration");
-    }
-
-    @Override
     public void updateInternalState() throws UnifyException {
         super.updateInternalState();
 
@@ -158,6 +144,18 @@ public class DurationSelect extends AbstractMultiControl {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        daySelCtrl = (Control) addInternalChildWidget(
+                "!ui-select styleClass:$e{dsselect} list:dayslist size:2 binding:days");
+        hourSelCtrl = (Control) addInternalChildWidget(
+                "!ui-select styleClass:$e{dsselect} list:hourslist size:2 binding:hours");
+        minuteSelCtrl = (Control) addInternalChildWidget(
+                "!ui-select styleClass:$e{dsselect} list:minuteslist size:2 listParamType:IMMEDIATE listParams:$l{"
+                        + MINUTE_JUMP + "} binding:minutes");
+        durationCtrl = (Control) addInternalChildWidget("!ui-hidden binding:duration");
     }
 
 }

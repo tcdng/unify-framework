@@ -263,6 +263,6 @@ public class DelimitedBatchFileReaderTest extends AbstractUnifyComponentTest {
 
     private ValueStore getValueStore(Object record) throws Exception {
         return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(record, 0);
+                .getValueStore(record, null, 0);
     }
 }

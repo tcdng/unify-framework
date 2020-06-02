@@ -48,4 +48,9 @@ public class TitleBar extends AbstractMultiControl {
         return false;
     }
 
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        
+    }
+
 }

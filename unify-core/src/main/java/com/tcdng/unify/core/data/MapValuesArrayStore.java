@@ -27,8 +27,8 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class MapValuesArrayStore extends AbstractArrayValueStore<MapValues> {
 
-    public MapValuesArrayStore(MapValues[] storage, int dataIndex) {
-        super(storage, dataIndex);
+    public MapValuesArrayStore(MapValues[] storage, String dataIndexPrefix, int dataIndex) {
+        super(storage, dataIndexPrefix, dataIndex);
     }
 
     @Override

@@ -51,7 +51,8 @@ public interface ValueStore {
     /**
      * Retrieves converted value from store using supplied name.
      * 
-     * @param type the type to convert to
+     * @param type
+     *            the type to convert to
      * @param name
      *            the name of the value to retrieve
      * @throws UnifyException
@@ -60,9 +61,11 @@ public interface ValueStore {
     <T> T retrieve(Class<T> type, String name) throws UnifyException;
 
     /**
-     * Retrieves converted value from store at a particular storage index using supplied name.
+     * Retrieves converted value from store at a particular storage index using
+     * supplied name.
      * 
-     * @param type the type to convert to
+     * @param type
+     *            the type to convert to
      * @param storageIndex
      *            the storage index
      * @param name
@@ -153,6 +156,19 @@ public interface ValueStore {
      * Returns the value store value object.
      */
     Object getValueObject();
+
+    /**
+     * Returns the value store data index prefix.
+     */
+    String getDataIndexPrefix();
+
+    /**
+     * Sets the value store data index prefix.
+     * 
+     * @param dataIndexPrefix
+     *            the data index prefix to set
+     */
+    void setDataIndexPrefix(String dataIndexPrefix);
 
     /**
      * Returns the value store data index.

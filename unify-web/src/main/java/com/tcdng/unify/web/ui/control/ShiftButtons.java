@@ -42,40 +42,6 @@ public class ShiftButtons extends AbstractMultiControl {
 
     private Control shiftBottomCtrl;
 
-    @Override
-    public void onPageConstruct() throws UnifyException {
-        super.onPageConstruct();
-        if (fontSymbolManager != null) {
-            shiftTopCtrl = (Control) addInternalChildWidget(
-                    "!ui-symbol symbol:$s{angle-double-up} styleClass:$e{sbutton} hint:$m{move.to.top}", true, false);
-            shiftUpCtrl = (Control) addInternalChildWidget(
-                    "!ui-symbol symbol:$s{angle-up} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
-            shiftDownCtrl = (Control) addInternalChildWidget(
-                    "!ui-symbol symbol:$s{angle-down} styleClass:$e{sbutton} hint:$m{move.down}", true, false);
-            shiftBottomCtrl = (Control) addInternalChildWidget(
-                    "!ui-symbol symbol:$s{angle-double-down} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
-                    false);
-        } else {
-            shiftTopCtrl = (Control) addInternalChildWidget(
-                    "!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
-                    false);
-            shiftUpCtrl = (Control) addInternalChildWidget(
-                    "!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true,
-                    false);
-            shiftDownCtrl = (Control) addInternalChildWidget(
-                    "!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
-                    false);
-            shiftBottomCtrl = (Control) addInternalChildWidget(
-                    "!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}",
-                    true, false);
-        }
-
-        shiftTopCtrl.setGroupId(getPrefixedId("shft_"));
-        shiftUpCtrl.setGroupId(getPrefixedId("shfu_"));
-        shiftDownCtrl.setGroupId(getPrefixedId("shfd_"));
-        shiftBottomCtrl.setGroupId(getPrefixedId("shfb_"));
-    }
-
     public Control getShiftTopCtrl() {
         return shiftTopCtrl;
     }
@@ -106,5 +72,38 @@ public class ShiftButtons extends AbstractMultiControl {
 
     public String getShiftBottomGroupId() throws UnifyException {
         return shiftBottomCtrl.getGroupId();
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        if (fontSymbolManager != null) {
+            shiftTopCtrl = (Control) addInternalChildWidget(
+                    "!ui-symbol symbol:$s{angle-double-up} styleClass:$e{sbutton} hint:$m{move.to.top}", true, false);
+            shiftUpCtrl = (Control) addInternalChildWidget(
+                    "!ui-symbol symbol:$s{angle-up} styleClass:$e{sbutton} hint:$m{move.up}", true, false);
+            shiftDownCtrl = (Control) addInternalChildWidget(
+                    "!ui-symbol symbol:$s{angle-down} styleClass:$e{sbutton} hint:$m{move.down}", true, false);
+            shiftBottomCtrl = (Control) addInternalChildWidget(
+                    "!ui-symbol symbol:$s{angle-double-down} styleClass:$e{sbutton} hint:$m{move.to.bottom}", true,
+                    false);
+        } else {
+            shiftTopCtrl = (Control) addInternalChildWidget(
+                    "!ui-image src:$t{images/circle-top-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.top}", true,
+                    false);
+            shiftUpCtrl = (Control) addInternalChildWidget(
+                    "!ui-image src:$t{images/circle-up-arrow.png} styleClass:$e{sbutton} hint:$m{move.up}", true,
+                    false);
+            shiftDownCtrl = (Control) addInternalChildWidget(
+                    "!ui-image src:$t{images/circle-down-arrow.png} styleClass:$e{sbutton} hint:$m{move.down}", true,
+                    false);
+            shiftBottomCtrl = (Control) addInternalChildWidget(
+                    "!ui-image src:$t{images/circle-bottom-arrow.png} styleClass:$e{sbutton} hint:$m{move.to.bottom}",
+                    true, false);
+        }
+
+        shiftTopCtrl.setGroupId(getPrefixedId("shft_"));
+        shiftUpCtrl.setGroupId(getPrefixedId("shfu_"));
+        shiftDownCtrl.setGroupId(getPrefixedId("shfd_"));
+        shiftBottomCtrl.setGroupId(getPrefixedId("shfb_"));
     }
 }

@@ -72,7 +72,7 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     @Override
     public void setPageBean(PageBean pageBean) throws UnifyException {
         setValueStore(((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(pageBean, -1));
+                .getValueStore(pageBean, null, -1));
     }
 
     @Override

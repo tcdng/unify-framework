@@ -29,10 +29,13 @@ public abstract class AbstractValueStore<T> implements ValueStore {
 
     protected T storage;
 
+    private String dataIndexPrefix;
+
     private int dataIndex;
 
-    public AbstractValueStore(T storage, int dataIndex) {
+    public AbstractValueStore(T storage, String dataIndexPrefix, int dataIndex) {
         this.storage = storage;
+        this.dataIndexPrefix = dataIndexPrefix;
         this.dataIndex = dataIndex;
     }
 
@@ -74,6 +77,16 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
         doStore(name, value, formatter);
+    }
+
+    @Override
+    public String getDataIndexPrefix() {
+        return dataIndexPrefix;
+    }
+
+    @Override
+    public void setDataIndexPrefix(String dataIndexPrefix) {
+        this.dataIndexPrefix = dataIndexPrefix;
     }
 
     @Override

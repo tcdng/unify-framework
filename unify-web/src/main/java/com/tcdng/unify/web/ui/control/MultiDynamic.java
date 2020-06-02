@@ -41,11 +41,6 @@ public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.Val
     private DynamicField valueCtrl;
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        valueCtrl = (DynamicField) addInternalChildWidget("!ui-dynamic binding:value descriptorBinding:editor");
-    }
-
-    @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock dynamicCtrlBlock = transferBlock.getChildBlock();
@@ -65,6 +60,11 @@ public class MultiDynamic extends AbstractValueListMultiControl<MultiDynamic.Val
 
     public DynamicField getValueCtrl() {
         return valueCtrl;
+    }
+
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        valueCtrl = (DynamicField) addInternalChildWidget("!ui-dynamic binding:value descriptorBinding:editor");
     }
 
     @SuppressWarnings("unchecked")

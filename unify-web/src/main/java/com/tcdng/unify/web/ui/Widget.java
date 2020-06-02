@@ -214,6 +214,11 @@ public interface Widget extends UplComponent {
     ValueStore getValueStore();
 
     /**
+     * Returns value index prefix.
+     */
+    String getValueIndexPrefix();
+
+    /**
      * Returns value index.
      */
     int getValueIndex();

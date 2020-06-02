@@ -131,40 +131,6 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     private String dataGroupId;
 
     @Override
-    public void onPageConstruct() throws UnifyException {
-        super.onPageConstruct();
-        viewIndexCtrl = (Control) addInternalChildWidget("!ui-hidden binding:viewIndex");
-        if (isPagination()) {
-            currentPageCtrl = (Control) addInternalChildWidget("!ui-hidden binding:currentPage");
-            itemsPerPageCtrl = (Control) addInternalChildWidget(
-                    "!ui-select styleClass:$e{tpselect} list:itemsperpagelist binding:itemsPerPage");
-        }
-
-        if (isMultiSelect()) {
-            multiSelectCtrl = (Control) addInternalChildWidget("!ui-checkbox binding:selected");
-        }
-
-        getColumnList(); // Do this here to ensure sortable is appropriately set
-        if (sortable) {
-            if (fontSymbolManager != null) {
-                ascendingImageCtrl = (Control) addInternalChildWidget(
-                        "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
-                descendingImageCtrl = (Control) addInternalChildWidget(
-                        "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
-            } else {
-                ascendingImageCtrl = (Control) addInternalChildWidget(
-                        "!ui-image src:$t{images/ascending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
-                descendingImageCtrl = (Control) addInternalChildWidget(
-                        "!ui-image src:$t{images/descending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
-            }
-            columnIndexCtrl = (Control) addInternalChildWidget("!ui-hidden binding:columnIndex", false, true);
-            sortDirectionCtrl = (Control) addInternalChildWidget("!ui-hidden binding:sortDirection", false, true);
-        }
-
-        dataGroupId = getPrefixedId("data_");
-    }
-
-    @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
@@ -642,6 +608,39 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return getPrefixedId("navr_");
     }
 
+    @Override
+    protected void doOnPageConstruct() throws UnifyException {
+        viewIndexCtrl = (Control) addInternalChildWidget("!ui-hidden binding:viewIndex");
+        if (isPagination()) {
+            currentPageCtrl = (Control) addInternalChildWidget("!ui-hidden binding:currentPage");
+            itemsPerPageCtrl = (Control) addInternalChildWidget(
+                    "!ui-select styleClass:$e{tpselect} list:itemsperpagelist binding:itemsPerPage");
+        }
+
+        if (isMultiSelect()) {
+            multiSelectCtrl = (Control) addInternalChildWidget("!ui-checkbox binding:selected");
+        }
+
+        getColumnList(); // Do this here to ensure sortable is appropriately set
+        if (sortable) {
+            if (fontSymbolManager != null) {
+                ascendingImageCtrl = (Control) addInternalChildWidget(
+                        "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
+                descendingImageCtrl = (Control) addInternalChildWidget(
+                        "!ui-symbol symbol:$s{sort} style:$s{width:16px;height:16px;cursor:pointer;}");
+            } else {
+                ascendingImageCtrl = (Control) addInternalChildWidget(
+                        "!ui-image src:$t{images/ascending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
+                descendingImageCtrl = (Control) addInternalChildWidget(
+                        "!ui-image src:$t{images/descending.png} style:$s{width:16px;height:16px;cursor:pointer;}");
+            }
+            columnIndexCtrl = (Control) addInternalChildWidget("!ui-hidden binding:columnIndex", false, true);
+            sortDirectionCtrl = (Control) addInternalChildWidget("!ui-hidden binding:sortDirection", false, true);
+        }
+
+        dataGroupId = getPrefixedId("data_");
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected List<Object> getItemList() throws UnifyException {
@@ -687,7 +686,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
         public Row(Object item, int index) throws UnifyException {
             this.item = item;
-            rowValueStore = new RowValueStore(this, index);
+            rowValueStore = new RowValueStore(this, getUplValueIndexPrefix(), index);
             String selectBinding = getUplAttribute(String.class, "selectBinding");
             if (selectBinding != null) {
                 selected = (Boolean) ReflectUtils.findNestedBeanProperty(item, selectBinding);
@@ -739,11 +738,11 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public class RowValueStore extends AbstractValueStore<Row> {
 
         private RowValueStore(Row row) {
-            this(row, -1);
+            this(row, null, -1);
         }
 
-        private RowValueStore(Row row, int dataIndex) {
-            super(row, dataIndex);
+        private RowValueStore(Row row, String dataIndexPrefix, int dataIndex) {
+            super(row, dataIndexPrefix, dataIndex);
         }
 
         @Override
