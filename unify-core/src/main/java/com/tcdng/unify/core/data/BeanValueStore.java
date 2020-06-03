@@ -32,8 +32,8 @@ public class BeanValueStore extends AbstractValueStore<Object> {
         this(valueBean, null, -1);
     }
 
-    public BeanValueStore(Object valueBean, String dataIndexPrefix, int dataIndex) {
-        super(valueBean, dataIndexPrefix, dataIndex);
+    public BeanValueStore(Object valueBean, String dataMarker, int dataIndex) {
+        super(valueBean, dataMarker, dataIndex);
     }
 
     @Override

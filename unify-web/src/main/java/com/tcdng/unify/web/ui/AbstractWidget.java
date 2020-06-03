@@ -210,9 +210,9 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
-    public String getValueIndexPrefix() {
+    public String getValueMarker() {
         if (valueStore != null) {
-            return valueStore.getDataIndexPrefix();
+            return valueStore.getDataMarker();
         }
 
         return null;

@@ -37,35 +37,35 @@ public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements Val
     }
 
     @Override
-    public ValueStore getValueStore(Object storageObject, String dataIndexPrefix, int dataIndex) throws UnifyException {
+    public ValueStore getValueStore(Object storageObject, String dataMarker, int dataIndex) throws UnifyException {
         if (storageObject != null) {
             if (storageObject instanceof PackableDoc) {
-                return new PackableDocStore((PackableDoc) storageObject, dataIndexPrefix, dataIndex);
+                return new PackableDocStore((PackableDoc) storageObject, dataMarker, dataIndex);
             }
 
             if (storageObject instanceof MapValues) {
-                return new MapValuesStore((MapValues) storageObject, dataIndexPrefix, dataIndex);
+                return new MapValuesStore((MapValues) storageObject, dataMarker, dataIndex);
             }
 
-            return new BeanValueStore(storageObject, dataIndexPrefix, dataIndex);
+            return new BeanValueStore(storageObject, dataMarker, dataIndex);
         }
 
         return null;
     }
 
     @Override
-    public ValueStore getArrayValueStore(Object[] storageObject, String dataIndexPrefix, int dataIndex)
+    public ValueStore getArrayValueStore(Object[] storageObject, String dataMarker, int dataIndex)
             throws UnifyException {
         if (storageObject != null) {
             if (storageObject instanceof PackableDoc[]) {
-                return new PackableDocArrayStore((PackableDoc[]) storageObject, dataIndexPrefix, dataIndex);
+                return new PackableDocArrayStore((PackableDoc[]) storageObject, dataMarker, dataIndex);
             }
 
             if (storageObject instanceof MapValues[]) {
-                return new MapValuesArrayStore((MapValues[]) storageObject, dataIndexPrefix, dataIndex);
+                return new MapValuesArrayStore((MapValues[]) storageObject, dataMarker, dataIndex);
             }
 
-            return new BeanValueArrayStore(storageObject, dataIndexPrefix, dataIndex);
+            return new BeanValueArrayStore(storageObject, dataMarker, dataIndex);
         }
 
         return null;
@@ -73,18 +73,18 @@ public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements Val
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> ValueStore getListValueStore(Class<T> clazz, List<T> storageObject, String dataIndexPrefix,
+    public <T> ValueStore getListValueStore(Class<T> clazz, List<T> storageObject, String dataMarker,
             int dataIndex) throws UnifyException {
         if (storageObject != null) {
             if (PackableDoc.class.equals(clazz)) {
-                return new PackableDocListStore((List<PackableDoc>) storageObject, dataIndexPrefix, dataIndex);
+                return new PackableDocListStore((List<PackableDoc>) storageObject, dataMarker, dataIndex);
             }
 
             if (MapValues.class.equals(clazz)) {
-                return new MapValuesListStore((List<MapValues>) storageObject, dataIndexPrefix, dataIndex);
+                return new MapValuesListStore((List<MapValues>) storageObject, dataMarker, dataIndex);
             }
 
-            return new BeanValueListStore((List<Object>) storageObject, dataIndexPrefix, dataIndex);
+            return new BeanValueListStore((List<Object>) storageObject, dataMarker, dataIndex);
         }
 
         return null;

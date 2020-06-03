@@ -29,8 +29,8 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public class BeanValueArrayStore extends AbstractArrayValueStore<Object> {
 
-    public BeanValueArrayStore(Object[] storage, String dataIndexPrefix, int dataIndex) {
-        super(storage, dataIndexPrefix, dataIndex);
+    public BeanValueArrayStore(Object[] storage, String dataMarker, int dataIndex) {
+        super(storage, dataMarker, dataIndex);
     }
 
     @Override

@@ -158,17 +158,17 @@ public interface ValueStore {
     Object getValueObject();
 
     /**
-     * Returns the value store data index prefix.
+     * Returns the value store data marker.
      */
-    String getDataIndexPrefix();
+    String getDataMarker();
 
     /**
-     * Sets the value store data index prefix.
+     * Sets the value store data marker.
      * 
-     * @param dataIndexPrefix
-     *            the data index prefix to set
+     * @param dataMarker
+     *            the data marker to set
      */
-    void setDataIndexPrefix(String dataIndexPrefix);
+    void setDataMarker(String dataMarker);
 
     /**
      * Returns the value store data index.

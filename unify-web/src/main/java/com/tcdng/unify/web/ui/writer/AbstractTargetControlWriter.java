@@ -47,7 +47,7 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
         } else {
             int index = targetControl.getValueIndex();
             if (index >= 0) {
-                String indexPrefix = targetControl.getValueIndexPrefix();
+                String indexPrefix = targetControl.getValueMarker();
                 if (indexPrefix != null) {
                     writer.write(" value=\"").write(indexPrefix).write(':').write(index).write("\"");
                 } else {

@@ -32,8 +32,8 @@ public class PackableDocStore extends AbstractValueStore<PackableDoc> {
         this(packableDoc, null, -1);
     }
 
-    public PackableDocStore(PackableDoc packableDoc, String dataIndexPrefix, int dataIndex) {
-        super(packableDoc, dataIndexPrefix, dataIndex);
+    public PackableDocStore(PackableDoc packableDoc, String dataMarker, int dataIndex) {
+        super(packableDoc, dataMarker, dataIndex);
     }
 
     @Override

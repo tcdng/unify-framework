@@ -460,17 +460,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * 
      * @param storageObject
      *            the storage object to use
-     * @param dataIndexPrefix
-     *            the data index prefix
+     * @param dataMarker
+     *            the data marker
      * @param dataIndex
      *            the data index
      * @return ValueStore new instance of a value store
      * @throws UnifyException
      *             if an error occurs
      */
-    protected ValueStore createValueStore(Object storageObject, String dataIndexPrefix, int dataIndex) throws UnifyException {
+    protected ValueStore createValueStore(Object storageObject, String dataMarker, int dataIndex) throws UnifyException {
         return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(storageObject, dataIndexPrefix, dataIndex);
+                .getValueStore(storageObject, dataMarker, dataIndex);
     }
 
     /**

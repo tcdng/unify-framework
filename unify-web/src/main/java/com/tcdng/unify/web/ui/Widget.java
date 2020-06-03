@@ -216,7 +216,7 @@ public interface Widget extends UplComponent {
     /**
      * Returns value index prefix.
      */
-    String getValueIndexPrefix();
+    String getValueMarker();
 
     /**
      * Returns value index.

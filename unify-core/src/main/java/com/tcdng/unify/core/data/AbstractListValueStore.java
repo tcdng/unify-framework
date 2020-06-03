@@ -32,13 +32,13 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
 
     private List<T> storage;
 
-    private String dataIndexPrefix;
+    private String dataMarker;
 
     private int dataIndex;
 
-    public AbstractListValueStore(List<T> storage, String dataIndexPrefix, int dataIndex) {
+    public AbstractListValueStore(List<T> storage, String dataMarker, int dataIndex) {
         this.storage = storage;
-        this.dataIndexPrefix = dataIndexPrefix;
+        this.dataMarker = dataMarker;
         this.dataIndex = dataIndex;
     }
 
@@ -97,13 +97,13 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     }
 
     @Override
-    public String getDataIndexPrefix() {
-        return dataIndexPrefix;
+    public String getDataMarker() {
+        return dataMarker;
     }
 
     @Override
-    public void setDataIndexPrefix(String dataIndexPrefix) {
-        this.dataIndexPrefix = dataIndexPrefix;
+    public void setDataMarker(String dataMarker) {
+        this.dataMarker = dataMarker;
     }
 
     @Override

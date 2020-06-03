@@ -41,7 +41,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
  * @since 1.0
  */
 @UplAttributes({ @UplAttribute(name = "components", type = UplElementReferences.class),
-        @UplAttribute(name = "valueIndexPrefix", type = String.class) })
+        @UplAttribute(name = "valueMarker", type = String.class) })
 public abstract class AbstractMultiControl extends AbstractControl implements MultiControl {
 
     private Map<String, ChildWidgetInfo> widgetInfoMap;
@@ -50,7 +50,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     private List<String> standalonePanelNames;
 
-    private String uplValueIndexPrefix;
+    private String uplValueMarker;
     
     public AbstractMultiControl() {
         widgetInfoMap = new LinkedHashMap<String, ChildWidgetInfo>();
@@ -59,7 +59,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
     @Override
     public final void onPageConstruct() throws UnifyException {
         super.onPageConstruct();        
-        uplValueIndexPrefix = getUplAttribute(String.class, "valueIndexPrefix");   
+        uplValueMarker = getUplAttribute(String.class, "valueMarker");   
         doOnPageConstruct();
     }
     
@@ -154,8 +154,8 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         return null;
     }
 
-    protected String getUplValueIndexPrefix() {
-        return uplValueIndexPrefix;
+    protected String getUplValueMarker() {
+        return uplValueMarker;
     }
 
     /**
@@ -225,8 +225,8 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     @Override
     protected final ValueStore createValueStore(Object storageObject, int dataIndex) throws UnifyException {
-        if (uplValueIndexPrefix != null) {
-            return super.createValueStore(storageObject, uplValueIndexPrefix, dataIndex);
+        if (uplValueMarker != null) {
+            return super.createValueStore(storageObject, uplValueMarker, dataIndex);
         }
         
         return super.createValueStore(storageObject, dataIndex);

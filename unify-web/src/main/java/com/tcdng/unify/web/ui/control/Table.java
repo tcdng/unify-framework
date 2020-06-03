@@ -686,7 +686,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
         public Row(Object item, int index) throws UnifyException {
             this.item = item;
-            rowValueStore = new RowValueStore(this, getUplValueIndexPrefix(), index);
+            rowValueStore = new RowValueStore(this, getUplValueMarker(), index);
             String selectBinding = getUplAttribute(String.class, "selectBinding");
             if (selectBinding != null) {
                 selected = (Boolean) ReflectUtils.findNestedBeanProperty(item, selectBinding);
@@ -741,8 +741,8 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             this(row, null, -1);
         }
 
-        private RowValueStore(Row row, String dataIndexPrefix, int dataIndex) {
-            super(row, dataIndexPrefix, dataIndex);
+        private RowValueStore(Row row, String dataMarker, int dataIndex) {
+            super(row, dataMarker, dataIndex);
         }
 
         @Override
