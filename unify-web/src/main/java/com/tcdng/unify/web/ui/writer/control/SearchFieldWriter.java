@@ -133,12 +133,11 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 
     private void writeRigging(ResponseWriter writer, SearchField searchField, String functionName)
             throws UnifyException {
-        String pageName = searchField.getId();
         ListControlJsonData listControlJsonData = searchField.getListControlJsonData(true, true, false);
 
         // Append rigging
         writer.write(functionName).write("({");
-        writer.write("\"pId\":\"").write(pageName).write('"');
+        writer.write("\"pId\":\"").write(searchField.getId()).write('"');
         writer.write(",\"pFacId\":\"").write(searchField.getFacadeId()).write('"');
         writer.write(",\"pFilId\":\"").write(searchField.getFilterId()).write('"');
         writer.write(",\"pRltId\":\"").write(searchField.getResultPanelId()).write('"');
