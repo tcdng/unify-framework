@@ -481,6 +481,7 @@ z-index:400;}
 .ui-date .ccontent {padding:4px;}
 .ui-date .ccontent td{padding:0px !important;border:0px !important;}
 .ui-date .ccontrol {height: 30px; text-align: center; padding: 4px 5px;}
+.ui-date .ctable {}
 .ui-date .cactbutton {width: 75px;  padding: 4px 0px; cursor: pointer; font-size: 8pt;
     border: 1px solid #C8C8C8;}
 .ui-date .cactbutton:hover {background-color: #D0D0D0;}
@@ -490,9 +491,9 @@ z-index:400;}
 .ui-date .cday {width: 18px; height: 20px; margin: 2px; border: solid 1px #A0A0A0;
 	background-color: white; cursor: pointer; text-align: right;}
 .ui-date .ctoday {width: 18px; height: 20px; margin: 2px;
-	border: solid 1px #A0C0A0; background-color: #80C080; color:white; cursor: pointer; text-align: right;}
+	border: solid 1px #A0C0A0; background-color: #80a0c0; color:white; cursor: pointer; text-align: right;}
 .ui-date .ccurrent {width: 18px; height: 20px; margin: 2px; border: solid 1px #E0E0C0;
-	background-color: #C0C080; color:white; cursor: pointer; text-align: right;}
+	background-color: #80C080; color:white; cursor: pointer; text-align: right;}
 
 /** Decimal field */
 .ui-decimal {text-align: right; padding-right: 4px;}

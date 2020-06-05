@@ -35,8 +35,6 @@ import com.tcdng.unify.core.format.Pattern;
         @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!dateformat style:customshort}") })
 public class DateField extends AbstractTimeField {
 
-    private DateTimeFormat monthDateTimeFormat;
-
     private String[] shortDayList;
 
     private String[] longMonthList;
@@ -50,8 +48,8 @@ public class DateField extends AbstractTimeField {
         for (Pattern p : super.getPattern()) {
             if (!p.isFiller()) {
                 if ('M' == p.getPattern().charAt(0)) {
-                    monthDateTimeFormat = formatter.getFormatHelper().getSubPatternDateTimeFormat(p.getPattern(),
-                            formatter.getLocale());
+                    DateTimeFormat monthDateTimeFormat = formatter.getFormatHelper()
+                            .getSubPatternDateTimeFormat(p.getPattern(), formatter.getLocale());
                     longMonthList = monthDateTimeFormat.getSubPatternDescriptions();
                 }
             }
@@ -76,6 +74,15 @@ public class DateField extends AbstractTimeField {
                         break;
                     case 'M':
                         p.setTarget(getPrefixedId("mon_"));
+                        break;
+                    case 'H':
+                        p.setTarget(getPrefixedId("hour_"));
+                        break;
+                    case 'm':
+                        p.setTarget(getPrefixedId("min_"));
+                        break;
+                    case 's':
+                        p.setTarget(getPrefixedId("sec_"));
                         break;
                     default:
                 }

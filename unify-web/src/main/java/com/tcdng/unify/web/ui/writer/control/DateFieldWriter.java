@@ -77,6 +77,9 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writeHidden(writer, dateField.getPrefixedId("day_"), dateCal.get(Calendar.DAY_OF_MONTH));
         writeHidden(writer, dateField.getPrefixedId("mon_"), dateCal.get(Calendar.MONTH) + 1);
         writeHidden(writer, dateField.getPrefixedId("year_"), dateCal.get(Calendar.YEAR));
+        writeHidden(writer, dateField.getPrefixedId("hour_"), dateCal.get(Calendar.HOUR_OF_DAY));
+        writeHidden(writer, dateField.getPrefixedId("min_"), dateCal.get(Calendar.MINUTE));
+        writeHidden(writer, dateField.getPrefixedId("sec_"), dateCal.get(Calendar.SECOND));
         writer.write("</div>");
     }
 

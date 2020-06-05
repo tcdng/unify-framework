@@ -1519,7 +1519,7 @@ ux.datePopulateCalendar = function(evp) {
 		currentDay = 0;
 	}
 
-	var calendarHtml = "<table>";
+	var calendarHtml = "<table class=\"ctable\">";
 	calendarHtml += "<tr>";
 	for (var i = 0; i < 7; i++) {
 		calendarHtml += "<th>";
