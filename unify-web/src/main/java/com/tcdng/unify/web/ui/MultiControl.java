@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.AbstractMultiControl.ChildWidgetInfo;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface MultiControl extends Control {
+public interface MultiControl extends Control, WidgetContainer {
     /**
      * Adds a child widget to this component.
      * 

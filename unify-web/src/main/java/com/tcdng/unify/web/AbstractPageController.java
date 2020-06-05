@@ -36,6 +36,7 @@ import com.tcdng.unify.web.ui.Document;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.WidgetCommandManager;
+import com.tcdng.unify.web.ui.WidgetContainer;
 import com.tcdng.unify.web.ui.data.Hint.MODE;
 import com.tcdng.unify.web.ui.data.MessageBox;
 import com.tcdng.unify.web.ui.data.MessageIcon;
@@ -150,6 +151,10 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
                     (WidgetCommandManager) getComponent(WebApplicationComponents.APPLICATION_UICOMMANDMANAGER);
             Widget widget = getRequestContextUtil().getRequestPage().getWidgetByLongName(Widget.class,
                     requestCommand.getTargetId());
+            if (requestCommand.isWithChildRef()) {
+                widget = ((WidgetContainer) widget).getChildWidget(requestCommand.getChildId());
+            }
+
             if (widget.isRelayCommand()) {
                 widget = widget.getRelayWidget();
             }

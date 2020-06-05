@@ -25,10 +25,16 @@ public class RequestCommand {
 
     private String targetId;
 
+    private String childId;
+
     private String command;
 
-    public RequestCommand(String targetId, String command) {
+    private int dataIndex;
+
+    public RequestCommand(String targetId, String childId, int dataIndex, String command) {
         this.targetId = targetId;
+        this.childId = childId;
+        this.dataIndex = dataIndex;
         this.command = command;
     }
 
@@ -38,5 +44,21 @@ public class RequestCommand {
 
     public String getCommand() {
         return command;
+    }
+
+    public String getChildId() {
+        return childId;
+    }
+
+    public int getDataIndex() {
+        return dataIndex;
+    }
+
+    public boolean isWithChildRef() {
+        return childId != null;
+    }
+
+    public boolean isWithDataIndex() {
+        return dataIndex >= 0;
     }
 }

@@ -298,6 +298,15 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         }
     }
 
+    @Override
+    public Widget getChildWidget(String childId) throws UnifyException {
+        if (internalWidgets != null) {
+            return internalWidgets.get(childId);
+        }
+        
+        return null;
+    }
+
     protected Set<String> getAllWidgetLongNames() throws UnifyException {
         return widgetRepository.getWidgetLongNames();
     }

@@ -154,6 +154,18 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         return null;
     }
 
+    @Override
+    public Widget getChildWidget(String childId) throws UnifyException {
+        if (widgetInfoMap != null) {
+            ChildWidgetInfo childWidgetInfo = widgetInfoMap.get(childId);
+            if (childWidgetInfo != null) {
+                return childWidgetInfo.getWidget();
+            }
+        }
+        
+        return null;
+    }
+
     protected String getUplValueMarker() {
         return uplValueMarker;
     }

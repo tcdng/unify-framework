@@ -27,7 +27,7 @@ import com.tcdng.unify.core.data.ValueStore;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Container extends DataTransferWidget {
+public interface Container extends DataTransferWidget, WidgetContainer {
 
     /**
      * Sets the container's widget repository.

@@ -247,8 +247,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             // May be a real path request
             File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
             if (file.exists()) {
-                ResourceController realPathResourceController =
-                        (ResourceController) getComponent("/resource/realpath");
+                ResourceController realPathResourceController = (ResourceController) getComponent("/resource/realpath");
                 realPathResourceController.setResourceName(path);
                 return realPathResourceController;
             }
@@ -809,7 +808,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             requestContextUtil.setClosedPagePaths(Arrays.asList(currentPage.getPathId()));
             return;
         }
-        
+
         ContentPanel contentPanel = requestContextUtil.getRequestDocument().getContentPanel();
         List<String> toClosePathIdList = contentPanel.evaluateRemoveContent(currentPage, closePageMode);
         if (!toClosePathIdList.isEmpty()) {
@@ -1023,13 +1022,22 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
                 String[] commandElements = ((String) values).split("->");
                 String pageName = commandElements[0];
+                int dataIndex = -1;
                 int dIndex = pageName.indexOf('d');
                 if (dIndex > 0) {
+                    dataIndex = Integer.valueOf(pageName.substring(dIndex + 1));
                     pageName = pageName.substring(0, dIndex);
                 }
 
-                RequestCommand requestCommand =
-                        new RequestCommand(getPageManager().getLongName(pageName), commandElements[1]);
+                String childId = null;
+                int cIndex = pageName.indexOf('c');
+                if (cIndex > 0) {
+                    childId = pageName;
+                    pageName = pageName.substring(0, cIndex - 1);
+                }
+
+                RequestCommand requestCommand = new RequestCommand(getPageManager().getLongName(pageName), childId,
+                        dataIndex, commandElements[1]);
                 requestContextUtil.setRequestCommand(requestCommand);
                 continue;
             }
