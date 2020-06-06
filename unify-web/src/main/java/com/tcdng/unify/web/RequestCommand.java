@@ -23,42 +23,27 @@ package com.tcdng.unify.web;
  */
 public class RequestCommand {
 
-    private String targetId;
+    private DataTransferBlock transferBlock;
 
-    private String childId;
-
+    private String parentLongName;
+    
     private String command;
 
-    private int dataIndex;
-
-    public RequestCommand(String targetId, String childId, int dataIndex, String command) {
-        this.targetId = targetId;
-        this.childId = childId;
-        this.dataIndex = dataIndex;
+    public RequestCommand(DataTransferBlock transferBlock, String parentLongName, String command) {
+        this.transferBlock = transferBlock;
+        this.parentLongName = parentLongName;
         this.command = command;
     }
 
-    public String getTargetId() {
-        return targetId;
+    public DataTransferBlock getTransferBlock() {
+        return transferBlock;
+    }
+
+    public String getParentLongName() {
+        return parentLongName;
     }
 
     public String getCommand() {
         return command;
-    }
-
-    public String getChildId() {
-        return childId;
-    }
-
-    public int getDataIndex() {
-        return dataIndex;
-    }
-
-    public boolean isWithChildRef() {
-        return childId != null;
-    }
-
-    public boolean isWithDataIndex() {
-        return dataIndex >= 0;
     }
 }

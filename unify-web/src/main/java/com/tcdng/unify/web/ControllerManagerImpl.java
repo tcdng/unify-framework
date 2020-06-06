@@ -1009,7 +1009,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 }
 
                 for (int i = 0; i < strings.length; i++) {
-                    strings[i] = getPageManager().getLongName(strings[i]);
+                    strings[i] = pageManager.getLongName(strings[i]);
                 }
                 requestContextUtil.setResponseRefreshPanels(strings);
                 continue;
@@ -1021,23 +1021,9 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 }
 
                 String[] commandElements = ((String) values).split("->");
-                String pageName = commandElements[0];
-                int dataIndex = -1;
-                int dIndex = pageName.indexOf('d');
-                if (dIndex > 0) {
-                    dataIndex = Integer.valueOf(pageName.substring(dIndex + 1));
-                    pageName = pageName.substring(0, dIndex);
-                }
-
-                String childId = null;
-                int cIndex = pageName.indexOf('c');
-                if (cIndex > 0) {
-                    childId = pageName;
-                    pageName = pageName.substring(0, cIndex - 1);
-                }
-
-                RequestCommand requestCommand = new RequestCommand(getPageManager().getLongName(pageName), childId,
-                        dataIndex, commandElements[1]);
+                DataTransferBlock transferBlock = DataTransferUtils.createTransferBlock(commandElements[0]);
+                String parentLongName = pageManager.getLongName(transferBlock.getId());
+                RequestCommand requestCommand = new RequestCommand(transferBlock, parentLongName, commandElements[1]);
                 requestContextUtil.setRequestCommand(requestCommand);
                 continue;
             }

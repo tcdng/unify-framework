@@ -31,6 +31,10 @@ public final class DataTransferUtils {
         
     }
 
+    public static DataTransferBlock createTransferBlock(String transferId) {
+        return DataTransferUtils.createTransferBlock(transferId, null);
+    }
+    
     public static DataTransferBlock createTransferBlock(String transferId, DataTransferHeader header) {
       DataTransferBlock transferBlock = null;
       String id = transferId;
