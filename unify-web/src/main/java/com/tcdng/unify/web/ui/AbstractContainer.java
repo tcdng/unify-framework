@@ -62,13 +62,13 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         this.useLayoutIfPresent = useLayoutIfPresent;
     }
 
-    @Override
-    public void setContainer(Container container) {
-        super.setContainer(container);
-        if(widgetRepository == null) {
-            widgetRepository = container.getWidgetRepository();
-        }
-    }
+//    @Override
+//    public void setContainer(Container container) {
+//        super.setContainer(container);
+//        if(widgetRepository == null) {
+//            widgetRepository = container.getWidgetRepository();
+//        }
+//    }
 
     @Override
     public boolean isField() {
@@ -406,7 +406,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         return getValueStore();
     }
 
-    private List<String> getShallowWidgetLongNames() throws UnifyException {
+    protected List<String> getShallowWidgetLongNames() throws UnifyException {
         return widgetRepository.getWidgetInfo(getLongName()).getShallowNames();
     }
 
