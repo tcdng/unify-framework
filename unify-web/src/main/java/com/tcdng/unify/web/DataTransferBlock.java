@@ -51,11 +51,19 @@ public class DataTransferBlock {
     }
 
     public Object getValue() {
-        return header.getValue();
+        if (header != null) {
+            return header.getValue();
+        }
+
+        return null;
     }
 
     public Object getDebugValue() {
-        return header.getDebugValue();
+        if (header != null) {
+            return header.getDebugValue();
+        }
+
+        return null;
     }
 
     public DataTransferBlock getChildBlock() {
@@ -63,23 +71,41 @@ public class DataTransferBlock {
     }
 
     public String getLongName() {
-        return header.getLongName();
+        if (header != null) {
+            return header.getLongName();
+        }
+
+        return null;
     }
 
     public String getLongProperty() {
-        return header.getLongProperty();
+        if (header != null) {
+            return header.getLongProperty();
+        }
+
+        return null;
     }
 
     public String getShortProperty() {
-        return header.getShortProperty();
+        if (header != null) {
+            return header.getShortProperty();
+        }
+
+        return null;
     }
 
     public DataTransferBlock getSiblingBlock() {
-        return header.getSiblingBlock();
+        if (header != null) {
+            return header.getSiblingBlock();
+        }
+
+        return null;
     }
 
     public void setSiblingBlock(DataTransferBlock siblingBlock) {
-        header.setSiblingBlock(siblingBlock);
+        if (header != null) {
+            header.setSiblingBlock(siblingBlock);
+        }
     }
 
     @Override

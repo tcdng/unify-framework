@@ -60,6 +60,9 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     @Configurable
     private PathInfoRepository pathInfoRepository;
 
+    @Configurable
+    private WidgetCommandManager uiCommandManager;
+
     private Class<T> pageBeanClass;
 
     public AbstractPageController(Class<T> pageBeanClass) {
@@ -147,12 +150,12 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     public String command() throws UnifyException {
         RequestCommand requestCommand = getRequestContextUtil().getRequestCommand();
         if (requestCommand != null) {
-            WidgetCommandManager uiCommandManager =
-                    (WidgetCommandManager) getComponent(WebApplicationComponents.APPLICATION_UICOMMANDMANAGER);
             Widget widget = getRequestContextUtil().getRequestPage().getWidgetByLongName(Widget.class,
-                    requestCommand.getTargetId());
-            if (requestCommand.isWithChildRef()) {
-                widget = ((WidgetContainer) widget).getChildWidget(requestCommand.getChildId());
+                    requestCommand.getParentLongName());
+            DataTransferBlock childBlock = requestCommand.getTransferBlock().getChildBlock();
+            while (childBlock != null) {
+                widget = ((WidgetContainer) widget).getChildWidget(childBlock.getId());
+                childBlock = childBlock.getChildBlock();
             }
 
             if (widget.isRelayCommand()) {
