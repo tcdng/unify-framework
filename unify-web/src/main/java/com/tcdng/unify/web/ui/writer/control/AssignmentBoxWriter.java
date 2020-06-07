@@ -48,22 +48,37 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
         writer.write("</div></div>");
 
         writer.write("<div class=\"abtable\">");
-        writer.write("<div class=\"abrow\"><div class=\"abscell\"><fieldset class=\"abfieldset\"><legend>")
-                .write(assignmentBox.getAssignCaption()).write(":</legend>");
+        writer.write("<div class=\"abrow\">");
+        // Assigned List
+        writer.write("<div class=\"abscell\"><fieldset class=\"abfieldset\"><legend>")
+        .write(assignmentBox.getAssignCaption()).write(":</legend>");
         writer.writeStructureAndContent(assignmentBox.getAssignSel());
-        writer.write("</fieldset></div><div class=\"abbcell\"><div>");
-        writer.writeStructureAndContent(assignmentBox.getAssignBtn());
-        writer.write("</div><div>");
-        writer.writeStructureAndContent(assignmentBox.getAssignAllBtn());
-        writer.write("</div><div>");
-        writer.writeStructureAndContent(assignmentBox.getUnassignBtn());
-        writer.write("</div><div>");
-        writer.writeStructureAndContent(assignmentBox.getUnassignAllBtn());
-        writer.write("</div></div><div class=\"abscell\"><fieldset class=\"abfieldset\"><legend>")
-                .write(assignmentBox.getUnassignCaption()).write(":</legend>");
-        writer.writeStructureAndContent(assignmentBox.getUnassignSel());
-        writer.write("</fieldset></div></div>");
+        writer.write("</fieldset></div>");
+        if (!assignmentBox.isShowAssignedOnly()) {
+            // Action Buttons
+            writer.write("<div class=\"abbcell\"><div>");
+            writer.writeStructureAndContent(assignmentBox.getAssignBtn());
+            writer.write("</div><div>");
+            writer.writeStructureAndContent(assignmentBox.getUnassignBtn());
+            writer.write("</div>");
+            if(assignmentBox.isAllowAssignAll()) {
+                writer.write("<div>");
+                writer.writeStructureAndContent(assignmentBox.getAssignAllBtn());
+                writer.write("</div><div>");
+                writer.writeStructureAndContent(assignmentBox.getUnassignAllBtn());
+                writer.write("</div>");
+            }
+            writer.write("</div>");
+
+            // Unassigned List
+            writer.write("<div class=\"abscell\"><fieldset class=\"abfieldset\"><legend>")
+            .write(assignmentBox.getUnassignCaption()).write(":</legend>");
+            writer.writeStructureAndContent(assignmentBox.getUnassignSel());
+            writer.write("</fieldset></div>");
+        }
         writer.write("</div></div>");
+        
+        writer.write("</div>");
     }
 
     @Override
@@ -100,11 +115,15 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
         }
 
         writer.write(",\"pAssnSelId\":\"").write(assignmentBox.getAssignSel().getId()).write('"');
-        writer.write(",\"pUnassnSelId\":\"").write(assignmentBox.getUnassignSel().getId()).write('"');
-        writer.write(",\"pAssnBtnId\":\"").write(assignmentBox.getAssignBtn().getId()).write('"');
-        writer.write(",\"pAssnAllBtnId\":\"").write(assignmentBox.getAssignAllBtn().getId()).write('"');
-        writer.write(",\"pUnassnBtnId\":\"").write(assignmentBox.getUnassignBtn().getId()).write('"');
-        writer.write(",\"pUnassnAllBtnId\":\"").write(assignmentBox.getUnassignAllBtn().getId()).write('"');
+        writer.write(",\"pAssnOnly\":").write(assignmentBox.isShowAssignedOnly());
+        if (!assignmentBox.isShowAssignedOnly()) {
+            writer.write(",\"pAssnAll\":").write(assignmentBox.isAllowAssignAll());
+            writer.write(",\"pUnassnSelId\":\"").write(assignmentBox.getUnassignSel().getId()).write('"');
+            writer.write(",\"pAssnBtnId\":\"").write(assignmentBox.getAssignBtn().getId()).write('"');
+            writer.write(",\"pAssnAllBtnId\":\"").write(assignmentBox.getAssignAllBtn().getId()).write('"');
+            writer.write(",\"pUnassnBtnId\":\"").write(assignmentBox.getUnassignBtn().getId()).write('"');
+            writer.write(",\"pUnassnAllBtnId\":\"").write(assignmentBox.getUnassignAllBtn().getId()).write('"');
+        }
         writer.write(",\"pEditable\":").write(assignmentBox.isContainerEditable());
         writer.write("});");
     }

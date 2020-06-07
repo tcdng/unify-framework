@@ -1281,48 +1281,55 @@ ux.rigAssignmentBox = function(rgp) {
 	ux.addHdl(filterSel1, "change", ux.post, evPrmSel);
 	ux.addHdl(filterSel2, "change", ux.post, evPrmSel);
 
-	var assnBoxRigBtns = function(rgp, assnBtnId, assnAllBtnId,
-			unassnSelId) {
-		var unassnSel = _id(unassnSelId);
-		var assnBtn = _id(assnBtnId);
-		var assnAllBtn = _id(assnAllBtnId);
-		unassnSel.disabled = false;
-		assnBtn.disabled = true;
-		assnAllBtn.disabled = !rgp.pEditable
-				|| unassnSel.options.length == 0;
-		var evp = ux.newEvPrm(rgp);
-		evp.uRef = [ unassnSelId ];
-		evp.uPanels = [ rgp.pContId ];
-		ux.addHdl(assnBtn, "click", ux.post, evp);
-
-		if (!assnAllBtn.disabled) {
-			evp = ux.newEvPrm(rgp);
+	if (!rgp.pAssnOnly) {
+		var assnBoxRigBtns = function(rgp, assnBtnId, assnAllBtnId,
+				unassnSelId, assnAll) {
+			var unassnSel = _id(unassnSelId);
+			var assnBtn = _id(assnBtnId);
+			unassnSel.disabled = false;
+			assnBtn.disabled = true;
+			var evp = ux.newEvPrm(rgp);
 			evp.uRef = [ unassnSelId ];
 			evp.uPanels = [ rgp.pContId ];
-			ux.addHdl(assnAllBtn, "click", function(uEv) {
-				for (var i = 0; i < unassnSel.options.length; i++) {
-					unassnSel.options[i].selected = true;
-				}
-				ux.post(uEv);
-			}, evp);
+			ux.addHdl(assnBtn, "click", ux.post, evp);
 
-			evp = {};
-			ux.addHdl(unassnSel, "change", function(uEv) {
-				assnBtn.disabled = true;
-				for (var i = 0; i < unassnSel.options.length; i++) {
-					if (unassnSel.options[i].selected) {
-						assnBtn.disabled = false;
-						break;
+			var btnDsbld =  !rgp.pEditable || unassnSel.options.length == 0;
+			if (assnAll) {
+				var assnAllBtn = _id(assnAllBtnId);
+				assnAllBtn.disabled = btnDsbld;
+				
+				if (!btnDsbld) {
+					evp = ux.newEvPrm(rgp);
+					evp.uRef = [ unassnSelId ];
+					evp.uPanels = [ rgp.pContId ];
+					ux.addHdl(assnAllBtn, "click", function(uEv) {
+						for (var i = 0; i < unassnSel.options.length; i++) {
+							unassnSel.options[i].selected = true;
+						}
+						ux.post(uEv);
+					}, evp);
+				}
+			}
+			
+			if (!btnDsbld) {
+				evp = {};
+				ux.addHdl(unassnSel, "change", function(uEv) {
+					assnBtn.disabled = true;
+					for (var i = 0; i < unassnSel.options.length; i++) {
+						if (unassnSel.options[i].selected) {
+							assnBtn.disabled = false;
+							break;
+						}
 					}
-				}
-			}, evp);
-		}
-	};
+				}, evp);
+			}
+		};
 
-	assnBoxRigBtns(rgp, rgp.pAssnBtnId, rgp.pAssnAllBtnId,
-			rgp.pUnassnSelId);
-	assnBoxRigBtns(rgp, rgp.pUnassnBtnId, rgp.pUnassnAllBtnId,
-			rgp.pAssnSelId);
+		assnBoxRigBtns(rgp, rgp.pAssnBtnId, rgp.pAssnAllBtnId,
+				rgp.pUnassnSelId, rgp.pAssnAll);
+		assnBoxRigBtns(rgp, rgp.pUnassnBtnId, rgp.pUnassnAllBtnId,
+				rgp.pAssnSelId, rgp.pAssnAll);
+	}
 }
 
 /** Checkbox */
