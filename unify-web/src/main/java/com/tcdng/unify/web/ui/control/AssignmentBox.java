@@ -46,7 +46,9 @@ import com.tcdng.unify.web.ui.Control;
         @UplAttribute(name = "unassignListKey", type = String.class),
         @UplAttribute(name = "assignListDesc", type = String.class),
         @UplAttribute(name = "unassignListDesc", type = String.class),
-        @UplAttribute(name = "multiSelectStyle", type = String.class) })
+        @UplAttribute(name = "multiSelectStyle", type = String.class),
+        @UplAttribute(name = "allowAssignAll", type = boolean.class, defaultVal="true"),
+        @UplAttribute(name = "showAssignedOnly", type = boolean.class) })
 public class AssignmentBox extends AbstractMultiControl {
 
     private Control assignedSelCtrl;
@@ -120,6 +122,14 @@ public class AssignmentBox extends AbstractMultiControl {
 
     public String getAssignCaption() throws UnifyException {
         return getUplAttribute(String.class, "assignCaption");
+    }
+
+    public boolean isAllowAssignAll() throws UnifyException {
+        return getUplAttribute(boolean.class, "allowAssignAll");
+    }
+
+    public boolean isShowAssignedOnly() throws UnifyException {
+        return getUplAttribute(boolean.class, "showAssignedOnly");
     }
 
     public Control getFilterSel1() {
