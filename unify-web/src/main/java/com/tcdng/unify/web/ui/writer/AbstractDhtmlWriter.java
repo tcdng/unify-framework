@@ -405,8 +405,6 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      *            the writer to use to write
      * @param widget
      *            the widget whose style class to write
-     * @param extraLeading
-     *            indicates extra classes should be leading
      * @param extraClasses
      *            the extra classes to write
      * @throws UnifyException
