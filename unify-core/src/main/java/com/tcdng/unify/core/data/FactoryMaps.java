@@ -82,11 +82,11 @@ public abstract class FactoryMaps<T, U, V> extends FactoryMap<T, FactoryMap<U, V
     }
 
     @Override
-    protected FactoryMap<U, V> create(final T mainKey, Object... params) throws Exception {
+    protected final FactoryMap<U, V> create(final T mainKey, Object... params) throws Exception {
         return new FactoryMap<U, V>(checkStale) {
             @Override
             protected boolean stale(U key, V value) throws Exception {
-                if (valueStale(key, value)) {
+                if (valueStale(mainKey, key, value)) {
                     removeSiblingKeys(mainKey, key);
                     return true;
                 }
@@ -105,7 +105,7 @@ public abstract class FactoryMaps<T, U, V> extends FactoryMap<T, FactoryMap<U, V
         };
     };
 
-    protected boolean valueStale(U key, V value) throws Exception {
+    protected boolean valueStale(T mainKey, U key, V value) throws Exception {
         return false;
     }
 

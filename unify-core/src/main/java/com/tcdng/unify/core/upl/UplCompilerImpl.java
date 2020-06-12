@@ -98,7 +98,7 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
         uplDocumentByNameMap = new LocaleFactoryMaps<String, UplDocument>(true) {
 
             @Override
-            protected boolean valueStale(String name, UplDocument values) throws Exception {
+            protected boolean valueStale(Locale locale, String name, UplDocument values) throws Exception {
                 return isStaleDocument(name);
             }
 
