@@ -46,6 +46,8 @@ public class SessionContext extends Context {
 
     private String contextPath;
 
+    private String tenantPath;
+
     private String remoteHost;
 
     private String remoteAddress;
@@ -56,19 +58,23 @@ public class SessionContext extends Context {
 
     private Date lastAccessTime;
 
-    private boolean useDaylightSavings;
+    private boolean isNewLastAccessTime;
     
+    private boolean useDaylightSavings;
+
     public SessionContext(String id, Locale locale, TimeZone timeZone, String uriBase, String contextPath,
-            String remoteHost, String remoteAddress, String remoteUser, UserPlatform platform) {
+            String tenantPath, String remoteHost, String remoteAddress, String remoteUser, UserPlatform platform) {
         this.id = id;
         this.locale = locale;
         this.timeZone = timeZone;
         this.uriBase = uriBase;
         this.contextPath = contextPath;
+        this.tenantPath = tenantPath;
         this.remoteHost = remoteHost;
         this.remoteAddress = remoteAddress;
         this.remoteUser = remoteUser;
         this.platform = platform;
+        this.isNewLastAccessTime = true;
         setAttribute(TRUE_ATTRIBUTE, Boolean.TRUE);
         setAttribute(FALSE_ATTRIBUTE, Boolean.FALSE);
     }
@@ -101,6 +107,10 @@ public class SessionContext extends Context {
         return contextPath;
     }
 
+    public String getTenantPath() {
+        return tenantPath;
+    }
+
     public String getRemoteHost() {
         return remoteHost;
     }
@@ -117,16 +127,26 @@ public class SessionContext extends Context {
         return platform;
     }
 
+    public boolean isWithTenantPath() {
+        return tenantPath != null;
+    }
+
     public boolean isUserLoggedIn() {
         return userToken != null;
     }
 
+    public boolean isNewLastAccessTime() {
+        return isNewLastAccessTime;
+    }
+
     public Date getLastAccessTime() {
+        isNewLastAccessTime = false;
         return lastAccessTime;
     }
 
     public void setLastAccessTime(Date lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
+        isNewLastAccessTime = true;
     }
 
     public TimeZone getTimeZone() {

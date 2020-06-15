@@ -236,13 +236,13 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
     }
 
     @Override
-    public Controller getController(PathParts pathParts, boolean isLoadPage) throws UnifyException {
-        logDebug("Retrieving controller for path [{0}]...", pathParts.getFullPath());
+    public Controller getController(ControllerPathParts controllerPathParts, boolean isLoadPage) throws UnifyException {
+        logDebug("Retrieving controller for path [{0}]...", controllerPathParts.getControllerPath());
 
-        final String controllerName = pathParts.getControllerName();
+        final String controllerName = controllerPathParts.getControllerName();
         UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, controllerName);
 
-        final String path = pathParts.getFullPath();
+        final String path = controllerPathParts.getControllerPath();
         if (unifyComponentConfig == null) {
             // May be a real path request
             File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
@@ -260,13 +260,13 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         Controller controller = (Controller) getComponent(controllerName);
         if (ControllerType.PAGE_CONTROLLER.equals(controller.getType())) {
             SessionContext sessionContext = getSessionContext();
-            Page page = (Page) sessionContext.getAttribute(pathParts.getPathId());
+            Page page = (Page) sessionContext.getAttribute(controllerPathParts.getControllerPathId());
             if (page == null) {
                 Page currentPage = requestContextUtil.getRequestPage();
                 try {
                     PageController<?> pageController = (PageController<?>) controller;
                     page = pageManager.createPage(sessionContext.getLocale(), controllerName);
-                    page.setPathParts(pathParts);
+                    page.setPathParts(controllerPathParts);
                     Class<? extends PageBean> pageBeanClass = pageController.getPageBeanClass();
                     if (VoidPageBean.class.equals(pageBeanClass)) {
                         page.setPageBean(VoidPageBean.INSTANCE);
@@ -276,7 +276,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
                     requestContextUtil.setRequestPage(page);
                     pageController.initPage();
-                    sessionContext.setAttribute(pathParts.getPathId(), page);
+                    sessionContext.setAttribute(controllerPathParts.getControllerPathId(), page);
                 } finally {
                     if (!isLoadPage) {
                         requestContextUtil.setRequestPage(currentPage);
@@ -294,15 +294,15 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         Controller controller = null;
         PageController<?> docPageController = null;
         try {
-            PathParts docPathParts = null;
-            final PathParts reqPathParts = request.getPathParts();
+            ControllerPathParts docPathParts = null;
+            final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
             controller = getController(reqPathParts, false);
 
             ControllerType controllerType = controller.getType();
             if (controllerType.isUIController()) {
                 String documentPath = (String) request.getParameter(RequestParameterConstants.DOCUMENT);
                 if (documentPath != null) {
-                    docPathParts = pathInfoRepository.getPathParts(documentPath);
+                    docPathParts = pathInfoRepository.getControllerPathParts(documentPath);
                     docPageController = (PageController<?>) getController(docPathParts, false);
                     requestContextUtil.setRequestDocument((Document) loadRequestPage(docPathParts));
                 }
@@ -317,10 +317,10 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                         (String) sessionContext.removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
                 if (forceLogout != null) {
                     throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout),
-                            reqPathParts.getFullPath());
+                            reqPathParts.getControllerPath());
                 }
 
-                throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, reqPathParts.getFullPath());
+                throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, reqPathParts.getControllerPath());
             }
 
             if (ControllerType.PLAIN_CONTROLLER.equals(controllerType)) {
@@ -330,8 +330,8 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 RemoteCallFormat remoteCallFormat =
                         (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
                 Object reqBody = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-                Object respBody =
-                        executeRemoteCall(remoteCallController, remoteCallFormat, reqPathParts.getFullPath(), reqBody);
+                Object respBody = executeRemoteCall(remoteCallController, remoteCallFormat,
+                        reqPathParts.getControllerPath(), reqBody);
                 response.setContentType(remoteCallFormat.mimeType().template());
                 if (request.getCharset() != null) {
                     response.setCharacterEncoding(request.getCharset().name());
@@ -363,7 +363,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
             } else {
                 ResponseWriter writer = responseWriterPool.getResponseWriter();
                 try {
-                    PathParts respPathParts = reqPathParts;
+                    ControllerPathParts respPathParts = reqPathParts;
                     PageController<?> pageController = (PageController<?>) controller;
                     PageControllerInfo pbbInfo = pageControllerInfoMap.get(pageController.getName());
                     Page page = loadRequestPage(reqPathParts);
@@ -400,7 +400,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                         if (!pbbInfo.hasResultWithName(resultName)) {
                             logDebug("AggregateItem with name [{0}] not found for controller [{1}]...", resultName,
                                     pageController.getName());
-                            respPathParts = pathInfoRepository.getPathParts(commonUtilitiesControllerName);
+                            respPathParts = pathInfoRepository.getControllerPathParts(commonUtilitiesControllerName);
                             pageController = (PageController<?>) getController(respPathParts, false);
                             page = loadRequestPage(respPathParts);
                             pbbInfo = pageControllerInfoMap.get(pageController.getName());
@@ -451,7 +451,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
     public String executePageController(String fullActionPath) throws UnifyException {
         Page currentPage = requestContextUtil.getRequestPage();
         try {
-            PathParts targetPathParts = pathInfoRepository.getPathParts(fullActionPath);
+            ControllerPathParts targetPathParts = pathInfoRepository.getControllerPathParts(fullActionPath);
             PageController<?> targetPageController = (PageController<?>) getController(targetPathParts, false);
             loadRequestPage(targetPathParts);
             return executePageCall(targetPageController, targetPathParts.getActionName());
@@ -464,7 +464,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
     public void populatePageBean(String controllerName, String property, Object value) throws UnifyException {
         Page currentPage = requestContextUtil.getRequestPage();
         try {
-            PathParts targetPathParts = pathInfoRepository.getPathParts(controllerName);
+            ControllerPathParts targetPathParts = pathInfoRepository.getControllerPathParts(controllerName);
             getController(targetPathParts, false); // Force target page to be created in session if necessary
             Page targetPage = loadRequestPage(targetPathParts);
             DataUtils.setNestedBeanProperty(targetPage.getPageBean(), property, value);
@@ -745,17 +745,19 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         ResponseWriter writer = responseWriterPool.getResponseWriter();
         try {
             PageController<?> pageController = null;
-            PathParts respPathParts = null;
+            ControllerPathParts respPathParts = null;
             Page page = null;
             Result result = null;
             if (StringUtils.isBlank((String) request.getParameter(RequestParameterConstants.DOCUMENT))
                     && !requestContextUtil.isRemoteViewer()) {
-                respPathParts = pathInfoRepository.getPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+                respPathParts =
+                        pathInfoRepository.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
                 pageController = (PageController<?>) getController(respPathParts, false);
                 page = loadRequestPage(respPathParts);
                 result = pageControllerInfoMap.get(pageController.getName()).getResult(ResultMappingConstants.INDEX);
             } else {
-                respPathParts = pathInfoRepository.getPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
+                respPathParts =
+                        pathInfoRepository.getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
                 pageController = (PageController<?>) getController(respPathParts, false);
                 page = loadRequestPage(respPathParts);
                 page.setWidgetVisible("stackTrace", !loginRequired);
@@ -802,9 +804,10 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         Page currentPage = requestContextUtil.getRequestPage();
         if (requestContextUtil.isRemoteViewer()) {
             // Fire closePage()
-            PathParts pathParts = pathInfoRepository.getPathParts(currentPage.getPathId());
-            loadRequestPage(pathParts);
-            ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
+            ControllerPathParts controllerPathParts =
+                    pathInfoRepository.getControllerPathParts(currentPage.getPathId());
+            loadRequestPage(controllerPathParts);
+            ((PageController<?>) getComponent(controllerPathParts.getControllerName())).closePage();
             requestContextUtil.setClosedPagePaths(Arrays.asList(currentPage.getPathId()));
             return;
         }
@@ -816,9 +819,10 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 if (isFireClose) {
                     // Fire closePage() for all targets
                     for (String closePathId : toClosePathIdList) {
-                        PathParts pathParts = pathInfoRepository.getPathParts(closePathId);
-                        loadRequestPage(pathParts);
-                        ((PageController<?>) getComponent(pathParts.getControllerName())).closePage();
+                        ControllerPathParts controllerPathParts =
+                                pathInfoRepository.getControllerPathParts(closePathId);
+                        loadRequestPage(controllerPathParts);
+                        ((PageController<?>) getComponent(controllerPathParts.getControllerName())).closePage();
                     }
                 }
 
@@ -834,8 +838,8 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
         }
     }
 
-    private Page loadRequestPage(PathParts pathParts) throws UnifyException {
-        Page page = (Page) getSessionContext().getAttribute(pathParts.getPathId());
+    private Page loadRequestPage(ControllerPathParts controllerPathParts) throws UnifyException {
+        Page page = (Page) getSessionContext().getAttribute(controllerPathParts.getControllerPathId());
         requestContextUtil.setRequestPage(page);
         return page;
     }

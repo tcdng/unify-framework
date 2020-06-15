@@ -24,32 +24,22 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Path information repository test.
+ * Path information repository tenant test.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
+public class PathInfoRepositoryTenantTest extends AbstractUnifyWebTest {
 
     private PathInfoRepository pir;
 
-    @Test
-    public void testGetPagePathInfo() throws Exception {
-        PagePathInfo pagePathInfo = pir.getPagePathInfo("/testauthor");
-        assertNotNull(pagePathInfo);
-        assertEquals("/testauthor", pagePathInfo.getPathId());
-        assertNull(pagePathInfo.getColorScheme());
-        assertEquals("/testauthor/openPage", pagePathInfo.getOpenPagePath());
-        assertEquals("/testauthor/savePage", pagePathInfo.getSavePagePath());
-        assertEquals("/testauthor/closePage", pagePathInfo.getClosePagePath());
-        assertFalse(pagePathInfo.isRemoteSave());
-    }
 
     @Test
     public void testGetPathPartsNoAction() throws Exception {
-        RequestPathParts requestPathParts = pir.getRequestPathParts("/testauthor");
+        RequestPathParts requestPathParts = pir.getRequestPathParts("/abcbank/testauthor");
         assertNotNull(requestPathParts);
-        assertFalse(requestPathParts.isWithTenantPath());
+        assertEquals("/abcbank", requestPathParts.getTenantPath());
+        assertTrue(requestPathParts.isWithTenantPath());
 
         ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor");
         assertNotNull(controllerPathParts);
@@ -67,9 +57,10 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsWithAction() throws Exception {
-        RequestPathParts requestPathParts = pir.getRequestPathParts("/testauthor/createAuthor");
+        RequestPathParts requestPathParts = pir.getRequestPathParts("/abcbank/testauthor/createAuthor");
         assertNotNull(requestPathParts);
-        assertFalse(requestPathParts.isWithTenantPath());
+        assertEquals("/abcbank", requestPathParts.getTenantPath());
+        assertTrue(requestPathParts.isWithTenantPath());
 
         ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor/createAuthor");
         assertNotNull(controllerPathParts);
@@ -87,9 +78,10 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsVariablePathNoAction() throws Exception {
-        RequestPathParts requestPathParts = pir.getRequestPathParts("/testauthor:20");
+        RequestPathParts requestPathParts = pir.getRequestPathParts("/abcbank/testauthor:20");
         assertNotNull(requestPathParts);
-        assertFalse(requestPathParts.isWithTenantPath());
+        assertEquals("/abcbank", requestPathParts.getTenantPath());
+        assertTrue(requestPathParts.isWithTenantPath());
 
         ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor:20");
         assertNotNull(controllerPathParts);
@@ -107,9 +99,10 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsVariablePathWithAction() throws Exception {
-        RequestPathParts requestPathParts = pir.getRequestPathParts("/testauthor:35/createAuthor");
+        RequestPathParts requestPathParts = pir.getRequestPathParts("/abcbank/testauthor:35/createAuthor");
         assertNotNull(requestPathParts);
-        assertFalse(requestPathParts.isWithTenantPath());
+        assertEquals("/abcbank", requestPathParts.getTenantPath());
+        assertTrue(requestPathParts.isWithTenantPath());
 
         ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor:35/createAuthor");
         assertNotNull(controllerPathParts);
@@ -127,8 +120,8 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
     @Test
     public void testGetPathPartsReuse() throws Exception {
-        RequestPathParts requestPathParts1 = pir.getRequestPathParts("/testauthor:35/createAuthor");
-        RequestPathParts requestPathParts2 = pir.getRequestPathParts("/testauthor:35/createAuthor");
+        RequestPathParts requestPathParts1 = pir.getRequestPathParts("/abcbank/testauthor:35/createAuthor");
+        RequestPathParts requestPathParts2 = pir.getRequestPathParts("/abcbank/testauthor:35/createAuthor");
         assertNotNull(requestPathParts1);
         assertNotNull(requestPathParts2);
         assertTrue(requestPathParts1 == requestPathParts2);
@@ -144,6 +137,12 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertNotNull(pathParts3);
         assertNotNull(pathParts4);
         assertTrue(pathParts3 == pathParts4);
+    }
+
+    @Override
+    protected void doAddSettingsAndDependencies() throws Exception {
+        super.doAddSettingsAndDependencies();
+        addContainerSetting(UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED, Boolean.TRUE);
     }
 
     @Override

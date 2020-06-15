@@ -37,7 +37,7 @@ public interface ClientRequest {
     /**
      * Returns the request path parts
      */
-    PathParts getPathParts();
+    RequestPathParts getRequestPathParts();
 
     /**
      * Returns the request character set.

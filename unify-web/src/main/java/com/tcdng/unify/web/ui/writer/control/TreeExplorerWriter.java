@@ -140,7 +140,7 @@ public class TreeExplorerWriter extends AbstractControlWriter {
         }
 
         if (treeExplorer.hasMenu()) {
-            String getPathId = getRequestContextUtil().getResponsePathParts().getPathId();
+            String getPathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
             writer.write(",\"pConfURL\":\"");
             writer.writeContextURL(getPathId, "/confirm");
             writer.write('"');

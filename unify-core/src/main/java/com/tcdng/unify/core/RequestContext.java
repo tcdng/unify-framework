@@ -42,6 +42,14 @@ public class RequestContext extends Context {
         return sessionContext.getContextPath();
     }
 
+    public String getTenantPath() {
+        return sessionContext.getTenantPath();
+    }
+
+    public boolean isWithTenantPath() {
+        return sessionContext.isWithTenantPath();
+    }
+
     public String getRequestPath() {
         return requestPath;
     }

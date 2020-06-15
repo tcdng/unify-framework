@@ -807,7 +807,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
     protected String writeActionParamsJS(ResponseWriter writer, String event, String function, String id,
             PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
-        String pathId = getRequestContextUtil().getResponsePathParts().getPathId();
+        String pathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
         PageManager pageManager = getPageManager();
         String eventParams = "_act" + (WriterUtils.getNextRefId()) + "Prm";
         writer.write("var ").write(eventParams).write("={");

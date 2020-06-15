@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.PathInfoRepository;
-import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.constant.ClosePageMode;
 import com.tcdng.unify.web.response.HintUserResponse;
 import com.tcdng.unify.web.response.LoadContentResponse;
@@ -257,8 +257,8 @@ public class ContentPanelImpl extends AbstractContentPanel {
             return pathInfoRepository.getPagePathInfo(page).isRemoteSave();
         }
 
-        public PathParts getPathParts() throws UnifyException {
-            return pathInfoRepository.getPathParts(page);
+        public ControllerPathParts getPathParts() throws UnifyException {
+            return pathInfoRepository.getControllerPathParts(page);
         }
 
         public Page getPage() {

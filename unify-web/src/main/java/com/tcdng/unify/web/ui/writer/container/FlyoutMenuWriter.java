@@ -84,7 +84,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
         if (!StringUtils.isBlank(originalPathId)) {
             writer.writeCommandURL(originalPathId);
         } else {
-            originalPathId = getRequestContextUtil().getResponsePathParts().getPathId();
+            originalPathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
             setSessionAttribute(ORIGINAL_MENU_PATHID, originalPathId);
             writer.writeCommandURL();
         }

@@ -42,13 +42,18 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
     private SessionContext sessionContext;
 
     public HttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase, String contextPath,
-            String remoteHost, String remoteIpAddress, String remoteUser, UserPlatform platform) {
+            String tenantPath, String remoteHost, String remoteIpAddress, String remoteUser, UserPlatform platform) {
         if (StringUtils.isBlank(sessionId)) {
             sessionId = ApplicationUtils.generateSessionContextId();
         }
 
-        sessionContext = new SessionContext(sessionId, locale, timeZone, uriBase, contextPath, remoteHost,
+        sessionContext = new SessionContext(sessionId, locale, timeZone, uriBase, contextPath, tenantPath, remoteHost,
                 remoteIpAddress, remoteUser, platform);
+    }
+
+    @Override
+    public SessionContext getSessionContext() {
+        return sessionContext;
     }
 
     @Override
@@ -67,8 +72,8 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
     }
 
     @Override
-    public SessionContext getSessionContext() {
-        return sessionContext;
+    public String getTenantPath() {
+        return sessionContext.getTenantPath();
     }
 
     @Override

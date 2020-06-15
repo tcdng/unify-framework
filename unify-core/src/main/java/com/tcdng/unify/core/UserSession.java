@@ -30,4 +30,6 @@ public interface UserSession {
     String getRemoteHost();
 
     String getRemoteUser();
+
+    String getTenantPath();
 }

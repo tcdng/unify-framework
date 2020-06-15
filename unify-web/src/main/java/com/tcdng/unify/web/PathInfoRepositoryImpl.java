@@ -20,7 +20,10 @@ import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.ui.Page;
 
 /**
@@ -32,65 +35,106 @@ import com.tcdng.unify.web.ui.Page;
 @Component(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY)
 public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements PathInfoRepository {
 
+    @Configurable
+    private TenantPathManager tenantPathManager;
+
     private FactoryMap<String, PagePathInfo> pagePathInfos;
 
-    private FactoryMap<String, PathParts> pathParts;
+    private FactoryMap<String, RequestPathParts> requestPathParts;
+
+    private FactoryMap<String, ControllerPathParts> controllerPathParts;
+
+    private boolean isTenantPathEnabled;
 
     public PathInfoRepositoryImpl() {
         pagePathInfos = new FactoryMap<String, PagePathInfo>() {
 
             @Override
-            protected PagePathInfo create(String pathId, Object... params) throws Exception {
-                return new PagePathInfo(pathId, null, pathId + "/openPage", pathId + "/savePage", pathId + "/closePage",
-                        false);
+            protected PagePathInfo create(String controllerPathId, Object... params) throws Exception {
+                return new PagePathInfo(controllerPathId, null, controllerPathId + "/openPage",
+                        controllerPathId + "/savePage", controllerPathId + "/closePage", false);
             }
         };
 
-        pathParts = new FactoryMap<String, PathParts>() {
+        requestPathParts = new FactoryMap<String, RequestPathParts>() {
 
             @Override
-            protected PathParts create(final String path, Object... params) throws Exception {
+            protected RequestPathParts create(String requestPath, Object... params) throws Exception {
+                String controllerPath = requestPath;
+                String tenantPath = null;
+                if (isTenantPathEnabled) {
+                    if (StringUtils.isBlank(requestPath)) {
+                        throw new UnifyException(UnifyWebErrorConstants.TENANT_PART_EXPECTED_IN_URL);
+                    }
+
+                    int cIndex = requestPath.indexOf('/', 1);
+                    if (cIndex > 0) {
+                        tenantPath = requestPath.substring(0, cIndex);
+                        controllerPath = requestPath.substring(cIndex);
+                    } else {
+                        tenantPath = requestPath;
+                        controllerPath = null;
+                    }
+
+                    tenantPathManager.verifyTenantPath(tenantPath);
+                }
+
+                if (StringUtils.isBlank(controllerPath)) {
+                    controllerPath = getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_HOME,
+                            ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
+                }
+
+                return new RequestPathParts(controllerPathParts.get(controllerPath), tenantPath);
+            }
+
+        };
+
+        controllerPathParts = new FactoryMap<String, ControllerPathParts>() {
+
+            @Override
+            protected ControllerPathParts create(final String controllerPath, Object... params) throws Exception {
                 UnifyComponentConfig ucc = null;
-                String pathId = path;
-                String controllerName = path;
+                String pathId = controllerPath;
+                String controllerName = controllerPath;
                 String actionName = null;
                 String pathVariable = null;
-                int colIndex = path.lastIndexOf(':');
+                int colIndex = controllerPath.lastIndexOf(':');
                 if (colIndex >= 0) {
-                    controllerName = path.substring(0, colIndex);
-                    int actionPartIndex = path.lastIndexOf('/');
+                    controllerName = controllerPath.substring(0, colIndex);
+                    int actionPartIndex = controllerPath.lastIndexOf('/');
                     if (actionPartIndex > colIndex) {
-                        pathId = path.substring(0, actionPartIndex);
-                        pathVariable = path.substring(colIndex + 1, actionPartIndex);
-                        actionName = path.substring(actionPartIndex);
+                        pathId = controllerPath.substring(0, actionPartIndex);
+                        pathVariable = controllerPath.substring(colIndex + 1, actionPartIndex);
+                        actionName = controllerPath.substring(actionPartIndex);
                     } else {
-                        pathVariable = path.substring(colIndex + 1);
+                        pathVariable = controllerPath.substring(colIndex + 1);
                     }
                 } else if ((ucc = getComponentConfig(Controller.class, controllerName)) == null) {
-                    int actionPartIndex = path.lastIndexOf('/');
+                    int actionPartIndex = controllerPath.lastIndexOf('/');
                     if (actionPartIndex > 0) {
-                        controllerName = path.substring(0, actionPartIndex);
+                        controllerName = controllerPath.substring(0, actionPartIndex);
                         pathId = controllerName;
-                        actionName = path.substring(actionPartIndex);
+                        actionName = controllerPath.substring(actionPartIndex);
                     }
                 }
 
                 boolean uiController = false;
-                if(ucc == null) {
+                if (ucc == null) {
                     ucc = getComponentConfig(Controller.class, controllerName);
                 }
-                
+
                 if (ucc != null) {
                     uiController = UIController.class.isAssignableFrom(ucc.getType());
                 }
 
-                return new PathParts(path, pathId, controllerName, pathVariable, actionName, uiController);
+                return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariable, actionName,
+                        uiController);
             }
 
-            @Override
-            protected boolean keep(PathParts pathParts) throws Exception {
-                return !pathParts.isVariablePath();
-            }
+//            @Override
+//            protected boolean keep(ControllerPathParts controllerPathParts) throws Exception {
+//                return !controllerPathParts.isVariablePath();
+//            }
 
         };
     }
@@ -106,18 +150,24 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
     }
 
     @Override
-    public PathParts getPathParts(Page page) throws UnifyException {
-        return pathParts.get(page.getPathId());
+    public RequestPathParts getRequestPathParts(String requestPath) throws UnifyException {
+        return requestPathParts.get(requestPath);
     }
 
     @Override
-    public PathParts getPathParts(String path) throws UnifyException {
-        return pathParts.get(path);
+    public ControllerPathParts getControllerPathParts(Page page) throws UnifyException {
+        return controllerPathParts.get(page.getPathId());
+    }
+
+    @Override
+    public ControllerPathParts getControllerPathParts(String path) throws UnifyException {
+        return controllerPathParts.get(path);
     }
 
     @Override
     protected void onInitialize() throws UnifyException {
-
+        isTenantPathEnabled =
+                getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED, false);
     }
 
     @Override

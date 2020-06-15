@@ -378,6 +378,10 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         }
 
         buf.append(requestContext.getContextPath());
+        if (requestContext.isWithTenantPath()) {
+            buf.append(requestContext.getTenantPath());
+        }
+        
         buf.append(path);
         for (String element : pathElement) {
             buf.append(element);
@@ -448,7 +452,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     @Override
     public ResponseWriter writeCommandURL() throws UnifyException {
-        writeContextURL(getRequestContextUtil().getResponsePathParts().getPathId(), "/command");
+        writeContextURL(getRequestContextUtil().getResponsePathParts().getControllerPathId(), "/command");
         return this;
     }
 

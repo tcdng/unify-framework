@@ -16,19 +16,17 @@
 
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.util.StringUtils;
-
 /**
- * TargetPath parts.
+ * Controller path parts.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PathParts {
+public class ControllerPathParts {
 
-    private String fullPath;
+    private String controllerPath;
 
-    private String pathId;
+    private String controllerPathId;
 
     private String controllerName;
 
@@ -38,22 +36,22 @@ public class PathParts {
 
     private boolean uiController;
 
-    public PathParts(String fullPath, String pathId, String controllerName, String pathVariable, String actionName,
-            boolean uiController) {
-        this.fullPath = fullPath;
-        this.pathId = pathId;
+    public ControllerPathParts(String controllerPath, String controllerPathId, String controllerName, String pathVariable,
+            String actionName, boolean uiController) {
+        this.controllerPath = controllerPath;
+        this.controllerPathId = controllerPathId;
         this.controllerName = controllerName;
         this.pathVariable = pathVariable;
         this.actionName = actionName;
         this.uiController = uiController;
     }
 
-    public String getFullPath() {
-        return fullPath;
+    public String getControllerPath() {
+        return controllerPath;
     }
 
-    public String getPathId() {
-        return pathId;
+    public String getControllerPathId() {
+        return controllerPathId;
     }
 
     public String getControllerName() {
@@ -77,6 +75,6 @@ public class PathParts {
     }
 
     public boolean isActionPath() {
-        return !StringUtils.isBlank(actionName);
+        return actionName != null;
     }
 }

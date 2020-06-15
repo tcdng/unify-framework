@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.web.PageBean;
-import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.ui.panel.AbstractStandalonePanel;
 import com.tcdng.unify.web.ui.panel.StandalonePanel;
@@ -44,17 +44,17 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
     private Map<String, Object> attributes;
 
-    private PathParts pathParts;
+    private ControllerPathParts controllerPathParts;
 
     @Override
-    public void setPathParts(PathParts pathParts) {
-        this.pathParts = pathParts;
+    public void setPathParts(ControllerPathParts controllerPathParts) {
+        this.controllerPathParts = controllerPathParts;
     }
 
     @Override
     public String getPathId() {
-        if (pathParts != null) {
-            return pathParts.getPathId();
+        if (controllerPathParts != null) {
+            return controllerPathParts.getControllerPathId();
         }
 
         return null;
@@ -62,8 +62,8 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
     @Override
     public String getPathVariable() {
-        if (pathParts != null) {
-            return pathParts.getPathVariable();
+        if (controllerPathParts != null) {
+            return controllerPathParts.getPathVariable();
         }
 
         return null;

@@ -15,18 +15,17 @@
  */
 package com.tcdng.unify.core.system;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.SessionAttributeValueConstants;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyContainer;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
@@ -179,28 +178,31 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         }
     }
 
-    @Periodic(PeriodicType.SLOWEST)
+    @Periodic(PeriodicType.NORMAL)
     @Transactional(TransactionAttribute.REQUIRES_NEW)
     public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
         // Update active session records and remove inactive ones
         Date now = db().getNow();
-        List<String> activeSessionList = new ArrayList<String>();
         int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
                 UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC);
         expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
         Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
         for (UserSession userSession : userSessions.values()) {
             SessionContext sessionContext = userSession.getSessionContext();
-            if (sessionContext.getLastAccessTime() == null || expiryTime.before(sessionContext.getLastAccessTime())) {
-                activeSessionList.add(sessionContext.getId());
-            } else {
+            boolean isNewLastAccessTime = sessionContext.isNewLastAccessTime();
+            Date lastAccessTime = sessionContext.getLastAccessTime();
+            if (lastAccessTime == null) {
+                lastAccessTime = now;
+            }
+
+            if (isNewLastAccessTime) {
+                db().updateAll(new UserSessionTrackingQuery().id(sessionContext.getId()),
+                        new Update().add("node", getNodeId()).add("lastAccessTime", lastAccessTime));
+            }
+
+            if (expiryTime.after(sessionContext.getLastAccessTime())) {
                 userSessions.remove(sessionContext.getId());
             }
-        }
-
-        if (!activeSessionList.isEmpty()) {
-            db().updateAll(new UserSessionTrackingQuery().idAmongst(activeSessionList),
-                    new Update().add("node", getNodeId()).add("lastAccessTime", now));
         }
 
         if (grabClusterMasterLock()) {
@@ -237,6 +239,11 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         }
 
         @Override
+        public SessionContext getSessionContext() {
+            return sessionContext;
+        }
+
+        @Override
         public String getRemoteAddress() {
             return sessionContext.getRemoteAddress();
         }
@@ -252,8 +259,8 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         }
 
         @Override
-        public SessionContext getSessionContext() {
-            return sessionContext;
+        public String getTenantPath() {
+            return sessionContext.getTenantPath();
         }
     }
 }
