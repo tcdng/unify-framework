@@ -208,7 +208,7 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
                 (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
         // Create page controller and load page to request context
-        bbm.getController(pathInfoRepository.getPathParts("/testauthor"), true);
+        bbm.getController(pathInfoRepository.getRequestPathParts("/testauthor").getControllerPathParts(), true);
 
         Date birthDt = new Date();
         bbm.populatePageBean("/testauthor", "fullName", "Adrian Skim");
@@ -229,7 +229,8 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
         PathInfoRepository pir =
                 (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
-        TestClientRequest request = new TestClientRequest(pir.getPathParts("/remotecall/mock/getAccountDetails"));
+        TestClientRequest request =
+                new TestClientRequest(pir.getRequestPathParts("/remotecall/mock/getAccountDetails"));
         String reqXml = "<accountDetailParams>" + "<accountNo>0123456785</accountNo>" + "</accountDetailParams>";
         request.setParameter(RequestParameterConstants.REMOTE_CALL_FORMAT, RemoteCallFormat.XML);
         request.setParameter(RequestParameterConstants.REMOTE_CALL_BODY, reqXml);
@@ -251,7 +252,8 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
                 (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
         TestClientResponse response = new TestClientResponse();
-        TestClientRequest request = new TestClientRequest(pir.getPathParts("/remotecall/mock/getAccountDetails"));
+        TestClientRequest request =
+                new TestClientRequest(pir.getRequestPathParts("/remotecall/mock/getAccountDetails"));
         String reqJson = "{" + "\"accountNo\":\"0123456785\"" + "}";
         request.setParameter(RequestParameterConstants.REMOTE_CALL_FORMAT, RemoteCallFormat.JSON);
         request.setParameter(RequestParameterConstants.REMOTE_CALL_BODY, reqJson);
@@ -267,9 +269,10 @@ public class ControllerManagerTest extends AbstractUnifyWebTest {
                 (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
         TestClientResponse response = new TestClientResponse();
-        TestClientRequest request = new TestClientRequest(pir.getPathParts("/testauthor/createAuthor"));
+        TestClientRequest request = new TestClientRequest(pir.getRequestPathParts("/testauthor/createAuthor"));
         Date birthDt = new Date();
-        AuthorPageController apbb = (AuthorPageController) bbm.getController(pir.getPathParts("/testauthor"), true);
+        AuthorPageController apbb = (AuthorPageController) bbm
+                .getController(pir.getRequestPathParts("/testauthor").getControllerPathParts(), true);
         Widget uic1 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.fullName");
         Widget uic2 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.birthDt");
         Widget uic3 = apbb.getPageWidgetByLongName(Widget.class, "/testauthor.height");

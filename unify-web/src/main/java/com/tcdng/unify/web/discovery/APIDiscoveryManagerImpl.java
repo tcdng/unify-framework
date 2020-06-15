@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -42,19 +43,25 @@ public class APIDiscoveryManagerImpl extends AbstractUnifyComponent implements A
     private Map<String, RemoteCallInfo> remoteCallInfos;
 
     public APIDiscoveryManagerImpl() {
-        this.remoteCallInfos = new HashMap<String, RemoteCallInfo>();
+        remoteCallInfos = new HashMap<String, RemoteCallInfo>();
     }
 
     @Override
     public APIDiscoveryRemoteCallInfo getRemoteCallInfo(String code) throws UnifyException {
-        RemoteCallInfo rci = this.remoteCallInfos.get(code);
+        RemoteCallInfo rci = remoteCallInfos.get(code);
         if (rci == null) {
             throw new UnifyException(UnifyWebErrorConstants.APIDISCOVERY_REMOTECALL_CODE_UNKNOWN, code);
         }
 
-        return new APIDiscoveryRemoteCallInfo(rci.getCode(), rci.getDescription(),
-                this.getSessionContext().getUriBase() + this.getSessionContext().getContextPath() + rci.getPath(),
-                rci.isRestricted());
+        SessionContext sessionContext = getSessionContext();
+        StringBuilder sb = new StringBuilder();
+        sb.append(sessionContext.getUriBase()).append(sessionContext.getContextPath());
+        if (sessionContext.isWithTenantPath()) {
+            sb.append(sessionContext.getTenantPath());
+        }
+
+        sb.append(rci.getPath());
+        return new APIDiscoveryRemoteCallInfo(rci.getCode(), rci.getDescription(), sb.toString(), rci.isRestricted());
     }
 
     @Override
@@ -62,12 +69,12 @@ public class APIDiscoveryManagerImpl extends AbstractUnifyComponent implements A
         // TODO No API discovery if disabled at container level
 
         // Do full API detection
-        this.logDebug("Initializing API detection...");
-        for (UnifyComponentConfig ucc : this.getComponentConfigs(RemoteCallController.class)) {
+        logDebug("Initializing API detection...");
+        for (UnifyComponentConfig ucc : getComponentConfigs(RemoteCallController.class)) {
             String name = ucc.getName();
             Method[] methods = ucc.getType().getMethods();
 
-            this.logDebug("Detecting API methods for [{0}]...", name);
+            logDebug("Detecting API methods for [{0}]...", name);
             for (Method method : methods) {
                 com.tcdng.unify.web.annotation.RemoteAction raa =
                         method.getAnnotation(com.tcdng.unify.web.annotation.RemoteAction.class);
@@ -75,16 +82,16 @@ public class APIDiscoveryManagerImpl extends AbstractUnifyComponent implements A
                     if (RemoteCallResult.class.isAssignableFrom(method.getReturnType())
                             && method.getParameterTypes().length == 1
                             && RemoteCallParams.class.isAssignableFrom(method.getParameterTypes()[0])) {
-                        RemoteCallInfo existRci = this.remoteCallInfos.get(raa.name());
+                        RemoteCallInfo existRci = remoteCallInfos.get(raa.name());
                         if (existRci != null) {
                             throw new UnifyException(UnifyWebErrorConstants.APIDISCOVERY_REMOTECALL_CODE_EXISTS,
                                     raa.name(), name, existRci.getComponentName());
                         }
 
                         String path = name + '/' + method.getName();
-                        this.logDebug("... method [{0}] detected.", path);
-                        this.remoteCallInfos.put(raa.name(), new RemoteCallInfo(name, raa.name(),
-                                this.resolveApplicationMessage(raa.description()), path, raa.restricted()));
+                        logDebug("... method [{0}] detected.", path);
+                        remoteCallInfos.put(raa.name(), new RemoteCallInfo(name, raa.name(),
+                                resolveApplicationMessage(raa.description()), path, raa.restricted()));
                     } else {
                         throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_INVALID_REMOTECALL_HANDLER_SIGNATURE,
                                 name, method.getName());
@@ -92,7 +99,7 @@ public class APIDiscoveryManagerImpl extends AbstractUnifyComponent implements A
                 }
             }
         }
-        this.logDebug("API detection completed...");
+        logDebug("API detection completed...");
     }
 
     @Override

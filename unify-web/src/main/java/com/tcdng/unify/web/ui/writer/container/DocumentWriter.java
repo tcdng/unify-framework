@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.PathInfoRepository;
-import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.DocumentLayout;
 import com.tcdng.unify.web.ui.Panel;
@@ -162,8 +162,8 @@ public class DocumentWriter extends AbstractPageWriter {
         BasicDocument document = (BasicDocument) widget;
         writer.write("<script>");
         // Set document properties
-        PathParts pathParts = pathInfoRepository.getPathParts(document);
-        writer.write("ux.setupDocument(\"").write(pathParts.getControllerName()).write("\", \"")
+        ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
+        writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerName()).write("\", \"")
                 .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
                 .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
 

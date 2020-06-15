@@ -118,7 +118,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     }
 
     protected String getCommandURL() throws UnifyException {
-        return getContextURL(getRequestContextUtil().getResponsePathParts().getPathId(), "/command");
+        return getContextURL(getRequestContextUtil().getResponsePathParts().getControllerPathId(), "/command");
     }
 
     protected String getContextURL(String path, String... pathElement) throws UnifyException {
@@ -128,7 +128,12 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
             sb.append(getSessionContext().getUriBase());
         }
 
-        sb.append(requestContext.getContextPath()).append(requestContext.getRequestPath());
+        sb.append(requestContext.getContextPath());
+        if (requestContext.isWithTenantPath()) {
+            sb.append(requestContext.getTenantPath());
+        }
+        
+        sb.append(requestContext.getRequestPath());
         sb.append(path);
         for (String element : pathElement) {
             sb.append(element);

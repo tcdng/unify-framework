@@ -31,12 +31,12 @@ import com.tcdng.unify.core.UnifyException;
  */
 public class TestClientRequest extends AbstractClientRequest {
 
-    private PathParts pathParts;
+    private RequestPathParts requestPathParts;
 
     private Map<String, Object> parameters;
 
-    public TestClientRequest(PathParts pathParts) {
-        this.pathParts = pathParts;
+    public TestClientRequest(RequestPathParts requestPathParts) {
+        this.requestPathParts = requestPathParts;
         parameters = new HashMap<String, Object>();
     }
 
@@ -46,8 +46,8 @@ public class TestClientRequest extends AbstractClientRequest {
     }
 
     @Override
-    public PathParts getPathParts() {
-        return pathParts;
+    public RequestPathParts getRequestPathParts() {
+        return requestPathParts;
     }
 
     @Override

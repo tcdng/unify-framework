@@ -217,7 +217,7 @@ public interface RequestContextUtil extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void setResponsePathParts(PathParts respPathParts) throws UnifyException;
+    void setResponsePathParts(ControllerPathParts respPathParts) throws UnifyException;
 
     /**
      * Returns the response path parts information for current request context
@@ -225,7 +225,7 @@ public interface RequestContextUtil extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    PathParts getResponsePathParts() throws UnifyException;
+    ControllerPathParts getResponsePathParts() throws UnifyException;
 
     /**
      * Sets the paths of pages closed in this request.

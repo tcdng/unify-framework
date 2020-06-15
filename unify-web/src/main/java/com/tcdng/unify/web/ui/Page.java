@@ -17,7 +17,7 @@ package com.tcdng.unify.web.ui;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.PageBean;
-import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.panel.StandalonePanel;
 
 /**
@@ -140,10 +140,10 @@ public interface Page extends StandalonePanel {
     /**
      * Sets this page path parts
      * 
-     * @param pathParts
+     * @param controllerPathParts
      *            the path parts to set
      */
-    void setPathParts(PathParts pathParts);
+    void setPathParts(ControllerPathParts controllerPathParts);
 
     /**
      * Returns the page path ID

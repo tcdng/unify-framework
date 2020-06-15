@@ -138,4 +138,9 @@ public interface UnifyWebErrorConstants {
      * Access to resource denied.
      */
     String RESOURCE_ACCESS_DENIED = "UW_001B";
+
+    /**
+     * Tenant part expected in request URL.
+     */
+    String TENANT_PART_EXPECTED_IN_URL = "UW_001C";
 }

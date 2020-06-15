@@ -198,13 +198,13 @@ public class RequestContextUtilImpl extends AbstractUnifyComponent implements Re
     }
 
     @Override
-    public void setResponsePathParts(PathParts respPathParts) throws UnifyException {
+    public void setResponsePathParts(ControllerPathParts respPathParts) throws UnifyException {
         setRequestAttribute(RESPONSE_PATHPARTS, respPathParts);
     }
     
     @Override
-    public PathParts getResponsePathParts() throws UnifyException {
-        return (PathParts) getRequestAttribute(RESPONSE_PATHPARTS);
+    public ControllerPathParts getResponsePathParts() throws UnifyException {
+        return (ControllerPathParts) getRequestAttribute(RESPONSE_PATHPARTS);
     }
 
     @Override

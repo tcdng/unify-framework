@@ -44,12 +44,11 @@ import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerManager;
 import com.tcdng.unify.web.PathInfoRepository;
-import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestHeaderConstants;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
-import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 
 /**
@@ -77,23 +76,18 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     private List<String> remoteViewerList;
 
     @Override
-    public PathParts resolveRequestPath(Object requestObject) throws UnifyException {
+    public RequestPathParts resolveRequestPath(Object requestObject) throws UnifyException {
         HttpServletRequest request = (HttpServletRequest) requestObject;
         String resolvedPath = request.getPathInfo();
         if (resolvedPath != null && resolvedPath.endsWith("/")) {
             resolvedPath = resolvedPath.substring(0, resolvedPath.length() - 1);
         }
 
-        if (StringUtils.isBlank(resolvedPath)) {
-            resolvedPath = getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_HOME,
-                    ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
-        }
-
-        return pathInfoRepository.getPathParts(resolvedPath);
+        return pathInfoRepository.getRequestPathParts(resolvedPath);
     }
 
     @Override
-    public void handleRequest(HttpRequestMethodType methodType, PathParts pathParts, Object requestObject,
+    public void handleRequest(HttpRequestMethodType methodType, RequestPathParts requestPathParts, Object requestObject,
             Object responseObject) throws UnifyException {
         try {
             HttpServletRequest request = (HttpServletRequest) requestObject;
@@ -103,7 +97,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             }
 
             ClientRequest clientRequest =
-                    new HttpClientRequest(methodType, pathParts, charset, extractRequestParameters(request, charset));
+                    new HttpClientRequest(methodType, requestPathParts, charset, extractRequestParameters(request, charset));
             ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
             if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {

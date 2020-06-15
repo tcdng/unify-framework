@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.PageAttributeConstants;
-import com.tcdng.unify.web.PathParts;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.ui.Container;
 import com.tcdng.unify.web.ui.Page;
@@ -102,7 +102,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         if (contentPanelImpl.getPageCount() > 0) {
             // Set response page controller
             RequestContextUtil rcu = getRequestContextUtil();
-            PathParts currentRespPathParts = rcu.getResponsePathParts();
+            ControllerPathParts currentRespPathParts = rcu.getResponsePathParts();
             ContentInfo currentContentInfo = contentPanelImpl.getCurrentContentInfo();
             rcu.setResponsePathParts(currentContentInfo.getPathParts());
             writer.writeBehavior(currentContentInfo.getPage());
@@ -243,7 +243,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         writer.write("<div style=\"display:table-cell;\">");
         writer.write("<div class=\"cpbody\">");
 
-        PathParts currentRespPathParts = rcUtil.getResponsePathParts();
+        ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
         rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
         writer.writeStructureAndContent(currentContentInfo.getPage());
 
