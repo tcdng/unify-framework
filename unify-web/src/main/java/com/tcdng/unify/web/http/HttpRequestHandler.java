@@ -43,7 +43,7 @@ public interface HttpRequestHandler extends UnifyComponent {
      * 
      * @param methodType
      *            the request method type
-     * @param controllerPathParts
+     * @param reqPathParts
      *            the path parts
      * @param requestObject
      *            the request object

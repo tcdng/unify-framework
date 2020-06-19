@@ -54,8 +54,8 @@ public interface PathInfoRepository extends UnifyComponent {
     /**
      * Gets request path parts
      * 
-     * @param page
-     *            the page object
+     * @param requestPath
+     *            the request path
      * @return the request path parts
      * @throws UnifyException
      *             if an error occurs
