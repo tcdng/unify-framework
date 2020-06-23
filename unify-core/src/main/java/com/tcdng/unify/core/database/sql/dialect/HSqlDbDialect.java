@@ -41,6 +41,9 @@ import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
+import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -60,6 +63,9 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     static {
         Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.DATE, new HSqlDbDatePolicy());
+        tempMap1.put(ColumnType.TIMESTAMP, new HSqlDbTimestampPolicy());
+        tempMap1.put(ColumnType.TIMESTAMP_UTC, new HSqlDbTimestampUTCPolicy());
 
         Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
         populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
@@ -263,4 +269,32 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
             }
         }
     }
+}
+
+
+class HSqlDbDatePolicy extends DatePolicy {
+
+	@Override
+	public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_DATE";
+	}
+	
+}
+
+class HSqlDbTimestampPolicy extends TimestampPolicy {
+
+	@Override
+	public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+	}
+	
+}
+
+class HSqlDbTimestampUTCPolicy extends TimestampUTCPolicy {
+
+	@Override
+	public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+	}
+	
 }
