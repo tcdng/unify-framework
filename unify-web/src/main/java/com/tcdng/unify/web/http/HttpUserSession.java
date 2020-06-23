@@ -76,6 +76,16 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
         return sessionContext.getTenantPath();
     }
 
+    public void invalidate() {
+    	if (sessionContext != null) {
+            try {
+                userSessionManager.removeUserSession(this);
+                sessionContext = null;
+            } catch (UnifyException e) {
+            }
+    	}
+    }
+
     @Override
     public void valueBound(HttpSessionBindingEvent event) {
 
@@ -83,10 +93,7 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
 
     @Override
     public void valueUnbound(HttpSessionBindingEvent event) {
-        try {
-            userSessionManager.removeUserSession(this);
-        } catch (UnifyException e) {
-        }
+    	invalidate();
     }
 
     public void setTransient(UserSessionManager userSessionManager) {
