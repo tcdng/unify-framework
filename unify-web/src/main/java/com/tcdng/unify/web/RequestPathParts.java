@@ -33,6 +33,10 @@ public class RequestPathParts {
         this.tenantPath = tenantPath;
     }
 
+    public RequestPathParts(ControllerPathParts controllerPathParts) {
+        this.controllerPathParts = controllerPathParts;
+    }
+
     public ControllerPathParts getControllerPathParts() {
         return controllerPathParts;
     }

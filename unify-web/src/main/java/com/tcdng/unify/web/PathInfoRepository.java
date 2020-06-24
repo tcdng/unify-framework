@@ -28,59 +28,48 @@ import com.tcdng.unify.web.ui.Page;
  */
 public interface PathInfoRepository extends UnifyComponent {
 
-    /**
-     * Gets page path information.
-     * 
-     * @param page
-     *            the page object.
-     * 
-     * @return the page path information
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    PagePathInfo getPagePathInfo(Page page) throws UnifyException;
+	/**
+	 * Gets page path information.
+	 * 
+	 * @param page
+	 *            the page object.
+	 * 
+	 * @return the page path information
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	PagePathInfo getPagePathInfo(Page page) throws UnifyException;
 
-    /**
-     * Gets page path information.
-     * 
-     * @param controllerPath
-     *            the controller path
-     * @return the page path information
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    PagePathInfo getPagePathInfo(String controllerPath) throws UnifyException;
+	/**
+	 * Gets page path information.
+	 * 
+	 * @param controllerPath
+	 *            the controller path
+	 * @return the page path information
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	PagePathInfo getPagePathInfo(String controllerPath) throws UnifyException;
 
-    /**
-     * Gets request path parts
-     * 
-     * @param requestPath
-     *            the request path
-     * @return the request path parts
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    RequestPathParts getRequestPathParts(String requestPath) throws UnifyException;
+	/**
+	 * Gets the supplied page controller path parts
+	 * 
+	 * @param page
+	 *            the page object
+	 * @return the path parts
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	ControllerPathParts getControllerPathParts(Page page) throws UnifyException;
 
-    /**
-     * Gets the supplied page controller path parts
-     * 
-     * @param page
-     *            the page object
-     * @return the path parts
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    ControllerPathParts getControllerPathParts(Page page) throws UnifyException;
-
-    /**
-     * Gets controller path parts
-     * 
-     * @param controllerPath
-     *            the path
-     * @return the controller path parts
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    ControllerPathParts getControllerPathParts(String controllerPath) throws UnifyException;
+	/**
+	 * Gets controller path parts
+	 * 
+	 * @param controllerPath
+	 *            the path
+	 * @return the controller path parts
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	ControllerPathParts getControllerPathParts(String controllerPath) throws UnifyException;
 }

@@ -27,31 +27,42 @@ import com.tcdng.unify.web.RequestPathParts;
  */
 public interface HttpRequestHandler extends UnifyComponent {
 
-    /**
-     * Resolve request path.
-     * 
-     * @param requestObject
-     *            the request object
-     * @return the path parts
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    RequestPathParts resolveRequestPath(Object requestObject) throws UnifyException;
+	/**
+	 * Resolve request path.
+	 * 
+	 * @param requestObject
+	 *            the request object
+	 * @return the path parts
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	RequestPathParts resolveRequestPath(Object requestObject) throws UnifyException;
 
-    /**
-     * Handles HTTP request.
-     * 
-     * @param methodType
-     *            the request method type
-     * @param reqPathParts
-     *            the path parts
-     * @param requestObject
-     *            the request object
-     * @param responseObject
-     *            the response object
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void handleRequest(HttpRequestMethodType methodType, RequestPathParts reqPathParts, Object requestObject,
-            Object responseObject) throws UnifyException;
+	/**
+	 * Gets the parts of supplied request path.
+	 * 
+	 * @param requestPath
+	 *            the request path
+	 * @return the request path parts
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	RequestPathParts getRequestPathParts(String requestPath) throws UnifyException;
+
+	/**
+	 * Handles HTTP request.
+	 * 
+	 * @param methodType
+	 *            the request method type
+	 * @param reqPathParts
+	 *            the path parts
+	 * @param requestObject
+	 *            the request object
+	 * @param responseObject
+	 *            the response object
+	 * @throws UnifyException
+	 *             if an error occurs
+	 */
+	void handleRequest(HttpRequestMethodType methodType, RequestPathParts reqPathParts, Object requestObject,
+			Object responseObject) throws UnifyException;
 }
