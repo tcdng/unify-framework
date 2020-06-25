@@ -34,44 +34,92 @@ import com.tcdng.unify.core.constant.NetworkSecurityType;
  */
 public class SmtpEmailServerTest extends AbstractUnifyComponentTest {
 
-    @Test
-    public void testConfigureEmailServer() throws Exception {
-        EmailServer emailServer = (EmailServer) getComponent(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER);
-        emailServer.configure("abc", getEmailServerConfig());
-        assertTrue(emailServer.isConfigured("abc"));
-        assertFalse(emailServer.isConfigured("xyz"));
-    }
+	private static final String ACCOUNT_PASSWORD = "xxxxxxx";
 
-    @Ignore
-    @Test
-    public void testSendEmail() throws Exception {
-        EmailServer emailServer = (EmailServer) getComponent(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER);
-        Email email = Email.newBuilder().withSubject("Weekly Summary Nov 22 - Nov 28")
-                .toRecipient(EmailRecipient.TYPE.TO, "lateefojulari@gmail.com").fromSender("info@tcdng.com")
-                .containingMessage("Opening Bal: $502.35, Credits:$1.50, Debits:$20.50,Closing Bal:$480.35").build();
-        assertFalse(email.isSent());
+	@Test
+	public void testConfigureEmailServer() throws Exception {
+		EmailServer emailServer = (EmailServer) getComponent(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER);
+		emailServer.configure("abc", new EmailServerConfig("mail.tcdng.com", 465, NetworkSecurityType.SSL,
+				"info@tcdng.com", ACCOUNT_PASSWORD));
+		assertTrue(emailServer.isConfigured("abc"));
+		assertFalse(emailServer.isConfigured("xyz"));
+	}
 
-        emailServer.configure("abc", getEmailServerConfig());
-        emailServer.sendEmail("abc", email);
-        assertTrue(email.isSent());
-    }
-    
-    @Override
-    protected void onSetup() throws Exception {
+	@Ignore
+	@Test
+	public void testSendEmailSSLPort465() throws Exception {
+		EmailServer emailServer = (EmailServer) getComponent(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER);
+		Email email = Email.newBuilder().withSubject("Weekly Summary Nov 22 - Nov 28")
+				.toRecipient(EmailRecipient.TYPE.TO, "lateefojulari@gmail.com").fromSender("info@tcdng.com")
+				.containingMessage(
+						"Using SSL Port 465 - Opening Bal: $502.35, Credits:$1.50, Debits:$20.50,Closing Bal:$480.35")
+				.build();
+		assertFalse(email.isSent());
 
-    }
+		emailServer.configure("abc", new EmailServerConfig("mail.tcdng.com", 465, NetworkSecurityType.SSL,
+				"info@tcdng.com", ACCOUNT_PASSWORD));
+		emailServer.sendEmail("abc", email);
+		assertTrue(email.isSent());
+	}
 
-    @Override
-    protected void onTearDown() throws Exception {
+	@Ignore
+	@Test
+	public void testSendEmailSSLPort25() throws Exception {
+		EmailServer emailServer = (EmailServer) getComponent(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER);
+		Email email = Email.newBuilder().withSubject("Weekly Summary Nov 22 - Nov 28")
+				.toRecipient(EmailRecipient.TYPE.TO, "lateefojulari@gmail.com").fromSender("info@tcdng.com")
+				.containingMessage(
+						"Using SSL Port 465 - Opening Bal: $502.35, Credits:$1.50, Debits:$20.50,Closing Bal:$480.35")
+				.build();
+		assertFalse(email.isSent());
 
-    }
-    
-    private EmailServerConfig getEmailServerConfig() {
-//        return new EmailServerConfig("tcdng.com", 465, NetworkSecurityType.SSL, "info@tcdng.com",
-//                "xxxxxxxx");
-//        return new EmailServerConfig("mail.tcdng.com", 26, null, "info@tcdng.com",
-//                "xxxxxxx");
-      return new EmailServerConfig("tcdng.com", 587, NetworkSecurityType.TLS, "info@tcdng.com",
-      "xxxxx");
-    }
+		emailServer.configure("abc",
+				new EmailServerConfig("tcdng.com", 25, NetworkSecurityType.SSL, "info@tcdng.com", ACCOUNT_PASSWORD));
+		emailServer.sendEmail("abc", email);
+		assertTrue(email.isSent());
+	}
+
+	@Ignore
+	@Test
+	public void testSendEmailTLSPort587() throws Exception {
+		EmailServer emailServer = (EmailServer) getComponent(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER);
+		Email email = Email.newBuilder().withSubject("Weekly Summary Nov 22 - Nov 28")
+				.toRecipient(EmailRecipient.TYPE.TO, "lateefojulari@gmail.com").fromSender("info@tcdng.com")
+				.containingMessage(
+						"Using TLS Port 587 - Opening Bal: $502.35, Credits:$1.50, Debits:$20.50,Closing Bal:$480.35")
+				.build();
+		assertFalse(email.isSent());
+
+		emailServer.configure("abc",
+				new EmailServerConfig("tcdng.com", 587, NetworkSecurityType.TLS, "info@tcdng.com", ACCOUNT_PASSWORD));
+		emailServer.sendEmail("abc", email);
+		assertTrue(email.isSent());
+	}
+
+	@Ignore
+	@Test
+	public void testSendEmailPort25NoSecurity() throws Exception {
+		EmailServer emailServer = (EmailServer) getComponent(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER);
+		Email email = Email.newBuilder().withSubject("Weekly Summary Nov 22 - Nov 28")
+				.toRecipient(EmailRecipient.TYPE.TO, "lateefojulari@gmail.com").fromSender("info@tcdng.com")
+				.containingMessage(
+						"Using Port 25 No Security - Opening Bal: $502.35, Credits:$1.50, Debits:$20.50,Closing Bal:$480.35")
+				.build();
+		assertFalse(email.isSent());
+
+		emailServer.configure("abc",
+				new EmailServerConfig("tcdng.com", 465, NetworkSecurityType.SSL, "info@tcdng.com", ACCOUNT_PASSWORD));
+		emailServer.sendEmail("abc", email);
+		assertTrue(email.isSent());
+	}
+
+	@Override
+	protected void onSetup() throws Exception {
+
+	}
+
+	@Override
+	protected void onTearDown() throws Exception {
+
+	}
 }
