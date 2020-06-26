@@ -81,6 +81,7 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
                         //properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
                     } else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
                         properties.put("mail.smtp.starttls.enable", "true");
+                        properties.put("mail.smtp.ssl.protocols", "TLSv1,TLSv1.1,TLSv1.2");
                     }
 
                     properties.put("mail.smtp.auth", "true");
