@@ -1,12 +1,12 @@
 /*
  * Copyright 2018-2020 The Code Department.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * File transfer setup data object.
- * 
+ *
  * @author Lateef Ojulari
  * @since 1.0
  */
@@ -183,6 +183,10 @@ public class FileTransferSetup {
             return this;
         }
 
+        /**
+         * @deprecated  as of release 1.1.2, replaced by {@link #filterBySuffix(String)}
+         */
+        @Deprecated
         public Builder filterByExtension(String extension) {
             if (fileSuffixes == null) {
                 fileSuffixes = new HashSet<String>();
@@ -192,6 +196,14 @@ public class FileTransferSetup {
             return this;
         }
 
+        public Builder filterBySuffix(String suffix) {
+            return filterByExtension(suffix);
+        }
+
+        /**
+         * @deprecated  as of release 1.1.2, replaced by {@link #filterBySuffixes(Collection)}
+         */
+        @Deprecated
         public Builder filterByExtensions(Collection<String> extensions) {
             if (DataUtils.isNotBlank(extensions)) {
                 if (fileSuffixes == null) {
@@ -202,6 +214,10 @@ public class FileTransferSetup {
             }
 
             return this;
+        }
+
+        public Builder filterBySuffixes(Collection<String> suffixes) {
+            return filterByExtensions(suffixes);
         }
 
         public FileTransferSetup build() throws UnifyException {
