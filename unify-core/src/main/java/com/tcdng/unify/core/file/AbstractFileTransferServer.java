@@ -43,11 +43,7 @@ public abstract class AbstractFileTransferServer extends AbstractUnifyComponent 
         }
 
         List<FileInfo> list = new ArrayList<FileInfo>();
-        boolean filteredByExtension = !fileTransferSetup.getFileSuffixes().isEmpty();
         for (File file : files) {
-            if (filteredByExtension && file.isDirectory()) {
-                continue;
-            }
             list.add(new FileInfo(file.getName(), file.getAbsolutePath(), file.length(), file.lastModified(),
                     file.lastModified(), file.isFile(), file.isHidden()));
         }
