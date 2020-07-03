@@ -39,53 +39,53 @@ import com.tcdng.unify.web.annotation.ResultMappings;
 @Component("/testauthor")
 @UplBinding("web/test/upl/testauthor.upl")
 @ResultMappings({ @ResultMapping(name = "resultMappingA", response = "!postresponse"),
-        @ResultMapping(name = "resultMappingB", response = "!hidepopupresponse") })
+		@ResultMapping(name = "resultMappingB", response = "!hidepopupresponse") })
 public class AuthorPageController extends AbstractPageController<AuthorPageBean> {
 
-    private Map<String, Author> authorDatabase;
+	private Map<String, Author> authorDatabase;
 
-    public AuthorPageController() {
-        super(AuthorPageBean.class);
-    }
+	public AuthorPageController() {
+		super(AuthorPageBean.class);
+	}
 
-    @Action
-    public String createAuthor() throws UnifyException {
-        AuthorPageBean authorPageBean = getPageBean();
-        authorDatabase.put(authorPageBean.getFullName(),
-                new Author(authorPageBean.getFullName(), authorPageBean.getBirthDt(), authorPageBean.getHeight()));
-        return noResult();
-    }
+	@Action
+	public String createAuthor() throws UnifyException {
+		AuthorPageBean authorPageBean = getPageBean();
+		authorDatabase.put(authorPageBean.getFullName(),
+				new Author(authorPageBean.getFullName(), authorPageBean.getBirthDt(), authorPageBean.getHeight()));
+		return noResult();
+	}
 
-    @Action
-    public String viewAuthor() throws UnifyException {
-        AuthorPageBean authorPageBean = getPageBean();
-        Author author = authorDatabase.get(authorPageBean.getFullName());
-        authorPageBean.setBirthDt(author.getBirthDt());
-        authorPageBean.setHeight(author.getHeight());
-        return noResult();
-    }
+	@Action
+	public String viewAuthor() throws UnifyException {
+		AuthorPageBean authorPageBean = getPageBean();
+		Author author = authorDatabase.get(authorPageBean.getFullName());
+		authorPageBean.setBirthDt(author.getBirthDt());
+		authorPageBean.setHeight(author.getHeight());
+		return noResult();
+	}
 
-    @Action
-    public String newAuthor() throws UnifyException {
-        reset();
-        return noResult();
-    }
+	@Action
+	public String newAuthor() throws UnifyException {
+		reset();
+		return noResult();
+	}
 
-    @Override
-    protected void onInitPage() throws UnifyException {
-        AuthorPageBean authorPageBean = getPageBean();
-        authorDatabase = new HashMap<String, Author>();
-        MapValues bio = new MapValues();
-        bio.addValue("color", String.class);
-        bio.addValue("age", Integer.class);
-        bio.addValue("gender", Gender.class);
+	@Override
+	protected void onInitPage() throws UnifyException {
+		AuthorPageBean authorPageBean = getPageBean();
+		authorDatabase = new HashMap<String, Author>();
+		MapValues bio = new MapValues();
+		bio.addValue("color", String.class);
+		bio.addValue("age", Integer.class);
+		bio.addValue("gender", Gender.class);
 
-        PackableDocConfig docConfig = PackableDocConfig.newBuilder("ledgerConfig")
-                .addFieldConfig("marker", DataType.STRING).addFieldConfig("height", DataType.DOUBLE).build();
+		PackableDocConfig docConfig = PackableDocConfig.newBuilder("ledgerConfig")
+				.addFieldConfig("marker", DataType.STRING).addFieldConfig("height", DataType.DOUBLE).build();
 
-        PackableDoc pDoc = new PackableDoc(docConfig, false);
-        bio.addValue("metric", pDoc);
-        authorPageBean.setBio(bio);
-    }
+		PackableDoc pDoc = new PackableDoc(docConfig, false);
+		bio.addValue("metric", PackableDoc.class, pDoc);
+		authorPageBean.setBio(bio);
+	}
 
 }
