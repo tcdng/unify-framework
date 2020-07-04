@@ -50,13 +50,13 @@ public class FileTransferSetup {
 
     private boolean deleteSourceOnTransfer;
 
-    private boolean preserveCase;
+    private boolean caseSensitive;
 
     private boolean fileOnly;
 
     private FileTransferSetup(String remoteHost, int remotePort, String authenticationId, String authenticationPassword,
                               String remotePath, String localPath, Set<String> filePrefixes, Set<String> fileSuffixes,
-                              boolean deleteSourceOnTransfer, boolean preserveCase, boolean fileOnly) {
+                              boolean deleteSourceOnTransfer, boolean caseSensitive, boolean fileOnly) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
         this.authenticationId = authenticationId;
@@ -66,7 +66,7 @@ public class FileTransferSetup {
         this.deleteSourceOnTransfer = deleteSourceOnTransfer;
         this.filePrefixes = filePrefixes;
         this.fileSuffixes = fileSuffixes;
-        this.preserveCase = preserveCase;
+        this.caseSensitive = caseSensitive;
         this.fileOnly = fileOnly;
     }
 
@@ -106,8 +106,8 @@ public class FileTransferSetup {
         return deleteSourceOnTransfer;
     }
 
-    public boolean isPreserveCase() {
-        return preserveCase;
+    public boolean isCaseSensitive() {
+        return caseSensitive;
     }
 
     public boolean isFileOnly() {
@@ -138,7 +138,7 @@ public class FileTransferSetup {
 
         private boolean deleteSourceOnTransfer;
 
-        private boolean preserveCase;
+        private boolean caseSensitive;
 
         private boolean fileOnly;
 
@@ -181,8 +181,8 @@ public class FileTransferSetup {
             return this;
         }
 
-        public Builder preserveCase(boolean preserveCase) {
-            this.preserveCase = preserveCase;
+        public Builder caseSensitive(boolean caseSensitive) {
+            this.caseSensitive = caseSensitive;
             return this;
         }
 
@@ -263,7 +263,7 @@ public class FileTransferSetup {
             }
 
             return new FileTransferSetup(remoteHost, remotePort, authenticationId, authenticationPassword, remotePath,
-                    localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer, preserveCase, fileOnly);
+                    localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer, caseSensitive, fileOnly);
         }
     }
 }

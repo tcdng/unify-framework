@@ -35,11 +35,11 @@ public class FileFilter implements java.io.FileFilter {
 
     private boolean fileOnly;
 
-    private boolean preserveCase;
+    private boolean caseSensitive;
 
     public FileFilter(FileTransferSetup fileTransferSetup) {
         this(fileTransferSetup.getFilePrefixes(), fileTransferSetup.getFileSuffixes());
-        this.preserveCase = fileTransferSetup.isPreserveCase();
+        this.caseSensitive = fileTransferSetup.isCaseSensitive();
         this.fileOnly = fileTransferSetup.isFileOnly();
     }
 
@@ -78,7 +78,7 @@ public class FileFilter implements java.io.FileFilter {
         if (!isFile) {
             return !fileOnly;
         }
-        if (!preserveCase) {
+        if (!caseSensitive) {
             filename = filename.toLowerCase();
         }
 
@@ -86,7 +86,7 @@ public class FileFilter implements java.io.FileFilter {
         if (!prefixes.isEmpty()) {
             accept = false;
             for (String prefix : prefixes) {
-                if (!preserveCase) {
+                if (!caseSensitive) {
                     prefix = prefix.toLowerCase();
                 }
                 if (filename.startsWith(prefix)) {
@@ -99,7 +99,7 @@ public class FileFilter implements java.io.FileFilter {
         if (accept && !suffixes.isEmpty()) {
             accept = false;
             for (String suffix : suffixes) {
-                if (!preserveCase) {
+                if (!caseSensitive) {
                     suffix = suffix.toLowerCase();
                 }
                 if (filename.endsWith(suffix)) {
