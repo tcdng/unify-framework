@@ -24,6 +24,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * File filter.
  * 
  * @author Lateef Ojulari
+ * @author Kayode Adekanye <kayodeadekanye@gmail.com>
  * @since 1.0
  */
 public class FileFilter implements java.io.FileFilter {
@@ -34,8 +35,12 @@ public class FileFilter implements java.io.FileFilter {
 
     private boolean fileOnly;
 
+    private boolean caseSensitive;
+
     public FileFilter(FileTransferSetup fileTransferSetup) {
         this(fileTransferSetup.getFilePrefixes(), fileTransferSetup.getFileSuffixes());
+        this.caseSensitive = fileTransferSetup.isCaseSensitive();
+        this.fileOnly = fileTransferSetup.isFileOnly();
     }
 
     public FileFilter(Set<String> prefixes, Set<String> suffixes) {
@@ -73,11 +78,17 @@ public class FileFilter implements java.io.FileFilter {
         if (!isFile) {
             return !fileOnly;
         }
+        if (!caseSensitive) {
+            filename = filename.toLowerCase();
+        }
 
         boolean accept = true;
         if (!prefixes.isEmpty()) {
             accept = false;
             for (String prefix : prefixes) {
+                if (!caseSensitive) {
+                    prefix = prefix.toLowerCase();
+                }
                 if (filename.startsWith(prefix)) {
                     accept = true;
                     break;
@@ -88,6 +99,9 @@ public class FileFilter implements java.io.FileFilter {
         if (accept && !suffixes.isEmpty()) {
             accept = false;
             for (String suffix : suffixes) {
+                if (!caseSensitive) {
+                    suffix = suffix.toLowerCase();
+                }
                 if (filename.endsWith(suffix)) {
                     accept = true;
                     break;
