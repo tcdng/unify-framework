@@ -39,7 +39,8 @@ public class FileFilter implements java.io.FileFilter {
 
     public FileFilter(FileTransferSetup fileTransferSetup) {
         this(fileTransferSetup.getFilePrefixes(), fileTransferSetup.getFileSuffixes());
-        this.preserveCase = fileTransferSetup.isCaseSensitive();
+        this.preserveCase = fileTransferSetup.isPreserveCase();
+        this.fileOnly = fileTransferSetup.isFileOnly();
     }
 
     public FileFilter(Set<String> prefixes, Set<String> suffixes) {
