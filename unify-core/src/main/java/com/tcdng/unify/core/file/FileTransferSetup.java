@@ -27,6 +27,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * File transfer setup data object.
  *
  * @author Lateef Ojulari
+ * @author Kayode Adekanye <kayodeadekanye@gmail.com>
  * @since 1.0
  */
 public class FileTransferSetup {
