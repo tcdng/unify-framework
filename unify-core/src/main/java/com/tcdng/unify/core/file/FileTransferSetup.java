@@ -50,9 +50,11 @@ public class FileTransferSetup {
 
     private boolean deleteSourceOnTransfer;
 
+    private boolean caseSensitive;
+
     private FileTransferSetup(String remoteHost, int remotePort, String authenticationId, String authenticationPassword,
             String remotePath, String localPath, Set<String> filePrefixes, Set<String> fileSuffixes,
-            boolean deleteSourceOnTransfer) {
+            boolean deleteSourceOnTransfer, boolean caseSensitive) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
         this.authenticationId = authenticationId;
@@ -62,6 +64,7 @@ public class FileTransferSetup {
         this.deleteSourceOnTransfer = deleteSourceOnTransfer;
         this.filePrefixes = filePrefixes;
         this.fileSuffixes = fileSuffixes;
+        this.caseSensitive = caseSensitive;
     }
 
     public String getRemoteHost() {
@@ -100,6 +103,10 @@ public class FileTransferSetup {
         return deleteSourceOnTransfer;
     }
 
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -123,6 +130,8 @@ public class FileTransferSetup {
         private int remotePort;
 
         private boolean deleteSourceOnTransfer;
+
+        private boolean caseSensitive;
 
         private Builder() {
 
@@ -160,6 +169,11 @@ public class FileTransferSetup {
 
         public Builder deleteSourceOnTransfer(boolean deleteSourceOnTransfer) {
             this.deleteSourceOnTransfer = deleteSourceOnTransfer;
+            return this;
+        }
+
+        public Builder isCaseSensitive(boolean caseSensitive) {
+            this.caseSensitive = caseSensitive;
             return this;
         }
 
@@ -235,7 +249,7 @@ public class FileTransferSetup {
             }
 
             return new FileTransferSetup(remoteHost, remotePort, authenticationId, authenticationPassword, remotePath,
-                    localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer);
+                    localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer, caseSensitive);
         }
     }
 }
