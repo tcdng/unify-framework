@@ -240,7 +240,7 @@ public final class ReflectUtils {
                         for (String childName : beanNestedFieldNamesMap.get(gsi.getType())) {
                             names.add(name + '.' + childName);
                         }
-                    } else  {
+                    } else {
                         for (String childName : beanNestedFieldNamesMap.find(gsi.getType())) {
                             names.add(name + '.' + childName);
                         }
