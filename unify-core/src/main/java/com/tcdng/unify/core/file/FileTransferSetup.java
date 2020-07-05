@@ -1,12 +1,12 @@
 /*
  * Copyright 2018-2020 The Code Department.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,8 +25,9 @@ import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * File transfer setup data object.
- * 
+ *
  * @author Lateef Ojulari
+ * @author Kayode Adekanye <kayodeadekanye@gmail.com>
  * @since 1.0
  */
 public class FileTransferSetup {
@@ -49,9 +50,13 @@ public class FileTransferSetup {
 
     private boolean deleteSourceOnTransfer;
 
+    private boolean caseSensitive;
+
+    private boolean fileOnly;
+
     private FileTransferSetup(String remoteHost, int remotePort, String authenticationId, String authenticationPassword,
-            String remotePath, String localPath, Set<String> filePrefixes, Set<String> fileSuffixes,
-            boolean deleteSourceOnTransfer) {
+                              String remotePath, String localPath, Set<String> filePrefixes, Set<String> fileSuffixes,
+                              boolean deleteSourceOnTransfer, boolean caseSensitive, boolean fileOnly) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
         this.authenticationId = authenticationId;
@@ -61,6 +66,8 @@ public class FileTransferSetup {
         this.deleteSourceOnTransfer = deleteSourceOnTransfer;
         this.filePrefixes = filePrefixes;
         this.fileSuffixes = fileSuffixes;
+        this.caseSensitive = caseSensitive;
+        this.fileOnly = fileOnly;
     }
 
     public String getRemoteHost() {
@@ -99,6 +106,14 @@ public class FileTransferSetup {
         return deleteSourceOnTransfer;
     }
 
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public boolean isFileOnly() {
+        return fileOnly;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -122,6 +137,10 @@ public class FileTransferSetup {
         private int remotePort;
 
         private boolean deleteSourceOnTransfer;
+
+        private boolean caseSensitive;
+
+        private boolean fileOnly;
 
         private Builder() {
 
@@ -162,6 +181,16 @@ public class FileTransferSetup {
             return this;
         }
 
+        public Builder caseSensitive(boolean caseSensitive) {
+            this.caseSensitive = caseSensitive;
+            return this;
+        }
+
+        public Builder fileOnly(boolean fileOnly) {
+            this.fileOnly = fileOnly;
+            return this;
+        }
+
         public Builder filterByPrefix(String prefix) {
             if (filePrefixes == null) {
                 filePrefixes = new HashSet<String>();
@@ -183,6 +212,10 @@ public class FileTransferSetup {
             return this;
         }
 
+        /**
+         * @deprecated  as of release 1.1.2, replaced by {@link #filterBySuffix(String)}
+         */
+        @Deprecated
         public Builder filterByExtension(String extension) {
             if (fileSuffixes == null) {
                 fileSuffixes = new HashSet<String>();
@@ -192,6 +225,14 @@ public class FileTransferSetup {
             return this;
         }
 
+        public Builder filterBySuffix(String suffix) {
+            return filterByExtension(suffix);
+        }
+
+        /**
+         * @deprecated  as of release 1.1.2, replaced by {@link #filterBySuffixes(Collection)}
+         */
+        @Deprecated
         public Builder filterByExtensions(Collection<String> extensions) {
             if (DataUtils.isNotBlank(extensions)) {
                 if (fileSuffixes == null) {
@@ -202,6 +243,10 @@ public class FileTransferSetup {
             }
 
             return this;
+        }
+
+        public Builder filterBySuffixes(Collection<String> suffixes) {
+            return filterByExtensions(suffixes);
         }
 
         public FileTransferSetup build() throws UnifyException {
@@ -218,7 +263,7 @@ public class FileTransferSetup {
             }
 
             return new FileTransferSetup(remoteHost, remotePort, authenticationId, authenticationPassword, remotePath,
-                    localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer);
+                    localPath, filePrefixes, fileSuffixes, deleteSourceOnTransfer, caseSensitive, fileOnly);
         }
     }
 }
