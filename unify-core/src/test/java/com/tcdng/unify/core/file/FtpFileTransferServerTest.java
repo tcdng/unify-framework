@@ -101,7 +101,7 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
         FileTransferSetup fileTransferSetup =
                 FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                         .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                        .remotePath("unify_test/filelist").filterByExtension(".pdf").build();
+                        .remotePath("unify_test/filelist").filterBySuffix(".pdf").build();
         List<FileInfo> fileInfoList = fileTransferServer.getRemoteFileList(fileTransferSetup);
         assertNotNull(fileInfoList);
         assertEquals(1, fileInfoList.size());
@@ -113,7 +113,7 @@ public class FtpFileTransferServerTest extends AbstractUnifyComponentTest {
 
         fileTransferSetup = FileTransferSetup.newBuilder().remoteHost(REMOTE_HOST).remotePort(REMOTE_PORT)
                 .useAuthenticationId(REMOTE_AUTH_ID).useAuthenticationPassword(REMOTE_AUTH_PASSWORD)
-                .remotePath("unify_test/filelist/books").filterByExtension(".pdf").build();
+                .remotePath("unify_test/filelist/books").filterBySuffix(".pdf").build();
         fileInfoList = fileTransferServer.getRemoteFileList(fileTransferSetup);
         assertNotNull(fileInfoList);
         assertEquals(3, fileInfoList.size());
