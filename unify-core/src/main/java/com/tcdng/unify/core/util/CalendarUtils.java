@@ -284,7 +284,7 @@ public final class CalendarUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static Date getNowWithFrequencyOffset(Date now, FrequencyUnit unit, int offsetCount) throws UnifyException {
+    public static Date getNowWithFrequencyOffset(Date now, FrequencyUnit unit, long offsetCount) throws UnifyException {
         return new Date(now.getTime() + CalendarUtils.getMilliSecondsByFrequency(unit, offsetCount));
     }
 
@@ -314,7 +314,7 @@ public final class CalendarUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static Date getDateWithFrequencyOffset(Date date, FrequencyUnit unit, int offsetCount)
+    public static Date getDateWithFrequencyOffset(Date date, FrequencyUnit unit, long offsetCount)
             throws UnifyException {
         return new Date(date.getTime() + CalendarUtils.getMilliSecondsByFrequency(unit, offsetCount));
     }
@@ -344,7 +344,7 @@ public final class CalendarUtils {
      *             if supplied unit is invalid
      * @see FrequencyUnit
      */
-    public static long getMilliSecondsByFrequency(FrequencyUnit unit, int frequency) throws UnifyException {
+    public static long getMilliSecondsByFrequency(FrequencyUnit unit, long frequency) throws UnifyException {
         switch (unit) {
             case HOUR:
                 return frequency * 60 * 60 * 1000;
