@@ -1979,7 +1979,7 @@ ux.rigSearchField = function(rgp) {
 		var evp = ux.newEvPrm(rgp);
 		evp.uCmd = id + "->search";
 		evp.uIsReqTrg = true;
-		ux.addHdl(fElem, "enter", ux.post, evp);
+		ux.addHdl(fElem, "input", ux.post, evp);
 	}
 
 	// Result
