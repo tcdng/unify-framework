@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.control;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.ui.AbstractGroupListControl;
 
@@ -36,4 +37,9 @@ public class CheckList extends AbstractGroupListControl {
     public boolean isSupportReadOnly() {
         return false;
     }
+
+	@Override
+	public boolean isUseFacade() throws UnifyException {
+		return true;
+	}
 }

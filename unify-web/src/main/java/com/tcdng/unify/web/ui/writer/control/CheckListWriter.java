@@ -93,7 +93,7 @@ public class CheckListWriter extends AbstractControlWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         CheckList checkList = (CheckList) widget;
         if (checkList.isContainerEditable() && !checkList.isContainerDisabled()) {
-            super.doWriteBehavior(writer, widget, true); // Use facade
+            super.doWriteBehavior(writer, widget);
             writer.write("ux.rigChecklist({");
             writer.write("\"pId\":\"").write(checkList.getId()).write('"');
             writer.write(",\"pNm\":\"").write(checkList.getGroupId()).write('"');

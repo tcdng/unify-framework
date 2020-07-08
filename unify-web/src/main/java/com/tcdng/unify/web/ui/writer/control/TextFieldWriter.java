@@ -41,14 +41,13 @@ public class TextFieldWriter extends AbstractControlWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget, boolean useFacade) throws UnifyException {
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         TextField textField = (TextField) widget;
-        boolean textUseFacade = !textField.getExtReadOnly();
-        super.doWriteBehavior(writer, textField, textUseFacade);
+        super.doWriteBehavior(writer, textField);
 
         // Append formatting regex
         writer.write("ux.setTextRegexFormatting(\"");
-        if (textUseFacade) {
+        if (textField.isUseFacade()) {
             writer.write(textField.getFacadeId());
         } else {
             writer.write(textField.getId());

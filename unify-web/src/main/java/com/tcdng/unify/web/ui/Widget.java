@@ -404,6 +404,11 @@ public interface Widget extends UplComponent {
     boolean isFixedConforming() throws UnifyException;
 
     /**
+     * Tests if widget is in facade mode.
+     */
+    boolean isUseFacade() throws UnifyException;
+    
+    /**
      * Sets the component editable state.
      * 
      * @param editable

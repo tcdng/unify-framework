@@ -51,14 +51,18 @@ public class TextField extends AbstractFormattedControl {
         return getUplAttribute(boolean.class, "extReadOnly");
     }
 
-    public ExtensionType getExtensionType() {
+    @Override
+	public boolean isUseFacade() throws UnifyException {
+		return !getExtReadOnly();
+	}
+
+	public ExtensionType getExtensionType() {
         return ExtensionType.NONE;
     }
 
     @Override
     public boolean setFocus() throws UnifyException {
-        boolean textUseFacade = !getExtReadOnly();
-        if (textUseFacade) {
+        if (isUseFacade()) {
             return getRequestContextUtil().setFocusOnWidgetId(getFacadeId());
         }
 

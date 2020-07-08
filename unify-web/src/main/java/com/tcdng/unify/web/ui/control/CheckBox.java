@@ -38,6 +38,11 @@ public class CheckBox extends AbstractControl {
     }
 
     @Override
+	public boolean isUseFacade() throws UnifyException {
+		return true;
+	}
+
+	@Override
     public boolean isLayoutCaption() throws UnifyException {
         return getUplAttribute(boolean.class, "layoutCaption");
     }

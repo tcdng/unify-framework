@@ -30,11 +30,11 @@ import com.tcdng.unify.web.ui.Widget;
 public abstract class AbstractControlWriter extends AbstractWidgetWriter implements ControlWriter {
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget, boolean useFacade) throws UnifyException {
-        super.doWriteBehavior(writer, widget, useFacade);
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
         Control control = (Control) widget;
         if (control.isFocus()) {
-            if (useFacade) {
+            if (widget.isUseFacade()) {
                 getRequestContextUtil().setFocusOnWidgetId(control.getFacadeId());
             } else {
                 getRequestContextUtil().setFocusOnWidgetId(control.getId());

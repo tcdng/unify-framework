@@ -196,14 +196,12 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
             return super.getWidgetByLongName(longName);
         }
 
-        // Fix 30/09/19 Long name may be referring to standalone panel
-        StandalonePanel panel = standalonePanels.get(longName);
-        if (panel != null) {
-            return panel;
-        }
-        // End fix
-
         if (standalonePanels != null) {
+            StandalonePanel panel = standalonePanels.get(longName);
+            if (panel != null) {
+                return panel;
+            }
+
             for (StandalonePanel standalonePanel : standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {
                     return standalonePanel.getWidgetByLongName(longName);

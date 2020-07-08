@@ -270,6 +270,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
+	public boolean isUseFacade() throws UnifyException {
+		return false;
+	}
+
+	@Override
     public void setConforming(boolean conforming) {
         this.conforming = conforming;
     }
