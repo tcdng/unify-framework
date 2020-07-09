@@ -20,19 +20,27 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.CompoundRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.data.ValueStore;
 
 /**
- * Convenient abstract base class for compound bean filter policies.
+ * Convenient abstract base class for compound object filter policies.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractCompoundBeanFilterPolicy implements BeanFilterPolicy {
+public abstract class AbstractCompoundObjectFilterPolicy implements ObjectFilterPolicy {
 
-    @Override
-    public boolean match(Object bean, Restriction restriction) throws UnifyException {
-        return doMatch(bean, ((CompoundRestriction) restriction).getRestrictionList());
-    }
+	@Override
+	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+		return doMatch(valueStore, ((CompoundRestriction) restriction).getRestrictionList());
+	}
 
-    protected abstract boolean doMatch(Object bean, List<Restriction> restrictionList) throws UnifyException;
+	@Override
+	public boolean match(Object bean, Restriction restriction) throws UnifyException {
+		return doMatch(bean, ((CompoundRestriction) restriction).getRestrictionList());
+	}
+
+	protected abstract boolean doMatch(ValueStore valueStore, List<Restriction> restrictionList) throws UnifyException;
+
+	protected abstract boolean doMatch(Object bean, List<Restriction> restrictionList) throws UnifyException;
 }

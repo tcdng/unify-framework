@@ -21,23 +21,37 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.MultipleParamRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Convenient abstract base class for multiple parameter bean filter policies.
+ * Convenient abstract base class for multiple parameter object filter policies.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractMultipleParamBeanFilterPolicy implements BeanFilterPolicy {
+public abstract class AbstractMultipleParamObjectFilterPolicy implements ObjectFilterPolicy {
 
     private boolean inverted;
 
-    public AbstractMultipleParamBeanFilterPolicy(boolean inverted) {
+    public AbstractMultipleParamObjectFilterPolicy(boolean inverted) {
         this.inverted = inverted;
     }
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
+    @Override
+	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+        MultipleParamRestriction multipleParamRestriction = (MultipleParamRestriction) restriction;
+        Object fieldVal = valueStore.retrieve(multipleParamRestriction.getFieldName());
+        if (fieldVal != null) {
+            return doMatch(fieldVal,
+                    DataUtils.convert(List.class, fieldVal.getClass(), multipleParamRestriction.getParams(), null));
+        }
+
+        return inverted;
+	}
+
+	@SuppressWarnings("unchecked")
     @Override
     public boolean match(Object bean, Restriction restriction) throws UnifyException {
         MultipleParamRestriction multipleParamRestriction = (MultipleParamRestriction) restriction;

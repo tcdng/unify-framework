@@ -19,7 +19,8 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.filter.AbstractCompoundBeanFilterPolicy;
+import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.filter.AbstractCompoundObjectFilterPolicy;
 import com.tcdng.unify.core.util.FilterUtils;
 
 /**
@@ -28,9 +29,20 @@ import com.tcdng.unify.core.util.FilterUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class AndPolicy extends AbstractCompoundBeanFilterPolicy {
+public class AndPolicy extends AbstractCompoundObjectFilterPolicy {
 
     @Override
+	protected boolean doMatch(ValueStore valueStore, List<Restriction> restrictionList) throws UnifyException {
+        for (Restriction restriction : restrictionList) {
+            if (!FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(valueStore, restriction)) {
+                return false;
+            }
+        }
+
+        return true;
+	}
+
+	@Override
     protected boolean doMatch(Object bean, List<Restriction> restrictionList) throws UnifyException {
         for (Restriction restriction : restrictionList) {
             if (!FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean, restriction)) {

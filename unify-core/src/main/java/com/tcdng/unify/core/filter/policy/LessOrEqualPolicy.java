@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.filter.policy;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
+import com.tcdng.unify.core.filter.AbstractSingleParamObjectFilterPolicy;
 
 /**
  * Less than or equal policy.
@@ -24,7 +24,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LessOrEqualPolicy extends AbstractSingleParamBeanFilterPolicy {
+public class LessOrEqualPolicy extends AbstractSingleParamObjectFilterPolicy {
 
     public LessOrEqualPolicy() {
         super(false);

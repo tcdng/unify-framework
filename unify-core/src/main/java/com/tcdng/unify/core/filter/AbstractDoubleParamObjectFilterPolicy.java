@@ -19,23 +19,49 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.DoubleParamRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionField;
+import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Convenient abstract base class for double parameter bean filter policies.
+ * Convenient abstract base class for double parameter object filter policies.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractDoubleParamBeanFilterPolicy implements BeanFilterPolicy {
+public abstract class AbstractDoubleParamObjectFilterPolicy implements ObjectFilterPolicy {
 
     private boolean inverted;
 
-    public AbstractDoubleParamBeanFilterPolicy(boolean inverted) {
+    public AbstractDoubleParamObjectFilterPolicy(boolean inverted) {
         this.inverted = inverted;
     }
 
     @Override
+	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+        DoubleParamRestriction doubleParamRestriction = (DoubleParamRestriction) restriction;
+        Object fieldVal = valueStore.retrieve(doubleParamRestriction.getFieldName());
+        if (fieldVal != null) {
+            Object paramA = doubleParamRestriction.getFirstParam();
+            if (paramA instanceof RestrictionField) {
+                paramA = valueStore.retrieve(((RestrictionField) paramA).getName());
+            } else {
+                paramA = DataUtils.convert(fieldVal.getClass(), paramA, null);
+            }
+
+            Object paramB = doubleParamRestriction.getSecondParam();
+            if (paramB instanceof RestrictionField) {
+                paramB = valueStore.retrieve(((RestrictionField) paramB).getName());
+            } else {
+                paramB = DataUtils.convert(fieldVal.getClass(), paramB, null);
+            }
+
+            return doMatch(fieldVal, paramA, paramB);
+        }
+
+        return inverted;
+	}
+
+	@Override
     public boolean match(Object bean, Restriction restriction) throws UnifyException {
         DoubleParamRestriction doubleParamRestriction = (DoubleParamRestriction) restriction;
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, doubleParamRestriction.getFieldName());

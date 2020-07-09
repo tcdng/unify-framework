@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.filter.policy;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.filter.AbstractZeroParamBeanFilterPolicy;
+import com.tcdng.unify.core.filter.AbstractZeroParamObjectFilterPolicy;
 
 /**
  * Restriction for a property that is null.
@@ -24,7 +24,7 @@ import com.tcdng.unify.core.filter.AbstractZeroParamBeanFilterPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class IsNullPolicy extends AbstractZeroParamBeanFilterPolicy {
+public class IsNullPolicy extends AbstractZeroParamObjectFilterPolicy {
 
     @Override
     protected boolean doMatch(Object fieldVal) throws UnifyException {

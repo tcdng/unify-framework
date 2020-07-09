@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.filter.policy;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.filter.AbstractDoubleParamBeanFilterPolicy;
+import com.tcdng.unify.core.filter.AbstractDoubleParamObjectFilterPolicy;
 
 /**
  * Between two values policy.
@@ -24,7 +24,7 @@ import com.tcdng.unify.core.filter.AbstractDoubleParamBeanFilterPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BetweenPolicy extends AbstractDoubleParamBeanFilterPolicy {
+public class BetweenPolicy extends AbstractDoubleParamObjectFilterPolicy {
 
     public BetweenPolicy() {
         super(false);

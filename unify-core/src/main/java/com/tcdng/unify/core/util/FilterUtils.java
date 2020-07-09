@@ -29,7 +29,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.criterion.FilterConditionType;
-import com.tcdng.unify.core.filter.BeanFilterPolicy;
+import com.tcdng.unify.core.filter.ObjectFilterPolicy;
 import com.tcdng.unify.core.filter.policy.AmongstPolicy;
 import com.tcdng.unify.core.filter.policy.AndPolicy;
 import com.tcdng.unify.core.filter.policy.BeginsWithPolicy;
@@ -187,11 +187,11 @@ public final class FilterUtils {
         supportedConditionMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<FilterConditionType, BeanFilterPolicy> filterPolicies;
+    private static final Map<FilterConditionType, ObjectFilterPolicy> filterPolicies;
 
     static {
-        Map<FilterConditionType, BeanFilterPolicy> policies =
-                new EnumMap<FilterConditionType, BeanFilterPolicy>(FilterConditionType.class);
+        Map<FilterConditionType, ObjectFilterPolicy> policies =
+                new EnumMap<FilterConditionType, ObjectFilterPolicy>(FilterConditionType.class);
         policies.put(FilterConditionType.EQUALS, new EqualsPolicy());
         policies.put(FilterConditionType.NOT_EQUALS, new NotEqualsPolicy());
         policies.put(FilterConditionType.LESS_THAN, new LessPolicy());
@@ -278,7 +278,7 @@ public final class FilterUtils {
         return supported.contains(type);
     }
     
-    public static BeanFilterPolicy getBeanFilterPolicy(FilterConditionType type) {
+    public static ObjectFilterPolicy getBeanFilterPolicy(FilterConditionType type) {
         return filterPolicies.get(type);
     }
 }

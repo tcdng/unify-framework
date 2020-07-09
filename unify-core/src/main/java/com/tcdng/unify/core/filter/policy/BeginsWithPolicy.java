@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.filter.policy;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
+import com.tcdng.unify.core.filter.AbstractSingleParamObjectFilterPolicy;
 
 /**
  * Begins with policy.
@@ -24,7 +24,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamBeanFilterPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BeginsWithPolicy extends AbstractSingleParamBeanFilterPolicy {
+public class BeginsWithPolicy extends AbstractSingleParamObjectFilterPolicy {
 
     public BeginsWithPolicy() {
         super(false);

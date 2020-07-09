@@ -18,7 +18,7 @@ package com.tcdng.unify.core.filter.policy;
 import java.util.Collection;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.filter.AbstractMultipleParamBeanFilterPolicy;
+import com.tcdng.unify.core.filter.AbstractMultipleParamObjectFilterPolicy;
 
 /**
  * Not amongst list policy.
@@ -26,7 +26,7 @@ import com.tcdng.unify.core.filter.AbstractMultipleParamBeanFilterPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class NotAmongstPolicy extends AbstractMultipleParamBeanFilterPolicy {
+public class NotAmongstPolicy extends AbstractMultipleParamObjectFilterPolicy {
 
     public NotAmongstPolicy() {
         super(false);

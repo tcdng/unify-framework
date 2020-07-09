@@ -17,25 +17,27 @@ package com.tcdng.unify.core.filter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.ZeroParamRestriction;
+import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Bean filter policy.
+ * Convenient abstract base class for zero parameter object filter policies.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface BeanFilterPolicy {
+public abstract class AbstractZeroParamObjectFilterPolicy implements ObjectFilterPolicy {
 
-    /**
-     * Perform bean field matching.
-     * 
-     * @param bean
-     *            the bean object
-     * @param restriction
-     *            restriction the restriction field
-     * @return true restriction matches bean field
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    boolean match(Object bean, Restriction restriction) throws UnifyException;
+	@Override
+	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+		return doMatch(valueStore.retrieve(((ZeroParamRestriction) restriction).getFieldName()));
+	}
+
+	@Override
+	public boolean match(Object bean, Restriction restriction) throws UnifyException {
+		return doMatch(DataUtils.getNestedBeanProperty(bean, ((ZeroParamRestriction) restriction).getFieldName()));
+	}
+
+	protected abstract boolean doMatch(Object fieldVal) throws UnifyException;
 }

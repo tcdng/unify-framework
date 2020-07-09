@@ -16,7 +16,7 @@
 package com.tcdng.unify.core.filter.policy;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.filter.AbstractCollectionSizeBeanFilterPolicy;
+import com.tcdng.unify.core.filter.AbstractCollectionSizeObjectFilterPolicy;
 
 /**
  * Collection size greater than policy.
@@ -24,7 +24,7 @@ import com.tcdng.unify.core.filter.AbstractCollectionSizeBeanFilterPolicy;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class GreaterCollectionPolicy extends AbstractCollectionSizeBeanFilterPolicy {
+public class GreaterCollectionPolicy extends AbstractCollectionSizeObjectFilterPolicy {
 
     public GreaterCollectionPolicy() {
         super(false);

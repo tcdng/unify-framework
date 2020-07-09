@@ -17,20 +17,26 @@ package com.tcdng.unify.core.filter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.FilterUtils;
 
 /**
- * Bean filter class.
+ * Object filter class.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BeanFilter {
+public class ObjectFilter {
 
     private Restriction restriction;
 
-    public BeanFilter(Restriction restriction) {
+    public ObjectFilter(Restriction restriction) {
         this.restriction = restriction;
+    }
+
+    public boolean match(ValueStore valueStore) throws UnifyException {
+        return FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(valueStore,
+                restriction);
     }
 
     public boolean match(Object bean) throws UnifyException {
