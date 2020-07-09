@@ -35,653 +35,579 @@ import com.tcdng.unify.core.upl.UplComponent;
  */
 public class UnifyComponentContext {
 
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-    private RequestContextManager requestContextManager;
+	private RequestContextManager requestContextManager;
 
-    private ListManager listManager;
+	private ListManager listManager;
 
-    private Logger logger;
+	private Logger logger;
 
-    private String name;
+	private String name;
 
-    public UnifyComponentContext(ApplicationContext applicationContext, Logger logger, String name) {
-        this.applicationContext = applicationContext;
-        this.logger = logger;
-        this.name = name;
-    }
+	public UnifyComponentContext(ApplicationContext applicationContext, Logger logger, String name) {
+		this.applicationContext = applicationContext;
+		this.logger = logger;
+		this.name = name;
+	}
 
-    /**
-     * Gets the component name.
-     * 
-     * @return the component name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * Gets the component name.
+	 * 
+	 * @return the component name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Sends a message to the application container.
-     * 
-     * @param command
-     *            the command to send
-     * @param params
-     *            the command parameters
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void sendCommand(String command, String... params) throws UnifyException {
-        applicationContext.getContainer().command(command, params);
-    }
+	/**
+	 * Sends a message to the application container.
+	 * 
+	 * @param command the command to send
+	 * @param params  the command parameters
+	 * @throws UnifyException if an error occurs
+	 */
+	public void sendCommand(String command, String... params) throws UnifyException {
+		applicationContext.getContainer().command(command, params);
+	}
 
-    /**
-     * Gets the context's container information.
-     * 
-     * @return the container information object
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public UnifyContainerInfo getContainerInfo() throws UnifyException {
-        return applicationContext.getContainer().getInfo();
-    }
+	/**
+	 * Gets the context's container information.
+	 * 
+	 * @return the container information object
+	 * @throws UnifyException if an error occurs
+	 */
+	public UnifyContainerInfo getContainerInfo() throws UnifyException {
+		return applicationContext.getContainer().getInfo();
+	}
 
-    /**
-     * Gets component by name.
-     * 
-     * @param name
-     *            the component name
-     * @return the component with name
-     * @throws UnifyException
-     *             If component is unknown. If an error occurs
-     */
-    public UnifyComponent getComponent(String name) throws UnifyException {
-        return applicationContext.getContainer().getComponent(name);
-    }
+	/**
+	 * Gets component by name.
+	 * 
+	 * @param name the component name
+	 * @return the component with name
+	 * @throws UnifyException If component is unknown. If an error occurs
+	 */
+	public UnifyComponent getComponent(String name) throws UnifyException {
+		return applicationContext.getContainer().getComponent(name);
+	}
 
-    /**
-     * Gets a component by name using alternate settings. Applies to non-singletons
-     * only..
-     * 
-     * @param name
-     *            the component name
-     * @param altSettings
-     *            the alternate settings
-     * @return the component
-     * @throws UnifyException
-     *             if container is not started. If component with name is unknown.
-     *             If component is a singleton. If component instantiation error
-     *             occurs.
-     */
-    public UnifyComponent getComponent(String name, UnifyComponentSettings altSettings) throws UnifyException {
-        return applicationContext.getContainer().getComponent(name, altSettings);
-    }
+	/**
+	 * Gets a component by name using alternate settings. Applies to non-singletons
+	 * only..
+	 * 
+	 * @param name        the component name
+	 * @param altSettings the alternate settings
+	 * @return the component
+	 * @throws UnifyException if container is not started. If component with name is
+	 *                        unknown. If component is a singleton. If component
+	 *                        instantiation error occurs.
+	 */
+	public UnifyComponent getComponent(String name, UnifyComponentSettings altSettings) throws UnifyException {
+		return applicationContext.getContainer().getComponent(name, altSettings);
+	}
 
-    /**
-     * Returns true if component with name exists in context.
-     * 
-     * @param name
-     *            the component name
-     * @throws UnifyException
-     *             If component an error occurs.
-     */
-    public boolean isComponent(String name) throws UnifyException {
-        return applicationContext.getContainer().isComponent(name);
-    }
+	/**
+	 * Returns true if component with name exists in context.
+	 * 
+	 * @param name the component name
+	 * @throws UnifyException If component an error occurs.
+	 */
+	public boolean isComponent(String name) throws UnifyException {
+		return applicationContext.getContainer().isComponent(name);
+	}
 
-    /**
-     * Gets a UPL component instance using supplied descriptor.
-     * 
-     * @param locale
-     *            the locale
-     * @param descriptor
-     *            the UPL descriptor
-     * @param cached
-     *            the cached flag.
-     * @return If the cached flag is set, the container returns a cached instance
-     *         with the same descriptor and locale if found. Otherwise, a new
-     *         instance is returned.
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public UplComponent getUplComponent(Locale locale, String descriptor, boolean cached) throws UnifyException {
-        return applicationContext.getContainer().getUplComponent(locale, descriptor, cached);
-    }
+	/**
+	 * Gets a UPL component instance using supplied descriptor.
+	 * 
+	 * @param locale     the locale
+	 * @param descriptor the UPL descriptor
+	 * @param cached     the cached flag.
+	 * @return If the cached flag is set, the container returns a cached instance
+	 *         with the same descriptor and locale if found. Otherwise, a new
+	 *         instance is returned.
+	 * @throws UnifyException if an error occurs
+	 */
+	public UplComponent getUplComponent(Locale locale, String descriptor, boolean cached) throws UnifyException {
+		return applicationContext.getContainer().getUplComponent(locale, descriptor, cached);
+	}
 
-    /**
-     * Gets a UPL component using UPL attributes key.
-     * 
-     * @param locale
-     *            the locale
-     * @param attributesKey
-     *            the UPL attributes ID
-     * @return a UPL component
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public UplComponent getUplComponent(Locale locale, String attributesKey) throws UnifyException {
-        return applicationContext.getContainer().getUplComponent(locale, attributesKey);
-    }
+	/**
+	 * Gets a UPL component using UPL attributes key.
+	 * 
+	 * @param locale        the locale
+	 * @param attributesKey the UPL attributes ID
+	 * @return a UPL component
+	 * @throws UnifyException if an error occurs
+	 */
+	public UplComponent getUplComponent(Locale locale, String attributesKey) throws UnifyException {
+		return applicationContext.getContainer().getUplComponent(locale, attributesKey);
+	}
 
-    /**
-     * Gets the component configuration of component with specified name.
-     * 
-     * @param name
-     *            the component name
-     * @return the component configuration otherwise null
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public UnifyComponentConfig getComponentConfig(String name) throws UnifyException {
-        return applicationContext.getContainer().getComponentConfig(name);
-    }
+	/**
+	 * Gets the component configuration of component with specified name.
+	 * 
+	 * @param name the component name
+	 * @return the component configuration otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	public UnifyComponentConfig getComponentConfig(String name) throws UnifyException {
+		return applicationContext.getContainer().getComponentConfig(name);
+	}
 
-    /**
-     * Gets all component names of particular types in scope.
-     * 
-     * @param type
-     *            the component type
-     * @return the list of names
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public List<String> getComponentNames(Class<? extends UnifyComponent> type) throws UnifyException {
-        return applicationContext.getContainer().getComponentNames(type);
-    }
+	/**
+	 * Gets all component names of particular types in scope.
+	 * 
+	 * @param type the component type
+	 * @return the list of names
+	 * @throws UnifyException if an error occurs
+	 */
+	public List<String> getComponentNames(Class<? extends UnifyComponent> type) throws UnifyException {
+		return applicationContext.getContainer().getComponentNames(type);
+	}
 
-    /**
-     * Gets component configuration for types the extend or implement specified
-     * types.
-     * 
-     * @param type
-     *            the component type
-     * @return the component types
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public List<UnifyComponentConfig> getComponentConfigs(Class<? extends UnifyComponent> type) throws UnifyException {
-        return applicationContext.getContainer().getComponentConfigs(type);
-    }
+	/**
+	 * Gets component configuration for types the extend or implement specified
+	 * types.
+	 * 
+	 * @param type the component type
+	 * @return the component types
+	 * @throws UnifyException if an error occurs
+	 */
+	public List<UnifyComponentConfig> getComponentConfigs(Class<? extends UnifyComponent> type) throws UnifyException {
+		return applicationContext.getContainer().getComponentConfigs(type);
+	}
 
-    /**
-     * Fetches all component instances of a specific type.
-     * 
-     * @param componentType
-     *            the component type
-     * @return the list of components.
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected <T extends UnifyComponent> List<T> getComponents(Class<T> componentType) throws UnifyException {
-        return applicationContext.getContainer().getComponents(componentType);
-    }
+	/**
+	 * Fetches all component instances of a specific type.
+	 * 
+	 * @param componentType the component type
+	 * @return the list of components.
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T extends UnifyComponent> List<T> getComponents(Class<T> componentType) throws UnifyException {
+		return applicationContext.getContainer().getComponents(componentType);
+	}
 
-    /**
-     * Returns classes of a particular type annotated with a specific type of
-     * annotation.
-     * 
-     * @param classType
-     *            the annotated class type
-     * @param annotationClass
-     *            the annotation
-     * @param basePackages
-     *            packages to restrict search to. This parameter is optional.
-     * @return list of annotated classes
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public <T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType,
-            Class<? extends Annotation> annotationClass, String... basePackages) throws UnifyException {
-        return applicationContext.getContainer().getAnnotatedClasses(classType, annotationClass, basePackages);
-    }
+	/**
+	 * Returns classes of a particular type annotated with a specific type of
+	 * annotation.
+	 * 
+	 * @param classType       the annotated class type
+	 * @param annotationClass the annotation
+	 * @param basePackages    packages to restrict search to. This parameter is
+	 *                        optional.
+	 * @return list of annotated classes
+	 * @throws UnifyException if an error occurs
+	 */
+	public <T> List<Class<? extends T>> getAnnotatedClasses(Class<T> classType,
+			Class<? extends Annotation> annotationClass, String... basePackages) throws UnifyException {
+		return applicationContext.getContainer().getAnnotatedClasses(classType, annotationClass, basePackages);
+	}
 
-    /**
-     * Returns classes of a particular type annotated with a specific type of
-     * annotation.
-     * 
-     * @param classType
-     *            the annotated class type
-     * @param annotationClass
-     *            the annotation
-     * @param excludePackages
-     *            packages to exclude search from. This parameter is optional.
-     * @return list of annotated classes
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public <T> List<Class<? extends T>> getAnnotatedClassesExcluded(Class<T> classType,
-            Class<? extends Annotation> annotationClass, String... excludePackages) throws UnifyException {
-        return applicationContext.getContainer().getAnnotatedClassesExcluded(classType, annotationClass,
-                excludePackages);
-    }
+	/**
+	 * Returns classes of a particular type annotated with a specific type of
+	 * annotation.
+	 * 
+	 * @param classType       the annotated class type
+	 * @param annotationClass the annotation
+	 * @param excludePackages packages to exclude search from. This parameter is
+	 *                        optional.
+	 * @return list of annotated classes
+	 * @throws UnifyException if an error occurs
+	 */
+	public <T> List<Class<? extends T>> getAnnotatedClassesExcluded(Class<T> classType,
+			Class<? extends Annotation> annotationClass, String... excludePackages) throws UnifyException {
+		return applicationContext.getContainer().getAnnotatedClassesExcluded(classType, annotationClass,
+				excludePackages);
+	}
 
-    /**
-     * Gets current thread request context object.
-     * 
-     * @return the request context
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public RequestContext getRequestContext() throws UnifyException {
-        return getRequestContextManager().getRequestContext();
-    }
+	/**
+	 * Gets current thread request context object.
+	 * 
+	 * @return the request context
+	 * @throws UnifyException if an error occurs
+	 */
+	public RequestContext getRequestContext() throws UnifyException {
+		return getRequestContextManager().getRequestContext();
+	}
 
-    /**
-     * Gets session context object.
-     * 
-     * @return the session context
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public SessionContext getSessionContext() throws UnifyException {
-        return getRequestContextManager().getRequestContext().getSessionContext();
-    }
+	/**
+	 * Gets session context object.
+	 * 
+	 * @return the session context
+	 * @throws UnifyException if an error occurs
+	 */
+	public SessionContext getSessionContext() throws UnifyException {
+		return getRequestContextManager().getRequestContext().getSessionContext();
+	}
 
-    /**
-     * Sets an attribute in application context.
-     * 
-     * @param name
-     *            the attribute name
-     * @param value
-     *            the attribute value to set
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void setApplicationAttribute(String name, Object value) throws UnifyException {
-        applicationContext.setAttribute(name, value);
-    }
+	/**
+	 * Sets an attribute in application context.
+	 * 
+	 * @param name  the attribute name
+	 * @param value the attribute value to set
+	 * @throws UnifyException if an error occurs
+	 */
+	public void setApplicationAttribute(String name, Object value) throws UnifyException {
+		applicationContext.setAttribute(name, value);
+	}
 
-    /**
-     * Gets an attribute value from application context.
-     * 
-     * @param name
-     *            the attribute name
-     * @return the attribute value
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public Object getApplicationAttribute(String name) throws UnifyException {
-        return applicationContext.getAttribute(name);
-    }
+	/**
+	 * Gets an attribute value from application context.
+	 * 
+	 * @param name the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	public Object getApplicationAttribute(String name) throws UnifyException {
+		return applicationContext.getAttribute(name);
+	}
 
-    /**
-     * Removes an attribute value from application context.
-     * 
-     * @param name
-     *            the attribute name
-     * @return the attribute value
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public Object removeApplicationAttribute(String name) throws UnifyException {
-        return applicationContext.removeAttribute(name);
-    }
+	/**
+	 * Removes an attribute value from application context.
+	 * 
+	 * @param name the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	public Object removeApplicationAttribute(String name) throws UnifyException {
+		return applicationContext.removeAttribute(name);
+	}
 
-    /**
-     * Removes attribute values from application context.
-     * 
-     * @param names
-     *            the attribute names
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void removeApplicationAttributes(String... names) throws UnifyException {
-        applicationContext.removeAttributes(names);
-    }
+	/**
+	 * Removes attribute values from application context.
+	 * 
+	 * @param names the attribute names
+	 * @throws UnifyException if an error occurs
+	 */
+	public void removeApplicationAttributes(String... names) throws UnifyException {
+		applicationContext.removeAttributes(names);
+	}
 
-    /**
-     * Checks if application context has an attribute.
-     * 
-     * @param name
-     *            the attribute name
-     * @return a true value if attribute exists in application context otherwise
-     *         false
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public boolean isApplicationAttribute(String name) throws UnifyException {
-        return applicationContext.isAttribute(name);
-    }
+	/**
+	 * Checks if application context has an attribute.
+	 * 
+	 * @param name the attribute name
+	 * @return a true value if attribute exists in application context otherwise
+	 *         false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean isApplicationAttribute(String name) throws UnifyException {
+		return applicationContext.isAttribute(name);
+	}
 
-    /**
-     * Gets application locale
-     * 
-     * @return the application locale
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected Locale getApplicationLocale() throws UnifyException {
-        return applicationContext.getApplicationLocale();
-    }
+	/**
+	 * Gets application locale
+	 * 
+	 * @return the application locale
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Locale getApplicationLocale() throws UnifyException {
+		return applicationContext.getApplicationLocale();
+	}
 
-    /**
-     * Gets application time zone
-     * 
-     * @return the application time zone
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected TimeZone getApplicationTimeZone() throws UnifyException {
-        return applicationContext.getTimeZone();
-    }
+	/**
+	 * Gets application time zone
+	 * 
+	 * @return the application time zone
+	 * @throws UnifyException if an error occurs
+	 */
+	protected TimeZone getApplicationTimeZone() throws UnifyException {
+		return applicationContext.getTimeZone();
+	}
 
-    /**
-     * Gets the application banner ASCII text
-     * 
-     * @return the application banner text as a list of strings
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected List<String> getApplicationBanner() throws UnifyException {
-        return applicationContext.getApplicationBanner();
-    }
+	/**
+	 * Checks if view directive should be ignored.
+	 * 
+	 * @return true if ignore view directive is set for application otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean isApplicationIgnoreViewDirective() throws UnifyException {
+		return applicationContext.isIgnoreViewDirective();
+	}
 
-    /**
-     * Returns view directive for supplied privilege code and current session role.
-     * 
-     * @param privilege
-     *            the privilege to test
-     * @return the privilege settings
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public ViewDirective getRoleViewDirective(String privilege) throws UnifyException {
-        UserToken userToken = getSessionContext().getUserToken();
-        if (userToken != null) {
-            return applicationContext.getRoleViewDirective(userToken.getRoleCode(), privilege);
-        }
-        return applicationContext.getRoleViewDirective(null, privilege);
-    }
+	/**
+	 * Gets the application banner ASCII text
+	 * 
+	 * @return the application banner text as a list of strings
+	 * @throws UnifyException if an error occurs
+	 */
+	protected List<String> getApplicationBanner() throws UnifyException {
+		return applicationContext.getApplicationBanner();
+	}
 
-    /**
-     * Returns privilege codes for supplied privilege category and role.
-     * 
-     * @param roleCode
-     *            the role code
-     * @param privilegeCategoryCode
-     *            the privilege category code
-     * @return set of privilege codes
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public Set<String> getRolePrivilegeCodes(String roleCode, String privilegeCategoryCode) throws UnifyException {
-        return applicationContext.getPrivilegeCodes(roleCode, privilegeCategoryCode);
-    }
+	/**
+	 * Returns view directive for supplied privilege code and current session role.
+	 * 
+	 * @param privilege the privilege to test
+	 * @return the privilege settings
+	 * @throws UnifyException if an error occurs
+	 */
+	public ViewDirective getRoleViewDirective(String privilege) throws UnifyException {
+		UserToken userToken = getSessionContext().getUserToken();
+		if (userToken != null) {
+			return applicationContext.getRoleViewDirective(userToken.getRoleCode(), privilege);
+		}
+		return applicationContext.getRoleViewDirective(null, privilege);
+	}
 
-    /**
-     * Returns privilege codes for supplied privilege category and current session
-     * role.
-     * 
-     * @param privilegeCategoryCode
-     *            the privilege category code
-     * @return set of privilege codes
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public Set<String> getCurrentRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
-        return applicationContext.getPrivilegeCodes(getSessionContext().getUserToken().getRoleCode(),
-                privilegeCategoryCode);
-    }
+	/**
+	 * Returns privilege codes for supplied privilege category and role.
+	 * 
+	 * @param roleCode              the role code
+	 * @param privilegeCategoryCode the privilege category code
+	 * @return set of privilege codes
+	 * @throws UnifyException if an error occurs
+	 */
+	public Set<String> getRolePrivilegeCodes(String roleCode, String privilegeCategoryCode) throws UnifyException {
+		return applicationContext.getPrivilegeCodes(roleCode, privilegeCategoryCode);
+	}
 
-    /**
-     * Checks if current session role has privilege.
-     * 
-     * @param privilegeCategoryCode
-     *            the privilege category code
-     * @param privilegeCode
-     *            the privilege code
-     * @return a true value is current session role has privilege otherwise false
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public boolean isCurrentRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
-        UserToken userToken = getSessionContext().getUserToken();
-        if (userToken != null && userToken.getRoleCode() != null) {
-            Set<String> privileges = getRolePrivilegeCodes(userToken.getRoleCode(), privilegeCategoryCode);
-            if (privileges != null) {
-                return privileges.contains(privilegeCode);
-            }
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * Returns privilege codes for supplied privilege category and current session
+	 * role.
+	 * 
+	 * @param privilegeCategoryCode the privilege category code
+	 * @return set of privilege codes
+	 * @throws UnifyException if an error occurs
+	 */
+	public Set<String> getCurrentRolePrivilegeCodes(String privilegeCategoryCode) throws UnifyException {
+		return applicationContext.getPrivilegeCodes(getSessionContext().getUserToken().getRoleCode(),
+				privilegeCategoryCode);
+	}
 
-    /**
-     * Checks if application context has role attributes loaded for the supplied
-     * role code.
-     * 
-     * @param roleCode
-     *            the role code
-     * @return true if context has attributes for role
-     */
-    public boolean isRoleAttributes(String roleCode) {
-        return applicationContext.isRoleAttributes(roleCode);
-    }
+	/**
+	 * Checks if current session role has privilege.
+	 * 
+	 * @param privilegeCategoryCode the privilege category code
+	 * @param privilegeCode         the privilege code
+	 * @return a true value is current session role has privilege otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean isCurrentRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
+		UserToken userToken = getSessionContext().getUserToken();
+		if (userToken != null && userToken.getRoleCode() != null) {
+			Set<String> privileges = getRolePrivilegeCodes(userToken.getRoleCode(), privilegeCategoryCode);
+			if (privileges != null) {
+				return privileges.contains(privilegeCode);
+			}
+			return false;
+		}
+		return true;
+	}
 
-    /**
-     * Returns workflow step codes that are associated with role of current user.
-     * 
-     * @return a set of workflow step codes
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public Set<String> getCurrentUserRoleStepCodes() throws UnifyException {
-        UserToken userToken = getSessionContext().getUserToken();
-        if (userToken != null) {
-            return getRoleStepCodes(userToken.getRoleCode());
-        }
+	/**
+	 * Checks if application context has role attributes loaded for the supplied
+	 * role code.
+	 * 
+	 * @param roleCode the role code
+	 * @return true if context has attributes for role
+	 */
+	public boolean isRoleAttributes(String roleCode) {
+		return applicationContext.isRoleAttributes(roleCode);
+	}
 
-        return Collections.emptySet();
-    }
+	/**
+	 * Returns workflow step codes that are associated with role of current user.
+	 * 
+	 * @return a set of workflow step codes
+	 * @throws UnifyException if an error occurs
+	 */
+	public Set<String> getCurrentUserRoleStepCodes() throws UnifyException {
+		UserToken userToken = getSessionContext().getUserToken();
+		if (userToken != null) {
+			return getRoleStepCodes(userToken.getRoleCode());
+		}
 
-    /**
-     * Returns workflow step codes that are associated with role.
-     * 
-     * @param roleCode
-     *            the role code
-     * @return a set of workflow step codes
-     */
-    public Set<String> getRoleStepCodes(String roleCode) {
-        return applicationContext.getStepCodes(roleCode);
-    }
+		return Collections.emptySet();
+	}
 
-    /**
-     * Sets attributes for specified role.
-     * 
-     * @param roleCode
-     *            the role code
-     * @param roleAttributes
-     *            the attributes to load.
-     */
-    public void setRoleAttributes(String roleCode, RoleAttributes roleAttributes) {
-        applicationContext.setRoleAttributes(roleCode, roleAttributes);
-    }
+	/**
+	 * Returns workflow step codes that are associated with role.
+	 * 
+	 * @param roleCode the role code
+	 * @return a set of workflow step codes
+	 */
+	public Set<String> getRoleStepCodes(String roleCode) {
+		return applicationContext.getStepCodes(roleCode);
+	}
 
-    /**
-     * Begins a cluster synchronization block with specified lock. Blocks until
-     * synchronization handle is obtained or an error occurs. Lock should be
-     * released by calling {@link #endClusterLock(String)}.
-     * 
-     * @param lockName
-     *            the lock name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void beginClusterLock(String lockName) throws UnifyException {
-        applicationContext.getContainer().beginClusterLock(lockName);
-    }
+	/**
+	 * Sets attributes for specified role.
+	 * 
+	 * @param roleCode       the role code
+	 * @param roleAttributes the attributes to load.
+	 */
+	public void setRoleAttributes(String roleCode, RoleAttributes roleAttributes) {
+		applicationContext.setRoleAttributes(roleCode, roleAttributes);
+	}
 
-    /**
-     * Ends a cluster synchronization block for specified lock.
-     * 
-     * @param lockName
-     *            the lock name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void endClusterLock(String lockName) throws UnifyException {
-        applicationContext.getContainer().endClusterLock(lockName);
-    }
+	/**
+	 * Begins a cluster synchronization block with specified lock. Blocks until
+	 * synchronization handle is obtained or an error occurs. Lock should be
+	 * released by calling {@link #endClusterLock(String)}.
+	 * 
+	 * @param lockName the lock name
+	 * @throws UnifyException if an error occurs
+	 */
+	public void beginClusterLock(String lockName) throws UnifyException {
+		applicationContext.getContainer().beginClusterLock(lockName);
+	}
 
-    /**
-     * Tries to grab the cluster master synchronization lock.
-     * 
-     * @return a true value is lock is obtained otherwise false
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public boolean grabClusterMasterLock() throws UnifyException {
-        return applicationContext.getContainer().grabClusterMasterLock();
-    }
+	/**
+	 * Ends a cluster synchronization block for specified lock.
+	 * 
+	 * @param lockName the lock name
+	 * @throws UnifyException if an error occurs
+	 */
+	public void endClusterLock(String lockName) throws UnifyException {
+		applicationContext.getContainer().endClusterLock(lockName);
+	}
 
-    /**
-     * Tries to grab a cluster synchronization lock. Lock must be released after use
-     * with {@link #releaseClusterLock(String)}
-     * 
-     * @param lockName
-     *            the lock name
-     * @return a true value is lock is obtained otherwise false
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public boolean grabClusterLock(String lockName) throws UnifyException {
-        return applicationContext.getContainer().grabClusterLock(lockName);
-    }
+	/**
+	 * Tries to grab the cluster master synchronization lock.
+	 * 
+	 * @return a true value is lock is obtained otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabClusterMasterLock() throws UnifyException {
+		return applicationContext.getContainer().grabClusterMasterLock();
+	}
 
-    /**
-     * Checks if current node has a hold on a cluster synchronization lock.
-     * 
-     * @param lockName
-     *            the lock name
-     * @return a true value is lock is held otherwise false
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public boolean isWithClusterLock(String lockName) throws UnifyException {
-        return applicationContext.getContainer().isWithClusterLock(lockName);
-    }
+	/**
+	 * Tries to grab a cluster synchronization lock. Lock must be released after use
+	 * with {@link #releaseClusterLock(String)}
+	 * 
+	 * @param lockName the lock name
+	 * @return a true value is lock is obtained otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabClusterLock(String lockName) throws UnifyException {
+		return applicationContext.getContainer().grabClusterLock(lockName);
+	}
 
-    /**
-     * Releases a cluster synchronization lock.
-     * 
-     * @param lockName
-     *            the lock name
-     * @return a true value if lock was released
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public boolean releaseClusterLock(String lockName) throws UnifyException {
-        return applicationContext.getContainer().releaseClusterLock(lockName);
-    }
+	/**
+	 * Checks if current node has a hold on a cluster synchronization lock.
+	 * 
+	 * @param lockName the lock name
+	 * @return a true value is lock is held otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean isWithClusterLock(String lockName) throws UnifyException {
+		return applicationContext.getContainer().isWithClusterLock(lockName);
+	}
 
-    /**
-     * Broadcasts a cluster command to other nodes.
-     * 
-     * @param command
-     *            the command to braodcast
-     * @param params
-     *            the command parameters
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
-        applicationContext.getContainer().broadcastToOtherNodes(command, params);
-    }
+	/**
+	 * Releases a cluster synchronization lock.
+	 * 
+	 * @param lockName the lock name
+	 * @return a true value if lock was released
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean releaseClusterLock(String lockName) throws UnifyException {
+		return applicationContext.getContainer().releaseClusterLock(lockName);
+	}
 
-    /**
-     * Broadcasts attribute to all sessions in this node.
-     * 
-     * @param name
-     *            the attribute name
-     * @param value
-     *            the attribute value. A null value clears attribute.
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void broadcastToSessions(String name, Object value) throws UnifyException {
-        applicationContext.getContainer().broadcastToSessions(name, value);
-    }
+	/**
+	 * Broadcasts a cluster command to other nodes.
+	 * 
+	 * @param command the command to braodcast
+	 * @param params  the command parameters
+	 * @throws UnifyException if an error occurs
+	 */
+	public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
+		applicationContext.getContainer().broadcastToOtherNodes(command, params);
+	}
 
-    /**
-     * Broadcasts attribute to specific application session context in this node.
-     * 
-     * @param sessionId
-     *            the session ID
-     * @param name
-     *            the attribute name
-     * @param value
-     *            the attribute value. A null value clears attribute.
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public void broadcastToSession(String sessionId, String name, Object value) throws UnifyException {
-        applicationContext.getContainer().broadcastToSession(sessionId, name, value);
-    }
+	/**
+	 * Broadcasts attribute to all sessions in this node.
+	 * 
+	 * @param name  the attribute name
+	 * @param value the attribute value. A null value clears attribute.
+	 * @throws UnifyException if an error occurs
+	 */
+	public void broadcastToSessions(String name, Object value) throws UnifyException {
+		applicationContext.getContainer().broadcastToSessions(name, value);
+	}
 
-    public List<UnifyStaticSettings> getStaticSettings() {
-        return applicationContext.getContainer().getStaticSettings();
-    }
+	/**
+	 * Broadcasts attribute to specific application session context in this node.
+	 * 
+	 * @param sessionId the session ID
+	 * @param name      the attribute name
+	 * @param value     the attribute value. A null value clears attribute.
+	 * @throws UnifyException if an error occurs
+	 */
+	public void broadcastToSession(String sessionId, String name, Object value) throws UnifyException {
+		applicationContext.getContainer().broadcastToSession(sessionId, name, value);
+	}
 
-    public ResourceBundles getMessages() throws UnifyException {
-        return applicationContext.getContainer().getMessages();
-    }
+	public List<UnifyStaticSettings> getStaticSettings() {
+		return applicationContext.getContainer().getStaticSettings();
+	}
 
-    public ListManager getListManager() throws UnifyException {
-        if (listManager == null) {
-            listManager = (ListManager) applicationContext.getContainer()
-                    .getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
-        }
-        return listManager;
-    }
+	public ResourceBundles getMessages() throws UnifyException {
+		return applicationContext.getContainer().getMessages();
+	}
 
-    public Logger getLogger() throws UnifyException {
-        return logger;
-    }
+	public ListManager getListManager() throws UnifyException {
+		if (listManager == null) {
+			listManager = (ListManager) applicationContext.getContainer()
+					.getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+		}
+		return listManager;
+	}
 
-    public String getLineSeparator() throws UnifyException {
-        return applicationContext.getLineSeparator();
-    }
+	public Logger getLogger() throws UnifyException {
+		return logger;
+	}
 
-    public String getNodeId() throws UnifyException {
-        return applicationContext.getContainer().getNodeId();
-    }
+	public String getLineSeparator() throws UnifyException {
+		return applicationContext.getLineSeparator();
+	}
 
-    public String getInstanceCode() throws UnifyException {
-        return applicationContext.getContainer().getInstanceCode();
-    }
+	public String getNodeId() throws UnifyException {
+		return applicationContext.getContainer().getNodeId();
+	}
 
-    public String getInstanceName() throws UnifyException {
-        return applicationContext.getContainer().getInstanceName();
-    }
+	public String getInstanceCode() throws UnifyException {
+		return applicationContext.getContainer().getInstanceCode();
+	}
 
-    public String getDeploymentVersion() throws UnifyException {
-        return applicationContext.getContainer().getDeploymentVersion();
-    }
+	public String getInstanceName() throws UnifyException {
+		return applicationContext.getContainer().getInstanceName();
+	}
 
-    public Object getContainerSetting(String name) throws UnifyException {
-        return applicationContext.getContainer().getSetting(name);
-    }
+	public String getDeploymentVersion() throws UnifyException {
+		return applicationContext.getContainer().getDeploymentVersion();
+	}
 
-    public String getWorkingPath() throws UnifyException {
-        return applicationContext.getContainer().getWorkingPath();
-    }
+	public Object getContainerSetting(String name) throws UnifyException {
+		return applicationContext.getContainer().getSetting(name);
+	}
 
-    public boolean isProductionMode() throws UnifyException {
-        return applicationContext.getContainer().isProductionMode();
-    }
+	public String getWorkingPath() throws UnifyException {
+		return applicationContext.getContainer().getWorkingPath();
+	}
 
-    public boolean isDeploymentMode() throws UnifyException {
-        return applicationContext.getContainer().isDeploymentMode();
-    }
+	public boolean isProductionMode() throws UnifyException {
+		return applicationContext.getContainer().isProductionMode();
+	}
 
-    public boolean isClusterMode() throws UnifyException {
-        return applicationContext.getContainer().isClusterMode();
-    }
+	public boolean isDeploymentMode() throws UnifyException {
+		return applicationContext.getContainer().isDeploymentMode();
+	}
 
-    private RequestContextManager getRequestContextManager() throws UnifyException {
-        if (requestContextManager == null) {
-            requestContextManager = (RequestContextManager) applicationContext.getContainer()
-                    .getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
-        }
-        return requestContextManager;
-    }
+	public boolean isClusterMode() throws UnifyException {
+		return applicationContext.getContainer().isClusterMode();
+	}
+
+	private RequestContextManager getRequestContextManager() throws UnifyException {
+		if (requestContextManager == null) {
+			requestContextManager = (RequestContextManager) applicationContext.getContainer()
+					.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+		}
+		return requestContextManager;
+	}
 }

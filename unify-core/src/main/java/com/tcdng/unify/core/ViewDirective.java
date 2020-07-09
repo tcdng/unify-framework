@@ -25,34 +25,38 @@ import com.tcdng.unify.core.constant.TriState;
  */
 public class ViewDirective {
 
-    private boolean visible;
+	public static final ViewDirective ALLOW_VIEW_DIRECTIVE = new ViewDirective(true, true, false, TriState.CONFORMING);
 
-    private boolean editable;
+	public static final ViewDirective DISALLOW_VIEW_DIRECTIVE = new ViewDirective(false, false, true, TriState.TRUE);
 
-    private boolean disabled;
+	private boolean visible;
 
-    private TriState required;
+	private boolean editable;
 
-    public ViewDirective(boolean visible, boolean editable, boolean disabled, TriState required) {
-        this.visible = visible;
-        this.editable = editable;
-        this.disabled = disabled;
-        this.required = required;
-    }
+	private boolean disabled;
 
-    public boolean isVisible() {
-        return visible;
-    }
+	private TriState required;
 
-    public boolean isEditable() {
-        return editable;
-    }
+	public ViewDirective(boolean visible, boolean editable, boolean disabled, TriState required) {
+		this.visible = visible;
+		this.editable = editable;
+		this.disabled = disabled;
+		this.required = required;
+	}
 
-    public boolean isDisabled() {
-        return disabled;
-    }
+	public boolean isVisible() {
+		return visible;
+	}
 
-    public TriState getRequired() {
-        return required;
-    }
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public TriState getRequired() {
+		return required;
+	}
 }

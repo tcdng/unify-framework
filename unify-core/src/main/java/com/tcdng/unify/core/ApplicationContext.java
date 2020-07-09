@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-import com.tcdng.unify.core.constant.TriState;
 import com.tcdng.unify.core.data.Context;
 
 /**
@@ -34,11 +33,6 @@ import com.tcdng.unify.core.data.Context;
  */
 public class ApplicationContext extends Context {
 
-    private static final ViewDirective ALLOW_VIEW_DIRECTIVE =
-            new ViewDirective(true, true, false, TriState.CONFORMING);
-
-    private static final ViewDirective DISALLOW_VIEW_DIRECTIVE = new ViewDirective(false, false, true, TriState.TRUE);
-
     private UnifyContainer container;
 
     private Locale applicationLocale;
@@ -47,13 +41,16 @@ public class ApplicationContext extends Context {
 
     private String lineSeparator;
 
+    private boolean ignoreViewDirective;
+    
     private Map<String, RoleAttributes> roleAttributes;
 
-    public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone, String lineSeparator) {
+    public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone, String lineSeparator, boolean ignoreViewDirective) {
         this.container = container;
         this.applicationLocale = applicationLocale;
         this.timeZone = timeZone;
         this.lineSeparator = lineSeparator;
+        this.ignoreViewDirective = ignoreViewDirective;
         this.roleAttributes = new HashMap<String, RoleAttributes>();
     }
 
@@ -94,7 +91,7 @@ public class ApplicationContext extends Context {
             RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
             if (roleAttributes != null) {
                 if (roleAttributes.isStaticViewDirectivePrivilege(privilege)) {
-                    return ALLOW_VIEW_DIRECTIVE;
+                    return ViewDirective.ALLOW_VIEW_DIRECTIVE;
                 }
 
                 ViewDirective directive = roleAttributes.getDynamicViewDirective(privilege);
@@ -102,9 +99,9 @@ public class ApplicationContext extends Context {
                     return directive;
                 }
             }
-            return DISALLOW_VIEW_DIRECTIVE;
+            return ViewDirective.DISALLOW_VIEW_DIRECTIVE;
         }
-        return ALLOW_VIEW_DIRECTIVE;
+        return ViewDirective.ALLOW_VIEW_DIRECTIVE;
     }
 
     public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {
@@ -144,7 +141,11 @@ public class ApplicationContext extends Context {
         return lineSeparator;
     }
 
-    public UnifyContainer getContainer() {
+    public boolean isIgnoreViewDirective() {
+		return ignoreViewDirective;
+	}
+
+	public UnifyContainer getContainer() {
         return container;
     }
 }
