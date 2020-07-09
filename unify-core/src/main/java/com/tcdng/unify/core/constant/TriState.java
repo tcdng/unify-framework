@@ -16,15 +16,43 @@
 
 package com.tcdng.unify.core.constant;
 
+import com.tcdng.unify.core.annotation.StaticList;
+import com.tcdng.unify.core.util.EnumUtils;
+
 /**
  * Tri-state type constants.
  * 
  * @author Lateef Ojulari
  * @version 1.0
  */
-public enum TriState {
+@StaticList("tristatelist")
+public enum TriState implements EnumConst {
 
-    TRUE, FALSE, CONFORMING;
+    TRUE("T"), FALSE("F"), CONFORMING("C");
+
+    private final String code;
+
+    private TriState(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String code() {
+        return this.code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return CONFORMING.code;
+    }
+
+    public static TriState fromCode(String code) {
+        return EnumUtils.fromCode(TriState.class, code);
+    }
+
+    public static TriState fromName(String name) {
+        return EnumUtils.fromName(TriState.class, name);
+    }
 
     public static TriState getTriState(boolean bool) {
         if (bool) {
