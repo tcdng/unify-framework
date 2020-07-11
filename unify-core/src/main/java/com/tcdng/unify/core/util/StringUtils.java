@@ -43,7 +43,7 @@ public final class StringUtils {
      * Removes duplicates from a string list.
      * 
      * @param valueList
-     *            the string list
+     *                  the string list
      * @return a new string list with no duplicates
      */
     public static List<String> removeDuplicates(List<String> valueList) {
@@ -63,7 +63,7 @@ public final class StringUtils {
      * Split a string into tokens using the whitespace character.
      * 
      * @param string
-     *            the string to split
+     *               the string to split
      * @return the result tokens
      */
     public static String[] whiteSpaceSplit(String string) {
@@ -85,7 +85,7 @@ public final class StringUtils {
      * Split a string into tokens using the comma character.
      * 
      * @param string
-     *            the string to split
+     *               the string to split
      * @return the result tokens
      */
     public static String[] commaSplit(String string) {
@@ -96,7 +96,7 @@ public final class StringUtils {
      * Split a string into tokens using the dot character.
      * 
      * @param string
-     *            the string to split
+     *               the string to split
      * @return the result tokens
      */
     public static String[] dotSplit(String string) {
@@ -107,8 +107,9 @@ public final class StringUtils {
      * Split a string into tokens using supplied character character.
      * 
      * @param string
-     *            the string to split
-     * @param ch the character to use
+     *               the string to split
+     * @param ch
+     *               the character to use
      * @return the result tokens
      */
     public static String[] charSplit(String string, char ch) {
@@ -127,7 +128,7 @@ public final class StringUtils {
                         start = len;
                     }
                 }
-                
+
                 return list.toArray(new String[list.size()]);
             }
         }
@@ -139,9 +140,9 @@ public final class StringUtils {
      * Split a string into tokens using supplied separator.
      * 
      * @param string
-     *            the string to split
+     *                  the string to split
      * @param separator
-     *            the separator
+     *                  the separator
      * @return the result tokens
      */
     public static String[] split(String string, String separator) {
@@ -155,7 +156,7 @@ public final class StringUtils {
      * Concatenates a set of string value of objects using dot.
      * 
      * @param objects
-     *            the objects to concatenate
+     *                the objects to concatenate
      * @return the dotified string
      */
     public static String dotify(Object... objects) {
@@ -188,36 +189,53 @@ public final class StringUtils {
      * a comma is surrounded with a double quote.
      * 
      * @param strings
-     *            the supplied array
-     * @param includeBrackets
-     *            indicates if enclosing brackets are to be included.
+     *                the supplied array
      * @return the CSV string
      */
+    public static String buildCommaSeparatedString(String[] strings) {
+        return StringUtils.buildCommaSeparatedString(strings, false);
+    }
+
+    /**
+     * Builds a CSV string from an array of string. A CSV string is a string with
+     * tokens separated with the comma symbol. Any element of the string array with
+     * a comma is surrounded with a double quote.
+     * 
+     * @param strings
+     *                        the supplied array
+     * @param includeBrackets
+     *                        indicates if enclosing brackets are to be included.
+     * @return the CSV string otherwise null
+     */
     public static String buildCommaSeparatedString(String[] strings, boolean includeBrackets) {
-        StringBuilder sb = new StringBuilder();
-        if (includeBrackets) {
-            sb.append('[');
-        }
-
-        boolean appendSym = false;
-        for (String string : strings) {
-            if (appendSym) {
-                sb.append(',');
-            } else {
-                appendSym = true;
+        if (strings != null) {
+            StringBuilder sb = new StringBuilder();
+            if (includeBrackets) {
+                sb.append('[');
             }
-            if (string.indexOf(',') >= 0) {
-                sb.append('"').append(string).append('"');
-            } else {
-                sb.append(string);
+
+            boolean appendSym = false;
+            for (String string : strings) {
+                if (appendSym) {
+                    sb.append(',');
+                } else {
+                    appendSym = true;
+                }
+                if (string.indexOf(',') >= 0) {
+                    sb.append('"').append(string).append('"');
+                } else {
+                    sb.append(string);
+                }
             }
+
+            if (includeBrackets) {
+                sb.append(']');
+            }
+
+            return sb.toString();
         }
 
-        if (includeBrackets) {
-            sb.append(']');
-        }
-
-        return sb.toString();
+        return null;
     }
 
     /**
@@ -226,9 +244,9 @@ public final class StringUtils {
      * with a comma is surrounded with a double quote.
      * 
      * @param objects
-     *            the object list
+     *                        the object list
      * @param includeBrackets
-     *            indicates if enclosing brackets are to be included.
+     *                        indicates if enclosing brackets are to be included.
      * @return the CSV string
      */
     public static String buildCommaSeparatedString(Collection<Object> objects, boolean includeBrackets) {
@@ -264,9 +282,9 @@ public final class StringUtils {
      * a comma is surrounded with a double quote.
      * 
      * @param values
-     *            the supplied array
+     *                        the supplied array
      * @param includeBrackets
-     *            indicates if enclosing brackets are to be included.
+     *                        indicates if enclosing brackets are to be included.
      * @return the CSV string
      */
     public static String buildCommaSeparatedString(Object[] values, boolean includeBrackets) {
@@ -301,7 +319,7 @@ public final class StringUtils {
      * Gets a list of string values from a CSV string.
      * 
      * @param string
-     *            the CSv string
+     *               the CSv string
      * @return the string values
      */
     public static String[] getCommaSeparatedValues(String string) {
@@ -349,7 +367,7 @@ public final class StringUtils {
      * Tests if supplied string is null or is white space.
      * 
      * @param string
-     *            the string to test
+     *               the string to test
      */
     public static boolean isBlank(String string) {
         return string == null || string.trim().isEmpty();
@@ -359,7 +377,7 @@ public final class StringUtils {
      * Tests if supplied string is not null and is not white space.
      * 
      * @param string
-     *            the string to test
+     *               the string to test
      */
     public static boolean isNotBlank(String string) {
         return string != null && !string.trim().isEmpty();
@@ -369,7 +387,7 @@ public final class StringUtils {
      * Tests if supplied string contains a whitespace character.
      * 
      * @param string
-     *            the supplied string
+     *               the supplied string
      * @return true if string contains whitespace otherwise false
      */
     public static boolean containsWhitespace(String string) {
@@ -391,11 +409,11 @@ public final class StringUtils {
      * than or equal to specified length.
      * 
      * @param string
-     *            the string to pad
+     *               the string to pad
      * @param ch
-     *            the padding character
+     *               the padding character
      * @param length
-     *            the length to pad supplied string to
+     *               the length to pad supplied string to
      * @return the padded string
      */
     public static String padLeft(String string, char ch, int length) {
@@ -417,11 +435,11 @@ public final class StringUtils {
      * than or equal to specified length.
      * 
      * @param string
-     *            the string to pad
+     *               the string to pad
      * @param ch
-     *            the padding character
+     *               the padding character
      * @param length
-     *            the length to pad supplied string to
+     *               the length to pad supplied string to
      * @return the padded string
      */
     public static String padRight(String string, char ch, int length) {
@@ -446,7 +464,7 @@ public final class StringUtils {
      * </pre>
      * 
      * @param string
-     *            the static list
+     *               the static list
      * @return the listable data array
      */
     public static List<ListData> readStaticList(String string) {
@@ -465,9 +483,9 @@ public final class StringUtils {
      * Ellipsizes a text if length is greater than supplied maximum length.
      * 
      * @param text
-     *            the text to ellipsize
+     *               the text to ellipsize
      * @param maxLen
-     *            the maximum length
+     *               the maximum length
      * @return the ellipsized text
      */
     public static String ellipsize(String text, int maxLen) {
@@ -482,7 +500,7 @@ public final class StringUtils {
      * Sets the first letter of a text to uppercase.
      * 
      * @param text
-     *            the input string
+     *             the input string
      */
     public static String capitalizeFirstLetter(String text) {
         if (text != null && text.length() > 0) {
@@ -495,7 +513,7 @@ public final class StringUtils {
      * Sets the first letter of a text to lowercase.
      * 
      * @param text
-     *            the input string
+     *             the input string
      */
     public static String decapitalize(String text) {
         if (text != null && text.length() > 0) {
@@ -509,7 +527,7 @@ public final class StringUtils {
      * with the dash character '-'.
      * 
      * @param text
-     *            the string to dashen
+     *             the string to dashen
      * @return the dashened string
      */
     public static String dashen(String text) {
@@ -523,7 +541,7 @@ public final class StringUtils {
      * Squeezes a string. Converts text to lower-case and removes all white spaces.
      * 
      * @param text
-     *            the string to squeeze
+     *             the string to squeeze
      * @return the squeezed string
      */
     public static String squeeze(String text) {
@@ -538,7 +556,7 @@ public final class StringUtils {
      * with the underscore character '_'.
      * 
      * @param text
-     *            the string to flatten
+     *             the string to flatten
      * @return the flattened string
      */
     public static String flatten(String text) {
@@ -552,7 +570,7 @@ public final class StringUtils {
      * Replaces all white spaces in a text with the underscore character '_'.
      * 
      * @param text
-     *            the string to underscore
+     *             the string to underscore
      * @return the underscored string
      */
     public static String underscore(String text) {
@@ -580,7 +598,7 @@ public final class StringUtils {
      * Builds a string by concatenating supplied objects.
      * 
      * @param objects
-     *            the compsing objects
+     *                the compsing objects
      * @return the built string
      */
     public static String concatenate(Object... objects) {
@@ -603,7 +621,7 @@ public final class StringUtils {
      * Returns the string representation of a bean.
      * 
      * @param bean
-     *            the supplied bean
+     *             the supplied bean
      */
     public static String toXmlString(Object bean) {
         if (bean != null) {

@@ -29,32 +29,32 @@ import org.junit.Test;
 public class CDataXmlAdapterTest {
 
 	@Test
-	public void testMarshallNull() throws Exception {
+	public void testMarshalNull() throws Exception {
 		CDataXmlAdapter adapter = new CDataXmlAdapter();
 		assertEquals("<![CDATA[]]>", adapter.marshal(null));
 	}
 
 	@Test
-	public void testMarshall() throws Exception {
+	public void testMarshal() throws Exception {
 		CDataXmlAdapter adapter = new CDataXmlAdapter();
 		assertEquals("<![CDATA[Hello World!]]>", adapter.marshal("Hello World!"));
 		assertEquals("<![CDATA[<span>Hello World!</span>]]>", adapter.marshal("<span>Hello World!</span>"));
 	}
 
 	@Test
-	public void testUnmarshallNull() throws Exception {
+	public void testUnmarshalNull() throws Exception {
 		CDataXmlAdapter adapter = new CDataXmlAdapter();
 		assertNull(adapter.unmarshal(null));
 	}
 
 	@Test
-	public void testUnmarshallPlain() throws Exception {
+	public void testUnmarshalPlain() throws Exception {
 		CDataXmlAdapter adapter = new CDataXmlAdapter();
 		assertEquals("Hello World!", adapter.unmarshal("Hello World!"));
 	}
 
 	@Test
-	public void testUnmarshallCData() throws Exception {
+	public void testUnmarshalCData() throws Exception {
 		CDataXmlAdapter adapter = new CDataXmlAdapter();
 		assertEquals("Hello World!", adapter.unmarshal("<![CDATA[Hello World!]]>"));
 		assertEquals("<span>Hello World!</span>", adapter.unmarshal("<![CDATA[<span>Hello World!</span>]]>"));
