@@ -50,9 +50,9 @@ public class CsvXmlAdapterTest {
         assertEquals(0, items.length);
 	}
 
-	@Test
-	public void testUnmarshal() throws Exception {
-	    CsvXmlAdapter adapter = new CsvXmlAdapter();
+    @Test
+    public void testUnmarshal() throws Exception {
+        CsvXmlAdapter adapter = new CsvXmlAdapter();
         String[] items = adapter.unmarshal("Red");
         assertNotNull(items);
         assertEquals(1, items.length);
@@ -64,5 +64,21 @@ public class CsvXmlAdapterTest {
         assertEquals("Red", items[0]);
         assertEquals("Green", items[1]);
         assertEquals("Blue", items[2]);
-	}
+    }
+
+    @Test
+    public void testUnmarshalTrim() throws Exception {
+        CsvXmlAdapter adapter = new CsvXmlAdapter();
+        String[] items = adapter.unmarshal("Red ");
+        assertNotNull(items);
+        assertEquals(1, items.length);
+        assertEquals("Red", items[0]);
+
+        items = adapter.unmarshal(" Red,  Green, Blue  ");
+        assertNotNull(items);
+        assertEquals(3, items.length);
+        assertEquals("Red", items[0]);
+        assertEquals("Green", items[1]);
+        assertEquals("Blue", items[2]);
+    }
 }

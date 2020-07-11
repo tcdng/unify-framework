@@ -34,7 +34,14 @@ public class CsvXmlAdapter extends XmlAdapter<String, String[]> {
 
 	@Override
 	public String[] unmarshal(String val) throws Exception {
-	    return StringUtils.commaSplit(val);
+	    String[] items = StringUtils.commaSplit(val);
+	    if (items != null) {
+	        for(int i = 0; i < items.length; i++) {
+	            items[i] = items[i].trim();
+	        }
+	    }
+	    
+	    return items;
 	}
 
 }
