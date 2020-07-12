@@ -1464,6 +1464,26 @@ public final class DataUtils {
         return coll != null && !coll.isEmpty();
     }
 
+    /**
+     * Returns true if supplied map is null or is empty.
+     * 
+     * @param map
+     *            the map to check
+     */
+    public static boolean isBlank(Map<?, ?> map) {
+        return map == null || map.isEmpty();
+    }
+
+    /**
+     * Returns true if supplied map is not null and is not empty.
+     * 
+     * @param map
+     *            the map to check
+     */
+    public static boolean isNotBlank(Map<?, ?> map) {
+        return map != null && !map.isEmpty();
+    }
+
     public static <T> List<T> unmodifiableList(List<T> list) {
         if (isBlank(list)) {
             return Collections.emptyList();
