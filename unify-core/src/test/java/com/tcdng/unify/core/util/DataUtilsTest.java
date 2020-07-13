@@ -20,11 +20,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.junit.Before;
@@ -475,6 +477,16 @@ public class DataUtilsTest {
         assertEquals(((Picture) pictureAsset.getResource()).getHeight(), jsonPicture.getHeight());
     }
 
+    @Test
+    public void testUnmodifiableListCollection() throws Exception {
+        List<String> list = DataUtils.unmodifiableList(new HashSet<String>(Arrays.asList("Red", "Green", "Blue")));
+        assertNotNull(list);
+        assertEquals(3, list.size());
+        assertTrue(list.contains("Red"));
+        assertTrue(list.contains("Green"));
+        assertTrue(list.contains("Blue"));
+    }
+    
     public static abstract class Asset {
 
         private String title;

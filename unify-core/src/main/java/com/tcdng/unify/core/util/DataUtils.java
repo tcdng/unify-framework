@@ -306,8 +306,7 @@ public final class DataUtils {
     private static final Map<Class<? extends Collection>, Class<? extends Collection>> collectionInterfaceToClassMap;
 
     static {
-        Map<Class<? extends Collection>, Class<? extends Collection>> map =
-                new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
+        Map<Class<? extends Collection>, Class<? extends Collection>> map = new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
         map.put(Collection.class, ArrayList.class);
         map.put(List.class, ArrayList.class);
         map.put(Set.class, HashSet.class);
@@ -364,9 +363,9 @@ public final class DataUtils {
      * Checks if two objects are equal.
      * 
      * @param a
-     *            the first object
+     *          the first object
      * @param b
-     *            the second object
+     *          the second object
      * @return a true value of both parameters are equal
      */
     public static boolean equals(Object a, Object b) {
@@ -385,9 +384,9 @@ public final class DataUtils {
      * Returns a concrete type for a collection type.
      * 
      * @param clazz
-     *            the collection type
+     *              the collection type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Class<? extends Collection> getCollectionConcreteType(Class<? extends Collection> clazz)
             throws UnifyException {
@@ -405,10 +404,10 @@ public final class DataUtils {
      * Returns the column type of a field.
      * 
      * @param field
-     *            the supplied field
+     *              the supplied field
      * @return The column type
      * @throws UnifyException
-     *             if field is not annotated with {@link Column}
+     *                        if field is not annotated with {@link Column}
      */
     public static ColumnType getColumnType(Field field) throws UnifyException {
         Column ca = field.getAnnotation(Column.class);
@@ -426,10 +425,10 @@ public final class DataUtils {
      * Returns the data type equivalence of supplied data type.
      * 
      * @param clazz
-     *            the data type
+     *              the data type
      * @return the equivalent data type
      * @throws UnifyException
-     *             if data type is unsupported
+     *                        if data type is unsupported
      */
     public static DataType getDataType(Class<?> clazz) throws UnifyException {
         DataType dataType = classToDataTypeMap.get(clazz);
@@ -446,10 +445,10 @@ public final class DataUtils {
      * Returns the data type equivalence of supplied class name.
      * 
      * @param className
-     *            the class name
+     *                  the class name
      * @return the equivalent data type
      * @throws UnifyException
-     *             if data type is unsupported
+     *                        if data type is unsupported
      */
     public static DataType getDataType(String className) throws UnifyException {
         try {
@@ -463,10 +462,10 @@ public final class DataUtils {
      * Finds the data type equivalence of supplied class.
      * 
      * @param clazz
-     *            the data type
+     *              the data type
      * @return the equivalent data type if found otherwise null
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static DataType findDataType(Class<?> clazz) throws UnifyException {
         DataType dataType = classToDataTypeMap.get(clazz);
@@ -483,10 +482,10 @@ public final class DataUtils {
      * Finds the data type equivalence of supplied class name.
      * 
      * @param className
-     *            the class name
+     *                  the class name
      * @return the equivalent data type if found otherwise null
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static DataType findDataType(String className) throws UnifyException {
         try {
@@ -500,10 +499,10 @@ public final class DataUtils {
      * Returns the column type equivalence of supplied data type.
      * 
      * @param clazz
-     *            the data type
+     *              the data type
      * @return the equivalent column type
      * @throws UnifyException
-     *             if data type is unsupported
+     *                        if data type is unsupported
      */
     public static ColumnType getColumnType(Class<?> clazz) throws UnifyException {
         ColumnType columnType = classToColumnMap.get(clazz);
@@ -521,7 +520,7 @@ public final class DataUtils {
      * Checks if supplied column type is mapped to a Java class.
      * 
      * @param type
-     *            the column type to check
+     *             the column type to check
      * @return true if mapped otherwise false
      */
     public static boolean isMappedColumnType(ColumnType type) {
@@ -540,10 +539,10 @@ public final class DataUtils {
      * Returns the column type equivalence of supplied data type.
      * 
      * @param className
-     *            the data type
+     *                  the data type
      * @return the equivalent column type
      * @throws UnifyException
-     *             if data type is unsupported
+     *                        if data type is unsupported
      */
     public static ColumnType getColumnType(String className) throws UnifyException {
         Class<?> clazz = ReflectUtils.getClassForName(className);
@@ -554,7 +553,7 @@ public final class DataUtils {
      * Returns the wrapper class for a data type.
      * 
      * @param clazz
-     *            the data type
+     *              the data type
      * @return the wrapper class if found, otherwise the supplied data type is
      *         returned
      */
@@ -569,7 +568,7 @@ public final class DataUtils {
      * Returns the name of the wrapper class for a data type.
      * 
      * @param clazz
-     *            the data type
+     *              the data type
      * @return the name of the wrapper class
      */
     public static String getWrapperClassName(Class<?> clazz) {
@@ -591,7 +590,7 @@ public final class DataUtils {
      * Tests if a supplied data type is a number type.
      * 
      * @param clazz
-     *            the data type
+     *              the data type
      */
     public static boolean isNumberType(Class<?> clazz) {
         return Number.class.isAssignableFrom(DataUtils.getWrapperClass(clazz));
@@ -601,7 +600,7 @@ public final class DataUtils {
      * Tests if data type of supplied class name is a number type.
      * 
      * @param className
-     *            the data type class name
+     *                  the data type class name
      */
     public static boolean isNumberType(String className) {
         try {
@@ -616,7 +615,7 @@ public final class DataUtils {
      * Gets the null value of a data type.
      * 
      * @param clazz
-     *            the data type
+     *              the data type
      * @return the null value
      */
     public static Object getNullValue(Class<?> clazz) {
@@ -711,14 +710,14 @@ public final class DataUtils {
      * Converts supplied value to target type.
      * 
      * @param targetClazz
-     *            the target type
+     *                    the target type
      * @param value
-     *            the value to convert
+     *                    the value to convert
      * @param formatter
-     *            the conversion formatter. Can be null
+     *                    the conversion formatter. Can be null
      * @return the converted value
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T> T convert(Class<T> targetClazz, Object value, Formatter<?> formatter) throws UnifyException {
@@ -822,16 +821,16 @@ public final class DataUtils {
      * Converts supplied value to target collection type.
      * 
      * @param collectionClazz
-     *            the collection type
+     *                        the collection type
      * @param dataClass
-     *            the collection data type
+     *                        the collection data type
      * @param value
-     *            the value to convert
+     *                        the value to convert
      * @param formatter
-     *            the conversion formatter. Can be null
+     *                        the conversion formatter. Can be null
      * @return the converted value
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object value,
@@ -894,8 +893,8 @@ public final class DataUtils {
                 }
             } else {
                 if (EnumConst.class.isAssignableFrom(dataClass)) {
-                    Object resultItem =
-                            EnumUtils.fromCode((Class<? extends EnumConst>) dataClass, String.valueOf(value));
+                    Object resultItem = EnumUtils.fromCode((Class<? extends EnumConst>) dataClass,
+                            String.valueOf(value));
                     if (resultItem == null) {
                         resultItem = EnumUtils.fromName((Class<? extends EnumConst>) dataClass, String.valueOf(value));
                     }
@@ -918,12 +917,12 @@ public final class DataUtils {
      * Converts value to array of specified type.
      * 
      * @param clazz
-     *            the array type
+     *              the array type
      * @param value
-     *            the value to convert
+     *              the value to convert
      * @return the conversion result
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T> T[] getValueArray(Class<T> clazz, Object value) throws UnifyException {
@@ -972,9 +971,9 @@ public final class DataUtils {
      * </pre>
      * 
      * @param length
-     *            the length to split
+     *                  the length to split
      * @param blockSize
-     *            the block size
+     *                  the block size
      * @return array containing split information.
      */
     public static int[] splitToBlocks(int length, int blockSize) {
@@ -1002,13 +1001,13 @@ public final class DataUtils {
      * Sorts a list by bean property ascending.
      * 
      * @param list
-     *            the list to sort
+     *                  the list to sort
      * @param beanClass
-     *            the bean type
+     *                  the bean type
      * @param property
-     *            the bean property to sort with
+     *                  the bean property to sort with
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> void sortAscending(List<?> list, Class<T> beanClass, String property) throws UnifyException {
         DataUtils.sort(list, beanClass, property, true);
@@ -1018,13 +1017,13 @@ public final class DataUtils {
      * Sorts a list by bean property descending.
      * 
      * @param list
-     *            the list to sort
+     *                  the list to sort
      * @param beanClass
-     *            the bean type
+     *                  the bean type
      * @param property
-     *            the bean property to sort with
+     *                  the bean property to sort with
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> void sortDescending(List<?> list, Class<T> beanClass, String property) throws UnifyException {
         DataUtils.sort(list, beanClass, property, false);
@@ -1034,9 +1033,9 @@ public final class DataUtils {
      * Compares two comparable value for sorting ascending.
      * 
      * @param value1
-     *            the first value
+     *               the first value
      * @param value2
-     *            the second value
+     *               the second value
      * @return an integer representing the comparison result
      */
     public static int compareForSortAscending(Comparable<Object> value1, Comparable<Object> value2) {
@@ -1047,9 +1046,9 @@ public final class DataUtils {
      * Compares two comparable value for sorting descending.
      * 
      * @param value1
-     *            the first value
+     *               the first value
      * @param value2
-     *            the second value
+     *               the second value
      * @return an integer representing the comparison result
      */
     public static int compareForSortDescending(Comparable<Object> value1, Comparable<Object> value2) {
@@ -1060,13 +1059,13 @@ public final class DataUtils {
      * Sets nested bean property by long name.
      * 
      * @param bean
-     *            the bean object
+     *                     the bean object
      * @param propertyName
-     *            the nested property long name
+     *                     the nested property long name
      * @param value
-     *            the value to set
+     *                     the value to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void setNestedBeanProperty(Object bean, String propertyName, Object value) throws UnifyException {
         DataUtils.setNestedBeanProperty(bean, propertyName, value, null);
@@ -1110,15 +1109,15 @@ public final class DataUtils {
      * </pre>
      * 
      * @param bean
-     *            the bean object
+     *                         the bean object
      * @param longPropertyName
-     *            the nested property long name
+     *                         the nested property long name
      * @param formatter
-     *            applied before setting value. Can be null
+     *                         applied before setting value. Can be null
      * @param value
-     *            the value to set
+     *                         the value to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void setNestedBeanProperty(Object bean, String longPropertyName, Object value, Formatter<?> formatter)
             throws UnifyException {
@@ -1149,11 +1148,11 @@ public final class DataUtils {
      * Populates a bean with supplied values.
      * 
      * @param bean
-     *            the bean to populate
+     *                 the bean to populate
      * @param valueMap
-     *            the values for population by property names
+     *                 the values for population by property names
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static void populateBean(Object bean, Map<String, Object> valueMap) throws UnifyException {
@@ -1185,13 +1184,13 @@ public final class DataUtils {
      * Sets the value of the property of a bean.
      * 
      * @param bean
-     *            the bean object
+     *                     the bean object
      * @param propertyName
-     *            the property to set
+     *                     the property to set
      * @param value
-     *            the value to set
+     *                     the value to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void setBeanProperty(Object bean, String propertyName, Object value) throws UnifyException {
         setBeanProperty(bean, propertyName, value, null);
@@ -1201,15 +1200,15 @@ public final class DataUtils {
      * Sets the value of the property of a bean using supplied formatter.
      * 
      * @param bean
-     *            the bean object
+     *                     the bean object
      * @param propertyName
-     *            the property to set
+     *                     the property to set
      * @param value
-     *            the value to set
-     * @param formatter,
-     *            if any, applied before setting value
+     *                     the value to set
+     * @param              formatter,
+     *                     if any, applied before setting value
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static void setBeanProperty(Object bean, String propertyName, Object value, Formatter<?> formatter)
@@ -1241,9 +1240,9 @@ public final class DataUtils {
      * Clears all the properties if a bean.
      * 
      * @param bean
-     *            the bean object
+     *             the bean object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void clearAllBeanProperties(Object bean) throws UnifyException {
         if (bean != null) {
@@ -1266,12 +1265,12 @@ public final class DataUtils {
      * Reads a JSON object. Has no support for collections.
      * 
      * @param type
-     *            the object type
+     *             the object type
      * @param json
-     *            the JSON string
+     *             the JSON string
      * @return instance of object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> T readJsonObject(Class<T> type, String json) throws UnifyException {
         return DataUtils.readJsonObject(type, new StringReader(json));
@@ -1281,14 +1280,14 @@ public final class DataUtils {
      * Reads a JSON object. Has no support for collections.
      * 
      * @param type
-     *            the object type
+     *                    the object type
      * @param inputStream
-     *            the JSON input stream
+     *                    the JSON input stream
      * @param charset
-     *            optional character set
+     *                    optional character set
      * @return instance of object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> T readJsonObject(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
         if (charset == null) {
@@ -1302,12 +1301,12 @@ public final class DataUtils {
      * Reads a JSON object. Has no support for collections.
      * 
      * @param type
-     *            the object type
+     *               the object type
      * @param reader
-     *            the JSON reader
+     *               the JSON reader
      * @return instance of object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> T readJsonObject(Class<T> type, Reader reader) throws UnifyException {
         try {
@@ -1323,11 +1322,11 @@ public final class DataUtils {
      * Reads a JSON object. Has no support for collections.
      * 
      * @param object
-     *            bean to read to
+     *               bean to read to
      * @param json
-     *            the JSON string
+     *               the JSON string
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void readJsonObject(Object object, String json) throws UnifyException {
         DataUtils.readJsonObject(object, new StringReader(json));
@@ -1337,13 +1336,13 @@ public final class DataUtils {
      * Reads a JSON object. Has no support for collections.
      * 
      * @param object
-     *            bean to read to
+     *                    bean to read to
      * @param inputStream
-     *            the JSON input stream
+     *                    the JSON input stream
      * @param charset
-     *            optional character set
+     *                    optional character set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void readJsonObject(Object object, InputStream inputStream, Charset charset) throws UnifyException {
         if (charset == null) {
@@ -1358,11 +1357,11 @@ public final class DataUtils {
      * Reads a JSON object. Has no support for collections.
      * 
      * @param object
-     *            bean to read to
+     *               bean to read to
      * @param reader
-     *            the JSON reader
+     *               the JSON reader
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void readJsonObject(Object object, Reader reader) throws UnifyException {
         try {
@@ -1378,15 +1377,15 @@ public final class DataUtils {
      * Writes a JSON object to an output stream. Has no support for collections.
      * 
      * @param object
-     *            the object to write
+     *                     the object to write
      * @param outputStream
-     *            the output stream to write to
+     *                     the output stream to write to
      * @param charset
-     *            optional character set
+     *                     optional character set
      * @param printFormat
-     *            formatting type
+     *                     formatting type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void writeJsonObject(Object object, OutputStream outputStream, Charset charset,
             PrintFormat printFormat) throws UnifyException {
@@ -1403,26 +1402,26 @@ public final class DataUtils {
      * Writes a JSON object to a writer. Has no support for collections.
      * 
      * @param object
-     *            the object to write
+     *                    the object to write
      * @param writer
-     *            the writer to write to
+     *                    the writer to write to
      * @param printFormat
-     *            formatting type
+     *                    formatting type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void writeJsonObject(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
         try {
             JsonObject jsonObject = Json.object();
             DataUtils.writeJsonObject(object, jsonObject, printFormat);
             switch (printFormat) {
-                case PRETTY:
-                    jsonObject.writeTo(writer, PrettyPrint.PRETTY_PRINT);
-                    break;
-                case NONE:
-                default:
-                    jsonObject.writeTo(writer);
-                    break;
+            case PRETTY:
+                jsonObject.writeTo(writer, PrettyPrint.PRETTY_PRINT);
+                break;
+            case NONE:
+            default:
+                jsonObject.writeTo(writer);
+                break;
             }
             writer.flush();
         } catch (UnifyException e) {
@@ -1448,7 +1447,7 @@ public final class DataUtils {
      * Returns true if supplied collection is null or is empty.
      * 
      * @param coll
-     *            the collection to check
+     *             the collection to check
      */
     public static boolean isBlank(Collection<?> coll) {
         return coll == null || coll.isEmpty();
@@ -1458,7 +1457,7 @@ public final class DataUtils {
      * Returns true if supplied collection is not null and is not empty.
      * 
      * @param coll
-     *            the collection to check
+     *             the collection to check
      */
     public static boolean isNotBlank(Collection<?> coll) {
         return coll != null && !coll.isEmpty();
@@ -1492,6 +1491,14 @@ public final class DataUtils {
         return Collections.unmodifiableList(list);
     }
 
+    public static <T> List<T> unmodifiableList(Collection<T> collection) {
+        if (isBlank(collection)) {
+            return Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList(new ArrayList<T>(collection));
+    }
+
     public static <T> List<T> unmodifiableList(T[] list) {
         if (list == null || list.length == 0) {
             return Collections.emptyList();
@@ -1520,13 +1527,13 @@ public final class DataUtils {
      * Creates a new instance of a data object populated with supplied parameters.
      * 
      * @param type
-     *            the data object type
+     *               the data object type
      * @param params
-     *            the parameters to construct the data object
+     *               the parameters to construct the data object
      * @return the new instance of data object except for {@link ZeroParams} type
      *         where the same instance is always returned
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T> T constructDataObject(Class<T> type, Object... params) throws UnifyException {
@@ -1611,8 +1618,8 @@ public final class DataUtils {
                         Object[] valueArray = (Object[]) Array.newInstance(componentType, array.size());
                         if (converter == null) {
                             for (int i = 0; i < valueArray.length; i++) {
-                                valueArray[i] =
-                                        DataUtils.readJsonObject(componentType.newInstance(), array.get(i).asObject());
+                                valueArray[i] = DataUtils.readJsonObject(componentType.newInstance(),
+                                        array.get(i).asObject());
                             }
                         } else {
                             for (int i = 0; i < valueArray.length; i++) {
