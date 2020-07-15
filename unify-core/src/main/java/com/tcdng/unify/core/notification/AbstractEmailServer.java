@@ -53,44 +53,46 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
     private FactoryMap<String, InternalConfig> configurations;
 
     public AbstractEmailServer() {
-        configurations = new FactoryMap<String, InternalConfig>() {
+        configurations = new FactoryMap<String, InternalConfig>()
+            {
 
-            @Override
-            protected InternalConfig create(String configName, Object... params) throws Exception {
-                EmailServerConfig emailServerConfig = (EmailServerConfig) params[0];
-                Properties properties = new Properties(System.getProperties());
-                Authenticator authenticator = null;
-                properties.put("mail.smtp.host", emailServerConfig.getHostAddress());
-                if (emailServerConfig.getHostPort() != null) {
-                    properties.put("mail.smtp.port", emailServerConfig.getHostPort());
-                }
-
-                if (StringUtils.isNotBlank(emailServerConfig.getUsername())) {
-                    authenticator =
-                            new SessionAuthenticator(emailServerConfig.getUsername(), emailServerConfig.getPassword());
-                }
-
-                if (authenticator != null || StringUtils.isNotBlank(emailServerConfig.getAuthentication())) {
-                    if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
-                        if (emailServerConfig.getHostPort() != null) {
-                            properties.put("mail.smtp.socketFactory.port", emailServerConfig.getHostPort());
-                        }
-
-                        properties.put("mail.smtp.ssl.enable", "true");
-
-                        //properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-                    } else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
-                        properties.put("mail.smtp.starttls.enable", "true");
-                        properties.put("mail.smtp.ssl.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+                @Override
+                protected InternalConfig create(String configName, Object... params) throws Exception {
+                    EmailServerConfig emailServerConfig = (EmailServerConfig) params[0];
+                    Properties properties = new Properties(System.getProperties());
+                    Authenticator authenticator = null;
+                    properties.put("mail.smtp.host", emailServerConfig.getHostAddress());
+                    if (emailServerConfig.getHostPort() != null) {
+                        properties.put("mail.smtp.port", emailServerConfig.getHostPort());
                     }
 
-                    properties.put("mail.smtp.auth", "true");
+                    if (StringUtils.isNotBlank(emailServerConfig.getUsername())) {
+                        authenticator = new SessionAuthenticator(emailServerConfig.getUsername(),
+                                emailServerConfig.getPassword());
+                    }
+
+                    if (authenticator != null || StringUtils.isNotBlank(emailServerConfig.getAuthentication())) {
+                        if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
+                            if (emailServerConfig.getHostPort() != null) {
+                                properties.put("mail.smtp.socketFactory.port", emailServerConfig.getHostPort());
+                            }
+
+                            properties.put("mail.smtp.ssl.enable", "true");
+
+                            // properties.put("mail.smtp.socketFactory.class",
+                            // "javax.net.ssl.SSLSocketFactory");
+                        } else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
+                            properties.put("mail.smtp.starttls.enable", "true");
+                            properties.put("mail.smtp.ssl.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+                        }
+
+                        properties.put("mail.smtp.auth", "true");
+                    }
+
+                    return new InternalConfig(emailServerConfig, properties, authenticator);
                 }
 
-                return new InternalConfig(emailServerConfig, properties, authenticator);
-            }
-
-        };
+            };
     }
 
     @Override
@@ -118,25 +120,6 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
         if (!configurations.isKey(configName)) {
             throw new UnifyException(UnifyCoreErrorConstants.EMAILSERVER_CONFIGURATION_UNKNOWN, configName);
         }
-    }
-
-    protected Session getSession(String configName) throws UnifyException {
-        checkConfiguration(configName);
-
-        InternalConfig internalConfig = configurations.get(configName);
-        Authenticator authenthicator = internalConfig.getAuthenticator();
-        if (authenthicator == null && StringUtils.isNotBlank(internalConfig.getOrigConfig().getAuthentication())) {
-            Authentication passwordAuthentication =
-                    (Authentication) getComponent(internalConfig.getOrigConfig().getAuthentication());
-            authenthicator = new SessionAuthenticator(passwordAuthentication.getUsername(),
-                    passwordAuthentication.getPassword());
-        }
-
-        if (authenthicator != null) {
-            return Session.getInstance(internalConfig.getProperties(), authenthicator);
-        }
-
-        return Session.getInstance(internalConfig.getProperties());
     }
 
     protected MimeMessage createMimeMessage(String configName, Email email) throws UnifyException {
@@ -242,8 +225,9 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
 
                 // Add parts to message
                 mimeMessage.setContent(multipart);
-                mimeMessage.saveChanges();
             }
+
+            mimeMessage.saveChanges();
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -251,6 +235,25 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
         }
 
         return mimeMessage;
+    }
+
+    protected Session getSession(String configName) throws UnifyException {
+        checkConfiguration(configName);
+
+        InternalConfig internalConfig = configurations.get(configName);
+        Authenticator authenthicator = internalConfig.getAuthenticator();
+        if (authenthicator == null && StringUtils.isNotBlank(internalConfig.getOrigConfig().getAuthentication())) {
+            Authentication passwordAuthentication = (Authentication) getComponent(
+                    internalConfig.getOrigConfig().getAuthentication());
+            authenthicator = new SessionAuthenticator(passwordAuthentication.getUsername(),
+                    passwordAuthentication.getPassword());
+        }
+
+        if (authenthicator != null) {
+            return Session.getInstance(internalConfig.getProperties(), authenthicator);
+        }
+
+        return Session.getInstance(internalConfig.getProperties());
     }
 
     private class SessionAuthenticator extends Authenticator {
@@ -295,5 +298,6 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
         public Authenticator getAuthenticator() {
             return authenticator;
         }
+
     }
 }
