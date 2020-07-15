@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.ListData;
+import com.tcdng.unify.core.data.PackableDoc;
 
 /**
  * Provides utility methods for string manipulation.
@@ -698,6 +700,27 @@ public final class StringUtils {
         for (StringToken stringToken : tokenList) {
             if (stringToken.isParam()) {
                 Object val = parameters.get(stringToken.getToken());
+                if (val != null) {
+                    sb.append(val);
+                }
+            } else {
+                sb.append(stringToken.getToken());
+            }
+        }
+
+        return sb.toString();
+    }
+
+    public static String buildParameterizedString(List<StringToken> tokenList, PackableDoc packableDoc)
+            throws UnifyException {
+        if (DataUtils.isBlank(tokenList)) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (StringToken stringToken : tokenList) {
+            if (stringToken.isParam()) {
+                Object val = packableDoc.read(stringToken.getToken());
                 if (val != null) {
                     sb.append(val);
                 }

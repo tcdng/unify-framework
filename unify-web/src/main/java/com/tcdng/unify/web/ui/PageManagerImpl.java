@@ -204,7 +204,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                                         pageActionList.add(pageAction);
                                     }
                                     eventHandler.setPageAction(
-                                            pageActionList.toArray(new PageAction[pageActionList.size()]));
+                                            DataUtils.toArray(PageAction.class, pageActionList));
                                 }
                             }
                         }

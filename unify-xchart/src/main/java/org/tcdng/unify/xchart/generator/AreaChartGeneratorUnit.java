@@ -31,6 +31,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.chart.AreaChart;
 import com.tcdng.unify.core.chart.XYSeries;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * XChart area chart generator.
@@ -80,10 +81,10 @@ public class AreaChartGeneratorUnit extends AbstractXChartGeneratorUnit<AreaChar
         }
 
         if (useCustomColors) {
-            xyChart.getStyler().setSeriesColors(customColors.toArray(new Color[customColors.size()]));
+            xyChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, customColors));
         } else if (!lineChart.getColorPalette().isDefault()) {
             List<Color> palette = lineChart.getColorPalette().pallete();
-            xyChart.getStyler().setSeriesColors(palette.toArray(new Color[palette.size()]));
+            xyChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, palette));
         }
 
         return xyChart;

@@ -1443,24 +1443,53 @@ public final class DataUtils {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T[] toArray(Class<T> clazz, List<T> list) {
+        if (list != null) {
+            return list.toArray((T[]) Array.newInstance(clazz, list.size()));
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns true if supplied array is null or is empty.
+     * 
+     * @param arr
+     *            the array to check
+     */
+    public static <T> boolean isBlank(T[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    /**
+     * Returns true if supplied array is not null and is not empty.
+     * 
+     * @param arr
+     *            the array to check
+     */
+    public static <T> boolean isNotBlank(T[] arr) {
+        return arr != null && arr.length != 0;
+    }
+
     /**
      * Returns true if supplied collection is null or is empty.
      * 
-     * @param coll
-     *             the collection to check
+     * @param col
+     *            the collection to check
      */
-    public static boolean isBlank(Collection<?> coll) {
-        return coll == null || coll.isEmpty();
+    public static boolean isBlank(Collection<?> col) {
+        return col == null || col.isEmpty();
     }
 
     /**
      * Returns true if supplied collection is not null and is not empty.
      * 
-     * @param coll
-     *             the collection to check
+     * @param col
+     *            the collection to check
      */
-    public static boolean isNotBlank(Collection<?> coll) {
-        return coll != null && !coll.isEmpty();
+    public static boolean isNotBlank(Collection<?> col) {
+        return col != null && !col.isEmpty();
     }
 
     /**

@@ -128,7 +128,7 @@ public abstract class AbstractStandalonePanel extends AbstractPanel implements S
                         }
 
                         if (pageActionList != null) {
-                            eh.setPageAction(pageActionList.toArray(new PageAction[pageActionList.size()]));
+                            eh.setPageAction(DataUtils.toArray(PageAction.class, pageActionList));
                         }
                     }
                 }

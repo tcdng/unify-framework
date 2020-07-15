@@ -31,6 +31,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.chart.BarChart;
 import com.tcdng.unify.core.chart.CategorySeries;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * XChart bar chart generator.
@@ -77,10 +78,10 @@ public class BarChartGeneratorUnit extends AbstractXChartGeneratorUnit<BarChart>
         }
 
         if (useCustomColors) {
-            categoryChart.getStyler().setSeriesColors(customColors.toArray(new Color[customColors.size()]));
+            categoryChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, customColors));
         } else if (!barChart.getColorPalette().isDefault()) {
             List<Color> palette = barChart.getColorPalette().pallete();
-            categoryChart.getStyler().setSeriesColors(palette.toArray(new Color[palette.size()]));
+            categoryChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, palette));
         }
 
         return categoryChart;

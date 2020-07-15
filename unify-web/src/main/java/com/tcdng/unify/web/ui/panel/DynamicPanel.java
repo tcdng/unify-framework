@@ -25,6 +25,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplUtils;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.AbstractPanel;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Widget;
@@ -91,7 +92,7 @@ public class DynamicPanel extends AbstractPanel {
     @Override
     public void addPageAliases() throws UnifyException {
         List<String> aliases = getPageManager().getExpandedReferences(getStandalonePanel().getId());
-        getRequestContextUtil().addPageAlias(getId(), aliases.toArray(new String[aliases.size()]));
+        getRequestContextUtil().addPageAlias(getId(), DataUtils.toArray(String.class, aliases));
     }
 
     private void setValueStore(StandalonePanel standalonePanel) throws UnifyException {

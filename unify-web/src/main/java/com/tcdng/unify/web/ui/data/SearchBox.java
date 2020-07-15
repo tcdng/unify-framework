@@ -18,6 +18,8 @@ package com.tcdng.unify.web.ui.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.util.DataUtils;
+
 /**
  * Search box data object.
  * 
@@ -55,7 +57,7 @@ public class SearchBox {
     }
 
     public Mapping[] getMappings() {
-        return this.mappings.toArray(new Mapping[this.mappings.size()]);
+        return DataUtils.toArray(Mapping.class, mappings);
     }
 
     public static class Mapping {

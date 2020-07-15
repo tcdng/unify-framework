@@ -30,6 +30,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.chart.LineChart;
 import com.tcdng.unify.core.chart.XYSeries;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * XChart line chart generator.
@@ -78,10 +79,10 @@ public class LineChartGeneratorUnit extends AbstractXChartGeneratorUnit<LineChar
         }
 
         if (useCustomColors) {
-            xyChart.getStyler().setSeriesColors(customColors.toArray(new Color[customColors.size()]));
+            xyChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, customColors));
         } else if (!lineChart.getColorPalette().isDefault()) {
             List<Color> palette = lineChart.getColorPalette().pallete();
-            xyChart.getStyler().setSeriesColors(palette.toArray(new Color[palette.size()]));
+            xyChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, palette));
         }
 
         return xyChart;

@@ -451,7 +451,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
                 indexList.add(i);
             }
         }
-        return indexList.toArray(new Integer[indexList.size()]);
+        return DataUtils.toArray(Integer.class, indexList);
     }
 
     @SuppressWarnings("unchecked")

@@ -298,13 +298,13 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 						requestParameterMap.put(entry.getKey(), null);
 					}
 				} else {
-					requestParameterMap.put(entry.getKey(), list.toArray(new String[list.size()]));
+					requestParameterMap.put(entry.getKey(), DataUtils.toArray(String.class, list));
 				}
 			}
 
 			for (Map.Entry<String, List<UploadedFile>> entry : uploadedFileMap.entrySet()) {
 				List<UploadedFile> list = entry.getValue();
-				requestParameterMap.put(entry.getKey(), list.toArray(new UploadedFile[list.size()]));
+				requestParameterMap.put(entry.getKey(), DataUtils.toArray(UploadedFile.class, list));
 			}
 		} catch (UnifyException e) {
 			throw e;

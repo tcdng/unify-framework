@@ -898,7 +898,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
 
                     // Set result object
                     resultByNameMap.put(ra.name(),
-                            new Result(responses.toArray(new PageControllerResponse[responses.size()])));
+                            new Result(DataUtils.toArray(PageControllerResponse.class, responses)));
                 }
             }
         }

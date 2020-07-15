@@ -229,7 +229,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
                 StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
                 if (standalonePanel != null) {
                     List<String> aliases = getPageManager().getExpandedReferences(standalonePanel.getId());
-                    getRequestContextUtil().addPageAlias(getId(), aliases.toArray(new String[aliases.size()]));
+                    getRequestContextUtil().addPageAlias(getId(), DataUtils.toArray(String.class, aliases));
                 }
             }
         }

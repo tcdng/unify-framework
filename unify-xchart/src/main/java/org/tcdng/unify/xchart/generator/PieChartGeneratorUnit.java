@@ -95,10 +95,10 @@ public class PieChartGeneratorUnit extends AbstractXChartGeneratorUnit<PieChart>
         }
 
         if (useCustomColors) {
-            pieChart.getStyler().setSeriesColors(customColors.toArray(new Color[customColors.size()]));
+            pieChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, customColors));
         } else if(!chart.getColorPalette().isDefault()) {
             List<Color> palette = chart.getColorPalette().pallete();
-            pieChart.getStyler().setSeriesColors(palette.toArray(new Color[palette.size()]));
+            pieChart.getStyler().setSeriesColors(DataUtils.toArray(Color.class, palette));
         }
 
         return pieChart;

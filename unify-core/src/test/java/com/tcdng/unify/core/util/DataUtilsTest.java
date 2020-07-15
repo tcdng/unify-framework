@@ -487,6 +487,21 @@ public class DataUtilsTest {
         assertTrue(list.contains("Blue"));
     }
     
+    @Test
+    public void testToArrayNull() throws Exception {
+        assertNull(DataUtils.toArray(String.class, null));
+    }
+    
+    @Test
+    public void testToArray() throws Exception {
+        String[] arr = DataUtils.toArray(String.class, Arrays.asList("Red", "Green", "Blue"));
+        assertNotNull(arr);
+        assertEquals(3, arr.length);
+        assertEquals("Red", arr[0]);
+        assertEquals("Green", arr[1]);
+        assertEquals("Blue", arr[2]);
+    }
+    
     public static abstract class Asset {
 
         private String title;

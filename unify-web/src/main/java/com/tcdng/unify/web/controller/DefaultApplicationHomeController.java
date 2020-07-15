@@ -18,6 +18,7 @@ package com.tcdng.unify.web.controller;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.AbstractPageController;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 
@@ -38,7 +39,7 @@ public class DefaultApplicationHomeController extends AbstractPageController<Def
     @Override
     protected void onIndexPage() throws UnifyException {
         super.onIndexPage();
-        getPageBean().setBanner(getApplicationBanner().toArray(new String[0]));
+        getPageBean().setBanner(DataUtils.toArray(String.class, getApplicationBanner()));
     }
 
 }
