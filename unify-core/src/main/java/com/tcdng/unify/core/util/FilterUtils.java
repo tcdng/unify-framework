@@ -142,12 +142,12 @@ public final class FilterUtils {
                     FilterConditionType.NOT_LIKE_FIELD)));
 
     private static final Set<FilterConditionType> enumConstConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
-           Arrays.asList(FilterConditionType.EQUALS,
-                   FilterConditionType.AMONGST,
-                   FilterConditionType.IS_NULL,
-                   FilterConditionType.IS_NOT_NULL,
+           Arrays.asList(
+                   FilterConditionType.EQUALS,
                    FilterConditionType.NOT_EQUALS,
-                   FilterConditionType.NOT_AMONGST)));
+                   FilterConditionType.IS_NULL,
+                   FilterConditionType.IS_NOT_NULL
+                   )));
     
     private static final Set<FilterConditionType> collectionConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
             Arrays.asList(FilterConditionType.EQUALS_COLLECTION,
