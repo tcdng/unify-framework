@@ -91,11 +91,12 @@ public final class FilterUtils {
 
     private static final Set<FilterConditionType> booleanConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
            Arrays.asList(FilterConditionType.EQUALS,
-                    FilterConditionType.IS_NULL,
-                    FilterConditionType.IS_NOT_NULL,
-                    FilterConditionType.NOT_EQUALS,
                     FilterConditionType.EQUALS_FIELD,
-                    FilterConditionType.NOT_EQUALS_FIELD)));
+                    FilterConditionType.NOT_EQUALS,
+                    FilterConditionType.NOT_EQUALS_FIELD,
+                    FilterConditionType.IS_NULL,
+                    FilterConditionType.IS_NOT_NULL
+                    )));
     
     private static final Set<FilterConditionType> numberConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
             Arrays.asList(FilterConditionType.EQUALS,
@@ -105,19 +106,20 @@ public final class FilterUtils {
                     FilterConditionType.LESS_OR_EQUAL,
                     FilterConditionType.BETWEEN,
                     FilterConditionType.AMONGST,
-                    FilterConditionType.IS_NULL,
-                    FilterConditionType.IS_NOT_NULL,
-                    FilterConditionType.NOT_EQUALS,
-                    FilterConditionType.NOT_BETWEEN,
-                    FilterConditionType.NOT_AMONGST,
                     FilterConditionType.EQUALS_FIELD,
                     FilterConditionType.GREATER_THAN_FIELD,
                     FilterConditionType.GREATER_OR_EQUAL_FIELD,
                     FilterConditionType.LESS_THAN_FIELD,
                     FilterConditionType.LESS_OR_EQUAL_FIELD,
                     FilterConditionType.BETWEEN_FIELD,
+                    FilterConditionType.NOT_EQUALS,
+                    FilterConditionType.NOT_BETWEEN,
+                    FilterConditionType.NOT_AMONGST,
                     FilterConditionType.NOT_EQUALS_FIELD,
-                    FilterConditionType.NOT_BETWEEN_FIELD)));
+                    FilterConditionType.NOT_BETWEEN_FIELD,
+                    FilterConditionType.IS_NULL,
+                    FilterConditionType.IS_NOT_NULL
+                    )));
      
     private static final Set<FilterConditionType> stringConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
             Arrays.asList(FilterConditionType.EQUALS,
@@ -125,21 +127,22 @@ public final class FilterUtils {
                     FilterConditionType.ENDS_WITH,
                     FilterConditionType.LIKE,
                     FilterConditionType.AMONGST,
-                    FilterConditionType.IS_NULL,
-                    FilterConditionType.IS_NOT_NULL,
+                    FilterConditionType.EQUALS_FIELD,
+                    FilterConditionType.BEGINS_WITH_FIELD,
+                    FilterConditionType.ENDS_WITH_FIELD,
+                    FilterConditionType.LIKE_FIELD,
                     FilterConditionType.NOT_EQUALS,
                     FilterConditionType.NOT_BEGIN_WITH,
                     FilterConditionType.NOT_END_WITH,
                     FilterConditionType.NOT_LIKE,
                     FilterConditionType.NOT_AMONGST,
-                    FilterConditionType.EQUALS_FIELD,
-                    FilterConditionType.BEGINS_WITH_FIELD,
-                    FilterConditionType.ENDS_WITH_FIELD,
-                    FilterConditionType.LIKE_FIELD,
                     FilterConditionType.NOT_EQUALS_FIELD,
                     FilterConditionType.NOT_BEGIN_WITH_FIELD,
                     FilterConditionType.NOT_END_WITH_FIELD,
-                    FilterConditionType.NOT_LIKE_FIELD)));
+                    FilterConditionType.NOT_LIKE_FIELD,
+                    FilterConditionType.IS_NULL,
+                    FilterConditionType.IS_NOT_NULL
+                    )));
 
     private static final Set<FilterConditionType> enumConstConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
            Arrays.asList(
@@ -151,13 +154,13 @@ public final class FilterUtils {
     
     private static final Set<FilterConditionType> collectionConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
             Arrays.asList(FilterConditionType.EQUALS_COLLECTION,
+                    FilterConditionType.NOT_EQUALS_COLLECTION,
                     FilterConditionType.GREATER_THAN_COLLECTION,
                     FilterConditionType.GREATER_OR_EQUAL_COLLECTION,
                     FilterConditionType.LESS_THAN_COLLECTION,
                     FilterConditionType.LESS_OR_EQUAL_COLLECTION,
                     FilterConditionType.IS_NULL,
-                    FilterConditionType.IS_NOT_NULL,
-                    FilterConditionType.NOT_EQUALS_COLLECTION)));
+                    FilterConditionType.IS_NOT_NULL)));
     
     private static final Set<FilterConditionType> objectConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
             Arrays.asList(FilterConditionType.IS_NULL,
