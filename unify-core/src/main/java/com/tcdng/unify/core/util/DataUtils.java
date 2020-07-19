@@ -1536,6 +1536,14 @@ public final class DataUtils {
         return Collections.unmodifiableList(Arrays.asList(list));
     }
 
+    public static <T> List<T> unmodifiableValuesList(Map<?, T> map) {
+        if (isBlank(map)) {
+            return Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList(new ArrayList<T>(map.values()));
+    }
+
     public static <T> Set<T> unmodifiableSet(Set<T> list) {
         if (isBlank(list)) {
             return Collections.emptySet();

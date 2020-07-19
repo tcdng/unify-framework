@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +56,26 @@ public class DataUtilsTest {
         bookList.add(new Book("Maladin", BigDecimal.valueOf(20.0), 1, false));
     }
 
+    @Test
+    public void testUnmodifiableValuesListNull() throws Exception {
+        List<String> list = DataUtils.unmodifiableValuesList(null);
+        assertNotNull(list);
+        assertTrue(list.isEmpty());
+    }
+
+    @Test
+    public void testUnmodifiableValuesList() throws Exception {
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("One", "Tom Hanks");
+        map.put("Two", "Samuel L. Jackson");
+        
+        List<String> list = DataUtils.unmodifiableValuesList(map);
+        assertNotNull(list);
+        assertEquals(2, list.size());
+        assertEquals("Tom Hanks", list.get(0));
+        assertEquals("Samuel L. Jackson", list.get(1));
+    }
+    
     @SuppressWarnings("unchecked")
     @Test
     public void testCollectionConvertFromArray() throws Exception {
