@@ -63,6 +63,12 @@ public class StringUtilsTest {
     }
 
     @Test
+    public void testToNonNullString() throws Exception {
+        assertEquals("Tom", StringUtils.toNonNullString("Tom", "Harry"));
+        assertEquals("Harry", StringUtils.toNonNullString(null, "Harry"));
+    }
+    
+    @Test
     public void testIsBlank() throws Exception {
         assertTrue(StringUtils.isBlank(null));
         assertTrue(StringUtils.isBlank(""));

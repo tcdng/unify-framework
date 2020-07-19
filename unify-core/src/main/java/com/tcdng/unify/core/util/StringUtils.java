@@ -385,6 +385,14 @@ public final class StringUtils {
         return string != null && !string.trim().isEmpty();
     }
 
+    public static String toNonNullString(Object obj, String nullDefault) {
+        if (obj == null) {
+            return nullDefault;
+        }
+
+        return obj.toString();
+    }
+    
     /**
      * Tests if supplied string contains a whitespace character.
      * 
