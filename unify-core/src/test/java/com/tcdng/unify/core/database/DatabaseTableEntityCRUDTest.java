@@ -547,6 +547,26 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testClearRollback() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            tm.setRollback();
+            tm.clearRollback();
+        } finally {
+            tm.endTransaction();
+        }
+
+        tm.beginTransaction();
+        try {
+            assertEquals(2, db.countAll(new FruitQuery().ignoreEmptyCriteria(true)));
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testRollbackToSavepoint() throws Exception {
         Fruit apple = new Fruit("apple", "red", 20.00);
         tm.beginTransaction();

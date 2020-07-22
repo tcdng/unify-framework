@@ -31,7 +31,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * {@link TransactionAttribute#REQUIRED} type.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void beginTransaction() throws UnifyException;
 
@@ -39,9 +39,9 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * Begins a transaction using supplied transaction attribute.
      * 
      * @param txnAttribute
-     *            the transaction attribute
+     *                     the transaction attribute
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void beginTransaction(TransactionAttribute txnAttribute) throws UnifyException;
 
@@ -50,7 +50,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * been set.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void endTransaction() throws UnifyException;
 
@@ -59,7 +59,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * 
      * @return true is transaction is open
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isTransactionOpen() throws UnifyException;
 
@@ -67,9 +67,9 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * Joins a database to the current transaction.
      * 
      * @param db
-     *            the database instance to join
+     *           the database instance to join
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void joinTransaction(Database db) throws UnifyException;
 
@@ -77,10 +77,11 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * Returns the database session in current transaction.
      * 
      * @param db
-     *            the database which should be part of current transaction
+     *           the database which should be part of current transaction
      * @return the database session
      * @throws UnifyException
-     *             if supplied database is not part of current transaction
+     *                        if supplied database is not part of current
+     *                        transaction
      */
     DatabaseSession getDatabaseSession(Database db) throws UnifyException;
 
@@ -88,7 +89,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * Sets save point for transaction session.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void setSavePoint() throws UnifyException;
 
@@ -96,7 +97,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * Clears current save point for transaction.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void clearSavePoint() throws UnifyException;
 
@@ -104,7 +105,7 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      * Roll back transaction to last save point.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void rollbackToSavePoint() throws UnifyException;
 
@@ -114,10 +115,18 @@ public interface DatabaseTransactionManager extends UnifyComponent {
     void setRollback() throws UnifyException;
 
     /**
+     * Clears roll back from current transaction.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void clearRollback() throws UnifyException;
+
+    /**
      * Commits session transactions and clears all save points.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void commit() throws UnifyException;
 }

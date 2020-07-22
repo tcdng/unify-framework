@@ -165,4 +165,14 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     protected void setRollbackTransactions() throws UnifyException {
         databaseTransactionManager.setRollback();
     }
+
+    /**
+     * Clears roll back on current transactions in database session.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void clearRollbackTransactions() throws UnifyException {
+        databaseTransactionManager.clearRollback();
+    }
 }
