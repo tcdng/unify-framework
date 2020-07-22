@@ -52,6 +52,14 @@ public class Customer extends AbstractDocument {
         this.gender = gender;
     }
 
+    public Customer(String name, Date birthDt, BigDecimal balance, Long id, Gender gender) {
+        this.name = name;
+        this.birthDt = birthDt;
+        this.balance = balance;
+        this.id = id;
+        this.gender = gender;
+    }
+
     public Customer() {
 
     }

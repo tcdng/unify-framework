@@ -197,9 +197,9 @@ public class PackableDoc implements Serializable {
                 }
             }
 
-            pd.values.put(unnested.uFieldName, val);
-            pd.updated = true;
-            updated = true;
+            Object oldVal = pd.values.put(unnested.uFieldName, val);
+            pd.updated |= !DataUtils.equals(oldVal, val);
+            updated |= pd.updated;
         }
     }
 

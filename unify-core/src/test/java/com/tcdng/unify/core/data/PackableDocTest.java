@@ -175,6 +175,36 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         assertEquals("Apapa Lagos", address.getLine2());
         assertEquals(Gender.FEMALE, pDoc.read(Gender.class, "gender"));
     }
+    
+    @Test
+    public void testReadFromNoUpdate() throws Exception {
+        Date birthDt = new Date();
+        Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20L,
+                Gender.FEMALE);
+        PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+
+        pDoc.readFrom(customer);
+        pDoc.clearUpdated();
+        
+        pDoc.readFrom(customer);
+        assertFalse(pDoc.isUpdated());
+    }
+    
+    @Test
+    public void testReadFromWithUpdate() throws Exception {
+        Date birthDt = new Date();
+        Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20L,
+                Gender.FEMALE);
+        PackableDoc pDoc = new PackableDoc(custDocConfig, false);
+
+        pDoc.readFrom(customer);
+        pDoc.clearUpdated();
+        
+        customer.setGender(Gender.MALE);
+        pDoc.readFrom(customer);
+        assertTrue(pDoc.isUpdated());
+    }
+
 
     @Test
     public void testWriteSimple() throws Exception {
