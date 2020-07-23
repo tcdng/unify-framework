@@ -661,7 +661,15 @@ ux.openWindow = function(uEv) {
 		if (param.value) {
 			url = url + "?" + param.value;
 		}
-		window.open(url, "_blank");
+		
+		if (evp.uWinName) {
+			var winHdl = window.open(url, evp.uWinName);
+			if (winHdl) {
+				winHdl.focus();
+			}
+		} else {
+			window.open(url, "_blank");
+		}
 	}
 }
 
