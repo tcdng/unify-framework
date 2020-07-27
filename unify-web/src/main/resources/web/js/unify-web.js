@@ -293,7 +293,7 @@ ux.respHandler = {
 					}
 				}
 			}
-		} else {
+		} else if (resp.showPopup) {
 			var basePanel = null;
 			if (ux.docPopupBaseId) {
 				basePanel = _id(ux.docPopupBaseId);

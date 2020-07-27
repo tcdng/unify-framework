@@ -47,19 +47,30 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
         appendRefreshAttributesJson(writer, false);
     }
 
-    protected void appendPopupPanelsJSON(ResponseWriter writer, Page page) throws UnifyException {
-        if (getUplAttribute(boolean.class, "systemInfo")) {
-            writer.write(",\"showSysInfoPopup\":");
-        } else {
-            writer.write(",\"showPopup\":");
-        }
+    private void appendPopupPanelsJSON(ResponseWriter writer, Page page) throws UnifyException {
         Panel panel = null;
         String popupShortName = getUplAttribute(String.class, "popup");
         if (popupShortName != null) {
             panel = page.getPanelByShortName(popupShortName);
         } else {
-            panel = page.getPanelByLongName(getRequestContextUtil().getRequestPopupName());
+            String reqPopupName = getRequestContextUtil().getRequestPopupName();
+            if (reqPopupName != null) {
+                if (page.isWidget(reqPopupName)) {
+                    panel = page.getPanelByLongName(reqPopupName);
+                } else {
+                    panel = page.getPanelByShortName(reqPopupName);
+                }
+            }
         }
-        writer.writeJsonPanel(panel, false);
+
+        if (panel != null) {
+            if (getUplAttribute(boolean.class, "systemInfo")) {
+                writer.write(",\"showSysInfoPopup\":");
+            } else {
+                writer.write(",\"showPopup\":");
+            }
+
+            writer.writeJsonPanel(panel, false);
+        }
     }
 }

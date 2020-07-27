@@ -504,6 +504,7 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
                 new Result(new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
                         (PageControllerResponse) getUplComponent(defaultLocale, "!loadcontentresponse", false),
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!showpopupresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 
         defaultResultMap.put(ResultMappingConstants.SAVE,
