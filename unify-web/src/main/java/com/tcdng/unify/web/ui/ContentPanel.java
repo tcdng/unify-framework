@@ -78,4 +78,12 @@ public interface ContentPanel extends Panel {
      *             if an error occurs
      */
     void removeContent(List<String> toRemovePathIdList) throws UnifyException;
+    
+    /**
+     * Clears content panel pages.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void clearPages() throws UnifyException;
 }

@@ -141,6 +141,13 @@ public class ContentPanelImpl extends AbstractContentPanel {
     }
 
     @Override
+    public void clearPages() throws UnifyException {
+        contentByPathIdMap.clear();
+        contentList.clear();
+        contentIndex = 0;
+    }
+
+    @Override
     public Page getCurrentPage() {
         return contentList.get(contentIndex).getPage();
     }

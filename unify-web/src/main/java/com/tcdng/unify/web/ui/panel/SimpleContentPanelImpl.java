@@ -39,6 +39,11 @@ public class SimpleContentPanelImpl extends AbstractContentPanel {
     }
 
     @Override
+    public void clearPages() throws UnifyException {
+        
+    }
+
+    @Override
     public Page getCurrentPage() {
         return (Page) getContainer();
     }
