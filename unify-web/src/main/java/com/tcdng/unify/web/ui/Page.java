@@ -178,4 +178,10 @@ public interface Page extends StandalonePanel {
      *             if an error occurs
      */
     String getPopupSysId() throws UnifyException;
+    
+    /**
+     * Returns page sub-caption.
+     * @throws UnifyException if an error occurs
+     */
+    String getSubCaption() throws UnifyException;
 }

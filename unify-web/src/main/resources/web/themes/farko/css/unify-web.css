@@ -222,7 +222,8 @@ z-index:400;}
 .ui-contentpanel .cptab li {float: left; margin-right: 2px;}
 .ui-contentpanel .cptab li a {display: block; text-decoration: none;}
 .ui-contentpanel .cptab .cpactive {border:solid 1px #C0C0C0; margin-bottom: -1px; border-bottom:solid 1px #FFF !important;}
-.ui-contentpanel .cptab .cpactive a {float:left; font-size:12px; padding: 8px; color: #454545;}
+.ui-contentpanel .cptab .cpactive a {float:left; font-size:12px; padding: 8px 8px; color: #454545;}
+.ui-contentpanel .cptab .cpactive .cpt {padding: 4px 8px}
 .ui-contentpanel .cptab .cpactive .cpremote {margin:3px; padding:4px;}
 .ui-contentpanel .cptab .cpactive .cpcat {border: 2px solid #5970B2; color: #454545; background-color: #BFD6FF;}
 .ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545; background-color: #FF9999;}
@@ -235,7 +236,11 @@ z-index:400;}
 .ui-contentpanel .cptab .cpinactive {border:solid 1px #D0D0D0; margin-top: 4px; background-color: #E0E0E0; border-bottom: none !important; cursor:pointer;}
 .ui-contentpanel .cptab .cpinactive:hover {background-color: #D0D0D0;}
 .ui-contentpanel .cptab .cpinactive a {float:left; font-size:12px;  padding: 6px 8px; color: #757575;}
+.ui-contentpanel .cptab .cpinactive .cpt {padding: 2px 8px}
 .ui-contentpanel .cptab .cpinactive img {float:right; padding:7px 6px; width:10px; height:10px; cursor:pointer;}
+.ui-contentpanel .cptab .cptitle {display:inline-block;}
+.ui-contentpanel .cptab .cptitle .hd {font-weight:bold; font-size:8pt; display: block; width: 100px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.ui-contentpanel .cptab .cptitle .hds {font-size:7pt;display: block; width: 100px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 
 .ui-contentpanel .cptitlebar {width: 100%; height:40px;}
 .ui-contentpanel .cptitlebar .cpbar {display: inline-block; width: 100%; height: 26px; margin-bottom: 2px;

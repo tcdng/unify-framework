@@ -166,11 +166,13 @@ public class ContentPanelWriter extends AbstractPanelWriter {
                 }
 
                 Page page = contentInfo.getPage();
-                String contentTitle = (String) page.getAttribute(PageAttributeConstants.PAGE_TITLE);
-                if (StringUtils.isBlank(contentTitle)) {
-                    contentTitle = page.getCaption();
+                String title = (String) page.getAttribute(PageAttributeConstants.PAGE_TITLE);
+                if (StringUtils.isBlank(title)) {
+                    title = page.getCaption();
                 }
 
+                String subTitle = page.getSubCaption();
+                
                 writer.write("><div><a ");
                 if (page.getUplAttribute(boolean.class, "remote")) {
                     String cpcat = CPREMOTE_CATEGORYBASE;
@@ -179,10 +181,22 @@ public class ContentPanelWriter extends AbstractPanelWriter {
                     }
 
                     writer.write("class=\"cpremote ").write(cpcat).write("\"");
+                } else {
+                    if (subTitle != null) {
+                        writer.write("class=\"cpt\"");
+                    }                    
                 }
 
                 writer.write(" id=\"").write(contentPanelImpl.getTabItemId(i)).write("\">");
-                writer.writeWithHtmlEscape(contentTitle);
+                if (subTitle != null) {
+                    writer.write("<div class=\"cptitle\">");
+                    writer.write("<span class=\"hd\">").writeWithHtmlEscape(title).write("</span>");
+                    writer.write("<span class=\"hds\">").writeWithHtmlEscape(subTitle).write("</span>");
+                    writer.write("</div>");
+                } else {
+                    writer.writeWithHtmlEscape(title);
+                }
+                
                 writer.write("</a>");
 
                 if (i > 0) {

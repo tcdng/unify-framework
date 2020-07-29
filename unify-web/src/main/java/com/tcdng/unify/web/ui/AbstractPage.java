@@ -35,8 +35,10 @@ import com.tcdng.unify.web.ui.panel.StandalonePanel;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "type", type = String.class, defaultVal = "ui-page"),
-        @UplAttribute(name = "caption", type = String.class, mandatory = true),
+@UplAttributes({
+        @UplAttribute(name = "subCaption", type = String.class),
+        @UplAttribute(name = "subCaptionBinding", type = String.class),
+        @UplAttribute(name = "type", type = String.class, defaultVal = "ui-page"),
         @UplAttribute(name = "remote", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPage extends AbstractStandalonePanel implements Page {
 
@@ -45,6 +47,16 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     private Map<String, Object> attributes;
 
     private ControllerPathParts controllerPathParts;
+
+    @Override
+    public String getSubCaption() throws UnifyException {
+        String subCaptionBinding = getUplAttribute(String.class, "subCaptionBinding");
+        if (subCaptionBinding != null) {
+            return getStringValue(subCaptionBinding);
+        }
+
+        return getUplAttribute(String.class, "subCaption");
+    }
 
     @Override
     public void setPathParts(ControllerPathParts controllerPathParts) {
