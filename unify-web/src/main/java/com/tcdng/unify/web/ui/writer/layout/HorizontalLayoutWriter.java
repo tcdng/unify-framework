@@ -40,8 +40,10 @@ public class HorizontalLayoutWriter extends AbstractTabularLayoutWriter {
             throws UnifyException {
         int columnIndex = 0;
         appendRowStart(writer, layout, 0);
+        boolean isAlternate = container.isAlternate();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 appendCellContent(writer, layout, widget, 0, columnIndex++);
             } else if (widget.isHidden()) {
@@ -57,8 +59,10 @@ public class HorizontalLayoutWriter extends AbstractTabularLayoutWriter {
         int columnIndex = 0;
         appendRowStart(writer, layout, 0);
         Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
+        boolean isAlternate = container.isAlternate();
         for (ValueStore valueStore : container.getRepeatValueStores()) {
             widget.setValueStore(valueStore);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 appendCellContent(writer, layout, widget, 0, columnIndex++);
             } else if (widget.isHidden()) {

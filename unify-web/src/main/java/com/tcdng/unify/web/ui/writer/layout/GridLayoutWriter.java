@@ -46,8 +46,10 @@ public class GridLayoutWriter extends AbstractTabularLayoutWriter {
             columns = 1;
         }
 
+        boolean isAlternate = container.isAlternate();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 if (columnIndex == 0) {
                     writer.write("<div class=\"lrow\">");
@@ -83,8 +85,10 @@ public class GridLayoutWriter extends AbstractTabularLayoutWriter {
         }
 
         Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
+        boolean isAlternate = container.isAlternate();
         for (ValueStore valueStore : container.getRepeatValueStores()) {
             widget.setValueStore(valueStore);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 if (columnIndex == 0) {
                     writer.write("<div class=\"lrow\">");

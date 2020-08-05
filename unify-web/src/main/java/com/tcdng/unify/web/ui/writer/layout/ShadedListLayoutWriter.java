@@ -46,6 +46,7 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
         writeTagStyleClass(writer, shadedListLayout.getStyleClass());
         writeTagStyle(writer, shadedListLayout.getStyle());
         writer.write(">");
+        boolean isAlternate = container.isAlternate();
         if (shadedListLayout.isInlineMode()) {
             writer.write("<tr>");
             int colWidth = 100;
@@ -65,6 +66,7 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
                 writeLayoutColor(writer, widget);
                 writer.write("\" style=\"width:").write(colWidth).write("%;\">");
                 if (widget.isVisible()) {
+                    widget.setAlternateMode(isAlternate);
                     writer.write("<span class=\"islcap\">");
                     String caption = widget.getCaption();
                     if (StringUtils.isNotBlank(caption)) {
@@ -88,6 +90,7 @@ public class ShadedListLayoutWriter extends AbstractLayoutWriter {
             for (String longName : container.getLayoutWidgetLongNames()) {
                 Widget widget = container.getWidgetByLongName(longName);
                 if (widget.isVisible()) {
+                    widget.setAlternateMode(isAlternate);
                     writer.write("<tr>");
                     if (shadedListLayout.isShowCaption()) {
                         writer.write("<td class=\"slcap\">");

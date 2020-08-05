@@ -39,8 +39,10 @@ public class VerticalLayoutWriter extends AbstractTabularLayoutWriter {
     protected void writeTableContent(ResponseWriter writer, TabularLayout layout, Container container)
             throws UnifyException {
         int rowIndex = 0;
+        boolean isAlternate = container.isAlternate();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 appendRowStart(writer, layout, rowIndex);
                 appendCellContent(writer, layout, widget, rowIndex, 0);
@@ -57,8 +59,10 @@ public class VerticalLayoutWriter extends AbstractTabularLayoutWriter {
             throws UnifyException {
         int rowIndex = 0;
         Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
+        boolean isAlternate = container.isAlternate();
         for (ValueStore valueStore : container.getRepeatValueStores()) {
             widget.setValueStore(valueStore);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 appendRowStart(writer, layout, rowIndex);
                 appendCellContent(writer, layout, widget, rowIndex, 0);

@@ -51,8 +51,10 @@ public class FlowGridLayoutWriter extends AbstractLayoutWriter {
         writeTagStyle(writer, style);
         writer.write(">");
 
+        boolean isAlternate = container.isAlternate();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 writer.write("<div class=\"fgcell\">");
                 // Caption

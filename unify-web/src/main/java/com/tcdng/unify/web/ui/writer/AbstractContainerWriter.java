@@ -53,8 +53,10 @@ public abstract class AbstractContainerWriter extends AbstractWidgetWriter imple
             writer.writeStructureAndContent(layout, container);
         } else {
             boolean isSpace = container.isSpace();
+            boolean isAlternate = container.isAlternate();
             for (String longName : container.getLayoutWidgetLongNames()) {
                 Widget widget = container.getWidgetByLongName(longName);
+                widget.setAlternateMode(isAlternate);
                 if (widget.isVisible()) {
                     writer.writeStructureAndContent(widget);
                     if (isSpace) {
@@ -68,9 +70,11 @@ public abstract class AbstractContainerWriter extends AbstractWidgetWriter imple
     }
 
     protected void writeContainedWidgetsBehavior(ResponseWriter writer, Container container) throws UnifyException {
+        boolean isAlternate = container.isAlternate();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
             if ((widget.isVisible() && !widget.isDisabled()) || widget.isHidden() || widget.isBehaviorAlways()) {
+                widget.setAlternateMode(isAlternate);
                 writer.writeBehavior(widget);
             }
         }

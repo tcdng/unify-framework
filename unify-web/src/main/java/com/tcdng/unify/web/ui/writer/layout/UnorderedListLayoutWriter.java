@@ -42,8 +42,10 @@ public class UnorderedListLayoutWriter extends AbstractLayoutWriter {
         writeTagStyleClass(writer, layout.getStyleClass());
         writeTagStyle(writer, layout.getStyle());
         writer.write(">");
+        boolean isAlternate = container.isAlternate();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
+            widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
                 writer.write("<li>");
                 writer.writeStructureAndContent(widget);

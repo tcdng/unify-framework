@@ -40,7 +40,7 @@ public interface Widget extends UplComponent {
      * Returns the widget id
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getId() throws UnifyException;
 
@@ -48,9 +48,9 @@ public interface Widget extends UplComponent {
      * Sets the widget id.
      * 
      * @param id
-     *            the id to set
+     *           the id to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void setId(String id) throws UnifyException;
 
@@ -58,7 +58,7 @@ public interface Widget extends UplComponent {
      * Returns the group id
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getGroupId() throws UnifyException;
 
@@ -66,9 +66,9 @@ public interface Widget extends UplComponent {
      * Sets the widget group id.
      * 
      * @param id
-     *            the id to set
+     *           the id to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void setGroupId(String id) throws UnifyException;
 
@@ -76,7 +76,7 @@ public interface Widget extends UplComponent {
      * Returns the widget facade Id
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getFacadeId() throws UnifyException;
 
@@ -84,9 +84,9 @@ public interface Widget extends UplComponent {
      * Returns prefixed form of id
      * 
      * @param prefix
-     *            the prefix to set
+     *               the prefix to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getPrefixedId(String prefix) throws UnifyException;
 
@@ -94,9 +94,9 @@ public interface Widget extends UplComponent {
      * Returns naming indexed form of id
      * 
      * @param index
-     *            the index to use
+     *              the index to use
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getNamingIndexedId(int index) throws UnifyException;
 
@@ -104,7 +104,7 @@ public interface Widget extends UplComponent {
      * Returns widget data binding.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getBinding() throws UnifyException;
 
@@ -112,7 +112,7 @@ public interface Widget extends UplComponent {
      * Returns widget caption.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getCaption() throws UnifyException;
 
@@ -120,7 +120,7 @@ public interface Widget extends UplComponent {
      * Returns widget style class.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getStyleClass() throws UnifyException;
 
@@ -128,7 +128,7 @@ public interface Widget extends UplComponent {
      * Returns widget style.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getStyle() throws UnifyException;
 
@@ -136,7 +136,7 @@ public interface Widget extends UplComponent {
      * Returns widget style class binding.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getStyleClassBinding() throws UnifyException;
 
@@ -144,7 +144,7 @@ public interface Widget extends UplComponent {
      * Returns widget table column style.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getColumnStyle() throws UnifyException;
 
@@ -153,7 +153,7 @@ public interface Widget extends UplComponent {
      * 
      * @return a true value if marked otherwise false
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean getColumnSelectSummary() throws UnifyException;
 
@@ -161,7 +161,7 @@ public interface Widget extends UplComponent {
      * Returns widget hint.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getHint() throws UnifyException;
 
@@ -171,7 +171,7 @@ public interface Widget extends UplComponent {
      * @return the parent container ID, otherwise null if component is not in a
      *         container
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getContainerId() throws UnifyException;
 
@@ -181,7 +181,7 @@ public interface Widget extends UplComponent {
      * @return the parent panel ID, otherwise null if component is not in a
      *         container
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getPanelId() throws UnifyException;
 
@@ -189,7 +189,7 @@ public interface Widget extends UplComponent {
      * Sets the component container.
      * 
      * @param container
-     *            the container to set
+     *                  the container to set
      */
     void setContainer(Container container);
 
@@ -202,9 +202,9 @@ public interface Widget extends UplComponent {
      * Sets the component value store. Binds the component to a value store.
      * 
      * @param valueStore
-     *            the value store to set
+     *                   the value store to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void setValueStore(ValueStore valueStore) throws UnifyException;
 
@@ -227,7 +227,7 @@ public interface Widget extends UplComponent {
      * Returns the component current value.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Object getValue() throws UnifyException;
 
@@ -235,9 +235,9 @@ public interface Widget extends UplComponent {
      * Returns the component current value.
      * 
      * @param valueClass
-     *            the expected value type
+     *                   the expected value type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     <T> T getValue(Class<T> valueClass) throws UnifyException;
 
@@ -245,9 +245,9 @@ public interface Widget extends UplComponent {
      * Sets the value of the bean attribute this component is binded to.
      * 
      * @param value
-     *            the value to set.
+     *              the value to set.
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void setValue(Object value) throws UnifyException;
 
@@ -255,7 +255,7 @@ public interface Widget extends UplComponent {
      * Returns the component value as a string.
      * 
      * @throws UnifyException
-     *             if an error occurs.
+     *                        if an error occurs.
      */
     String getStringValue() throws UnifyException;
 
@@ -263,9 +263,9 @@ public interface Widget extends UplComponent {
      * Returns the string value of this component value bean attribute.
      * 
      * @param attribute
-     *            the attribute to fetch
+     *                  the attribute to fetch
      * @throws UnifyException
-     *             if an error occurs.
+     *                        if an error occurs.
      */
     String getStringValue(String attribute) throws UnifyException;
 
@@ -273,9 +273,9 @@ public interface Widget extends UplComponent {
      * Returns the type converted value of this component value bean attribute.
      * 
      * @param attribute
-     *            the attribute to fetch
+     *                  the attribute to fetch
      * @throws UnifyException
-     *             if an error occurs.
+     *                        if an error occurs.
      */
     <T> T getValue(Class<T> clazz, String attribute) throws UnifyException;
 
@@ -287,11 +287,11 @@ public interface Widget extends UplComponent {
      * returning value where it first finds attribute
      * 
      * @param attribute
-     *            the attribute name
+     *                  the attribute name
      * @return the attribute value
      * @throws UnifyException
-     *             if associated value object or application scopes have no such
-     *             attribute
+     *                        if associated value object or application scopes have
+     *                        no such attribute
      */
     Object getValue(String attribute) throws UnifyException;
 
@@ -300,7 +300,7 @@ public interface Widget extends UplComponent {
      * returned.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getStyleClassValue() throws UnifyException;
 
@@ -309,11 +309,11 @@ public interface Widget extends UplComponent {
      * attribute.
      * 
      * @param clazz
-     *            the collection type
+     *                  the collection type
      * @param dataClass
-     *            the collection data type
+     *                  the collection data type
      * @throws UnifyException
-     *             if an error occurs.
+     *                        if an error occurs.
      */
     <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException;
 
@@ -321,7 +321,7 @@ public interface Widget extends UplComponent {
      * Returns this component's containing panel.
      * 
      * @throws UnifyException
-     *             if an error occurs.
+     *                        if an error occurs.
      */
     Panel getPanel() throws UnifyException;
 
@@ -329,7 +329,7 @@ public interface Widget extends UplComponent {
      * Returns this component's containing standalone panel.
      * 
      * @throws UnifyException
-     *             if an error occurs.
+     *                        if an error occurs.
      */
     StandalonePanel getStandalonePanel() throws UnifyException;
 
@@ -337,7 +337,7 @@ public interface Widget extends UplComponent {
      * Returns the relay widget otherwise null.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Widget getRelayWidget() throws UnifyException;
 
@@ -357,7 +357,7 @@ public interface Widget extends UplComponent {
      * 
      * @return a true value if component is hidden
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isHidden() throws UnifyException;
 
@@ -366,7 +366,7 @@ public interface Widget extends UplComponent {
      * 
      * @return a true value if widget ignores parent state otherwise false.
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isIgnoreParentState() throws UnifyException;
 
@@ -375,7 +375,7 @@ public interface Widget extends UplComponent {
      * 
      * @return a true value if component is hidden
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isMasked() throws UnifyException;
 
@@ -384,7 +384,7 @@ public interface Widget extends UplComponent {
      * {@link #setValueStore(ValueStore)} is always invoked during a cascade
      * 
      * @param conforming
-     *            the flag to set
+     *                   the flag to set
      */
     void setConforming(boolean conforming);
 
@@ -407,12 +407,12 @@ public interface Widget extends UplComponent {
      * Tests if widget is in facade mode.
      */
     boolean isUseFacade() throws UnifyException;
-    
+
     /**
      * Sets the component editable state.
      * 
      * @param editable
-     *            the editable state to set
+     *                 the editable state to set
      */
     void setEditable(boolean editable);
 
@@ -421,7 +421,7 @@ public interface Widget extends UplComponent {
      * 
      * @return true value if component is editable
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isEditable() throws UnifyException;
 
@@ -431,7 +431,7 @@ public interface Widget extends UplComponent {
      * 
      * @return true value if component is editable
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isContainerEditable() throws UnifyException;
 
@@ -439,7 +439,7 @@ public interface Widget extends UplComponent {
      * Sets the component disabled state.
      * 
      * @param disabled
-     *            the disabled state to set
+     *                 the disabled state to set
      */
     void setDisabled(boolean disabled);
 
@@ -470,7 +470,7 @@ public interface Widget extends UplComponent {
      * Sets the component visible state.
      * 
      * @param visible
-     *            the visible state to set
+     *                the visible state to set
      */
     void setVisible(boolean visible);
 
@@ -480,7 +480,7 @@ public interface Widget extends UplComponent {
      * 
      * @return true value if component is visible
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isContainerVisible() throws UnifyException;
 
@@ -496,7 +496,7 @@ public interface Widget extends UplComponent {
      * Tests if component is validatable.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isValidatable() throws UnifyException;
 
@@ -518,10 +518,18 @@ public interface Widget extends UplComponent {
     boolean isLayoutCaption() throws UnifyException;
 
     /**
+     * Sets widget alternate mode.
+     * 
+     * @param alternateMode
+     *                      if an error occurs
+     */
+    void setAlternateMode(boolean alternateMode);
+
+    /**
      * Expects widget to add page name aliases to current request context.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void addPageAliases() throws UnifyException;
 
@@ -530,7 +538,7 @@ public interface Widget extends UplComponent {
      * properties have been set and containing page is constructed.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void onPageConstruct() throws UnifyException;
 
@@ -539,7 +547,7 @@ public interface Widget extends UplComponent {
      * state with binded value.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     void updateInternalState() throws UnifyException;
 }

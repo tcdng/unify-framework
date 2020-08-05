@@ -32,9 +32,20 @@ import com.tcdng.unify.core.annotation.UplAttributes;
     @UplAttribute(name = "debounce", type = boolean.class)})
 public abstract class AbstractTargetControl extends AbstractControl implements TargetControl {
 
+    private boolean alternateMode;
+    
     @Override
     public String getStaticBindingValue() throws UnifyException {
         return getUplAttribute(String.class, "staticBindingValue");
+    }
+
+    @Override
+    public String getId() throws UnifyException {
+        if (alternateMode) {
+            return super.getId() + "_alt";
+        }
+        
+        return super.getId();
     }
 
     @Override
@@ -50,5 +61,10 @@ public abstract class AbstractTargetControl extends AbstractControl implements T
     @Override
     public boolean isDebounce() throws UnifyException {
         return getUplAttribute(boolean.class, "debounce");
+    }
+
+    @Override
+    public void setAlternateMode(boolean alternateMode) {
+        this.alternateMode = alternateMode;
     }
 }

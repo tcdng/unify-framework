@@ -225,6 +225,14 @@ public interface Container extends DataTransferWidget, WidgetContainer {
     boolean isUseLayoutIfPresent();
 
     /**
+     * Returns true if container is in alternate mode.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isAlternate() throws UnifyException ;
+
+    /**
      * Cascades value store to child components.
      * 
      * @throws UnifyException

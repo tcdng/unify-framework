@@ -38,6 +38,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
  */
 @UplAttributes({ @UplAttribute(name = "layout", type = Layout.class),
         @UplAttribute(name = "components", type = UplElementReferences.class),
+        @UplAttribute(name = "alternate", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "arrayCascade", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "space", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractContainer extends AbstractWidget implements Container {
@@ -212,6 +213,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     @Override
     public boolean isSpace() throws UnifyException {
         return getUplAttribute(boolean.class, "space");
+    }
+
+    @Override
+    public boolean isAlternate() throws UnifyException {
+        return getUplAttribute(boolean.class, "alternate");
     }
 
     @Override

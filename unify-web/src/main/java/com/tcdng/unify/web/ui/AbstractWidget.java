@@ -352,6 +352,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+    public void setAlternateMode(boolean alternateMode) {
+        
+    }
+
+    @Override
 	public void onPageConstruct() throws UnifyException {
 
 	}
