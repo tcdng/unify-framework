@@ -26,6 +26,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplUtils;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.AbstractPanel;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.Widget;
@@ -71,8 +72,13 @@ public class DynamicPanel extends AbstractPanel {
         String panelName = (String) getValue(getUplAttribute(String.class, "panelNameBinding"));
         String uniqueName =
                 UplUtils.generateUplComponentCloneName(panelName, getPageManager().getPageName(getLongName()));
+
         Page page = getRequestContextUtil().getRequestPage();
         getPageManager().invalidateStaleDocument(uniqueName);
+        if (page == null) {
+            page = (Page) getSessionAttribute(RequestParameterConstants.UNLOAD_ORIGIN_PAGE);
+        }
+        
         StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
         if (standalonePanel == null) {
             standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName);

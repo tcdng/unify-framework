@@ -66,4 +66,6 @@ public interface RequestParameterConstants {
     String REMOTE_TENANT_CODE = "req_tnc";
 
     String REMOTE_COLOR_SCHEME = "req_csm";
+    
+    String UNLOAD_ORIGIN_PAGE = "unload_origin";
 }

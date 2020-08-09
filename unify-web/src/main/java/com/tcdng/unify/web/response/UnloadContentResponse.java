@@ -18,6 +18,7 @@ package com.tcdng.unify.web.response;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.AbstractJsonPageControllerResponse;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.ContentPanel;
 import com.tcdng.unify.web.ui.Page;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -53,8 +54,13 @@ public class UnloadContentResponse extends AbstractJsonPageControllerResponse {
 
     private void appendRefreshPageJSON(ResponseWriter writer, ContentPanel contentPanel, Page page)
             throws UnifyException {
-        writer.write(",\"refreshPanels\":[");
-        writer.writeJsonPanel(contentPanel, true);
-        writer.write("]");
+        setSessionAttribute(RequestParameterConstants.UNLOAD_ORIGIN_PAGE, page);
+        try {
+            writer.write(",\"refreshPanels\":[");
+            writer.writeJsonPanel(contentPanel, true);
+            writer.write("]");
+        } finally{
+            removeSessionAttribute(RequestParameterConstants.UNLOAD_ORIGIN_PAGE);
+        }
     }
 }
