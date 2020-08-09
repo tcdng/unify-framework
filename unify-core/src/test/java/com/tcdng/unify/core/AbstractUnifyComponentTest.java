@@ -188,7 +188,8 @@ public abstract class AbstractUnifyComponentTest {
         addDependency(ApplicationComponents.APPLICATION_DATASOURCE, TestSqlDataSource.class);
 
         addContainerSetting(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE,
-                new String[] { "com.tcdng.unify.core.resources.messages", "com.tcdng.unify.core.resources.test" });
+                new String[] { "com.tcdng.unify.core.resources.messages", "com.tcdng.unify.core.resources.test",
+                        "com.tcdng.unify.core.resources.test3" });
     }
 
     /**
