@@ -21,7 +21,10 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.constant.ResultMappingConstants;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.data.Hint.MODE;
 
 /**
@@ -178,5 +181,19 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
                 listener.notify(this, eventCode);
             }
         }
+    }
+
+    /**
+     * Sets up a file for download in current request context and returns a file
+     * download response.
+     * 
+     * @param downloadFile
+     *            the file download object
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void fileDownloadResult(DownloadFile downloadFile) throws UnifyException {
+        setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
+        setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
     }
 }
