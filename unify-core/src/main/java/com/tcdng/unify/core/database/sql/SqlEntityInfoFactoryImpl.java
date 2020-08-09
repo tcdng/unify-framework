@@ -45,6 +45,7 @@ import com.tcdng.unify.core.annotation.Id;
 import com.tcdng.unify.core.annotation.InOutParam;
 import com.tcdng.unify.core.annotation.InParam;
 import com.tcdng.unify.core.annotation.Index;
+import com.tcdng.unify.core.annotation.Indexes;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.annotation.Policy;
@@ -53,6 +54,7 @@ import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.TableRef;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
+import com.tcdng.unify.core.annotation.UniqueConstraints;
 import com.tcdng.unify.core.annotation.Version;
 import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.annotation.ViewRestriction;
@@ -639,10 +641,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     entityPolicy = (EntityPolicy) getComponent(pa.value());
                 }
 
+                List<Class<?>> heirachyList = ReflectUtils.getClassHierachyList(entityClass);
                 Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap =
-                        extractUniqueConstraints(tableName, entityClass, propertyInfoMap, ta.uniqueConstraints());
+                        extractUniqueConstraints(tableName, entityClass, heirachyList, propertyInfoMap, ta.uniqueConstraints());
                 Map<String, SqlIndexInfo> indexMap =
-                        extractIndexes(tableName, entityClass, propertyInfoMap, ta.indexes());
+                        extractIndexes(tableName, entityClass, heirachyList, propertyInfoMap, ta.indexes());
 
                 if (sqlOrderColumns) {
                     List<SqlFieldInfo> tempList = new ArrayList<SqlFieldInfo>(propertyInfoMap.values());
@@ -917,10 +920,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     }
                 }
 
+                List<Class<?>> heirachyList = ReflectUtils.getClassHierachyList(entityClass);
                 Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap =
-                        extractUniqueConstraints(tableName, entityClass, propertyInfoMap, tae.uniqueConstraints());
+                        extractUniqueConstraints(tableName, entityClass, heirachyList, propertyInfoMap, tae.uniqueConstraints());
                 Map<String, SqlIndexInfo> indexMap =
-                        extractIndexes(tableName, entityClass, propertyInfoMap, tae.indexes());
+                        extractIndexes(tableName, entityClass, heirachyList, propertyInfoMap, tae.indexes());
 
                 if (sqlOrderColumns) {
                     List<SqlFieldInfo> tempList = new ArrayList<SqlFieldInfo>(propertyInfoMap.values());
@@ -1149,13 +1153,27 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             }
 
             private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(String tableName,
-                    Class<?> entityClass, Map<String, SqlFieldInfo> propertyInfoMap,
+                    Class<?> entityClass, List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap,
                     UniqueConstraint[] uniqueConstraints) throws UnifyException {
                 // Unique constraints
+                List<UniqueConstraint> resolvedConstraints = new ArrayList<UniqueConstraint>();
+                for (Class<?> clazz : heirachyList) {
+                    UniqueConstraints ucs = clazz.getAnnotation(UniqueConstraints.class);
+                    if (ucs != null) {
+                        for (UniqueConstraint uca : ucs.value()) {
+                            resolvedConstraints.add(uca);
+                        }
+                    }
+                }
+
+                for (UniqueConstraint uca : uniqueConstraints) {
+                    resolvedConstraints.add(uca);
+                }
+                
                 Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = null;
-                if (uniqueConstraints.length > 0) {
+                if (!resolvedConstraints.isEmpty()) {
                     uniqueConstraintMap = new LinkedHashMap<String, SqlUniqueConstraintInfo>();
-                    for (UniqueConstraint uca : uniqueConstraints) {
+                    for (UniqueConstraint uca : resolvedConstraints) {
                         String[] fieldNames = uca.value();
                         String name = SqlUtils.generateUniqueConstraintName(tableName, fieldNames);
                         if (fieldNames.length == 0) {
@@ -1189,10 +1207,25 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             }
 
             private Map<String, SqlIndexInfo> extractIndexes(String tableName, Class<?> entityClass,
-                    Map<String, SqlFieldInfo> propertyInfoMap, Index[] indexes) throws UnifyException {
+                    List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap, Index[] indexes)
+                    throws UnifyException {
                 // Indexes
+                List<Index> resolvedIndexes = new ArrayList<Index>();
+                for (Class<?> clazz : heirachyList) {
+                    Indexes ids = clazz.getAnnotation(Indexes.class);
+                    if (ids != null) {
+                        for (Index id : ids.value()) {
+                            resolvedIndexes.add(id);
+                        }
+                    }
+                }
+
+                for (Index id : indexes) {
+                    resolvedIndexes.add(id);
+                }
+                
                 Map<String, SqlIndexInfo> indexMap = null;
-                if (indexes.length > 0) {
+                if (!resolvedIndexes.isEmpty()) {
                     indexMap = new LinkedHashMap<String, SqlIndexInfo>();
                     for (Index idxa : indexes) {
                         String[] fieldNames = idxa.value();
