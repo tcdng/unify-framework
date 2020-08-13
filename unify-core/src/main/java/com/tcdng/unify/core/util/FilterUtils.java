@@ -84,18 +84,18 @@ public final class FilterUtils {
         map.put(double.class, "numberconditionlist");
         map.put(Double.class, "numberconditionlist");
         map.put(BigDecimal.class, "numberconditionlist");
-        map.put(Date.class, "numberconditionlist");
+        map.put(Date.class, "dateconditionlist");
         map.put(String.class, "stringconditionlist");
         classToFilterConditionSelectorMap = Collections.unmodifiableMap(map);
     }
 
     private static final Set<FilterConditionType> booleanConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
            Arrays.asList(FilterConditionType.EQUALS,
-                    FilterConditionType.EQUALS_FIELD,
                     FilterConditionType.NOT_EQUALS,
-                    FilterConditionType.NOT_EQUALS_FIELD,
                     FilterConditionType.IS_NULL,
-                    FilterConditionType.IS_NOT_NULL
+                    FilterConditionType.IS_NOT_NULL,
+                    FilterConditionType.EQUALS_FIELD,
+                    FilterConditionType.NOT_EQUALS_FIELD
                     )));
     
     private static final Set<FilterConditionType> numberConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
@@ -106,19 +106,40 @@ public final class FilterUtils {
                     FilterConditionType.LESS_OR_EQUAL,
                     FilterConditionType.BETWEEN,
                     FilterConditionType.AMONGST,
+                    FilterConditionType.NOT_EQUALS,
+                    FilterConditionType.NOT_BETWEEN,
+                    FilterConditionType.NOT_AMONGST,
+                    FilterConditionType.IS_NULL,
+                    FilterConditionType.IS_NOT_NULL,
                     FilterConditionType.EQUALS_FIELD,
                     FilterConditionType.GREATER_THAN_FIELD,
                     FilterConditionType.GREATER_OR_EQUAL_FIELD,
                     FilterConditionType.LESS_THAN_FIELD,
                     FilterConditionType.LESS_OR_EQUAL_FIELD,
                     FilterConditionType.BETWEEN_FIELD,
+                    FilterConditionType.NOT_EQUALS_FIELD,
+                    FilterConditionType.NOT_BETWEEN_FIELD
+                    )));
+    
+    private static final Set<FilterConditionType> dateConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
+            Arrays.asList(FilterConditionType.EQUALS,
+                    FilterConditionType.GREATER_THAN,
+                    FilterConditionType.GREATER_OR_EQUAL,
+                    FilterConditionType.LESS_THAN,
+                    FilterConditionType.LESS_OR_EQUAL,
+                    FilterConditionType.BETWEEN,
                     FilterConditionType.NOT_EQUALS,
                     FilterConditionType.NOT_BETWEEN,
-                    FilterConditionType.NOT_AMONGST,
-                    FilterConditionType.NOT_EQUALS_FIELD,
-                    FilterConditionType.NOT_BETWEEN_FIELD,
                     FilterConditionType.IS_NULL,
-                    FilterConditionType.IS_NOT_NULL
+                    FilterConditionType.IS_NOT_NULL,
+                    FilterConditionType.EQUALS_FIELD,
+                    FilterConditionType.GREATER_THAN_FIELD,
+                    FilterConditionType.GREATER_OR_EQUAL_FIELD,
+                    FilterConditionType.LESS_THAN_FIELD,
+                    FilterConditionType.LESS_OR_EQUAL_FIELD,
+                    FilterConditionType.BETWEEN_FIELD,
+                    FilterConditionType.NOT_EQUALS_FIELD,
+                    FilterConditionType.NOT_BETWEEN_FIELD
                     )));
      
     private static final Set<FilterConditionType> stringConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
@@ -127,21 +148,21 @@ public final class FilterUtils {
                     FilterConditionType.ENDS_WITH,
                     FilterConditionType.LIKE,
                     FilterConditionType.AMONGST,
-                    FilterConditionType.EQUALS_FIELD,
-                    FilterConditionType.BEGINS_WITH_FIELD,
-                    FilterConditionType.ENDS_WITH_FIELD,
-                    FilterConditionType.LIKE_FIELD,
                     FilterConditionType.NOT_EQUALS,
                     FilterConditionType.NOT_BEGIN_WITH,
                     FilterConditionType.NOT_END_WITH,
                     FilterConditionType.NOT_LIKE,
                     FilterConditionType.NOT_AMONGST,
+                    FilterConditionType.IS_NULL,
+                    FilterConditionType.IS_NOT_NULL,
+                    FilterConditionType.EQUALS_FIELD,
+                    FilterConditionType.BEGINS_WITH_FIELD,
+                    FilterConditionType.ENDS_WITH_FIELD,
+                    FilterConditionType.LIKE_FIELD,
                     FilterConditionType.NOT_EQUALS_FIELD,
                     FilterConditionType.NOT_BEGIN_WITH_FIELD,
                     FilterConditionType.NOT_END_WITH_FIELD,
-                    FilterConditionType.NOT_LIKE_FIELD,
-                    FilterConditionType.IS_NULL,
-                    FilterConditionType.IS_NOT_NULL
+                    FilterConditionType.NOT_LIKE_FIELD
                     )));
 
     private static final Set<FilterConditionType> enumConstConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
@@ -185,7 +206,7 @@ public final class FilterUtils {
         map.put(double.class, numberConditionTypes);
         map.put(Double.class, numberConditionTypes);
         map.put(BigDecimal.class, numberConditionTypes);
-        map.put(Date.class, numberConditionTypes);
+        map.put(Date.class, dateConditionTypes);
         map.put(String.class, stringConditionTypes);
         supportedConditionMap = Collections.unmodifiableMap(map);
     }
