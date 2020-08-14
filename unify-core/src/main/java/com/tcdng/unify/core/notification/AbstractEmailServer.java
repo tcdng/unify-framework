@@ -63,7 +63,7 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
                     Authenticator authenticator = null;
                     properties.put("mail.smtp.host", emailServerConfig.getHostAddress());
                     if (emailServerConfig.getHostPort() != null) {
-                        properties.put("mail.smtp.port", emailServerConfig.getHostPort());
+                        properties.put("mail.smtp.port", String.valueOf(emailServerConfig.getHostPort()));
                     }
 
                     if (StringUtils.isNotBlank(emailServerConfig.getUsername())) {
@@ -74,16 +74,15 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
                     if (authenticator != null || StringUtils.isNotBlank(emailServerConfig.getAuthentication())) {
                         if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
                             if (emailServerConfig.getHostPort() != null) {
-                                properties.put("mail.smtp.socketFactory.port", emailServerConfig.getHostPort());
+                                properties.put("mail.smtp.socketFactory.port",
+                                        String.valueOf(emailServerConfig.getHostPort()));
                             }
 
                             properties.put("mail.smtp.ssl.enable", "true");
-
-                            // properties.put("mail.smtp.socketFactory.class",
-                            // "javax.net.ssl.SSLSocketFactory");
+                            properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
                         } else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
                             properties.put("mail.smtp.starttls.enable", "true");
-                            properties.put("mail.smtp.ssl.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+                            properties.put("mail.smtp.ssl.protocols", "TLSv1 TLSv1.1 TLSv1.2");
                         }
 
                         properties.put("mail.smtp.auth", "true");

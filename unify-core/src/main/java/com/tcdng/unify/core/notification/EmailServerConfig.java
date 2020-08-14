@@ -32,6 +32,11 @@ public class EmailServerConfig extends AbstractNotifServerConfig {
         super(hostAddress, hostPort, securityType, username, password);
     }
 
+    public EmailServerConfig(String hostAddress, Integer hostPort, String username,
+            String password) {
+        super(hostAddress, hostPort, null, username, password);
+    }
+
     public EmailServerConfig(String hostAddress, Integer hostPort, NetworkSecurityType securityType,
             String authentication) {
         super(hostAddress, hostPort, securityType, authentication);

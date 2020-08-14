@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.notification;
 
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 
@@ -46,8 +47,30 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
 
     @Override
     public void sendEmail(String configurationCode, Email[] email) throws UnifyException {
-        for (Email _email : email) {
-            sendEmail(configurationCode, _email); 
+        Session session = getSession(configurationCode);
+        Transport transport = null;
+        try {
+            transport = session.getTransport("smtp");
+            transport.connect();
+            for (Email _email : email) {
+                try {
+                    MimeMessage mimeMessage = createMimeMessage(session, _email);
+                    transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
+                    _email.setSent(true);
+                } catch (Exception e) {
+                    logError(e);
+                }
+            }
+        } catch (Exception e) {
+            logError(e);
+        } finally {
+            if (transport != null) {
+                try {
+                    transport.close();
+                } catch (MessagingException e) {
+                    logError(e);
+                }
+            }
         }
     }
 }
