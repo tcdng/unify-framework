@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.control;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.data.FileAttachmentInfo;
@@ -26,6 +28,18 @@ import com.tcdng.unify.web.ui.data.FileAttachmentInfo;
  * @since 1.0
  */
 public interface FileAttachmentHandler extends UnifyComponent {
+
+    /**
+     * Fills file attachment file names.
+     * 
+     * @param parentId
+     *            the parent ID
+     * @param attachmentInfoList
+     *            the attachment information list
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void fillAttachFileNames(Object parentId, List<FileAttachmentInfo> attachmentInfoList) throws UnifyException;
 
     /**
      * Handles an attachment request.

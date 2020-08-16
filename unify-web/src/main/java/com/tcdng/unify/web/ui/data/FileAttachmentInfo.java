@@ -35,7 +35,14 @@ public class FileAttachmentInfo {
 
     private byte[] attachment;
 
-    public FileAttachmentInfo(String name, String description, FileAttachmentType type) {
+    public FileAttachmentInfo(FileAttachmentType type, String name, String description, String filename) {
+        this.name = name;
+        this.description = description;
+        this.filename = filename;
+        this.type = type;
+    }
+
+    public FileAttachmentInfo(FileAttachmentType type, String name, String description) {
         this.name = name;
         this.description = description;
         this.type = type;

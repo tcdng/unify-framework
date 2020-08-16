@@ -25,6 +25,7 @@ import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.FileAttachment;
+import com.tcdng.unify.web.ui.control.FileAttachmentHandler;
 import com.tcdng.unify.web.ui.control.FileUpload;
 import com.tcdng.unify.web.ui.data.FileAttachmentInfo;
 import com.tcdng.unify.web.ui.data.FileAttachmentsInfo;
@@ -49,6 +50,12 @@ public class FileAttachmentWriter extends AbstractControlWriter {
         String noFilename = getSessionMessage("fileattachment.noname");
         FileAttachmentsInfo fileAttachmentsInfo = fileAttachment.getAttachmentsInfo();
         if (fileAttachmentsInfo != null) {
+            FileAttachmentHandler handler = fileAttachment.getFileAttachmentHandler();
+            if (handler != null) {
+                handler.fillAttachFileNames(fileAttachmentsInfo.getParentId(),
+                        fileAttachmentsInfo.getAttachmentInfoList());
+            }
+
             boolean isContainerDisabled = fileAttachment.isContainerDisabled();
             boolean isContainerEditable = fileAttachment.isContainerEditable();
             List<ValueStore> valueStoreList = fileAttachment.getValueList();

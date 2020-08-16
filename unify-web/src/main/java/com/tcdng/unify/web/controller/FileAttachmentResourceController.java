@@ -46,7 +46,7 @@ public class FileAttachmentResourceController extends AbstractResourceController
 
     @Override
     public void execute(OutputStream outputStream) throws UnifyException {
-        FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) this.removeSessionAttribute(getResourceName());
+        FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) removeSessionAttribute(getResourceName());
         FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
         byte[] data = fileAttachmentInfo.getAttachment();
         if (data == null) {

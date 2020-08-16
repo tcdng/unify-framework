@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.DataTransferBlock;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
@@ -51,6 +52,8 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
 
     private Control removeCtrl;
 
+    private FileAttachmentHandler handler;
+    
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
@@ -66,10 +69,8 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
             fileAttachmentInfo.setAttachment(uploadedFile.getData());
             fileAttachmentsInfo.attach();
 
-            String handler = getUplAttribute(String.class, "handler");
-            if (handler != null) {
-                FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
-                fileAttachmentHandler.handleAttach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
+            if (isWithHandler()) {
+                getFileAttachmentHandler().handleAttach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
                 fileAttachmentInfo.setAttachment(null);
             }
         }
@@ -80,7 +81,7 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
         // Setup view
         FileAttachmentsInfo fileAttachmentsInfo = getAttachmentsInfo();
         fileAttachmentsInfo.setSelectedIndex(getRequestTarget(int.class));
-        fileAttachmentsInfo.setHandlerName(getUplAttribute(String.class, "handler"));
+        fileAttachmentsInfo.setHandlerName(getUplAttribute(String.class, "handler"));        
         setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentsInfo);
         setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
     }
@@ -92,10 +93,8 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
         fileAttachmentsInfo.setSelectedIndex(getRequestTarget(int.class));
         FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.detach();
 
-        String handler = getUplAttribute(String.class, "handler");
-        if (handler != null) {
-            FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
-            fileAttachmentHandler.handleDetach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
+        if (isWithHandler()) {
+            getFileAttachmentHandler().handleDetach(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
         }
 
         invalidateValueList();
@@ -114,6 +113,14 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
         return getValue(FileAttachmentsInfo.class);
     }
 
+    public FileAttachmentHandler getFileAttachmentHandler() throws UnifyException {
+        return handler;
+    }
+    
+    public boolean isWithHandler() {
+        return handler != null;
+    }
+    
     public FileUpload getFileCtrl() {
         return fileCtrl;
     }
@@ -140,6 +147,10 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
                 "!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view} debounce:false");
         removeCtrl = (Control) addInternalChildWidget(
                 "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} debounce:false");
+        String _handler = getUplAttribute(String.class, "handler");
+        if (!StringUtils.isBlank(_handler)) {
+            handler = (FileAttachmentHandler) getComponent(_handler);
+        }
     }
 
     @Override

@@ -95,6 +95,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("mail", "&#xf0e0;");
         registerSymbol("minus", "&#xf068;");
         registerSymbol("money-bill", "&#xf0d6;");
+        registerSymbol("paper-clip", "&#xf0c6;");
         registerSymbol("plus", "&#xf067;");
         registerSymbol("save", "&#xf0c7;");
         registerSymbol("search", "&#xf002;");

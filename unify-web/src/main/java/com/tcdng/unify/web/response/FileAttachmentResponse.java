@@ -34,9 +34,13 @@ public class FileAttachmentResponse extends AbstractOpenWindowPageControllerResp
     @Override
     protected WindowResourceInfo prepareWindowResource() throws UnifyException {
         FileAttachmentsInfo fileAttachmentsInfo =
-                (FileAttachmentsInfo) this.getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
+                (FileAttachmentsInfo) getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
         FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
-        String resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
+        String resourceName = fileAttachmentInfo.getFilename();
+        if (fileAttachmentsInfo.isViewTimestamped()) {
+            resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
+        }
+
         return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", resourceName,
                 fileAttachmentInfo.getType().mimeType().template(), false);
     }
