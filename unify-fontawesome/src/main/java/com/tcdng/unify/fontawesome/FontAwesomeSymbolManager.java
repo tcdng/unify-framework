@@ -33,7 +33,7 @@ import com.tcdng.unify.web.font.AbstractFontSymbolManager;
 public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
 
     public List<String> getFontResources() throws UnifyException {
-        return Arrays.asList("webfonts/fa-regular-400.woff", "webfonts/fa-solid-900.woff");
+        return Arrays.asList("webfonts/fa-solid-900.woff", "webfonts/fa-regular-400.woff");
     }
 
     @Override
@@ -57,6 +57,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("backward-fast", "&#xf049;");
         registerSymbol("bell", "&#xf0f3;");
         registerSymbol("bell-slash", "&#xf1f6;");
+        registerSymbol("buffer", "&#xf837;");
         registerSymbol("calendar", "&#xf133;");
         registerSymbol("calendar-alt", "&#xf073;");
         registerSymbol("caret-down", "&#xf0d7;");
@@ -74,11 +75,14 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("copy", "&#xf0c5;");
         registerSymbol("cog", "&#xf013;");
         registerSymbol("cogs", "&#xf085;");
+        registerSymbol("compact-disk", "&#xf51f;");
         registerSymbol("credit-card", "&#xf09d;");
         registerSymbol("cross", "&#xf00d;");
+        registerSymbol("cubes", "&#xf1b3;");
         registerSymbol("cut", "&#xf0c4;");
         registerSymbol("database", "&#xf1c0;");
         registerSymbol("desktop", "&#xf108;");
+        registerSymbol("door-open", "&#xf52b;");
         registerSymbol("edit", "&#xf044;");
         registerSymbol("file", "&#xf15b;");
         registerSymbol("file-excel", "&#x1c3;");
@@ -89,24 +93,38 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("folder-open", "&#xf07c;");
         registerSymbol("forward", "&#xf04e;");
         registerSymbol("forward-fast", "&#xf050;");
+        registerSymbol("globe-africa", "&#xf57c;");
         registerSymbol("harddisk", "&#xf0a0;");
+        registerSymbol("house-user", "&#xe065;");
         registerSymbol("id-card", "&#xf2c2;");
         registerSymbol("image", "&#xf03e;");
+        registerSymbol("laptop-house", "&#xe066;");
+        registerSymbol("list", "&#xf03a;");
         registerSymbol("mail", "&#xf0e0;");
+        registerSymbol("mail-bulk", "&#xf674;");
         registerSymbol("minus", "&#xf068;");
         registerSymbol("money-bill", "&#xf0d6;");
+        registerSymbol("newspaper", "&#xf1ea;");
         registerSymbol("paper-clip", "&#xf0c6;");
         registerSymbol("plus", "&#xf067;");
+        registerSymbol("rocket", "&#xf135;");
+        registerSymbol("satellite-disk", "&#xf7c0;");
         registerSymbol("save", "&#xf0c7;");
         registerSymbol("search", "&#xf002;");
         registerSymbol("sign-in", "&#xf2f6;");
         registerSymbol("sign-out", "&#xf2f5;");
+        registerSymbol("site-map", "&#xf0e8;");
         registerSymbol("sort", "&#xf0dc;");
         registerSymbol("swap", "&#xf362;");
         registerSymbol("sync", "&#xf2f1;");
+        registerSymbol("table", "&#xf0ce;");
+        registerSymbol("tasks", "&#xf0ae;");
         registerSymbol("thumbtack", "&#xf08d;");
         registerSymbol("undo", "&#xf2ea;");
         registerSymbol("user", "&#xf007;");
+        registerSymbol("users", "&#xf0c0;");
+        registerSymbol("user-tag", "&#xf507;");
+        registerSymbol("window-restore", "&#xf2d2;");
     }
 
 }
