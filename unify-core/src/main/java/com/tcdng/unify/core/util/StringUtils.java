@@ -608,7 +608,7 @@ public final class StringUtils {
      * Builds a string by concatenating supplied objects.
      * 
      * @param objects
-     *                the compsing objects
+     *                the composing objects
      * @return the built string
      */
     public static String concatenate(Object... objects) {
@@ -619,6 +619,38 @@ public final class StringUtils {
         if (objects.length > 0) {
             StringBuilder sb = new StringBuilder();
             for (Object object : objects) {
+                sb.append(object);
+            }
+            return sb.toString();
+        }
+
+        return "";
+    }
+
+    /**
+     * Builds a string by concatenating supplied objects separated by supplied character.
+     * 
+     * @param ch
+     *                the separator character
+     * @param objects
+     *                the composing objects
+     * @return the built string
+     */
+    public static String concatenateUsingSeparator(char ch, Object... objects) {
+        if (objects.length == 1) {
+            return String.valueOf(objects[0]);
+        }
+
+        if (objects.length > 0) {
+            StringBuilder sb = new StringBuilder();
+            boolean appendSym = false;
+            for (Object object : objects) {
+                if (appendSym) {
+                    sb.append(ch);
+                } else {
+                    appendSym = true;
+                }
+                
                 sb.append(object);
             }
             return sb.toString();

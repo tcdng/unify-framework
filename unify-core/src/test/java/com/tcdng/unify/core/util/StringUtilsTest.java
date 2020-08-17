@@ -557,4 +557,20 @@ public class StringUtilsTest {
         assertEquals("Indigo", StringUtils.getFirstNonBlank("Indigo", "Blue", "Green"));
         assertEquals("Violet", StringUtils.getFirstNonBlank((String) null, "  ", "Violet"));
     }
+
+    @Test
+    public void testConcatenate() throws Exception {
+        assertEquals("", StringUtils.concatenate());
+        assertEquals("Tom", StringUtils.concatenate("Tom"));
+        assertEquals("TomDon", StringUtils.concatenate("Tom", "Don"));
+        assertEquals("HenryTomDon", StringUtils.concatenate("Henry", "Tom", "Don"));
+    }
+
+    @Test
+    public void concatenateWithSeparator() throws Exception {
+        assertEquals("", StringUtils.concatenateUsingSeparator(':'));
+        assertEquals("Tom", StringUtils.concatenateUsingSeparator(':', "Tom"));
+        assertEquals("Tom:Don", StringUtils.concatenateUsingSeparator(':', "Tom", "Don"));
+        assertEquals("Henry:Tom:Don", StringUtils.concatenateUsingSeparator(':', "Henry", "Tom", "Don"));
+    }
 }
