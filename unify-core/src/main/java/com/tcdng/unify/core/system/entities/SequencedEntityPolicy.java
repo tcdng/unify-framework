@@ -51,4 +51,8 @@ public class SequencedEntityPolicy extends AbstractEntityPolicy {
         return id;
     }
 
+    protected final SequenceNumberService getSequenceNumberService() {
+        return sequenceNumberService;
+    }
+
 }
