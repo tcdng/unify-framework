@@ -133,6 +133,48 @@ public interface ValueStore {
     void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException;
 
     /**
+     * Gets temporary value from store using supplied name.
+     * 
+     * @param name
+     *            the name of the value to read
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Object getTempValue(String name) throws UnifyException;
+
+    /**
+     * Gets converted temporary value from store using supplied name.
+     * 
+     * @param type
+     *            the type to convert to
+     * @param name
+     *            the name of the value to retrieve
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T getTempValue(Class<T> type, String name) throws UnifyException;
+
+    /**
+     * Sets a temporary value using supplied name.
+     * 
+     * @param name
+     *            the name of the value
+     * @param value
+     *            the value to store
+     * @throws UnifyException
+     *             if value with supplied name is unknown. If an error occurs
+     */
+    void setTempValue(String name, Object value) throws UnifyException;
+
+    /**
+     * Returns true if supplied name is a temporary value
+     * 
+     * @param name
+     *             the temporary value name
+     */
+    boolean isTempValue(String name);
+    
+    /**
      * Returns true if value store has a gettable value with supplied name.
      * 
      * @param name

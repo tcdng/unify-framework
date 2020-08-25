@@ -15,6 +15,9 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
@@ -33,6 +36,8 @@ public abstract class AbstractValueStore<T> implements ValueStore {
 
     private int dataIndex;
 
+    private Map<String, Object> temp;
+    
     public AbstractValueStore(T storage, String dataMarker, int dataIndex) {
         this.storage = storage;
         this.dataMarker = dataMarker;
@@ -77,6 +82,42 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
         doStore(name, value, formatter);
+    }
+
+    @Override
+    public Object getTempValue(String name) throws UnifyException {
+        if (temp != null) {
+            return temp.get(name);
+        }
+        
+        return null;
+    }
+
+    @Override
+    public <U> U getTempValue(Class<U> type, String name) throws UnifyException {
+        if (temp != null) {
+            return DataUtils.convert(type, temp.get(name), null);
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void setTempValue(String name, Object value) throws UnifyException {
+        if (temp == null) {
+            temp = new HashMap<String, Object>();
+        }
+        
+        temp.put(name, value);
+    }
+
+    @Override
+    public boolean isTempValue(String name) {
+        if (temp != null) {
+            return temp.containsKey(name);
+        }
+        
+        return false;
     }
 
     @Override

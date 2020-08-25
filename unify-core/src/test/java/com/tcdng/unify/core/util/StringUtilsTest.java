@@ -26,7 +26,9 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.tcdng.unify.core.data.BeanValueStore;
 import com.tcdng.unify.core.data.ListData;
+import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.StringUtils.StringToken;
 
 /**
@@ -540,6 +542,17 @@ public class StringUtilsTest {
         token = tokenList.get(2);
         assertEquals("adj", token.getToken());
         assertTrue(token.isParam());
+    }
+    
+    @Test
+    public void testBuildParameterizedStringUsingValueStore() throws Exception {
+        List<StringToken> tokenList = StringUtils
+                .breakdownParameterizedString("Mr {lastName}'s phone number is {phoneNumber}.");
+        ValueStore vs = new BeanValueStore(new Customer());
+        vs.store("lastName", "Shinzo");
+        vs.setTempValue("phoneNumber", "+81203948574909090");
+        assertEquals("Mr Shinzo's phone number is +81203948574909090.",
+                StringUtils.buildParameterizedString(tokenList, vs));
     }
     
     @Test

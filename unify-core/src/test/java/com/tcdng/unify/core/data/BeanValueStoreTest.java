@@ -16,7 +16,9 @@
 package com.tcdng.unify.core.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -97,5 +99,38 @@ public class BeanValueStoreTest {
         assertEquals(Long.valueOf(16), customer.getId());
         assertEquals("17, I Close, 5th Avenue", customer.getAddress().getLine1());
         assertEquals("Festac Town", customer.getAddress().getLine2());
+    }
+    
+    @Test
+    public void testIsTempValueBlank() throws Exception {
+        Customer customer = new Customer();
+        customer.setAddress(new Address());
+
+        BeanValueStore bvs = new BeanValueStore(customer);
+        assertFalse(bvs.isTempValue("surname"));
+    }
+    
+    @Test
+    public void testSetTempValue() throws Exception {
+        Customer customer = new Customer();
+        customer.setAddress(new Address());
+
+        BeanValueStore bvs = new BeanValueStore(customer);
+        bvs.setTempValue("surname", "Shinzo");
+        assertTrue(bvs.isTempValue("surname"));
+        assertFalse(bvs.isTempValue("phoneNumber"));
+    }
+    
+    @Test
+    public void testGetTempValue() throws Exception {
+        Customer customer = new Customer();
+        customer.setAddress(new Address());
+
+        BeanValueStore bvs = new BeanValueStore(customer);
+        bvs.setTempValue("surname", "Shinzo");
+        assertTrue(bvs.isTempValue("surname"));
+        assertFalse(bvs.isTempValue("phoneNumber"));
+        assertEquals("Shinzo", bvs.getTempValue("surname"));
+        assertNull(bvs.getTempValue("phoneNumber"));
     }
 }
